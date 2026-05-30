@@ -49,8 +49,9 @@ export function cerrarSesion() {
 export function inicializarAuthObserver({ progressData, evalData, timeData, globalSettings, onLogin, onLogout }) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            window.currentUserUid  = user.uid;
-            window.isMasterAdmin   = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            window.currentUserUid   = user.uid;
+            window.currentUserEmail = user.email;
+            window.isMasterAdmin    = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
             // Actualizar UI de cabecera
             document.getElementById('auth-modal').style.display       = 'none';
@@ -141,6 +142,7 @@ export function inicializarAuthObserver({ progressData, evalData, timeData, glob
             window.currentUserUid = null;
             document.getElementById('user-info-container').style.display = 'none';
             document.getElementById('nav-admin').style.display = 'none';
+            document.getElementById('btn-login-modal').style.display = 'flex';
             document.getElementById('auth-modal').style.display = 'flex';
             if (onLogout) onLogout();
         }

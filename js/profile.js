@@ -21,6 +21,7 @@ export async function guardarPerfil() {
     const calc        = document.getElementById('prof-calc').value;
     const trig        = document.getElementById('prof-trig').value;
     const algebra     = document.getElementById('prof-algebra').value;
+    const apikey      = document.getElementById('prof-apikey') ? document.getElementById('prof-apikey').value.trim() : '';
 
     try {
         let existingRole = 'student';
@@ -33,12 +34,21 @@ export async function guardarPerfil() {
 
         const profileData = {
             name, institution: inst, role: existingRole, email: auth.currentUser.email,
-            major, age, gender, avatarStyle,
+            major, age, gender, avatarStyle, apikey,
             studyHours: hours, mathCalc: calc, mathTrig: trig, mathAlgebra: algebra
         };
 
         await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'profile', 'data'), profileData, { merge: true });
         await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'directory', window.currentUserUid), profileData, { merge: true });
+
+        // Guardar API Key localmente para acceso rápido en ai-chat.js
+        if(apikey) {
+            localStorage.setItem('userApiKey', apikey);
+            window.userApiKey = apikey;
+        } else {
+            localStorage.removeItem('userApiKey');
+            window.userApiKey = null;
+        }
 
         document.getElementById('student-name-hero').innerText = name || auth.currentUser.email.split('@')[0];
         actualizarAvatarUI(avatarStyle, window.currentUserUid, name || auth.currentUser.email);
@@ -71,6 +81,14 @@ export async function cargarDatosPerfil() {
             if (selTrig) selTrig.value = data.mathTrig || 'Medio';
             const selAlg = document.getElementById('prof-algebra');
             if (selAlg) selAlg.value = data.mathAlgebra || 'Medio';
+            const inputKey = document.getElementById('prof-apikey');
+            if (inputKey) inputKey.value = data.apikey || '';
+            
+            // Setear globalmente si existe
+            if(data.apikey) {
+                localStorage.setItem('userApiKey', data.apikey);
+                window.userApiKey = data.apikey;
+            }
 
             const roleDisplay = document.getElementById('prof-role-display');
             if (roleDisplay) {

@@ -80,12 +80,12 @@ export async function inicializarEstructuraBase(progressData) {
                 const gList = document.createElement('ul');
                 gList.className = 'group-list';
                 gHeader.onclick = () => gList.classList.toggle('expanded');
-                leccion.sublecciones.forEach(sub => { totalLessons++; gList.appendChild(crearElementoLi(sub, modulo.titulo, progressData)); });
+                leccion.sublecciones.forEach(sub => { totalLessons++; gList.appendChild(crearElementoLi(sub, modulo, progressData)); });
                 lessonList.appendChild(gHeader);
                 lessonList.appendChild(gList);
             } else {
                 totalLessons++;
-                lessonList.appendChild(crearElementoLi(leccion, modulo.titulo, progressData));
+                lessonList.appendChild(crearElementoLi(leccion, modulo, progressData));
             }
         });
 
@@ -98,12 +98,12 @@ export async function inicializarEstructuraBase(progressData) {
 }
 
 // ── Crea un elemento <li> del menú lateral ───────────────────
-function crearElementoLi(leccion, modTitulo, progressData) {
+function crearElementoLi(leccion, modulo, progressData) {
     const li = document.createElement('li');
     li.className = 'lesson-item';
     li.id        = 'menu-' + leccion.id;
     if (progressData[leccion.id]) li.classList.add('completed');
     li.innerHTML = `<span class="material-symbols-outlined icon-status">${progressData[leccion.id] ? 'check_circle' : getIconForType(leccion.tipo)}</span> <span class="lesson-item-text text-wrap-safe">${leccion.titulo}</span>`;
-    li.onclick = () => window._loadContent(leccion, modTitulo);
+    li.onclick = () => window._loadContent(leccion, modulo);
     return li;
 }

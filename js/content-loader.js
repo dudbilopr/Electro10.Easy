@@ -68,7 +68,7 @@ export function guardarNotas() {
 }
 
 // ── Cargador principal de contenido ─────────────────────────
-export function loadContent(leccion, modTitulo, progressData, evalData) {
+export function loadContent(leccion, modulo, progressData, evalData) {
     const elementLi       = document.getElementById('menu-' + leccion.id);
     resetNav();
     currentLeccionId = leccion.id;
@@ -87,9 +87,57 @@ export function loadContent(leccion, modTitulo, progressData, evalData) {
     contentHeader.style.display   = 'flex';
 
     document.getElementById('display-title').innerText      = leccion.titulo;
-    document.getElementById('bread-modulo').innerText       = modTitulo ? modTitulo.split(':')[0] : 'Módulo';
+    document.getElementById('bread-modulo').innerText       = modulo?.titulo ? modulo.titulo.split(':')[0] : 'Módulo';
     document.getElementById('bread-leccion').innerText      = leccion.titulo;
-    document.getElementById('tab-desc-text').innerText      = leccion.descripcion || "Explora el recurso analítico.";
+    
+    // Construir detalles con los nuevos insights
+    let detailsHtml = `<p style="color: var(--text-medium); margin-bottom: 15px;">${leccion.descripcion || "Explora el recurso analítico."}</p>`;
+    
+    if (modulo && modulo.conceptosClave) {
+        detailsHtml += `
+        <div style="margin-top: 20px; background: rgba(139, 92, 246, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+            <h4 style="margin: 0 0 10px 0; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">key</span> Conceptos Clave</h4>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${modulo.conceptosClave.map(c => `<span style="background: var(--bg-surface-hover); color: var(--text-high); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; border: 1px solid var(--border-color);">${c}</span>`).join('')}
+            </div>
+        </div>`;
+    }
+
+    if (modulo && modulo.ecuaciones) {
+        detailsHtml += `
+        <div style="margin-top: 15px; background: var(--bg-surface-hover); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4 style="margin: 0 0 10px 0; color: var(--text-high);"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px; color: #10b981;">functions</span> Ecuaciones Principales</h4>
+            <div style="color: var(--text-medium); font-size: 1rem;">
+                ${modulo.ecuaciones.join('<br>')}
+            </div>
+        </div>`;
+    }
+
+    if (modulo && modulo.historia) {
+        detailsHtml += `
+        <div style="margin-top: 15px; background: rgba(59, 130, 246, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <h4 style="margin: 0 0 10px 0; color: #3b82f6;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">history_edu</span> Contexto Histórico: ${modulo.historia.experimentoClave}</h4>
+            <p style="margin: 0; color: var(--text-medium); font-size: 0.85rem; line-height: 1.5;">${modulo.historia.hallazgo}</p>
+        </div>`;
+    }
+
+    if (modulo && modulo.bibliografia) {
+        detailsHtml += `
+        <div style="margin-top: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: var(--text-high); font-size: 0.9rem;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 16px;">menu_book</span> Bibliografía Recomendada</h4>
+            <ul style="margin: 0; padding-left: 20px; color: var(--text-medium); font-size: 0.8rem;">
+                ${modulo.bibliografia.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+        </div>`;
+    }
+
+    const tabDescContainer = document.getElementById('tab-desc-text');
+    tabDescContainer.innerHTML = detailsHtml;
+    
+    // Renderizar ecuaciones si KaTeX está disponible
+    if (window.renderMathInElement) {
+        window.renderMathInElement(tabDescContainer, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });
+    }
 
     const btnNotebook = document.getElementById('btn-notebook');
     if (leccion.llmLink) { btnNotebook.style.display = 'inline-flex'; btnNotebook.href = leccion.llmLink; }
@@ -172,25 +220,16 @@ export function loadContent(leccion, modTitulo, progressData, evalData) {
             iframe.src = getYoutubeEmbed(leccion.recurso);
             iframeWrapper.style.aspectRatio = '16/9'; iframeWrapper.style.height = 'auto';
         } else if (leccion.tipo === 'quiz' && leccion.preguntas) {
-            // Renderizado dinámico del Examen de Presaberes / Quizzes JSON
+            // Renderizado dinámico del Examen con el Nuevo Motor Cognitivo
             iframe.style.display = 'none';
             enlacesContainer.style.display = 'block';
-            enlacesContainer.innerHTML = window.renderizarQuizDinamico(leccion);
+            enlacesContainer.innerHTML = '<div id="dyn-quiz-container"></div>';
             
-            // Renderizar matemáticas con KaTeX
             setTimeout(() => {
-                if (window.renderMathInElement) {
-                    renderMathInElement(enlacesContainer, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false},
-                            {left: '\\(', right: '\\)', display: false},
-                            {left: '\\[', right: '\\]', display: true}
-                        ],
-                        throwOnError: false
-                    });
+                if(window.initDynamicQuiz) {
+                    window.initDynamicQuiz('dyn-quiz-container', leccion);
                 }
-            }, 100);
+            }, 50);
         } else {
             iframe.src = leccion.recurso;
             iframeWrapper.style.aspectRatio = 'auto'; iframeWrapper.style.height = '75vh'; iframeWrapper.style.minHeight = '500px';

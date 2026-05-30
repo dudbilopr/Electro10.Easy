@@ -9,11 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Plataforma educativa interactiva para el curso de Electromagnetismo. Videos, simuladores y evaluaciones.">
     <title>Electro10.easy | Plataforma Educativa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b57d0'/><text x='50%25' y='50%25' font-family='sans-serif' font-weight='bold' font-size='60' fill='white' text-anchor='middle' dy='.3em'>E</text></svg>">
 
     <!-- Fuentes Google: Inter y Material Symbols -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
     <!-- KaTeX para renderizado matemático -->
@@ -27,8 +28,15 @@
     <!-- Librerias externas (Graficos y Alertas) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Vis Network y JSZip para el Cerebro Obsidian -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
+    <!-- Fondo Cósmico (Particles.js) -->
+    <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;"></div>
 
     <header>
         <div class="header-brand">
@@ -48,6 +56,9 @@
             
             <button class="icon-btn" onclick="window.toggleTheme()" title="Cambiar Tema (Claro/Oscuro)">
                 <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+            </button>
+            <button class="icon-btn focus-btn" onclick="window.toggleFocusMode()" title="Focus Mode (Pomodoro)" style="color: #10b981;">
+                <span class="material-symbols-outlined">timer</span>
             </button>
             <button class="icon-btn" title="Notificaciones" onclick="window.mostrarNotificaciones()">
                 <span class="material-symbols-outlined">notifications</span>
@@ -85,6 +96,14 @@
                 <span class="material-symbols-outlined">person</span>
                 <span>Mi Perfil</span>
             </a>
+            <a onclick="window.mostrarLaboratorios()" class="nav-item" id="nav-labs">
+                <span class="material-symbols-outlined">science</span>
+                <span>Centro de Simulaciones</span>
+            </a>
+            <a onclick="window.mostrarCerebro()" class="nav-item" id="nav-brain" style="color: #a855f7;">
+                <span class="material-symbols-outlined">psychology</span>
+                <span>Cerebro de Conocimiento</span>
+            </a>
             <a id="nav-admin" onclick="window.abrirPanelAdmin()" class="nav-item" style="display: none; color: var(--admin);">
                 <span class="material-symbols-outlined icon-filled">admin_panel_settings</span>
                 <span>Panel Admin</span>
@@ -94,6 +113,9 @@
             <div id="menu-content-area"></div>
             
             <div class="sidebar-footer">
+                <a href="#" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-medium); padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 500; margin-bottom: 15px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'; this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-medium)'">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">local_cafe</span> Apoya el proyecto
+                </a>
                 &copy; 2026 Electro10.easy<br>
                 Desarrollado con excelencia académica.<br>
                 Todos los derechos reservados.
@@ -121,9 +143,53 @@
 
             <!-- ================= DASHBOARD ESTUDIANTE ================= -->
             <div id="student-dashboard" class="bento-container" style="display: block;">
+                <!-- ================= PLANIFICADOR DINÁMICO ================= -->
+                <div class="bento-card col-12 animate-fade-in" style="margin-bottom: 24px; padding: 20px;">
+                    <div class="bento-header" style="margin-bottom: 15px; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: var(--accent);">calendar_month</span> Ruta de Aprendizaje</h3>
+                            <span style="font-size: 0.75rem; color: var(--text-medium); background: var(--bg-surface-hover); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color);">Progreso Flexible</span>
+                        </div>
+                        <select id="timeline-pacing-select" class="form-input" style="width: auto; padding: 5px 10px; font-size: 0.85rem;" onchange="window.renderTimeline(this.value)">
+                            <option value="16">Ritmo Regular (16 Semanas)</option>
+                            <option value="12">Ritmo Acelerado (12 Semanas)</option>
+                            <option value="24">Basado en Sesiones (24 Encuentros)</option>
+                        </select>
+                    </div>
+                    <div id="dynamic-timeline-container" class="timeline-container" style="display: flex; overflow-x: auto; padding-bottom: 15px; gap: 10px; scroll-snap-type: x mandatory;">
+                        <!-- Contenido inyectado por JS -->
+                    </div>
+                </div>
+                <script>
+                    window.renderTimeline = function(length) {
+                        const container = document.getElementById('dynamic-timeline-container');
+                        const isSessions = length == 24;
+                        const label = isSessions ? 'Sesión' : 'Semana';
+                        const activeIndex = isSessions ? 5 : 3; // Simular el progreso
+                        
+                        container.innerHTML = Array.from({length: parseInt(length)}, (_, i) => {
+                            let statusColor = i < activeIndex ? 'var(--success)' : (i === activeIndex ? 'var(--accent)' : 'var(--border-color)');
+                            let statusBg = i < activeIndex ? 'rgba(20, 108, 46, 0.1)' : (i === activeIndex ? 'var(--accent-glow)' : 'transparent');
+                            let statusBorder = i < activeIndex ? 'var(--success)' : (i === activeIndex ? 'var(--accent)' : 'var(--border-color)');
+                            let icon = i < activeIndex ? 'check_circle' : (i === activeIndex ? 'play_circle' : 'radio_button_unchecked');
+                            let opacity = i > activeIndex ? '0.6' : '1';
+                            let textClass = i === activeIndex ? 'font-weight: bold; color: var(--text-high);' : 'color: var(--text-medium);';
+                            
+                            return \`
+                            <div style="min-width: 140px; border: 1px solid \${statusBorder}; border-radius: var(--shape-medium); padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; scroll-snap-align: start; opacity: \${opacity}; background: \${statusBg}; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <span class="material-symbols-outlined" style="color: \${statusColor}; font-size: 24px;">\${icon}</span>
+                                <span style="font-size: 0.85rem; \${textClass}">\${label} \${i + 1}</span>
+                            </div>
+                            \`;
+                        }).join('');
+                    };
+                    // Inicializar con 16 semanas por defecto
+                    setTimeout(() => window.renderTimeline(16), 100);
+                </script>
+
                 <div class="bento-grid">
                     
-                    <div class="bento-card hero-card col-8">
+                    <div class="bento-card hero-card col-8 animate-fade-in">
                         <div class="bento-label">BIENVENIDO A TU VIAJE ACADÉMICO</div>
                         <h2>¡Hola, <span id="student-name-hero" style="color: #fff; font-weight: 900;">Estudiante</span>!</h2>
                         <p>Te damos la bienvenida al maravilloso mundo del electromagnetismo. Prepárate para explorar las fuerzas que rigen el universo a través de simulaciones de vanguardia e IA integrada.</p>
@@ -133,7 +199,7 @@
                         </div>
                     </div>
 
-                    <div class="bento-card col-4">
+                    <div class="bento-card col-4 animate-slide-up">
                         <div class="bento-header">
                             <h3><span class="material-symbols-outlined text-accent">data_usage</span> Índice de Finalización</h3>
                         </div>
@@ -143,7 +209,7 @@
                     </div>
 
                     <!-- PORTADA DEL MAESTRO ULTRA MEJORADA -->
-                    <div class="bento-card col-12 teacher-hero">
+                    <div class="bento-card col-12 teacher-hero animate-slide-up">
                         <!-- Video Placeholder -->
                         <div class="teacher-video-wrapper">
                             <iframe width="560" height="315" src="https://www.youtube.com/embed/TMYJ6-pvLqs?si=7yBnmfS_G519fc0a" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -311,6 +377,11 @@
                                     <label>Edad</label>
                                     <input type="number" id="prof-age" class="form-input" placeholder="Años" min="10" max="99">
                                 </div>
+                                <div class="input-group" style="grid-column: 1 / -1;">
+                                    <label><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 16px;">key</span> Clave API (Gemini / OpenAI)</label>
+                                    <input type="password" id="prof-apikey" class="form-input" placeholder="Ej. AIzaSyB...">
+                                    <small style="color: var(--text-medium); font-size: 0.8rem;">Opcional. Tu propia clave de API para usar el Chatbot IA de forma ilimitada.</small>
+                                </div>
                                 <div class="input-group">
                                     <label>Género</label>
                                     <select id="prof-gender" class="form-input">
@@ -383,7 +454,205 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ================= METODOLOGÍAS DE APRENDIZAJE ================= -->
+                    <div class="bento-card col-12" style="margin-top: 15px; padding: 30px;">
+                        <div class="bento-header" style="margin-bottom: 20px;">
+                            <h3><span class="material-symbols-outlined" style="color: var(--accent);">menu_book</span> Metodologías de Aprendizaje (Aprender a Aprender)</h3>
+                        </div>
+                        <p style="color: var(--text-medium); margin-bottom: 25px;">Para dominar el Electromagnetismo, no basta con leer. Aplica estas estrategias para una retención profunda (basado en principios de neuroeducación).</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            
+                            <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--shape-large); padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <h4 style="margin: 0 0 10px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: #10b981;">edit_note</span> Apuntes Efectivos</h4>
+                                <ul style="color: var(--text-medium); font-size: 0.85rem; padding-left: 20px; margin: 0; line-height: 1.6;">
+                                    <li>Usa el <b>Sistema Cornell</b>: Divide tus notas en conceptos clave, detalles y resumen.</li>
+                                    <li>No transcribas; parafrasea lo que entiendes.</li>
+                                    <li>Dibuja mapas mentales de los fenómenos físicos.</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: var(--shape-large); padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <h4 style="margin: 0 0 10px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: #f59e0b;">smart_display</span> Consumo de Videos</h4>
+                                <ul style="color: var(--text-medium); font-size: 0.85rem; padding-left: 20px; margin: 0; line-height: 1.6;">
+                                    <li><b>Pausa Activa</b>: Pausa el video antes de que el profesor resuelva el ejercicio e intenta hacerlo tú.</li>
+                                    <li>Cero distracciones: Visualiza en pantalla completa.</li>
+                                    <li>Revisa los conceptos difíciles a velocidad 0.75x.</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(11, 87, 208, 0.05); border: 1px solid rgba(11, 87, 208, 0.2); border-radius: var(--shape-large); padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <h4 style="margin: 0 0 10px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: var(--accent);">science</span> Laboratorios y Simuladores</h4>
+                                <ul style="color: var(--text-medium); font-size: 0.85rem; padding-left: 20px; margin: 0; line-height: 1.6;">
+                                    <li><b>Experimenta primero</b>: Juega con el simulador antes de ver las matemáticas. Intuye qué pasa.</li>
+                                    <li>Cambia variables extremas para ver qué colapsa en el sistema.</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: var(--shape-large); padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <h4 style="margin: 0 0 10px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: #8b5cf6;">import_contacts</span> Lectura Profunda</h4>
+                                <ul style="color: var(--text-medium); font-size: 0.85rem; padding-left: 20px; margin: 0; line-height: 1.6;">
+                                    <li>Lee los primeros y últimos párrafos antes de entrar en los detalles matemáticos.</li>
+                                    <li>No te asustes por integrales triples; busca el <b>significado físico</b> de la ecuación.</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
+            </div>
+
+            <!-- ================= CENTRO DE SIMULACIÓN Y LABORATORIOS ================= -->
+            <div id="labs-dashboard" class="bento-container" style="display: none;">
+                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
+                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #0ea5e9;">science</span>
+                        Centro de Simulación
+                    </h2>
+                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                        El puente entre las matemáticas y la realidad física. Aquí encontrarás las guías de laboratorio y entornos de experimentación interactiva.
+                    </p>
+                </div>
+
+                <div class="bento-grid">
+                    <!-- Laboratorio Interactivo 1: Campo Eléctrico -->
+                    <div class="bento-card col-12" style="border: 1px solid var(--border-color); background: var(--bg-surface); position: relative; overflow: hidden; padding: 0;">
+                        <div style="padding: 20px; background: rgba(14, 165, 233, 0.05); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="margin: 0 0 5px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;">
+                                    <span class="material-symbols-outlined" style="color: #0ea5e9;">model_training</span>
+                                    Simulador: Campo Eléctrico Interactivo
+                                </h3>
+                                <p style="margin: 0; color: var(--text-medium); font-size: 0.9rem;">Agrega cargas positivas o negativas y observa las líneas de fuerza en tiempo real.</p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="btn-add-pos" class="btn-primary" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;"><span class="material-symbols-outlined">add_circle</span> Carga +</button>
+                                <button id="btn-add-neg" class="btn-primary" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"><span class="material-symbols-outlined">do_not_disturb_on</span> Carga -</button>
+                                <button id="btn-clear-canvas" class="icon-btn" title="Limpiar"><span class="material-symbols-outlined">delete</span></button>
+                            </div>
+                        </div>
+                        <div style="width: 100%; height: 400px; background: #000; position: relative;">
+                            <canvas id="physics-canvas" style="width: 100%; height: 100%; display: block; cursor: crosshair;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder Lab 2 -->
+                    <div class="bento-card col-4" style="border: 2px dashed var(--border-strong); background: rgba(14, 165, 233, 0.02);">
+                        <div style="height: 150px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">bolt</span>
+                        </div>
+                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Práctica 2: Ley de Coulomb</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Simulación de fuerzas eléctricas interactivas.</p>
+                        <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
+                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Próximamente
+                        </div>
+                    </div>
+
+                    <!-- Placeholder Lab 3 -->
+                    <div class="bento-card col-4" style="border: 2px dashed var(--border-strong); background: rgba(14, 165, 233, 0.02);">
+                        <div style="height: 150px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">electric_meter</span>
+                        </div>
+                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Práctica 3: Circuitos DC</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Leyes de Kirchhoff usando multímetros virtuales.</p>
+                        <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
+                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Próximamente
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= CEREBRO DEL ESTUDIANTE (OBSIDIAN STYLE) ================= -->
+            <div id="brain-dashboard" class="bento-container" style="display: none;">
+                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
+                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #a855f7;">psychology</span>
+                        Cerebro de Conocimiento
+                    </h2>
+                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                        Tu segundo cerebro. Aquí se interconectan los conceptos que vas aprendiendo, herramientas cognitivas y un tutor IA visual.
+                    </p>
+                </div>
+
+                <!-- Navegación interna del Cerebro -->
+                <div class="tabs-nav" style="margin-bottom: 20px; border-bottom: 2px solid var(--border-color); display: flex; gap: 20px;">
+                    <button class="tab-btn active" onclick="window.cambiarTabCerebro('brain-graph', this)"><span class="material-symbols-outlined">account_tree</span> Mapa Mental</button>
+                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-tools', this)"><span class="material-symbols-outlined">menu_book</span> Herramientas</button>
+                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-games', this)"><span class="material-symbols-outlined">extension</span> Juegos Cognitivos</button>
+                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-camera', this)" style="color: #10b981;"><span class="material-symbols-outlined">photo_camera</span> Tutor por Cámara</button>
+                    <button class="btn-primary" onclick="window.descargarObsidian()" style="margin-left: auto; background: #2b2b2b; color: #a855f7; border: 1px solid #a855f7;"><span class="material-symbols-outlined text-[18px]">download</span> Bóveda Obsidian</button>
+                </div>
+
+                <!-- Tab: Grafo Visual (Obsidian) -->
+                <div id="brain-graph" class="brain-tab-content" style="display: block;">
+                    <div class="bento-card col-12" style="padding: 0; overflow: hidden; height: 600px; position: relative; border: 1px solid var(--border-color);">
+                        <div id="vis-network-container" style="width: 100%; height: 100%; background: #000;"></div>
+                        <div style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 8px; color: white; font-size: 0.85rem; border: 1px solid var(--border-color); backdrop-filter: blur(5px);">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><div style="width:12px; height:12px; border-radius:50%; background:#10b981;"></div> Conceptos Dominados</div>
+                            <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px; height:12px; border-radius:50%; background:#3b82f6;"></div> Conceptos en Progreso</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Herramientas (Glosario, Fórmulas, Constantes) -->
+                <div id="brain-tools" class="brain-tab-content" style="display: none;">
+                    <div class="bento-grid">
+                        <div class="bento-card col-4">
+                            <h3><span class="material-symbols-outlined" style="color: var(--accent); vertical-align: middle;">sort_by_alpha</span> Glosario</h3>
+                            <div id="brain-glosario-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;"></div>
+                        </div>
+                        <div class="bento-card col-4">
+                            <h3><span class="material-symbols-outlined" style="color: var(--accent); vertical-align: middle;">functions</span> Fórmulas y Leyes</h3>
+                            <div id="brain-formulas-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;"></div>
+                        </div>
+                        <div class="bento-card col-4">
+                            <h3><span class="material-symbols-outlined" style="color: var(--accent); vertical-align: middle;">straighten</span> Constantes / Unidades</h3>
+                            <div id="brain-constantes-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Juegos Cognitivos -->
+                <div id="brain-games" class="brain-tab-content" style="display: none;">
+                    <div class="bento-grid">
+                        <div class="bento-card col-12" style="text-align: center; padding: 40px;">
+                            <span class="material-symbols-outlined" style="font-size: 60px; color: var(--accent);">sports_esports</span>
+                            <h3 style="color: var(--text-high);">Juego: Encuentra la Ley</h3>
+                            <p style="color: var(--text-medium); max-width: 500px; margin: 10px auto;">Une el concepto físico con su respectiva ecuación matemática para ganar puntos cognitivos.</p>
+                            <button class="btn-primary" onclick="alert('Esta sección está en desarrollo de gamificación. ¡Vuelve pronto!')" style="margin-top: 20px;">Iniciar Juego</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Evaluador IA por Cámara -->
+                <div id="brain-camera" class="brain-tab-content" style="display: none;">
+                    <div class="bento-grid">
+                        <div class="bento-card col-6" style="display: flex; flex-direction: column; align-items: center;">
+                            <h3 style="width:100%; color: var(--text-high); display: flex; align-items: center; gap: 10px;"><span class="material-symbols-outlined" style="color: #10b981;">linked_camera</span> Captura de Ejercicio</h3>
+                            <p style="color: var(--text-medium); font-size: 0.9rem; width: 100%;">Muestra a la cámara el ejercicio que acabas de resolver en tu cuaderno para que el Tutor IA lo evalúe.</p>
+                            
+                            <div style="width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; margin: 20px 0; position: relative; overflow: hidden; border: 2px solid var(--border-color);">
+                                <video id="ai-camera-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                                <canvas id="ai-camera-canvas" style="display: none;"></canvas>
+                            </div>
+                            
+                            <div style="display: flex; gap: 15px; width: 100%;">
+                                <button id="btn-start-camera" class="btn-secondary" style="flex: 1;"><span class="material-symbols-outlined">videocam</span> Iniciar Cámara</button>
+                                <button id="btn-take-photo" class="btn-primary" style="flex: 1; background: #10b981;" disabled><span class="material-symbols-outlined">camera</span> Capturar y Evaluar</button>
+                            </div>
+                        </div>
+
+                        <div class="bento-card col-6" style="display: flex; flex-direction: column;">
+                            <h3 style="color: var(--text-high); display: flex; align-items: center; gap: 10px;"><span class="material-symbols-outlined" style="color: #a855f7;">smart_toy</span> Retroalimentación IA</h3>
+                            <div id="ai-camera-feedback" style="flex: 1; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; margin-top: 15px; padding: 20px; overflow-y: auto; color: var(--text-medium);">
+                                Esperando captura del ejercicio...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- ================= DASHBOARD ADMINISTRADOR (CIENTÍFICO DE DATOS) ================= -->
@@ -447,7 +716,6 @@
                             <button class="btn-primary" onclick="window.guardarAjustesCalendario()"><span class="material-symbols-outlined text-[18px]">update</span> Aplicar a Estudiantes</button>
                         </div>
                     </div>
-
                     <div class="bento-card col-4">
                         <div class="bento-header">
                             <h3><span class="material-symbols-outlined" style="color: var(--admin);">pie_chart</span> Demografía de Roles</h3>
@@ -621,29 +889,24 @@
         </div>
     </div>
 
-    <!-- CHATBOT FAB -->
-    <div class="chat-fab" onclick="window.toggleChat()">
-        <span class="material-symbols-outlined icon-filled" style="font-size: 28px;">smart_toy</span>
-    </div>
-
-    <div class="chat-panel" id="chat-panel">
-        <div class="chat-header" style="background: var(--bg-surface-hover); padding: 15px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color);">
-            <div style="display: flex; align-items: center; gap: 8px; font-weight: bold;">
-                <span class="material-symbols-outlined icon-filled" style="color: var(--accent);">smart_toy</span> 
-                <span>ElectroBOT IA</span>
-            </div>
-            <button class="icon-btn" onclick="window.toggleChat()"><span class="material-symbols-outlined">close</span></button>
-        </div>
-        <div class="chat-body" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center;">
-            <span class="material-symbols-outlined" style="font-size: 48px; color: var(--border-color); margin-bottom: 15px;">memory</span>
-            <p style="font-size: 0.85rem; color: var(--text-medium);">Conexión a la red neural requerida.</p>
-        </div>
-    </div>
+    <!-- El Chatbot de IA ahora es inyectado dinámicamente por ai-chat.js -->
     
     <!-- =========================================================================================
          LÓGICA UNIFICADA Y ANALÍTICA
     ========================================================================================== -->
-        <!-- Lógica modularizada -->
+    <!-- Motor de Simulación Física 2D -->
+    <script src="./js/physics-engine.js"></script>
+
+    <!-- Motor de Exámenes Dinámicos y Cognitivos -->
+    <script src="./js/quiz-engine.js"></script>
+
+    <!-- Módulo IA Contextual (BYOK) -->
+    <script src="./js/ai-chat.js"></script>
+
+    <!-- Cerebro Obsidian (Graph & AI Grader) -->
+    <script src="./js/brain.js"></script>
+
+    <!-- Script Principal -->
     <script type="module" src="./js/app.js"></script>
 </body>
 </html>

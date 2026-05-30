@@ -20,7 +20,7 @@ export function injectUIState({ progressData, curriculoData, totalLessons }) {
 
 export function resetNav() {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    ['student-dashboard', 'calendar-dashboard', 'profile-dashboard', 'admin-dashboard', 'main-viewer-area', 'content-header']
+    ['student-dashboard', 'calendar-dashboard', 'profile-dashboard', 'labs-dashboard', 'brain-dashboard', 'admin-dashboard', 'main-viewer-area', 'content-header']
         .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
 }
 
@@ -93,6 +93,28 @@ export function mostrarPerfil() {
     window.cargarDatosPerfil?.();
 }
 
+export function mostrarLaboratorios() {
+    resetNav();
+    document.getElementById('nav-labs').classList.add('active');
+    document.getElementById('labs-dashboard').style.display = 'block';
+}
+
+export function mostrarCerebro() {
+    resetNav();
+    const btn = document.getElementById('nav-brain');
+    if(btn) btn.classList.add('active');
+    document.getElementById('brain-dashboard').style.display = 'block';
+    if(window.initBrainGraph) window.initBrainGraph();
+}
+
+export function cambiarTabCerebro(tabId, btnElement) {
+    document.querySelectorAll('.brain-tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('brain-dashboard').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
+    if(btnElement) btnElement.classList.add('active');
+}
+
+
 export function abrirPanelAdmin(globalSettings) {
     resetNav();
     document.getElementById('nav-admin').classList.add('active');
@@ -163,5 +185,53 @@ export function aplicarTemaGuardado() {
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark');
         document.getElementById('theme-icon').innerText = 'light_mode';
+    }
+}
+
+// ── Focus Mode (Pomodoro) ────────────────────────────────────
+let focusTimer = null;
+let focusTimeLeft = 45 * 60; // 45 minutos
+
+export function toggleFocusMode() {
+    const body = document.body;
+    body.classList.toggle('focus-mode-active');
+    
+    let floating = document.getElementById('pomodoro-floating');
+    
+    if (body.classList.contains('focus-mode-active')) {
+        // Iniciar
+        if (!floating) {
+            floating = document.createElement('div');
+            floating.id = 'pomodoro-floating';
+            floating.innerHTML = `<span class="material-symbols-outlined">timer</span> <span id="pomo-time">45:00</span>`;
+            floating.onclick = toggleFocusMode;
+            document.body.appendChild(floating);
+        }
+        floating.style.display = 'flex';
+        
+        Swal.fire({
+            title: 'Modo Concentración Activado',
+            text: 'Las distracciones se han ocultado. Tienes 45 minutos de enfoque profundo según la curva de atención óptima. ¡Tú puedes!',
+            icon: 'success',
+            confirmButtonColor: '#10b981'
+        });
+        
+        focusTimeLeft = 45 * 60;
+        focusTimer = setInterval(() => {
+            focusTimeLeft--;
+            const m = Math.floor(focusTimeLeft / 60).toString().padStart(2, '0');
+            const s = (focusTimeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('pomo-time').innerText = `${m}:${s}`;
+            
+            if (focusTimeLeft <= 0) {
+                clearInterval(focusTimer);
+                toggleFocusMode();
+                Swal.fire('¡Tiempo Terminado!', 'Es hora de tu pausa activa de 15 minutos. El modo difuso del cerebro necesita asimilar lo aprendido.', 'info');
+            }
+        }, 1000);
+    } else {
+        // Detener
+        if (floating) floating.style.display = 'none';
+        clearInterval(focusTimer);
     }
 }

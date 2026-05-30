@@ -8,6 +8,17 @@ export const modulo1 = {
     "icono": "electric_bolt",
     "descripcionCorta": "Fuerza entre cargas eléctricas y principio de superposición",
     "subtemas": ["Carga eléctrica", "Conductores y aislantes", "Ley de Coulomb", "Principio de superposición", "Distribuciones de carga discreta"],
+    "conceptosClave": ["Cuantización de la carga", "Aislante vs Conductor", "Superposición", "Inducción electrostática"],
+    "requisitosPrevios": ["Suma de Vectores (Física Mecánica)", "Trigonometría Básica (Seno/Coseno)", "Notación Científica"],
+    "ecuaciones": [
+        "$$ F = k_e \\frac{|q_1 q_2|}{r^2} $$ (Magnitud de Coulomb)",
+        "$$ \\vec{F} = \\vec{F}_1 + \\vec{F}_2 + ... $$ (Superposición)"
+    ],
+    "historia": {
+        "hallazgo": "En 1785, Charles-Augustin de Coulomb utilizó una balanza de torsión ultrasensible para medir la debilísima fuerza de atracción entre dos esferas cargadas, descubriendo la ley de la inversa del cuadrado.",
+        "experimentoClave": "Balanza de Torsión de Coulomb"
+    },
+    "bibliografia": ["Serway, R. A., & Jewett, J. W. (2018). Physics for Scientists and Engineers (10th ed.). Cengage Learning. (Cap. 23)"],
     "lecciones": [
         {
             "id": "m1-l1", "tipo": "multivideo",

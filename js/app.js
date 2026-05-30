@@ -10,7 +10,7 @@ import { APP_ID }                               from '../config/firebase.config.
 import { doc, setDoc, increment }               from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { auth }                                 from './firebase.js';
 import { iniciarSesion, registrarUsuario, iniciarSesionConGoogle, cerrarSesion, inicializarAuthObserver } from './auth.js';
-import { toggleSidebar, toggleTheme, toggleChat, abrirModalAuth, mostrarNotificaciones, cambiarTab, resetNav, mostrarDashboardEstudiante, mostrarCalendario, mostrarPerfil, abrirPanelAdmin, actualizarAvatarUI, aplicarTemaGuardado, injectUIState } from './ui.js';
+import { toggleSidebar, toggleTheme, toggleChat, abrirModalAuth, mostrarNotificaciones, cambiarTab, resetNav, mostrarDashboardEstudiante, mostrarCalendario, mostrarPerfil, mostrarLaboratorios, mostrarCerebro, cambiarTabCerebro, abrirPanelAdmin, actualizarAvatarUI, aplicarTemaGuardado, injectUIState, toggleFocusMode } from './ui.js';
 import { inicializarEstructuraBase }            from './curriculum.js';
 import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconForType } from './content-loader.js';
 import { actualizarGraficosEstudiante }         from './charts.js';
@@ -120,6 +120,10 @@ window.cambiarTab                = cambiarTab;
 window.mostrarDashboardEstudiante = mostrarDashboardEstudiante;
 window.mostrarCalendario         = () => { injectUIState({ progressData, curriculoData, totalLessons }); mostrarCalendario(); };
 window.mostrarPerfil             = mostrarPerfil;
+window.mostrarLaboratorios       = mostrarLaboratorios;
+window.mostrarCerebro            = mostrarCerebro;
+window.cambiarTabCerebro         = cambiarTabCerebro;
+window.toggleFocusMode           = toggleFocusMode;
 window.abrirPanelAdmin           = () => abrirPanelAdmin(globalSettings);
 window.cerrarSesion              = cerrarSesion;
 window.iniciarSesion             = iniciarSesion;
@@ -139,180 +143,7 @@ window.cambiarRolUsuario         = cambiarRolUsuario;
 window.guardarAjustesCalendario  = () => guardarAjustesCalendario(globalSettings);
 window.renderAdminCharts         = (t, s, sc) => renderAdminCharts(t, s, sc);
 
-window.renderizarQuizDinamico = (leccion) => {
-    // Generar HTML interactivo
-    let html = `<div style="max-width:800px; margin:0 auto; padding:20px;">
-        <h2 style="color:var(--text-high); text-align:center; margin-bottom:10px;">${leccion.titulo}</h2>
-        <p style="color:var(--text-medium); text-align:center; margin-bottom:30px;">${leccion.descripcion || ''}</p>
-        <div id="quiz-container" style="background:var(--bg-surface); padding:30px; border-radius:16px; box-shadow:var(--shadow-md); border:1px solid var(--border-color);">`;
-    
-    // Almacenamos temporalmente la lección actual para evaluarla
-    window._currentQuizData = leccion;
-
-    leccion.preguntas.forEach((q, i) => {
-        html += `<div class="quiz-question" style="margin-bottom:25px;">
-            <h4 style="color:var(--text-high); margin-bottom:15px;">${i + 1}. ${q.pregunta} <span style="font-size:0.7rem; color:var(--text-low); font-weight:normal;">(${q.tema})</span></h4>
-            <div style="display:flex; flex-direction:column; gap:10px;">`;
-        q.opciones.forEach((opt, oIdx) => {
-            html += `<label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:10px 15px; border:1px solid var(--border-color); border-radius:8px; transition:all 0.2s;" class="quiz-opt-label">
-                <input type="radio" name="q_${i}" value="${oIdx}" style="accent-color:var(--accent);">
-                <span style="color:var(--text-medium);">${opt}</span>
-            </label>`;
-        });
-        html += `</div>
-            <div id="feedback_q_${i}" style="display:none; margin-top:10px; padding:10px; border-radius:8px; font-size:0.85rem;"></div>
-        </div>`;
-    });
-
-    html += `<button onclick="window.evaluarQuizDinamico()" class="btn-primary" style="width:100%; padding:15px; font-size:1.1rem; margin-top:20px;">Enviar Respuestas y Ver Diagnóstico</button>
-        </div>
-        
-        <!-- Contenedor del Gráfico de Diagnóstico (Oculto inicialmente) -->
-        <div id="quiz-diagnostico-container" style="display:none; background:var(--bg-surface); padding:30px; border-radius:16px; box-shadow:var(--shadow-lg); border:1px solid var(--border-color); margin-top:30px; text-align:center;">
-            <h3 style="color:var(--text-high);">Tu Diagnóstico Matemático</h3>
-            <div style="width:100%; max-width:500px; height:300px; margin:20px auto; position:relative;">
-                <canvas id="diagnosticoRadarChart"></canvas>
-            </div>
-            <h2 id="diag-score" style="font-size:3rem; margin:10px 0;">0%</h2>
-            <p id="diag-msg" style="color:var(--text-medium); margin-bottom:20px;"></p>
-            <div id="diag-tips" style="text-align:left; background:var(--bg-main); padding:20px; border-radius:12px; border-left:4px solid var(--accent); color:var(--text-medium);"></div>
-        </div>
-    </div>`;
-
-    return html;
-};
-
-window.evaluarQuizDinamico = async () => {
-    const leccion = window._currentQuizData;
-    if (!leccion) return;
-
-    let scorePonderado = 0;
-    let pesoTotal = 0;
-    let temasData = {}; // { "Cálculo": { score: 0, total: 0 } }
-
-    let todasRespondidas = true;
-
-    leccion.preguntas.forEach((q, i) => {
-        const radios = document.getElementsByName('q_' + i);
-        let valSeleccionado = null;
-        radios.forEach(r => { if(r.checked) valSeleccionado = parseInt(r.value); });
-        
-        if(valSeleccionado === null) todasRespondidas = false;
-        
-        const feedbackEl = document.getElementById('feedback_q_' + i);
-        if (!temasData[q.tema]) temasData[q.tema] = { score: 0, total: 0 };
-        
-        temasData[q.tema].total += q.peso;
-        pesoTotal += q.peso;
-
-        if (valSeleccionado === q.respuestaCorrecta) {
-            scorePonderado += q.peso;
-            temasData[q.tema].score += q.peso;
-            if(valSeleccionado !== null) {
-                feedbackEl.innerHTML = '✅ ¡Correcto!';
-                feedbackEl.style.background = 'rgba(16,185,129,0.1)';
-                feedbackEl.style.color = 'var(--success)';
-                feedbackEl.style.display = 'block';
-            }
-        } else if(valSeleccionado !== null) {
-            feedbackEl.innerHTML = `❌ Incorrecto. ${q.feedback_error}`;
-            feedbackEl.style.background = 'rgba(239,68,68,0.1)';
-            feedbackEl.style.color = 'var(--danger)';
-            feedbackEl.style.display = 'block';
-        }
-    });
-
-    if (!todasRespondidas) {
-        return Swal.fire('Incompleto', 'Por favor responde todas las preguntas antes de enviar.', 'warning');
-    }
-
-    const puntajeFinal = Math.round((scorePonderado / pesoTotal) * 100);
-    
-    // Guardar la evaluación local y en nube
-    if (window._currentLeccionId) {
-        evalData[window._currentLeccionId] = puntajeFinal;
-        localStorage.setItem('cursoElectromagnetismoEval', JSON.stringify(evalData));
-        if (puntajeFinal >= 65) {
-            progressData[window._currentLeccionId] = true;
-            localStorage.setItem('cursoElectromagnetismoProgreso', JSON.stringify(progressData));
-            window.guardarProgresoNube(window._currentLeccionId);
-        }
-        
-        // Guardar la evaluación usando guardarEval sin pasar UI (esto se enviará al nodo /evaluations)
-        if (window.currentUserUid) {
-            const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            try {
-                await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'evaluations', 'data'), {
-                    [window._currentLeccionId]: puntajeFinal
-                }, { merge: true });
-            } catch(e) {}
-        }
-    }
-
-    // Desplegar diagnóstico visual
-    document.getElementById('quiz-container').style.display = 'none';
-    const diagContainer = document.getElementById('quiz-diagnostico-container');
-    diagContainer.style.display = 'block';
-
-    const elScore = document.getElementById('diag-score');
-    const elMsg = document.getElementById('diag-msg');
-    const elTips = document.getElementById('diag-tips');
-
-    elScore.innerText = puntajeFinal + '%';
-    if (puntajeFinal >= 65) {
-        elScore.style.color = 'var(--success)';
-        elMsg.innerHTML = '¡Felicidades! Tienes las bases matemáticas necesarias para iniciar el curso de Electromagnetismo.<br><strong>Se han desbloqueado todos los módulos.</strong>';
-        elTips.innerHTML = 'Sigue así. Durante el curso repasaremos estos conceptos aplicados a la física.';
-    } else {
-        elScore.style.color = 'var(--danger)';
-        elMsg.innerHTML = 'Tu puntaje es menor a 65%. Necesitas reforzar tus bases matemáticas antes de continuar.<br><strong>Los módulos permanecerán bloqueados hasta que apruebes.</strong>';
-        
-        let debilidades = [];
-        for(let tema in temasData) {
-            if ((temasData[tema].score / temasData[tema].total) < 0.6) {
-                debilidades.push(tema);
-            }
-        }
-        elTips.innerHTML = `<strong>Tópicos a Nivelar Urgentemente:</strong><ul>${debilidades.map(d => `<li>${d}</li>`).join('')}</ul>`;
-        elTips.innerHTML += `<div style="margin-top:15px;"><button onclick="window.location.reload()" class="btn-primary" style="background:var(--bg-surface-hover); color:var(--text-high); border:1px solid var(--border-color);">Reintentar Examen</button></div>`;
-    }
-
-    // Renderizar Radar Chart de Diagnóstico
-    const labels = Object.keys(temasData);
-    const dataVals = labels.map(l => Math.round((temasData[l].score / temasData[l].total) * 100));
-
-    if (window.diagChartInstance) window.diagChartInstance.destroy();
-    const ctx = document.getElementById('diagnosticoRadarChart').getContext('2d');
-    window.diagChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Dominio por Tema (%)',
-                data: dataVals,
-                backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                borderColor: 'rgba(37, 99, 235, 1)',
-                pointBackgroundColor: 'rgba(37, 99, 235, 1)',
-                pointBorderColor: '#fff',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { r: { min: 0, max: 100, ticks: { display: false } } },
-            plugins: { legend: { display: false } }
-        }
-    });
-
-    // Actualizar barra lateral (Unlock)
-    const presaberesLi = document.getElementById('menu-' + window._currentLeccionId);
-    if(presaberesLi && puntajeFinal >= 65) {
-        presaberesLi.classList.add('completed');
-        const icon = presaberesLi.querySelector('.icon-status');
-        if (icon) { icon.innerText = 'check_circle'; icon.classList.add('icon-filled'); }
-    }
-};
+    // window.renderizarQuizDinamico y window.evaluarQuizDinamico han sido movidos al motor avanzado quiz-engine.js
 
 window._loadContent = (leccion, modTitulo) => {
     // ── Lógica de Bloqueo por Presaberes ──
@@ -338,7 +169,7 @@ window._loadContent = (leccion, modTitulo) => {
 
 // ── Lógica de Alto Impacto (Neuroeducación y Gamificación) ──
 window.guardarApuntes = async () => {
-    if (!window.currentUserUid || window.isMasterAdmin) {
+    if (!window.currentUserUid) {
         return Swal.fire('Modo Visitante', 'Inicia sesión para guardar apuntes en la nube.', 'info');
     }
     const notas = document.getElementById('student-notes').value.trim();
@@ -353,7 +184,7 @@ window.guardarApuntes = async () => {
 };
 
 async function cargarApuntes() {
-    if (!window.currentUserUid || window.isMasterAdmin) return;
+    if (!window.currentUserUid) return;
     try {
         const { getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
         const docRef = doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'notes', 'data');
@@ -430,6 +261,27 @@ async function init() {
         },
         onLogout: () => { mostrarDashboardEstudiante(); }
     });
+
+    // Fondo Cósmico (Particles.js)
+    if(window.particlesJS) {
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {"value": 50, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": "#0ea5e9"},
+                "shape": {"type": "circle"},
+                "opacity": {"value": 0.3, "random": false},
+                "size": {"value": 2, "random": true},
+                "line_linked": {"enable": true, "distance": 150, "color": "#0ea5e9", "opacity": 0.2, "width": 1},
+                "move": {"enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out"}
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}, "resize": true},
+                "modes": {"grab": {"distance": 200, "line_linked": {"opacity": 0.6}}, "push": {"particles_nb": 3}}
+            },
+            "retina_detect": true
+        });
+    }
 }
 
 window.addEventListener('DOMContentLoaded', init);
