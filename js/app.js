@@ -14,7 +14,7 @@ import { toggleSidebar, toggleTheme, toggleChat, abrirModalAuth, mostrarNotifica
 import { inicializarEstructuraBase }            from './curriculum.js';
 import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconForType } from './content-loader.js';
 import { actualizarGraficosEstudiante }         from './charts.js';
-import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin } from './profile.js';
+import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, guardarEncuestaSemanal } from './profile.js';
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
@@ -135,6 +135,8 @@ window.guardarProgresoNube       = guardarProgresoNube;
 window.guardarPerfil             = guardarPerfil;
 window.cargarDatosPerfil         = cargarDatosPerfil;
 window.cambiarModoVistaAdmin     = cambiarModoVistaAdmin;
+window.guardarRitmo              = guardarRitmo;
+window.guardarEncuestaSemanal    = guardarEncuestaSemanal;
 window.actualizarAvatarUI        = actualizarAvatarUI;
 window.actualizarGraficosEstudiante = (c, t) => actualizarGraficosEstudiante(c, t, progressData, evalData, timeData, curriculoData);
 window.cargarDirectorioAdminFirebase = () => cargarDirectorioAdminFirebase(curriculoData, totalLessons);

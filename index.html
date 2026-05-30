@@ -150,22 +150,30 @@
                             <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><span class="material-symbols-outlined" style="color: var(--accent);">calendar_month</span> Ruta de Aprendizaje</h3>
                             <span style="font-size: 0.75rem; color: var(--text-medium); background: var(--bg-surface-hover); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color);">Progreso Flexible</span>
                         </div>
-                        <select id="timeline-pacing-select" class="form-input" style="width: auto; padding: 5px 10px; font-size: 0.85rem;" onchange="window.renderTimeline(this.value)">
-                            <option value="16">Ritmo Regular (16 Semanas)</option>
-                            <option value="12">Ritmo Acelerado (12 Semanas)</option>
-                            <option value="24">Basado en Sesiones (24 Encuentros)</option>
-                        </select>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <select id="pacing-mode" class="form-input" style="width: auto; padding: 5px 10px; font-size: 0.85rem;" onchange="window.updateTimelinePacing()">
+                                <option value="semanas">Semanas</option>
+                                <option value="dias">Días (Vacacional)</option>
+                            </select>
+                            <input type="number" id="pacing-length" class="form-input" style="width: 70px; padding: 5px; font-size: 0.85rem;" value="16" min="1" max="100" onchange="window.updateTimelinePacing()">
+                        </div>
                     </div>
                     <div id="dynamic-timeline-container" class="timeline-container" style="display: flex; overflow-x: auto; padding-bottom: 15px; gap: 10px; scroll-snap-type: x mandatory;">
                         <!-- Contenido inyectado por JS -->
                     </div>
                 </div>
                 <script>
-                    window.renderTimeline = function(length) {
+                    window.renderTimeline = function(mode, length) {
                         const container = document.getElementById('dynamic-timeline-container');
-                        const isSessions = length == 24;
-                        const label = isSessions ? 'Sesión' : 'Semana';
-                        const activeIndex = isSessions ? 5 : 3; // Simular el progreso
+                        if (!mode) mode = document.getElementById('pacing-mode')?.value || 'semanas';
+                        if (!length) length = document.getElementById('pacing-length')?.value || 16;
+                        
+                        document.getElementById('pacing-mode').value = mode;
+                        document.getElementById('pacing-length').value = length;
+
+                        const isSessions = mode === 'dias';
+                        const label = isSessions ? 'Día' : 'Semana';
+                        const activeIndex = isSessions ? 2 : 3; // Simular el progreso visual (TODO: enlazar a progreso real)
                         
                         container.innerHTML = Array.from({length: parseInt(length)}, (_, i) => {
                             let statusColor = i < activeIndex ? 'var(--success)' : (i === activeIndex ? 'var(--accent)' : 'var(--border-color)');
@@ -175,16 +183,24 @@
                             let opacity = i > activeIndex ? '0.6' : '1';
                             let textClass = i === activeIndex ? 'font-weight: bold; color: var(--text-high);' : 'color: var(--text-medium);';
                             
-                            return \`
-                            <div style="min-width: 140px; border: 1px solid \${statusBorder}; border-radius: var(--shape-medium); padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; scroll-snap-align: start; opacity: \${opacity}; background: \${statusBg}; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                                <span class="material-symbols-outlined" style="color: \${statusColor}; font-size: 24px;">\${icon}</span>
-                                <span style="font-size: 0.85rem; \${textClass}">\${label} \${i + 1}</span>
+                            return `
+                            <div style="min-width: 140px; border: 1px solid ${statusBorder}; border-radius: var(--shape-medium); padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; scroll-snap-align: start; opacity: ${opacity}; background: ${statusBg}; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <span class="material-symbols-outlined" style="color: ${statusColor}; font-size: 24px;">${icon}</span>
+                                <span style="font-size: 0.85rem; ${textClass}">${label} ${i + 1}</span>
                             </div>
-                            \`;
+                            `;
                         }).join('');
                     };
+                    
+                    window.updateTimelinePacing = function() {
+                        const mode = document.getElementById('pacing-mode').value;
+                        const length = document.getElementById('pacing-length').value;
+                        window.renderTimeline(mode, length);
+                        if (window.guardarRitmo) window.guardarRitmo(mode, length);
+                    };
+
                     // Inicializar con 16 semanas por defecto
-                    setTimeout(() => window.renderTimeline(16), 100);
+                    setTimeout(() => window.renderTimeline('semanas', 16), 100);
                 </script>
 
                 <div class="bento-grid">
@@ -885,6 +901,52 @@
             <h4 style="margin:0 0 10px 0; color:var(--text-high);">Radar de Fortalezas (Por Módulo)</h4>
             <div class="chart-container" style="height: 250px;">
                 <canvas id="modalUserRadarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL DE ENCUESTA DE ESTUDIO SEMANAL ================= -->
+    <div id="study-survey-modal" class="modal" style="display: none; z-index: 2000;">
+        <div class="modal-content glass animate-slide-up" style="max-width: 500px; padding: 25px;">
+            <span class="close-btn material-symbols-outlined" onclick="document.getElementById('study-survey-modal').style.display='none'">close</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span class="material-symbols-outlined" style="font-size: 48px; color: var(--accent); margin-bottom: 10px; display: block;">psychology</span>
+                <h2 style="margin: 0; font-size: 1.5rem; color: var(--text-high);">Monitoreo de Aprendizaje</h2>
+                <p style="color: var(--text-medium); font-size: 0.9rem; margin-top: 5px;">Para asegurar tu éxito, realiza este seguimiento de tus metodologías de estudio.</p>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="input-group">
+                    <label>¿Cuántas horas dedicaste al curso en esta etapa?</label>
+                    <input type="number" id="survey-hours" class="form-input" min="0" max="100" placeholder="Ej: 5">
+                </div>
+                
+                <div class="input-group">
+                    <label>¿Qué metodologías aplicaste principalmente?</label>
+                    <select id="survey-methodology" class="form-input">
+                        <option value="">Selecciona una opción...</option>
+                        <option value="pomodoro">Técnica Pomodoro</option>
+                        <option value="feynman">Técnica de Feynman (Explicar a otros)</option>
+                        <option value="spaced_repetition">Repetición Espaciada / Tarjetas</option>
+                        <option value="mind_maps">Mapas Mentales</option>
+                        <option value="summaries">Resúmenes y Notas Tradicionales</option>
+                        <option value="practice">Ejercicios y Práctica Continua</option>
+                        <option value="none">Lectura Pasiva</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>¿Cómo evaluarías tu nivel de fatiga cognitiva?</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                        <span style="font-size: 0.8rem;">Descansado</span>
+                        <input type="range" id="survey-fatigue" min="1" max="10" value="5" style="flex: 1;">
+                        <span style="font-size: 0.8rem;">Agotado</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="window.guardarEncuestaSemanal()">
+                    <span class="material-symbols-outlined">save</span> Guardar Progreso Semanal
+                </button>
             </div>
         </div>
     </div>

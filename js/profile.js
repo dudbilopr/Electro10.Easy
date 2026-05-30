@@ -96,6 +96,22 @@ export async function cargarDatosPerfil() {
                     ? 'Administrador Maestro'
                     : (data.role === 'teacher' ? 'Docente/Admin' : 'Estudiante');
             }
+            
+            // Cargar configuración de ritmo
+            if (data.pacingMode && data.pacingLength && window.renderTimeline) {
+                window.renderTimeline(data.pacingMode, data.pacingLength);
+            }
+
+            // Verificar la última fecha de la encuesta
+            const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+            const now = new Date().getTime();
+            if (!data.lastSurveyDate || (now - data.lastSurveyDate > ONE_WEEK_MS)) {
+                // Forzar u ofrecer la encuesta
+                const modal = document.getElementById('study-survey-modal');
+                if (modal && !window.isMasterAdmin && data.role !== 'teacher') {
+                    modal.style.display = 'flex';
+                }
+            }
 
             const adminToggle = document.getElementById('admin-view-toggle-container');
             if (window.isMasterAdmin && adminToggle) {
@@ -119,4 +135,57 @@ export function cambiarModoVistaAdmin() {
                 navAdmin.style.display = 'flex';
             }
         });
+}
+
+// Guarda la configuración del ritmo flexible del usuario
+export async function guardarRitmo(mode, length) {
+    if (!window.currentUserUid) return;
+    try {
+        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'profile', 'data'), {
+            pacingMode: mode,
+            pacingLength: length
+        }, { merge: true });
+    } catch (e) {
+        console.error("Error al guardar el ritmo:", e);
+    }
+}
+
+// Guarda la encuesta de metodología de estudio semanal
+export async function guardarEncuestaSemanal() {
+    if (!window.currentUserUid) return;
+    
+    const hours = document.getElementById('survey-hours').value;
+    const method = document.getElementById('survey-methodology').value;
+    const fatigue = document.getElementById('survey-fatigue').value;
+    
+    if (!hours || !method) {
+        Swal.fire('Campos Incompletos', 'Por favor, ingresa las horas y la metodología principal.', 'warning');
+        return;
+    }
+
+    try {
+        const timestamp = new Date().getTime();
+        const surveyData = {
+            hours: parseInt(hours),
+            methodology: method,
+            fatigue: parseInt(fatigue),
+            date: timestamp
+        };
+
+        // Guardar la encuesta en una subcolección (histórico)
+        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'surveys', timestamp.toString()), surveyData);
+        
+        // Actualizar la fecha de última encuesta en el perfil principal
+        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'profile', 'data'), {
+            lastSurveyDate: timestamp
+        }, { merge: true });
+
+        // Cerrar modal
+        document.getElementById('study-survey-modal').style.display = 'none';
+        Swal.fire('¡Excelente!', 'Has registrado tu progreso semanal. Sigue así.', 'success');
+        
+    } catch (e) {
+        Swal.fire('Error', 'No se pudo guardar la encuesta. Intenta nuevamente.', 'error');
+        console.error(e);
+    }
 }
