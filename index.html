@@ -449,6 +449,18 @@
                                 </div>
                             </div>
 
+                            <div class="input-group" style="margin-top: 25px; padding: 15px; border-radius: 8px; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <label style="font-size: 1.1rem; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle;">star</span> Calificación Global del Curso</label>
+                                <p style="font-size: 0.85rem; color: var(--text-medium); margin-bottom: 10px;">Evalúa tu experiencia general con la plataforma Electro10.Easy</p>
+                                <div class="star-rating" style="display: flex; gap: 5px; cursor: pointer;" id="course-stars">
+                                    <span class="material-symbols-outlined star" data-value="1" onclick="window.calificarCurso(1)" onmouseover="window.hoverCourseStars(1)" onmouseout="window.resetCourseStarsHover()" style="color: var(--text-medium); font-size: 32px; transition: color 0.2s;">star</span>
+                                    <span class="material-symbols-outlined star" data-value="2" onclick="window.calificarCurso(2)" onmouseover="window.hoverCourseStars(2)" onmouseout="window.resetCourseStarsHover()" style="color: var(--text-medium); font-size: 32px; transition: color 0.2s;">star</span>
+                                    <span class="material-symbols-outlined star" data-value="3" onclick="window.calificarCurso(3)" onmouseover="window.hoverCourseStars(3)" onmouseout="window.resetCourseStarsHover()" style="color: var(--text-medium); font-size: 32px; transition: color 0.2s;">star</span>
+                                    <span class="material-symbols-outlined star" data-value="4" onclick="window.calificarCurso(4)" onmouseover="window.hoverCourseStars(4)" onmouseout="window.resetCourseStarsHover()" style="color: var(--text-medium); font-size: 32px; transition: color 0.2s;">star</span>
+                                    <span class="material-symbols-outlined star" data-value="5" onclick="window.calificarCurso(5)" onmouseover="window.hoverCourseStars(5)" onmouseout="window.resetCourseStarsHover()" style="color: var(--text-medium); font-size: 32px; transition: color 0.2s;">star</span>
+                                </div>
+                            </div>
+
                             <div class="input-group" style="margin-top: 15px;">
                                 <label>Rol Asignado</label>
                                 <input type="text" id="prof-role-display" class="form-input" value="Estudiante" disabled style="opacity:0.7; cursor:not-allowed;">
@@ -799,6 +811,21 @@
                         </div>
                     </div>
 
+                    <!-- Sistema de Calificación de Recurso -->
+                    <div id="resource-rating-container" style="display: none; align-items: center; justify-content: space-between; background: var(--bg-surface-light); padding: 10px 20px; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border-color);">
+                        <div>
+                            <h4 style="margin: 0; color: var(--text-high); font-size: 0.95rem;">¿Qué te pareció este módulo/recurso?</h4>
+                            <p style="margin: 0; color: var(--text-medium); font-size: 0.8rem;">Tu evaluación nos ayuda a mejorar la experiencia</p>
+                        </div>
+                        <div class="star-rating" style="display: flex; gap: 5px; cursor: pointer;" id="resource-stars">
+                            <span class="material-symbols-outlined star" data-value="1" onclick="window.calificarRecurso(1)" onmouseover="window.hoverStars(1)" onmouseout="window.resetStarsHover()" style="color: var(--text-medium); font-size: 28px; transition: color 0.2s;">star</span>
+                            <span class="material-symbols-outlined star" data-value="2" onclick="window.calificarRecurso(2)" onmouseover="window.hoverStars(2)" onmouseout="window.resetStarsHover()" style="color: var(--text-medium); font-size: 28px; transition: color 0.2s;">star</span>
+                            <span class="material-symbols-outlined star" data-value="3" onclick="window.calificarRecurso(3)" onmouseover="window.hoverStars(3)" onmouseout="window.resetStarsHover()" style="color: var(--text-medium); font-size: 28px; transition: color 0.2s;">star</span>
+                            <span class="material-symbols-outlined star" data-value="4" onclick="window.calificarRecurso(4)" onmouseover="window.hoverStars(4)" onmouseout="window.resetStarsHover()" style="color: var(--text-medium); font-size: 28px; transition: color 0.2s;">star</span>
+                            <span class="material-symbols-outlined star" data-value="5" onclick="window.calificarRecurso(5)" onmouseover="window.hoverStars(5)" onmouseout="window.resetStarsHover()" style="color: var(--text-medium); font-size: 28px; transition: color 0.2s;">star</span>
+                        </div>
+                    </div>
+
                     <div class="tabs-nav mt-4" id="tabs-navigation">
                         <button class="tab-btn active" onclick="window.cambiarTab('tab-detalles', this)">Detalles</button>
                         <button class="tab-btn" onclick="window.cambiarTab('tab-eval', this)">Mi Nivel (Retroalimentación)</button>
@@ -931,6 +958,10 @@
                         <option value="mind_maps">Mapas Mentales</option>
                         <option value="summaries">Resúmenes y Notas Tradicionales</option>
                         <option value="practice">Ejercicios y Práctica Continua</option>
+                        <option value="cornell_notes">Toma de Apuntes (Método Cornell / Esquemas)</option>
+                        <option value="exam_prep">Preparación Activa / Simulacros de Examen</option>
+                        <option value="active_questioning">Indagación Crítica (Hacerse preguntas profundas)</option>
+                        <option value="error_analysis">Análisis de Falencias y Errores (Metacognición)</option>
                         <option value="none">Lectura Pasiva</option>
                     </select>
                 </div>

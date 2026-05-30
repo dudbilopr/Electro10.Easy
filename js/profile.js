@@ -113,6 +113,11 @@ export async function cargarDatosPerfil() {
                 }
             }
 
+            // Cargar calificación del curso si existe
+            if (window.cargarCalificacionCurso) {
+                window.cargarCalificacionCurso();
+            }
+
             const adminToggle = document.getElementById('admin-view-toggle-container');
             if (window.isMasterAdmin && adminToggle) {
                 adminToggle.style.display = 'block';
@@ -188,4 +193,161 @@ export async function guardarEncuestaSemanal() {
         Swal.fire('Error', 'No se pudo guardar la encuesta. Intenta nuevamente.', 'error');
         console.error(e);
     }
+}
+
+// ==========================================
+// Funciones de Calificación (Ratings)
+// ==========================================
+
+export async function calificarRecurso(valor, lessonId = window.currentLeccionId) {
+    if (!window.currentUserUid) return;
+    if (!lessonId) {
+        Swal.fire('Error', 'No se pudo identificar la lección actual.', 'error');
+        return;
+    }
+
+    try {
+        const ratingData = {
+            rating: valor,
+            timestamp: new Date().getTime(),
+            userId: window.currentUserUid
+        };
+
+        // Guardar la calificación del usuario para este recurso
+        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'ratings', lessonId), ratingData);
+        
+        // Efecto visual
+        pintarEstrellas(valor);
+        Swal.fire({
+            title: '¡Gracias por tu retroalimentación!',
+            text: 'Tu calificación nos ayuda a mejorar Electro10.Easy',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+    } catch (e) {
+        console.error("Error al guardar calificación:", e);
+    }
+}
+
+export async function cargarCalificacionRecurso(lessonId) {
+    if (!window.currentUserUid || !lessonId) return 0;
+    try {
+        const docRef = doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'ratings', lessonId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return docSnap.data().rating;
+        }
+    } catch (e) {
+        console.error("Error al cargar calificación:", e);
+    }
+    return 0;
+}
+
+export function pintarEstrellas(valor) {
+    window.currentRatingValue = valor; // Guardar valor real
+    const stars = document.querySelectorAll('#resource-stars .star');
+    stars.forEach((star, index) => {
+        if (index < valor) {
+            star.style.color = '#fbbf24'; // Amarillo
+            star.classList.add('icon-filled');
+        } else {
+            star.style.color = 'var(--text-medium)';
+            star.classList.remove('icon-filled');
+        }
+    });
+}
+
+export function hoverStars(valor) {
+    const stars = document.querySelectorAll('#resource-stars .star');
+    stars.forEach((star, index) => {
+        if (index < valor) {
+            star.style.color = '#fcd34d'; // Amarillo claro
+        } else {
+            star.style.color = 'var(--text-medium)';
+        }
+    });
+}
+
+export function resetStarsHover() {
+    pintarEstrellas(window.currentRatingValue || 0);
+}
+
+// ==========================================
+// Funciones de Calificación General del Curso
+// ==========================================
+
+export async function calificarCurso(valor) {
+    if (!window.currentUserUid) return;
+    try {
+        const ratingData = {
+            rating: valor,
+            timestamp: new Date().getTime(),
+            userId: window.currentUserUid
+        };
+
+        // Guardar la calificación del usuario para el curso completo
+        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'ratings', 'curso_global'), ratingData);
+        
+        pintarCourseEstrellas(valor);
+        Swal.fire({
+            title: '¡Gracias!',
+            text: 'Tu calificación global del curso ha sido guardada.',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+    } catch (e) {
+        console.error("Error al guardar calificación del curso:", e);
+    }
+}
+
+export async function cargarCalificacionCurso() {
+    if (!window.currentUserUid) return;
+    try {
+        const docRef = doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'ratings', 'curso_global');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            pintarCourseEstrellas(docSnap.data().rating);
+        } else {
+            pintarCourseEstrellas(0);
+        }
+    } catch (e) {
+        console.error("Error al cargar calificación del curso:", e);
+    }
+}
+
+export function pintarCourseEstrellas(valor) {
+    window.currentCourseRatingValue = valor; // Guardar valor real
+    const stars = document.querySelectorAll('#course-stars .star');
+    stars.forEach((star, index) => {
+        if (index < valor) {
+            star.style.color = '#fbbf24'; // Amarillo
+            star.classList.add('icon-filled');
+        } else {
+            star.style.color = 'var(--text-medium)';
+            star.classList.remove('icon-filled');
+        }
+    });
+}
+
+export function hoverCourseStars(valor) {
+    const stars = document.querySelectorAll('#course-stars .star');
+    stars.forEach((star, index) => {
+        if (index < valor) {
+            star.style.color = '#fcd34d'; // Amarillo claro
+        } else {
+            star.style.color = 'var(--text-medium)';
+        }
+    });
+}
+
+export function resetCourseStarsHover() {
+    pintarCourseEstrellas(window.currentCourseRatingValue || 0);
 }

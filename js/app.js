@@ -137,6 +137,20 @@ window.cargarDatosPerfil         = cargarDatosPerfil;
 window.cambiarModoVistaAdmin     = cambiarModoVistaAdmin;
 window.guardarRitmo              = guardarRitmo;
 window.guardarEncuestaSemanal    = guardarEncuestaSemanal;
+
+// Importar y exponer las de calificación dinámicamente si no quiero modificar el bloque import arriba, o mejor las importo arriba.
+import { calificarRecurso, hoverStars, resetStarsHover, cargarCalificacionRecurso, pintarEstrellas, calificarCurso, hoverCourseStars, resetCourseStarsHover, cargarCalificacionCurso } from './profile.js';
+window.calificarRecurso          = calificarRecurso;
+window.hoverStars                = hoverStars;
+window.resetStarsHover           = resetStarsHover;
+window.cargarCalificacionRecurso = cargarCalificacionRecurso;
+window.pintarEstrellas           = pintarEstrellas;
+
+window.calificarCurso            = calificarCurso;
+window.hoverCourseStars          = hoverCourseStars;
+window.resetCourseStarsHover     = resetCourseStarsHover;
+window.cargarCalificacionCurso   = cargarCalificacionCurso;
+
 window.actualizarAvatarUI        = actualizarAvatarUI;
 window.actualizarGraficosEstudiante = (c, t) => actualizarGraficosEstudiante(c, t, progressData, evalData, timeData, curriculoData);
 window.cargarDirectorioAdminFirebase = () => cargarDirectorioAdminFirebase(curriculoData, totalLessons);

@@ -146,6 +146,20 @@ export function loadContent(leccion, modulo, progressData, evalData) {
     document.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
     if (elementLi) elementLi.classList.add('active');
 
+    // Manejo de UI de Calificación
+    const ratingContainer = document.getElementById('resource-rating-container');
+    if (ratingContainer) {
+        ratingContainer.style.display = 'flex';
+        if (window.pintarEstrellas) window.pintarEstrellas(0);
+        if (window.cargarCalificacionRecurso) {
+            window.cargarCalificacionRecurso(leccion.id).then(rating => {
+                if (rating && window.pintarEstrellas) {
+                    window.pintarEstrellas(rating);
+                }
+            });
+        }
+    }
+
     // Reset visual
     iframe.style.display          = 'block';
     enlacesContainer.style.display = 'none';
