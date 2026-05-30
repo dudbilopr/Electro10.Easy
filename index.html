@@ -608,6 +608,7 @@
                 <div class="tabs-nav" style="margin-bottom: 20px; border-bottom: 2px solid var(--border-color); display: flex; gap: 20px;">
                     <button class="tab-btn active" onclick="window.cambiarTabCerebro('brain-graph', this)"><span class="material-symbols-outlined">account_tree</span> Mapa Mental</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-tools', this)"><span class="material-symbols-outlined">menu_book</span> Herramientas</button>
+                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-history', this)"><span class="material-symbols-outlined">history_edu</span> Historia</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-games', this)"><span class="material-symbols-outlined">extension</span> Juegos Cognitivos</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-camera', this)" style="color: #10b981;"><span class="material-symbols-outlined">photo_camera</span> Tutor por Cámara</button>
                     <button class="btn-primary" onclick="window.descargarObsidian()" style="margin-left: auto; background: #2b2b2b; color: #a855f7; border: 1px solid #a855f7;"><span class="material-symbols-outlined text-[18px]">download</span> Bóveda Obsidian</button>
@@ -642,14 +643,43 @@
                     </div>
                 </div>
 
+                <!-- Tab: Historia (Pioneros y Experimentos) -->
+                <div id="brain-history" class="brain-tab-content" style="display: none;">
+                    <div class="bento-grid">
+                        <div class="bento-card col-6">
+                            <h3><span class="material-symbols-outlined" style="color: #3b82f6; vertical-align: middle;">groups</span> Pioneros de la Física</h3>
+                            <div id="brain-cientificos-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;"></div>
+                        </div>
+                        <div class="bento-card col-6">
+                            <h3><span class="material-symbols-outlined" style="color: #10b981; vertical-align: middle;">science</span> Experimentos Icónicos</h3>
+                            <div id="brain-experimentos-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tab: Juegos Cognitivos -->
                 <div id="brain-games" class="brain-tab-content" style="display: none;">
                     <div class="bento-grid">
-                        <div class="bento-card col-12" style="text-align: center; padding: 40px;">
-                            <span class="material-symbols-outlined" style="font-size: 60px; color: var(--accent);">sports_esports</span>
-                            <h3 style="color: var(--text-high);">Juego: Encuentra la Ley</h3>
-                            <p style="color: var(--text-medium); max-width: 500px; margin: 10px auto;">Une el concepto físico con su respectiva ecuación matemática para ganar puntos cognitivos.</p>
-                            <button class="btn-primary" onclick="alert('Esta sección está en desarrollo de gamificación. ¡Vuelve pronto!')" style="margin-top: 20px;">Iniciar Juego</button>
+                        <div class="bento-card col-12" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h3 style="color: var(--text-high); display:flex; align-items:center; gap:10px;"><span class="material-symbols-outlined icon-filled" style="color: var(--accent);">sports_esports</span> Reto Metacognitivo: Asociación Visual</h3>
+                                <p style="color: var(--text-medium); margin: 0; font-size: 0.9rem;">Empareja el concepto con su definición o fórmula correcta. Selecciona un elemento de la izquierda y luego su pareja a la derecha.</p>
+                            </div>
+                            <button class="btn-primary" onclick="window.iniciarJuegoAsociacion()" id="btn-iniciar-juego">Jugar / Reiniciar</button>
+                        </div>
+
+                        <!-- Panel del Juego -->
+                        <div class="bento-card col-12" id="game-panel" style="display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                                <div style="font-size:1.2rem; font-weight:bold; color:var(--text-high);">Puntaje: <span id="game-score" style="color:var(--accent);">0</span></div>
+                                <div id="game-feedback" style="font-weight:bold; height:24px;"></div>
+                            </div>
+                            <div style="display:flex; gap:20px; justify-content:center;">
+                                <!-- Columna Conceptos -->
+                                <div style="flex:1; display:flex; flex-direction:column; gap:10px;" id="game-col-a"></div>
+                                <!-- Columna Definiciones -->
+                                <div style="flex:1; display:flex; flex-direction:column; gap:10px;" id="game-col-b"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

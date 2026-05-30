@@ -23,6 +23,20 @@ const cerebroDatos = {
         { simbolo: "ε₀", valor: "8.854 × 10⁻¹² F/m", nombre: "Permitividad del Vacío" },
         { simbolo: "m_e", valor: "9.109 × 10⁻³¹ kg", nombre: "Masa del Electrón" },
         { simbolo: "m_p", valor: "1.672 × 10⁻²⁷ kg", nombre: "Masa del Protón" }
+    ],
+    cientificos: [
+        { nombre: "Charles-Augustin de Coulomb", epoca: "1736 - 1806", aporte: "Formuló la ley que describe la fuerza entre cargas eléctricas (Ley de Coulomb). Inventó la balanza de torsión." },
+        { nombre: "Michael Faraday", epoca: "1791 - 1867", aporte: "Descubrió la inducción electromagnética, el diamagnetismo y la electrólisis. Introdujo el concepto de 'Líneas de campo'." },
+        { nombre: "James Clerk Maxwell", epoca: "1831 - 1879", aporte: "Unificó la electricidad y el magnetismo en su famosa teoría electromagnética (Ecuaciones de Maxwell), demostrando que la luz es una onda electromagnética." },
+        { nombre: "Alessandro Volta", epoca: "1745 - 1827", aporte: "Inventó la pila voltaica, la primera batería química, proporcionando la primera fuente continua de corriente eléctrica." },
+        { nombre: "Heinrich Hertz", epoca: "1857 - 1894", aporte: "Demostró experimentalmente la existencia de las ondas electromagnéticas teorizadas por Maxwell." }
+    ],
+    experimentos: [
+        { nombre: "Balanza de Torsión (Coulomb)", año: "1785", descripcion: "Midió con precisión la fuerza de repulsión y atracción electrostática entre cargas puntuales, estableciendo la dependencia de la inversa del cuadrado de la distancia." },
+        { nombre: "Experimento de la Cometa (Franklin)", año: "1752", descripcion: "Demostró que los rayos son descargas eléctricas al volar una cometa durante una tormenta, recolectando carga en una botella de Leyden." },
+        { nombre: "Descubrimiento de la Inducción (Faraday)", año: "1831", descripcion: "Usó un anillo de hierro y dos bobinas. Al encender/apagar la batería de un lado, observó una corriente transitoria en el otro, probando que un campo magnético cambiante induce un campo eléctrico." },
+        { nombre: "El Experimento de Oersted", año: "1820", descripcion: "Hans Christian Ørsted notó que la aguja de una brújula se desviaba cerca de un cable con corriente, descubriendo por primera vez la relación entre electricidad y magnetismo." },
+        { nombre: "Gotas de Aceite de Millikan", año: "1909", descripcion: "Robert Millikan y Harvey Fletcher midieron la carga elemental (la carga del electrón) balanceando gotas de aceite cargadas entre campos eléctricos y gravitacionales." }
     ]
 };
 
@@ -35,6 +49,7 @@ window.initBrainGraph = function() {
     renderGlosario();
     renderFormulas();
     renderConstantes();
+    renderHistoria();
 
     const container = document.getElementById('vis-network-container');
     if (!container) return;
@@ -93,14 +108,37 @@ ${notaContent}
     });
     vault.file("Formulario Master.md", formulasMd);
 
-    // 4. Index (Home)
+    // 4. Historia y Experimentos
+    let historiaMd = `# Pioneros del Electromagnetismo\n\n`;
+    cerebroDatos.cientificos.forEach(c => {
+        historiaMd += `## ${c.nombre} (${c.epoca})\n${c.aporte}\n\n`;
+    });
+    historiaMd += `# Experimentos Icónicos\n\n`;
+    cerebroDatos.experimentos.forEach(e => {
+        historiaMd += `## ${e.nombre} (${e.año})\n${e.descripcion}\n\n`;
+    });
+    vault.file("Historia y Experimentos.md", historiaMd);
+
+    // 5. Index (Home)
     const homeMd = `# Bóveda Electro10: ${new Date().getFullYear()}
 Bienvenido a tu segundo cerebro de física.
 - Revisa tus [[Glosario]]
 - Revisa tu [[Formulario Master]]
+- Conoce la [[Historia y Experimentos]]
 
 Esta bóveda fue autogenerada por tu **Tutor IA**.`;
     vault.file("Home.md", homeMd);
+
+    // 6. Configuración de Obsidian (.obsidian folder)
+    const obsFolder = vault.folder(".obsidian");
+    const appearanceJson = { "cssTheme": "", "theme": "obsidian" };
+    obsFolder.file("appearance.json", JSON.stringify(appearanceJson, null, 2));
+    const graphJson = {
+        "collapse-filter": false, "search": "", "showArrow": false, "textFadeMultiplier": 0, "nodeSizeMultiplier": 1.5,
+        "lineSizeMultiplier": 1.5, "collapse-forces": false, "centerStrength": 0.518713248972782,
+        "repelStrength": 10, "linkStrength": 1, "linkDistance": 250, "scale": 1, "close": false
+    };
+    obsFolder.file("graph.json", JSON.stringify(graphJson, null, 2));
 
     // Generar y descargar
     try {
@@ -220,6 +258,34 @@ function renderConstantes() {
     `).join('');
 }
 
+function renderHistoria() {
+    const listC = document.getElementById('brain-cientificos-list');
+    if(listC) {
+        listC.innerHTML = cerebroDatos.cientificos.map(item => `
+            <div style="background: var(--bg-main); padding: 10px; border-radius: 8px; border-left: 3px solid #3b82f6; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color: var(--text-high);">${item.nombre}</strong>
+                    <span class="badge" style="background:#3b82f6; color:#fff; font-size:0.7rem;">${item.epoca}</span>
+                </div>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: var(--text-medium);">${item.aporte}</p>
+            </div>
+        `).join('');
+    }
+
+    const listE = document.getElementById('brain-experimentos-list');
+    if(listE) {
+        listE.innerHTML = cerebroDatos.experimentos.map(item => `
+            <div style="background: var(--bg-main); padding: 10px; border-radius: 8px; border-left: 3px solid #10b981; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color: var(--text-high);">${item.nombre}</strong>
+                    <span class="badge" style="background:#10b981; color:#fff; font-size:0.7rem;">${item.año}</span>
+                </div>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: var(--text-medium);">${item.descripcion}</p>
+            </div>
+        `).join('');
+    }
+}
+
 // ── Interfaz de Cámara (Evaluador IA) ────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const btnStart = document.getElementById('btn-start-camera');
@@ -321,5 +387,126 @@ Estructura tu respuesta con un saludo, un análisis paso a paso y una conclusió
     } catch (e) {
         console.error(e);
         feedbackBox.innerHTML = `<span style="color:var(--danger)">⚠️ Error al analizar la imagen: ${e.message}</span>`;
+    }
+}
+
+// ── Lógica de Juegos (Asociación Cognitiva) ────────────────────────
+let gameDataA = [];
+let gameDataB = [];
+let selectedA = null;
+let selectedB = null;
+let gameScore = 0;
+
+window.iniciarJuegoAsociacion = function() {
+    document.getElementById('game-panel').style.display = 'block';
+    const colA = document.getElementById('game-col-a');
+    const colB = document.getElementById('game-col-b');
+    const feedback = document.getElementById('game-feedback');
+    const scoreEl = document.getElementById('game-score');
+    
+    colA.innerHTML = '';
+    colB.innerHTML = '';
+    feedback.innerText = 'Elige un concepto y luego su definición.';
+    feedback.style.color = 'var(--text-medium)';
+    gameScore = 0;
+    scoreEl.innerText = gameScore;
+    selectedA = null;
+    selectedB = null;
+
+    const pool = [...cerebroDatos.glosario.map(i => ({...i, tipo: 'def'})), ...cerebroDatos.formulas.map(i => ({...i, tipo: 'eq'}))];
+    const shuffledPool = pool.sort(() => 0.5 - Math.random()).slice(0, 5);
+    
+    gameDataA = [];
+    gameDataB = [];
+    
+    shuffledPool.forEach((item, index) => {
+        gameDataA.push({ id: index, text: item.termino || item.nombre });
+        gameDataB.push({ id: index, text: item.definicion || item.eq, isMath: item.tipo === 'eq' });
+    });
+    
+    gameDataB.sort(() => 0.5 - Math.random());
+    
+    gameDataA.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'game-card-a';
+        div.style.cssText = 'padding: 15px; background: var(--bg-surface-light); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; transition: all 0.2s;';
+        div.innerText = item.text;
+        div.onclick = () => selectCardA(div, item.id);
+        colA.appendChild(div);
+    });
+    
+    gameDataB.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'game-card-b';
+        div.style.cssText = 'padding: 15px; background: var(--bg-surface-light); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.9rem; transition: all 0.2s;';
+        div.innerText = item.text;
+        div.onclick = () => selectCardB(div, item.id);
+        colB.appendChild(div);
+    });
+    
+    if (window.renderMathInElement) {
+        renderMathInElement(colB, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+    }
+};
+
+function selectCardA(element, id) {
+    if (element.classList.contains('matched')) return;
+    document.querySelectorAll('.game-card-a').forEach(el => { if(!el.classList.contains('matched')) el.style.borderColor = 'var(--border-color)'; });
+    element.style.borderColor = '#3b82f6';
+    selectedA = { element, id };
+    checkMatch();
+}
+
+function selectCardB(element, id) {
+    if (element.classList.contains('matched')) return;
+    document.querySelectorAll('.game-card-b').forEach(el => { if(!el.classList.contains('matched')) el.style.borderColor = 'var(--border-color)'; });
+    element.style.borderColor = '#10b981';
+    selectedB = { element, id };
+    checkMatch();
+}
+
+function checkMatch() {
+    if (selectedA && selectedB) {
+        const feedback = document.getElementById('game-feedback');
+        const scoreEl = document.getElementById('game-score');
+        
+        if (selectedA.id === selectedB.id) {
+            selectedA.element.classList.add('matched');
+            selectedB.element.classList.add('matched');
+            selectedA.element.style.background = 'rgba(16, 185, 129, 0.2)';
+            selectedA.element.style.borderColor = '#10b981';
+            selectedA.element.style.cursor = 'default';
+            selectedB.element.style.background = 'rgba(16, 185, 129, 0.2)';
+            selectedB.element.style.borderColor = '#10b981';
+            selectedB.element.style.cursor = 'default';
+            
+            gameScore += 20;
+            scoreEl.innerText = gameScore;
+            feedback.innerText = '¡Correcto! +20 puntos';
+            feedback.style.color = '#10b981';
+            
+            if (gameScore === 100) {
+                feedback.innerText = '¡Reto Completado Magistralmente! 🎉';
+                feedback.style.color = 'var(--accent)';
+                if (window.Swal) window.Swal.fire('¡Felicidades!', 'Has demostrado un excelente dominio conceptual.', 'success');
+            }
+        } else {
+            selectedA.element.style.borderColor = '#ef4444';
+            selectedB.element.style.borderColor = '#ef4444';
+            gameScore = Math.max(0, gameScore - 5);
+            scoreEl.innerText = gameScore;
+            feedback.innerText = 'Asociación incorrecta. Intenta de nuevo.';
+            feedback.style.color = '#ef4444';
+            
+            setTimeout(() => {
+                if(selectedA && !selectedA.element.classList.contains('matched')) selectedA.element.style.borderColor = 'var(--border-color)';
+                if(selectedB && !selectedB.element.classList.contains('matched')) selectedB.element.style.borderColor = 'var(--border-color)';
+                selectedA = null;
+                selectedB = null;
+            }, 800);
+            return;
+        }
+        selectedA = null;
+        selectedB = null;
     }
 }
