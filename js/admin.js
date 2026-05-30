@@ -17,10 +17,11 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
         if (!dirSnap.empty) {
             let filasHtml = '', iteraciones = 0, teachersCount = 0, studentsCount = 0, arrayScatter = [];
             
-            // Variables para Neuro-métricas
             let sumRetencion = 0;
             let sumTiempoEstudiantes = 0;
             let riskCount = 0;
+            let sumRatings = 0, countRatings = 0;
+            let methodCount = {};
 
             dirSnap.forEach(async (documento) => {
                 const d   = documento.data();
@@ -39,7 +40,24 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
                         const eVals = Object.values(evalSnap.data());
                         promGrade = eVals.length > 0 ? (eVals.reduce((a, v) => a + v, 0) / eVals.length / 4) * 100 : 0;
                     }
-                } catch (e) { /* sin conexión */ }
+
+                    // Extraer Ratings y Surveys
+                    const ratingSnap = await getDoc(doc(db, 'artifacts', APP_ID, 'users', uid, 'ratings', 'curso_global'));
+                    if (ratingSnap.exists()) {
+                        sumRatings += ratingSnap.data().rating;
+                        countRatings++;
+                    }
+
+                    const surveysSnap = await getDocs(collection(db, 'artifacts', APP_ID, 'users', uid, 'surveys'));
+                    if (!surveysSnap.empty) {
+                        surveysSnap.forEach(sDoc => {
+                            const met = sDoc.data().methodology;
+                            if (met && met !== 'none') {
+                                methodCount[met] = (methodCount[met] || 0) + 1;
+                            }
+                        });
+                    }
+                } catch (e) { /* sin conexión o sin datos */ }
 
                 if (d.role === 'teacher') {
                     teachersCount++;
@@ -91,6 +109,26 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
                         if(elRet) elRet.innerText = `${avgRetencion}%`;
                         if(elChurn) elChurn.innerText = `${churnPct}%`;
                         if(elCarga) elCarga.innerText = `${avgCarga} min`;
+
+                        const avgRating = countRatings > 0 ? (sumRatings / countRatings).toFixed(1) : '0.0';
+                        const elRating = document.getElementById('admin-metric-rating');
+                        if (elRating) elRating.innerHTML = `<span class="material-symbols-outlined icon-filled">star</span> ${avgRating}`;
+
+                        let dominantMethod = 'N/A';
+                        let maxCount = 0;
+                        for (let [met, count] of Object.entries(methodCount)) {
+                            if (count > maxCount) { maxCount = count; dominantMethod = met; }
+                        }
+                        const elMethod = document.getElementById('admin-metric-metodologia');
+                        if (elMethod) {
+                            const methodNames = {
+                                'pomodoro': 'Pomodoro', 'feynman': 'Feynman', 'spaced_repetition': 'Repetición Espaciada',
+                                'mind_maps': 'Mapas Mentales', 'summaries': 'Resúmenes', 'practice': 'Práctica Continua',
+                                'cornell_notes': 'Cornell (Apuntes)', 'exam_prep': 'Preparación Examen',
+                                'active_questioning': 'Indagación', 'error_analysis': 'Análisis Errores'
+                            };
+                            elMethod.innerText = methodNames[dominantMethod] || dominantMethod;
+                        }
                     }
                 }
             });

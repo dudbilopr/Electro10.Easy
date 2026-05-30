@@ -257,15 +257,56 @@ export function loadContent(leccion, modulo, progressData, evalData) {
         }
     };
 
-    // ── Marcar completado ────────────────────────────────────
-    const autoComplete = leccion.tipo !== 'simulador' && leccion.tipo !== 'quiz';
-    if (!progressData[leccion.id]) {
-        if (autoComplete) {
-            _marcarCompletado(leccion, elementLi, progressData);
+    // ── Lógica de Progreso Adaptativo (Time-tracking) ────────
+    if (window.lessonTimer) clearInterval(window.lessonTimer);
+    window.activeLessonSeconds = 0;
+    const progressBar = document.getElementById('lesson-active-progress');
+    const TIEMPO_REQUERIDO = 60; // 60 segundos obligatorios de lectura/interacción
+
+    if (progressData[leccion.id]) {
+        // Ya completada
+        if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '100%';
+            // Forzar reflow para que si sale y entra respete la transición luego
+            progressBar.offsetHeight; 
+            progressBar.style.transition = 'width 1s linear';
         }
-    }
-    if (leccion.tipo === 'enlaces' && !progressData[leccion.id]) {
-        _marcarCompletado(leccion, elementLi, progressData);
+    } else {
+        if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            progressBar.offsetHeight;
+            progressBar.style.transition = 'width 1s linear';
+        }
+        
+        window.lessonTimer = setInterval(() => {
+            // Solo contar si la pestaña es visible
+            if (document.visibilityState === 'visible') {
+                window.activeLessonSeconds++;
+                let pct = (window.activeLessonSeconds / TIEMPO_REQUERIDO) * 100;
+                if (pct > 100) pct = 100;
+                if (progressBar) progressBar.style.width = pct + '%';
+                
+                if (window.activeLessonSeconds >= TIEMPO_REQUERIDO) {
+                    clearInterval(window.lessonTimer);
+                    if (!progressData[leccion.id]) {
+                        _marcarCompletado(leccion, elementLi, progressData);
+                        if (window.Swal) {
+                            window.Swal.fire({
+                                title: '¡Dedicación Recompensada!',
+                                text: 'Has dominado esta lección. (+Progreso)',
+                                icon: 'success',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    }
+                }
+            }
+        }, 1000);
     }
 
     // Restaurar notas y eval

@@ -692,7 +692,7 @@
                     </div>
 
                     <!-- METRICAS DE NEUROCIENCIA Y DATA SCIENCE -->
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; grid-column: span 12;">
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; grid-column: span 12;">
                         <div class="stat-box" style="padding: 15px; border-left: 4px solid #10b981;">
                             <div class="stat-value" style="font-size: 2.2rem; color: #10b981;" id="admin-metric-retencion">0%</div>
                             <div class="stat-label" style="font-weight: bold;">Índice de Retención Cognitiva</div>
@@ -707,6 +707,16 @@
                             <div class="stat-value" style="font-size: 2.2rem; color: #3b82f6;" id="admin-metric-carga">0</div>
                             <div class="stat-label" style="font-weight: bold;">Carga Cognitiva Promedio</div>
                             <div style="font-size: 0.75rem; color: var(--text-medium); margin-top: 5px;">Horas/semana / Nivel Mates</div>
+                        </div>
+                        <div class="stat-box" style="padding: 15px; border-left: 4px solid #8b5cf6;">
+                            <div class="stat-value" style="font-size: 1.5rem; color: #8b5cf6; display: flex; align-items: center; justify-content: center; gap: 5px;" id="admin-metric-rating"><span class="material-symbols-outlined icon-filled">star</span> 0.0</div>
+                            <div class="stat-label" style="font-weight: bold;">Calificación Global</div>
+                            <div style="font-size: 0.75rem; color: var(--text-medium); margin-top: 5px;">Satisfacción promedio</div>
+                        </div>
+                        <div class="stat-box" style="padding: 15px; border-left: 4px solid #f59e0b;">
+                            <div class="stat-value" style="font-size: 1.2rem; color: #f59e0b;" id="admin-metric-metodologia">N/A</div>
+                            <div class="stat-label" style="font-weight: bold;">Metodología Dominante</div>
+                            <div style="font-size: 0.75rem; color: var(--text-medium); margin-top: 5px;">Preferida por estudiantes</div>
                         </div>
                     </div>
 
@@ -795,8 +805,11 @@
                             <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(37, 99, 235, 0.8); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(37, 99, 235, 0.5);"><span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #fff; margin-left: 5px;">play_arrow</span></div>
                         </div>
 
-                        <div class="iframe-header">
+                        <div class="iframe-header" style="justify-content: space-between;">
                             <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                            <div style="flex: 1; margin: 0 15px; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; position: relative;">
+                                <div id="lesson-active-progress" style="width: 0%; height: 100%; background: var(--accent); transition: width 1s linear;"></div>
+                            </div>
                             <span class="resource-badge" id="recurso-badge">RECURSO</span>
                         </div>
                         
