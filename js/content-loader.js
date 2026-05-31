@@ -83,7 +83,7 @@ export function loadContent(leccion, modulo, progressData, evalData) {
     const enlacesContainer = document.getElementById('enlaces-container');
     const playOverlay      = document.getElementById('play-overlay');
 
-    mainViewerArea.style.display  = 'flex';
+    mainViewerArea.style.display  = 'grid';
     contentHeader.style.display   = 'flex';
 
     // Aplicar Color Temático (Stitch Design System)
