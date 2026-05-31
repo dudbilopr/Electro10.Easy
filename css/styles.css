@@ -48,10 +48,10 @@
     --theme-kinetic: #00FFA3;
     
     /* M3 Elevations (Shadows) */
-    --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 1px rgba(0, 0, 0, 0.05); /* Level 1 */
-    --shadow-md: 0px 1px 2px 0px rgba(0, 0, 0, 0.1), 0px 2px 6px 2px rgba(0, 0, 0, 0.05); /* Level 2 */
-    --shadow-lg: 0px 4px 8px 3px rgba(0, 0, 0, 0.05), 0px 1px 3px 0px rgba(0, 0, 0, 0.1); /* Level 3 */
-    --shadow-glow: 0 0 20px var(--accent-glow);
+    --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.2), 0px 1px 3px 1px rgba(0, 0, 0, 0.1); 
+    --shadow-md: 0px 2px 4px 0px rgba(0, 0, 0, 0.2), 0px 4px 12px 2px rgba(0, 0, 0, 0.1); 
+    --shadow-lg: 0px 8px 16px 4px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.15); 
+    --shadow-glow: 0 0 25px var(--accent-glow);
     
     /* M3 Shapes (Border Radius) */
     --shape-small: 8px;
@@ -59,7 +59,7 @@
     --shape-large: 16px;
     --shape-extra-large: 24px;
     
-    --blur: blur(24px);
+    --blur: blur(40px); /* Intensified Glassmorphism */
 }
 
 /* MODO OSCURO (Laboratorio Cuántico Inmersivo) */
@@ -91,14 +91,14 @@ html.dark {
     --accent-hover: #bae6fd;
     --accent-glow: rgba(56, 189, 248, 0.15);
     
-    --shadow-glow: 0 0 30px var(--accent-glow);
+    --shadow-glow: 0 0 40px var(--accent-glow);
 }
 
 * { box-sizing: border-box; }
 
 body { 
     margin: 0; 
-    font-family: 'Outfit', 'Google Sans', 'Inter', sans-serif; 
+    font-family: 'Outfit', 'Inter', sans-serif; 
     display: flex; 
     flex-direction: column; 
     height: 100vh; 
@@ -106,8 +106,34 @@ body {
     background-color: var(--bg-main);
     color: var(--text-high);
     font-size: 14px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s ease, color 0.4s ease;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+}
+
+/* ===================== FONDO CÓSMICO CUÁNTICO ===================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -2;
+    background: radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+    animation: slowRotate 40s linear infinite;
+    pointer-events: none;
+}
+html.dark body::before {
+    background: radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+}
+@keyframes slowRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* ===================== SCROLLBAR ===================== */
@@ -126,7 +152,9 @@ body {
 header { 
     background: var(--bg-surface-light);
     backdrop-filter: var(--blur);
-    border-bottom: 1px solid var(--border-color);
+    -webkit-backdrop-filter: var(--blur);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     padding: 0 1.5rem; 
     height: 64px;
     display: flex; 
@@ -137,6 +165,9 @@ header {
     top: 0;
     width: 100%;
     transition: background-color 0.3s ease;
+}
+html.dark header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .header-brand { display: flex; align-items: center; gap: 12px; }
@@ -239,20 +270,12 @@ header {
 .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
 
 .bento-card { 
-    background: var(--bg-surface); 
+    background: var(--bg-surface-light); 
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
-    border: 1px solid var(--border-color); 
     border-radius: var(--shape-extra-large); 
-    padding: 30px; 
+    padding: 24px; 
     box-shadow: var(--shadow-sm); 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; 
-    overflow: hidden; 
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-}
-.bento-card:hover { 
     box-shadow: var(--shadow-glow); 
     border-color: var(--accent);
     transform: translateY(-4px); 
@@ -470,8 +493,8 @@ iframe { width: 100%; height: 100%; border: none; display: block; flex: 1; }
 .eval-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); box-shadow: var(--shadow-glow);}
 
 /* Playlist Derecha */
-.right-sidebar { width: 320px; display: none; flex-direction: column; gap: 20px; flex-shrink: 0; overflow-y: auto; max-height: 80vh; padding-right: 5px;}
-.right-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md); }
+.right-sidebar { width: 350px; display: none; flex-direction: column; gap: 20px; flex-shrink: 0; overflow-y: auto; max-height: calc(100vh - 150px); padding-right: 5px; scrollbar-width: thin; }
+.right-card { background: var(--bg-surface-light); backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md); }
 .playlist-content { display: flex; flex-direction: column; gap: 8px; }
 .thumbnail-card { display: flex; gap: 12px; cursor: pointer; padding: 8px; border-radius: 10px; border: 1px solid transparent; transition: all 0.2s; background: var(--bg-main); align-items: center;}
 .thumbnail-card:hover { background: var(--bg-surface-hover); border-color: var(--border-strong);}
@@ -496,12 +519,12 @@ iframe { width: 100%; height: 100%; border: none; display: block; flex: 1; }
     .teacher-hero { grid-template-columns: 1fr; text-align: center; }
     .academic-links { justify-content: center; }
     .contact-btn { margin: 10px auto 0 auto; }
-    .viewer-container { flex-direction: column; padding: 1.5rem;}
-    .right-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; max-height: none;}
-    .right-card { flex: 1; min-width: 300px; }
 }
 
 @media (max-width: 768px) {
+    .viewer-container { flex-direction: column; padding: 1.5rem;}
+    .right-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; max-height: none;}
+    .right-card { flex: 1; min-width: 300px; }
     .sidebar { position: absolute; height: 100%; z-index: 100; box-shadow: var(--shadow-lg); }
     .sidebar.hidden { transform: translateX(-100%); margin-left: 0; }
     .header-brand .brand-text { display: none; }

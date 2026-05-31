@@ -114,11 +114,33 @@ window.mostrarPreguntaChaea = function(index) {
 
 window.responderChaea = function(valor) {
     chaeaRespuestas[chaeaCurrentIndex] = valor;
+    actualizarEstadoNavegacion();
+    
     if (chaeaCurrentIndex < 79) {
         mostrarPreguntaChaea(chaeaCurrentIndex + 1);
     } else {
-        actualizarEstadoNavegacion();
         mostrarPreguntaChaea(chaeaCurrentIndex); // just to update UI
+    }
+
+    if (!chaeaRespuestas.includes(null)) {
+        if(window.Swal) {
+            Swal.fire({
+                title: '¡Test Completado!',
+                text: 'Has respondido todas las preguntas. ¿Deseas ver tus resultados ahora?',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ver Resultados',
+                cancelButtonText: 'Revisar Respuestas'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.finalizarChaea();
+                }
+            });
+        } else {
+            window.finalizarChaea();
+        }
     }
 };
 
