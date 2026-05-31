@@ -125,8 +125,12 @@ export async function cargarDatosPerfil() {
                 if (adminMode) adminMode.value = window.simulatedRole || 'teacher';
             }
             
-            // Cargar resultados de CHAEA desde localStorage o Firestore si existe en el perfil
-            window.cargarResultadosChaeaPerfil?.();
+            // Cargar resultados Holísticos desde localStorage o Firestore
+            if(window.cargarResultadosHolisticos) {
+                window.cargarResultadosHolisticos();
+            } else {
+                window.cargarResultadosChaeaPerfil?.();
+            }
         }
     } catch (e) { /* sin conexión */ }
 }

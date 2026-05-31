@@ -280,16 +280,23 @@ window.cerrarYGuardarChaea = async function() {
         }
     }
     
-    // Actualizar vista de perfil
-    if (window.cargarResultadosChaeaPerfil) {
+    // Actualizar vista de perfil (Holístico)
+    if (window.cargarResultadosHolisticos) {
+        window.cargarResultadosHolisticos();
+    } else if (window.cargarResultadosChaeaPerfil) {
         window.cargarResultadosChaeaPerfil();
     }
     
     // Verificar si estamos en el módulo cero
-    if (document.getElementById('content-header').innerText.includes('Presaberes')) {
+    if (document.getElementById('content-header') && document.getElementById('content-header').innerText.includes('Presaberes')) {
         document.getElementById('btn-finalizar-modulo').disabled = false;
         document.getElementById('btn-finalizar-modulo').classList.remove('btn-locked');
     }
     
-    if(window.Swal) Swal.fire('¡Perfil Creado!', 'Tus analíticas de aprendizaje han sido guardadas y el docente ha sido notificado.', 'success');
+    // Redirigir al Hub en lugar del SweetAlert simple
+    if (window.iniciarDiagnosticoHub) {
+        window.iniciarDiagnosticoHub();
+    } else {
+        if(window.Swal) Swal.fire('¡Perfil Creado!', 'Tus analíticas de aprendizaje han sido guardadas y el docente ha sido notificado.', 'success');
+    }
 };
