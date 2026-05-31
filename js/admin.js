@@ -152,6 +152,17 @@ export async function verDetalleEstudiante(uid, nombre, curriculoData, totalLess
         const dirS = await getDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'directory', uid));
         if (dirS.exists()) {
             const prof = dirS.data();
+            
+            // Try to fetch CHAEA
+            let chaeaDominant = 'No realizado';
+            try {
+                const chaeaS = await getDoc(doc(db, 'artifacts', APP_ID, 'users', uid, 'profile', 'chaea'));
+                if (chaeaS.exists()) {
+                    chaeaDominant = chaeaS.data().dominante;
+                    chaeaDominant = chaeaDominant.charAt(0).toUpperCase() + chaeaDominant.slice(1);
+                }
+            } catch(e) {}
+
             document.getElementById('modal-u-inst').innerText = prof.institution || 'Institución no declarada';
             document.getElementById('modal-u-presaberes').innerHTML = `
                 <div><strong>Carrera:</strong> ${prof.major || 'No indicada'}</div>
@@ -159,7 +170,7 @@ export async function verDetalleEstudiante(uid, nombre, curriculoData, totalLess
                 <div><strong>Estudio Semanal:</strong> ${prof.studyHours || '0'} hrs</div>
                 <div><strong>Cálculo:</strong> ${prof.mathCalc || 'Medio'}</div>
                 <div><strong>Trigonometría:</strong> ${prof.mathTrig || 'Medio'}</div>
-                <div><strong>Álg. Lineal:</strong> ${prof.mathAlgebra || 'Medio'}</div>
+                <div><strong>Perfil CHAEA:</strong> <span style="color:var(--primary); font-weight:bold;">${chaeaDominant}</span></div>
             `;
         }
 

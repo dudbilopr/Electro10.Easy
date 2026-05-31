@@ -4,6 +4,13 @@ export const modulo0_presaberes = {
     descripcion: "Prueba obligatoria para evaluar tus bases matemáticas avanzadas antes de iniciar el curso. Puntaje mínimo: 65%.",
     lecciones: [
         {
+            id: "m0_l0",
+            titulo: "Diagnóstico de Estilos de Aprendizaje (CHAEA)",
+            tipo: "chaea",
+            duracion: "15 min",
+            descripcion: "Descubre tu estilo de aprendizaje predominante (Activo, Reflexivo, Teórico, Pragmático) para adaptar este curso a tus fortalezas."
+        },
+        {
             id: "m0_l1",
             titulo: "Diagnóstico Matemático Integral (Nivel Universitario)",
             tipo: "quiz",
