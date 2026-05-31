@@ -86,6 +86,20 @@ export function loadContent(leccion, modulo, progressData, evalData) {
     mainViewerArea.style.display  = 'flex';
     contentHeader.style.display   = 'flex';
 
+    // Aplicar Color Temático (Stitch Design System)
+    let newAccent = '#0284c7'; // default
+    if (modulo && modulo.titulo) {
+        const titleLower = modulo.titulo.toLowerCase();
+        if (titleLower.includes('eléctric') || titleLower.includes('electricidad') || titleLower.includes('coulomb')) {
+            newAccent = 'var(--theme-electric)';
+        } else if (titleLower.includes('magnétic') || titleLower.includes('magnetismo') || titleLower.includes('faraday') || titleLower.includes('maxwell')) {
+            newAccent = 'var(--theme-magnetic)';
+        } else if (titleLower.includes('kinemátic') || titleLower.includes('mecánica') || titleLower.includes('cinemática') || titleLower.includes('fuerza')) {
+            newAccent = 'var(--theme-kinetic)';
+        }
+    }
+    document.documentElement.style.setProperty('--accent', newAccent);
+
     document.getElementById('display-title').innerText      = leccion.titulo;
     document.getElementById('bread-modulo').innerText       = modulo?.titulo ? modulo.titulo.split(':')[0] : 'Módulo';
     document.getElementById('bread-leccion').innerText      = leccion.titulo;

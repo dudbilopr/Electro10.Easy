@@ -124,9 +124,79 @@ export async function cargarDatosPerfil() {
                 const adminMode = document.getElementById('admin-view-mode');
                 if (adminMode) adminMode.value = window.simulatedRole || 'teacher';
             }
+            
+            // Cargar resultados de CHAEA desde localStorage o Firestore si existe en el perfil
+            window.cargarResultadosChaeaPerfil?.();
         }
     } catch (e) { /* sin conexión */ }
 }
+
+export function cargarResultadosChaeaPerfil() {
+    const statusEl = document.getElementById('profile-chaea-status');
+    const dataEl = document.getElementById('profile-chaea-data');
+    if (!statusEl || !dataEl) return;
+
+    try {
+        const savedData = localStorage.getItem('electro10_chaea');
+        if (savedData) {
+            const result = JSON.parse(savedData);
+            statusEl.style.display = 'none';
+            dataEl.style.display = 'flex';
+            document.getElementById('profile-chaea-dom').innerText = result.dominante;
+            
+            const desc = window.CHAEA_DATA ? window.CHAEA_DATA.explicaciones[result.dominante] : '';
+            document.getElementById('profile-chaea-desc').innerText = desc || 'Estilo de aprendizaje completado.';
+
+            if (window.profileChaeaChart) {
+                window.profileChaeaChart.destroy();
+            }
+
+            const ctx = document.getElementById('profile-chaea-chart').getContext('2d');
+            window.profileChaeaChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Activo', 'Reflexivo', 'Teórico', 'Pragmático'],
+                    datasets: [{
+                        label: 'Puntaje',
+                        data: [
+                            result.scores.Activo,
+                            result.scores.Reflexivo,
+                            result.scores.Teórico,
+                            result.scores.Pragmático
+                        ],
+                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                        borderColor: '#a855f7',
+                        pointBackgroundColor: '#a855f7',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#a855f7'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(128,128,128,0.2)' },
+                            grid: { color: 'rgba(128,128,128,0.2)' },
+                            pointLabels: { color: '#a855f7', font: { size: 10 } },
+                            ticks: { display: false, max: 20, min: 0 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        } else {
+            statusEl.style.display = 'block';
+            dataEl.style.display = 'none';
+        }
+    } catch (e) {
+        console.error('Error loading CHAEA profile results:', e);
+    }
+}
+
+// Ensure function is globally accessible
+window.cargarResultadosChaeaPerfil = cargarResultadosChaeaPerfil;
 
 export function cambiarModoVistaAdmin() {
     window.simulatedRole = document.getElementById('admin-view-mode').value;

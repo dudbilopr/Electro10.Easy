@@ -191,7 +191,7 @@ function mostrarResultados(scores, dominante) {
     document.getElementById('chaea-res-desc').innerText = desc[dominante];
     document.getElementById('chaea-res-recs').innerHTML = recs[dominante];
     
-    // Guardar en Perfil
+    // Guardar en Perfil Local
     const chaeaProfile = {
         scores: scores,
         dominante: dominante,
@@ -200,39 +200,44 @@ function mostrarResultados(scores, dominante) {
     localStorage.setItem('electro10_chaea', JSON.stringify(chaeaProfile));
     
     // Render Chart
-    const ctx = document.getElementById('chaea-radar-chart').getContext('2d');
-    if (chaeaChartInstance) chaeaChartInstance.destroy();
-    
-    chaeaChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ['Activo', 'Reflexivo', 'Teórico', 'Pragmático'],
-            datasets: [{
-                label: 'Tu Perfil',
-                data: [scores.activo, scores.reflexivo, scores.teorico, scores.pragmatico],
-                backgroundColor: 'rgba(168, 85, 247, 0.4)',
-                borderColor: '#a855f7',
-                pointBackgroundColor: '#fff',
-                pointBorderColor: '#a855f7',
-                pointHoverBackgroundColor: '#a855f7',
-                pointHoverBorderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                r: {
-                    angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                    pointLabels: { color: '#e0e0e0', font: { size: 14 } },
-                    ticks: { display: false, min: 0, max: 20 }
-                }
+    try {
+        const ctx = document.getElementById('chaea-radar-chart').getContext('2d');
+        if (chaeaChartInstance) chaeaChartInstance.destroy();
+        
+        chaeaChartInstance = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Activo', 'Reflexivo', 'Teórico', 'Pragmático'],
+                datasets: [{
+                    label: 'Tu Perfil',
+                    data: [scores.activo, scores.reflexivo, scores.teorico, scores.pragmatico],
+                    backgroundColor: 'rgba(168, 85, 247, 0.4)',
+                    borderColor: '#a855f7',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#a855f7',
+                    pointHoverBackgroundColor: '#a855f7',
+                    pointHoverBorderColor: '#fff'
+                }]
             },
-            plugins: {
-                legend: { display: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(128, 128, 128, 0.2)' },
+                        grid: { color: 'rgba(128, 128, 128, 0.2)' },
+                        pointLabels: { color: '#a855f7', font: { size: 12 } },
+                        ticks: { display: false, min: 0, max: 20 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
             }
-        }
-    });
+        });
+    } catch (e) {
+        console.error("Error al renderizar gráfico CHAEA:", e);
+    }
 };
 
 window.cerrarYGuardarChaea = async function() {
@@ -249,8 +254,19 @@ window.cerrarYGuardarChaea = async function() {
                 await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'profile', 'chaea'), JSON.parse(profileStr));
             }
         } catch(e) {
-            console.error("Error al guardar CHAEA en la nube", e);
+            console.error("Error guardando chaea en firestore", e);
         }
+    }
+    
+    // Actualizar vista de perfil
+    if (window.cargarResultadosChaeaPerfil) {
+        window.cargarResultadosChaeaPerfil();
+    }
+    
+    // Verificar si estamos en el módulo cero
+    if (document.getElementById('content-header').innerText.includes('Presaberes')) {
+        document.getElementById('btn-finalizar-modulo').disabled = false;
+        document.getElementById('btn-finalizar-modulo').classList.remove('btn-locked');
     }
     
     if(window.Swal) Swal.fire('¡Perfil Creado!', 'Tus analíticas de aprendizaje han sido guardadas y el docente ha sido notificado.', 'success');
