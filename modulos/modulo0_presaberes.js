@@ -5,10 +5,10 @@ export const modulo0_presaberes = {
     lecciones: [
         {
             id: "m0_l0",
-            titulo: "Diagnóstico de Estilos de Aprendizaje (CHAEA)",
-            tipo: "chaea",
-            duracion: "15 min",
-            descripcion: "Descubre tu estilo de aprendizaje predominante (Activo, Reflexivo, Teórico, Pragmático) para adaptar este curso a tus fortalezas."
+            titulo: "Diagnóstico Holístico (CHAEA + Kolb + IM)",
+            tipo: "diagnostico_hub",
+            duracion: "25 min",
+            descripcion: "Descubre tu perfil neuro-cognitivo con 3 dimensiones: Estilo (CHAEA), Asimilación (Kolb) e Inteligencias Múltiples (Gardner)."
         },
         {
             id: "m0_l1",

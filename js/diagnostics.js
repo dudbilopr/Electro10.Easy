@@ -38,7 +38,12 @@ window.iniciarDiagnosticoHub = function() {
     }
     
     // All done! Update Profile
-    window.cargarResultadosHolisticos();
+    if (window.mostrarPerfil) {
+        window.mostrarPerfil();
+        setTimeout(() => window.cargarResultadosHolisticos(), 100);
+    } else {
+        window.cargarResultadosHolisticos();
+    }
 };
 
 function startKolbTest() {
@@ -229,8 +234,14 @@ function calculateMI(data) {
     localStorage.setItem('electro10_mi', JSON.stringify(miResult));
     
     guardarDiagnosticoNube().then(() => {
-        Swal.fire('¡Diagnóstico Integral Completado!', 'Hemos generado tu mapa cognitivo.', 'success').then(() => {
-            window.cargarResultadosHolisticos();
+        Swal.fire('¡Diagnóstico Integral Completado!', 'Hemos generado tu mapa cognitivo y tu plan de estudio personalizado.', 'success').then(() => {
+            if (window.mostrarPerfil) {
+                window.mostrarPerfil();
+                // Ensure there is a slight delay to allow the DOM to render before drawing charts
+                setTimeout(() => window.cargarResultadosHolisticos(), 100);
+            } else {
+                window.cargarResultadosHolisticos();
+            }
         });
     });
 }

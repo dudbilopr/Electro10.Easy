@@ -442,8 +442,8 @@ html.dark header {
 .badge-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);}
 
 /* ===================== VISORES (IFRAMES) ===================== */
-.viewer-container { padding: 2rem 2.5rem; display: flex; gap: 24px; width: 100%; max-width: 1400px; margin: 0 auto; display: none; align-items: flex-start; animation: fadeIn 0.4s ease;}
-.main-player { flex: 1; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.viewer-container { padding: 2rem 2.5rem; display: flex; flex-wrap: nowrap !important; gap: 24px; width: 100%; max-width: 1400px; margin: 0 auto; display: none; align-items: flex-start; animation: fadeIn 0.4s ease;}
+.main-player { flex: 1 1 auto; display: flex; flex-direction: column; gap: 24px; min-width: 0; max-width: 100%; }
 
 .iframe-container-pro { background: var(--bg-surface); border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; width: 100%; position: relative;}
 .iframe-header { background: var(--bg-main); padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }

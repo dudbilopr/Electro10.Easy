@@ -258,10 +258,10 @@ export function loadContent(leccion, modulo, progressData, evalData) {
                     window.initDynamicQuiz('dyn-quiz-container', leccion);
                 }
             }, 50);
-        } else if (leccion.tipo === 'chaea') {
+        } else if (leccion.tipo === 'chaea' || leccion.tipo === 'diagnostico_hub') {
             iframe.style.display = 'none';
             enlacesContainer.style.display = 'block';
-            enlacesContainer.innerHTML = '<div style="padding: 50px; text-align: center;"><span class="material-symbols-outlined" style="font-size:64px; color:var(--primary); margin-bottom: 20px; display:block;">psychology</span><h3 style="color:var(--text-high); margin-bottom: 20px;">Test CHAEA (Estilos de Aprendizaje)</h3><p style="color:var(--text-medium); margin-bottom: 30px;">Identifica tu perfil para recibir recomendaciones personalizadas de estudio.</p><button class="btn-primary" onclick="window.iniciarChaea()">Comenzar Test Ahora</button></div>';
+            enlacesContainer.innerHTML = '<div style="padding: 50px; text-align: center;"><span class="material-symbols-outlined" style="font-size:64px; color:var(--primary); margin-bottom: 20px; display:block;">hub</span><h3 style="color:var(--text-high); margin-bottom: 20px;">Diagnóstico Holístico (CHAEA + Kolb + IM)</h3><p style="color:var(--text-medium); margin-bottom: 30px;">Identifica tu perfil neuro-cognitivo para recibir recomendaciones personalizadas de estudio.</p><button class="btn-primary" onclick="window.iniciarDiagnosticoHub()">Comenzar Centro de Diagnóstico Ahora</button></div>';
         } else {
             iframe.src = leccion.recurso;
             iframeWrapper.style.aspectRatio = 'auto'; iframeWrapper.style.height = '75vh'; iframeWrapper.style.minHeight = '500px';
