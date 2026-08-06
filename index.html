@@ -152,10 +152,10 @@
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <select id="pacing-mode" class="form-input" style="width: auto; padding: 5px 10px; font-size: 0.85rem;" onchange="window.updateTimelinePacing()">
-                                <option value="semanas">Semanas</option>
+                                <option value="semanas">Semanas (2 clases/sem)</option>
                                 <option value="dias">Días (Vacacional)</option>
                             </select>
-                            <input type="number" id="pacing-length" class="form-input" style="width: 70px; padding: 5px; font-size: 0.85rem;" value="16" min="1" max="100" onchange="window.updateTimelinePacing()">
+                            <input type="number" id="pacing-length" class="form-input" style="width: 70px; padding: 5px; font-size: 0.85rem;" value="12" min="1" max="100" onchange="window.updateTimelinePacing()">
                         </div>
                     </div>
                     <div id="dynamic-timeline-container" class="timeline-container" style="display: flex; overflow-x: auto; padding-bottom: 15px; gap: 10px; scroll-snap-type: x mandatory;">
@@ -199,8 +199,8 @@
                         if (window.guardarRitmo) window.guardarRitmo(mode, length);
                     };
 
-                    // Inicializar con 16 semanas por defecto
-                    setTimeout(() => window.renderTimeline('semanas', 16), 100);
+                    // Inicializar con 12 semanas por defecto
+                    setTimeout(() => window.renderTimeline('semanas', 12), 100);
                 </script>
 
                 <div class="bento-grid">
@@ -1179,22 +1179,22 @@
          LÓGICA UNIFICADA Y ANALÍTICA
     ========================================================================================== -->
     <!-- Motor de Simulación Física 2D -->
-    <script src="./js/physics-engine.js"></script>
+    <script src="./js/physics-engine.js?v=1.1"></script>
 
     <!-- Motor de Exámenes Dinámicos y Cognitivos -->
-    <script src="./js/quiz-engine.js"></script>
+    <script src="./js/quiz-engine.js?v=1.1"></script>
 
     <!-- Módulo IA Contextual (BYOK) -->
-    <script src="./js/ai-chat.js"></script>
+    <script src="./js/ai-chat.js?v=1.1"></script>
 
     <!-- Cerebro Obsidian (Graph & AI Grader) -->
-    <script src="./js/brain.js"></script>
-    <script src="./js/chaea_data.js"></script>
-    <script src="./js/chaea.js"></script>
-    <script type="module" src="./js/app.js"></script>
-    <script type="module" src="./js/ui.js"></script>
-    <script type="module" src="./js/profile.js"></script>
-    <script type="module" src="./js/admin.js"></script>
-    <script type="module" src="./js/diagnostics.js"></script>
+    <script src="./js/brain.js?v=1.1"></script>
+    <script src="./js/chaea_data.js?v=1.1"></script>
+    <script src="./js/chaea.js?v=1.1"></script>
+    <script type="module" src="./js/app.js?v=1.1"></script>
+    <script type="module" src="./js/ui.js?v=1.1"></script>
+    <script type="module" src="./js/profile.js?v=1.1"></script>
+    <script type="module" src="./js/admin.js?v=1.1"></script>
+    <script type="module" src="./js/diagnostics.js?v=1.1"></script>
 </body>
 </html>
