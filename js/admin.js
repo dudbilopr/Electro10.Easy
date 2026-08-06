@@ -15,15 +15,12 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
     try {
         const dirSnap = await getDocs(collection(db, 'artifacts', APP_ID, 'public', 'data', 'directory'));
         if (!dirSnap.empty) {
-            let filasHtml = '', iteraciones = 0, teachersCount = 0, studentsCount = 0, arrayScatter = [];
-            
-            let sumRetencion = 0;
-            let sumTiempoEstudiantes = 0;
-            let riskCount = 0;
+            let teachersCount = 0, studentsCount = 0, arrayScatter = [];
+            let sumRetencion = 0, sumTiempoEstudiantes = 0, riskCount = 0;
             let sumRatings = 0, countRatings = 0;
             let methodCount = {};
 
-            dirSnap.forEach(async (documento) => {
+            const rowsPromises = dirSnap.docs.map(async (documento) => {
                 const d   = documento.data();
                 const uid = documento.id;
                 let completadas = 0, tiempoUser = 0, promGrade = 0;
@@ -57,7 +54,7 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
                             }
                         });
                     }
-                } catch (e) { /* sin conexión o sin datos */ }
+                } catch (e) { console.error("Error reading student data for", uid, e); /* sin conexión o sin datos */ }
 
                 if (d.role === 'teacher') {
                     teachersCount++;
@@ -66,12 +63,11 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
                     arrayScatter.push({ x: tiempoUser, y: completadas });
                     
                     // Lógica Neuroeducativa Simulada
-                    // 1. Retención: Promedio de notas + un factor de tiempo
                     let retencionUsuario = promGrade || Math.min(100, completadas * 5);
                     sumRetencion += retencionUsuario;
                     sumTiempoEstudiantes += tiempoUser;
 
-                    // 2. Churn (Riesgo de abandono): Si ha estado < 10 min y no ha completado nada, está en riesgo
+                    // Churn (Riesgo de abandono)
                     if (tiempoUser < 10 && completadas < 2) {
                         riskCount++;
                     }
@@ -83,55 +79,54 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
                         <option value="teacher" ${d.role === 'teacher' ? 'selected' : ''}>Docente/Admin</option>
                     </select>`;
 
-                filasHtml += `<tr>
+                return `<tr>
                     <td><strong>${d.name || d.email || uid.substring(0, 6)}</strong></td>
                     <td>${d.institution || 'N/A'}</td>
                     <td>${selectHtml}</td>
                     <td><span class="badge" style="background:var(--bg-surface-hover);color:var(--text-high);">${completadas} completadas (${tiempoUser} min)</span></td>
-                    <td><button class="btn-primary btn-sm" onclick="window.verDetalleEstudiante('${uid}','${d.name || d.email}')"><span class="material-symbols-outlined" style="font-size:16px;">monitoring</span> Ver Métricas</button></td>
+                    <td><button class="btn-primary btn-sm" onclick="window.verDetalleEstudiante('${uid}','${d.name || d.email || ''}')"><span class="material-symbols-outlined" style="font-size:16px;">monitoring</span> Ver Métricas</button></td>
                 </tr>`;
-
-                iteraciones++;
-                if (iteraciones === dirSnap.size) {
-                    tableBody.innerHTML = filasHtml;
-                    renderAdminCharts(teachersCount, studentsCount, arrayScatter);
-
-                    // Actualizar métricas del DOM (Data Science Metrics)
-                    if (studentsCount > 0) {
-                        const avgRetencion = Math.round(sumRetencion / studentsCount);
-                        const churnPct = Math.round((riskCount / studentsCount) * 100);
-                        const avgCarga = Math.round(sumTiempoEstudiantes / studentsCount);
-
-                        const elRet = document.getElementById('admin-metric-retencion');
-                        const elChurn = document.getElementById('admin-metric-churn');
-                        const elCarga = document.getElementById('admin-metric-carga');
-
-                        if(elRet) elRet.innerText = `${avgRetencion}%`;
-                        if(elChurn) elChurn.innerText = `${churnPct}%`;
-                        if(elCarga) elCarga.innerText = `${avgCarga} min`;
-
-                        const avgRating = countRatings > 0 ? (sumRatings / countRatings).toFixed(1) : '0.0';
-                        const elRating = document.getElementById('admin-metric-rating');
-                        if (elRating) elRating.innerHTML = `<span class="material-symbols-outlined icon-filled">star</span> ${avgRating}`;
-
-                        let dominantMethod = 'N/A';
-                        let maxCount = 0;
-                        for (let [met, count] of Object.entries(methodCount)) {
-                            if (count > maxCount) { maxCount = count; dominantMethod = met; }
-                        }
-                        const elMethod = document.getElementById('admin-metric-metodologia');
-                        if (elMethod) {
-                            const methodNames = {
-                                'pomodoro': 'Pomodoro', 'feynman': 'Feynman', 'spaced_repetition': 'Repetición Espaciada',
-                                'mind_maps': 'Mapas Mentales', 'summaries': 'Resúmenes', 'practice': 'Práctica Continua',
-                                'cornell_notes': 'Cornell (Apuntes)', 'exam_prep': 'Preparación Examen',
-                                'active_questioning': 'Indagación', 'error_analysis': 'Análisis Errores'
-                            };
-                            elMethod.innerText = methodNames[dominantMethod] || dominantMethod;
-                        }
-                    }
-                }
             });
+
+            const rowsHtmlArray = await Promise.all(rowsPromises);
+            tableBody.innerHTML = rowsHtmlArray.join('');
+            
+            renderAdminCharts(teachersCount, studentsCount, arrayScatter);
+
+            // Actualizar métricas del DOM
+            if (studentsCount > 0) {
+                const avgRetencion = Math.round(sumRetencion / studentsCount);
+                const churnPct = Math.round((riskCount / studentsCount) * 100);
+                const avgCarga = Math.round(sumTiempoEstudiantes / studentsCount);
+
+                const elRet = document.getElementById('admin-metric-retencion');
+                const elChurn = document.getElementById('admin-metric-churn');
+                const elCarga = document.getElementById('admin-metric-carga');
+
+                if(elRet) elRet.innerText = `${avgRetencion}%`;
+                if(elChurn) elChurn.innerText = `${churnPct}%`;
+                if(elCarga) elCarga.innerText = `${avgCarga} min`;
+
+                const avgRating = countRatings > 0 ? (sumRatings / countRatings).toFixed(1) : '0.0';
+                const elRating = document.getElementById('admin-metric-rating');
+                if (elRating) elRating.innerHTML = `<span class="material-symbols-outlined icon-filled">star</span> ${avgRating}`;
+
+                let dominantMethod = 'N/A';
+                let maxCount = 0;
+                for (let [met, count] of Object.entries(methodCount)) {
+                    if (count > maxCount) { maxCount = count; dominantMethod = met; }
+                }
+                const elMethod = document.getElementById('admin-metric-metodologia');
+                if (elMethod) {
+                    const methodNames = {
+                        'pomodoro': 'Pomodoro', 'feynman': 'Feynman', 'spaced_repetition': 'Repetición Espaciada',
+                        'mind_maps': 'Mapas Mentales', 'summaries': 'Resúmenes', 'practice': 'Práctica Continua',
+                        'cornell_notes': 'Cornell (Apuntes)', 'exam_prep': 'Preparación Examen',
+                        'active_questioning': 'Indagación', 'error_analysis': 'Análisis Errores'
+                    };
+                    elMethod.innerText = methodNames[dominantMethod] || dominantMethod;
+                }
+            }
         } else {
             tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-medium);">No hay estudiantes en el directorio.</td></tr>';
         }
