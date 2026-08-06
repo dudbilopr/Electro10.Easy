@@ -423,9 +423,9 @@ html.dark header {
 }
 
 @media(max-width: 600px) {
-    .viewer-container { grid-template-columns: 1fr; padding: 1rem;}
-    .right-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; max-height: none;}
-    .right-card { flex: 1; min-width: 300px; }
+    .viewer-container { flex-direction: column !important; padding: 1rem;}
+    .right-sidebar { width: 100%; max-height: none;}
+    .right-card { min-width: 0; flex: 1; }
 }
 
 /* ===================== PERFIL Y FORMULARIOS ===================== */
@@ -448,7 +448,7 @@ html.dark header {
 .badge-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);}
 
 /* ===================== VISORES (IFRAMES) ===================== */
-.viewer-container { padding: 2rem 2.5rem; display: flex; flex-wrap: nowrap !important; gap: 24px; width: 100%; max-width: 1400px; margin: 0 auto; display: none; align-items: flex-start; animation: fadeIn 0.4s ease;}
+.viewer-container { padding: 2rem 2.5rem; display: none; flex-direction: row; flex-wrap: nowrap !important; gap: 24px; width: 100%; max-width: 1400px; margin: 0 auto; align-items: flex-start; animation: fadeIn 0.4s ease;}
 .main-player { flex: 1 1 auto; display: flex; flex-direction: column; gap: 24px; min-width: 0; max-width: 100%; }
 
 .iframe-container-pro { background: var(--bg-surface); border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; width: 100%; position: relative;}
@@ -497,8 +497,6 @@ iframe { width: 100%; height: 100%; border: none; display: block; flex: 1; }
 .eval-btn { flex: 1; padding: 15px 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-medium); transition: all 0.2s; font-weight: 600;}
 .eval-btn:hover { background: var(--bg-surface-hover); border-color: var(--accent); color: var(--accent); transform: translateY(-2px);}
 .eval-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); box-shadow: var(--shadow-glow);}
-.viewer-container { padding: 2rem 2.5rem; display: none; gap: 24px; width: 100%; max-width: 1400px; margin: 0 auto; align-items: start; animation: fadeIn 0.4s ease; grid-template-columns: minmax(0, 1fr) auto;}
-.viewer-container.no-sidebar { grid-template-columns: minmax(0, 1fr); }
 .main-player { flex: 1 1 auto; display: flex; flex-direction: column; gap: 24px; min-width: 0; max-width: 100%; }
 
 .iframe-container-pro { background: var(--bg-surface); border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; width: 100%; position: relative;}
