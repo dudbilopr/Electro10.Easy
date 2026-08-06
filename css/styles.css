@@ -420,7 +420,10 @@ html.dark header {
     .c-node { width: 100%; height: auto; border-radius: 20px; aspect-ratio: auto; animation: none !important; transform: none !important; padding: 30px;}
     .c-node:nth-child(even) { transform: none !important; }
     .c-node:hover { transform: scale(1.02) !important; }
-    .viewer-container { grid-template-columns: 1fr; padding: 1.5rem;}
+}
+
+@media(max-width: 600px) {
+    .viewer-container { grid-template-columns: 1fr; padding: 1rem;}
     .right-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; max-height: none;}
     .right-card { flex: 1; min-width: 300px; }
 }
