@@ -20,7 +20,7 @@ export function injectUIState({ progressData, curriculoData, totalLessons }) {
 
 export function resetNav() {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    ['student-dashboard', 'calendar-dashboard', 'profile-dashboard', 'labs-dashboard', 'brain-dashboard', 'admin-dashboard', 'main-viewer-area', 'content-header']
+    ['student-dashboard', 'calendar-dashboard', 'profile-dashboard', 'labs-dashboard', 'brain-dashboard', 'admin-dashboard', 'game-dashboard', 'main-viewer-area', 'content-header']
         .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
 }
 
@@ -97,6 +97,21 @@ export function mostrarLaboratorios() {
     resetNav();
     document.getElementById('nav-labs').classList.add('active');
     document.getElementById('labs-dashboard').style.display = 'block';
+}
+
+export function mostrarJuegoSnake() {
+    resetNav();
+    const btn = document.getElementById('nav-snake');
+    if (btn) btn.classList.add('active');
+    document.getElementById('game-dashboard').style.display = 'block';
+    
+    // Initialize game if not already running
+    if (!window.snakeGameInstance) {
+        window.snakeGameInstance = new SnakeGame();
+        window.snakeGameInstance.start();
+    } else {
+        window.snakeGameInstance.resume();
+    }
 }
 
 export function mostrarCerebro() {

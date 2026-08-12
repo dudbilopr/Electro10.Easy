@@ -870,6 +870,7 @@ body.focus-mode-active .bento-container:not([style*="display: block"]) { display
 
 /* ===================== YOUTUBE STYLE LAYOUT OVERRIDES ===================== */
 .viewer-container {
+    display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: flex-start;
@@ -877,12 +878,15 @@ body.focus-mode-active .bento-container:not([style*="display: block"]) { display
 .main-player {
     flex: 1 1 0% !important;
     min-width: 0;
+    width: 100%;
 }
 .right-sidebar {
     width: 350px !important;
     flex-shrink: 0 !important;
+    display: flex;
+    flex-direction: column;
 }
-@media(max-width: 1024px) {
+@media(max-width: 768px) {
     .viewer-container {
         flex-direction: column !important;
     }

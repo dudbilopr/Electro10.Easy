@@ -172,6 +172,8 @@ export function loadContent(leccion, modulo, progressData, evalData) {
                 btnNewTab.href = leccion.tipo === 'multivideo' ? getYoutubeEmbed(recs[0]) : recs[0];
             } else if (leccion.tipo === 'video') {
                 btnNewTab.href = getYoutubeEmbed(leccion.recurso);
+            } else if (leccion.tipo === 'notebooklm') {
+                btnNewTab.href = leccion.llmLink || '#';
             } else {
                 btnNewTab.href = leccion.recurso || '#';
             }

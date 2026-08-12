@@ -10,7 +10,7 @@ import { APP_ID }                               from '../config/firebase.config.
 import { doc, setDoc, increment }               from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { auth }                                 from './firebase.js';
 import { iniciarSesion, registrarUsuario, iniciarSesionConGoogle, cerrarSesion, inicializarAuthObserver } from './auth.js';
-import { toggleSidebar, toggleTheme, toggleChat, abrirModalAuth, mostrarNotificaciones, cambiarTab, resetNav, mostrarDashboardEstudiante, mostrarCalendario, mostrarPerfil, mostrarLaboratorios, mostrarCerebro, cambiarTabCerebro, abrirPanelAdmin, actualizarAvatarUI, aplicarTemaGuardado, injectUIState, toggleFocusMode } from './ui.js';
+import { toggleSidebar, toggleTheme, toggleChat, abrirModalAuth, mostrarNotificaciones, cambiarTab, resetNav, mostrarDashboardEstudiante, mostrarCalendario, mostrarPerfil, mostrarLaboratorios, mostrarCerebro, cambiarTabCerebro, abrirPanelAdmin, actualizarAvatarUI, aplicarTemaGuardado, injectUIState, toggleFocusMode, mostrarJuegoSnake } from './ui.js';
 import { inicializarEstructuraBase }            from './curriculum.js';
 import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconForType } from './content-loader.js';
 import { actualizarGraficosEstudiante }         from './charts.js';
@@ -121,6 +121,7 @@ window.mostrarDashboardEstudiante = mostrarDashboardEstudiante;
 window.mostrarCalendario         = () => { injectUIState({ progressData, curriculoData, totalLessons }); mostrarCalendario(); };
 window.mostrarPerfil             = mostrarPerfil;
 window.mostrarLaboratorios       = mostrarLaboratorios;
+window.mostrarJuegoSnake         = mostrarJuegoSnake;
 window.mostrarCerebro            = mostrarCerebro;
 window.cambiarTabCerebro         = cambiarTabCerebro;
 window.toggleFocusMode           = toggleFocusMode;

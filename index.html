@@ -100,6 +100,10 @@
                 <span class="material-symbols-outlined">science</span>
                 <span>Centro de Simulaciones</span>
             </a>
+            <a onclick="window.mostrarJuegoSnake()" class="nav-item" id="nav-snake">
+                <span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span>
+                <span style="color: #00f2fe; font-weight: 600;">Superposition Snake</span>
+            </a>
             <a onclick="window.mostrarCerebro()" class="nav-item" id="nav-brain" style="color: #a855f7;">
                 <span class="material-symbols-outlined">psychology</span>
                 <span>Cerebro de Conocimiento</span>
@@ -583,6 +587,43 @@
             </div>
 
             <!-- ================= CENTRO DE SIMULACIÓN Y LABORATORIOS ================= -->
+            <!-- JUEGO SNAKE DASHBOARD -->
+            <div id="game-dashboard" class="bento-container" style="display: none;">
+                <div class="card col-span-full">
+                    <div class="card-header">
+                        <h2><span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span> Superposition Snake</h2>
+                        <span class="badge" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">Minijuego Interactivo</span>
+                    </div>
+                    <div class="card-content">
+                        <p style="text-align: center; margin-bottom: 1rem; color: var(--text-medium);">¡Aprende conceptos de electrostática mientras juegas! Usa las flechas de tu teclado para moverte.</p>
+                        
+                        <div id="game-scoreboard" style="display:flex; justify-content:center; gap: 2rem; font-size: 1.2rem; margin-top: 1rem; font-weight: bold;">
+                            <div>Nivel: <span id="game-level">1</span></div>
+                            <div>Puntos: <span id="game-score">0</span></div>
+                            <div>Meta: <span id="game-target">5</span></div>
+                        </div>
+
+                        <div id="game-container" style="display:flex; justify-content:center; align-items:center; position:relative; margin-top: 1rem; height: 500px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; background: #0f172a; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px rgba(0,242,254,0.1);">
+                            <canvas id="snake-canvas" style="display:block; width:100%; height:100%;"></canvas>
+                            
+                            <!-- Popup overlay for concepts -->
+                            <div id="game-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 2px solid #00f2fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 10; box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);">
+                                <h3 id="game-popup-title" style="color: #00f2fe; margin-bottom: 1rem; font-size: 1.8rem; margin-top: 0;">Concepto</h3>
+                                <p id="game-popup-desc" style="font-size: 1.2rem; line-height: 1.5;">Descripción del concepto.</p>
+                                <button id="game-popup-btn" class="btn" style="margin-top: 1.5rem; background: var(--accent); color: white; padding: 10px 20px;">Continuar (Espacio)</button>
+                            </div>
+                            
+                            <!-- Level up overlay -->
+                            <div id="game-level-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(168, 85, 247, 0.95); border: 2px solid #d8b4fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 20; box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);">
+                                <h3 style="margin-bottom: 1rem; font-size: 2rem; margin-top: 0;">¡Nivel <span id="game-level-display">2</span> Alcanzado!</h3>
+                                <p id="game-level-desc" style="font-size: 1.2rem; line-height: 1.5;">La velocidad aumenta.</p>
+                                <button id="game-level-btn" class="btn" style="background: white; color: #a855f7; margin-top: 1.5rem; padding: 10px 20px;">Comenzar Nivel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="labs-dashboard" class="bento-container" style="display: none;">
                 <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
                     <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
@@ -1196,5 +1237,6 @@
     <script type="module" src="./js/profile.js?v=1.1"></script>
     <script type="module" src="./js/admin.js?v=1.1"></script>
     <script type="module" src="./js/diagnostics.js?v=1.1"></script>
+    <script src="./js/snake-game.js"></script>
 </body>
 </html>
