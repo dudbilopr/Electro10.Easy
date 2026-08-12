@@ -21,8 +21,8 @@ export const modulo10 = {
         { "id":"m10-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 10: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Ley de Faraday","descripcion":"IA para inducción: explica Faraday, Lenz, inductancia y transformadores.","xp":10 },
-        { "id":"m10-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes sobre inducción electromagnética y sus aplicaciones.","xp":10,
+          "titulo": "8. NotebookLLM — Ley de Faraday","descripcion":"IA para inducción: explica Faraday, Lenz, inductancia y transformadores.","xp":10 },
+        { "id":"m10-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre inducción electromagnética y sus aplicaciones.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/13-1-faradays-law","titulo":"OpenStax: Ley de Faraday — Cap. 13","descripcion":"Flujo, FEM inducida, Lenz y aplicaciones." },

@@ -21,15 +21,15 @@ export const modulo5 = {
         {
             "id": "m5-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
-            "titulo": "Evaluación Completa — Módulo 5",
+            "titulo": "7. Evaluación del Módulo 5",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
         { "id":"m5-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 5: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Capacitancia","descripcion":"IA entrenada en capacitores. Explica dieléctricos, combinaciones y aplicaciones en circuitos.","xp":10 },
-        { "id":"m5-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre capacitores, dieléctricos y energía en campos eléctricos.","xp":10,
+          "titulo": "8. NotebookLLM — Capacitancia","descripcion":"IA entrenada en capacitores. Explica dieléctricos, combinaciones y aplicaciones en circuitos.","xp":10 },
+        { "id":"m5-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre capacitores, dieléctricos y energía en campos eléctricos.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/8-1-capacitors-and-capacitance","titulo":"OpenStax: Capacitores — Cap. 8","descripcion":"Capacitancia, energía y dieléctricos con ejemplos resueltos." },

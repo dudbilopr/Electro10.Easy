@@ -26,15 +26,15 @@ export const modulo2 = {
         {
             "id": "m2-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_2_Campo_Electrico.html",
-            "titulo": "Evaluación Completa — Módulo 2",
+            "titulo": "7. Evaluación del Módulo 2",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
         { "id":"m2-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 2: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Campo Eléctrico","descripcion":"IA entrenada con material de campo eléctrico. Pide explicaciones, derivaciones o ejercicios adicionales.","xp":10 },
-        { "id":"m2-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes académicas verificadas sobre campo eléctrico y electrostática vectorial.","xp":10,
+          "titulo": "8. NotebookLLM — Campo Eléctrico","descripcion":"IA entrenada con material de campo eléctrico. Pide explicaciones, derivaciones o ejercicios adicionales.","xp":10 },
+        { "id":"m2-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas verificadas sobre campo eléctrico y electrostática vectorial.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/5-1-electric-field","titulo":"OpenStax: Campo Eléctrico — Cap. 5","descripcion":"Definición, propiedades y campo de distribuciones." },

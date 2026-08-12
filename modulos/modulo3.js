@@ -22,15 +22,15 @@ export const modulo3 = {
         {
             "id": "m3-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_3_Trabajo_Potencial_Electrico.html",
-            "titulo": "Evaluación Completa — Módulo 3",
+            "titulo": "7. Evaluación del Módulo 3",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
         { "id":"m3-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 3: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Ley de Gauss","descripcion":"IA especializada en Gauss. Explica cómo elegir la superficie gaussiana correcta.","xp":10 },
-        { "id":"m3-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes para profundizar en la Ley de Gauss y el flujo eléctrico.","xp":10,
+          "titulo": "8. NotebookLLM — Ley de Gauss","descripcion":"IA especializada en Gauss. Explica cómo elegir la superficie gaussiana correcta.","xp":10 },
+        { "id":"m3-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes para profundizar en la Ley de Gauss y el flujo eléctrico.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/6-1-electric-flux","titulo":"OpenStax: Flujo Eléctrico y Ley de Gauss","descripcion":"Cap. 6: definición de flujo y aplicaciones con simetría." },

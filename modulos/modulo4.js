@@ -22,15 +22,15 @@ export const modulo4 = {
         {
             "id": "m4-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_4_Distribuciones_de_Carga_continua.html",
-            "titulo": "Evaluación Completa — Módulo 4",
+            "titulo": "7. Evaluación del Módulo 4",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
         { "id":"m4-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 4: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Potencial Eléctrico","descripcion":"IA especializada en potencial eléctrico. Pregunta sobre derivaciones, equipotenciales y más.","xp":10 },
-        { "id":"m4-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre potencial eléctrico y energía en campos eléctricos.","xp":10,
+          "titulo": "8. NotebookLLM — Potencial Eléctrico","descripcion":"IA especializada en potencial eléctrico. Pregunta sobre derivaciones, equipotenciales y más.","xp":10 },
+        { "id":"m4-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre potencial eléctrico y energía en campos eléctricos.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/7-1-electric-potential-energy","titulo":"OpenStax: Energía Potencial y Potencial — Cap. 7","descripcion":"Desarrollo completo del potencial eléctrico con ejemplos." },

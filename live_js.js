@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // js/content-loader.js
 // Carga contenido en el visor principal según el tipo de
 // lección: video, multivideo, simulador, quiz, enlaces, etc.
@@ -156,25 +156,6 @@ export function loadContent(leccion, modulo, progressData, evalData) {
     const btnNotebook = document.getElementById('btn-notebook');
     if (leccion.llmLink) { btnNotebook.style.display = 'inline-flex'; btnNotebook.href = leccion.llmLink; }
     else { btnNotebook.style.display = 'none'; }
-    
-    const btnNewTab = document.getElementById('btn-new-tab');
-    if (btnNewTab) {
-        if (leccion.tipo === 'enlaces' || leccion.tipo === 'referencias' || leccion.tipo === 'chaea' || leccion.tipo === 'diagnostico_hub') {
-            btnNewTab.style.display = 'none';
-        } else {
-            btnNewTab.style.display = 'inline-flex';
-            if (leccion.tipo === 'notebooklm') {
-                btnNewTab.href = leccion.llmLink || '#';
-            } else if (leccion.tipo === 'multivideo' || leccion.tipo === 'multipresentacion') {
-                const recs = leccion.recurso.split('|');
-                btnNewTab.href = leccion.tipo === 'multivideo' ? getYoutubeEmbed(recs[0]) : recs[0];
-            } else if (leccion.tipo === 'video') {
-                btnNewTab.href = getYoutubeEmbed(leccion.recurso);
-            } else {
-                btnNewTab.href = leccion.recurso || '#';
-            }
-        }
-    }
 
     document.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
     if (elementLi) elementLi.classList.add('active');
@@ -201,7 +182,7 @@ export function loadContent(leccion, modulo, progressData, evalData) {
 
     // ── Renderizar según tipo ────────────────────────────────
 
-    if (leccion.tipo === 'enlaces' || leccion.tipo === 'referencias') {
+    if (leccion.tipo === 'enlaces') {
         // Directorio de enlaces
         iframe.style.display           = 'none';
         enlacesContainer.style.display = 'block';
@@ -266,10 +247,6 @@ export function loadContent(leccion, modulo, progressData, evalData) {
         if (leccion.tipo === 'video') {
             iframe.src = getYoutubeEmbed(leccion.recurso);
             iframeWrapper.style.aspectRatio = '16/9'; iframeWrapper.style.height = 'auto';
-        } else if (leccion.tipo === 'notebooklm') {
-            iframe.style.display = 'none';
-            enlacesContainer.style.display = 'block';
-            enlacesContainer.innerHTML = `<div style="padding: 50px; text-align: center;"><span class="material-symbols-outlined" style="font-size:64px; color:var(--primary); margin-bottom: 20px; display:block;">auto_awesome</span><h3 style="color:var(--text-high); margin-bottom: 20px;">${leccion.titulo}</h3><p style="color:var(--text-medium); margin-bottom: 30px;">${leccion.descripcion}</p><a href="${leccion.llmLink}" target="_blank" class="btn-primary" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap: 8px;"><span class="material-symbols-outlined text-[18px]">open_in_new</span> Abrir Asistente NotebookLM</a></div>`;
         } else if (leccion.tipo === 'quiz' && leccion.preguntas) {
             // Renderizado dinámico del Examen con el Nuevo Motor Cognitivo
             iframe.style.display = 'none';
@@ -368,3 +345,4 @@ function _marcarCompletado(leccion, elementLi, progressData) {
     }
     guardarProgresoNube(leccion.id);
 }
+

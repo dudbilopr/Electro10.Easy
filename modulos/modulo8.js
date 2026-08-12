@@ -22,8 +22,8 @@ export const modulo8 = {
         { "id":"m8-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 8: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Biot-Savart","descripcion":"IA para Biot-Savart: integración vectorial, geometrías y comparación con Ampere.","xp":10 },
-        { "id":"m8-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes sobre la Ley de Biot-Savart y campo magnético de corrientes.","xp":10,
+          "titulo": "8. NotebookLLM — Biot-Savart","descripcion":"IA para Biot-Savart: integración vectorial, geometrías y comparación con Ampere.","xp":10 },
+        { "id":"m8-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre la Ley de Biot-Savart y campo magnético de corrientes.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/12-1-the-biot-savart-law","titulo":"OpenStax: Ley de Biot-Savart — Cap. 12","descripcion":"Derivación y aplicaciones a geometrías estándar." },

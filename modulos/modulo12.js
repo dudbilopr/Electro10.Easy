@@ -22,8 +22,8 @@ export const modulo12 = {
         { "id":"m12-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 12: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Circuitos CA","descripcion":"IA para circuitos CA: fasores, impedancia, resonancia y filtros.","xp":10 },
-        { "id":"m12-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes sobre circuitos RLC, corriente alterna y análisis de señales.","xp":10,
+          "titulo": "8. NotebookLLM — Circuitos CA","descripcion":"IA para circuitos CA: fasores, impedancia, resonancia y filtros.","xp":10 },
+        { "id":"m12-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre circuitos RLC, corriente alterna y análisis de señales.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/14-1-mutual-inductance","titulo":"OpenStax: Inductancia y Circuitos AC — Cap. 14–15","descripcion":"Inductores, RLC, corriente alterna y transformadores." },

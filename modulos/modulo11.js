@@ -21,8 +21,8 @@ export const modulo11 = {
         { "id":"m11-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 11: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Ecuaciones de Maxwell","descripcion":"IA para Maxwell: explica las 4 ecuaciones, sus consecuencias y la teoría de ondas EM.","xp":10 },
-        { "id":"m11-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes sobre las ecuaciones de Maxwell y ondas electromagnéticas.","xp":10,
+          "titulo": "8. NotebookLLM — Ecuaciones de Maxwell","descripcion":"IA para Maxwell: explica las 4 ecuaciones, sus consecuencias y la teoría de ondas EM.","xp":10 },
+        { "id":"m11-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre las ecuaciones de Maxwell y ondas electromagnéticas.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/16-1-maxwells-equations-and-electromagnetic-waves","titulo":"OpenStax: Ecuaciones de Maxwell — Cap. 16","descripcion":"Síntesis del EM clásico, ondas y vector de Poynting." },

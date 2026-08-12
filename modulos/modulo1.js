@@ -66,7 +66,7 @@ export const modulo1 = {
         {
             "id": "m1-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_1_Ley_de_Coulomb.html",
-            "titulo": "Evaluación Completa — Módulo 1",
+            "titulo": "7. Evaluación del Módulo 1",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
@@ -75,13 +75,13 @@ export const modulo1 = {
             // Ejemplo: "llmLink": "https://notebooklm.google.com/notebook/TU-ID-AQUI"
             "id": "m1-nb1", "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "7. NotebookLLM — Ley de Coulomb",
+            "titulo": "8. NotebookLLM — Ley de Coulomb",
             "descripcion": "Asistente de IA entrenado con todo el material del módulo. Hazle preguntas, pide explicaciones o genera ejercicios.",
             "xp": 10
         },
         {
             "id": "m1-e1", "tipo": "referencias",
-            "titulo": "8. Referencias Bibliográficas",
+            "titulo": "9. Referencias Bibliográficas",
             "descripcion": "Fuentes académicas, libros de texto, artículos y recursos web verificados.",
             "xp": 10,
             "secciones": [

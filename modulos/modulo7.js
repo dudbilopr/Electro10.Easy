@@ -21,15 +21,15 @@ export const modulo7 = {
         {
             "id": "m7-eval", "tipo": "quiz",
             "recurso": "quizzes/Cuestionario_7_Circuitos_CC.html",
-            "titulo": "Evaluación Completa — Módulo 7",
+            "titulo": "7. Evaluación del Módulo 7",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
         },
         { "id":"m7-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 7: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Ley de Lorentz","descripcion":"IA para Lorentz: regla de la mano derecha, movimiento circular, aplicaciones en tecnología.","xp":10 },
-        { "id":"m7-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes sobre magnetostática y fuerza de Lorentz.","xp":10,
+          "titulo": "8. NotebookLLM — Ley de Lorentz","descripcion":"IA para Lorentz: regla de la mano derecha, movimiento circular, aplicaciones en tecnología.","xp":10 },
+        { "id":"m7-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre magnetostática y fuerza de Lorentz.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/11-1-magnetism-and-its-historical-discoveries","titulo":"OpenStax: Magnetismo y Fuerza de Lorentz — Cap. 11","descripcion":"Fuerza magnética, movimiento de cargas y aplicaciones." },

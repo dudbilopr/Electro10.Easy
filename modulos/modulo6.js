@@ -26,8 +26,8 @@ export const modulo6 = {
         { "id":"m6-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 6: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Circuitos DC","descripcion":"IA especializada en circuitos DC. Ayuda a resolver por mallas, nodos y teoremas de Thevenin/Norton.","xp":10 },
-        { "id":"m6-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Libros, tutoriales y simuladores para circuitos resistivos DC.","xp":10,
+          "titulo": "8. NotebookLLM — Circuitos DC","descripcion":"IA especializada en circuitos DC. Ayuda a resolver por mallas, nodos y teoremas de Thevenin/Norton.","xp":10 },
+        { "id":"m6-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Libros, tutoriales y simuladores para circuitos resistivos DC.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force","titulo":"OpenStax: Circuitos DC — Cap. 10","descripcion":"FEM, resistencia interna, Kirchhoff y circuitos RC." },

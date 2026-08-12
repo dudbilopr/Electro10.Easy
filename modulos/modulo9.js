@@ -21,8 +21,8 @@ export const modulo9 = {
         { "id":"m9-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 9: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo":"7. NotebookLLM — Ley de Ampere","descripcion":"IA para Ampere: cómo elegir el camino amperiano, comparación con Gauss y generalización de Maxwell.","xp":10 },
-        { "id":"m9-e1","tipo":"referencias","titulo":"8. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre la Ley de Ampere y sus generalizaciones.","xp":10,
+          "titulo": "8. NotebookLLM — Ley de Ampere","descripcion":"IA para Ampere: cómo elegir el camino amperiano, comparación con Gauss y generalización de Maxwell.","xp":10 },
+        { "id":"m9-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre la Ley de Ampere y sus generalizaciones.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
                 { "url":"https://openstax.org/books/university-physics-volume-2/pages/13-1-the-biot-savart-law","titulo":"OpenStax: Ley de Ampere — Cap. 13","descripcion":"Solenoides, toroides y corriente de desplazamiento." },
