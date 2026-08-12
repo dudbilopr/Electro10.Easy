@@ -19,6 +19,13 @@ export const modulo3 = {
         { "id":"m3-j1","tipo":"juego","recurso":"juegos/Juego_3.html","titulo":"4. Physics Quest — Gauss","descripcion":"Elige la superficie gaussiana correcta y calcula el campo. ¡5 rondas desafiantes!","xp":25,"logro":{"id":"logro_m3","nombre":"Guardián del Flujo","icono":"🌊"} },
         { "id":"m3-l7","tipo":"ejercicio","recurso":"talleres/Taller_3_Ley_de_Gauss.html","titulo":"5. Taller Práctico — Gauss","descripcion":"Problemas de flujo eléctrico y aplicación de la Ley de Gauss con geometrías reales.","xp":30 },
         { "id":"m3-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_3.html","titulo":"6. Quiz Adaptativo — Módulo 3","descripcion":"Evalúa tu comprensión del flujo, las superficies gaussianas y sus aplicaciones.","xp":40 },
+        {
+            "id": "m3-eval", "tipo": "quiz",
+            "recurso": "quizzes/Cuestionario_3_Trabajo_Potencial_Electrico.html",
+            "titulo": "Evaluación Completa — Módulo 3",
+            "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
+            "xp": 50
+        },
         { "id":"m3-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 3: Reemplaza "#" con tu link
           "llmLink": "#",

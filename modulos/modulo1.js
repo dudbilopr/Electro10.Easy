@@ -64,6 +64,13 @@ export const modulo1 = {
             "xp": 40
         },
         {
+            "id": "m1-eval", "tipo": "quiz",
+            "recurso": "quizzes/Cuestionario_1_Ley_de_Coulomb.html",
+            "titulo": "Evaluación Completa — Módulo 1",
+            "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
+            "xp": 50
+        },
+        {
             // 📓 NOTEBOOKLM: Reemplaza el '#' con el link real de tu notebook
             // Ejemplo: "llmLink": "https://notebooklm.google.com/notebook/TU-ID-AQUI"
             "id": "m1-nb1", "tipo": "notebooklm",

@@ -23,6 +23,13 @@ export const modulo2 = {
           ]
         },
         { "id":"m2-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_2.html","titulo":"6. Quiz Adaptativo — Módulo 2","descripcion":"Adaptativo 3 niveles: conceptual, cálculo vectorial y problemas de aplicación.","xp":40 },
+        {
+            "id": "m2-eval", "tipo": "quiz",
+            "recurso": "quizzes/Cuestionario_2_Campo_Electrico.html",
+            "titulo": "Evaluación Completa — Módulo 2",
+            "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
+            "xp": 50
+        },
         { "id":"m2-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 2: Reemplaza "#" con tu link
           "llmLink": "#",
