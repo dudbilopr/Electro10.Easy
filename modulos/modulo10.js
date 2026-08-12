@@ -17,7 +17,7 @@ export const modulo10 = {
         },
         { "id":"m10-j1","tipo":"juego","recurso":"juegos/Juego_10.html","titulo":"4. Physics Quest — Faraday","descripcion":"¡Genera la corriente exacta moviendo el conductor! 5 misiones de inducción.","xp":25,"logro":{"id":"logro_m10","nombre":"Maestro de la Inducción","icono":"⚙️"} },
         { "id":"m10-l7","tipo":"ejercicio","recurso":"talleres/Taller_10_Ley_de_Faraday.html","titulo":"5. Taller Práctico — Faraday","descripcion":"Cálculo de FEM inducida, inductancia mutua, autoinductancia y energía en inductores.","xp":30 },
-        { "id":"m10-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_10.html","titulo":"6. Quiz Adaptativo — Módulo 10","descripcion":"Evalúa desde el concepto de flujo hasta el diseño de transformadores.","xp":40 },
+        { "id":"m10-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_10.html","titulo":"6. Quiz Adaptativo — Módulo 10","descripcion":"Evalúa desde el concepto de flujo hasta el diseño de transformadores.","xp":40 },
         { "id":"m10-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 10: Reemplaza "#" con tu link
           "llmLink": "#",

@@ -17,10 +17,10 @@ export const modulo7 = {
         },
         { "id":"m7-j1","tipo":"juego","recurso":"juegos/Juego_7.html","titulo":"4. Physics Quest — Lorentz","descripcion":"Dirige partículas cargadas a través de campos magnéticos hacia el objetivo. ¡5 misiones!","xp":25,"logro":{"id":"logro_m7","nombre":"Piloto Cuántico","icono":"🚀"} },
         { "id":"m7-l7","tipo":"ejercicio","recurso":"talleres/Taller_7_Ley_de_Lorentz.html","titulo":"5. Taller Práctico — Lorentz","descripcion":"Problemas de trayectorias en campo magnético, espectrómetros y ciclotrones.","xp":30 },
-        { "id":"m7-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_7.html","titulo":"6. Quiz Adaptativo — Módulo 7","descripcion":"Evalúa desde la dirección de la fuerza (regla de la mano derecha) hasta cálculos de radio de ciclotrón.","xp":40 },
+        { "id":"m7-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_7.html","titulo":"6. Quiz Adaptativo — Módulo 7","descripcion":"Evalúa desde la dirección de la fuerza (regla de la mano derecha) hasta cálculos de radio de ciclotrón.","xp":40 },
         {
             "id": "m7-eval", "tipo": "quiz",
-            "recurso": "quizzes/Cuestionario_7_Circuitos_CC.html",
+            "recurso": "Examen/Cuestionario_7_Circuitos_CC.html",
             "titulo": "7. Evaluación del Módulo 7",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50

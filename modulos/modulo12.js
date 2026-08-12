@@ -18,7 +18,7 @@ export const modulo12 = {
         },
         { "id":"m12-j1","tipo":"juego","recurso":"juegos/Juego_12.html","titulo":"4. Physics Quest — Circuitos CA","descripcion":"¡Sintoniza el circuito RLC a la frecuencia de resonancia! 5 desafíos de ingeniería AC.","xp":25,"logro":{"id":"logro_m12","nombre":"Maestro de la Resonancia","icono":"〰️"} },
         { "id":"m12-l7","tipo":"ejercicio","recurso":"talleres/Taller_12_Circuitos_CA.html","titulo":"5. Taller Práctico — Circuitos CA","descripcion":"Impedancia, resonancia, fasores y factor de potencia. Transitorios.","xp":30 },
-        { "id":"m12-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_12.html","titulo":"6. Quiz Adaptativo — Módulo 12","descripcion":"Evalúa desde conceptos de impedancia hasta cálculos de potencia en CA.","xp":40 },
+        { "id":"m12-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_12.html","titulo":"6. Quiz Adaptativo — Módulo 12","descripcion":"Evalúa desde conceptos de impedancia hasta cálculos de potencia en CA.","xp":40 },
         { "id":"m12-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 12: Reemplaza "#" con tu link
           "llmLink": "#",

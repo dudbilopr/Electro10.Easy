@@ -22,10 +22,10 @@ export const modulo2 = {
             { "id":"m2-t2","tipo":"ejercicio","recurso":"talleres/Taller_2_2_Distribuciones_Continuas.html","titulo":"5.2 Taller Práctico — Distribuciones Continuas","descripcion":"Integración de campo eléctrico de barras, anillos y discos.","xp":30 }
           ]
         },
-        { "id":"m2-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_2.html","titulo":"6. Quiz Adaptativo — Módulo 2","descripcion":"Adaptativo 3 niveles: conceptual, cálculo vectorial y problemas de aplicación.","xp":40 },
+        { "id":"m2-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_2.html","titulo":"6. Quiz Adaptativo — Módulo 2","descripcion":"Adaptativo 3 niveles: conceptual, cálculo vectorial y problemas de aplicación.","xp":40 },
         {
             "id": "m2-eval", "tipo": "quiz",
-            "recurso": "quizzes/Cuestionario_2_Campo_Electrico.html",
+            "recurso": "Examen/Cuestionario_2_Campo_Electrico.html",
             "titulo": "7. Evaluación del Módulo 2",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50

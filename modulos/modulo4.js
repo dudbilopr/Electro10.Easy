@@ -18,10 +18,10 @@ export const modulo4 = {
         },
         { "id":"m4-j1","tipo":"juego","recurso":"juegos/Juego_4.html","titulo":"4. Physics Quest — Potencial","descripcion":"Navega partículas hacia zonas de menor potencial. ¡El trabajo hace la diferencia!","xp":25,"logro":{"id":"logro_m4","nombre":"Explorador de Superficies","icono":"⛰️"} },
         { "id":"m4-l7","tipo":"ejercicio","recurso":"talleres/Taller_4_Potencial_Electrico.html","titulo":"5. Taller Práctico — Potencial Eléctrico","descripcion":"Problemas de energía potencial, potencial de distribuciones y equipotenciales.","xp":30 },
-        { "id":"m4-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_4.html","titulo":"6. Quiz Adaptativo — Módulo 4","descripcion":"Evalúa desde conceptos de trabajo hasta cálculo de potencial en distribuciones complejas.","xp":40 },
+        { "id":"m4-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_4.html","titulo":"6. Quiz Adaptativo — Módulo 4","descripcion":"Evalúa desde conceptos de trabajo hasta cálculo de potencial en distribuciones complejas.","xp":40 },
         {
             "id": "m4-eval", "tipo": "quiz",
-            "recurso": "quizzes/Cuestionario_4_Distribuciones_de_Carga_continua.html",
+            "recurso": "Examen/Cuestionario_4_Distribuciones_de_Carga_continua.html",
             "titulo": "7. Evaluación del Módulo 4",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50

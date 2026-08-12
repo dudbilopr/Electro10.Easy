@@ -22,7 +22,7 @@ export const modulo6 = {
             { "id":"m6-t2","tipo":"ejercicio","recurso":"talleres/Taller_6_2_Leyes_K.html","titulo":"5.2 Taller — Leyes de Kirchhoff","descripcion":"Análisis sistemático de redes usando LKV y LKC con 20 problemas.","xp":30 }
           ]
         },
-        { "id":"m6-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_6.html","titulo":"6. Quiz Adaptativo — Módulo 6","descripcion":"Desde Ley de Ohm hasta análisis de redes complejas con Kirchhoff.","xp":40 },
+        { "id":"m6-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_6.html","titulo":"6. Quiz Adaptativo — Módulo 6","descripcion":"Desde Ley de Ohm hasta análisis de redes complejas con Kirchhoff.","xp":40 },
         { "id":"m6-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 6: Reemplaza "#" con tu link
           "llmLink": "#",

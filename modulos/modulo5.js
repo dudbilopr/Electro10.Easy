@@ -17,10 +17,10 @@ export const modulo5 = {
         },
         { "id":"m5-j1","tipo":"juego","recurso":"juegos/Juego_5.html","titulo":"4. Physics Quest — Capacitancia","descripcion":"Diseña el capacitor perfecto para almacenar la energía requerida. ¡5 desafíos de ingeniería!","xp":25,"logro":{"id":"logro_m5","nombre":"Ingeniero de Circuitos","icono":"🔋"} },
         { "id":"m5-l7","tipo":"ejercicio","recurso":"talleres/Taller_5_Capacitancia.html","titulo":"5. Taller Práctico — Capacitancia","descripcion":"Problemas de capacitores simples, combinaciones en red y energía almacenada.","xp":30 },
-        { "id":"m5-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_5.html","titulo":"6. Quiz Adaptativo — Módulo 5","descripcion":"Desde definición de capacitancia hasta cálculo de energía con dieléctricos.","xp":40 },
+        { "id":"m5-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_5.html","titulo":"6. Quiz Adaptativo — Módulo 5","descripcion":"Desde definición de capacitancia hasta cálculo de energía con dieléctricos.","xp":40 },
         {
             "id": "m5-eval", "tipo": "quiz",
-            "recurso": "quizzes/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
+            "recurso": "Examen/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
             "titulo": "7. Evaluación del Módulo 5",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50

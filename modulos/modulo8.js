@@ -18,7 +18,7 @@ export const modulo8 = {
         },
         { "id":"m8-j1","tipo":"juego","recurso":"juegos/Juego_8.html","titulo":"4. Physics Quest — Biot-Savart","descripcion":"¡Construye el electroimán perfecto! Elige geometría y corriente para alcanzar el campo objetivo.","xp":25,"logro":{"id":"logro_m8","nombre":"Arquitecto Magnético","icono":"🧲"} },
         { "id":"m8-l7","tipo":"ejercicio","recurso":"talleres/Taller_8_Biot_Savart.html","titulo":"5. Taller Práctico — Biot-Savart","descripcion":"Cálculo del campo magnético de hilos, arcos, espiras y solenoides finitos.","xp":30 },
-        { "id":"m8-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_8.html","titulo":"6. Quiz Adaptativo — Módulo 8","descripcion":"Evalúa desde la dirección de B hasta cálculos integrales de Biot-Savart.","xp":40 },
+        { "id":"m8-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_8.html","titulo":"6. Quiz Adaptativo — Módulo 8","descripcion":"Evalúa desde la dirección de B hasta cálculos integrales de Biot-Savart.","xp":40 },
         { "id":"m8-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 8: Reemplaza "#" con tu link
           "llmLink": "#",

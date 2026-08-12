@@ -17,7 +17,7 @@ export const modulo9 = {
         },
         { "id":"m9-j1","tipo":"juego","recurso":"juegos/Juego_9.html","titulo":"4. Physics Quest — Ley de Ampere","descripcion":"Elige el camino amperiano correcto y calcula el campo. ¡5 geometrías distintas!","xp":25,"logro":{"id":"logro_m9","nombre":"Maestro Amperiano","icono":"🔄"} },
         { "id":"m9-l7","tipo":"ejercicio","recurso":"talleres/Taller_9_Ley_de_Ampere.html","titulo":"5. Taller Práctico — Ley de Ampere","descripcion":"Problemas de solenoides, toroides, conductores coaxiales y campo toroidal.","xp":30 },
-        { "id":"m9-q1","tipo":"quiz","recurso":"quizzes/Quiz_Adaptativo_9.html","titulo":"6. Quiz Adaptativo — Módulo 9","descripcion":"Evalúa desde el concepto de circulación hasta aplicaciones con corriente de desplazamiento.","xp":40 },
+        { "id":"m9-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_9.html","titulo":"6. Quiz Adaptativo — Módulo 9","descripcion":"Evalúa desde el concepto de circulación hasta aplicaciones con corriente de desplazamiento.","xp":40 },
         { "id":"m9-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 9: Reemplaza "#" con tu link
           "llmLink": "#",

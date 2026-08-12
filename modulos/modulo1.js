@@ -58,14 +58,14 @@ export const modulo1 = {
         },
         {
             "id": "m1-q1", "tipo": "quiz",
-            "recurso": "quizzes/Quiz_Adaptativo_1.html",
+            "recurso": "Examen/Quiz_Adaptativo_1.html",
             "titulo": "6. Quiz Adaptativo — Módulo 1",
             "descripcion": "10 preguntas adaptadas a tu nivel. El sistema ajusta la dificultad según tu desempeño.",
             "xp": 40
         },
         {
             "id": "m1-eval", "tipo": "quiz",
-            "recurso": "quizzes/Cuestionario_1_Ley_de_Coulomb.html",
+            "recurso": "Examen/Cuestionario_1_Ley_de_Coulomb.html",
             "titulo": "7. Evaluación del Módulo 1",
             "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
             "xp": 50
