@@ -867,3 +867,26 @@ body.focus-mode-active .bento-container:not([style*="display: block"]) { display
     transition: all 0.3s;
 }
 #pomodoro-floating:hover { transform: scale(1.05); }
+
+/* ===================== YOUTUBE STYLE LAYOUT OVERRIDES ===================== */
+.viewer-container {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start;
+}
+.main-player {
+    flex: 1 1 0% !important;
+    min-width: 0;
+}
+.right-sidebar {
+    width: 350px !important;
+    flex-shrink: 0 !important;
+}
+@media(max-width: 1024px) {
+    .viewer-container {
+        flex-direction: column !important;
+    }
+    .right-sidebar {
+        width: 100% !important;
+    }
+}

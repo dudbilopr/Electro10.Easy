@@ -22,6 +22,8 @@ export function getIconForType(tipo) {
         case 'ejercicio':       return 'edit_note';
         case 'quiz':            return 'quiz';
         case 'enlaces':         return 'folder_special';
+        case 'juego':           return 'sports_esports';
+        case 'clase_emi':       return 'school';
         default:                return 'description';
     }
 }
