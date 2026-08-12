@@ -3,470 +3,1166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Physics Quest — Ley de Coulomb</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<title>Charge Wars — Módulo 1: Electrostática</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});">
+</script>
 <style>
-:root{--accent:#2563eb;--bg:#070b1a;--surface:#0f172a;--card:#1e293b;--border:rgba(255,255,255,0.07);--text:#f1f5f9;--mid:#94a3b8;--success:#10b981;--danger:#ef4444;--warning:#f59e0b;--glow:rgba(37,99,235,0.4)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-/* Stars */
-.stars{position:fixed;width:100%;height:100%;top:0;left:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at center,#0a1628 0%,var(--bg) 100%)}
-.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--t,3s) ease-in-out infinite}
-@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.8;transform:scale(1.3)}}
-/* Layout */
-.game-wrapper{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-/* Header */
-.game-header{width:100%;text-align:center;margin-bottom:24px}
-.game-logo{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:6px;text-shadow:0 0 20px var(--glow)}
-.game-title{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
-/* HUD */
-.hud{display:flex;gap:12px;width:100%;margin-bottom:20px;flex-wrap:wrap}
-.hud-card{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;text-align:center}
-.hud-val{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--accent)}
-.hud-lbl{font-size:0.7rem;color:var(--mid);margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
-.lives-display{display:flex;gap:4px;justify-content:center;margin-top:4px}
-.heart{font-size:1.1rem;transition:all .3s}
-.heart.lost{opacity:.2;filter:grayscale(1);transform:scale(.8)}
-/* Timer ring */
-.timer-ring{position:relative;width:56px;height:56px;margin:0 auto}
-.timer-ring svg{transform:rotate(-90deg)}
-.timer-ring circle{fill:none;stroke:var(--surface);stroke-width:4}
-.timer-ring .prog{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .5s}
-.timer-val{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',monospace;font-size:.85rem;font-weight:900}
-/* Progress bar */
-.round-bar{width:100%;background:var(--surface);border-radius:999px;height:6px;margin-bottom:20px;overflow:hidden}
-.round-fill{height:100%;background:linear-gradient(90deg,var(--accent),#7c3aed);border-radius:999px;transition:width .6s ease}
-/* Card */
-.question-card{width:100%;background:linear-gradient(135deg,var(--card),#0f1929);border:1px solid var(--border);border-radius:24px;padding:32px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(37,99,235,0.08)}
-.question-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 70% 30%,rgba(37,99,235,0.05),transparent 50%);pointer-events:none}
-.round-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:20px;padding:4px 14px;font-size:0.75rem;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}
-.q-category{font-size:0.72rem;color:var(--mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-.q-text{font-size:1.1rem;font-weight:600;line-height:1.65;margin-bottom:8px}
-.q-formula{background:rgba(255,255,255,0.04);border:1px solid rgba(37,99,235,0.25);border-radius:10px;padding:12px 16px;font-family:'Courier New',monospace;font-size:0.95rem;color:#93c5fd;margin-bottom:20px;text-align:center}
-/* Options */
-.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-@media(max-width:600px){.options{grid-template-columns:1fr}}
-.opt{background:rgba(255,255,255,0.03);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;color:var(--text);font-size:0.9rem;cursor:pointer;text-align:left;transition:all .2s;display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif}
-.opt:hover{border-color:var(--accent);background:rgba(37,99,235,0.08);transform:translateY(-2px);box-shadow:0 4px 20px rgba(37,99,235,0.15)}
-.opt.sel{border-color:var(--accent);background:rgba(37,99,235,0.12)}
-.opt.correct{border-color:var(--success)!important;background:rgba(16,185,129,0.12)!important;animation:pulse-green .5s ease}
-.opt.wrong{border-color:var(--danger)!important;background:rgba(239,68,68,0.08)!important;animation:shake .4s ease}
-@keyframes pulse-green{0%,100%{box-shadow:none}50%{box-shadow:0 0 20px rgba(16,185,129,0.4)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.opt-key{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
-/* Feedback */
-.feedback{border-radius:12px;padding:14px 18px;margin-top:8px;font-size:0.88rem;line-height:1.5;display:none;animation:fadeIn .3s ease}
-.feedback.show{display:block}
-.feedback.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#6ee7b7}
-.feedback.bad{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#fca5a5}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-/* XP popup */
-.xp-pop{position:fixed;top:30%;left:50%;transform:translateX(-50%);font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:#f59e0b;pointer-events:none;text-shadow:0 0 20px rgba(245,158,11,0.6);opacity:0;z-index:999;transition:all .8s}
-.xp-pop.show{opacity:1;transform:translateX(-50%) translateY(-40px)}
-/* Next btn */
-.next-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#7c3aed);border:none;border-radius:12px;color:#fff;font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s;margin-top:12px;display:none}
-.next-btn.show{display:block}
-.next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,99,235,0.3)}
-/* Results */
-.results{width:100%;background:linear-gradient(135deg,var(--card),#0f1929);border:1px solid var(--border);border-radius:24px;padding:36px;text-align:center;display:none;animation:fadeIn .5s ease}
-.results.show{display:block}
-.result-trophy{font-size:64px;margin-bottom:12px;display:block;animation:bounce 1s ease infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.result-title{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;margin-bottom:6px}
-.result-xp{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:#f59e0b;margin:16px 0;text-shadow:0 0 20px rgba(245,158,11,0.4)}
-.stat-row{display:flex;justify-content:center;gap:16px;margin:16px 0;flex-wrap:wrap}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;min-width:90px}
-.stat-n{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:900;color:var(--accent)}
-.stat-l{font-size:0.7rem;color:var(--mid);margin-top:4px}
-.achievement{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:16px 20px;margin:16px 0;display:flex;align-items:center;gap:14px;text-align:left}
-.achievement-icon{font-size:2rem;flex-shrink:0}
-.achievement-name{font-weight:700;font-size:0.95rem;color:#fcd34d}
-.achievement-desc{font-size:0.78rem;color:var(--mid);margin-top:2px}
-.btn-restart{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);padding:12px 24px;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;transition:all .2s;margin-right:10px}
-.btn-restart:hover{background:rgba(255,255,255,0.1)}
-.btn-save{background:linear-gradient(135deg,var(--accent),#7c3aed);border:none;color:#fff;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;transition:all .2s}
-.btn-save:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.3)}
+:root {
+  --bg:#05080f; --surface:#0d1424; --card:#1a2338; --border:rgba(255,255,255,0.07);
+  --positive:#ff4d4d; --negative:#4da6ff; --neutral:#8a9bb0;
+  --accent:#00f2fe; --purple:#a855f7; --green:#10b981; --yellow:#f59e0b;
+  --text:#f1f5f9; --mid:#94a3b8;
+  --glow-pos:rgba(255,77,77,0.5); --glow-neg:rgba(77,166,255,0.5); --glow-cyan:rgba(0,242,254,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+
+/* ── Layout ── */
+#ui-root{position:fixed;inset:0;display:flex;flex-direction:column;z-index:2;}
+#hud{display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(5,8,15,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);flex-wrap:wrap;min-height:60px;}
+#hud.hidden{display:none;}
+#canvas-wrap{flex:1;position:relative;}
+canvas#game{display:block;width:100%;height:100%;}
+
+/* ── HUD Elements ── */
+.hud-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 12px;text-align:center;min-width:68px;}
+.hud-val{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:var(--accent);}
+.hud-lbl{font-size:0.6rem;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+
+/* Charge meter */
+#charge-meter{display:flex;flex-direction:column;align-items:center;gap:3px;}
+#charge-bar-wrap{width:120px;height:14px;background:var(--surface);border-radius:999px;border:1px solid var(--border);position:relative;overflow:hidden;}
+#charge-bar{height:100%;transition:all .3s;border-radius:999px;}
+#charge-label{font-family:'Orbitron',monospace;font-size:0.75rem;font-weight:700;}
+.positive{color:var(--positive);}
+.negative{color:var(--negative);}
+.neutral{color:var(--neutral);}
+
+/* Level badge */
+#level-badge{display:flex;align-items:center;gap:6px;background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.3);border-radius:8px;padding:5px 12px;font-size:0.78rem;font-weight:700;color:var(--purple);}
+
+/* Lives */
+#lives-display{font-size:1.1rem;letter-spacing:3px;}
+
+/* ── Overlays ── */
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;padding:20px;}
+
 /* Start screen */
-.start-screen{width:100%;text-align:center;padding:20px}
-.start-desc{font-size:1rem;color:var(--mid);line-height:1.6;max-width:500px;margin:0 auto 24px;margin-top:12px}
-.rules{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:left;max-width:500px;margin:0 auto 24px}
-.rules li{padding:6px 0;font-size:0.88rem;color:var(--mid);display:flex;align-items:center;gap:8px}
-.rules li span{color:var(--text)}
-.start-btn{background:linear-gradient(135deg,var(--accent),#7c3aed);border:none;color:#fff;padding:16px 48px;border-radius:14px;cursor:pointer;font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;letter-spacing:2px;transition:all .3s;box-shadow:0 8px 30px rgba(37,99,235,0.3)}
-.start-btn:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(37,99,235,0.4)}
+#start-screen{background:rgba(5,8,15,0.97);}
+.start-inner{max-width:680px;width:100%;text-align:center;}
+.game-logo{font-family:'Orbitron',monospace;font-size:0.75rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;text-shadow:0 0 12px var(--glow-cyan);margin-bottom:8px;}
+.game-title{font-family:'Orbitron',monospace;font-size:clamp(1.4rem,4vw,2.4rem);font-weight:900;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.game-sub{color:var(--mid);font-size:0.88rem;line-height:1.7;margin-bottom:20px;}
+.mechanics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:24px;text-align:left;}
+.mech-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.mech-icon{font-size:1.4rem;margin-bottom:4px;}
+.mech-title{font-size:0.72rem;font-weight:700;color:var(--text);margin-bottom:2px;}
+.mech-desc{font-size:0.65rem;color:var(--mid);line-height:1.4;}
+.start-btn{padding:14px 40px;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#4facfe);color:#0f172a;font-family:'Inter',sans-serif;box-shadow:0 0 30px var(--glow-cyan);transition:transform .15s;}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 0 40px var(--glow-cyan);}
+
+/* Concept popup */
+#concept-popup{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;display:none;width:90%;max-width:540px;background:rgba(5,8,15,0.97);border:2px solid var(--accent);border-radius:18px;padding:26px;box-shadow:0 0 60px var(--glow-cyan);}
+#concept-popup.show{display:block;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.8);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+.cp-badge{display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:20px;padding:3px 12px;margin-bottom:8px;}
+.cp-title{font-family:'Orbitron',monospace;font-size:1.15rem;font-weight:900;margin-bottom:10px;line-height:1.3;}
+.cp-formula{background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.18);border-radius:10px;padding:12px;margin:10px 0;text-align:center;overflow-x:auto;}
+.cp-desc{color:var(--mid);font-size:0.87rem;line-height:1.65;margin-bottom:10px;}
+.cp-fact{background:rgba(168,85,247,0.08);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:9px 13px;font-size:0.8rem;color:#c4b5fd;margin-bottom:16px;line-height:1.5;}
+.cp-continue{width:100%;padding:12px;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#4facfe);color:#0f172a;font-family:'Inter',sans-serif;box-shadow:0 0 15px var(--glow-cyan);transition:transform .15s;}
+.cp-continue:hover{transform:translateY(-2px);}
+.cp-hint{color:var(--mid);font-size:0.7rem;margin-top:7px;text-align:center;}
+
+/* Level popup */
+#level-popup{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;display:none;width:90%;max-width:480px;background:rgba(10,5,30,0.97);border:2px solid var(--purple);border-radius:18px;padding:30px;box-shadow:0 0 60px rgba(168,85,247,.45);text-align:center;}
+#level-popup.show{display:block;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.lp-num{font-family:'Orbitron',monospace;font-size:4rem;font-weight:900;color:var(--purple);text-shadow:0 0 30px rgba(168,85,247,.8);margin-bottom:4px;}
+.lp-title{font-family:'Orbitron',monospace;font-size:1.1rem;color:#d8b4fe;margin-bottom:10px;}
+.lp-desc{color:var(--mid);font-size:0.87rem;line-height:1.6;margin-bottom:20px;}
+.lp-start{width:100%;padding:13px;border:none;border-radius:11px;font-size:1rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--purple),#ec4899);color:white;font-family:'Inter',sans-serif;transition:transform .15s;}
+.lp-start:hover{transform:translateY(-2px);}
+
+/* End screen */
+#end-screen{background:rgba(5,8,15,0.97);display:none;}
+#end-screen.show{display:flex;}
+.end-inner{text-align:center;max-width:500px;}
+.end-emoji{font-size:3.5rem;margin-bottom:8px;}
+.end-title{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;margin-bottom:6px;}
+.end-sub{color:var(--mid);font-size:0.88rem;line-height:1.6;margin-bottom:18px;}
+.end-stats{display:flex;gap:14px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.es-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 18px;min-width:80px;}
+.es-val{font-family:'Orbitron',monospace;font-size:1.3rem;color:var(--accent);}
+.es-lbl{font-size:0.62rem;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.end-btn{padding:13px 32px;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#4facfe);color:#0f172a;font-family:'Inter',sans-serif;box-shadow:0 0 20px var(--glow-cyan);transition:transform .15s;}
+.end-btn:hover{transform:translateY(-2px);}
+
+/* Mini instruction toast */
+#toast{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,242,254,0.12);border:1px solid rgba(0,242,254,0.25);border-radius:20px;padding:6px 18px;font-size:0.75rem;color:var(--accent);pointer-events:none;z-index:5;transition:opacity .5s;white-space:nowrap;}
+#toast.fade{opacity:0;}
 </style>
 </head>
 <body>
-<!-- Stars -->
-<div class="stars" id="stars"></div>
 
-<!-- XP Popup -->
-<div class="xp-pop" id="xp-pop"></div>
+<!-- ═══════════════════ UI ROOT ═══════════════════ -->
+<div id="ui-root">
 
-<div class="game-wrapper">
-  <!-- START SCREEN -->
-  <div id="start-screen" class="start-screen">
-    <div class="game-header">
-      <div class="game-logo">⚡ Physics Quest</div>
-      <div class="game-title" id="main-title">Ley de Coulomb</div>
+  <!-- ── HUD ── -->
+  <div id="hud" class="hidden">
+    <div class="hud-pill">
+      <div class="hud-val" id="hud-score">0</div>
+      <div class="hud-lbl">Puntos</div>
     </div>
-    <div class="start-desc" id="main-desc">Pon a prueba tu conocimiento sobre la fuerza entre cargas eléctricas. 5 rondas · 3 vidas · XP y logros.</div>
-    <div class="rules">
-      <ul style="list-style:none">
-        <li>⚡ <span>5 rondas de dificultad creciente</span></li>
-        <li>❤️ <span>3 vidas — cada error cuesta una</span></li>
-        <li>⏱️ <span>20 segundos por pregunta</span></li>
-        <li>🎯 <span>Responder rápido da más XP</span></li>
-        <li>🏆 <span>Desbloquea logros con 100% de aciertos</span></li>
-      </ul>
+    <div id="level-badge">⚡ Nivel <span id="hud-level">1</span> &mdash; <span id="hud-lname">Electrización</span></div>
+    <div id="charge-meter">
+      <div id="charge-label" class="neutral">Neutro (q=0)</div>
+      <div id="charge-bar-wrap">
+        <div id="charge-bar"></div>
+      </div>
+      <div style="font-size:0.6rem;color:var(--mid);">CARGA NETA DEL JUGADOR</div>
     </div>
-    <button class="start-btn" onclick="startGame()">⚡ INICIAR JUEGO</button>
+    <div class="hud-pill">
+      <div class="hud-val" id="hud-concepts">0</div>
+      <div class="hud-lbl">Conceptos</div>
+    </div>
+    <div class="hud-pill">
+      <div id="lives-display">❤️❤️❤️</div>
+      <div class="hud-lbl">Vidas</div>
+    </div>
+    <div class="hud-pill" id="hud-friction-zone" style="display:none;">
+      <div class="hud-val" style="font-size:0.75rem;" id="friction-label">—</div>
+      <div class="hud-lbl">Zona Fricción</div>
+    </div>
   </div>
 
-  <!-- GAME SCREEN (hidden) -->
-  <div id="game-screen" style="width:100%;display:none">
-    <!-- HUD -->
-    <div class="hud">
-      <div class="hud-card">
-        <div class="hud-val" id="hud-score">0</div>
-        <div class="hud-lbl">Puntos</div>
-      </div>
-      <div class="hud-card">
-        <div class="timer-ring">
-          <svg width="56" height="56" viewBox="0 0 56 56">
-            <circle cx="28" cy="28" r="22" stroke-width="4"/>
-            <circle id="timer-prog" class="prog" cx="28" cy="28" r="22" stroke-width="4" stroke-dasharray="138.2" stroke-dashoffset="0"/>
-          </svg>
-          <div class="timer-val" id="timer-val">20</div>
+  <!-- ── Canvas ── -->
+  <div id="canvas-wrap">
+    <canvas id="game"></canvas>
+
+    <!-- Toast -->
+    <div id="toast">Usa ← → ↑ ↓ para mover la partícula</div>
+
+    <!-- ───── Start Screen ───── -->
+    <div id="start-screen" class="overlay">
+      <div class="start-inner">
+        <div class="game-logo">Módulo 1 · Electrostática</div>
+        <div class="game-title">⚡ Charge Wars</div>
+        <div class="game-sub">
+          Controla una partícula cargada dentro de un campo eléctrico real.<br>
+          La física de Coulomb actúa sobre ti — la atracción y la repulsión son reales en el juego.<br>
+          Cambia tu carga neta con zonas de fricción. Aprende 25 conceptos en 5 niveles.
         </div>
-        <div class="hud-lbl" style="margin-top:0">Tiempo</div>
-      </div>
-      <div class="hud-card">
-        <div class="hud-val" id="hud-round">1/5</div>
-        <div class="hud-lbl">Ronda</div>
-      </div>
-      <div class="hud-card">
-        <div class="lives-display" id="lives-display">❤️❤️❤️</div>
-        <div class="hud-lbl">Vidas</div>
+        <div class="mechanics-grid">
+          <div class="mech-card">
+            <div class="mech-icon">⚡</div>
+            <div class="mech-title">Fuerza de Coulomb Real</div>
+            <div class="mech-desc">Los protones y electrones del campo te empujan y jalan según tu carga actual.</div>
+          </div>
+          <div class="mech-card">
+            <div class="mech-icon">🔴</div>
+            <div class="mech-title">Protones (+)</div>
+            <div class="mech-desc">Repelen partículas positivas, atraen negativas. Cuidado si tu carga cambia.</div>
+          </div>
+          <div class="mech-card">
+            <div class="mech-icon">🔵</div>
+            <div class="mech-title">Electrones (−)</div>
+            <div class="mech-desc">Repelen partículas negativas, atraen positivas. Úsalos como escudo estratégico.</div>
+          </div>
+          <div class="mech-card">
+            <div class="mech-icon">⚪</div>
+            <div class="mech-title">Neutrones</div>
+            <div class="mech-desc">Sin carga. Son obstáculos estáticos que bloquean tu camino.</div>
+          </div>
+          <div class="mech-card">
+            <div class="mech-icon">🧤</div>
+            <div class="mech-title">Zonas de Fricción</div>
+            <div class="mech-desc">Vidrio, goma, seda y lana cambian tu carga neta por triboelectricidad.</div>
+          </div>
+          <div class="mech-card">
+            <div class="mech-icon">✨</div>
+            <div class="mech-title">Orbes de Concepto</div>
+            <div class="mech-desc">Recógelos para aprender física real con ecuaciones LaTeX. ¡25 conceptos!</div>
+          </div>
+        </div>
+        <button class="start-btn" onclick="Game.start()">▶ Iniciar Experimento</button>
       </div>
     </div>
 
-    <!-- Round bar -->
-    <div class="round-bar"><div class="round-fill" id="round-fill" style="width:0%"></div></div>
-
-    <!-- Question card -->
-    <div class="question-card" id="question-card">
-      <div class="round-badge">⚡ <span id="round-label">Ronda 1 — Calentamiento</span></div>
-      <div class="q-category" id="q-cat">FÍSICA ELECTROSTÁTICA</div>
-      <div class="q-text" id="q-text">Cargando...</div>
-      <div class="q-formula" id="q-formula" style="display:none"></div>
-      <div class="options" id="options-grid"></div>
-      <div class="feedback" id="feedback-box"></div>
-      <button class="next-btn" id="next-btn" onclick="nextRound()">SIGUIENTE RONDA →</button>
+    <!-- ───── Concept Popup ───── -->
+    <div id="concept-popup">
+      <div class="cp-badge" id="cp-badge">Concepto</div>
+      <div class="cp-title" id="cp-title">Título</div>
+      <div class="cp-formula" id="cp-formula"></div>
+      <div class="cp-desc" id="cp-desc"></div>
+      <div class="cp-fact" id="cp-fact"></div>
+      <button class="cp-continue" onclick="Game.resumeAfterConcept()">Continuar Experimento →</button>
+      <div class="cp-hint">También puedes presionar <strong>Espacio</strong></div>
     </div>
-  </div>
 
-  <!-- RESULTS (hidden) -->
-  <div class="results" id="results-screen">
-    <span class="result-trophy" id="result-trophy">🏆</span>
-    <div class="result-title" id="result-title">¡Misión Completada!</div>
-    <div style="color:var(--mid);font-size:0.9rem;margin-top:4px" id="result-sub">Has completado el Physics Quest</div>
-    <div class="result-xp" id="result-xp">+0 XP</div>
-    <div class="stat-row">
-      <div class="stat"><div class="stat-n" id="stat-score">0</div><div class="stat-l">Puntos</div></div>
-      <div class="stat"><div class="stat-n" id="stat-correct">0/5</div><div class="stat-l">Correctas</div></div>
-      <div class="stat"><div class="stat-n" id="stat-best">0s</div><div class="stat-l">Mejor tiempo</div></div>
+    <!-- ───── Level Popup ───── -->
+    <div id="level-popup">
+      <div class="lp-num" id="lp-num">2</div>
+      <div class="lp-title" id="lp-title">Ley de Coulomb</div>
+      <div class="lp-desc" id="lp-desc"></div>
+      <button class="lp-start" onclick="Game.nextLevel()">⚡ Comenzar Nivel</button>
     </div>
-    <div class="achievement" id="achievement-box" style="display:none">
-      <div class="achievement-icon" id="ach-icon">⭐</div>
-      <div>
-        <div class="achievement-name" id="ach-name">Logro desbloqueado</div>
-        <div class="achievement-desc" id="ach-desc">Descripción del logro</div>
+
+    <!-- ───── End Screen ───── -->
+    <div id="end-screen" class="overlay">
+      <div class="end-inner">
+        <div class="end-emoji" id="end-emoji">🏆</div>
+        <div class="end-title" id="end-title">¡Misión Completada!</div>
+        <div class="end-sub" id="end-sub">Has dominado la electrostática del Módulo 1.</div>
+        <div class="end-stats">
+          <div class="es-box"><div class="es-val" id="es-score">0</div><div class="es-lbl">Puntos</div></div>
+          <div class="es-box"><div class="es-val" id="es-concepts">0</div><div class="es-lbl">Conceptos</div></div>
+          <div class="es-box"><div class="es-val" id="es-levels">5</div><div class="es-lbl">Niveles</div></div>
+        </div>
+        <button class="end-btn" onclick="Game.restart()">🔄 Jugar de Nuevo</button>
       </div>
     </div>
-    <div style="margin-top:16px">
-      <button class="btn-restart" onclick="restartGame()">🔄 Reintentar</button>
-      <button class="btn-save" onclick="saveResult()">✅ Guardar progreso</button>
-    </div>
-  </div>
-</div>
 
+  </div><!-- end canvas-wrap -->
+</div><!-- end ui-root -->
+
+<!-- ═══════════════════ GAME SCRIPT ═══════════════════ -->
 <script>
-// ═══════════════════════════════════════════════════════════
-// CONFIGURACIÓN DEL JUEGO — Módulo 1: Ley de Coulomb
-// ═══════════════════════════════════════════════════════════
-const GAME_CONFIG = {
-  titulo: "Ley de Coulomb",
-  descripcion: "Pon a prueba tu conocimiento sobre la fuerza entre cargas eléctricas. 5 rondas · 3 vidas · XP y logros.",
-  color: "#2563eb",
-  moduloId: "m1-j1",
-  xpGanado: 25,
-  logro: { icono: "⚡", nombre: "Maestro Electrostático", desc: "Completaste el Physics Quest de Coulomb con todas las respuestas correctas" },
-  rondas: [
-    {
-      titulo: "Ronda 1 — Calentamiento",
-      categoria: "CONCEPTOS FUNDAMENTALES",
-      pregunta: "¿Qué tipo de fuerza ejerce la Ley de Coulomb entre dos cargas del mismo signo?",
-      opciones: ["Fuerza de atracción", "Fuerza de repulsión", "No hay fuerza entre ellas", "Fuerza gravitacional"],
-      correcta: 1,
-      formula: null,
-      feedback_ok: "¡Correcto! Cargas iguales se REPELEN. Cargas opuestas se atraen.",
-      feedback_bad: "Cargas del mismo signo se repelen. '+ y + → repulsión'; '+ y − → atracción'."
-    },
-    {
-      titulo: "Ronda 2 — Cálculo Básico",
-      categoria: "CÁLCULO NUMÉRICO",
-      pregunta: "Dos cargas de +1 μC cada una, separadas 1 m. ¿Cuánto vale la fuerza entre ellas?",
-      formula: "F = kq₁q₂/r², k = 9×10⁹ N·m²/C²",
-      opciones: ["9 × 10⁻³ N", "9 × 10⁻⁶ N", "9 × 10⁻⁹ N", "9 × 10³ N"],
-      correcta: 0,
-      feedback_ok: "¡Perfecto! F = 9×10⁹ × (10⁻⁶)² / 1 = 9×10⁻³ N = 9 mN.",
-      feedback_bad: "F = k × q² / r² = 9×10⁹ × 10⁻¹² / 1 = 9×10⁻³ N. Recuerda: μC = 10⁻⁶ C."
-    },
-    {
-      titulo: "Ronda 3 — Proporcionalidad",
-      categoria: "ANÁLISIS PROPORCIONAL",
-      pregunta: "Si la distancia entre dos cargas se TRIPLICA, ¿en qué factor cambia la fuerza?",
-      formula: "F ∝ 1/r²",
-      opciones: ["Se reduce a 1/3", "Se reduce a 1/9", "Se triplica", "No cambia"],
-      correcta: 1,
-      feedback_ok: "¡Brillante! F ∝ 1/r². Si r → 3r: F_nueva = F/(3²) = F/9.",
-      feedback_bad: "F ∝ 1/r². Si r → 3r entonces F_nueva/F_original = 1/(3)² = 1/9."
-    },
-    {
-      titulo: "Ronda 4 — Superposición",
-      categoria: "PRINCIPIO DE SUPERPOSICIÓN",
-      pregunta: "¿Cuántas cargas pueden participar en la aplicación del Principio de Superposición de Coulomb?",
-      opciones: ["Solo 2 cargas", "Máximo 3 cargas", "Cualquier número de cargas", "Depende del medio"],
-      correcta: 2,
-      formula: "F_total = Σ F_ij (suma vectorial)",
-      feedback_ok: "¡Exacto! El principio de superposición aplica para cualquier número de cargas: la fuerza total es la suma vectorial de todas las fuerzas individuales.",
-      feedback_bad: "El principio de superposición no tiene límite en el número de cargas. F_total = ΣF_i para todos los pares."
-    },
-    {
-      titulo: "Ronda 5 — Desafío Final",
-      categoria: "APLICACIÓN AVANZADA",
-      pregunta: "Un electrón y un protón separados por el radio de Bohr (5.29×10⁻¹¹ m). Comparando fuerzas: F_eléctrica vs F_gravitacional, ¿cuál es mayor y por cuánto?",
-      formula: "Fe = ke²/r², Fg = Gm_em_p/r²",
-      opciones: ["F_eléctrica ≈ 10³⁹ × F_gravitacional", "Son iguales a escala atómica", "F_gravitacional es mayor", "F_eléctrica ≈ 10² × F_gravitacional"],
-      correcta: 0,
-      feedback_ok: "¡Dominio absoluto! La fuerza eléctrica entre protón y electrón es ~2.2×10³⁹ veces más intensa que la gravedad entre ellos. ¡El electromagnetismo domina la escala atómica!",
-      feedback_bad: "Fe/Fg = ke²/(Gm_em_p) ≈ 10³⁹. La fuerza eléctrica es ENORMEMENTE mayor que la gravitacional a escala atómica."
+// ────────────────────────────────────────────────────────────────
+//  CHARGE WARS  —  Módulo 1: Electrostática
+//  Física simulada: Ley de Coulomb, atracción/repulsión,
+//  cambio de carga neta por fricción, partículas subatómicas
+// ────────────────────────────────────────────────────────────────
+
+// ══ PEDAGOGICAL DATABASE ═════════════════════════════════════════
+const LEVELS_DATA = [
+  {
+    id:1, name:'Electrización', color:'#00f2fe',
+    desc:'Descubre cómo los cuerpos adquieren carga eléctrica. Recoge los 5 orbes de conocimiento mientras navegas el campo.',
+    speed:3.8, particleCount:6, frictionEnabled:true,
+    concepts:[
+      { name:'Frotamiento Triboelétrico', badge:'Triboelectricidad', color:'#00f2fe', emoji:'🔋',
+        formula:'\\Delta Q = n \\cdot e \\;,\\quad e = 1{,}602 \\times 10^{-19}\\,\\text{C}',
+        desc:'Al frotar dos materiales, los electrones saltan de uno al otro. El que pierde electrones queda positivo (+), el que los gana queda negativo (−). Esta es la electrización por frotamiento, la más antigua conocida.',
+        fact:'🏺 Tales de Mileto (s. VI a.C.) observó que el ámbar frotado con lana atraía objetos pequeños. De la palabra griega "elektron" (ámbar) nació la palabra "electricidad".' },
+      { name:'Electrización por Contacto', badge:'Conducción Directa', color:'#4facfe', emoji:'🤝',
+        formula:'Q_{final} = \\tfrac{Q_A + Q_B}{2} \\quad \\text{(esferas conductoras idénticas)}',
+        desc:'Al poner en contacto un cuerpo cargado con uno neutro, las cargas se redistribuyen. En conductores esféricos idénticos, cada uno queda con exactamente la mitad de la carga total.',
+        fact:'⚡ Un rayo es electrización por contacto masivo: las nubes transfieren hasta 1 mil millones de julios de energía al suelo en microsegundos.' },
+      { name:'Electrización por Inducción', badge:'Sin Contacto', color:'#a78bfa', emoji:'🧲',
+        formula:'\\vec{E}_{ind} \\neq 0 \\;\\Rightarrow\\; \\text{separación interna de cargas}',
+        desc:'Sin tocarlo, un cuerpo cargado reorganiza las cargas de un conductor neutro cercano. Las cargas iguales se alejan y las opuestas se acercan. Si se conecta a tierra antes de retirar el inductor, el conductor queda cargado.',
+        fact:'📡 Los pararrayos explotan la inducción: el rayo induce carga en la punta y crea un camino ionizado preferencial hacia el suelo.' },
+      { name:'Conservación de la Carga', badge:'Ley Fundamental', color:'#f59e0b', emoji:'⚖️',
+        formula:'\\sum Q_{sistema} = \\text{cte} \\quad (\\text{sistema aislado, siempre})',
+        desc:'La carga eléctrica total de un sistema aislado es siempre constante. Nunca se crea ni se destruye; solo se transfiere. Es una de las leyes de conservación más fundamentales de la física.',
+        fact:'🔬 En el LHC del CERN, las colisiones crean pares partícula-antipartícula, conservando siempre la carga total neta igual a cero.' },
+      { name:'Cuantización de la Carga', badge:'Carga Mínima', color:'#10b981', emoji:'⚛️',
+        formula:'Q = n \\cdot e \\;,\\quad n \\in \\mathbb{Z} \\;,\\quad e = 1{,}602 \\times 10^{-19}\\,\\text{C}',
+        desc:'La carga no puede tomar valores continuos: siempre es múltiplo entero de la carga elemental e. Un electrón tiene carga −e, un protón +e, y un neutrón 0. Esta cuantización fue confirmada por Millikan (1909).',
+        fact:'🏅 Robert Millikan ganó el Nobel de Física en 1923 por medir e con un experimento de gotitas de aceite flotando en un campo eléctrico.' }
+    ]
+  },
+  {
+    id:2, name:'Ley de Coulomb', color:'#f59e0b',
+    desc:'Domina la ecuación que gobierna toda la electrostática. Los protones y electrones te empujan con fuerzas reales de Coulomb.',
+    speed:4.2, particleCount:8, frictionEnabled:true,
+    concepts:[
+      { name:'Fórmula de Coulomb', badge:'Ley Fundamental', color:'#f59e0b', emoji:'⚡',
+        formula:'F = k_e \\dfrac{|q_1||q_2|}{r^2} \\;,\\quad k_e = 8{,}988 \\times 10^9 \\tfrac{\\text{N}\\cdot\\text{m}^2}{\\text{C}^2}',
+        desc:'La fuerza entre dos cargas puntuales es proporcional al producto de sus magnitudes e inversamente proporcional al cuadrado de la distancia. Esta ley explica todo el electromagnetismo estático.',
+        fact:'📐 Coulomb (1736–1806) usó una balanza de torsión de fibra de seda para medir fuerzas del orden de nanonewtons, con una precisión increíble para su época.' },
+      { name:'Dependencia r² : Ley Inversa', badge:'Decaimiento Cuadrático', color:'#fbbf24', emoji:'📉',
+        formula:'F \\propto \\dfrac{1}{r^2} \\;\\Rightarrow\\; r \\times 2 \\Rightarrow F \\div 4',
+        desc:'Si duplicas la distancia, la fuerza cae a una cuarta parte. Si la triplicas, cae a un noveno. Esta misma ley cuadrática inversa rige la gravedad de Newton y la intensidad de la luz.',
+        fact:'🌌 La similitud entre Coulomb y Newton llevó a Einstein a buscar una teoría unificada de campos por 30 años. Aún no tenemos una teoría cuántica completa de la gravedad.' },
+      { name:'Constante de Coulomb kₑ', badge:'Valor Universal', color:'#ef4444', emoji:'🔢',
+        formula:'k_e = \\dfrac{1}{4\\pi\\varepsilon_0} \\approx 8{,}988 \\times 10^9 \\;\\tfrac{\\text{N}\\cdot\\text{m}^2}{\\text{C}^2}',
+        desc:'La constante kₑ está definida a través de la permitividad del vacío ε₀. En un medio material, se divide por la constante dieléctrica κ del medio: k = kₑ/κ.',
+        fact:'💧 En agua (κ ≈ 80), la fuerza de Coulomb se reduce 80 veces, lo que permite disolver sales iónicas fácilmente. Esto hace posible la química de la vida.' },
+      { name:'Carácter Vectorial de F', badge:'Dirección y Sentido', color:'#06b6d4', emoji:'➡️',
+        formula:'\\vec{F}_{12} = k_e \\dfrac{q_1 q_2}{r^2}\\,\\hat{r}_{12}',
+        desc:'La fuerza de Coulomb es un vector: tiene magnitud y dirección. El vector unitario r̂₁₂ apunta de q₁ hacia q₂. Signos iguales → fuerza repulsiva; signos opuestos → atractiva.',
+        fact:'🎯 El signo del producto q₁q₂ determina el sentido: positivo = repulsión, negativo = atracción. ¡Por eso la notación vectorial es esencial!' },
+      { name:'Tercera Ley en Coulomb', badge:'Acción y Reacción', color:'#a855f7', emoji:'↔️',
+        formula:'\\vec{F}_{12} = -\\vec{F}_{21} \\;,\\quad |\\vec{F}_{12}| = |\\vec{F}_{21}|',
+        desc:'La fuerza que q₁ ejerce sobre q₂ es igual en magnitud pero opuesta en dirección a la que q₂ ejerce sobre q₁. La Tercera Ley de Newton también se cumple para fuerzas eléctricas.',
+        fact:'🚀 Por esto, cuando un electrón repele a otro, ambos se alejan simétricamente. La igualdad de fuerzas es exacta, incluso si las masas son muy diferentes.' }
+    ]
+  },
+  {
+    id:3, name:'Conductores & Aislantes', color:'#10b981',
+    desc:'Aprende a clasificar los materiales según cómo responden a las cargas eléctricas.',
+    speed:4.6, particleCount:10, frictionEnabled:true,
+    concepts:[
+      { name:'Conductores Metálicos', badge:'Electrones Libres', color:'#10b981', emoji:'⚡',
+        formula:'\\vec{E}_{interno} = 0 \\quad \\text{(equilibrio electrostático)}',
+        desc:'En los metales, los electrones de valencia están desvinculados de sus núcleos y se mueven libremente. En equilibrio, el campo eléctrico dentro de un conductor es exactamente cero y todas las cargas residen en la superficie.',
+        fact:'🔌 El cobre tiene 8.5 × 10²⁸ electrones libres por m³. Un cable de 1 mm² puede conducir 15 A de corriente continua de forma segura.' },
+      { name:'Aislantes Dieléctricos', badge:'Cargas Ligadas', color:'#f59e0b', emoji:'🛡️',
+        formula:'\\kappa = \\dfrac{\\varepsilon}{\\varepsilon_0} \\geq 1 \\quad (\\text{constante dieléctrica})',
+        desc:'En los aislantes (vidrio, caucho, plástico), los electrones están firmemente ligados a los átomos. Sin flujo de carga, los dipolos moleculares pueden alinearse con el campo externo, aumentando la constante dieléctrica.',
+        fact:'🔲 Los condensadores modernos usan dieléctricos con κ > 1000 para almacenar enormes cargas en chips de milímetros cuadrados.' },
+      { name:'Semiconductores', badge:'Control por Dopaje', color:'#6366f1', emoji:'💻',
+        formula:'n_i = \\sqrt{N_c N_v}\\,e^{-E_g/(2k_BT)} \\quad (\\text{portadores intrínsecos})',
+        desc:'El silicio tiene conductividad controlable por temperatura e impurezas (dopaje). Añadir fósforo (tipo N: más electrones) o boro (tipo P: más huecos) crea la base de todos los transistores y circuitos integrados.',
+        fact:'📱 Tu smartphone tiene más de 15 000 millones de transistores en un chip del tamaño de una uña, gracias a la física de semiconductores.' },
+      { name:'Distribución Superficial de Carga', badge:'Puntas y Curvaturas', color:'#ec4899', emoji:'📍',
+        formula:'\\sigma \\propto \\dfrac{1}{R} \\;\\Rightarrow\\; \\text{mayor carga en puntas (R pequeño)}',
+        desc:'En un conductor cargado, la carga solo existe en la superficie. La densidad de carga σ es mayor donde el radio de curvatura R es menor. Por eso los pararrayos son puntiagudos: concentran la carga para atraer el rayo.',
+        fact:'⛪ Franklin inventó el pararrayos en 1752. Una catedral gótica moderna puede tener más de 50 pararrayos de cobre para proteger su estructura.' },
+      { name:'Jaula de Faraday', badge:'Blindaje Eléctrico Total', color:'#00f2fe', emoji:'🛡️',
+        formula:'\\vec{E}_{interior} = 0 \\quad (\\text{cavidad conductora cerrada})',
+        desc:'Una cavidad rodeada completamente por un conductor tiene campo eléctrico nulo en su interior, sin importar qué tan fuerte sea el campo externo. Faraday demostró esto en 1836 con una jaula de malla metálica.',
+        fact:'✈️ Los aviones son jaulas de Faraday naturales. Por eso es seguro estar dentro durante un rayo: la carrocería conduce la corriente y el interior queda protegido.' }
+    ]
+  },
+  {
+    id:4, name:'Atracción & Repulsión', color:'#ec4899',
+    desc:'Domina el juego de fuerzas opuestas. Los protones y electrones del nivel ahora se mueven buscándote activamente.',
+    speed:5.0, particleCount:12, frictionEnabled:true,
+    concepts:[
+      { name:'Regla de los Signos', badge:'Igual Repele · Opuesto Atrae', color:'#ef4444', emoji:'↔️',
+        formula:'q_1 q_2 > 0 \\Rightarrow \\text{Repulsión} \\qquad q_1 q_2 < 0 \\Rightarrow \\text{Atracción}',
+        desc:'El signo del producto de las cargas determina el tipo de fuerza. Dos cargas positivas se repelen, dos negativas también. Una positiva y una negativa se atraen mutuamente. Simple, pero explica desde átomos hasta imanes.',
+        fact:'💥 La repulsión entre núcleos positivos en el Sol es tan grande que se necesitan 100 millones de grados para lograr fusión nuclear. El campo gravitacional solar lo compensa.' },
+      { name:'Campo Eléctrico E', badge:'Intermediario de Coulomb', color:'#06b6d4', emoji:'🌐',
+        formula:'\\vec{E} = \\dfrac{\\vec{F}}{q_0} = k_e \\dfrac{q}{r^2}\\,\\hat{r} \\quad \\left[\\tfrac{\\text{N}}{\\text{C}} = \\tfrac{\\text{V}}{\\text{m}}\\right]',
+        desc:'El campo eléctrico es la "perturbación" que una carga fuente crea en el espacio. Una carga de prueba q₀ dentro del campo siente F = q₀E. El campo apunta hacia fuera de cargas positivas y hacia dentro de las negativas.',
+        fact:'💡 El campo en la punta de un pararrayos supera 10⁶ V/m antes de ionizar el aire. Esta ionización crea el "camino" brillante que vemos como un relámpago.' },
+      { name:'Potencial Eléctrico V', badge:'Energía por Carga', color:'#a855f7', emoji:'🔋',
+        formula:'V = k_e \\dfrac{q}{r} \\quad ,\\quad U = q_0 V \\quad [\\text{V = J/C}]',
+        desc:'El potencial V mide el trabajo por unidad de carga para traer una carga del infinito hasta ese punto. Las cargas se mueven espontáneamente de mayor a menor potencial (como el agua cuesta abajo). El voltaje de una pila es diferencia de potencial.',
+        fact:'🔌 Un rayo genera hasta 300 millones de voltios. Pero dura solo microsegundos, por lo que su energía total es ~250 kWh: suficiente para encender un foco por meses.' },
+      { name:'Líneas de Campo Eléctrico', badge:'Visualización de Faraday', color:'#fbbf24', emoji:'〰️',
+        formula:'\\Phi_E = \\oint \\vec{E} \\cdot d\\vec{A} = \\dfrac{Q_{enc}}{\\varepsilon_0} \\quad (\\text{Ley de Gauss})',
+        desc:'Las líneas de campo parten de cargas positivas, terminan en negativas, nunca se cruzan. La densidad de líneas indica la magnitud del campo. La Ley de Gauss dice que el flujo a través de cualquier superficie cerrada depende solo de la carga encerrada.',
+        fact:'🎨 Faraday inventó las "líneas de fuerza" en 1830 sin usar matemáticas: las dibujó intuitivamente. Maxwell las formalizó matemáticamente 30 años después.' },
+      { name:'Dipolo Eléctrico', badge:'Par de Cargas Opuestas', color:'#10b981', emoji:'⊕⊖',
+        formula:'\\vec{p} = q\\,\\vec{d} \\;(\\text{de}\\,-\\,\\text{a}\\,+) \\;,\\quad \\vec{E}_{eje} = \\dfrac{2kp}{r^3}',
+        desc:'Un dipolo es un par +q y −q separados por d. Su campo cae más rápido (r³) que el de una carga puntual (r²). Las moléculas polares como el agua son dipolos permanentes; esto explica su enorme capacidad disolvente.',
+        fact:'💧 El agua tiene p = 1.85 D. Esta asimetría de carga le da su capacidad de disolver casi cualquier sal iónica, haciéndola esencial para la química de la vida.' }
+    ]
+  },
+  {
+    id:5, name:'Superposición de Fuerzas', color:'#a855f7',
+    desc:'¡Nivel maestro! Múltiples cargas crean fuerzas que SE SUMAN como vectores. Las partículas del campo aumentan su intensidad.',
+    speed:5.5, particleCount:16, frictionEnabled:true,
+    concepts:[
+      { name:'Principio de Superposición', badge:'Corazón del Nivel 5', color:'#a855f7', emoji:'➕',
+        formula:'\\vec{F}_{net} = \\sum_{i=1}^{n} \\vec{F}_{i} = k_e q_0 \\sum_{i=1}^{n} \\dfrac{q_i}{r_i^2}\\,\\hat{r}_i',
+        desc:'La fuerza neta sobre una carga es la SUMA VECTORIAL de las fuerzas individuales de cada carga del sistema. Las fuerzas no se mezclan ni se atenúan entre sí; simplemente se adicionan vectorialmente. Este principio es exacto y universal.',
+        fact:'🎯 La superposición es tan fundamental que las ecuaciones de Maxwell son lineales por diseño. Sin linealidad, no podría coexistir luz de distintas fuentes sin interferirse destructivamente.' },
+      { name:'Suma Vectorial en 2D', badge:'Componentes y Módulo', color:'#7c3aed', emoji:'📐',
+        formula:'F_x = \\textstyle\\sum F_i\\cos\\theta_i \\;,\\; F_y = \\sum F_i\\sin\\theta_i \\;,\\; |F| = \\sqrt{F_x^2+F_y^2}',
+        desc:'Para superponer fuerzas en 2D: descompón cada fuerza en sus componentes x e y, suma por separado cada componente, y recombina con el teorema de Pitágoras. El ángulo resultante: θ = arctan(Fy/Fx).',
+        fact:'❌ Error clásico: sumar las magnitudes en lugar de los vectores. Dos fuerzas iguales perpendiculares dan resultante F√2, no 2F. ¡Un error del 41%!' },
+      { name:'Sistema de 3 Cargas en Línea', badge:'Cálculo Paso a Paso', color:'#06b6d4', emoji:'⚛️',
+        formula:'\\vec{F}_3 = \\vec{F}_{13} + \\vec{F}_{23} = k_e\\!\\left(\\dfrac{q_1 q_3}{r_{13}^2}\\hat{r}_{13}+\\dfrac{q_2 q_3}{r_{23}^2}\\hat{r}_{23}\\right)',
+        desc:'Para la fuerza sobre q₃ con tres cargas en línea: (1) calcula F₁₃ con Coulomb, (2) calcula F₂₃ con Coulomb, (3) suma los vectores considerando el signo de la dirección (+derecha, −izquierda).',
+        fact:'📊 Los átomos pesados como el mercurio tienen 80 electrones. El principio de superposición permite calcular la energía de cada electrón sumando 80 fuerzas vectorialmente.' },
+      { name:'Campo de Distribución Continua', badge:'Integral de Coulomb', color:'#f59e0b', emoji:'∫',
+        formula:'\\vec{E} = k_e \\int \\dfrac{dq}{r^2}\\,\\hat{r} = k_e \\int \\dfrac{\\lambda\\,dl}{r^2}\\,\\hat{r}',
+        desc:'Para objetos cargados continuamente, divide la carga en elementos dq = λdl (lineal), σdA (superficial), ρdV (volumétrico). Aplica Coulomb a cada dq e integra. Es superposición en su forma continua e infinitesimal.',
+        fact:'🔋 Esta integral es cómo los ingenieros calculan el campo entre las placas de un condensador, la base de todo capacitor en electrónica moderna.' },
+      { name:'Equilibrio Electrostático', badge:'Fuerza Neta Cero', color:'#10b981', emoji:'⚖️',
+        formula:'\\vec{F}_{net} = \\sum_i \\vec{F}_i = \\vec{0} \\;\\Rightarrow\\; \\text{equilibrio}',
+        desc:'Una carga está en equilibrio electrostático cuando la suma vectorial de todas las fuerzas que actúan sobre ella es cero. Puede ser equilibrio estable (vuelve si se desplaza) o inestable (se aleja si se desplaza). En cristales iónicos, los iones están en equilibrio estable.',
+        fact:'🧂 La sal (NaCl) es un cristal en equilibrio electrostático perfecto: cada Na⁺ está rodeado por 6 Cl⁻ y viceversa, maximizando la atracción y minimizando la repulsión.' }
+    ]
+  }
+];
+
+// ══ FRICTION ZONES DATABASE ══════════════════════════════════════
+const FRICTION_ZONES = [
+  { name:'Vidrio', emoji:'🪟', chargeChange:+2, color:'rgba(147,197,253,0.15)', border:'#93c5fd',
+    desc:'El vidrio pierde electrones al frotarse → carga positiva al jugador' },
+  { name:'Goma/Caucho', emoji:'⬛', chargeChange:-2, color:'rgba(107,114,128,0.2)', border:'#6b7280',
+    desc:'La goma gana electrones al frotarse → carga negativa al jugador' },
+  { name:'Seda', emoji:'🧵', chargeChange:+1, color:'rgba(249,168,212,0.15)', border:'#f9a8d4',
+    desc:'La seda pierde pocos electrones → leve carga positiva' },
+  { name:'Lana', emoji:'🧶', chargeChange:-1, color:'rgba(253,186,116,0.15)', border:'#fdba74',
+    desc:'La lana gana pocos electrones → leve carga negativa' },
+  { name:'Ámbar', emoji:'🟡', chargeChange:-3, color:'rgba(253,224,71,0.15)', border:'#fde047',
+    desc:'El ámbar gana muchos electrones al frotarse → fuerte carga negativa' }
+];
+
+// ══ CANVAS SETUP ═════════════════════════════════════════════════
+const canvas = document.getElementById('game');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  const wrap = canvas.parentElement;
+  canvas.width  = W = wrap.clientWidth;
+  canvas.height = H = wrap.clientHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ══ GAME STATE ════════════════════════════════════════════════════
+const Game = (() => {
+
+  // ── State ──────────────────────────────────────────────────────
+  let running = false, paused = false, rafId = null, loopId = null;
+  let levelIdx = 0, score = 0, lives = 3, conceptsTotal = 0;
+  let lvl = LEVELS_DATA[0];
+
+  // Player
+  const PLAYER_R = 18;
+  let player = { x:0, y:0, vx:0, vy:0, charge:0 }; // charge: -3..+3
+  const KEYS = {};
+  const PLAYER_SPEED = 250; // pixels/sec
+  const PLAYER_ACCEL = 600;
+  const PLAYER_DAMPING = 0.92;
+  const MAX_COULOMB_FORCE = 180; // cap per particle
+
+  // Particles (protons, electrons, neutrons)
+  let particles = [];    // field particles
+  let orbs = [];         // concept orbs
+  let frictionZones = [];// material zones
+  let sparks = [];       // visual sparks
+  let fieldLines = [];   // drawn field lines
+  let lastTime = 0;
+
+  // Active concept queue
+  let conceptQueue = [];
+  let conceptIdx = 0;
+  let activeConcept = null;
+
+  // ── Input ─────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    KEYS[e.key] = true;
+    if ((e.key === ' ' || e.key === 'Spacebar') && paused && activeConcept) {
+      e.preventDefault(); resumeAfterConcept();
     }
-  ]
-};
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+  });
+  document.addEventListener('keyup', e => { KEYS[e.key] = false; });
 
-// ═══════════════════════════════════════════════════════════
-// MOTOR DEL JUEGO — No modificar
-// ═══════════════════════════════════════════════════════════
-let currentRound = 0, score = 0, lives = 3, timer = null;
-let timeLeft = 20, answered = false, bestTime = 20, totalCorrect = 0;
-const TIMER_MAX = 138.2; // circunferencia SVG
+  // Touch/swipe
+  let touchStart = null;
+  document.addEventListener('touchstart', e => { touchStart = {x:e.touches[0].clientX, y:e.touches[0].clientY}; }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if (!touchStart) return;
+    const dx = e.touches[0].clientX - touchStart.x;
+    const dy = e.touches[0].clientY - touchStart.y;
+    KEYS['ArrowRight'] = dx > 20;
+    KEYS['ArrowLeft']  = dx < -20;
+    KEYS['ArrowDown']  = dy > 20;
+    KEYS['ArrowUp']    = dy < -20;
+  }, {passive:true});
+  document.addEventListener('touchend', () => {
+    KEYS['ArrowUp']=KEYS['ArrowDown']=KEYS['ArrowLeft']=KEYS['ArrowRight']=false;
+    touchStart=null;
+  });
 
-function makeStars() {
-  const s = document.getElementById('stars');
-  for(let i=0;i<80;i++){
-    const d=document.createElement('div');
-    d.className='star';
-    const sz=Math.random()*2+1;
-    d.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--t:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
-    s.appendChild(d);
-  }
-}
+  // ── Init Level ─────────────────────────────────────────────────
+  function initLevel(idx) {
+    levelIdx = idx;
+    lvl = LEVELS_DATA[idx];
+    score = 0; lives = 3; paused = false;
 
-function startGame() {
-  document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('game-screen').style.display = 'block';
-  currentRound = 0; score = 0; lives = 3; totalCorrect = 0; bestTime = 20;
-  updateHUD();
-  showRound();
-}
+    // Shuffle concepts
+    conceptQueue = [...lvl.concepts].sort(() => Math.random() - 0.5);
+    conceptIdx = 0; activeConcept = null;
 
-function showRound() {
-  if(currentRound >= GAME_CONFIG.rondas.length) { showResults(); return; }
-  answered = false;
-  const r = GAME_CONFIG.rondas[currentRound];
+    // Player center
+    player.x = W/2; player.y = H/2;
+    player.vx = 0;  player.vy = 0;
+    player.charge = 0; // start neutral
 
-  document.getElementById('round-label').textContent = r.titulo;
-  document.getElementById('q-cat').textContent = r.categoria;
-  document.getElementById('q-text').textContent = r.pregunta;
+    // Spawn field particles
+    particles = [];
+    for (let i = 0; i < lvl.particleCount; i++) spawnFieldParticle();
 
-  const fEl = document.getElementById('q-formula');
-  if(r.formula){ fEl.style.display='block'; fEl.textContent=r.formula; }
-  else { fEl.style.display='none'; }
+    // Spawn friction zones (2-3 zones)
+    frictionZones = [];
+    const numZones = 2 + (idx >= 2 ? 1 : 0);
+    for (let i = 0; i < numZones; i++) spawnFrictionZone(i);
 
-  const letters=['A','B','C','D'];
-  // Shuffle options with tracking
-  const opts = r.opciones.map((t,i)=>({t,orig:i}));
-  // keep order for simplicity (already varied in content)
-  document.getElementById('options-grid').innerHTML = opts.map((o,i)=>`
-    <button class="opt" id="opt-${i}" onclick="selectAnswer(${i},${o.orig===r.correcta})">
-      <span class="opt-key">${letters[i]}</span>${o.t}
-    </button>`).join('');
+    // Spawn first orb
+    orbs = [];
+    spawnOrb();
 
-  document.getElementById('feedback-box').className='feedback';
-  document.getElementById('next-btn').className='next-btn';
+    // Field lines
+    fieldLines = [];
+    sparks = [];
 
-  const pct = (currentRound/GAME_CONFIG.rondas.length)*100;
-  document.getElementById('round-fill').style.width=pct+'%';
-  document.getElementById('hud-round').textContent=`${currentRound+1}/5`;
+    updateHUD();
+    document.getElementById('hud').classList.remove('hidden');
 
-  startTimer();
-}
-
-function startTimer(){
-  clearInterval(timer);
-  timeLeft = 20;
-  updateTimer();
-  timer = setInterval(()=>{
-    timeLeft--;
-    updateTimer();
-    if(timeLeft<=0){ clearInterval(timer); timeExpired(); }
-  },1000);
-}
-
-function updateTimer(){
-  const pct = timeLeft/20;
-  const offset = TIMER_MAX*(1-pct);
-  const prog = document.getElementById('timer-prog');
-  prog.style.strokeDashoffset = offset;
-  prog.style.stroke = timeLeft>10 ? '#2563eb' : timeLeft>5 ? '#f59e0b' : '#ef4444';
-  document.getElementById('timer-val').textContent = timeLeft;
-}
-
-function timeExpired(){
-  if(answered) return;
-  answered = true;
-  loseLife();
-  // Show correct answer
-  const r = GAME_CONFIG.rondas[currentRound];
-  document.getElementById(`opt-${r.correcta}`).classList.add('correct');
-  showFeedback(false, `⏱️ ¡Tiempo! La respuesta correcta era la opción ${['A','B','C','D'][r.correcta]}. ${r.feedback_bad}`);
-  document.getElementById('next-btn').className='next-btn show';
-}
-
-function selectAnswer(idx, isCorrect) {
-  if(answered) return;
-  answered = true;
-  clearInterval(timer);
-
-  const btn = document.getElementById(`opt-${idx}`);
-  btn.classList.add(isCorrect ? 'correct' : 'wrong');
-
-  if(isCorrect){
-    const timeBonus = Math.ceil(timeLeft * 5);
-    const roundScore = 100 + timeBonus;
-    score += roundScore;
-    totalCorrect++;
-    if(timeLeft > bestTime) bestTime = 20 - timeLeft;
-    showXP(`+${roundScore}`);
-    showFeedback(true, GAME_CONFIG.rondas[currentRound].feedback_ok);
-  } else {
-    const r = GAME_CONFIG.rondas[currentRound];
-    document.getElementById(`opt-${r.correcta}`).classList.add('correct');
-    loseLife();
-    showFeedback(false, GAME_CONFIG.rondas[currentRound].feedback_bad);
+    if (!running) { running = true; lastTime = performance.now(); rafId = requestAnimationFrame(loop); }
   }
 
-  document.getElementById('hud-score').textContent = score;
-  document.getElementById('next-btn').className='next-btn show';
+  // ── Spawn Helpers ──────────────────────────────────────────────
+  function spawnFieldParticle() {
+    const types = ['proton','electron','neutron'];
+    const w  = Math.random();
+    let type = w < 0.40 ? 'proton' : (w < 0.78 ? 'electron' : 'neutron');
+    const margin = 60;
+    let x, y;
+    do {
+      x = margin + Math.random() * (W - 2*margin);
+      y = margin + Math.random() * (H - 2*margin);
+    } while (dist(x,y,W/2,H/2) < 140);
 
-  if(lives <= 0) {
-    setTimeout(()=>{ clearInterval(timer); showResults(); }, 1500);
-    document.getElementById('next-btn').className='next-btn';
-    return;
+    const speed = 25 + Math.random() * 40;
+    const angle = Math.random() * Math.PI * 2;
+    particles.push({
+      type, x, y,
+      vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+      charge: type==='proton'?1 : type==='electron'?-1 : 0,
+      r: type==='neutron' ? 9 : 11,
+      pulsePhase: Math.random()*Math.PI*2,
+      mass: type==='neutron' ? 2 : 1
+    });
   }
-}
 
-function loseLife(){
-  if(lives > 0) lives--;
-  updateLives();
-}
-
-function updateLives(){
-  let html='';
-  for(let i=0;i<3;i++) html+=`<span class="heart${i>=lives?' lost':''}">❤️</span>`;
-  document.getElementById('lives-display').innerHTML=html;
-}
-
-function showFeedback(ok, msg){
-  const fb=document.getElementById('feedback-box');
-  fb.className='feedback show '+(ok?'ok':'bad');
-  fb.innerHTML=`<strong>${ok?'✅':'❌'}</strong> ${msg}`;
-}
-
-function showXP(text){
-  const el=document.getElementById('xp-pop');
-  el.textContent=text;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),900);
-}
-
-function nextRound(){
-  currentRound++;
-  if(currentRound>=GAME_CONFIG.rondas.length||lives<=0){ showResults(); return; }
-  document.getElementById('question-card').style.animation='none';
-  void document.getElementById('question-card').offsetWidth;
-  document.getElementById('question-card').style.animation='';
-  showRound();
-}
-
-function updateHUD(){
-  document.getElementById('hud-score').textContent=score;
-  document.getElementById('hud-round').textContent=`${currentRound+1}/5`;
-  updateLives();
-}
-
-function showResults(){
-  clearInterval(timer);
-  document.getElementById('game-screen').style.display='none';
-  const rs=document.getElementById('results-screen');
-  rs.className='results show';
-
-  const pct=Math.round((totalCorrect/GAME_CONFIG.rondas.length)*100);
-  const xp=Math.round(GAME_CONFIG.xpGanado*(pct/100));
-  const trophies=['💀','😰','😐','👍','⭐','🏆'];
-  const ti=Math.floor(pct/20);
-
-  document.getElementById('result-trophy').textContent=trophies[Math.min(ti,5)];
-  document.getElementById('result-title').textContent=pct>=80?'¡Misión Completada!':pct>=50?'¡Buen intento!':'Sigue practicando';
-  document.getElementById('result-sub').textContent=`${pct}% de acierto · Nivel ${totalCorrect>=GAME_CONFIG.rondas.length?'Máximo':totalCorrect+'/'+GAME_CONFIG.rondas.length}`;
-  document.getElementById('result-xp').textContent=`+${xp} XP`;
-  document.getElementById('stat-score').textContent=score;
-  document.getElementById('stat-correct').textContent=`${totalCorrect}/5`;
-  document.getElementById('stat-best').textContent=`${20-bestTime}s`;
-
-  if(totalCorrect===GAME_CONFIG.rondas.length && lives>0){
-    const ab=document.getElementById('achievement-box');
-    ab.style.display='flex';
-    document.getElementById('ach-icon').textContent=GAME_CONFIG.logro.icono;
-    document.getElementById('ach-name').textContent=GAME_CONFIG.logro.nombre;
-    document.getElementById('ach-desc').textContent=GAME_CONFIG.logro.desc;
+  function spawnFrictionZone(i) {
+    const zone = FRICTION_ZONES[i % FRICTION_ZONES.length];
+    const margin = 80;
+    frictionZones.push({
+      ...zone,
+      x: margin + Math.random() * (W - 2*margin),
+      y: margin + Math.random() * (H - 2*margin),
+      w: 110, h: 70, active: false, timer: 0
+    });
   }
-}
 
-function saveResult(){
-  const pct=Math.round((totalCorrect/GAME_CONFIG.rondas.length)*100);
-  const xp=Math.round(GAME_CONFIG.xpGanado*(pct/100));
-  window.parent?.postMessage({
-    action:'marcarCompletado',
-    lessonId:GAME_CONFIG.moduloId,
-    xp:xp,
-    gameData:{score,totalCorrect,pct},
-    logro:totalCorrect===5&&lives>0?GAME_CONFIG.logro:null,
-    mensaje:`Physics Quest completado — ${pct}% — ${score} pts`
-  },'*');
-}
+  function spawnOrb() {
+    if (conceptIdx >= conceptQueue.length) { conceptIdx = 0; }
+    const concept = conceptQueue[conceptIdx];
+    const margin = 80;
+    let ox, oy;
+    do {
+      ox = margin + Math.random() * (W - 2*margin);
+      oy = margin + Math.random() * (H - 2*margin);
+    } while (dist(ox,oy,player.x,player.y) < 150);
+    orbs.push({ x:ox, y:oy, concept, r:16, phase: Math.random()*Math.PI*2, collected:false });
+  }
 
-function restartGame(){
-  document.getElementById('results-screen').className='results';
-  document.getElementById('start-screen').style.display='block';
-}
+  // ── Main Loop ─────────────────────────────────────────────────
+  function loop(ts) {
+    rafId = requestAnimationFrame(loop);
+    const dt = Math.min((ts - lastTime)/1000, 0.05);
+    lastTime = ts;
+    if (!paused) update(dt);
+    draw(dt);
+  }
 
-// Init
-makeStars();
-document.getElementById('main-title').textContent=GAME_CONFIG.titulo;
-document.getElementById('main-desc').textContent=GAME_CONFIG.descripcion;
+  // ── Update ────────────────────────────────────────────────────
+  function update(dt) {
+    updatePlayer(dt);
+    updateParticles(dt);
+    updateSparks(dt);
+    checkOrbCollision();
+    checkParticleCollision();
+    checkFrictionZones();
+    computeFieldLines();
+  }
+
+  function updatePlayer(dt) {
+    // Input acceleration
+    let ax = 0, ay = 0;
+    if (KEYS['ArrowLeft']  || KEYS['a']) ax -= PLAYER_ACCEL;
+    if (KEYS['ArrowRight'] || KEYS['d']) ax += PLAYER_ACCEL;
+    if (KEYS['ArrowUp']    || KEYS['w']) ay -= PLAYER_ACCEL;
+    if (KEYS['ArrowDown']  || KEYS['s']) ay += PLAYER_ACCEL;
+
+    // Coulomb forces from field particles
+    for (const p of particles) {
+      const dx = player.x - p.x, dy = player.y - p.y;
+      const r2 = dx*dx + dy*dy;
+      if (r2 < 4) continue;
+      const r = Math.sqrt(r2);
+      // F = k * q1 * q2 / r²  (normalized, scaled for gameplay)
+      const forceMag = Math.min(MAX_COULOMB_FORCE, 55000 * player.charge * p.charge / r2);
+      ax += (dx/r) * forceMag;
+      ay += (dy/r) * forceMag;
+    }
+
+    player.vx = (player.vx + ax*dt) * Math.pow(PLAYER_DAMPING, dt*60);
+    player.vy = (player.vy + ay*dt) * Math.pow(PLAYER_DAMPING, dt*60);
+
+    const speed = Math.sqrt(player.vx*player.vx + player.vy*player.vy);
+    const maxSpeed = PLAYER_SPEED + Math.abs(player.charge) * 40;
+    if (speed > maxSpeed) { player.vx = player.vx/speed*maxSpeed; player.vy = player.vy/speed*maxSpeed; }
+
+    player.x += player.vx * dt;
+    player.y += player.vy * dt;
+
+    // Bounce walls
+    if (player.x < PLAYER_R)   { player.x = PLAYER_R;   player.vx = Math.abs(player.vx)*0.6; }
+    if (player.x > W-PLAYER_R) { player.x = W-PLAYER_R; player.vx = -Math.abs(player.vx)*0.6; }
+    if (player.y < PLAYER_R)   { player.y = PLAYER_R;   player.vy = Math.abs(player.vy)*0.6; }
+    if (player.y > H-PLAYER_R) { player.y = H-PLAYER_R; player.vy = -Math.abs(player.vy)*0.6; }
+  }
+
+  function updateParticles(dt) {
+    for (const p of particles) {
+      p.pulsePhase += dt * 2.5;
+
+      if (p.type === 'neutron') continue; // neutrons are static
+
+      // Random drift
+      p.vx += (Math.random()-0.5)*30*dt;
+      p.vy += (Math.random()-0.5)*30*dt;
+
+      // Higher levels: particles drift toward player if opposite charge
+      if (levelIdx >= 3) {
+        const dx = player.x - p.x, dy = player.y - p.y;
+        const r  = Math.sqrt(dx*dx+dy*dy)+1;
+        const attraction = p.charge * player.charge * -80; // opposite → positive → toward
+        p.vx += (dx/r) * attraction * dt;
+        p.vy += (dy/r) * attraction * dt;
+      }
+
+      const maxPV = 60 + levelIdx*10;
+      const pspeed = Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if (pspeed > maxPV) { p.vx=p.vx/pspeed*maxPV; p.vy=p.vy/pspeed*maxPV; }
+
+      p.x += p.vx*dt; p.y += p.vy*dt;
+      if (p.x<p.r||p.x>W-p.r) { p.vx*=-1; p.x=Math.max(p.r,Math.min(W-p.r,p.x)); }
+      if (p.y<p.r||p.y>H-p.r) { p.vy*=-1; p.y=Math.max(p.r,Math.min(H-p.r,p.y)); }
+    }
+  }
+
+  function updateSparks(dt) {
+    sparks = sparks.filter(s => s.life > 0);
+    for (const s of sparks) {
+      s.x+=s.vx*dt; s.y+=s.vy*dt;
+      s.life-=dt*2.5; s.vx*=0.93; s.vy*=0.93;
+    }
+  }
+
+  function checkOrbCollision() {
+    for (const orb of orbs) {
+      if (orb.collected) continue;
+      if (dist(player.x,player.y,orb.x,orb.y) < PLAYER_R + orb.r) {
+        orb.collected = true;
+        score++; conceptsTotal++;
+        activeConcept = orb.concept;
+        spawnSparks(orb.x, orb.y, orb.concept.color, 30);
+        showConceptPopup(orb.concept);
+      }
+    }
+    orbs = orbs.filter(o => !o.collected);
+  }
+
+  function checkParticleCollision() {
+    for (const p of particles) {
+      if (p.type === 'neutron') {
+        // Neutrons: solid obstacle
+        if (dist(player.x,player.y,p.x,p.y) < PLAYER_R + p.r) {
+          lives = Math.max(0, lives-1);
+          spawnSparks(player.x, player.y, '#8a9bb0', 20);
+          recoilPlayer(p);
+          updateHUD();
+          if (lives<=0) { endGame(false); return; }
+        }
+      } else {
+        // Charged particles: collision penalty only if moving into them without correct charge strategy
+        if (dist(player.x,player.y,p.x,p.y) < PLAYER_R + p.r - 4) {
+          // Same charge = Coulomb repulsion protects → no damage
+          // Opposite charge = collision → lose life
+          if (player.charge * p.charge < 0) {
+            lives = Math.max(0, lives-1);
+            spawnSparks(player.x, player.y, p.type==='proton'?'#ff4d4d':'#4da6ff', 25);
+            recoilPlayer(p);
+            updateHUD();
+            if (lives<=0) { endGame(false); return; }
+          } else {
+            // same sign → push away, no damage
+            recoilPlayer(p);
+          }
+        }
+      }
+    }
+  }
+
+  function recoilPlayer(p) {
+    const dx = player.x-p.x, dy = player.y-p.y;
+    const r = Math.sqrt(dx*dx+dy*dy)+1;
+    player.vx += (dx/r)*350; player.vy += (dy/r)*350;
+  }
+
+  function checkFrictionZones() {
+    for (const z of frictionZones) {
+      const inside = player.x > z.x - z.w/2 && player.x < z.x + z.w/2 &&
+                     player.y > z.y - z.h/2 && player.y < z.y + z.h/2;
+      if (inside) {
+        z.timer += 1/60;
+        if (z.timer > 1.2) { // spend 1.2s in zone to change charge
+          player.charge = Math.max(-3, Math.min(3, player.charge + z.chargeChange));
+          z.timer = 0;
+          spawnSparks(z.x, z.y, z.border, 18);
+          updateHUD();
+          showFrictionHint(z);
+        }
+        z.active = true;
+      } else {
+        z.timer = Math.max(0, z.timer - 0.02);
+        z.active = false;
+      }
+    }
+  }
+
+  function showFrictionHint(z) {
+    const toast = document.getElementById('toast');
+    toast.textContent = `${z.emoji} Fricción con ${z.name}: carga ${z.chargeChange>0?'+':''}${z.chargeChange}`;
+    toast.classList.remove('fade');
+    clearTimeout(showFrictionHint._t);
+    showFrictionHint._t = setTimeout(() => toast.classList.add('fade'), 2500);
+  }
+
+  function computeFieldLines() {
+    // Compute a grid of field vectors for background visualization
+    fieldLines = [];
+    const step = 60;
+    for (let gx = step; gx < W; gx += step) {
+      for (let gy = step; gy < H; gy += step) {
+        let ex = 0, ey = 0;
+        for (const p of particles) {
+          if (p.charge===0) continue;
+          const dx=gx-p.x, dy=gy-p.y, r2=dx*dx+dy*dy;
+          if (r2<100) continue;
+          const r=Math.sqrt(r2), fac=p.charge*800/r2;
+          ex+=fac*dx/r; ey+=fac*dy/r;
+        }
+        const mag=Math.sqrt(ex*ex+ey*ey);
+        if (mag>0.2) fieldLines.push({x:gx,y:gy,ex:ex/mag,ey:ey/mag,mag:Math.min(1,mag/5)});
+      }
+    }
+  }
+
+  // ── Draw ──────────────────────────────────────────────────────
+  function draw(dt) {
+    ctx.clearRect(0,0,W,H);
+
+    // Background gradient
+    const bg = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.7);
+    bg.addColorStop(0,'#080e1f'); bg.addColorStop(1,'#05080f');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+    // Grid dots
+    ctx.fillStyle='rgba(255,255,255,0.025)';
+    for(let x=0;x<W;x+=40){for(let y=0;y<H;y+=40){ctx.beginPath();ctx.arc(x,y,1,0,Math.PI*2);ctx.fill();}}
+
+    // Field lines
+    drawFieldLines();
+
+    // Friction zones
+    drawFrictionZones();
+
+    // Field particles
+    drawParticles();
+
+    // Concept orbs
+    drawOrbs();
+
+    // Sparks
+    drawSparks();
+
+    // Player
+    drawPlayer();
+
+    // Coulomb force arrows on player (visual)
+    if (player.charge !== 0) drawForceArrows();
+  }
+
+  function drawFieldLines() {
+    for (const fl of fieldLines) {
+      const len = 14 * fl.mag;
+      ctx.save();
+      ctx.globalAlpha = fl.mag * 0.18;
+      ctx.strokeStyle = fl.mag > 0.5 ? '#f59e0b' : '#4da6ff';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(fl.x - fl.ex*len/2, fl.y - fl.ey*len/2);
+      ctx.lineTo(fl.x + fl.ex*len/2, fl.y + fl.ey*len/2);
+      ctx.stroke();
+      // arrowhead
+      const ax = fl.x + fl.ex*len/2, ay = fl.y + fl.ey*len/2;
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax - fl.ex*5 + fl.ey*3, ay - fl.ey*5 - fl.ex*3);
+      ctx.lineTo(ax - fl.ex*5 - fl.ey*3, ay - fl.ey*5 + fl.ex*3);
+      ctx.closePath(); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function drawFrictionZones() {
+    for (const z of frictionZones) {
+      const x0 = z.x - z.w/2, y0 = z.y - z.h/2;
+      ctx.save();
+      // background
+      ctx.globalAlpha = z.active ? 0.5 : 0.25;
+      ctx.fillStyle = z.color;
+      ctx.strokeStyle = z.border;
+      ctx.lineWidth = z.active ? 2 : 1;
+      roundRect(ctx,x0,y0,z.w,z.h,10);
+      ctx.fill(); ctx.stroke();
+      // label
+      ctx.globalAlpha = 1;
+      ctx.font = '18px Inter';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(z.emoji, z.x, z.y - 12);
+      ctx.font = 'bold 11px Inter';
+      ctx.fillStyle = z.border;
+      ctx.fillText(z.name, z.x, z.y + 6);
+      ctx.font='9px Inter'; ctx.fillStyle = '#94a3b8';
+      ctx.fillText(z.chargeChange > 0 ? `+${z.chargeChange}e` : `${z.chargeChange}e`, z.x, z.y+19);
+      // progress bar if active
+      if (z.active && z.timer > 0) {
+        const frac = Math.min(1, z.timer/1.2);
+        ctx.fillStyle = z.border;
+        ctx.globalAlpha = 0.6;
+        roundRect(ctx, x0+4, y0+z.h-8, (z.w-8)*frac, 5, 3);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawParticles() {
+    const t = performance.now()/1000;
+    for (const p of particles) {
+      const pulse = 1 + Math.sin(p.pulsePhase + t*2)*0.15;
+      const r = p.r * pulse;
+      ctx.save();
+
+      // Glow
+      const gColor = p.type==='proton' ? '#ff4d4d' : p.type==='electron' ? '#4da6ff' : '#8a9bb0';
+      ctx.shadowBlur = p.type==='neutron' ? 8 : 20;
+      ctx.shadowColor = gColor;
+
+      // Body gradient
+      const grad = ctx.createRadialGradient(p.x-r*0.3,p.y-r*0.3,r*0.1, p.x,p.y,r);
+      if (p.type==='proton') {
+        grad.addColorStop(0,'#ff9999'); grad.addColorStop(1,'#cc0000');
+      } else if (p.type==='electron') {
+        grad.addColorStop(0,'#99ccff'); grad.addColorStop(1,'#0044aa');
+      } else {
+        grad.addColorStop(0,'#cdd5e0'); grad.addColorStop(1,'#475569');
+      }
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+
+      // Symbol
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.floor(r*0.9)}px Inter`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(p.type==='proton'?'+' : p.type==='electron'?'−':'n', p.x, p.y+1);
+
+      // Type label
+      ctx.font = '8px Inter'; ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillText(p.type==='proton'?'p⁺' : p.type==='electron'?'e⁻':'n⁰', p.x, p.y + r + 10);
+
+      ctx.restore();
+    }
+  }
+
+  function drawOrbs() {
+    const t = performance.now()/1000;
+    for (const orb of orbs) {
+      if (orb.collected) continue;
+      orb.phase += 0.002;
+      const pulse = 1 + Math.sin(t * 2 + orb.phase) * 0.2;
+      const r = orb.r * pulse;
+
+      ctx.save();
+      ctx.shadowBlur = 28; ctx.shadowColor = orb.concept.color;
+
+      // Ring
+      ctx.strokeStyle = orb.concept.color; ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.arc(orb.x, orb.y, r+8, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 0.2;
+      ctx.beginPath(); ctx.arc(orb.x, orb.y, r+14, 0, Math.PI*2); ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      // Body
+      const g = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, r);
+      g.addColorStop(0, '#fff');
+      g.addColorStop(0.4, orb.concept.color);
+      g.addColorStop(1, orb.concept.color+'44');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(orb.x, orb.y, r, 0, Math.PI*2); ctx.fill();
+
+      // Emoji
+      ctx.shadowBlur = 0; ctx.fillStyle = '#0f172a';
+      ctx.font = `bold ${Math.floor(r*0.9)}px Inter`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(orb.concept.emoji, orb.x, orb.y+1);
+
+      // Arrow pointing to orb if > 250px away
+      const dd = dist(player.x,player.y,orb.x,orb.y);
+      if (dd > 200) {
+        const angle = Math.atan2(orb.y-player.y, orb.x-player.x);
+        const ax = player.x + Math.cos(angle)*55, ay = player.y + Math.sin(angle)*55;
+        ctx.globalAlpha = 0.5 + Math.sin(t*4)*0.3;
+        ctx.strokeStyle = orb.concept.color; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(ax+Math.cos(angle)*12,ay+Math.sin(angle)*12); ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  function drawSparks() {
+    for (const s of sparks) {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0,s.life);
+      ctx.fillStyle = s.color;
+      ctx.shadowBlur = 6; ctx.shadowColor = s.color;
+      ctx.beginPath(); ctx.arc(s.x,s.y,2.5*Math.max(0,s.life),0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function drawPlayer() {
+    const t = performance.now()/1000;
+    const pc = player.charge;
+    const pColor = pc > 0 ? `hsl(0,85%,${55+pc*8}%)` : pc < 0 ? `hsl(210,85%,${55+Math.abs(pc)*8}%)` : '#a8b8d0';
+    const glowColor = pc > 0 ? '#ff4d4d' : pc < 0 ? '#4da6ff' : '#8a9bb0';
+
+    ctx.save();
+
+    // Outer aura (charge indicator)
+    if (pc !== 0) {
+      const auraSize = PLAYER_R + 10 + Math.abs(pc)*5 + Math.sin(t*3)*3;
+      ctx.globalAlpha = 0.15 + Math.abs(pc)*0.08;
+      ctx.fillStyle = glowColor;
+      ctx.shadowBlur = 0;
+      ctx.beginPath(); ctx.arc(player.x, player.y, auraSize, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // Body glow
+    ctx.shadowBlur = 25 + Math.abs(pc)*8;
+    ctx.shadowColor = glowColor;
+
+    // Body gradient
+    const g = ctx.createRadialGradient(player.x-PLAYER_R*0.3,player.y-PLAYER_R*0.3,2, player.x,player.y,PLAYER_R);
+    g.addColorStop(0,'#ffffff');
+    g.addColorStop(0.35, pColor);
+    g.addColorStop(1, glowColor+'88');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(player.x,player.y,PLAYER_R,0,Math.PI*2); ctx.fill();
+
+    // Charge symbol
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#0f172a';
+    ctx.font = `bold ${PLAYER_R}px Inter`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    const sym = pc > 0 ? '+'.repeat(Math.min(pc,2)) : pc < 0 ? '−'.repeat(Math.min(Math.abs(pc),2)) : '⚫';
+    ctx.fillText(sym, player.x, player.y+1);
+
+    // Charge label below
+    ctx.font = '10px Inter'; ctx.fillStyle = pColor;
+    ctx.fillText(`q = ${pc>0?'+':''}${pc}e`, player.x, player.y + PLAYER_R + 14);
+
+    ctx.restore();
+  }
+
+  function drawForceArrows() {
+    // Draw short arrows showing net force direction from each charged particle
+    for (const p of particles) {
+      if (p.charge === 0) continue;
+      const dx = player.x - p.x, dy = player.y - p.y;
+      const r2 = dx*dx+dy*dy, r = Math.sqrt(r2);
+      if (r > 250 || r < 5) continue;
+      const fMag = Math.min(1, 12000 * Math.abs(player.charge * p.charge) / r2);
+      if (fMag < 0.05) continue;
+
+      const sign = player.charge * p.charge; // positive = repulsion, negative = attraction
+      const dirX = sign > 0 ? dx/r : -dx/r;
+      const dirY = sign > 0 ? dy/r : -dy/r;
+      const len = fMag * 30;
+
+      ctx.save();
+      ctx.globalAlpha = Math.min(0.7, fMag * 1.2);
+      const col = sign > 0 ? '#fbbf24' : '#a855f7';
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+      ctx.shadowBlur = 5; ctx.shadowColor = col;
+
+      // Draw from midpoint toward player
+      const mx = (player.x + p.x)/2, my = (player.y + p.y)/2;
+      ctx.beginPath();
+      ctx.moveTo(mx, my);
+      ctx.lineTo(mx + dirX*len, my + dirY*len);
+      ctx.stroke();
+
+      // Arrowhead
+      ctx.beginPath();
+      ctx.moveTo(mx+dirX*len, my+dirY*len);
+      ctx.lineTo(mx+dirX*len - dirX*6 + dirY*3, my+dirY*len - dirY*6 - dirX*3);
+      ctx.lineTo(mx+dirX*len - dirX*6 - dirY*3, my+dirY*len - dirY*6 + dirX*3);
+      ctx.closePath(); ctx.fillStyle=col; ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ── Sparks ─────────────────────────────────────────────────────
+  function spawnSparks(x,y,color,count) {
+    for (let i=0;i<count;i++) {
+      const angle=Math.random()*Math.PI*2, speed=50+Math.random()*120;
+      sparks.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:1.0,color});
+    }
+  }
+
+  // ── Concept Popup ──────────────────────────────────────────────
+  function showConceptPopup(concept) {
+    paused = true;
+
+    const popup = document.getElementById('concept-popup');
+    const badge  = document.getElementById('cp-badge');
+    badge.textContent = concept.badge;
+    badge.style.background = concept.color+'22';
+    badge.style.color = concept.color;
+    badge.style.border = `1px solid ${concept.color}55`;
+
+    document.getElementById('cp-title').textContent = concept.emoji + ' ' + concept.name;
+    document.getElementById('cp-title').style.color = concept.color;
+
+    const fEl = document.getElementById('cp-formula');
+    fEl.innerHTML='';
+    try { katex.render(concept.formula, fEl, {throwOnError:false, displayMode:true}); }
+    catch(e) { fEl.textContent = concept.formula; }
+
+    document.getElementById('cp-desc').textContent = concept.desc;
+    document.getElementById('cp-fact').textContent = concept.fact;
+    popup.style.borderColor = concept.color;
+    popup.style.boxShadow = `0 0 60px ${concept.color}44`;
+    popup.classList.add('show');
+
+    updateHUD();
+  }
+
+  function resumeAfterConcept() {
+    document.getElementById('concept-popup').classList.remove('show');
+    paused = false;
+    activeConcept = null;
+    conceptIdx++;
+
+    if (score >= lvl.concepts.length) {
+      // Level complete
+      const nextIdx = levelIdx + 1;
+      if (nextIdx >= LEVELS_DATA.length) { endGame(true); return; }
+      showLevelPopup(nextIdx);
+    } else {
+      spawnOrb();
+    }
+  }
+
+  function showLevelPopup(nextIdx) {
+    const nl = LEVELS_DATA[nextIdx];
+    document.getElementById('lp-num').textContent = nl.id;
+    document.getElementById('lp-num').style.color = nl.color;
+    document.getElementById('lp-title').textContent = nl.name;
+    document.getElementById('lp-desc').textContent = nl.desc;
+    const popup = document.getElementById('level-popup');
+    popup.style.borderColor = nl.color;
+    popup.style.boxShadow = `0 0 60px ${nl.color}55`;
+    popup.classList.add('show');
+    paused = true;
+    window._nextLevelIdx = nextIdx;
+  }
+
+  function nextLevel() {
+    document.getElementById('level-popup').classList.remove('show');
+    paused = false;
+    initLevel(window._nextLevelIdx || levelIdx+1);
+  }
+
+  // ── End Game ───────────────────────────────────────────────────
+  function endGame(won) {
+    running = false; paused = false;
+    cancelAnimationFrame(rafId);
+
+    document.getElementById('end-emoji').textContent = won ? '🏆' : '💀';
+    document.getElementById('end-title').textContent = won ? '¡Misión Completada!' : '¡Vidas Agotadas!';
+    document.getElementById('end-sub').textContent   = won
+      ? '¡Has dominado los 5 niveles de electrostática! Ahora comprendes la Ley de Coulomb y la superposición de fuerzas.'
+      : 'Las partículas del campo te absorbieron. La carga opuesta atrae, y tú encontraste demasiadas. ¡Intenta manejar mejor tu carga neta!';
+    document.getElementById('es-score').textContent    = conceptsTotal * 100;
+    document.getElementById('es-concepts').textContent = conceptsTotal;
+    document.getElementById('es-levels').textContent   = levelIdx + 1;
+    document.getElementById('end-screen').classList.add('show');
+  }
+
+  function restart() {
+    document.getElementById('end-screen').classList.remove('show');
+    document.getElementById('concept-popup').classList.remove('show');
+    document.getElementById('level-popup').classList.remove('show');
+    conceptsTotal = 0; score = 0;
+    running = false;
+    cancelAnimationFrame(rafId);
+    initLevel(0);
+  }
+
+  // ── HUD ────────────────────────────────────────────────────────
+  function updateHUD() {
+    document.getElementById('hud-score').textContent    = score;
+    document.getElementById('hud-level').textContent    = lvl.id;
+    document.getElementById('hud-lname').textContent    = lvl.name;
+    document.getElementById('hud-concepts').textContent = conceptsTotal;
+
+    const lb = document.getElementById('level-badge');
+    lb.style.color       = lvl.color;
+    lb.style.borderColor = lvl.color+'55';
+    lb.style.background  = lvl.color+'18';
+
+    // Lives
+    const lv = Math.max(0,lives);
+    document.getElementById('lives-display').textContent = '❤️'.repeat(lv)+'🖤'.repeat(Math.max(0,3-lv));
+
+    // Charge bar
+    const pc = player.charge; // -3..+3
+    const bar   = document.getElementById('charge-bar');
+    const label = document.getElementById('charge-label');
+    const frac  = (pc + 3) / 6; // 0..1
+    bar.style.width = (frac * 100) + '%';
+    if (pc > 0) {
+      bar.style.background = `linear-gradient(90deg,#334155,#ff4d4d)`;
+      label.textContent = `Positivo (q = +${pc}e)`;
+      label.className = 'positive';
+    } else if (pc < 0) {
+      bar.style.background = `linear-gradient(90deg,#4da6ff,#334155)`;
+      label.textContent = `Negativo (q = ${pc}e)`;
+      label.className = 'negative';
+    } else {
+      bar.style.background = `linear-gradient(90deg,#475569,#94a3b8)`;
+      label.textContent = 'Neutro (q = 0)';
+      label.className = 'neutral';
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function dist(x1,y1,x2,y2){const dx=x2-x1,dy=y2-y1;return Math.sqrt(dx*dx+dy*dy);}
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  }
+
+  // ── Public API ─────────────────────────────────────────────────
+  function start() {
+    document.getElementById('start-screen').style.display='none';
+    // Hide toast after 5s
+    setTimeout(()=>document.getElementById('toast').classList.add('fade'),5000);
+    initLevel(0);
+  }
+
+  return { start, resumeAfterConcept, nextLevel, restart };
+
+})();
 </script>
 </body>
 </html>
