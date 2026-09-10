@@ -1,0 +1,153 @@
+\documentclass[10pt,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{lmodern} 
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{babel, 3d, perspective}
+\usepackage{tikz-3dplot} 
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{hyperref}
+
+% Configuración de márgenes
+\geometry{
+  a4paper,
+  top=1.5cm,
+  bottom=1.5cm,
+  inner=1.5cm,
+  outer=1.5cm,
+  headheight=15pt
+}
+
+% Paleta de colores UNAB
+\definecolor{unabBlue}{HTML}{003865}
+\definecolor{unabOrange}{HTML}{E85C0B}
+
+% Encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textcolor{unabBlue}{\textit{Curso de Electromagnetismo}}}
+\fancyhead[LO]{\textcolor{unabBlue}{\textit{Quiz de Aplicación}}}
+\fancyfoot[C]{\textcolor{unabBlue}{\footnotesize Universidad Autónoma de Bucaramanga -- Departamento de Ciencias Básicas}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Comando de sección
+\newcommand{\mysection}[1]{
+  \vspace{0.3cm}\noindent{\Large\bfseries\color{unabBlue} #1}
+  \vspace{0.1cm}\hrule\vspace{0.2cm}
+}
+
+% Comando para problemas
+\newcounter{problema}
+\newcommand{\problema}[1]{
+    \stepcounter{problema}
+    \vspace{0.2cm}\noindent\textbf{\textcolor{unabBlue}{Problema \theproblema}}\ (#1)\par\vspace{0.1cm}\noindent
+}
+
+\newcommand{\class}{\textcolor{unabBlue}{Tema: Electrostática y Campo Eléctrico}}
+\newcommand{\term}{Semestre en Curso}
+\newcommand{\examnum}{Quiz de Aplicación (RAEs)}
+\newcommand{\examdate}{Fecha:}
+\newcommand{\timelimit}{2 Horas}
+
+\begin{document}
+
+\noindent
+\begin{minipage}[c]{0.12\textwidth}
+    \includegraphics[width=\linewidth]{../../Plantilla_LaTeX_Examen_Ciencia_de_Datos_UNAB/logo_ciencia_datos_negro.png}
+\end{minipage}%
+\hspace{0.03\textwidth}%
+\begin{minipage}[c]{0.85\textwidth}
+\begin{tabular}{@{}p{0.55\textwidth} p{0.42\textwidth}@{}}
+\textbf{\class} & \textbf{Nombre:} \hrulefill \\
+\textbf{\term} & \textbf{Curso:} Electromagnetismo \\
+\textbf{\examnum} & \textbf{Fecha:} \hrulefill \\
+\textbf{Tiempo: \timelimit} & \textbf{Profesor:} Dudbil Olvasada Pabon R.
+\end{tabular}
+\end{minipage}
+\vspace{0.1cm}
+\rule[2ex]{\textwidth}{1pt}
+
+\vspace{0.1cm}
+\noindent
+\textbf{Instrucciones:} Este examen evalúa los conceptos teóricos y problemas analíticos de fuerza electrostática, campo y potencial. Resuelva cada punto de forma clara. \textbf{No se permite el uso de celulares ni formular preguntas teóricas durante la prueba. El incumplimiento de estas normas dará lugar a sanciones disciplinarias.}
+
+\vspace{0.2cm}
+\begin{multicols}{2}
+
+\mysection{I. Análisis Conceptual y Teórico}
+
+\problema{Valor: 1.0 punto | Evalúa RAE 1.1, 1.2, 2.1, 2.2}
+Defina de forma clara y rigurosa los siguientes conceptos fundamentales de la electrostática:
+\begin{itemize}
+    \item \textbf{Carga Eléctrica:} ¿Qué es desde un punto de vista físico fundamental?
+    \item \textbf{Tipos de Electrización:} Describa brevemente los tres mecanismos físicos para electrizar un material (fricción, inducción y contacto).
+    \item \textbf{Campo Eléctrico y Potencial:} Defina el vector Campo Eléctrico y diferéncielo conceptualmente del Potencial Eléctrico.
+    \item \textbf{Líneas y Superficies:} ¿Qué representan las líneas de campo eléctrico y qué relación geométrica estricta deben cumplir respecto a las superficies equipotenciales?
+\end{itemize}
+
+\vspace{0.2cm}
+
+\mysection{II. Modelado Matemático y Resolución de Problemas}
+
+\problema{Valor: 1.5 puntos | Evalúa RAE 1.3 y 2.1}
+Tres cargas puntuales se encuentran fijas en los vértices de un triángulo rectángulo. La carga $q_1 = -4\ \mu\text{C}$ está en el origen $(0,0)$. La carga $q_2 = +5\ \mu\text{C}$ está ubicada en $(0, 3)\text{ m}$, y la carga $q_3 = +3\ \mu\text{C}$ está en $(4, 0)\text{ m}$. 
+\textbf{a)} Calcule de forma vectorial la \textbf{Fuerza Electrostática neta} que actúa sobre $q_1$. 
+\textbf{b)} Calcule el \textbf{Campo Eléctrico neto} en el origen producido por $q_2$ y $q_3$. 
+(Para ambos, indique magnitud total y ángulo respecto al eje $X$).
+
+\vspace{0.2cm}
+
+\problema{Valor: 1.0 punto | Evalúa RAE 2.1}
+En los vértices de un cuadrado de lado $L = 2\text{ m}$ en el plano $XY$ se ubican tres cargas puntuales: $q_A = +2\ \mu\text{C}$ en $(0,2)\text{ m}$, $q_B = -4\ \mu\text{C}$ en $(2,2)\text{ m}$ y $q_C = +5\ \mu\text{C}$ en $(2,0)\text{ m}$.
+Calcule el \textbf{Potencial Eléctrico neto} ($V_{\text{neto}}$) evaluado en el origen $O(0,0)$ y determine el \textbf{Trabajo} eléctrico externo necesario para traer una partícula de carga $q = +1\ \mu\text{C}$ desde el infinito hasta dicho origen.
+
+\vspace{0.2cm}
+
+\problema{Valor: 1.5 puntos | Evalúa RAE 2.2}
+Una varilla delgada aislante de longitud $L = 2\text{ m}$ se encuentra alineada a lo largo del eje $X$, con su extremo izquierdo en el origen $(0,0)$. La varilla posee una densidad de carga lineal uniforme $\lambda = +12\ \text{nC/m}$.
+Planteando desde los diferenciales geométricos, determine la magnitud y dirección del \textbf{campo eléctrico} en un punto $P$ ubicado sobre el eje $X$ a una distancia $a = 1\text{ m}$ a la izquierda del origen (es decir, en la coordenada $x = -1\text{ m}$). Justifique matemáticamente la integración.
+
+\mysection{III. Apéndice y Formulario}
+\vspace{0.3cm}
+\textbf{Constantes Físicas:}
+\begin{itemize}
+    \item $k_e = \frac{1}{4\pi\epsilon_0} \approx 8.99 \times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$
+    \item $\epsilon_0 = 8.85 \times 10^{-12}\ \text{C}^2/(\text{N}\cdot\text{m}^2)$
+    \item $1\ \mu\text{C} = 10^{-6}\ \text{C}$
+    \item $1\ \text{nC} = 10^{-9}\ \text{C}$
+\end{itemize}
+
+\textbf{Magnitud y Vectores:}
+\begin{itemize}
+    \item Vector posición: $\vec{r} = x\hat{i} + y\hat{j} + z\hat{k}$
+    \item Magnitud: $|\vec{r}| = \sqrt{x^2 + y^2 + z^2}$
+    \item Vector Desplazamiento: $\vec{R} = \vec{r}_{\text{pto}} - \vec{r}_{\text{fuente}}$
+    \item Vector Unitario: $\hat{u} = \frac{\vec{R}}{|\vec{R}|}$
+\end{itemize}
+
+\textbf{Electrostática Discreta:}
+\begin{itemize}
+    \item Fuerza de Coulomb: $\vec{F}_{12} = k_e \frac{q_1 q_2}{|\vec{R}|^2} \hat{u}_{R}$
+    \item Campo Eléctrico: $\vec{E} = k_e \frac{q}{|\vec{R}|^2} \hat{u}_{R}$
+    \item Fuerza y Campo: $\vec{F} = q_0 \vec{E}$
+    \item Potencial: $V = k_e \frac{q}{|\vec{R}|}$
+\end{itemize}
+
+\textbf{Distribuciones Continuas:}
+\begin{itemize}
+    \item Lineal: $dq = \lambda\ dl$
+    \item Superficial: $dq = \sigma\ dA$
+    \item Volumétrica: $dq = \rho\ dV$
+    \item Campo: $\vec{E} = \int k_e \frac{dq}{|\vec{R}|^2} \hat{u}_{R}$
+    \item Potencial: $V = \int k_e \frac{dq}{|\vec{R}|}$
+\end{itemize}
+
+\end{multicols}
+\end{document}

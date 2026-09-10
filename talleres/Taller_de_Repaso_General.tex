@@ -1,0 +1,830 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[letterpaper,top=5.0cm,bottom=2.5cm,left=2.0cm,right=2.0cm,
+            headheight=70pt,headsep=35pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[scaled=0.95]{helvet}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{lastpage}
+\usepackage{needspace}
+\usepackage{tikz}
+\usetikzlibrary{babel,calc,patterns,arrows,arrows.meta,3d,perspective}
+\usepackage{tikz-3dplot}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{pgffor}
+
+\renewcommand{\familydefault}{\sfdefault}
+\definecolor{linecolor}{HTML}{000000}
+
+% Paleta de colores UNAB y niveles
+\definecolor{unabBlue}{HTML}{003865}
+\definecolor{unabOrange}{HTML}{E85C0B}
+\definecolor{facil}{HTML}{2E7D32}
+\definecolor{medio}{HTML}{F57F17}
+\definecolor{dificil}{HTML}{C62828}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=unabBlue,
+    urlcolor=unabBlue
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\renewcommand{\arraystretch}{1.5}
+
+% ---------- Datos editables del examen ----------
+\newcommand{\NombreCurso}{Electromagnetismo}
+\newcommand{\NombreProfesor}{Dudbil Olvasada Pabon Riaño}
+\newcommand{\FechaExamen}{}
+\newcommand{\TiempoExamen}{Práctica Autónoma}
+\newcommand{\TituloEvaluacion}{TALLER DE REPASO: ELECTROSTÁTICA}
+
+% ---------- Encabezado institucional ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{%
+  \begin{minipage}{0.4\textwidth}
+    \raggedleft
+    {\large\bfseries\color{gray} INSTITUCIÓN EDUCATIVA}\\[2pt]
+    {\scriptsize \textcolor{gray}{\textbf{Departamento de Ciencias Básicas}}}
+  \end{minipage}}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\scriptsize \textcolor{gray}{Institución Educativa \hspace{0.7em}|\hspace{0.7em} Departamento de Ciencias Básicas}}
+\fancyfoot[R]{\scriptsize \textcolor{gray}{Página \thepage\ de \pageref{LastPage}}}
+
+% ---------- Componentes reutilizables ----------
+\newcommand{\Etiqueta}[1]{%
+  {\fontsize{11}{13}\selectfont\bfseries\MakeUppercase{#1}}}
+
+\newcommand{\Campo}[2]{%
+  \Etiqueta{#1}\\[-2pt]
+  {\fontsize{14}{16}\selectfont #2}}
+
+% Comando de sección manual con salto de página
+\newcommand{\mysection}[1]{
+  \newpage
+  \vspace{0.5cm}\noindent{\Large\bfseries\color{unabBlue} #1}
+  \vspace{0.2cm}\hrule\vspace{0.3cm}
+}
+\newcommand{\mysubsection}[1]{
+  \vspace{0.3cm}\noindent{\large\bfseries\color{unabBlue} #1}
+}
+
+% Entornos personalizados
+\newcommand{\raebox}[1]{
+  \vspace{0.4cm}
+  \noindent\fcolorbox{unabBlue}{unabBlue!5}{
+    \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
+      #1
+    \end{minipage}
+  }
+  \vspace{0.4cm}
+}
+
+\newcommand{\teoriabox}[1]{
+  \vspace{0.4cm}
+  \noindent\fcolorbox{unabOrange}{white}{
+    \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
+      #1
+    \end{minipage}
+  }
+  \vspace{0.4cm}
+}
+
+% Etiquetas de dificultad
+\newcommand{\difFacil}{\textcolor{facil}{\textbf{[Básico]}}}
+\newcommand{\difMedio}{\textcolor{medio}{\textbf{[Intermedio]}}}
+\newcommand{\difDificil}{\textcolor{dificil}{\textbf{[Avanzado]}}}
+
+% Comando para problemas (Elegante)
+\newcounter{problema}
+\newcommand{\problema}[2]{
+    \stepcounter{problema}
+    \needspace{4\baselineskip}
+    \vspace{0.4cm}\noindent\textbf{\textcolor{unabBlue}{Problema \theproblema}}\ (#1) \hfill #2\par\vspace{0.1cm}\noindent
+}
+
+% Respuesta
+\newcommand{\respuesta}[1]{
+    \par\vspace{0.1cm}\noindent\textbf{R/ } \textit{#1}
+}
+
+\begin{document}
+
+\vspace*{1cm}
+\begin{center}
+  {\fontsize{20}{24}\selectfont\bfseries\color{unabBlue}\TituloEvaluacion}\par
+  \vspace{0.3cm}
+  {\large\textit{Modelado Matemático}}\par
+\end{center}
+\vspace{1cm}
+
+% ---------- Identificación ----------
+\noindent
+\arrayrulecolor{unabBlue}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{unabBlue!10}
+\textbf{\color{unabBlue}NOMBRE DEL ESTUDIANTE:} & \textbf{\color{unabBlue}ID ESTUDIANTE:} \\[15pt]
+\hline
+\textbf{\color{unabBlue}CURSO:} \NombreCurso & \textbf{\color{unabBlue}PROFESOR:} \NombreProfesor \\
+\hline
+\textbf{\color{unabBlue}FECHA:} \FechaExamen & \textbf{\color{unabBlue}TIEMPO ASIGNADO:} \TiempoExamen \\
+\hline
+\end{tabularx}
+\arrayrulecolor{black}
+
+\vspace{1cm}
+
+% ---------- Indicaciones ----------
+{\fontsize{14}{17}\selectfont\bfseries\color{unabBlue} PREFACIO E INDICACIONES}
+
+\vspace{5pt}
+\noindent\fcolorbox{unabBlue}{white}{%
+  \parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+    \fontsize{12}{15}\selectfont
+    \vspace{5pt}
+    Este compendio presenta una colección estructurada de preguntas conceptuales y problemas analíticos seleccionados del texto \textit{Problemas de Física Tomo II} (Burbano). El diseño tipográfico sigue los estándares de los textos universitarios en ciencias exactas. Los problemas están categorizados por dificultad para guiar el estudio autónomo. \\ \\
+    \textbf{\color{unabOrange}Importancia de la Práctica:} En física, el verdadero aprendizaje no ocurre al memorizar fórmulas, sino al enfrentarse iterativamente a los problemas. Resolver rigurosamente todos los ejercicios propuestos es el único camino para desarrollar la intuición física, el razonamiento analítico y la destreza matemática necesarias para modelar con éxito los fenómenos del mundo real. ¡No te saltes ningún paso!
+    
+    \vspace{8pt}
+    \textbf{\color{unabOrange}Taxonomía de Dificultad:}
+    \begin{itemize}[leftmargin=*, noitemsep, topsep=2pt, parsep=2pt]
+        \item \difFacil: Aplicación directa de conceptos fundamentales y fórmulas en 1D o con simetrías triviales.
+        \item \difMedio: Requiere descomposición vectorial estricta (2D), superposición espacial, o análisis trigonométrico.
+        \item \difDificil: Involucra distribuciones continuas de carga (cálculo integral avanzado), problemas tridimensionales (3D), o acoplamiento físico con las Leyes de Newton (dinámica y oscilaciones).
+    \end{itemize}
+    \vspace{5pt}
+  }
+}
+
+\vspace{12pt}
+
+\mysection{Metodología: Guía para la Resolución Efectiva de Problemas}
+\addcontentsline{toc}{section}{Metodología: Guía para la Resolución Efectiva de Problemas}
+
+Para enfrentar con éxito los problemas analíticos de este taller y del examen formal, el estudiante debe interiorizar el siguiente flujograma de razonamiento físico-matemático:
+
+\begin{enumerate}
+    \item \textbf{Análisis Geométrico y Esquema Físico (Boceto):} 
+    Lea el enunciado e identifique si se trata de cargas discretas (puntuales) o una distribución continua (varillas, anillos). \textbf{Nunca} inicie cálculos sin antes dibujar un diagrama claro donde ubique las cargas, las distancias y el punto de interés donde se evaluará la fuerza o el campo.
+    
+    \item \textbf{Selección del Sistema de Coordenadas:} 
+    Establezca un origen ($0,0,0$) estratégico. Para anillos o discos, ubique el origen en el centro geométrico. Para problemas lineales, alinee el objeto con el eje $X$ o $Y$. Un buen sistema de referencia reduce la dificultad de las integrales a la mitad.
+    
+    \item \textbf{Vectores de Posición (Vectores $\vec{r}$ y $\vec{r}'$):}
+    Identifique rigurosamente dos vectores fundamentales:
+    \begin{itemize}
+        \item Vector punto de evaluación ($\vec{r}$): Donde quiero calcular el campo.
+        \item Vector fuente ($\vec{r}'$): Donde está ubicada la carga $q$ o el diferencial de carga $dq$.
+        \item El vector de desplazamiento es siempre: $\vec{R} = \vec{r} - \vec{r}'$.
+    \end{itemize}
+    
+    \item \textbf{Argumentos de Simetría (Cargas Continuas):} 
+    Antes de plantear integrales complejas, verifique si la geometría posee ejes de simetría. Si, por ejemplo, existe un hemisferio superior idéntico al inferior, las componentes transversales del campo ($E_y$) se cancelarán mutuamente. \textit{Argumente esto textualmente en su examen.}
+    
+    \item \textbf{Planteamiento Matemático y Resolución:} 
+    Para sistemas discretos, realice la suma vectorial de forma ordenada (componente a componente). Para sistemas continuos, plantee la integral $d\vec{E} = k_e \frac{dq}{R^2} \hat{u}_R$ utilizando los diferenciales adecuados del apéndice. Integre con cuidado, verificando los límites espaciales del cuerpo.
+    
+    \item \textbf{Análisis de Sentido Físico (Sanity Check):} 
+    Una vez obtenga la respuesta, verifique sus unidades ($\text{N}$, $\text{N/C}$, $\text{V}$, $\text{J}$). Compruebe si la dirección del vector resultante tiene lógica (cargas del mismo signo se repelen, de distinto signo se atraen).
+\end{enumerate}
+
+
+
+%-------------------------------------------------------------------------
+\mysection{I. Fundamentos Conceptuales}
+\addcontentsline{toc}{section}{I. Fundamentos Conceptuales}
+
+\raebox{
+\textbf{RAE 1.1:} Describe el proceso de electrificación por fricción, por inducción y por contacto. \\
+\textbf{RAE 1.2:} Describe el comportamiento eléctrico de la materia a partir de las propiedades de la carga eléctrica.
+}
+
+\noindent Previo a la resolución algebraica, argumente desde los primeros principios físicos las siguientes cuestiones teóricas:
+
+\begin{enumerate}
+    \item ¿Qué es la \textbf{carga eléctrica} desde un punto de vista fundamental?
+    \item Defina rigurosamente la \textbf{Ley de Coulomb}.
+    \item Explique tres mecanismos físicos distintos mediante los cuales se puede \textbf{electrizar un material}.
+    \item ¿Para qué sirve y cómo se interpreta la \textbf{serie triboeléctrica}?
+    \item Defina el \textbf{campo eléctrico} y su relación con la fuerza electrostática.
+    \item ¿Cuáles son las tres reglas topológicas para dibujar \textbf{líneas de campo eléctrico}?
+    \item Diferencie conceptualmente entre \textbf{energía potencial eléctrica} y \textbf{potencial eléctrico}.
+    \item ¿Cómo se define el \textbf{trabajo eléctrico} en el contexto del movimiento de cargas puntuales?
+    \item ¿Qué son las \textbf{superficies equipotenciales}? Demuestre por qué las líneas de campo son siempre perpendiculares a ellas.
+\end{enumerate}
+
+
+
+%-------------------------------------------------------------------------
+\mysection{II. Ley de Coulomb: Modelado Interactivo}
+\addcontentsline{toc}{section}{II. Ley de Coulomb: Modelado Interactivo}
+
+\raebox{
+\textbf{RAE 1.3:} Define la Ley de Coulomb, y la aplica para determinar la fuerza neta en un campo debido a dos o más cargas.
+}
+
+\teoriabox{
+\textbf{Teoría y Recursos:}\\
+La interacción electrostática entre cargas puntuales está gobernada por el principio de superposición: $\vec{F}_{\text{neta}} = \sum \vec{F}_i$, donde cada contribución individual viene dada por $\vec{F}_{12} = k_e \frac{q_1 q_2}{|\vec{r}_{12}|^2} \hat{u}_{12}$.\\
+\vspace{2mm}
+\href{https://www.youtube.com/results?search_query=Ley+de+Coulomb+Fisica}{\textbf{\textcolor{unabOrange}{Ver Conferencia: Naturaleza de la Carga y Ley de Coulomb}}}
+}
+
+\problema{Ref. XVIII-23}{\difFacil}
+Dos cargas eléctricas puntuales, la una, $A$, triple que la otra, $B$, están separadas $1\text{ m}$. Determinar el punto en que la unidad de carga positiva estaría en equilibrio. 1) Cuando $A$ y $B$ tienen el mismo signo. 2) Cuando tienen signos opuestos.
+\respuesta{1) $x = 0,366\text{ m}$ desde $B$; 2) $x = -1,366\text{ m}$.}
+
+\problema{Ref. XVIII-14}{\difMedio}
+El cuadrado de la figura tiene $1\text{ m}$ de lado. Determinar la fuerza que actúa sobre la carga situada en el vértice $C$. Cargas: $A = 1\ \mu\text{C}$, $B = -2\ \mu\text{C}$, $C = 3\ \mu\text{C}$, $D = 4\ \mu\text{C}$.
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+    \tikzstyle{cpos}=[circle, draw=unabOrange, fill=unabOrange!90, text=white, inner sep=0pt, minimum size=14pt, font=\large\bfseries]
+    \tikzstyle{cneg}=[circle, draw=unabBlue, fill=unabBlue!90, text=white, inner sep=0pt, minimum size=14pt, font=\large\bfseries]
+    
+    % Cuadrado de fondo
+    \draw[thick, gray] (0,0) rectangle (3,3);
+    
+    % Cargas con colores representativos (A, C, D positivas; B negativa)
+    \node[cpos] (A) at (0,0) {$+$};
+    \node[cneg] (B) at (3,0) {$-$};
+    \node[cpos] (C) at (3,3) {$+$};
+    \node[cpos] (D) at (0,3) {$+$};
+    
+    % Etiquetas
+    \node[below left=1mm] at (A) {$A$};
+    \node[below right=1mm] at (B) {$B$};
+    \node[above right=1mm] at (C) {$C$};
+    \node[above left=1mm] at (D) {$D$};
+    
+    \node[below=0.1cm] at (1.5,0) {$1\text{ m}$};
+    \node[left=0.1cm] at (0,1.5) {$1\text{ m}$};
+\end{tikzpicture}
+\end{center}
+\respuesta{$\vec{F} = (117,5\ \hat{i} - 44,4\ \hat{j}) \times 10^{-3}\text{ N}$.}
+
+\problema{Ref. XVIII-13}{\difMedio}
+Calcular la fuerza que actúa sobre una carga de $1\ \mu\text{C}$ colocada en $(0, 4)\text{ m}$ debida a la siguiente distribución: en $(0, 0)$, carga $Q_1 = -3\ \mu\text{C}$; en $(4, 0)\text{ m}$, carga $Q_2 = 4\ \mu\text{C}$, y en $(1, 1)\text{ m}$, carga $Q_3 = 2\ \mu\text{C}$.
+\respuesta{$\vec{F} = (-1,36\ \hat{i} + 0,81\ \hat{j}) \times 10^{-3}\text{ N}$.}
+
+\problema{Ref. XVIII-15}{\difDificil}
+Dos cargas puntuales de $-200$ y $300\ \mu\text{C}$ se encuentran situadas en los puntos de coordenadas $A(1, 2, 1)\text{ m}$ y $B(3, 0, 2)\text{ m}$ respectivamente. Calcular la fuerza espacial tridimensional que ejercen sobre una tercera carga de $100\ \mu\text{C}$ situada en $C(-1, 2, 3)\text{ m}$.
+\respuesta{$\vec{F} = (4,69\ \hat{i} + 5,61\ \hat{j} - 13,10\ \hat{k})\text{ N}$.}
+
+\problema{Ref. XVIII-16}{\difDificil}
+Una partícula de masa $m$ y carga $q$ se encuentra en el punto medio de la línea que une otras dos cargas iguales $Q$ fijas, situadas a una distancia $r$ la una de la otra. Si desplazamos $q$ una distancia $A \ll r$ a lo largo de la línea que las une, determinar el período de oscilación resultante.
+\respuesta{$T = 2 \pi \sqrt{\frac{m r^3}{2 k_e Q q}}$.}
+
+
+%-------------------------------------------------------------------------
+\mysection{III. Análisis del Campo Eléctrico}
+\addcontentsline{toc}{section}{III. Análisis del Campo Eléctrico}
+
+\raebox{
+\textbf{RAE 2.1:} Define intensidad del Campo Eléctrico. \\
+\textbf{RAE 2.2:} Dibuja, esboza y explica los patrones de campo eléctrico y su relación con las superficies equipotenciales para diferentes configuraciones de carga.
+}
+
+\teoriabox{
+\textbf{Teoría y Recursos:}\\
+El campo vectorial $\vec{E}$ representa la perturbación del vacío. Para un ensamble discreto: $\vec{E} = \sum k_e \frac{q_i}{|\vec{r}_i|^2} \hat{u}_i$. Las líneas de campo emanan de cargas positivas y convergen en negativas, siendo tangentes a $\vec{E}$ en cada punto.\\
+\vspace{2mm}
+\href{https://www.youtube.com/results?search_query=Topologia+y+Lineas+de+Campo+Electrico}{\textbf{\textcolor{unabOrange}{Ver Conferencia: Topología del Campo Eléctrico}}}
+}
+
+\problema{Ref. XVIII-28}{\difFacil}
+Una carga puntual positiva de $10^{-2}\ \mu\text{C}$ se encuentra en el origen de un sistema cartesiano. Determinar la intensidad del campo eléctrico creado por ella en el punto $P(2, -4, 5)\text{ m}$.
+\respuesta{$\vec{E} = \frac{2\sqrt{5}}{15}(2\hat{i}-4\hat{j}+5\hat{k})\text{ N/C}$.}
+
+\problema{Ref. XVIII-29}{\difMedio}
+Una carga positiva de $10^{-2}\ \mu\text{C}$ se encuentra en $A(-1, 2, -1)\text{ m}$ y una negativa de $-2 \times 10^{-2}\ \mu\text{C}$ en $B(2, -2, 2)\text{ m}$. Determinar el vector campo eléctrico en el punto $C(3, 4, 0)\text{ m}$.
+\respuesta{$\vec{E} = 3,06\ \hat{i} - 2,24\ \hat{j} + 2,31\ \hat{k}\ (\text{N/C})$.}
+
+\problema{Ref. XVIII-66}{\difMedio}
+En cada uno de los vértices de la base de un triángulo equilátero de $3\text{ m}$ de lado hay una carga de $3\ \mu\text{C}$. Calcular el campo y el potencial electrostático en el tercer vértice.
+\respuesta{$\vec{E} = 3\sqrt{3} \times 10^3\ \hat{j}\ (\text{N/C})$, $V = 18 \times 10^3\text{ V}$.}
+
+\problema{Ref. XVIII-67}{\difDificil}
+En tres vértices de un cuadrado de $1\text{ m}$ de lado existen cargas de $10\ \mu\text{C}$ cada una. Calcular la intensidad del campo eléctrico resultante en el cuarto vértice vacío.
+\respuesta{$\vec{E} = 12,18 \times 10^4 (\hat{i}+\hat{j})\text{ N/C}$.}
+
+\problema{Ref. XVIII-35}{\difDificil}
+En el centro geométrico de un cubo de $2\text{ m}$ de arista tenemos una carga puntual de $50\ \mu\text{C}$. Calcular el módulo de la intensidad del campo en el centro de cualquiera de sus caras, y el flujo total que la atraviesa.
+\respuesta{$E = 45 \times 10^4\text{ N/C}$, $\Phi = 3\pi \times 10^5\text{ V}\cdot\text{m}$.}
+
+%-------------------------------------------------------------------------
+\mysection{IV. Potencial Eléctrico y Trabajo}
+\addcontentsline{toc}{section}{IV. Potencial Eléctrico y Trabajo}
+
+\raebox{
+\textbf{RAE 2.1:} Define Energía Potencial Eléctrica, Potencial Eléctrico, Diferencia de potencial eléctrico y superficie equipotencial.
+}
+
+\teoriabox{
+\textbf{Teoría y Recursos:}\\
+Dada la naturaleza conservativa del campo, la diferencia de potencial es escalar e independiente de la trayectoria: $\Delta V = -\int \vec{E}\cdot d\vec{l}$. El trabajo externo requerido es $W = q \Delta V$.\\
+\vspace{2mm}
+\href{https://www.youtube.com/results?search_query=Superficies+Equipotenciales+y+Trabajo+Electrico}{\textbf{\textcolor{unabOrange}{Ver Conferencia: Superficies Equipotenciales}}}
+}
+
+\problema{Ref. XVIII-59}{\difFacil}
+Se tienen dos cargas puntuales de $+ 2\ \mu\text{C}$ y $- 5\ \mu\text{C}$ a $10\text{ cm}$ de distancia. ¿En qué punto coordenado de la recta que las une el potencial eléctrico es exactamente nulo?
+\respuesta{A $2,86\text{ cm}$ (interior) y a $6,67\text{ cm}$ (exterior), ambas distancias medidas desde la carga de $+2\ \mu\text{C}$.}
+
+\problema{Ref. XVIII-88}{\difMedio}
+En los vértices de un cuadrado de lado $l$ se ubican cuatro cargas idénticas de valor $q$. En el centro geométrico se sitúa una carga $-q$. Hallar la energía potencial electrostática total de la distribución.
+\respuesta{$U = k_e \frac{q^2}{l} (4 - 3\sqrt{2})$.}
+
+\problema{Ref. XVIII-89}{\difMedio}
+Tres cargas $q_1, q_2$ y $q_3$ ocupan los vértices de un triángulo equilátero de lado $l$. Se liberan sucesivamente en el vacío. Calcular la energía cinética máxima adquirida por la primera carga ($q_1$) en liberarse.
+\respuesta{$K_1 = k_e \frac{q_1(q_2+q_3)}{l}$.}
+
+\problema{Ref. XVIII-46}{\difDificil}
+Dos partículas con carga $q = 0,1\ \mu\text{C}$ están fijas separadas $d = 1\text{ m}$. Otra partícula $q' = 2\ \mu\text{C}$ se desplaza desde el punto medio ($A$) hasta un punto $B$ que forma un triángulo equilátero con ellas. Determine la variación de energía cinética $\Delta K$ de $q'$.
+\respuesta{$\Delta K = 3,6\text{ mJ}$.}
+
+\problema{Ref. XVIII-70}{\difDificil}
+Carga de $2\ \mu\text{C}$ en $A(2, -1, 3)\text{ m}$ y carga de $-3\ \mu\text{C}$ en $B(3, 3, 5)\text{ m}$. Calcular el trabajo realizado por el campo para trasladar un corpúsculo de $-1\ \mu\text{C}$ desde $C(1, 2, 1)$ hasta $D(-2, 6, 4)$.
+\respuesta{$W = 1267\ \mu\text{J}$ (Trabajo externo) o $-1267\ \mu\text{J}$ (Trabajo del campo).}
+
+
+%-------------------------------------------------------------------------
+\mysection{V. Distribuciones Continuas de Carga}
+\addcontentsline{toc}{section}{V. Distribuciones Continuas de Carga}
+
+\raebox{
+\textbf{RAE 2.2:} Dibuja, esboza y explica los patrones de campo eléctrico y su relación con las superficies equipotenciales para diferentes configuraciones de carga (cargas distribuidas).
+}
+
+\teoriabox{
+\textbf{Teoría y Recursos:}\\
+El paso al continuo implica transformar las sumatorias en integrales. Un elemento lineal porta carga $dq = \lambda\ dl$. Es imperativo identificar simetrías para anular componentes ortogonales del campo.\\
+\vspace{2mm}
+\href{https://www.youtube.com/results?search_query=Campo+Electrico+Distribuciones+Continuas+Integrales}{\textbf{\textcolor{unabOrange}{Ver Conferencia: Integración en Medios Continuos}}}
+}
+
+\problema{Ref. XVIII-17}{\difFacil}
+Una varilla recta finita de longitud $L$ tiene densidad de carga constante $\lambda$. Determine la fuerza que ejerce sobre una partícula puntual $q$ localizada sobre el eje geométrico de la varilla a una distancia $a$ de su extremo más cercano.
+\respuesta{$F = \frac{k_e q \lambda L}{a(a+L)}$.}
+
+\problema{Ref. XVIII-18}{\difMedio}
+Un anillo cerrado de radio $a$ posee una densidad de carga constante $\lambda$. Una partícula de carga $q$ reposa en el eje $Z$ de simetría del anillo, a una altura $b$. Evaluar el vector fuerza sobre la partícula $q$.
+\respuesta{$\vec{F} = \frac{2\pi k_e q \lambda a b}{(a^2+b^2)^{3/2}} \hat{k}$.}
+
+\problema{Ref. XVIII-30}{\difMedio}
+Un cable de plástico delgado cargado con densidad lineal $\lambda$ se dobla formando una semicircunferencia perfecta de radio $R$. Determine el vector campo eléctrico en el centro de curvatura.
+\respuesta{$\vec{E} = - \frac{2 k_e \lambda}{R}\ \hat{j}$.}
+
+\problema{Ref. XVIII-31}{\difDificil}
+Determinar analíticamente el campo eléctrico en un punto ubicado a una distancia perpendicular $a$, situado exactamente sobre el plano de simetría (mediatriz) de una varilla recta de longitud $l$, cuya densidad de carga $\lambda$ es uniforme.
+\respuesta{$\vec{E} = \frac{2 k_e \lambda l}{a \sqrt{4a^2+l^2}}\ \hat{u}_\perp$.}
+
+\problema{Ref. XVIII-32}{\difDificil}
+Un anillo de radio $R$ centrado en el origen del plano $XY$ está electrizado con una densidad lineal variable de la forma $\lambda = \lambda_0 \sin \varphi$, donde el punto $P(R, 0)$ tiene densidad nula. Calcular la intensidad del campo en el origen.
+\respuesta{$\vec{E} = -\frac{k_e \lambda_0 \pi}{R}\ \hat{j}$.}
+
+
+%-------------------------------------------------------------------------
+\mysection{Apéndice Matemático y Formulario Visual}
+\addcontentsline{toc}{section}{Apéndice Matemático y Formulario Visual}
+
+\mysubsection{A. Geometría Plana y Trigonometría}
+
+\begin{minipage}{0.5\textwidth}
+Para un triángulo rectángulo con ángulo $\theta$:
+\begin{itemize}
+    \item \textbf{Pitágoras:} $c^2 = a^2 + b^2$
+    \item $\sin \theta = \frac{\text{Opuesto}}{\text{Hipotenusa}} = \frac{b}{c}$
+    \item $\cos \theta = \frac{\text{Adyacente}}{\text{Hipotenusa}} = \frac{a}{c}$
+    \item $\tan \theta = \frac{\text{Opuesto}}{\text{Adyacente}} = \frac{b}{a}$
+\end{itemize}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    \draw[thick] (0,0) -- (3,0) node[midway,below] {Adyacente ($a$)};
+    \draw[thick] (3,0) -- (3,2) node[midway,right] {Opuesto ($b$)};
+    \draw[thick] (0,0) -- (3,2) node[midway,above left] {Hipotenusa ($c$)};
+    \draw (2.8,0) -- (2.8,0.2) -- (3,0.2);
+    \draw (0.5,0) arc (0:33.69:0.5);
+    \node at (0.8, 0.25) {$\theta$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.5cm}
+\mysubsection{B. Vectores y Coordenadas Polares (2D)}
+
+\begin{minipage}{0.5\textwidth}
+Las coordenadas polares $(r, \theta)$ relacionan un punto en el plano con sus coordenadas cartesianas $(x, y)$:
+\begin{itemize}
+    \item $x = r \cos \theta$
+    \item $y = r \sin \theta$
+    \item $r = \sqrt{x^2 + y^2}$
+    \item $\theta = \arctan(y/x)$
+    \item \textbf{Vector de posición:} $\vec{r} = x\hat{i} + y\hat{j} = r\hat{u}_r$
+\end{itemize}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    % Ejes
+    \draw[->, gray] (-0.5,0) -- (3.5,0) node[right, black] {$x$};
+    \draw[->, gray] (0,-0.5) -- (0,3.0) node[above, black] {$y$};
+    
+    % Vector
+    \draw[->, thick, unabBlue] (0,0) -- (2.5,2) node[midway, above left] {$\vec{r}$};
+    \filldraw (2.5,2) circle (1.5pt) node[above right] {$P(x,y)$ o $P(r,\theta)$};
+    
+    % Proyecciones
+    \draw[dashed] (2.5,0) node[below] {$x$} -- (2.5,2);
+    \draw[dashed] (0,2) node[left] {$y$} -- (2.5,2);
+    
+    % Angulo
+    \draw (0.7,0) arc (0:38.66:0.7);
+    \node at (1.0, 0.3) {$\theta$};
+    
+    % Vectores unitarios
+    \draw[->, unabOrange, thick] (0,0) -- (1,0) node[below] {$\hat{i}$};
+    \draw[->, unabOrange, thick] (0,0) -- (0,1) node[left] {$\hat{j}$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.4cm}
+\begin{minipage}{0.5\textwidth}
+\textbf{Suma de Vectores (Paralelogramo):} \\
+La suma geométrica de dos vectores $\vec{A}$ y $\vec{B}$ unidos por su origen forma la diagonal de un paralelogramo, resultando en el vector $\vec{R} = \vec{A} + \vec{B}$. \\
+
+\textbf{Magnitud (Ley de Cosenos):} \\
+Conociendo el ángulo $\alpha$ formado \textit{entre las colas} de los vectores, la magnitud de la resultante se calcula sumando el doble producto:
+$$ |\vec{R}| = \sqrt{|\vec{A}|^2 + |\vec{B}|^2 + 2|\vec{A}||\vec{B}|\cos\alpha} $$
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9, >=latex]
+    \coordinate (O) at (0,0);
+    \coordinate (A) at (10:3.5); 
+    \coordinate (B) at (60:2.8); 
+    \coordinate (R) at ($(A)+(B)$); 
+    
+    % Paralelogramo
+    \draw[dashed, gray, thick] (A) -- (R);
+    \draw[dashed, gray, thick] (B) -- (R);
+    
+    % Vectores
+    \draw[->, thick, unabBlue] (O) -- (A) node[midway, below right] {$\vec{A}$};
+    \draw[->, thick, unabBlue] (O) -- (B) node[midway, above left] {$\vec{B}$};
+    \draw[->, thick, unabOrange] (O) -- (R) node[pos=0.65, above left] {$\vec{R}$};
+    
+    % Angulo
+    \draw (O) ++(10:0.8) arc (10:60:0.8);
+    \node at (35:1.1) {$\alpha$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.4cm}
+\begin{minipage}{\textwidth}
+\textbf{Suma por Componentes Rectangulares:} \\
+De manera analítica, los vectores pueden sumarse algebraicamente descomponiéndolos en sus ejes coordenados. Si tenemos $\vec{A} = A_x\hat{i} + A_y\hat{j}$ y $\vec{B} = B_x\hat{i} + B_y\hat{j}$, el vector resultante $\vec{R}$ se obtiene sumando componente a componente:
+$$ \vec{R} = (A_x + B_x)\hat{i} + (A_y + B_y)\hat{j} = R_x\hat{i} + R_y\hat{j} $$
+La magnitud y dirección de $\vec{R}$ respecto al eje $x$ se calculan usando el teorema de Pitágoras espacial y trigonometría:
+$$ |\vec{R}| = \sqrt{R_x^2 + R_y^2} \quad \text{y} \quad \theta_R = \arctan\left(\frac{R_y}{R_x}\right) $$
+\end{minipage}
+
+\mysubsection{C. Vectores en 3D y Producto Punto}
+
+\begin{minipage}{0.55\textwidth}
+Un vector en el espacio tridimensional se descompone en sus componentes rectangulares:
+$$ \vec{A} = A_x\hat{i} + A_y\hat{j} + A_z\hat{k} $$
+La \textbf{magnitud} del vector se calcula con el teorema de Pitágoras espacial:
+$$ |\vec{A}| = \sqrt{A_x^2 + A_y^2 + A_z^2} $$
+El \textbf{vector unitario} (que indica solo dirección) es: $\hat{u}_A = \frac{\vec{A}}{|\vec{A}|}$.
+
+El \textbf{Producto Punto} (o escalar) entre dos vectores mide qué tan paralelos son:
+$$ \vec{A} \cdot \vec{B} = |\vec{A}| |\vec{B}| \cos\phi = A_x B_x + A_y B_y + A_z B_z $$
+\begin{itemize}
+    \item Si $\vec{A} \cdot \vec{B} = 0$, los vectores son \textbf{ortogonales} (perpendiculares).
+    \item El producto de un vector consigo mismo es su magnitud al cuadrado: $\vec{A} \cdot \vec{A} = |\vec{A}|^2$.
+\end{itemize}
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9, >=latex]
+    % Ejes isométricos manuales
+    \coordinate (O) at (0,0);
+    \draw[->, gray] (O) -- (-1.8,-1.5) node[below left, black] {$x$};
+    \draw[->, gray] (O) -- (3.5,0) node[right, black] {$y$};
+    \draw[->, gray] (O) -- (0,3) node[above, black] {$z$};
+    
+    % Proyecciones en el plano xy
+    \coordinate (Axy) at (-0.6, -0.5);
+    \coordinate (A) at (-0.6, 2.3);
+    
+    \coordinate (Bxy) at (2.2, -0.3);
+    \coordinate (B) at (2.2, 1.2);
+    
+    % Lineas punteadas de proyeccion (suelo y altura)
+    \draw[dashed, gray] (O) -- (Axy);
+    \draw[dashed, gray] (Axy) -- (A);
+    \draw[dashed, gray] (O) -- (Bxy);
+    \draw[dashed, gray] (Bxy) -- (B);
+    
+    % Vectores principales
+    \draw[->, thick, unabBlue] (O) -- (A) node[above] {$\vec{A}$};
+    \draw[->, thick, unabOrange] (O) -- (B) node[right] {$\vec{B}$};
+
+    % Angulo entre ellos
+    \draw[thick, gray, ->] (104:1.2) arc (104:28:1.2) node[midway, right, xshift=1mm, yshift=2mm] {$\phi$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.4cm}
+
+\mysubsection{D. Diferenciales Espaciales (3D)}
+En electromagnetismo, la integración de distribuciones continuas requiere identificar correctamente los diferenciales de línea ($d\vec{l}$) y volumen ($dV$).
+
+\vspace{0.3cm}
+\noindent
+\begin{minipage}{0.55\textwidth}
+\textbf{1. Coordenadas Cartesianas $(x, y, z)$:} \\
+$d\vec{l} = dx\,\hat{i} + dy\,\hat{j} + dz\,\hat{k}$ \\
+$dV = dx\,dy\,dz$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.55, >=latex]
+  \coordinate (O) at (0,0);
+  \draw[->, thick, gray] (O) -- (-2.5,-2.5) node[below left, black] {$x$};
+  \draw[->, thick, gray] (O) -- (4,0) node[right, black] {$y$};
+  \draw[->, thick, gray] (O) -- (0,4) node[above, black] {$z$};
+  
+  \coordinate (V1) at (1.5, 1.5); 
+  \coordinate (V2) at (3.5, 1.5); 
+  \coordinate (V3) at (3.5, 3.5); 
+  \coordinate (V4) at (1.5, 3.5); 
+  \coordinate (V5) at (0.5, 0.5); 
+  \coordinate (V6) at (2.5, 0.5); 
+  \coordinate (V7) at (2.5, 2.5); 
+  \coordinate (V8) at (0.5, 2.5); 
+  
+  \draw[dashed, thick, unabBlue, ->] (O) -- (V5) node[midway, above left] {$\vec{r}$};
+  \draw[dashed, thick] (V1) -- (V2);
+  \draw[dashed, thick] (V1) -- (V4);
+  \draw[dashed, thick] (V1) -- (V5);
+  
+  \filldraw[fill=unabBlue!20, draw=black, thick, opacity=0.9] (V5) -- (V6) -- (V7) -- (V8) -- cycle;
+  \filldraw[fill=unabBlue!40, draw=black, thick, opacity=0.9] (V6) -- (V2) -- (V3) -- (V7) -- cycle;
+  \filldraw[fill=unabBlue!60, draw=black, thick, opacity=0.9] (V8) -- (V7) -- (V3) -- (V4) -- cycle;
+
+  \draw[thick, <->] (0.5, 0.2) -- (2.5, 0.2) node[midway, below] {$dy$};
+  \draw[thick, <->] (2.7, 0.5) -- (3.7, 1.5) node[midway, below right] {$dx$};
+  \draw[thick, <->] (3.8, 1.5) -- (3.8, 3.5) node[midway, right] {$dz$}; 
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.1cm}
+
+\noindent
+\begin{minipage}{0.55\textwidth}
+\textbf{2. Coordenadas Cilíndricas $(r, \theta, z)$:} \\
+El diferencial de volumen es un sector cilíndrico curvo. El desplazamiento radial es $dr$, el vertical es $dz$, pero el desplazamiento angular genera un arco de longitud transversal $r d\theta$. \\
+\vspace{0.1cm} \\
+$d\vec{l} = dr\,\hat{u}_r + r\,d\theta\,\hat{u}_\theta + dz\,\hat{k}$ \\
+$dV = (dr)(r\,d\theta)(dz) = r\,dr\,d\theta\,dz$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\begin{center}
+%Axis Angles
+\tdplotsetmaincoords{70}{110}
+
+%Macros
+\pgfmathsetmacro{\rvec}{3.5}
+\pgfmathsetmacro{\thetavec}{35}
+\pgfmathsetmacro{\zvec}{2}
+
+\pgfmathsetmacro{\drvec}{1.5}
+\pgfmathsetmacro{\dthetavec}{30}
+\pgfmathsetmacro{\dzvec}{1.5}
+
+\begin{tikzpicture}[tdplot_main_coords, scale=0.65, >=latex]
+
+% 1. COORDINATES
+\coordinate (O) at (0,0,0);
+\coordinate (A) at ({\rvec*cos(\thetavec)}, {\rvec*sin(\thetavec)}, {\zvec});
+\coordinate (B) at ({\rvec*cos(\thetavec+\dthetavec)}, {\rvec*sin(\thetavec+\dthetavec)}, {\zvec});
+\coordinate (C) at ({(\rvec+\drvec)*cos(\thetavec+\dthetavec)}, {(\rvec+\drvec)*sin(\thetavec+\dthetavec)}, {\zvec});
+\coordinate (D) at ({(\rvec+\drvec)*cos(\thetavec)}, {(\rvec+\drvec)*sin(\thetavec)}, {\zvec});
+
+\coordinate (E) at ({\rvec*cos(\thetavec)}, {\rvec*sin(\thetavec)}, {\zvec+\dzvec});
+\coordinate (F) at ({\rvec*cos(\thetavec+\dthetavec)}, {\rvec*sin(\thetavec+\dthetavec)}, {\zvec+\dzvec});
+\coordinate (G) at ({(\rvec+\drvec)*cos(\thetavec+\dthetavec)}, {(\rvec+\drvec)*sin(\thetavec+\dthetavec)}, {\zvec+\dzvec});
+\coordinate (H) at ({(\rvec+\drvec)*cos(\thetavec)}, {(\rvec+\drvec)*sin(\thetavec)}, {\zvec+\dzvec});
+
+% 2. BACKGROUND ELEMENTS
+% Axis
+\draw[thick,-latex, gray] (O) -- (4.5,0,0) node[pos=1.05, black]{$x$};
+\draw[thick,-latex, gray] (O) -- (0,4.5,0) node[pos=1.05, black]{$y$};
+\draw[thick,-latex, gray] (O) -- (0,0,4.5) node[pos=1.05, black]{$z$};
+
+% Projections to xy-plane (Background)
+\draw[dashed, gray] (O) -- ({(\rvec+\drvec)*cos(\thetavec)}, {(\rvec+\drvec)*sin(\thetavec)}, 0);
+\draw[dashed, gray] (O) -- ({(\rvec+\drvec)*cos(\thetavec+\dthetavec)}, {(\rvec+\drvec)*sin(\thetavec+\dthetavec)}, 0);
+
+% Upwards projections from xy-plane
+\draw[dashed, gray] ({\rvec*cos(\thetavec)}, {\rvec*sin(\thetavec)}, 0) -- (A);
+\draw[dashed, gray] ({\rvec*cos(\thetavec+\dthetavec)}, {\rvec*sin(\thetavec+\dthetavec)}, 0) -- (B);
+\draw[dashed, gray] ({(\rvec+\drvec)*cos(\thetavec)}, {(\rvec+\drvec)*sin(\thetavec)}, 0) -- (D);
+\draw[dashed, gray] ({(\rvec+\drvec)*cos(\thetavec+\dthetavec)}, {(\rvec+\drvec)*sin(\thetavec+\dthetavec)}, 0) -- (C);
+
+% Hidden edges of the volume (Background)
+\tdplotdrawarc[tdplot_main_coords, thick, dashed]{(0,0,\zvec)}{\rvec}{\thetavec}{\thetavec+\dthetavec}{}{}
+\draw[thick, dashed] (A) -- (D);
+\draw[thick, dashed] (A) -- (E);
+
+% Faces (Background)
+\fill[gray!20, opacity=0.5] (A) to[bend left=4] (B) -- (F) to[bend right=4] (E) -- cycle; % Inner r
+\fill[gray!20, opacity=0.5] (A) -- (D) -- (H) -- (E) -- cycle; % Left theta
+
+% 3. MAIN ELEMENTS
+% Faces (Main)
+\fill[unabOrange!40, opacity=0.9] (E) to[bend left=4] (F) -- (G) to[bend right=4] (H) -- cycle; % Top z
+\fill[unabOrange!70, opacity=0.9] (D) to[bend left=4] (C) -- (G) to[bend right=4] (H) -- cycle; % Outer r
+\fill[unabOrange!20, opacity=0.9] (B) -- (C) -- (G) -- (F) -- cycle; % Right theta
+
+% 4. FOREGROUND ELEMENTS
+% Visible edges
+\draw[thick] (E) -- (H) node[midway, above left]{$dr$};
+\draw[thick] (F) -- (G);
+\draw[thick] (B) -- (C);
+\draw[thick] (C) -- (D);
+
+\draw[thick] (B) -- (F);
+\draw[thick] (C) -- (G) node[midway, right]{$dz$};
+\draw[thick] (D) -- (H);
+
+% Visible arcs
+\tdplotdrawarc[tdplot_main_coords, thick]{(0,0,\zvec)}{\rvec+\drvec}{\thetavec}{\thetavec+\dthetavec}{}{}
+\tdplotdrawarc[tdplot_main_coords, thick]{(0,0,\zvec+\dzvec)}{\rvec}{\thetavec}{\thetavec+\dthetavec}{below left}{$r d\theta$}
+\tdplotdrawarc[tdplot_main_coords, thick]{(0,0,\zvec+\dzvec)}{\rvec+\drvec}{\thetavec}{\thetavec+\dthetavec}{}{}
+
+% Angle theta in xy-plane
+\tdplotdrawarc[-stealth]{(O)}{1.5}{0}{\thetavec}{anchor=north}{$\theta$}
+
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\vspace{0.1cm}
+
+\noindent
+\begin{minipage}{0.55\textwidth}
+\textbf{3. Coordenadas Esféricas $(r, \theta, \phi)$:} \\
+El diferencial es una cuña esférica curvilínea. Consta de un desplazamiento radial directo $dr$, un arco polar descendente de longitud $r d\theta$, y un arco azimutal de longitud $r \sin\theta d\phi$. \\
+\vspace{0.1cm} \\
+$d\vec{l} = dr\,\hat{u}_r + r\,d\theta\,\hat{u}_\theta + r\sin\theta\,d\phi\,\hat{u}_\phi$ \\
+$dV = (dr)(r\,d\theta)(r\sin\theta\,d\phi) = r^2\sin\theta\,dr\,d\theta\,d\phi$
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+\begin{center}
+%Axis Angles
+\tdplotsetmaincoords{70}{110}
+
+%Macros
+\pgfmathsetmacro{\rvec}{4}
+\pgfmathsetmacro{\thetavec}{40}
+\pgfmathsetmacro{\phivec}{45}
+\pgfmathsetmacro{\dphivec}{20}
+\pgfmathsetmacro{\dthetavec}{20}
+\pgfmathsetmacro{\drvec}{1.0}
+
+\begin{tikzpicture}[tdplot_main_coords, scale=0.65, >=latex]
+
+% 1. COORDINATES
+\coordinate (O) at (0,0,0);
+\tdplotsetcoord{A}{\rvec}{\thetavec}{\phivec}
+\tdplotsetcoord{B}{\rvec}{\thetavec + \dthetavec}{\phivec}
+\tdplotsetcoord{C}{\rvec}{\thetavec + \dthetavec}{\phivec + \dphivec}
+\tdplotsetcoord{D}{\rvec}{\thetavec}{\phivec + \dphivec}
+\tdplotsetcoord{E}{\rvec + \drvec}{\thetavec}{\phivec}
+\tdplotsetcoord{F}{\rvec + \drvec}{\thetavec + \dthetavec}{\phivec}
+\tdplotsetcoord{F'}{\rvec + \drvec}{90}{\phivec}
+\tdplotsetcoord{G}{\rvec + \drvec}{\thetavec + \dthetavec}{\phivec + \dphivec}
+\tdplotsetcoord{G'}{\rvec + \drvec}{90}{\phivec + \dphivec}
+\tdplotsetcoord{H}{\rvec + \drvec}{\thetavec}{\phivec + \dphivec}
+
+% 2. BACKGROUND ELEMENTS
+% Axis
+\draw[thick,-latex, gray] (0,0,0) -- (4.5,0,0) node[pos=1.05, black]{$x$};
+\draw[thick,-latex, gray] (0,0,0) -- (0,4.5,0) node[pos=1.05, black]{$y$};
+\draw[thick,-latex, gray] (0,0,0) -- (0,0,4.5) node[pos=1.05, black]{$z$};
+
+% Help Lines
+\draw[thick, dashed] (O) -- (A) node[pos=0.6, above left] {$r$};
+\draw[dashed] (O) -- (B);
+\draw[dashed] (O) -- (C);
+\draw[dashed] (O) -- (D);
+\draw[gray, dotted] (O) -- (F');
+\draw[gray, dotted] (O) -- (G');
+\draw[dashed, thick] (D) -- (H);
+
+% Curved (background)
+\tdplotsetrotatedcoords{55}{-50.4313}{-6.4086}
+\tdplotdrawarc[dashed, tdplot_rotated_coords, thick]{(O)}{\rvec}{0}{12.8173}{}{}
+
+\tdplotsetthetaplanecoords{\phivec + \dphivec}
+\tdplotdrawarc[dashed, tdplot_rotated_coords, thick]{(O)}{\rvec}{\thetavec}{\dthetavec + \thetavec}{}{}
+
+% Fill Color (background)
+\fill[gray!20, opacity=0.5] (A) to[bend left=2] (D) to[bend left=6] (C) to[bend right=2.5] (B) to[bend right=4] cycle;
+\fill[gray!20, opacity=0.5] (A) to[bend left=2] (D) to (H) to[bend right=2.5] (E) to[bend right=4] cycle;
+\fill[gray!20, opacity=0.5] (D) to (H) to[bend left=6] (G) to[bend right=2] (C) to[bend right=6] cycle;
+
+% 3. MAIN ELEMENTS
+% Fill Color (main)
+\fill[facil!40, opacity=0.8] (E) to (A)  to[bend left=4] (B) to (F) to[bend right=4] cycle;
+\fill[facil!60, opacity=0.9] (E) to[bend left=4] (F)  to[bend left=2] (G) to[bend right=6.5] (H) to[bend right=4] cycle;
+\fill[facil!20, opacity=0.9] (F) to[bend left=2] (G) to[bend left=1.5] (C) to[bend right=2.5] (B) to[bend right=4] cycle;
+
+% 4. FOREGROUND ELEMENTS
+% Help Curves
+\tdplotsetthetaplanecoords{\phivec}
+\tdplotdrawarc[tdplot_rotated_coords]{(O)}{\rvec}{\thetavec+\dthetavec}{90}{}{}
+\tdplotdrawarc[tdplot_rotated_coords]{(O)}{\rvec+\drvec}{\thetavec+\dthetavec}{90}{}{}
+\tdplotsetthetaplanecoords{\phivec+\dphivec}
+\tdplotdrawarc[tdplot_rotated_coords, dashed]{(O)}{\rvec}{\thetavec+\dthetavec}{90}{}{}
+\tdplotdrawarc[tdplot_rotated_coords]{(O)}{\rvec+\drvec}{\thetavec+\dthetavec}{90}{}{}
+
+\tdplotdrawarc[tdplot_main_coords]{(O)}{\rvec}{\phivec}{\phivec+\dphivec}{}{}
+\node[rotate=13] at (2.2,3.0,0) {$r\sin\theta d\phi$};
+\tdplotdrawarc[tdplot_main_coords]{(O)}{\rvec+\drvec}{\phivec}{\phivec+\dphivec}{}{}
+
+% Angles
+\tdplotdrawarc[-stealth]{(O)}{0.9}{0}{\phivec}{anchor=north}{$\phi$}
+\tdplotdrawarc[-stealth]{(O)}{1.5}{\phivec}{\phivec + \dphivec}{}{}
+\node at (1.4,1.9,0) {$d\phi$};
+
+\tdplotsetthetaplanecoords{\phivec}
+\tdplotdrawarc[tdplot_rotated_coords, -stealth]{(0,0,0)}{1.2}{0}{\thetavec}{}{}
+\node at (0,0.3,1.3) {$\theta$};
+\tdplotdrawarc[tdplot_rotated_coords, -stealth]{(0,0,0)}{2.}{\thetavec}{\thetavec + \dthetavec}{anchor=south west}{$d\theta$}
+
+% Lines
+\draw[thick] (A) -- (E) node[midway, above left]{$dr$};
+\draw[thick] (B) -- (F);
+\draw[thick] (C) -- (G);
+
+% Curved (foreground)
+\tdplotsetthetaplanecoords{\phivec}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec}{\thetavec}{\dthetavec + \thetavec}{below left}{$r d\theta$}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec + \drvec}{\thetavec}{\dthetavec + \thetavec}{}{}
+
+\tdplotsetthetaplanecoords{\phivec + \dphivec}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec + \drvec}{\thetavec}{\dthetavec + \thetavec}{}{}
+
+\tdplotsetrotatedcoords{55}{-50.4313}{-6.4086}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec + \drvec}{0}{12.8173}{}{}
+
+\tdplotsetrotatedcoords{55}{-30.3813}{-8.6492}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec}{0}{17.2983}{}{}
+\tdplotdrawarc[tdplot_rotated_coords, thick]{(O)}{\rvec + \drvec}{0}{17.2983}{}{}
+
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\mysubsection{E. Tabla de Integrales Comunes}
+Integrales indispensables para el modelado de distribuciones continuas ($C$ representa la constante de integración):
+\begin{multicols}{2}
+\begin{align*}
+    \int \frac{dx}{(x^2 + a^2)^{3/2}} &= \frac{x}{a^2 \sqrt{x^2 + a^2}} + C \\
+    \int \frac{x\, dx}{(x^2 + a^2)^{3/2}} &= -\frac{1}{\sqrt{x^2 + a^2}} + C \\
+    \int \frac{dx}{x^2 + a^2} &= \frac{1}{a} \arctan \left( \frac{x}{a} \right) + C
+\end{align*}
+\columnbreak
+\begin{align*}
+    \int \sin \theta\, d\theta &= -\cos \theta + C \\
+    \int \cos \theta\, d\theta &= \sin \theta + C \\
+    \int \ln(x)\, dx &= x\ln(x) - x + C
+\end{align*}
+\end{multicols}
+
+\vfill
+
+
+\end{document}

@@ -89,6 +89,97 @@
                 <span>Dashboard</span>
             </a>
             <a onclick="window.mostrarCalendario()" class="nav-item" id="nav-calendario">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plataforma educativa interactiva para el curso de Electromagnetismo. Videos, simuladores y evaluaciones.">
+    <title>Electro10.easy | Plataforma Educativa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b57d0'/><text x='50%25' y='50%25' font-family='sans-serif' font-weight='bold' font-size='60' fill='white' text-anchor='middle' dy='.3em'>E</text></svg>">
+
+    <!-- Fuentes Google: Inter y Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- KaTeX para renderizado matemático -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="window.katexLoaded = true;"></script>
+
+    <!-- Estilos externos -->
+    <link rel="stylesheet" href="./css/styles.css?v=1.1">
+
+    <!-- Librerias externas (Graficos y Alertas) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Vis Network y JSZip para el Cerebro Obsidian -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <!-- Fondo Cósmico (Particles.js) -->
+    <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;"></div>
+
+    <header>
+        <div class="header-brand">
+            <button id="toggle-sidebar" class="icon-btn" title="Mostrar Menú" onclick="window.toggleSidebar()"><span class="material-symbols-outlined">menu</span></button>
+            <div class="brand-logo">E</div>
+            <div class="brand-text">
+                <span class="brand-title">Electro10<span style="color: var(--accent);">.easy</span></span>
+                <span class="brand-sub">Academic Excellence</span>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="search-bar">
+                <span class="material-symbols-outlined text-[18px]" style="color: var(--text-medium);">search</span>
+                <input type="text" placeholder="Buscar contenidos...">
+            </div>
+            
+            <button class="icon-btn" onclick="window.toggleTheme()" title="Cambiar Tema (Claro/Oscuro)">
+                <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+            </button>
+            <button class="icon-btn focus-btn" onclick="window.toggleFocusMode()" title="Focus Mode (Pomodoro)" style="color: #10b981;">
+                <span class="material-symbols-outlined">timer</span>
+            </button>
+            <button class="icon-btn" title="Notificaciones" onclick="window.mostrarNotificaciones()">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="notification-dot" id="noti-dot"></span>
+            </button>
+            <button class="icon-btn" title="Ayuda" onclick="Swal.fire('Soporte', 'Visita el foro interactivo en la pestaña de la lección o contacta al administrador.', 'question')"><span class="material-symbols-outlined">help</span></button>
+
+            <!-- AUTH ZONE -->
+            <button id="btn-login-modal" onclick="window.abrirModalAuth()" class="btn-auth" style="display: none;"><span class="material-symbols-outlined text-[18px]">login</span> Ingresar</button>
+            
+            <div class="user-profile" id="user-info-container" onclick="window.mostrarPerfil()">
+                <div class="user-avatar" id="avatar-initial">U</div>
+                <div style="display: flex; flex-direction: column; margin-right: 8px;">
+                    <span class="user-name truncate" id="user-email-text" style="max-width: 100px; font-weight: 600;">Usuario</span>
+                </div>
+                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-medium);">expand_more</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- MENÚ LATERAL -->
+        <aside class="sidebar" id="sidebar-menu">
+            <div class="nav-section-title" style="margin-top: 0;">PANEL ACADÉMICO</div>
+            
+            <a onclick="window.mostrarDashboardEstudiante()" class="nav-item active" id="nav-dashboard">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a onclick="window.mostrarCalendario()" class="nav-item" id="nav-calendario">
                 <span class="material-symbols-outlined">hub</span>
                 <span>Universo de Conocimiento</span>
             </a>
@@ -102,7 +193,7 @@
             </a>
             <a onclick="window.mostrarJuegoSnake()" class="nav-item" id="nav-snake">
                 <span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span>
-                <span style="color: #00f2fe; font-weight: 600;">Superposition Snake</span>
+                <span style="font-weight: 600;">Juegos Educativos</span>
             </a>
             <a onclick="window.mostrarCerebro()" class="nav-item" id="nav-brain" style="color: #a855f7;">
                 <span class="material-symbols-outlined">psychology</span>
@@ -587,13 +678,89 @@
             </div>
 
             <!-- ================= CENTRO DE SIMULACIÓN Y LABORATORIOS ================= -->
+            <div id="labs-dashboard" class="bento-container" style="display: none;">
+                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
+                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #0ea5e9;">science</span>
+                        Centro de Simulación
+                    </h2>
+                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                        El puente entre las matemáticas y la realidad física. Aquí encontrarás las guías de laboratorio y entornos de experimentación interactiva.
+                    </p>
+                </div>
+                <div class="bento-grid">
+                    <div class="bento-card col-4">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">group_work</span>
+                        </div>
+                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Ley de Coulomb</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Interacción de fuerzas entre cargas puntuales.</p>
+                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">Abrir Simulador</button>
+                    </div>
+
+                    <div class="bento-card col-4">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">line_style</span>
+                        </div>
+                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Campo Eléctrico</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo eléctrico y mapas de vectores.</p>
+                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">Abrir Simulador</button>
+                    </div>
+
+                    <div class="bento-card col-4">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">3d_rotation</span>
+                        </div>
+                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Potencial Eléctrico 3D</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Topografía del potencial generado por cargas.</p>
+                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">Abrir Simulador</button>
+                    </div>
+
+                    <div class="bento-card col-4">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">air</span>
+                        </div>
+                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Flujo Eléctrico</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo atravesando superficies (Gauss).</p>
+                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">Abrir Simulador</button>
+                    </div>
+                    
+                    <div class="bento-card col-4">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Capacitance.html', '_blank')">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">battery_charging_full</span>
+                        </div>
+                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Capacitancia</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Acumulación de carga y arreglos de capacitores.</p>
+                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Capacitance.html', '_blank')">Abrir Simulador</button>
+                    </div>
+
+                    <div class="bento-card col-4" style="border: 2px dashed var(--border-strong); background: rgba(14, 165, 233, 0.02);">
+                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">bolt</span>
+                        </div>
+                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Más Laboratorios...</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Nuevos simuladores se agregarán en la 2da parte del curso.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- JUEGO SNAKE DASHBOARD -->
             <div id="game-dashboard" class="bento-container" style="display: none;">
-                <div class="card col-span-full">
-                    <div class="card-header">
-                        <h2><span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span> Superposition Snake</h2>
-                        <span class="badge" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">Minijuego Interactivo</span>
-                    </div>
+                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
+                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #00f2fe;">gamepad</span>
+                        Juegos Educativos
+                    </h2>
+                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                        Gamificación del aprendizaje. Aprende conceptos avanzados de física jugando.
+                    </p>
+                </div>
+                <div class="bento-grid">
+                    <div class="card col-12">
+                        <div class="card-header">
+                            <h2><span class="material-symbols-outlined" style="color: #00f2fe;">videogame_asset</span> Superposition Snake</h2>
+                            <span class="badge" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">Disponible</span>
+                        </div>
                     <div class="card-content">
                         <p style="text-align: center; margin-bottom: 1rem; color: var(--text-medium);">¡Aprende conceptos de electrostática mientras juegas! Usa las flechas de tu teclado para moverte.</p>
                         
@@ -619,65 +786,18 @@
                                 <p id="game-level-desc" style="font-size: 1.2rem; line-height: 1.5;">La velocidad aumenta.</p>
                                 <button id="game-level-btn" class="btn" style="background: white; color: #a855f7; margin-top: 1.5rem; padding: 10px 20px;">Comenzar Nivel</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="labs-dashboard" class="bento-container" style="display: none;">
-                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
-                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
-                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #0ea5e9;">science</span>
-                        Centro de Simulación
-                    </h2>
-                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                        El puente entre las matemáticas y la realidad física. Aquí encontrarás las guías de laboratorio y entornos de experimentación interactiva.
-                    </p>
-                </div>
-
-                <div class="bento-grid">
-                    <!-- Laboratorio Interactivo 1: Campo Eléctrico -->
-                    <div class="bento-card col-12" style="border: 1px solid var(--border-color); background: var(--bg-surface); position: relative; overflow: hidden; padding: 0;">
-                        <div style="padding: 20px; background: rgba(14, 165, 233, 0.05); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h3 style="margin: 0 0 5px 0; color: var(--text-high); display: flex; align-items: center; gap: 8px;">
-                                    <span class="material-symbols-outlined" style="color: #0ea5e9;">model_training</span>
-                                    Simulador: Campo Eléctrico Interactivo
-                                </h3>
-                                <p style="margin: 0; color: var(--text-medium); font-size: 0.9rem;">Agrega cargas positivas o negativas y observa las líneas de fuerza en tiempo real.</p>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button id="btn-add-pos" class="btn-primary" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;"><span class="material-symbols-outlined">add_circle</span> Carga +</button>
-                                <button id="btn-add-neg" class="btn-primary" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"><span class="material-symbols-outlined">do_not_disturb_on</span> Carga -</button>
-                                <button id="btn-clear-canvas" class="icon-btn" title="Limpiar"><span class="material-symbols-outlined">delete</span></button>
                             </div>
                         </div>
-                        <div style="width: 100%; height: 400px; background: #000; position: relative;">
-                            <canvas id="physics-canvas" style="width: 100%; height: 100%; display: block; cursor: crosshair;"></canvas>
-                        </div>
                     </div>
 
-                    <!-- Placeholder Lab 2 -->
-                    <div class="bento-card col-4" style="border: 2px dashed var(--border-strong); background: rgba(14, 165, 233, 0.02);">
-                        <div style="height: 150px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">bolt</span>
+                    <div class="bento-card col-6" style="border: 2px dashed var(--border-strong); background: rgba(0, 242, 254, 0.02);">
+                        <div style="height: 150px; background: rgba(0, 242, 254, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                            <span class="material-symbols-outlined" style="font-size: 48px; color: #00f2fe; opacity: 0.5;">casino</span>
                         </div>
-                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Práctica 2: Ley de Coulomb</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Simulación de fuerzas eléctricas interactivas.</p>
+                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Próximos Juegos</h3>
+                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Nuevas experiencias interactivas en desarrollo.</p>
                         <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
-                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Próximamente
-                        </div>
-                    </div>
-
-                    <!-- Placeholder Lab 3 -->
-                    <div class="bento-card col-4" style="border: 2px dashed var(--border-strong); background: rgba(14, 165, 233, 0.02);">
-                        <div style="height: 150px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">electric_meter</span>
-                        </div>
-                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Práctica 3: Circuitos DC</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Leyes de Kirchhoff usando multímetros virtuales.</p>
-                        <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
-                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Próximamente
+                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Muy pronto
                         </div>
                     </div>
                 </div>

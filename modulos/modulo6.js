@@ -1,47 +1,129 @@
-// modulos/modulo6.js — Circuitos Resistivos DC
-// 📓 NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
 export const modulo6 = {
-    "titulo": "Módulo 6: Circuitos Resistivos DC",
-    "color": "#059669",
-    "icono": "electrical_services",
-    "descripcionCorta": "Corriente eléctrica, resistencia, Leyes de Kirchhoff y análisis de redes",
-    "subtemas": ["Corriente eléctrica y densidad de corriente","Resistencia y resistividad","Ley de Ohm","Circuitos en serie y paralelo","Ley de Kirchhoff de voltajes (LKV)","Ley de Kirchhoff de corrientes (LKC)","Análisis de nodos y mallas","Transformación Delta-Estrella","Teorema de Thevenin y Norton","Potencia eléctrica disipada"],
+    "titulo": "Módulo 6: Capacitancia y Dieléctricos",
     "lecciones": [
-        { "id":"m6-l1","tipo":"multivideo","recurso":"Z_XkDlMFXGA|8Fy4-FOgNlA|gxbA_iy4aWM|y5X2AMZVMxM|s7YUiSeMJ0g|cFPjijfVTtU|WUmxkuYVHsQ","titulo":"1. Videos — Circuitos DC","descripcion":"Corriente, resistencia, Kirchhoff, Thevenin y Norton. Teoría completa con ejemplos.","xp":10 },
-        { "id":"m6-l2","tipo":"presentacion","recurso":"./player.html?clase=6","titulo":"2. Diapositivas Interactivas","descripcion":"Análisis de circuitos con método de mallas y nodos animado paso a paso.","xp":15 },
-        { "id":"m6-g1","tipo":"grupo","titulo":"3. Laboratorio Virtual",
-          "sublecciones":[
-            { "id":"m6-s1","tipo":"simulador","recurso":"simuladores/Sim_M6_Resistividad.html","titulo":"3.1 Resistividad y Geometría","descripcion":"Cómo la geometría del conductor afecta su resistencia.","xp":20 },
-            { "id":"m6-s2","tipo":"simulador","recurso":"simuladores/Sim_M6_CircuitoDC.html","titulo":"3.2 Campo en Conductores","descripcion":"Campo eléctrico que impulsa la corriente en un conductor.","xp":20 }
-          ]
+        {
+            "id": "m6-l1",
+            "tipo": "multivideo",
+            // Nota: Aquí he colocado una estructura de IDs de ejemplo. 
+            // Debes reemplazar estos IDs con los de tu propia lista de reproducción curada en YouTube sobre capacitores.
+            "recurso": "v=capacitores1|v=capacitores2|v=dielectricos|v=rc_circuits",
+            "titulo": "1. Teoría: Capacitancia, Arreglos y Energía Almacenada",
+            "descripcion": "Selecciona la lección en el panel derecho. Explora desde la definición de capacitancia hasta el cálculo de energía y el efecto de los materiales dieléctricos.",
+            "llmLink": "https://notebooklm.google.com/notebook/tu-enlace-notebook-capacitores"
         },
-        { "id":"m6-j1","tipo":"juego","recurso":"juegos/Juego_6.html","titulo":"4. Physics Quest — Circuitos DC","descripcion":"Diseña circuitos para cumplir especificaciones de voltaje y corriente. ¡5 retos de ingeniería!","xp":25,"logro":{"id":"logro_m6","nombre":"Arquitecto de Redes","icono":"🔌"} },
-        { "id":"m6-t","tipo":"grupo","titulo":"5. Talleres Prácticos",
-          "sublecciones":[
-            { "id":"m6-t1","tipo":"ejercicio","recurso":"talleres/Taller_6_1_Reduccion_Circuitos.html","titulo":"5.1 Taller — Reducción de Circuitos","descripcion":"Simplificación de redes resistivas: serie, paralelo y delta-estrella.","xp":25 },
-            { "id":"m6-t2","tipo":"ejercicio","recurso":"talleres/Taller_6_2_Leyes_K.html","titulo":"5.2 Taller — Leyes de Kirchhoff","descripcion":"Análisis sistemático de redes usando LKV y LKC con 20 problemas.","xp":30 }
-          ]
+        {
+            "id": "m6-l2",
+            "tipo": "multipresentacion",
+            "recurso": "./clase_6.html|https://docs.google.com/presentation/d/e/ID_DE_TU_PRESENTACION/pub?start=true&loop=true&delayms=3000",
+            "titulo": "2. Diapositivas de Apoyo (2 Partes)",
+            "descripcion": "Material visual utilizado en la clase magistral. Incluye demostraciones matemáticas de arreglos en serie y paralelo."
         },
-        { "id":"m6-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_6.html","titulo":"6. Quiz Adaptativo — Módulo 6","descripcion":"Desde Ley de Ohm hasta análisis de redes complejas con Kirchhoff.","xp":40 },
-        { "id":"m6-nb1","tipo":"notebooklm",
-          // 📓 NOTEBOOKLM MÓDULO 6: Reemplaza "#" con tu link
-          "llmLink": "#",
-          "titulo": "8. NotebookLLM — Circuitos DC","descripcion":"IA especializada en circuitos DC. Ayuda a resolver por mallas, nodos y teoremas de Thevenin/Norton.","xp":10 },
-        { "id":"m6-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Libros, tutoriales y simuladores para circuitos resistivos DC.","xp":10,
-          "secciones":[
-            { "tituloSeccion":"📘 Libros de texto","links":[
-                { "url":"https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force","titulo":"OpenStax: Circuitos DC — Cap. 10","descripcion":"FEM, resistencia interna, Kirchhoff y circuitos RC." },
-                { "url":"https://www.amazon.com/dp/0073380679","titulo":"Hayt — Engineering Circuit Analysis","descripcion":"Análisis de circuitos con métodos de mallas y nodos." }
-            ]},
-            { "tituloSeccion":"🌐 Recursos web","links":[
-                { "url":"https://www.allaboutcircuits.com/textbook/direct-current/","titulo":"All About Circuits: DC","descripcion":"Guía completa de circuitos DC con simuladores online." },
-                { "url":"https://www.khanacademy.org/science/ap-physics-2/ap-circuits-topic","titulo":"Khan Academy: Circuitos Eléctricos","descripcion":"Videos paso a paso de Kirchhoff y circuitos." }
-            ]},
-            { "tituloSeccion":"🔬 Simuladores externos","links":[
-                { "url":"https://phet.colorado.edu/es/simulations/circuit-construction-kit-dc","titulo":"PhET: Construcción de Circuitos DC","descripcion":"Construye y mide circuitos completos online." },
-                { "url":"https://www.falstad.com/circuit/","titulo":"Falstad Circuit Simulator","descripcion":"Simulador profesional de circuitos en el navegador." }
-            ]}
-          ]
+        {
+            "id": "m6-g1",
+            "tipo": "grupo",
+            "titulo": "3. Laboratorio Virtual (Simuladores)",
+            "sublecciones": [
+                {
+                    "id": "m6-l3",
+                    "tipo": "simulador",
+                    "recurso": "https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_es.html",
+                    "titulo": "3.1 Laboratorio de Capacitores (PhET)",
+                    "descripcion": "Simulador interactivo de la Universidad de Colorado para visualizar el campo eléctrico, la carga en las placas y la energía almacenada."
+                },
+                {
+                    "id": "m6-l4",
+                    "tipo": "simulador",
+                    "recurso": "https://www.falstad.com/circuit/e-cap.html",
+                    "titulo": "3.2 Falstad: Carga y Descarga (RC)",
+                    "descripcion": "Osciloscopio en tiempo real para analizar la curva exponencial de carga y descarga en circuitos RC."
+                },
+                {
+                    "id": "m6-l5",
+                    "tipo": "simulador",
+                    "recurso": "https://www.geogebra.org/m/jztkf22s",
+                    "titulo": "3.3 GeoGebra: Dieléctricos",
+                    "descripcion": "Modelo matemático interactivo que muestra cómo varía la capacitancia al introducir diferentes materiales dieléctricos."
+                },
+                {
+                    "id": "m6-l6",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Electro10_easy_Capacitores.html",
+                    "titulo": "3.4 Calculadora de Arreglos (Nativa)",
+                    "descripcion": "Módulo SaaS nativo de la plataforma para calcular capacitancia equivalente en topologías complejas."
+                }
+            ]
+        },
+        {
+            "id": "m6-l7",
+            "tipo": "ejercicio",
+            "recurso": "Talleres/Taller_6_Capacitancia.html",
+            "titulo": "4. Taller Práctico No. 6",
+            "descripcion": "Guía de ejercicios enfocada en el cálculo de cargas, voltajes en arreglos mixtos y energía potencial eléctrica."
+        },
+        {
+            "id": "m6-q1",
+            "tipo": "quiz",
+            "recurso": "Examen/Cuestionario_6_Capacitores.html",
+            "titulo": "5. Evaluación del Módulo 6",
+            "descripcion": "Cuestionario de validación de conocimientos teóricos y prácticos sobre condensadores."
+        },
+        {
+            "id": "m6-e1",
+            "tipo": "enlaces",
+            "titulo": "6. Repositorio Documental: Élite Académica",
+            "descripcion": "Directorio de recursos externos, apuntes universitarios y textos de referencia sobre física de campos y capacitancia.",
+            "secciones": [
+                {
+                    "tituloSeccion": "Textos Universitarios y Lecturas de Referencia",
+                    "links": [
+                        { 
+                            "url": "https://openstax.org/books/college-physics-2e/pages/19-5-capacitors-and-dielectrics", 
+                            "titulo": "OpenStax: Capacitors and Dielectrics", 
+                            "descripcion": "Libro de texto universitario de acceso abierto. Desarrollo formal de la capacitancia con ejemplos prácticos." 
+                        },
+                        { 
+                            "url": "http://hyperphysics.phy-astr.gsu.edu/hbasees/electric/capac.html", 
+                            "titulo": "HyperPhysics: Capacitancia (GSU)", 
+                            "descripcion": "Mapas conceptuales altamente estructurados y herramientas de cálculo de la Georgia State University." 
+                        },
+                        { 
+                            "url": "https://es.khanacademy.org/science/physics/circuits-topic/circuits-with-capacitors/v/capacitors-and-capacitance", 
+                            "titulo": "Khan Academy: Circuitos con Capacitores", 
+                            "descripcion": "Módulo estructurado en video que explica intuitivamente el funcionamiento de los condensadores." 
+                        }
+                    ]
+                },
+                {
+                    "tituloSeccion": "OpenCourseWare y Clases Magistrales",
+                    "links": [
+                        { 
+                            "url": "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/pages/readings/", 
+                            "titulo": "MIT OCW: Physics II (8.02) - Lecturas", 
+                            "descripcion": "Notas del curso del MIT. Revisa el Capítulo 5: Capacitance and Dielectrics para un análisis electromagnético profundo." 
+                        },
+                        { 
+                            "url": "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/pages/assignments/", 
+                            "titulo": "MIT OCW: Problemas Propuestos (8.02)", 
+                            "descripcion": "Problem Sets (Guías de ejercicios) originales del MIT. Ideales para retar el análisis físico." 
+                        }
+                    ]
+                },
+                {
+                    "tituloSeccion": "Herramientas Analíticas y de Diseño",
+                    "links": [
+                        { 
+                            "url": "https://www.circuitlab.com/editor/#?id=7pq5wm&from=homepage", 
+                            "titulo": "CircuitLab: Captura de Esquemas", 
+                            "descripcion": "Diseña arreglos de capacitores en el navegador y simula la respuesta transitoria del voltaje." 
+                        },
+                        { 
+                            "url": "https://es.symbolab.com/", 
+                            "titulo": "Symbolab: Álgebra Avanzada", 
+                            "descripcion": "Herramienta indispensable para resolver las ecuaciones diferenciales de primer orden en la carga/descarga de capacitores." 
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };

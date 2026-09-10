@@ -1,49 +1,96 @@
-// modulos/modulo4.js — Potencial Eléctrico
-// 📓 NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
 export const modulo4 = {
-    "titulo": "Módulo 4: Potencial Eléctrico",
-    "color": "#d97706",
-    "icono": "bolt",
-    "descripcionCorta": "Energía potencial eléctrica, potencial eléctrico y superficies equipotenciales",
-    "subtemas": ["Trabajo y energía en campo eléctrico","Energía potencial eléctrica","Potencial eléctrico — definición","Potencial de una carga puntual","Superficies equipotenciales","Relación E y V (gradiente)","Potencial de distribuciones continuas","Energía almacenada en un sistema de cargas"],
+    "titulo": "Módulo 4: Electrostática - Distribución de Cargas Continuas",
     "lecciones": [
-        { "id":"m4-l1","tipo":"multivideo","recurso":"mR1neFcFQms|UHPetewKgvc|D4_fOFVP5bI|gTjRqI6aFx8|DkD5JxYMjvU|eVt1V7G6W-I","titulo":"1. Videos — Potencial Eléctrico","descripcion":"Del trabajo eléctrico al potencial: derivación completa con ejemplos.","xp":10 },
-        { "id":"m4-l2","tipo":"presentacion","recurso":"./player.html?clase=4","titulo":"2. Diapositivas Interactivas","descripcion":"Superficies equipotenciales animadas y relación E–V con visualizaciones 3D.","xp":15 },
-        { "id":"m4-g1","tipo":"grupo","titulo":"3. Laboratorio Virtual",
-          "sublecciones":[
-            { "id":"m4-s1","tipo":"simulador","recurso":"simuladores/Sim_M4_Potencial_3D.html","titulo":"3.1 Potencial Eléctrico 3D","descripcion":"Explora el potencial y el campo de múltiples cargas en 3D.","xp":20 },
-            { "id":"m4-s2","tipo":"simulador","recurso":"simuladores/Sim_M4_Equipotenciales.html","titulo":"3.2 Superficies Equipotenciales","descripcion":"Dibuja superficies equipotenciales y mide el gradiente.","xp":20 },
-            { "id":"m4-s3","tipo":"simulador","recurso":"simuladores/Sim_M2_Campo_Vectorial.html","titulo":"3.3 Relación E–V","descripcion":"Verifica que el campo eléctrico es el gradiente negativo del potencial.","xp":20 }
-          ]
-        },
-        { "id":"m4-j1","tipo":"juego","recurso":"juegos/Juego_4.html","titulo":"4. Physics Quest — Potencial","descripcion":"Navega partículas hacia zonas de menor potencial. ¡El trabajo hace la diferencia!","xp":25,"logro":{"id":"logro_m4","nombre":"Explorador de Superficies","icono":"⛰️"} },
-        { "id":"m4-l7","tipo":"ejercicio","recurso":"talleres/Taller_4_Potencial_Electrico.html","titulo":"5. Taller Práctico — Potencial Eléctrico","descripcion":"Problemas de energía potencial, potencial de distribuciones y equipotenciales.","xp":30 },
-        { "id":"m4-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_4.html","titulo":"6. Quiz Adaptativo — Módulo 4","descripcion":"Evalúa desde conceptos de trabajo hasta cálculo de potencial en distribuciones complejas.","xp":40 },
         {
-            "id": "m4-eval", "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_4_Distribuciones_de_Carga_continua.html",
-            "titulo": "7. Evaluación del Módulo 4",
-            "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
-            "xp": 50
+            "id": "m4-l1",
+            "tipo": "multivideo",
+            "recurso": "h57Q1fCwZgA|A9DWg5FSTx0|ZmBfYn9APkg|A9DWg5FSTx0|1cpACIOuFFU|k2dXe2AvoYs|k2w8tZeF0ug|IA5-ydK4ni8|8irn1C12G2U|MjhyOf-6VKQ|YisPzZHHvV0|ZmBfYn9APkg|cbePOxHemJQ|0wZ8s6Byghg|uesmpfag3Og|vWWwq63cyY8|EBddV2b2gCk|G3jlxpinO5U|HbYTaVAqCFs|1g5lqbuTqVw|SBPnw31wdsI|vAZ8SakEDNI|rT58Zxw6Cm4|VnbKz5u_mq4|fPJX3pkC6bM|alkbEKOgSM4|mgOiEQSQzhw|c7Yi0SQA-0g|TAV-vusYOPA|RMwjSPNjVu0|MakxGRwCJNs|piNXE_x7rds|19blKvJDkTM|ULMaUTcxu4g|p44FT5sA5iY|4cHTPtFuyUk|U7gvwwI-l20|_26VjgvsIeU|Yg5N1jHeDIQ|S5NDkJgDEig|NfjEvhwZDN0|Et92ofdz6y4|DnycOMVMI7E|aqoAXHZQ8aU|X1LAQryjbRo|gqbwBX7ZVvs",
+            "titulo": "4. Teoría: Distribuciones de Carga Continua",
+            "descripcion": "Selecciona la parte en el panel derecho.",
+            "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719"
         },
-        { "id":"m4-nb1","tipo":"notebooklm",
-          // 📓 NOTEBOOKLM MÓDULO 4: Reemplaza "#" con tu link
-          "llmLink": "#",
-          "titulo": "8. NotebookLLM — Potencial Eléctrico","descripcion":"IA especializada en potencial eléctrico. Pregunta sobre derivaciones, equipotenciales y más.","xp":10 },
-        { "id":"m4-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre potencial eléctrico y energía en campos eléctricos.","xp":10,
-          "secciones":[
-            { "tituloSeccion":"📘 Libros de texto","links":[
-                { "url":"https://openstax.org/books/university-physics-volume-2/pages/7-1-electric-potential-energy","titulo":"OpenStax: Energía Potencial y Potencial — Cap. 7","descripcion":"Desarrollo completo del potencial eléctrico con ejemplos." },
-                { "url":"https://www.amazon.com/dp/0321971174","titulo":"Griffiths — Electrodynamics Cap. 2.3","descripcion":"Potencial eléctrico con rigor matemático." }
-            ]},
-            { "tituloSeccion":"🌐 Recursos web","links":[
-                { "url":"https://www.fisicalab.com/apartado/potencial-electrico","titulo":"Fisicalab: Potencial Eléctrico","descripcion":"Teoría y ejercicios con gráficas de equipotenciales." },
-                { "url":"https://www.khanacademy.org/science/ap-physics-2/ap-electric-charge-electric-force-and-voltage/electric-potential-voltage-ap/v/electric-potential-energy","titulo":"Khan Academy: Potencial Eléctrico","descripcion":"Videos conceptuales y práctica." }
-            ]},
-            { "tituloSeccion":"🔬 Simuladores externos","links":[
-                { "url":"https://phet.colorado.edu/es/simulations/charges-and-fields","titulo":"PhET: Cargas y Potencial","descripcion":"Mide el potencial en cualquier punto del espacio." }
-            ]}
-          ]
+        {
+            "id": "m4-l2",
+            "tipo": "multipresentacion",
+            "recurso": "./clase_4.html|./clase_4.html",
+            "titulo": "2. Diapositivas de Apoyo (2 Partes)",
+            "descripcion": "Material visual utilizado en la clase magistral."
+        },
+        {
+            "id": "m4-g1",
+            "tipo": "grupo",
+            "titulo": "3. Laboratorio Virtual (Simuladores)",
+            "sublecciones": [
+                {
+                    "id": "m4-l3-a",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Varilla_Cargada.html",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                },
+                {
+                    "id": "m4-l3-b",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Arco_Cargado.html",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                },
+                {
+                    "id": "m4-l3-c",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Linea_Rectangulo_Paralelepipedo (1).html",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                },
+                {
+                    "id": "m4-l3-d",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Anillo_Disco_Cilindro (1).html",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                }
+            ]
+        },
+        {
+            "id": "m4-l7",
+            "tipo": "ejercicio",
+            "recurso": "Talleres/Taller_4_Distribuciones_de_Carga_Continua.html",
+            "titulo": "5. Taller Práctico No. 4",
+            "descripcion": "Guía de ejercicios sobre distribuciones de carga continúa."
+        },
+        {
+            "id": "m4-q1",
+            "tipo": "quiz",
+            "recurso": "Examen/Cuestionario_4_Distribuciones_de_Carga_continua.html",
+            "titulo": "6. Evaluación del Módulo 4",
+            "descripcion": "Cuestionario de validación de conocimientos."
+        },
+        {
+            "id": "m4-e1",
+            "tipo": "enlaces",
+            "titulo": "7. Enlaces de Interés",
+            "descripcion": "Directorio de recursos externos y herramientas útiles para el módulo.",
+            "secciones": [
+                {
+                    "tituloSeccion": "Lecturas y fundamentos teóricos",
+                    "links": [
+                        { "url": "https://openstax.org/...", "titulo": "OpenStax: Cálculo de campos...", "descripcion": "Explicación detallada..." },
+                        { "url": "http://hyperphysics.phy-astr.gsu.edu/...", "titulo": "Hyperphysics: Distribuciones...", "descripcion": "Conceptos fundamentales..." },
+                        { "url": "http://www.sc.ehu.es/...", "titulo": "Universidad del País Vasco...", "descripcion": "Análisis del campo..." },
+                        { "url": "https://espanol.libretexts.org/...", "titulo": "LibreTexts: Distribuciones...", "descripcion": "Enfoque de resolución..." },
+                        { "url": "https://cienciadelux.wordpress.com/...", "titulo": "Ciencia de Lux: Campo...", "descripcion": "Explicación didáctica..." }
+                    ]
+                },
+                {
+                    "tituloSeccion": "Material complementario (PDF)",
+                    "links": [
+                        { "url": "https://www.cerasa.es/...", "titulo": "Apuntes: Distribuciones...", "descripcion": "Material complementario..." },
+                        { "url": "http://www.das.uchile.cl/...", "titulo": "Problemas resueltos...", "descripcion": "Colección de problemas..." },
+                        { "url": "https://www2.udec.cl/...", "titulo": "Ejercicios de electrostática...", "descripcion": "Problemas prácticos..." },
+                        { "url": "http://www0.unsl.edu.ar/...", "titulo": "Sears y Zemansky: Física...", "descripcion": "Libro de texto clásico..." }
+                    ]
+                }
+            ]
         }
     ]
 };

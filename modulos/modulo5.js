@@ -1,48 +1,93 @@
-// modulos/modulo5.js — Capacitancia
-// 📓 NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
 export const modulo5 = {
-    "titulo": "Módulo 5: Capacitancia",
-    "color": "#0891b2",
-    "icono": "developer_board",
-    "descripcionCorta": "Capacitores, energía almacenada, dieléctricos y circuitos capacitivos",
-    "subtemas": ["Definición de capacitancia","Capacitor de placas paralelas","Capacitores esférico y cilíndrico","Energía almacenada en un capacitor","Dieléctricos y polarización","Constante dieléctrica relativa","Capacitores en serie y paralelo","Energía del campo eléctrico"],
+    "titulo": "Módulo 5: Electrostática - Ley de Gauss",
     "lecciones": [
-        { "id":"m5-l1","tipo":"multivideo","recurso":"NNelSWJnUNc|6YdyYPfLqfA|rPBpCN_TdXk|ZCGpHvTPNlA|P3DPNxNnCqQ|Y2bQSfZ8eZE","titulo":"1. Videos — Capacitancia","descripcion":"Capacitores, dieléctricos y energía: desde la teoría hasta los circuitos.","xp":10 },
-        { "id":"m5-l2","tipo":"presentacion","recurso":"./player.html?clase=5","titulo":"2. Diapositivas Interactivas","descripcion":"Animaciones del proceso de carga de capacitores y efecto de los dieléctricos.","xp":15 },
-        { "id":"m5-g1","tipo":"grupo","titulo":"3. Laboratorio Virtual",
-          "sublecciones":[
-            { "id":"m5-s1","tipo":"simulador","recurso":"simuladores/Sim_M5_Capacitancia.html","titulo":"3.1 Capacitor Interactivo","descripcion":"Ajusta separación, área y dieléctrico. Mide C, Q, V y energía.","xp":20 },
-            { "id":"m5-s2","tipo":"simulador","recurso":"simuladores/Sim_M2_Campo_Vectorial.html","titulo":"3.2 Campo entre Placas","descripcion":"Visualiza el campo eléctrico uniforme entre placas paralelas.","xp":20 }
-          ]
-        },
-        { "id":"m5-j1","tipo":"juego","recurso":"juegos/Juego_5.html","titulo":"4. Physics Quest — Capacitancia","descripcion":"Diseña el capacitor perfecto para almacenar la energía requerida. ¡5 desafíos de ingeniería!","xp":25,"logro":{"id":"logro_m5","nombre":"Ingeniero de Circuitos","icono":"🔋"} },
-        { "id":"m5-l7","tipo":"ejercicio","recurso":"talleres/Taller_5_Capacitancia.html","titulo":"5. Taller Práctico — Capacitancia","descripcion":"Problemas de capacitores simples, combinaciones en red y energía almacenada.","xp":30 },
-        { "id":"m5-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_5.html","titulo":"6. Quiz Adaptativo — Módulo 5","descripcion":"Desde definición de capacitancia hasta cálculo de energía con dieléctricos.","xp":40 },
         {
-            "id": "m5-eval", "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
-            "titulo": "7. Evaluación del Módulo 5",
-            "descripcion": "Cuestionario final de evaluación de todos los conceptos del módulo.",
-            "xp": 50
+            "id": "m5-l1",
+            "tipo": "multivideo",
+            "recurso": "COGjyZI1PS8|A4qBPrfzZMk|LYmdJmTyFGQ|5XdSmm8VWKQ|38lwnRYEGEc|3aWFJdqM_Rw|jJSq8BFJYt4|z-fv_QDESSc|0iU4RWMHqOg|Sw6vtplA_68|enQ8QuUBYNE|6w51PrhXy04|b_nBNDkJUJE|g2YK35fR7yE|XHAfc4EbH1Q|a7jaxpYtZAQ|DPCcImv1Xko|SizL_9HP6nY|gJasVOhHbao|7ssuVrxocBQ|X27VqqJ6Dwo|-iIUb9Bma0k|dxOxY0et1rE|9HCXZruI0Lk|gJasVOhHbao|TnA2ejc-1es|RmbQiiVV_bc|9t65kr3UVFw|a3VThqncuZQ",
+            "titulo": "5. Teoría: Ley de Gauss",
+            "descripcion": "Selecciona la parte en el panel derecho.",
+            "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719"
         },
-        { "id":"m5-nb1","tipo":"notebooklm",
-          // 📓 NOTEBOOKLM MÓDULO 5: Reemplaza "#" con tu link
-          "llmLink": "#",
-          "titulo": "8. NotebookLLM — Capacitancia","descripcion":"IA entrenada en capacitores. Explica dieléctricos, combinaciones y aplicaciones en circuitos.","xp":10 },
-        { "id":"m5-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes académicas sobre capacitores, dieléctricos y energía en campos eléctricos.","xp":10,
-          "secciones":[
-            { "tituloSeccion":"📘 Libros de texto","links":[
-                { "url":"https://openstax.org/books/university-physics-volume-2/pages/8-1-capacitors-and-capacitance","titulo":"OpenStax: Capacitores — Cap. 8","descripcion":"Capacitancia, energía y dieléctricos con ejemplos resueltos." },
-                { "url":"https://www.amazon.com/dp/0131496824","titulo":"Serway — Física Vol. 2 Cap. 26","descripcion":"Capacitores en circuitos: teoría y problemas." }
-            ]},
-            { "tituloSeccion":"🌐 Recursos web","links":[
-                { "url":"https://www.fisicalab.com/apartado/condensadores","titulo":"Fisicalab: Condensadores","descripcion":"Capacitores, dieléctricos y combinaciones." },
-                { "url":"https://www.electronics-tutorials.ws/capacitor/cap_1.html","titulo":"Electronics Tutorials: Capacitors","descripcion":"Perspectiva de ingeniería electrónica." }
-            ]},
-            { "tituloSeccion":"🔬 Simuladores externos","links":[
-                { "url":"https://phet.colorado.edu/es/simulations/capacitor-lab-basics","titulo":"PhET: Laboratorio de Capacitores","descripcion":"Experimenta con placas, separación y dieléctrico." }
-            ]}
-          ]
+        {
+            "id": "m5-l2",
+            "tipo": "multipresentacion",
+            "recurso": "./clase_5.html|https://docs.google.com/presentation/d/e/ID/pub?start=true&loop=true&delayms=3000",
+            "titulo": "2. Diapositivas de Apoyo (2 Partes)",
+            "descripcion": "Material visual utilizado en la clase magistral."
+        },
+        {
+            "id": "m5-g1",
+            "tipo": "grupo",
+            "titulo": "3. Laboratorio Virtual (Simuladores)",
+            "sublecciones": [
+                {
+                    "id": "m5-l3-a",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Tabla_Gauss.html",
+                    "titulo": "Ley de Gauss: Esferas",
+                    "descripcion": "Entorno virtual para interactuar con esferas y superficies gaussianas"
+                },
+                {
+                    "id": "m5-l3-b",
+                    "tipo": "simulador",
+                    "recurso": "https://phys-viz.github.io/Gauss/",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                },
+                {
+                    "id": "m5-l3-c",
+                    "tipo": "simulador",
+                    "recurso": "Simuladores/Flujo_Electrico.html",
+                    "titulo": "Distribuciones de Carga Continua",
+                    "descripcion": "Entorno virtual para interactuar con cargas puntuales."
+                }
+            ]
+        },
+        {
+            "id": "m5-l7",
+            "tipo": "ejercicio",
+            "recurso": "Talleres/Taller_5_1_Flujo_Electrico.html",
+            "titulo": "5. Taller Práctico No. 5",
+            "descripcion": "Guía de ejercicios sobre flujo eléctrico."
+        },
+        {
+            "id": "m5-q1",
+            "tipo": "quiz",
+            "recurso": "Examen/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
+            "titulo": "6. Evaluación del Módulo 5",
+            "descripcion": "Cuestionario de validación de conocimientos."
+        },
+        {
+            "id": "m5-e1",
+            "tipo": "enlaces",
+            "titulo": "7. Enlaces de Interés",
+            "descripcion": "Directorio de recursos externos y herramientas útiles para el módulo.",
+            "secciones": [
+                {
+                    "tituloSeccion": "Fundamentos teóricos",
+                    "links": [
+                        { "url": "http://cima.utalca.cl/...", "titulo": "Flujo eléctrico y Ley de Gauss (UTalca)", "descripcion": "Desarrollo teórico..." },
+                        { "url": "http://www.das.uchile.cl/...", "titulo": "Electromagnetismo (U. de Chile)", "descripcion": "Material completo..." }
+                    ]
+                },
+                {
+                    "tituloSeccion": "Ejercicios resueltos",
+                    "links": [
+                        { "url": "https://www.uajms.edu.bo/...", "titulo": "Ejercicios resueltos (UAJMS)", "descripcion": "Problemas desarrollados..." },
+                        { "url": "https://fisicartes.files.wordpress.com/...", "titulo": "Problemas propuestos y resueltos", "descripcion": "Colección de ejercicios..." },
+                        { "url": "https://www.studocu.com/...", "titulo": "Problemas tipo examen (Studocu)", "descripcion": "Ejercicios de evaluaciones..." },
+                        { "url": "http://www.unizar.es/...", "titulo": "Ejercicios resueltos (Unizar)", "descripcion": "Problemas clásicos..." }
+                    ]
+                },
+                {
+                    "tituloSeccion": "Problemas propuestos",
+                    "links": [
+                        { "url": "http://www.sc.ehu.es/...", "titulo": "Problemas Ley de Gauss (EHU)", "descripcion": "Listado de problemas..." },
+                        { "url": "https://www.u-cursos.cl/...", "titulo": "Guía de ejercicios (U-Cursos)", "descripcion": "Material de curso..." }
+                    ]
+                }
+            ]
         }
     ]
 };
