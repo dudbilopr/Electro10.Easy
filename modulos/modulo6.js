@@ -1,22 +1,22 @@
-export const modulo6 = {
-    "titulo": "Módulo 6: Capacitancia y Dieléctricos",
+﻿export const modulo6 = {
+    "titulo": "MÃ³dulo 6: Capacitancia y DielÃ©ctricos",
     "lecciones": [
         {
             "id": "m6-l1",
             "tipo": "multivideo",
-            // Nota: Aquí he colocado una estructura de IDs de ejemplo. 
-            // Debes reemplazar estos IDs con los de tu propia lista de reproducción curada en YouTube sobre capacitores.
+            // Nota: AquÃ­ he colocado una estructura de IDs de ejemplo. 
+            // Debes reemplazar estos IDs con los de tu propia lista de reproducciÃ³n curada en YouTube sobre capacitores.
             "recurso": "v=capacitores1|v=capacitores2|v=dielectricos|v=rc_circuits",
-            "titulo": "1. Teoría: Capacitancia, Arreglos y Energía Almacenada",
-            "descripcion": "Selecciona la lección en el panel derecho. Explora desde la definición de capacitancia hasta el cálculo de energía y el efecto de los materiales dieléctricos.",
+            "titulo": "1. TeorÃ­a: Capacitancia, Arreglos y EnergÃ­a Almacenada",
+            "descripcion": "Selecciona la lecciÃ³n en el panel derecho. Explora desde la definiciÃ³n de capacitancia hasta el cÃ¡lculo de energÃ­a y el efecto de los materiales dielÃ©ctricos.",
             "llmLink": "https://notebooklm.google.com/notebook/tu-enlace-notebook-capacitores"
         },
         {
             "id": "m6-l2",
             "tipo": "multipresentacion",
-            "recurso": "./clase_6.html|https://docs.google.com/presentation/d/e/ID_DE_TU_PRESENTACION/pub?start=true&loop=true&delayms=3000",
+            "recurso": "./player.html?clase=6|./player.html?clase=6"
             "titulo": "2. Diapositivas de Apoyo (2 Partes)",
-            "descripcion": "Material visual utilizado en la clase magistral. Incluye demostraciones matemáticas de arreglos en serie y paralelo."
+            "descripcion": "Material visual utilizado en la clase magistral. Incluye demostraciones matemÃ¡ticas de arreglos en serie y paralelo."
         },
         {
             "id": "m6-g1",
@@ -28,7 +28,7 @@ export const modulo6 = {
                     "tipo": "simulador",
                     "recurso": "https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_es.html",
                     "titulo": "3.1 Laboratorio de Capacitores (PhET)",
-                    "descripcion": "Simulador interactivo de la Universidad de Colorado para visualizar el campo eléctrico, la carga en las placas y la energía almacenada."
+                    "descripcion": "Simulador interactivo de la Universidad de Colorado para visualizar el campo elÃ©ctrico, la carga en las placas y la energÃ­a almacenada."
                 },
                 {
                     "id": "m6-l4",
@@ -41,15 +41,15 @@ export const modulo6 = {
                     "id": "m6-l5",
                     "tipo": "simulador",
                     "recurso": "https://www.geogebra.org/m/jztkf22s",
-                    "titulo": "3.3 GeoGebra: Dieléctricos",
-                    "descripcion": "Modelo matemático interactivo que muestra cómo varía la capacitancia al introducir diferentes materiales dieléctricos."
+                    "titulo": "3.3 GeoGebra: DielÃ©ctricos",
+                    "descripcion": "Modelo matemÃ¡tico interactivo que muestra cÃ³mo varÃ­a la capacitancia al introducir diferentes materiales dielÃ©ctricos."
                 },
                 {
                     "id": "m6-l6",
                     "tipo": "simulador",
                     "recurso": "Simuladores/Electro10_easy_Capacitores.html",
                     "titulo": "3.4 Calculadora de Arreglos (Nativa)",
-                    "descripcion": "Módulo SaaS nativo de la plataforma para calcular capacitancia equivalente en topologías complejas."
+                    "descripcion": "MÃ³dulo SaaS nativo de la plataforma para calcular capacitancia equivalente en topologÃ­as complejas."
                 }
             ]
         },
@@ -57,21 +57,21 @@ export const modulo6 = {
             "id": "m6-l7",
             "tipo": "ejercicio",
             "recurso": "Talleres/Taller_6_Capacitancia.html",
-            "titulo": "4. Taller Práctico No. 6",
-            "descripcion": "Guía de ejercicios enfocada en el cálculo de cargas, voltajes en arreglos mixtos y energía potencial eléctrica."
+            "titulo": "4. Taller PrÃ¡ctico No. 6",
+            "descripcion": "GuÃ­a de ejercicios enfocada en el cÃ¡lculo de cargas, voltajes en arreglos mixtos y energÃ­a potencial elÃ©ctrica."
         },
         {
             "id": "m6-q1",
             "tipo": "quiz",
             "recurso": "Examen/Cuestionario_6_Capacitores.html",
-            "titulo": "5. Evaluación del Módulo 6",
-            "descripcion": "Cuestionario de validación de conocimientos teóricos y prácticos sobre condensadores."
+            "titulo": "5. EvaluaciÃ³n del MÃ³dulo 6",
+            "descripcion": "Cuestionario de validaciÃ³n de conocimientos teÃ³ricos y prÃ¡cticos sobre condensadores."
         },
         {
             "id": "m6-e1",
             "tipo": "enlaces",
-            "titulo": "6. Repositorio Documental: Élite Académica",
-            "descripcion": "Directorio de recursos externos, apuntes universitarios y textos de referencia sobre física de campos y capacitancia.",
+            "titulo": "6. Repositorio Documental: Ã‰lite AcadÃ©mica",
+            "descripcion": "Directorio de recursos externos, apuntes universitarios y textos de referencia sobre fÃ­sica de campos y capacitancia.",
             "secciones": [
                 {
                     "tituloSeccion": "Textos Universitarios y Lecturas de Referencia",
@@ -79,17 +79,17 @@ export const modulo6 = {
                         { 
                             "url": "https://openstax.org/books/college-physics-2e/pages/19-5-capacitors-and-dielectrics", 
                             "titulo": "OpenStax: Capacitors and Dielectrics", 
-                            "descripcion": "Libro de texto universitario de acceso abierto. Desarrollo formal de la capacitancia con ejemplos prácticos." 
+                            "descripcion": "Libro de texto universitario de acceso abierto. Desarrollo formal de la capacitancia con ejemplos prÃ¡cticos." 
                         },
                         { 
                             "url": "http://hyperphysics.phy-astr.gsu.edu/hbasees/electric/capac.html", 
                             "titulo": "HyperPhysics: Capacitancia (GSU)", 
-                            "descripcion": "Mapas conceptuales altamente estructurados y herramientas de cálculo de la Georgia State University." 
+                            "descripcion": "Mapas conceptuales altamente estructurados y herramientas de cÃ¡lculo de la Georgia State University." 
                         },
                         { 
                             "url": "https://es.khanacademy.org/science/physics/circuits-topic/circuits-with-capacitors/v/capacitors-and-capacitance", 
                             "titulo": "Khan Academy: Circuitos con Capacitores", 
-                            "descripcion": "Módulo estructurado en video que explica intuitivamente el funcionamiento de los condensadores." 
+                            "descripcion": "MÃ³dulo estructurado en video que explica intuitivamente el funcionamiento de los condensadores." 
                         }
                     ]
                 },
@@ -99,26 +99,26 @@ export const modulo6 = {
                         { 
                             "url": "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/pages/readings/", 
                             "titulo": "MIT OCW: Physics II (8.02) - Lecturas", 
-                            "descripcion": "Notas del curso del MIT. Revisa el Capítulo 5: Capacitance and Dielectrics para un análisis electromagnético profundo." 
+                            "descripcion": "Notas del curso del MIT. Revisa el CapÃ­tulo 5: Capacitance and Dielectrics para un anÃ¡lisis electromagnÃ©tico profundo." 
                         },
                         { 
                             "url": "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/pages/assignments/", 
                             "titulo": "MIT OCW: Problemas Propuestos (8.02)", 
-                            "descripcion": "Problem Sets (Guías de ejercicios) originales del MIT. Ideales para retar el análisis físico." 
+                            "descripcion": "Problem Sets (GuÃ­as de ejercicios) originales del MIT. Ideales para retar el anÃ¡lisis fÃ­sico." 
                         }
                     ]
                 },
                 {
-                    "tituloSeccion": "Herramientas Analíticas y de Diseño",
+                    "tituloSeccion": "Herramientas AnalÃ­ticas y de DiseÃ±o",
                     "links": [
                         { 
                             "url": "https://www.circuitlab.com/editor/#?id=7pq5wm&from=homepage", 
                             "titulo": "CircuitLab: Captura de Esquemas", 
-                            "descripcion": "Diseña arreglos de capacitores en el navegador y simula la respuesta transitoria del voltaje." 
+                            "descripcion": "DiseÃ±a arreglos de capacitores en el navegador y simula la respuesta transitoria del voltaje." 
                         },
                         { 
                             "url": "https://es.symbolab.com/", 
-                            "titulo": "Symbolab: Álgebra Avanzada", 
+                            "titulo": "Symbolab: Ãlgebra Avanzada", 
                             "descripcion": "Herramienta indispensable para resolver las ecuaciones diferenciales de primer orden en la carga/descarga de capacitores." 
                         }
                     ]
