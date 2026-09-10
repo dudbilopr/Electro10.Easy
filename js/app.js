@@ -18,6 +18,9 @@ import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, 
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
+window.firebaseDb = db;
+window.APP_ID = APP_ID;
+
 const progressData   = {};
 const evalData       = {};
 const timeData       = { value: 0 };  // Objeto para permitir mutación por referencia
@@ -216,9 +219,24 @@ async function cargarApuntes() {
     } catch (e) {}
 }
 
-function generarDashboardGamificado() {
-    // Generar red de pares simulada/real (gamificación social)
-    const basePares = 15 + Math.floor(Math.random() * 20); // 15-35 compañeros
+async function generarDashboardGamificado() {
+    // Generar red de pares real (consultando directorio)
+    let basePares = 0;
+    try {
+        const { getDocs, collection } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        if (window.firebaseDb) {
+            const snap = await getDocs(collection(window.firebaseDb, 'artifacts', window.APP_ID, 'public', 'data', 'directory'));
+            snap.forEach(doc => {
+                if (doc.data().role !== 'teacher') basePares++;
+            });
+        }
+    } catch(e) {
+        basePares = 1; // Fallback al usuario actual si hay error
+    }
+    
+    // Si somos el único, mostramos 1
+    basePares = Math.max(1, basePares);
+
     const elCount = document.getElementById('student-network-count');
     if (elCount) elCount.innerText = basePares;
 
@@ -227,7 +245,7 @@ function generarDashboardGamificado() {
         let htmlAvatares = '';
         const avataresCount = Math.min(basePares, 5);
         for(let i=1; i<=avataresCount; i++) {
-            const num = Math.floor(Math.random() * 100);
+            const num = i * 13; // Semilla determinista basada en i
             htmlAvatares += `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${num}" style="width:30px;height:30px;border-radius:50%;border:2px solid var(--bg-surface-hover);margin-left:-10px;">`;
         }
         if (basePares > 5) htmlAvatares += `<div style="width:30px;height:30px;border-radius:50%;background:var(--bg-main);border:2px solid var(--bg-surface-hover);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin-left:-10px;">+${basePares-5}</div>`;

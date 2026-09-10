@@ -298,7 +298,42 @@ export function loadContent(leccion, modulo, progressData, evalData) {
     // Enviar UID al iframe hijo (sincronización)
     iframe.onload = function () {
         if (window.currentUserUid) {
-            this.contentWindow?.postMessage({ action: 'initSync', uid: window.currentUserUid, appId: APP_ID }, '*');
+            iframe.contentWindow.postMessage({ type: 'SYNC_UID', uid: window.currentUserUid }, '*');
+        }
+        
+        // INYECCIÓN DE TELEMETRÍA AUTOMÁTICA
+        try {
+            const iDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            const logInteraction = async (action, value) => {
+                if(!window.currentUserUid) return;
+                const db = window.firebaseDb; 
+                if(!db) return;
+                try {
+                    const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+                    const timestamp = new Date().toISOString();
+                    const telemetryRef = doc(db, 'artifacts', window.APP_ID || 'electro10', 'users', window.currentUserUid, 'telemetry', `${leccion.id}_${Date.now()}`);
+                    await setDoc(telemetryRef, {
+                        leccionId: leccion.id,
+                        timestamp: timestamp,
+                        action: action,
+                        value: value
+                    });
+                } catch(e) {} // Fallo silencioso si hay problemas de red
+            };
+
+            iDoc.addEventListener('change', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+                    logInteraction('input_change', { id: e.target.id || e.target.name || 'input', val: e.target.value });
+                }
+            });
+            iDoc.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    logInteraction('button_click', { id: e.target.id || e.target.innerText });
+                }
+            });
+        } catch(e) {
+            console.warn("Telemetría limitada (Restricción de origen cruzado o no disponible en este frame)");
         }
     };
 
