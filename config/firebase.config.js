@@ -21,8 +21,11 @@ export const firebaseConfig = {
 // ID de la aplicación en Firestore (colección raíz)
 export const APP_ID = 'electro10';
 
-// Email del administrador maestro
-export const ADMIN_EMAIL = "dudbilopr@gmail.com";
+// Emails de los administradores maestros
+export const ADMIN_EMAILS = [
+    "dudbilopr@gmail.com",
+    "dpabon180@unab.edu.co"
+];
 
 // ID de Google Analytics (gtag)
 export const GA_ID = "G-EXGD1GSLLB";

@@ -13,7 +13,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { auth, db } from './firebase.js';
-import { APP_ID, ADMIN_EMAIL } from '../config/firebase.config.js';
+import { APP_ID, ADMIN_EMAILS } from '../config/firebase.config.js';
 import { actualizarAvatarUI, mostrarDashboardEstudiante } from './ui.js';
 import { cargarDatosPerfil } from './profile.js';
 
@@ -51,7 +51,7 @@ export function inicializarAuthObserver({ progressData, evalData, timeData, glob
         if (user) {
             window.currentUserUid   = user.uid;
             window.currentUserEmail = user.email;
-            window.isMasterAdmin    = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            window.isMasterAdmin    = user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
 
             // Actualizar UI de cabecera
             document.getElementById('auth-modal').style.display       = 'none';
@@ -100,7 +100,24 @@ export function inicializarAuthObserver({ progressData, evalData, timeData, glob
             if (!window.isMasterAdmin) {
                 try {
                     const myDir = await getDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'directory', user.uid));
-                    if (myDir.exists()) actualRole = myDir.data().role || actualRole;
+                    if (myDir.exists()) {
+                        actualRole = myDir.data().role || actualRole;
+                    } else {
+                        // Create user in directory and initial profile
+                        actualRole = 'student';
+                        const userName = user.displayName || user.email.split('@')[0];
+                        await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'directory', user.uid), {
+                            email: user.email,
+                            name: userName,
+                            role: actualRole,
+                            createdAt: new Date().toISOString()
+                        });
+                        await setDoc(doc(db, 'artifacts', APP_ID, 'users', user.uid, 'profile', 'data'), {
+                            name: userName,
+                            email: user.email,
+                            avatarStyle: 'initials'
+                        });
+                    }
                 } catch (e) { /* sin conexión */ }
             } else {
                 actualRole = window.simulatedRole;
