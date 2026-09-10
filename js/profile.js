@@ -273,7 +273,7 @@ export async function guardarEncuestaSemanal() {
 // Funciones de Calificación (Ratings)
 // ==========================================
 
-export async function calificarRecurso(valor, lessonId = window.currentLeccionId) {
+export async function calificarRecurso(valor, lessonId = window._currentLeccionId) {
     if (!window.currentUserUid) return;
     if (!lessonId) {
         Swal.fire('Error', 'No se pudo identificar la lección actual.', 'error');
