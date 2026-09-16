@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo Interactivo: Ley de Gauss - UNAB</title>
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --unab-blue: #003865;
+            --unab-orange: #E85C0B;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--unab-blue);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--unab-orange);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { font-weight: 800; font-size: 2rem; }
+        h2 { color: var(--unab-blue); margin-bottom: 1rem; border-bottom: 2px solid var(--unab-orange); padding-bottom: 0.5rem; }
+        h3 { color: var(--unab-orange); margin: 1.5rem 0 0.5rem 0; font-size: 1.2rem; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* 3D Viewer Styles */
+        .viewer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        select, button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select { background: white; font-weight: 600; color: var(--unab-blue); }
+        
+        button {
+            background: var(--unab-blue);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        button:hover { background: var(--unab-orange); }
+        button.active { background: var(--unab-orange); }
+
+        #canvas-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111; /* Dark background for 3D */
+            position: relative;
+        }
+
+        /* Math Panel Styles */
+        .math-content {
+            height: 600px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        
+        .math-content::-webkit-scrollbar { width: 8px; }
+        .math-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .math-step {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-left: 4px solid var(--unab-blue);
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Matrix Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--unab-blue);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: var(--bg-light); }
+
+        
+        /* Drag and Drop Styles */
+        .options-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: var(--bg-light);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            min-height: 80px;
+        }
+
+        .draggable-item {
+            background: white;
+            border: 1px solid var(--unab-blue);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: grab;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            user-select: none;
+            transition: transform 0.2s;
+        }
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+
+        .dropzone {
+            min-height: 50px;
+            background: var(--bg-light);
+            border: 2px dashed #cbd5e1;
+            border-radius: 6px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .dropzone.dragover {
+            background: #e0f2fe;
+            border-color: var(--unab-blue);
+        }
+        .dropzone.correct {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+        }
+        
+        .feedback-box {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .feedback-box.error { background: #fef2f2; color: #b91c1c; border-left: 4px solid #dc2626; }
+        .feedback-box.success { background: #f0fdf4; color: #15803d; border-left: 4px solid #16a34a; }
+        .hidden { display: none; }
+
+        /* Quiz Styles */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--unab-orange);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .quiz-card h4 { color: var(--unab-blue); margin-bottom: 1rem; }
+        
+        .answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+            color: var(--text-dark);
+            background: #f0fdf4;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        
+        .answer.visible { display: block; animation: fadeIn 0.3s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Legend */
+        .legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }
+        .legend-color { width: 15px; height: 15px; border-radius: 3px; margin-right: 8px; }
+
+        @media (max-width: 992px) {
+            .main-grid { grid-template-columns: 1fr; }
+            #canvas-container { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Módulo Interactivo: Ley de Gauss</h1>
+        <p>Visualización 3D y Desglose Matemático Paso a Paso</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="main-grid">
+            <!-- Left Panel: 3D Viewer -->
+            <div class="panel">
+                <h2>1. Visor 3D Interactivo</h2>
+                
+                <div class="viewer-controls">
+                    <select id="geometry-select">
+                        <option value="puntual">Carga Puntual (q)</option>
+                        <option value="conductora">Esfera Conductora (Q)</option>
+                        <option value="aislante">Esfera Aislante Maciza (Q)</option>
+                        <option value="cilindro">Hilo / Cilindro Infinito (λ)</option>
+                        <option value="plano">Plano Infinito (σ)</option>
+                    </select>
+                    
+                    <button id="btn-gaussiana" class="active">Superficie Gaussiana</button>
+                    <button id="btn-vectores-e" class="active">Vectores E</button>
+                    <button id="btn-vectores-ds" class="active">Vectores dS</button>
+                </div>
+
+                <div id="canvas-container">
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-color" style="background:#ff3333;"></div> Campo Eléctrico (E)</div>
+                        <div class="legend-item"><div class="legend-color" style="background:#33ff33;"></div> Normal de Área (dS)</div>
+                        <div class="legend-item"><div class="legend-color" style="background:rgba(0, 150, 255, 0.4); border: 1px solid #0096ff"></div> Superficie Gaussiana</div>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
+                    Usa el mouse para rotar (click izquierdo), acercar (scroll) y mover (click derecho).
+                </p>
+            </div>
+
+            <!-- Right Panel: Math Breakdown -->
+            <div class="panel">
+                <h2>2. Desglose Físico-Matemático</h2>
+                <div class="math-content" id="math-content">
+                    <!-- Dynamic KaTeX Content -->
+                </div>
+            </div>
+        </div>
+
+                <!-- Matrix Section -->
+        <div class="panel" style="margin-bottom: 2rem;">
+            <h2>3. Juego Interactivo: Matriz de Simetrías (Drag & Drop)</h2>
+            <p style="margin-bottom: 1rem;">Arrastra los elementos del banco de opciones a la celda correspondiente. Si te equivocas, recibirás pistas para mejorar.</p>
+            
+            <div id="options-bank" class="options-bank">
+                <!-- Draggable options populated by JS -->
+            </div>
+
+            <div id="feedback-box" class="feedback-box hidden"></div>
+
+            <div style="overflow-x: auto;">
+                <table id="interactive-matrix">
+                    <thead>
+                        <tr>
+                            <th>Geometría y Carga</th>
+                            <th>Superficie Gaussiana Recomendada</th>
+                            <th>Campo Interior (r < R)</th>
+                            <th>Campo Exterior (r > R)</th>
+                            <th>Dependencia con la Distancia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <button id="btn-reset-matrix" style="margin-top: 1rem; display: none;">Reiniciar Matriz</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="panel">
+            <h2>4. Autoevaluación y Reflexión</h2>
+            <p>Lee las siguientes preguntas generadas por los problemas y reflexiona antes de revelar la respuesta.</p>
+            
+            <div class="quiz-grid" id="quiz-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- KaTeX -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Three.js and OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+
+        // --- DATA STRUCTURE FOR MATH CONTENT ---
+        const mathData = {
+            puntual: {
+                title: "Campo Eléctrico de una Carga Puntual (q)",
+                analysis: "Geometría: Carga puntual centrada en el origen (0,0,0).<br>Superficie Gaussiana: Esfera concéntrica de radio \\(r\\).<br>Orientación Vectorial: En cada punto de la superficie esférica, el vector campo eléctrico \\(\\vec{E}\\) es colineal con el vector normal \\(d\\vec{S}\\) (\\(\\theta = 0^\\circ \\implies \\cos(0^\\circ) = 1\\)).",
+                data: "Carga encerrada: \\(q_{enc} = q\\)<br>Área de la esfera gaussiana: \\(S = 4\\pi r^2\\)<br>Ley de Gauss: \\(\\Phi = \\oint \\vec{E} \\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}\\)",
+                math: \`\\oint \\vec{E} \\cdot d\\vec{S} = \\frac{q}{\\varepsilon_0} \\\\[10pt] 
+                       \\oint E \\, dS \\cos(0^\\circ) = \\frac{q}{\\varepsilon_0} \\implies E \\oint dS = \\frac{q}{\\varepsilon_0} \\\\[10pt] 
+                       E (4\\pi r^2) = \\frac{q}{\\varepsilon_0} \\\\[10pt] 
+                       E = \\frac{q}{4\\pi \\varepsilon_0 r^2} = k_e \\frac{q}{r^2}\`,
+                conclusion: "La Ley de Gauss demuestra que la Ley de Coulomb es una consecuencia directa de la simetría esférica y del flujo del campo eléctrico."
+            },
+            conductora: {
+                title: "Esfera Conductora en Equilibrio (R, Q)",
+                analysis: "En un conductor en equilibrio electrostático, toda la carga neta \\(Q\\) reside en la superficie externa \\(r = R\\).<br>Caso \\(r > R\\): Esfera gaussiana exterior.<br>Caso \\(r < R\\): Esfera gaussiana interior.",
+                data: "Para \\(r > R\\): \\(q_{enc} = Q\\), \\(S = 4\\pi r^2\\)<br>Para \\(r < R\\): \\(q_{enc} = 0\\) (no hay carga interna)",
+                math: \`\\textbf{Exterior (r > R):} \\\\[5pt] 
+                       E (4\\pi r^2) = \\frac{Q}{\\varepsilon_0} \\implies E = k_e \\frac{Q}{r^2} \\\\[15pt] 
+                       \\textbf{Interior (r < R):} \\\\[5pt] 
+                       \\Phi = \\oint \\vec{E} \\cdot d\\vec{S} = \\frac{0}{\\varepsilon_0} = 0 \\implies E = 0 \\text{ N/C}\`,
+                conclusion: "El interior del conductor está en blindaje electrostático (Jaula de Faraday). Visto desde afuera, la esfera conductora se comporta exactamente igual a una carga puntual \\(Q\\)."
+            },
+            aislante: {
+                title: "Esfera Aislante Maciza (R, Q)",
+                analysis: "La carga no se mueve a la superficie; permanece fija uniformemente en el volumen con densidad \\(\\rho = \\frac{Q}{\\frac{4}{3}\\pi R^3}\\).<br>Superficie gaussiana interior (\\(r < R\\)): Esfera de radio \\(r\\) que encierra una fracción del volumen total.",
+                data: "Para \\(r > R\\): \\(q_{enc} = Q\\)<br>Para \\(r < R\\): \\(q_{enc} = \\rho \\cdot V_{gauss} = Q \\left(\\frac{r^3}{R^3}\\right)\\)",
+                math: \`\\textbf{Exterior (r > R):} \\quad E = k_e \\frac{Q}{r^2} \\\\[15pt]
+                       \\textbf{Interior (r < R):} \\\\[5pt]
+                       E (4\\pi r^2) = \\frac{q_{enc}}{\\varepsilon_0} = \\frac{Q \\frac{r^3}{R^3}}{\\varepsilon_0} \\\\[10pt]
+                       E = \\frac{Q r}{4\\pi \\varepsilon_0 R^3} = k_e \\frac{Q r}{R^3}\`,
+                conclusion: "El campo crece linealmente desde cero en el centro (\\(r = 0\\)) hasta un máximo en la superficie (\\(r = R\\)), para luego decrecer cuadráticamente (\\(1/r^2\\)) al alejarse."
+            },
+            cilindro: {
+                title: "Hilo / Cilindro Infinito (λ)",
+                analysis: "Geometría Gaussiana: Cilindro coaxial cerrado de radio \\(r\\) y longitud \\(L\\).<br>Tapas \\(T_1, T_2\\): \\(\\vec{E} \\perp d\\vec{S} \\implies \\cos 90^\\circ = 0\\).<br>Pared lateral \\(F\\): \\(\\vec{E} \\parallel d\\vec{S} \\implies \\cos 0^\\circ = 1\\).",
+                data: "\\(q_{enc} = \\lambda L\\)<br>Flujo total: \\(\\Phi = \\int_{T_1} + \\int_{T_2} + \\int_{F} = 0 + 0 + E (2\\pi r L)\\)",
+                math: \`E (2\\pi r L) = \\frac{\\lambda L}{\\varepsilon_0} \\\\[10pt]
+                       E = \\frac{\\lambda}{2\\pi \\varepsilon_0 r} = \\frac{2 k_e \\lambda}{r}\`,
+                conclusion: "La longitud arbitraria \\(L\\) del cilindro gaussiano se simplifica algebraicamente. El campo decrece como \\(1/r\\) debido a la simetría unidimensional."
+            },
+            plano: {
+                title: "Plano Infinito (σ)",
+                analysis: "Geometría Gaussiana: Caja o cilindro que atraviesa perpendicularmente el plano.<br>Pared lateral: flujo nulo (\\(\\cos 90^\\circ = 0\\)).<br>Tapas transversales: el campo \\(\\vec{E}\\) sale perpendicularmente (\\(\\cos 0^\\circ = 1\\)) hacia ambos lados.",
+                data: "Carga encerrada: \\(q_{enc} = \\sigma S\\)<br>Áreas activas: 2 tapas de área \\(S \\implies \\text{Área de flujo} = 2S\\)",
+                math: \`\\Phi_{total} = \\int_{T_1} E \\, dS + \\int_{T_2} E \\, dS = 2 E S \\\\[10pt]
+                       2 E S = \\frac{q_{enc}}{\\varepsilon_0} = \\frac{\\sigma S}{\\varepsilon_0} \\\\[10pt]
+                       E = \\frac{\\sigma}{2\\varepsilon_0}\`,
+                conclusion: "El campo generado por un plano infinito es uniforme: su magnitud y dirección son exactamente iguales independientemente de la distancia."
+            }
+        };
+
+        const matrixData = [
+            ["Carga Puntual \\(q\\)", "Esfera de radio \\(r\\)", "N/A", "\\(E = \\frac{k_e q}{r^2}\\)", "\\(1/r^2\\)"],
+            ["Esfera Conductora \\(Q\\)", "Esfera concéntrica", "\\(E = 0 \\text{ N/C}\\)", "\\(E = \\frac{k_e Q}{r^2}\\)", "Cero dentro / \\(1/r^2\\) fuera"],
+            ["Esfera Aislante \\(Q\\)", "Esfera concéntrica", "\\(E = \\frac{k_e Q r}{R^3}\\)", "\\(E = \\frac{k_e Q}{r^2}\\)", "Lineal (\\(\\propto r\\)) dentro / \\(1/r^2\\) fuera"],
+            ["Cilindro / Hilo Infinito \\(\\lambda\\)", "Cilindro coaxial de long. \\(L\\)", "\\(E = 0\\) (cond) / \\(\\propto r\\) (aisl)", "\\(E = \\frac{\\lambda}{2\\pi \\varepsilon_0 r}\\)", "\\(1/r\\)"],
+            ["Plano Infinito \\(\\sigma\\)", "Caja/Cilindro transversal", "N/A", "\\(E = \\frac{\\sigma}{2\\varepsilon_0}\\)", "Independiente (\\(r^0=1\\), Uniforme)"]
+        ];
+
+        const quizData = [
+            {
+                q: "¿Por qué la forma esférica de la superficie gaussiana es la única que permite factorizar \\(E\\) fuera de la integral para una carga puntual?",
+                a: "Porque es la única geometría en la que todos los puntos de la superficie están a la misma distancia \\(r\\) del centro, garantizando por simetría que la magnitud del campo \\(E\\) sea constante en toda el área y que el ángulo con la normal sea siempre 0°."
+            },
+            {
+                q: "¿Existe una discontinuidad finita del campo eléctrico al atravesar la frontera \\(r = R\\) de una esfera conductora?",
+                a: "Sí. Justo en el interior \\(E=0\\), pero justo en el exterior salta bruscamente a \\(E = \\frac{\\sigma}{\\varepsilon_0}\\). Esta discontinuidad es característica de superficies con densidad de carga superficial pura."
+            },
+            {
+                q: "¿Por qué el campo varía linealmente con \\(r\\) en el interior de una esfera aislante?",
+                a: "Porque a medida que aumenta el radio gaussiano \\(r\\), el área crece como \\(r^2\\), pero la carga encerrada crece más rápido (como volumen, \\(r^3\\)). Al dividir \\(q_{enc}\\) por el Área en la Ley de Gauss, queda proporcional a \\(r\\)."
+            },
+            {
+                q: "¿Qué ocurriría con el campo si la longitud del cilindro fuera finita en lugar de infinita?",
+                a: "Aparecerían 'efectos de borde'. El campo eléctrico dejaría de ser estrictamente radial en los extremos, las componentes paralelas no se cancelarían, y no podríamos usar la Ley de Gauss de forma simple porque \\(E\\) ya no sería constante sobre un cilindro gaussiano."
+            },
+            {
+                q: "¿Por qué la distancia \\(r\\) no aparece en el resultado final del plano infinito?",
+                a: "Porque al alejarse del plano infinito, el 'cono de influencia' o área efectiva cargada que afecta al punto crece exactamente en la misma proporción (cuadrática) en que disminuye la intensidad individual (según Coulomb). Ambos efectos se cancelan exactamente."
+            }
+        ];
+
+        // --- DOM MANIPULATION & KATEX ---
+        function updateMathPanel(type) {
+            const data = mathData[type];
+            const html = \`
+                <h3>\${data.title}</h3>
+                
+                <div class="math-step">
+                    <strong>1. Análisis Gráfico y DCL 3D</strong><br>
+                    \${data.analysis}
+                </div>
+                
+                <div class="math-step">
+                    <strong>2. Datos y Ecuaciones</strong><br>
+                    \${data.data}
+                </div>
+                
+                <div class="math-step">
+                    <strong>3. Desarrollo Matemático Paso a Paso</strong><br>
+                    $$\${data.math}$$
+                </div>
+                
+                <div class="math-step">
+                    <strong>4. Conclusiones (Interpretación Física)</strong><br>
+                    \${data.conclusion}
+                </div>
+            \`;
+            document.getElementById('math-content').innerHTML = html;
+            renderMathInElement(document.getElementById('math-content'), {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\\\(", right: "\\\\)", display: false}
+                ]
+            });
+        }
+
+        
+        const matrixHints = [
+            // Carga Puntual
+            [null, "Hint: Una carga puntual irradia en todas direcciones por igual, requiere simetría esférica.", "Hint: Una carga puntual no tiene 'interior'.", "Hint: Usa la constante de Coulomb.", "Hint: Sigue la ley del inverso al cuadrado."],
+            // Conductora
+            [null, "Hint: Igual que la carga puntual vista desde lejos.", "Hint: ¿Qué pasa con las cargas libres en equilibrio electrostático? Se repelen a la superficie, adentro no hay carga.", "Hint: Fuera del conductor se comporta como carga puntual.", "Hint: El campo interior es nulo. El exterior decrece cuadráticamente."],
+            // Aislante
+            [null, "Hint: Su geometría es una esfera.", "Hint: Al estar cargada uniformemente, el área (r²) crece más lento que el volumen (r³), dando un crecimiento lineal con r.", "Hint: Desde fuera, cualquier esfera cargada se ve igual.", "Hint: Piensa en el crecimiento lineal interior y decrecimiento cuadrático exterior."],
+            // Cilindro
+            [null, "Hint: Necesitamos tapar un 'cable' longitudinalmente.", "Hint: Para hilos/cilindros la simetría interior puede ser 0 o lineal según el material.", "Hint: El área lateral gaussiana crece proporcionalmente a r (2πrL), no r².", "Hint: Debido al área cilíndrica, decrece más lento que una esfera (1/r)."],
+            // Plano
+            [null, "Hint: Un plano requiere atrapar flujo por ambas caras planas con una caja transversal.", "Hint: Un plano bidimensional no tiene volumen interior.", "Hint: La densidad es superficial y el campo no se atenúa.", "Hint: Al alejarte, el campo de visión del plano crece, cancelando la atenuación de distancia."]
+        ];
+
+        let draggedItem = null;
+        let correctPlacements = 0;
+        const totalPlacements = 20;
+
+        function buildMatrix() {
+            const tbody = document.getElementById('matrix-body');
+            const bank = document.getElementById('options-bank');
+            tbody.innerHTML = '';
+            bank.innerHTML = '';
+            correctPlacements = 0;
+            document.getElementById('feedback-box').className = 'feedback-box hidden';
+            document.getElementById('btn-reset-matrix').style.display = 'none';
+
+            let allOptions = [];
+
+            matrixData.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+                
+                // First column is static (Geometry name)
+                const tdLabel = document.createElement('td');
+                tdLabel.innerHTML = row[0];
+                tdLabel.style.fontWeight = 'bold';
+                tr.appendChild(tdLabel);
+
+                // Next 4 columns are dropzones
+                for(let colIndex = 1; colIndex < 5; colIndex++) {
+                    const cellData = row[colIndex];
+                    const uid = `${rowIndex}-${colIndex}`; // Unique ID for correct matching
+                    
+                    const td = document.createElement('td');
+                    td.innerHTML = `<div class="dropzone" data-target="${uid}"></div>`;
+                    tr.appendChild(td);
+
+                    // Add to options pool
+                    allOptions.push({ id: uid, html: cellData });
+                }
+                tbody.appendChild(tr);
+            });
+
+            // Shuffle options
+            allOptions.sort(() => Math.random() - 0.5);
+
+            // Populate bank
+            allOptions.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'draggable-item';
+                div.draggable = true;
+                div.dataset.id = opt.id;
+                div.innerHTML = opt.html;
+                
+                div.addEventListener('dragstart', (e) => {
+                    draggedItem = div;
+                    e.dataTransfer.setData('text/plain', opt.id);
+                    setTimeout(() => div.style.opacity = '0.5', 0);
+                });
+                
+                div.addEventListener('dragend', () => {
+                    div.style.opacity = '1';
+                    draggedItem = null;
+                });
+                
+                bank.appendChild(div);
+            });
+
+            // Render KaTeX for static label and bank
+            renderMathInElement(tbody, { delimiters: [{left: "\(", right: "\)", display: false}] });
+            renderMathInElement(bank, { delimiters: [{left: "\(", right: "\)", display: false}] });
+
+            // Setup dropzones
+            document.querySelectorAll('.dropzone').forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if(!zone.classList.contains('correct')) zone.classList.add('dragover');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('dragover');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('dragover');
+                    
+                    if(zone.classList.contains('correct')) return; // Already solved
+
+                    const targetId = zone.dataset.target;
+                    const draggedId = e.dataTransfer.getData('text/plain');
+                    const feedbackBox = document.getElementById('feedback-box');
+                    
+                    if(targetId === draggedId) {
+                        // Correct!
+                        zone.appendChild(draggedItem);
+                        draggedItem.draggable = false;
+                        draggedItem.style.cursor = 'default';
+                        draggedItem.style.border = 'none';
+                        draggedItem.style.boxShadow = 'none';
+                        zone.classList.add('correct');
+                        feedbackBox.className = 'feedback-box success';
+                        feedbackBox.innerText = "¡Excelente! Ubicación correcta.";
+                        correctPlacements++;
+                        
+                        if(correctPlacements === totalPlacements) {
+                            feedbackBox.innerText = "¡Felicidades! Has completado la Matriz de Simetrías de Gauss perfectamente.";
+                            document.getElementById('btn-reset-matrix').style.display = 'block';
+                        }
+                    } else {
+                        // Incorrect - Show Hint
+                        const targetParts = targetId.split('-');
+                        const hint = matrixHints[targetParts[0]][targetParts[1]];
+                        feedbackBox.className = 'feedback-box error';
+                        feedbackBox.innerText = "Incorrecto. " + hint;
+                    }
+                });
+            });
+        }
+
+        document.getElementById('btn-reset-matrix').addEventListener('click', buildMatrix);
+
+
+        function buildQuiz() {
+            const grid = document.getElementById('quiz-grid');
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.innerHTML = \`
+                    <h4>Pregunta \${index + 1}</h4>
+                    <p>\${item.q}</p>
+                    <button style="margin-top: 1rem; width: 100%;" onclick="this.nextElementSibling.classList.toggle('visible')">Revelar Respuesta</button>
+                    <div class="answer">\${item.a}</div>
+                \`;
+                grid.appendChild(card);
+            });
+            renderMathInElement(grid, { delimiters: [{left: "\\\\(", right: "\\\\)", display: false}] });
+        }
+
+        // --- THREE.JS LOGIC ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111);
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(5, 4, 6);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(10, 10, 10);
+        scene.add(dirLight);
+
+        // State & Groups
+        const objectGroup = new THREE.Group();
+        const gaussGroup = new THREE.Group();
+        const vectorEGroup = new THREE.Group();
+        const vectorSGroup = new THREE.Group();
+        scene.add(objectGroup, gaussGroup, vectorEGroup, vectorSGroup);
+
+        let config = { gauss: true, ve: true, vs: true };
+
+        // Materials
+        const chargeMat = new THREE.MeshStandardMaterial({ color: 0xff3333, emissive: 0x440000 });
+        const conductorMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.8, roughness: 0.2 });
+        const insulatorMat = new THREE.MeshStandardMaterial({ color: 0xff8833, opacity: 0.9, transparent: true });
+        const gaussMat = new THREE.MeshStandardMaterial({ 
+            color: 0x0096ff, 
+            transparent: true, 
+            opacity: 0.25, 
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+        const gaussWireMat = new THREE.MeshBasicMaterial({ color: 0x0096ff, wireframe: true, transparent: true, opacity: 0.5 });
+
+        // Vector Helpers generator
+        function createVectors(origin, direction, length, color, group) {
+            const dir = direction.normalize();
+            const arrowHelper = new THREE.ArrowHelper(dir, origin, length, color, 0.2, 0.1);
+            group.add(arrowHelper);
+        }
+
+        // Build 3D Geometries based on type
+        function build3DScene(type) {
+            // Clear groups
+            objectGroup.clear();
+            gaussGroup.clear();
+            vectorEGroup.clear();
+            vectorSGroup.clear();
+
+            let gaussMesh;
+
+            if (type === 'puntual') {
+                // Point Charge
+                const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), chargeMat);
+                objectGroup.add(sphere);
+                
+                // Gaussian Sphere
+                const gGeo = new THREE.SphereGeometry(2.5, 32, 32);
+                gaussMesh = new THREE.Mesh(gGeo, gaussMat);
+                gaussGroup.add(gaussMesh);
+                gaussGroup.add(new THREE.Mesh(gGeo, gaussWireMat));
+
+                // Vectors
+                const phiSteps = 4;
+                const thetaSteps = 4;
+                for(let i=0; i<phiSteps; i++){
+                    for(let j=0; j<thetaSteps; j++){
+                        const phi = Math.acos(-1 + (2 * i) / phiSteps);
+                        const theta = Math.sqrt(phiSteps * Math.PI) * phi;
+                        const x = 2.5 * Math.sin(phi) * Math.cos(theta);
+                        const y = 2.5 * Math.sin(phi) * Math.sin(theta);
+                        const z = 2.5 * Math.cos(phi);
+                        const pos = new THREE.Vector3(x,y,z);
+                        createVectors(pos, pos.clone(), 0.8, 0xff3333, vectorEGroup); // E
+                        createVectors(pos.clone().add(pos.clone().normalize().multiplyScalar(0.05)), pos.clone(), 0.8, 0x33ff33, vectorSGroup); // dS slightly offset
+                    }
+                }
+            } 
+            else if (type === 'conductora') {
+                // Conductor Sphere (R=1.5)
+                const sphere = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), conductorMat);
+                objectGroup.add(sphere);
+
+                // Gaussian Sphere (r=2.5)
+                const gGeo = new THREE.SphereGeometry(2.5, 32, 32);
+                gaussMesh = new THREE.Mesh(gGeo, gaussMat);
+                gaussGroup.add(gaussMesh);
+                gaussGroup.add(new THREE.Mesh(gGeo, gaussWireMat));
+
+                // Add charges on surface
+                for(let i=0; i<30; i++) {
+                    const phi = Math.acos(-1 + (2 * i) / 30);
+                    const theta = Math.sqrt(30 * Math.PI) * phi;
+                    const p = new THREE.Mesh(new THREE.SphereGeometry(0.08), chargeMat);
+                    p.position.set(1.5*Math.sin(phi)*Math.cos(theta), 1.5*Math.sin(phi)*Math.sin(theta), 1.5*Math.cos(phi));
+                    objectGroup.add(p);
+                }
+
+                // Vectors
+                for(let i=0; i<12; i++){
+                    const angle = (i / 12) * Math.PI * 2;
+                    const pos = new THREE.Vector3(2.5*Math.cos(angle), 0, 2.5*Math.sin(angle));
+                    createVectors(pos, pos.clone(), 0.8, 0xff3333, vectorEGroup);
+                    createVectors(pos, pos.clone(), 0.8, 0x33ff33, vectorSGroup);
+                }
+            }
+            else if (type === 'aislante') {
+                const sphere = new THREE.Mesh(new THREE.SphereGeometry(2.5, 32, 32), insulatorMat);
+                objectGroup.add(sphere);
+                
+                // Gaussian Sphere INTERIOR (r=1.5)
+                const gGeo = new THREE.SphereGeometry(1.5, 32, 32);
+                gaussMesh = new THREE.Mesh(gGeo, gaussMat);
+                gaussGroup.add(gaussMesh);
+                gaussGroup.add(new THREE.Mesh(gGeo, gaussWireMat));
+
+                // Vectors
+                for(let i=0; i<8; i++){
+                    const angle = (i / 8) * Math.PI * 2;
+                    const pos = new THREE.Vector3(1.5*Math.cos(angle), 1.5*Math.sin(angle), 0);
+                    createVectors(pos, pos.clone(), 0.8, 0xff3333, vectorEGroup);
+                    createVectors(pos, pos.clone(), 0.8, 0x33ff33, vectorSGroup);
+                }
+            }
+            else if (type === 'cilindro') {
+                // Infinite Line (simulated as long cylinder)
+                const line = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 8, 16), chargeMat);
+                line.rotation.x = Math.PI / 2; // Along Z axis
+                objectGroup.add(line);
+
+                // Gaussian Cylinder
+                const gGeo = new THREE.CylinderGeometry(1.5, 1.5, 4, 32);
+                gaussMesh = new THREE.Mesh(gGeo, gaussMat);
+                gaussMesh.rotation.x = Math.PI / 2;
+                gaussGroup.add(gaussMesh);
+                gaussGroup.add(new THREE.Mesh(gGeo, gaussWireMat));
+
+                // Vectors on lateral surface
+                for(let i=0; i<8; i++){
+                    const angle = (i / 8) * Math.PI * 2;
+                    // Middle
+                    const pos = new THREE.Vector3(1.5*Math.cos(angle), 1.5*Math.sin(angle), 0);
+                    const dir = new THREE.Vector3(Math.cos(angle), Math.sin(angle), 0);
+                    createVectors(pos, dir, 0.8, 0xff3333, vectorEGroup);
+                    createVectors(pos, dir, 0.8, 0x33ff33, vectorSGroup);
+                }
+                
+                // Vector dS on caps
+                createVectors(new THREE.Vector3(0,0,2), new THREE.Vector3(0,0,1), 1, 0x33ff33, vectorSGroup);
+                createVectors(new THREE.Vector3(0,0,-2), new THREE.Vector3(0,0,-1), 1, 0x33ff33, vectorSGroup);
+            }
+            else if (type === 'plano') {
+                // Infinite Plane
+                const plane = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), chargeMat);
+                plane.material.side = THREE.DoubleSide;
+                objectGroup.add(plane);
+
+                // Gaussian Box (Pillbox)
+                const gGeo = new THREE.BoxGeometry(2, 2, 4);
+                gaussMesh = new THREE.Mesh(gGeo, gaussMat);
+                gaussGroup.add(gaussMesh);
+                gaussGroup.add(new THREE.Mesh(gGeo, gaussWireMat));
+
+                // Vectors E
+                createVectors(new THREE.Vector3(0,0,2), new THREE.Vector3(0,0,1), 1, 0xff3333, vectorEGroup);
+                createVectors(new THREE.Vector3(0,0,-2), new THREE.Vector3(0,0,-1), 1, 0xff3333, vectorEGroup);
+                
+                // Vectors dS Caps
+                createVectors(new THREE.Vector3(0.5,0.5,2), new THREE.Vector3(0,0,1), 1, 0x33ff33, vectorSGroup);
+                createVectors(new THREE.Vector3(0.5,0.5,-2), new THREE.Vector3(0,0,-1), 1, 0x33ff33, vectorSGroup);
+                
+                // Vectors dS Lateral
+                createVectors(new THREE.Vector3(0,1,0), new THREE.Vector3(0,1,0), 1, 0x33ff33, vectorSGroup);
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        document.getElementById('geometry-select').addEventListener('change', (e) => {
+            build3DScene(e.target.value);
+            updateMathPanel(e.target.value);
+        });
+
+        document.getElementById('btn-gaussiana').addEventListener('click', (e) => {
+            config.gauss = !config.gauss;
+            gaussGroup.visible = config.gauss;
+            e.target.classList.toggle('active');
+        });
+
+        document.getElementById('btn-vectores-e').addEventListener('click', (e) => {
+            config.ve = !config.ve;
+            vectorEGroup.visible = config.ve;
+            e.target.classList.toggle('active');
+        });
+
+        document.getElementById('btn-vectores-ds').addEventListener('click', (e) => {
+            config.vs = !config.vs;
+            vectorSGroup.visible = config.vs;
+            e.target.classList.toggle('active');
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Initialize
+        buildMatrix();
+        buildQuiz();
+        build3DScene('puntual');
+        updateMathPanel('puntual');
+        animate();
+
+    </script>
+</body>
+</html>

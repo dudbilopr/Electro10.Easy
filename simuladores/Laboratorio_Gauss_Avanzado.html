@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio WebGL: Ley de Gauss Avanzada</title>
+
+    <!-- Tipografía -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --bg-panel: rgba(15, 23, 42, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --accent-purple: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body {
+            background: radial-gradient(circle at top right, #1e293b 0%, #020617 100%);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+        /* HEADER */
+        .header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            z-index: 10;
+        }
+        .header h1 { font-size: 1.3rem; font-weight: 600; color: var(--accent-blue); display: flex; align-items: center; gap: 10px;}
+        .header-tools { display: flex; gap: 10px; }
+
+        /* LAYOUT */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr 420px;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 65px);
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .panel-header {
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--glass-border);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .panel-content {
+            padding: 1.2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* CONTROLES UI */
+        .control-group { margin-bottom: 1.2rem; }
+        .control-label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        .custom-select {
+            width: 100%; padding: 0.8rem; border-radius: 8px;
+            background: rgba(0,0,0,0.4); color: var(--text-main);
+            border: 1px solid var(--glass-border); outline: none;
+            font-size: 0.9rem; cursor: pointer; appearance: none;
+        }
+        .custom-select:focus { border-color: var(--accent-blue); }
+
+        .radio-group { display: flex; gap: 0.5rem; background: rgba(0,0,0,0.3); padding: 0.3rem; border-radius: 8px; }
+        .radio-btn {
+            flex: 1; text-align: center; padding: 0.6rem; cursor: pointer;
+            border-radius: 6px; font-size: 0.85rem; transition: 0.2s; font-weight: 500;
+        }
+        .radio-btn.active { background: var(--accent-blue); color: white; box-shadow: 0 2px 10px rgba(59,130,246,0.3); }
+
+        .slider-container { display: flex; align-items: center; gap: 1rem; }
+        input[type="range"] { flex: 1; accent-color: var(--accent-blue); }
+        .slider-val { font-family: monospace; background: rgba(0,0,0,0.5); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.9rem; width: 65px; text-align: center;}
+
+        .btn-toggle {
+            width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--accent-purple);
+            background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); cursor: pointer;
+            font-weight: 600; transition: all 0.3s; display: flex; justify-content: center; gap: 10px; align-items: center;
+        }
+        .btn-toggle.active { background: var(--accent-purple); color: white; }
+
+        .chart-wrapper { height: 200px; width: 100%; margin-top: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; border: 1px solid var(--glass-border); }
+
+        /* VISOR 3D */
+        .viewer-container {
+            position: relative; background: #000; border-radius: 12px;
+            border: 1px solid var(--glass-border); box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
+            overflow: hidden;
+        }
+        #webgl-canvas { width: 100%; height: 100%; cursor: crosshair; display: block;}
+
+        .ds-hud {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+            border: 1px solid var(--accent-green); padding: 1rem; border-radius: 8px;
+            pointer-events: none; display: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+        .ds-hud .val { font-family: monospace; font-size: 1.2rem; color: var(--accent-green); margin: 5px 0;}
+        .ds-hud .desc { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* PASO A PASO Y TEORÍA */
+        .math-step {
+            background: rgba(0, 0, 0, 0.2); padding: 1rem; border-radius: 8px;
+            margin-bottom: 0.8rem; border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--accent-blue);
+            animation: slideIn 0.3s ease forwards;
+        }
+        .math-step h4 { color: var(--accent-blue); margin-bottom: 0.5rem; font-size: 0.9rem;}
+        .math-step p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;}
+        
+        .tip-box {
+            background: rgba(234, 179, 8, 0.1); border-left: 3px solid var(--accent-yellow);
+            padding: 1rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem; font-size: 0.85rem;
+        }
+        .tip-box h4 { color: var(--accent-yellow); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 5px;}
+
+        .katex-display { margin: 0.5em 0 !important; overflow-x: auto;}
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1><i class="fa-solid fa-atom"></i> Simulador Máster: Simetrías y Ley de Gauss</h1>
+    <div class="header-tools">
+        <button class="btn-toggle active" id="btn-vectors" style="width: auto; padding: 0.5rem 1rem; margin-right: 10px;">
+            <i class="fa-solid fa-arrow-up-right-dots"></i> Ocultar Vectores E
+        </button>
+        <button class="btn-toggle" id="btn-cut" style="width: auto; padding: 0.5rem 1rem;">
+            <i class="fa-solid fa-scissors"></i> Corte Transversal 3D
+        </button>
+    </div>
+</header>
+
+<div class="main-layout">
+    
+    <!-- PANEL IZQUIERDO: CONTROLES -->
+    <div class="panel">
+        <div class="panel-header"><i class="fa-solid fa-sliders"></i> Configuración del Sistema</div>
+        <div class="panel-content">
+            
+            <div class="control-group">
+                <span class="control-label">Categoría Geométrica</span>
+                <select id="cat-select" class="custom-select">
+                    <option value="esfera">Simetría Esférica</option>
+                    <option value="cilindro">Simetría Cilíndrica</option>
+                    <option value="plano">Simetría Plana</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Caso de Estudio Especializado</span>
+                <select id="sub-select" class="custom-select">
+                    <!-- Dinámico vía JS -->
+                </select>
+            </div>
+
+            <div class="control-group" id="mat-group">
+                <span class="control-label">Propiedad del Material Volumétrico</span>
+                <div class="radio-group" id="mat-selector">
+                    <div class="radio-btn active" data-mat="conductor">Conductor (Equilibrio)</div>
+                    <div class="radio-btn" data-mat="aislante">Dieléctrico Uniforme</div>
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-top: 2rem;">
+                <span class="control-label">Posición de Superficie Gaussiana (r o x)</span>
+                <div class="slider-container">
+                    <input type="range" id="gauss-radius" min="0.1" max="4.0" step="0.02" value="2.5">
+                    <div class="slider-val" id="gauss-val">2.50</div>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--accent-green); margin-top: 5px;" id="region-label">Región Exterior</div>
+            </div>
+
+            <div class="chart-wrapper">
+                <canvas id="fieldChart"></canvas>
+            </div>
+            <div style="text-align:center; font-size: 0.75rem; color:var(--text-muted); margin-top:5px;">Magnitud del Campo $|E|$ vs Distancia</div>
+        </div>
+    </div>
+
+    <!-- PANEL CENTRAL: 3D -->
+    <div class="viewer-container">
+        <div id="webgl-canvas"></div>
+        <div class="ds-hud" id="ds-hud">
+            <div style="font-weight:600;"><i class="fa-solid fa-arrows-to-dot"></i> Análisis de Flujo Local</div>
+            <div class="desc">Ángulo entre $\vec{E}$ y $d\vec{S}$</div>
+            <div class="val" id="hud-angle">0°</div>
+            <div class="desc" id="hud-msg" style="color:var(--accent-green)">Flujo Máximo Activo</div>
+        </div>
+    </div>
+
+    <!-- PANEL DERECHO: MATEMÁTICAS -->
+    <div class="panel">
+        <div class="panel-header"><i class="fa-solid fa-file-invoice"></i> Desarrollo y Deducción Paso a Paso</div>
+        <div class="panel-content" id="math-content">
+            <!-- Dinámico vía JS -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Three.js Globales (Sin Importmap) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    const subCasesMap = {
+        'esfera': [
+            { id: 'puntual', name: 'Carga Puntual' },
+            { id: 'maciza', name: 'Esfera Sólida (Maciza)' },
+            { id: 'casc_delgado', name: 'Cascarón Esférico Delgado' },
+            { id: 'casc_grueso', name: 'Cascarón Esférico Grueso' },
+            { id: 'puntual_casc', name: 'Puntual + Cascarón Hueco' },
+            { id: 'maciza_casc', name: 'Esfera Maciza + Cascarón Delgado' }
+        ],
+        'cilindro': [
+            { id: 'hilo', name: 'Hilo Infinito' },
+            { id: 'macizo', name: 'Cilindro Sólido' },
+            { id: 'casc_delgado', name: 'Cascarón Cilíndrico Delgado' },
+            { id: 'casc_grueso', name: 'Cascarón Cilíndrico Grueso' },
+            { id: 'hilo_casc', name: 'Hilo + Cascarón Hueco' }
+        ],
+        'plano': [
+            { id: 'un_plano', name: 'Un Plano Infinito' },
+            { id: 'dos_planos', name: 'Dos Planos Paralelos (Capacitor)' }
+        ]
+    };
+
+    // Estado global de la simulación
+    const state = {
+        cat: 'esfera',
+        sub: 'puntual',
+        mat: 'conductor',
+        r: 2.5,  // Posición del slider
+        cut3D: false,
+        
+        // Parámetros fijos geométricos para la simulación visual
+        R1: 1.0, // Radio interno o radio principal
+        R2: 1.8, // Radio externo para cascarones gruesos o secundarios
+        k: 10,   // Constante visual k
+        Q: 10    // Carga base visual
+    };
+
+    const container = document.getElementById('webgl-canvas');
+    const scene = new THREE.Scene();
+    scene.add(new THREE.AxesHelper(4));
+    scene.add(new THREE.GridHelper(10, 20, 0x334155, 0x0f172a));
+
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(5, 4, 6);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.localClippingEnabled = true; // Fundamental para el corte 3D
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Luces
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 10, 5);
+    scene.add(dirLight);
+
+    // Plano de Corte Transversal Global (Eje X)
+    const globalClipPlane = new THREE.Plane(new THREE.Vector3(1, 0, 0), 0);
+
+    // Grupos de la escena
+    const solidGroup = new THREE.Group();
+    const gaussGroup = new THREE.Group();
+    const particlesGroup = new THREE.Group();
+    const vectorsGroup = new THREE.Group();
+    const eVectorsGroup = new THREE.Group();
+    let showEVectors = true;
+
+    scene.add(solidGroup); scene.add(gaussGroup); scene.add(particlesGroup); scene.add(vectorsGroup); scene.add(eVectorsGroup);
+
+    // Vector dS Interactivo - CORREGIDO A TAMAÑO MÁS PEQUEÑO SEGÚN REQUERIMIENTO
+    const dsVector = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(0,0,0), 0.8, 0x10b981, 0.2, 0.1);
+    dsVector.visible = false;
+    scene.add(dsVector);
+
+    // Parche Visual del Área dS - CORREGIDO A TAMAÑO MÁS PEQUEÑO SEGÚN REQUERIMIENTO
+    const dsAreaMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.2, 0.2),
+        new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide, transparent: true, opacity: 0.6 })
+    );
+    dsAreaMesh.visible = false;
+    scene.add(dsAreaMesh);
+
+    // Generador de Materiales Dinámicos (respetan corte)
+    function getMaterials() {
+        const planes = state.cut3D ? [globalClipPlane] : [];
+        return {
+            cond: new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2, clippingPlanes: planes, side: THREE.DoubleSide }),
+            condInner: new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.9, roughness: 0.2, clippingPlanes: planes, side: THREE.BackSide }), // Para simular grosor
+            aisl: new THREE.MeshPhysicalMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.65, transmission: 0.5, clippingPlanes: planes, side: THREE.DoubleSide }),
+            aislInner: new THREE.MeshPhysicalMaterial({ color: 0x2563eb, transparent: true, opacity: 0.65, clippingPlanes: planes, side: THREE.BackSide }),
+            gauss: new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.2, clippingPlanes: planes, side: THREE.DoubleSide, depthWrite: false }),
+            charge: new THREE.MeshBasicMaterial({ color: 0xef4444, clippingPlanes: planes })
+        };
+    }
+
+    function generateParticles() {
+        particlesGroup.clear();
+        const planes = state.cut3D ? [globalClipPlane] : [];
+        
+        // Materiales de partículas (Rojo = Positivo, Azul = Negativo/Inducido)
+        const pMatPos = new THREE.PointsMaterial({ color: 0xef4444, size: 0.08, clippingPlanes: planes });
+        const pMatNeg = new THREE.PointsMaterial({ color: 0x3b82f6, size: 0.08, clippingPlanes: planes });
+
+        const count = 600;
+        const posPoints = [];
+        const negPoints = [];
+
+        // Helpers de geometría esférica uniforme (Fibonacci)
+        function addSphereSurface(ptsArr, radius, n) {
+            let phi = Math.PI * (3 - Math.sqrt(5));
+            for (let i = 0; i < n; i++) {
+                let y = 1 - (i / (n - 1)) * 2;
+                let r = Math.sqrt(1 - y * y);
+                let theta = phi * i;
+                ptsArr.push(new THREE.Vector3(Math.cos(theta) * r * radius, y * radius, Math.sin(theta) * r * radius));
+            }
+        }
+        function addSphereVolume(ptsArr, radius, n) {
+            for(let i=0; i<n; i++) {
+                let u = Math.random(), v = Math.random(), w = Math.random();
+                let theta = u * 2.0 * Math.PI;
+                let phi = Math.acos(2.0 * v - 1.0);
+                let r = Math.cbrt(w) * radius;
+                ptsArr.push(new THREE.Vector3(r * Math.sin(phi)*Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi)*Math.sin(theta)));
+            }
+        }
+
+        if (state.cat === 'esfera') {
+            if (state.sub === 'puntual') {
+                // Solo un punto grande en el centro (mesh, no particle)
+            } else if (state.sub === 'maciza') {
+                if(state.mat === 'conductor') addSphereSurface(posPoints, state.R1, count);
+                else addSphereVolume(posPoints, state.R1, count);
+            } else if (state.sub === 'casc_delgado') {
+                addSphereSurface(posPoints, state.R1, count);
+            } else if (state.sub === 'casc_grueso') {
+                if(state.mat === 'conductor') addSphereSurface(posPoints, state.R2, count); // Se va afuera
+                else {
+                    // Volumen entre R1 y R2
+                    for(let i=0; i<count; i++) {
+                        let u = Math.random(), v = Math.random();
+                        let theta = u * 2 * Math.PI; let phi = Math.acos(2 * v - 1);
+                        // R = cbrt( random * (R2^3 - R1^3) + R1^3 )
+                        let r = Math.cbrt( Math.random() * (Math.pow(state.R2,3) - Math.pow(state.R1,3)) + Math.pow(state.R1,3) );
+                        posPoints.push(new THREE.Vector3(r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(theta)));
+                    }
+                }
+            } else if (state.sub === 'puntual_casc') {
+                // Inducción visual muy didáctica!
+                addSphereSurface(negPoints, state.R1, count/2); // -q inducida adentro
+                addSphereSurface(posPoints, state.R2, count/2); // +q inducida afuera
+            } else if (state.sub === 'maciza_casc') {
+                if(state.mat === 'conductor') addSphereSurface(posPoints, state.R1, count/2);
+                else addSphereVolume(posPoints, state.R1, count/2);
+                addSphereSurface(posPoints, state.R2, count/2); // Cascaron externo también tiene carga
+            }
+        } 
+        else if (state.cat === 'cilindro') {
+            // Simplificado para cilindros: distribucion aleatoria en superficies o volumenes
+            const L = 6;
+            if(state.sub === 'hilo') {} 
+            else if(state.sub === 'macizo') {
+                for(let i=0; i<count; i++) {
+                    let y = (Math.random()-0.5)*L; let theta = Math.random()*Math.PI*2;
+                    let r = state.mat==='conductor' ? state.R1 : state.R1*Math.sqrt(Math.random());
+                    posPoints.push(new THREE.Vector3(r*Math.cos(theta), y, r*Math.sin(theta)));
+                }
+            } else if (state.sub === 'casc_delgado') {
+                 for(let i=0; i<count; i++) {
+                    let y = (Math.random()-0.5)*L; let theta = Math.random()*Math.PI*2;
+                    posPoints.push(new THREE.Vector3(state.R1*Math.cos(theta), y, state.R1*Math.sin(theta)));
+                }
+            } else if (state.sub === 'casc_grueso' || state.sub === 'hilo_casc') {
+                if(state.sub === 'hilo_casc') {
+                    for(let i=0; i<count/2; i++) {
+                        let y = (Math.random()-0.5)*L; let theta = Math.random()*Math.PI*2;
+                        negPoints.push(new THREE.Vector3(state.R1*Math.cos(theta), y, state.R1*Math.sin(theta)));
+                        posPoints.push(new THREE.Vector3(state.R2*Math.cos(theta), y, state.R2*Math.sin(theta)));
+                    }
+                } else {
+                    for(let i=0; i<count; i++) {
+                        let y = (Math.random()-0.5)*L; let theta = Math.random()*Math.PI*2;
+                        let r = state.mat==='conductor' ? state.R2 : Math.sqrt(Math.random()*(state.R2*state.R2 - state.R1*state.R1) + state.R1*state.R1);
+                        posPoints.push(new THREE.Vector3(r*Math.cos(theta), y, r*Math.sin(theta)));
+                    }
+                }
+            }
+        } 
+        else if (state.cat === 'plano') {
+            for(let i=0; i<count; i++) {
+                let y = (Math.random()-0.5)*5; let z = (Math.random()-0.5)*5;
+                if(state.sub === 'un_plano') posPoints.push(new THREE.Vector3(0, y, z));
+                else { posPoints.push(new THREE.Vector3(-1, y, z)); negPoints.push(new THREE.Vector3(1, y, z)); }
+            }
+        }
+
+        if(posPoints.length > 0) particlesGroup.add(new THREE.Points(new THREE.BufferGeometry().setFromPoints(posPoints), pMatPos));
+        if(negPoints.length > 0) particlesGroup.add(new THREE.Points(new THREE.BufferGeometry().setFromPoints(negPoints), pMatNeg));
+    }
+
+    let gaussMeshRef = null;
+
+    function generateEVectors() {
+        if (!showEVectors) return;
+        const color = 0xef4444; // Rojo para el Campo Eléctrico
+        const len = 3.0;
+        const R1 = state.R1;
+
+        if (state.cat === 'esfera') {
+            let num = 45;
+            let phi = Math.PI * (3 - Math.sqrt(5)); // Esfera de Fibonacci para distribución uniforme
+            for (let i = 0; i < num; i++) {
+                let y = 1 - (i / (num - 1)) * 2;
+                let r = Math.sqrt(1 - y * y);
+                let theta = phi * i;
+                let dir = new THREE.Vector3(Math.cos(theta)*r, y, Math.sin(theta)*r);
+                
+                // Nace de la superficie si es conductor, o desde el centro si es carga puntual
+                let origin = dir.clone().multiplyScalar(state.sub === 'puntual' ? 0.2 : (state.mat === 'conductor' ? R1 : 0));
+                let drawLen = len + (R1 - origin.length()); 
+                eVectorsGroup.add(new THREE.ArrowHelper(dir, origin, drawLen, color, 0.4, 0.2));
+            }
+        } else if (state.cat === 'cilindro') {
+            for (let y = -3; y <= 3; y += 1.5) {
+                for (let i = 0; i < 8; i++) {
+                    let theta = (i / 8) * Math.PI * 2;
+                    let dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
+                    let originR = state.sub === 'hilo' ? 0.1 : (state.mat === 'conductor' ? R1 : 0);
+                    let origin = new THREE.Vector3(dir.x * originR, y, dir.z * originR);
+                    eVectorsGroup.add(new THREE.ArrowHelper(dir, origin, len, color, 0.4, 0.2));
+                }
+            }
+        } else if (state.cat === 'plano') {
+            for (let y = -2; y <= 2; y += 2) {
+                for (let z = -2; z <= 2; z += 2) {
+                    let offX = state.sub === 'un_plano' ? 0 : 1;
+                    eVectorsGroup.add(new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(0.1 + offX, y, z), len, color, 0.4, 0.2));
+                    eVectorsGroup.add(new THREE.ArrowHelper(new THREE.Vector3(-1,0,0), new THREE.Vector3(-0.1 - offX, y, z), len, color, 0.4, 0.2));
+                }
+            }
+        }
+    }
+
+    function buildScene() {
+        solidGroup.clear(); gaussGroup.clear(); vectorsGroup.clear(); eVectorsGroup.clear();
+        dsVector.visible = false; dsAreaMesh.visible = false; document.getElementById('ds-hud').style.display = 'none';
+        
+        const mats = getMaterials();
+        const activeMat = state.mat === 'conductor' ? mats.cond : mats.aisl;
+        const activeInnerMat = state.mat === 'conductor' ? mats.condInner : mats.aislInner;
+
+        if (state.cat === 'esfera') {
+            if (state.sub === 'puntual' || state.sub === 'puntual_casc') {
+                solidGroup.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), mats.charge));
+            }
+            if (state.sub === 'maciza' || state.sub === 'maciza_casc') {
+                solidGroup.add(new THREE.Mesh(new THREE.SphereGeometry(state.R1, 32, 32), activeMat));
+            }
+            if (state.sub === 'casc_delgado' || state.sub === 'maciza_casc') {
+                let rCasc = state.sub === 'maciza_casc' ? state.R2 : state.R1;
+                solidGroup.add(new THREE.Mesh(new THREE.SphereGeometry(rCasc, 32, 32), mats.cond)); // Asumimos conductor para delgado
+            }
+            if (state.sub === 'casc_grueso' || state.sub === 'puntual_casc') {
+                // Truco visual para cascaron grueso con corte
+                solidGroup.add(new THREE.Mesh(new THREE.SphereGeometry(state.R2, 32, 32), activeMat));
+                solidGroup.add(new THREE.Mesh(new THREE.SphereGeometry(state.R1, 32, 32), activeInnerMat));
+            }
+
+            // Gaussiana Esférica
+            gaussMeshRef = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), mats.gauss);
+            gaussGroup.add(gaussMeshRef);
+        }
+        else if (state.cat === 'cilindro') {
+            const L = 8;
+            if (state.sub === 'hilo' || state.sub === 'hilo_casc') {
+                solidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, L, 16), mats.charge));
+            }
+            if (state.sub === 'macizo' || state.sub === 'macizo_casc') {
+                solidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(state.R1, state.R1, L, 32), activeMat));
+            }
+            if (state.sub === 'casc_delgado' || state.sub === 'macizo_casc') {
+                let rCasc = state.sub === 'macizo_casc' ? state.R2 : state.R1;
+                solidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(rCasc, rCasc, L, 32), mats.cond));
+            }
+            if (state.sub === 'casc_grueso' || state.sub === 'hilo_casc') {
+                solidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(state.R2, state.R2, L, 32), activeMat));
+                solidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(state.R1, state.R1, L, 32), activeInnerMat));
+            }
+
+            // Gaussiana Cilíndrica (r = variable, L = constante visual 4)
+            gaussMeshRef = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 4, 32), mats.gauss);
+            gaussGroup.add(gaussMeshRef);
+        }
+        else if (state.cat === 'plano') {
+            const planeGeom = new THREE.PlaneGeometry(6, 6);
+            if (state.sub === 'un_plano') {
+                let p = new THREE.Mesh(planeGeom, mats.aisl); p.rotation.y = Math.PI/2; solidGroup.add(p);
+            } else if (state.sub === 'dos_planos') {
+                let p1 = new THREE.Mesh(planeGeom, mats.cond); p1.rotation.y = Math.PI/2; p1.position.x = -1; solidGroup.add(p1);
+                let p2 = new THREE.Mesh(planeGeom, mats.cond); p2.rotation.y = Math.PI/2; p2.position.x = 1; solidGroup.add(p2);
+            }
+
+            // Gaussiana: Píldora cilíndrica a lo largo de X
+            gaussMeshRef = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 1, 32), mats.gauss);
+            gaussMeshRef.rotation.z = Math.PI/2;
+            gaussGroup.add(gaussMeshRef);
+        }
+
+        generateParticles();
+        generateEVectors();
+        updateGaussSize();
+    }
+
+    function updateGaussSize() {
+        if (!gaussMeshRef) return;
+        
+        if (state.cat === 'esfera') {
+            gaussMeshRef.scale.setScalar(state.r);
+        } else if (state.cat === 'cilindro') {
+            gaussMeshRef.scale.set(state.r, 1, state.r);
+        } else if (state.cat === 'plano') {
+            // state.r controla el largo de la caja en X. 
+            // Para 'un_plano', va de -r a r (largo 2r).
+            // Para 'dos_planos', si el test es x, la caja va de 0 a x, o corta placas.
+            // Lo más didáctico: la caja siempre tiene largo 2*|x|.
+            let length = Math.max(0.1, state.r * 2);
+            gaussMeshRef.scale.set(1, length, 1);
+        }
+    }
+
+    function getExactField(r) {
+        let E = 0; const k = state.k; const Q = state.Q; const R1 = state.R1; const R2 = state.R2;
+        
+        if (state.cat === 'esfera') {
+            if (state.sub === 'puntual') E = k*Q/(r*r);
+            else if (state.sub === 'maciza') {
+                if(state.mat==='conductor') E = r<R1 ? 0 : k*Q/(r*r);
+                else E = r<R1 ? k*Q*r/Math.pow(R1,3) : k*Q/(r*r);
+            }
+            else if (state.sub === 'casc_delgado') E = r<R1 ? 0 : k*Q/(r*r);
+            else if (state.sub === 'casc_grueso') {
+                if(r<R1) E = 0;
+                else if(r>R2) E = k*Q/(r*r);
+                else E = state.mat==='conductor' ? 0 : k*Q*(Math.pow(r,3)-Math.pow(R1,3))/(r*r*(Math.pow(R2,3)-Math.pow(R1,3)));
+            }
+            else if (state.sub === 'puntual_casc') {
+                if(r<R1) E = k*Q/(r*r);
+                else if(r>R2) E = k*Q/(r*r);
+                else E = 0; // Dentro del conductor
+            }
+            else if (state.sub === 'maciza_casc') {
+                if(r<R1) E = state.mat==='conductor' ? 0 : k*Q*r/Math.pow(R1,3);
+                else if(r<R2) E = k*Q/(r*r);
+                else E = 2*k*Q/(r*r); // Q maciza + Q cascaron
+            }
+        } 
+        else if (state.cat === 'cilindro') {
+            const lam = Q; // Reusamos Q como lambda
+            if(r===0) return 0;
+            if (state.sub === 'hilo') E = 2*k*lam/r;
+            else if (state.sub === 'macizo') {
+                if(state.mat==='conductor') E = r<R1 ? 0 : 2*k*lam/r;
+                else E = r<R1 ? 2*k*lam*r/Math.pow(R1,2) : 2*k*lam/r;
+            }
+            else if (state.sub === 'casc_delgado') E = r<R1 ? 0 : 2*k*lam/r;
+            else if (state.sub === 'casc_grueso') {
+                if(r<R1) E=0;
+                else if(r>R2) E = 2*k*lam/r;
+                else E = state.mat==='conductor' ? 0 : 2*k*lam*(r*r-R1*R1)/(r*(R2*R2-R1*R1));
+            }
+            else if (state.sub === 'hilo_casc') {
+                if(r<R1) E = 2*k*lam/r;
+                else if(r>R2) E = 2*k*lam/r;
+                else E = 0;
+            }
+        }
+        else if (state.cat === 'plano') {
+            const sig = Q; // Reusamos como sigma
+            if (state.sub === 'un_plano') E = sig/2; // Constante
+            else if (state.sub === 'dos_planos') {
+                // Placas en -1 y 1. r acts as X coordinate.
+                let x = Math.abs(r);
+                E = x < 1.0 ? sig : 0; // Dentro capacitor E=sig, fuera 0
+            }
+        }
+        return isNaN(E) || E === Infinity ? 0 : E;
+    }
+
+    function updateMathTheory() {
+        const div = document.getElementById('math-content');
+        const r = state.r; const R1 = state.R1; const R2 = state.R2;
+        let html = '';
+        let region = '';
+
+        // Helper para inyectar un paso visual idéntico al PowerPoint
+        const step = (title, eq, desc) => `
+            <div class="math-step">
+                <h4><i class="fa-solid fa-angle-right"></i> ${title}</h4>
+                <p>${desc}</p>
+                ${eq ? `<div class="katex-display" style="margin-top:8px;">$$${eq}$$</div>` : ''}
+            </div>
+        `;
+
+        let pptSteps = "";
+
+        if (state.cat === 'esfera') {
+            pptSteps += step('Paso 1: Ley de Gauss General', '\\oint \\vec{E} \\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}', 'Se plantea la integral de superficie cerrada sobre la esfera de radio r.');
+            pptSteps += step('Paso 2: Expansión del Producto Punto', '\\oint E \\, dS \\cos(0^\\circ) = \\frac{q_{enc}}{\\varepsilon_0}', 'Por la simetría esférica, las líneas de $\\vec{E}$ cruzan de manera perfectamente perpendicular a la frontera, siendo colineales con el vector área $d\\vec{S}$.');
+            pptSteps += step('Paso 3: Reducción Vectorial', 'E \\oint dS = \\frac{q_{enc}}{\\varepsilon_0}', 'La magnitud del Campo Eléctrico $E$ es un escalar constante en cualquier punto evaluado de la cáscara esférica, permitiendo extraerlo de la integral.');
+            pptSteps += step('Paso 4: Integral de Área ($4\\pi r^2$)', 'E (4\\pi r^2) = \\frac{q_{enc}}{\\varepsilon_0}', 'La suma de todos los diferenciales de área da lugar a la superficie geométrica de la esfera.');
+
+            if (state.sub === 'puntual_casc') {
+                html += `<div class="tip-box"><h4><i class="fa-solid fa-bolt"></i> Fenómeno de Inducción</h4><p>La carga puntual $+q$ en el centro obliga a las cargas libres del metal a desplazarse, induciendo $-q$ en la cara interna.</p></div>`;
+                if(r < R1) {
+                    region = `Región 1: Hueco Interior ($r < R_{int}$)`;
+                    pptSteps += step('Paso 5: Carga Encerada', 'q_{enc} = +q', 'Solo se encierra la carga central puntual.');
+                    pptSteps += step('Paso 6: Despeje Final', 'E = \\frac{1}{4\\pi\\varepsilon_0}\\frac{q}{r^2} = k_e \\frac{q}{r^2}', 'El cascarón exterior grueso no genera campo hacia su interior.');
+                } else if (r <= R2) {
+                    region = `Región 2: Volumen Conductor ($R_{int} < r < R_{ext}$)`;
+                    pptSteps += step('Paso 5: Equilibrio Metálico', 'q_{enc} = +q_{central} + q_{inducida} = 0', 'En el interior de un conductor, el flujo y campo deben ser cero. Por ende, $q_{inducida} = -q$.');
+                    pptSteps += step('Paso 6: Despeje Final', 'E = 0 \\text{ N/C}', 'Condición inquebrantable de equilibrio electrostático.');
+                } else {
+                    region = `Región 3: Exterior Libre ($r > R_{ext}$)`;
+                    pptSteps += step('Paso 5: Carga Neta Global', 'q_{enc} = +q_{central}', 'Las cargas inducidas en el cascarón se anulan netamente al sumar el sistema.');
+                    pptSteps += step('Paso 6: Comportamiento Puntual', 'E = k_e \\frac{q}{r^2}', 'Toda la compleja distribución se comporta idéntico a una carga en el centro.');
+                }
+            } 
+            else if (state.sub === 'casc_grueso') {
+                if(r < R1) {
+                    region = `Cavidad Central ($r < R_1$)`;
+                    pptSteps += step('Paso 5: Carga Nula', 'q_{enc} = 0 \\implies E = 0', 'No existe materia ni carga fuente encerrada.');
+                } else if (r <= R2) {
+                    region = `Interior del Material Anular ($R_1 < r < R_2$)`;
+                    if(state.mat === 'conductor') {
+                        pptSteps += step('Paso 5: Repulsión en Conductores', 'q_{enc} = 0 \\implies E = 0', 'Toda carga inyectada fue forzada mecánicamente hacia la costra exterior $R_2$.');
+                    } else {
+                        pptSteps += step('Paso 5: Distribución Dieléctrica Volumétrica', '\\rho = \\frac{Q}{\\frac{4}{3}\\pi(R_2^3 - R_1^3)}', 'La carga habita tridimensionalmente todo el espacio sólido.');
+                        pptSteps += step('Paso 6: Ecuación no lineal', 'E = \\frac{k_e Q (r^3 - R_1^3)}{r^2 (R_2^3 - R_1^3)}', 'Dependencia compleja basada en la fracción de masa intersectada.');
+                    }
+                } else {
+                    region = `Abierto Exterior ($r > R_2$)`;
+                    pptSteps += step('Paso 5: Comportamiento Puntual (Teorema Cascarón)', 'q_{enc} = Q \\implies E = k_e \\frac{Q}{r^2}', 'Todo volumen radial simétrico emite flujo externamente como un punto.');
+                }
+            }
+            else { 
+                if(r < R1) {
+                    region = `Zona Interna ($r < R$)`;
+                    if(state.mat==='conductor' || state.sub==='casc_delgado') {
+                        pptSteps += step('Paso 5: Jaula de Faraday', 'q_{enc} = 0 \\implies E = 0', 'Toda la carga $Q$ permanece en la piel superficial. El núcleo está blindado.');
+                    } else { 
+                        pptSteps += step('Paso 5: Integración Aislante', 'q_{enc} = \\rho V_{gauss} = Q \\left(\\frac{r^3}{R^3}\\right)', 'A medida que crecemos r, engullimos más masa cargada al cubo ($r^3$).');
+                        pptSteps += step('Paso 6: Ecuación Lineal', 'E = \\frac{1}{4\\pi\\varepsilon_0} \\frac{Q r}{R^3} = k_e \\frac{Q r}{R^3}', 'El término $r^2$ del área se cancela parcialmente con el $r^3$ del volumen, resultando un crecimiento $\\propto r$.');
+                    }
+                } else {
+                    region = `Espacio Exterior ($r > R$)`;
+                    pptSteps += step('Paso 5: Límite Finito', 'q_{enc} = Q', 'A partir de este punto, expandir más la superficie no encuentra nueva carga.');
+                    pptSteps += step('Paso 6: Ley de Inversa', 'E = \\frac{1}{4\\pi\\varepsilon_0} \\frac{Q}{r^2} = k_e \\frac{Q}{r^2}', 'Las líneas de campo se dispersan perdiendo densidad superficialmente.');
+                }
+            }
+        } 
+        else if (state.cat === 'cilindro') {
+            pptSteps += step('Paso 1: Planteamiento Tubular', '\\oint \\vec{E} \\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}', 'Proyectamos un cilindro gaussiano imaginario concéntrico, de radio de prueba r y longitud infinita segmentada L.');
+            pptSteps += step('Paso 2: Subdivisión Integral', '\\int_{T_{sup}} \\vec{E}\\cdot d\\vec{S} + \\int_{T_{inf}} \\vec{E}\\cdot d\\vec{S} + \\int_{Manto} \\vec{E}\\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}', 'El cilindro completo se fracciona en Tapas transversales y Manto enrollado.');
+            pptSteps += step('Paso 3: Evaluación Geométrica', '0 + 0 + \\int_{Manto} E \\, dS \\cos(0^\\circ) = \\frac{q_{enc}}{\\varepsilon_0}', 'Las líneas de campo jamás atraviesan las tapas top/bottom ($\\theta = 90^\\circ$). Toda emisión cruza el Manto en paralelo.');
+            pptSteps += step('Paso 4: Superficie Lateral ($2\\pi r L$)', 'E (2\\pi r L) = \\frac{q_{enc}}{\\varepsilon_0}', 'Desenrollar el cilindro revela un rectángulo de base $2\\pi r$ y altura L.');
+
+            if(r < R1 && state.mat === 'conductor' && state.sub !== 'hilo') {
+                region = "Zona de Blindaje del Cilindro Metal";
+                pptSteps += step('Paso 5: Equilibrio Cilíndrico', 'q_{enc} = 0 \\implies E = 0', 'Sin densidad volumétrica interna.');
+            } else {
+                region = "Campo Activo (Distribución Lineal)";
+                pptSteps += step('Paso 5: Definición Lambda', 'q_{enc} = \\lambda L', 'En vez de contar culombios exactos, multiplicamos la densidad infinita $\\lambda$ por la fracción L analizada.');
+                pptSteps += step('Paso 6: Independencia Z', 'E(2\\pi r L) = \\frac{\\lambda L}{\\varepsilon_0} \\implies E = \\frac{\\lambda}{2\\pi \\varepsilon_0 r}', 'La longitud L ficticia desaparece matemáticamente. El decrecimiento pasa a ser $1/r$.');
+            }
+        }
+        else if (state.cat === 'plano') {
+            pptSteps += step('Paso 1: Construcción de Píldora Gaussiana', '\\oint \\vec{E} \\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}', 'Creamos un prisma virtual que taladra el plano perpendicularmente.');
+            pptSteps += step('Paso 2: Subdivisión de Caras', '\\int_{T_1} \\vec{E}\\cdot d\\vec{S} + \\int_{T_2} \\vec{E}\\cdot d\\vec{S} + \\int_{Pared} \\vec{E}\\cdot d\\vec{S} = \\frac{q_{enc}}{\\varepsilon_0}', 'Dos tapas expuestas de área S, interconectadas por un marco perimetral.');
+            pptSteps += step('Paso 3: Ceros de Producto Punto', '\\int_{T_1} E \\, dS + \\int_{T_2} E \\, dS + 0 = \\frac{q_{enc}}{\\varepsilon_0}', 'Las líneas viajan en bloque recto. Ninguna impacta las paredes paralelas del prisma. Perforan ambas tapas.');
+            pptSteps += step('Paso 4: Dualidad de Superficie', 'E(S) + E(S) = 2 E S = \\frac{q_{enc}}{\\varepsilon_0}', 'Recolección gemela idéntica en izquierda/derecha.');
+
+            if(state.sub === 'dos_planos') {
+                html += `<div class="tip-box"><h4><i class="fa-solid fa-layer-group"></i> Superposición Vectorial</h4><p>El arreglo forma un condensador de placas. Dos planos inyectando magnitudes $E=\\sigma/2\\varepsilon_0$.</p></div>`;
+                if(Math.abs(r) < 1.0) {
+                    region = `Abismo Inter-Placas (Adentro)`;
+                    pptSteps += step('Paso 5: Adición de Líneas', 'E_{neto} = \\frac{\\sigma}{2\\varepsilon_0} + \\frac{\\sigma}{2\\varepsilon_0} = \\frac{\\sigma}{\\varepsilon_0}', 'Las líneas repelidas del polo positivo viajan apuntando en perfecta sincronía a donde jalan las placas negativas.');
+                } else {
+                    region = `Vacio Externo (Fuera del Capacitor)`;
+                    pptSteps += step('Paso 5: Bloqueo Destructivo', 'E_{neto} = \\frac{\\sigma}{2\\varepsilon_0} - \\frac{\\sigma}{2\\varepsilon_0} = 0', 'El empuje del plano cercano se iguala a la succión del plano lejano, eliminando el campo emitido al vacío exterior.');
+                }
+            } else {
+                region = `Aura del Plano Sencillo`;
+                pptSteps += step('Paso 5: Estampado Sigma', 'q_{enc} = \\sigma S', 'El prisma recorta imaginariamente un trozo de lámina de superficie exacta $S$.');
+                pptSteps += step('Paso 6: Conclusión', '2 E S = \\frac{\\sigma S}{\\varepsilon_0} \\implies E = \\frac{\\sigma}{2\\varepsilon_0}', 'El área transversal de prueba se anula en ambos bandos. El Campo no tiene variable radial, permanece eterno en magnitud uniforme.');
+            }
+        }
+
+        html += pptSteps;
+
+        // Actualizar Label UI
+        document.getElementById('region-label').innerText = region || 'Análisis Activo';
+        div.innerHTML = html;
+        renderMathInElement(div, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+    }
+
+    const ctx = document.getElementById('fieldChart').getContext('2d');
+    let chart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                { label: 'E(r) Teórico', data: [], showLine: true, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+                { label: 'Posición Actual P', data: [], backgroundColor: '#10b981', pointRadius: 6, borderColor: '#fff', borderWidth: 2 }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: { duration: 0 },
+            scales: {
+                x: { title: { display: true, text: state.cat==='plano'?'Posición x':'Radio r', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                y: { title: { display: true, text: 'Campo E', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' }, min: 0 }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    function updateChart() {
+        const curve = [];
+        let maxR = state.cat === 'plano' ? 3 : 4;
+        let minR = state.cat === 'plano' ? -3 : 0;
+        
+        for(let x = minR; x <= maxR; x += 0.05) {
+            curve.push({x: x, y: getExactField(x)});
+        }
+        
+        const curE = getExactField(state.cat === 'plano' ? (state.r * (state.r > 0 ? 1 : -1)) : state.r); // Simplificación para plano
+        let displayX = state.cat === 'plano' ? state.r : state.r; // r is used as magnitude here
+        
+        chart.data.datasets[0].data = curve;
+        chart.data.datasets[1].data = [{x: displayX, y: curE}];
+        
+        chart.options.scales.x.min = minR;
+        chart.options.scales.x.max = maxR;
+        chart.options.scales.y.max = state.cat === 'plano' ? 15 : 40; // Autoescala fija para evitar saltos
+        chart.update();
+    }
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    container.addEventListener('mousemove', (e) => {
+        if (!gaussMeshRef) return;
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(gaussMeshRef);
+
+        const hud = document.getElementById('ds-hud');
+        if (intersects.length > 0) {
+            const hit = intersects[0];
+            let n = hit.face.normal.clone();
+            const nMatrix = new THREE.Matrix3().getNormalMatrix(gaussMeshRef.matrixWorld);
+            n.applyMatrix3(nMatrix).normalize();
+
+            // Corrección matemática pura para evitar fluctuaciones por los polígonos de la malla
+            if (state.cat === 'esfera') {
+                n.copy(hit.point).normalize();
+            } else if (state.cat === 'cilindro') {
+                if (Math.abs(n.y) > 0.5) { // Es tapa
+                    n.set(0, Math.sign(n.y), 0);
+                } else { // Es manto
+                    n.set(hit.point.x, 0, hit.point.z).normalize();
+                }
+            } else if (state.cat === 'plano') {
+                // El plano usa un cilindro rotado. Ajustamos matemáticamente para precisión perfecta
+                if (Math.abs(n.x) > 0.5) { // Tapas frontales
+                    n.set(Math.sign(n.x), 0, 0);
+                } else { // Manto lateral
+                    n.set(0, hit.point.y, hit.point.z).normalize();
+                }
+            }
+
+            // Orientar dS siempre hacia afuera
+            if (state.cat === 'esfera' || state.cat === 'cilindro') {
+                if(n.dot(hit.point.clone().normalize()) < 0) n.negate();
+            } else if (state.cat === 'plano') {
+                if(hit.point.x * n.x < 0) n.negate(); // En X
+            }
+
+            // Mover y Orientar el Vector dS
+            dsVector.position.copy(hit.point);
+            dsVector.setDirection(n);
+            dsVector.visible = true;
+
+            // Mover y Orientar el Parche de Área dS
+            dsAreaMesh.position.copy(hit.point);
+            // Evitar problemas de gimbal lock o volteos bruscos usando quaternions con normal up
+            dsAreaMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), n);
+            // Alejarlo infinitesimalmente de la malla para evitar Z-Fighting
+            dsAreaMesh.position.add(n.clone().multiplyScalar(0.01)); 
+            dsAreaMesh.visible = true;
+
+            // Calcular E teórico direccional
+            let Edir = new THREE.Vector3();
+            if(state.cat === 'esfera') Edir.copy(hit.point).normalize();
+            else if(state.cat === 'cilindro') Edir.set(hit.point.x, 0, hit.point.z).normalize();
+            else if(state.cat === 'plano') Edir.set(hit.point.x > 0 ? 1 : -1, 0, 0);
+
+            let angleDeg = THREE.MathUtils.radToDeg(n.angleTo(Edir));
+            if(angleDeg < 0.1) angleDeg = 0; if(angleDeg > 89.9 && angleDeg < 90.1) angleDeg = 90;
+            if(angleDeg > 179.9) angleDeg = 180;
+
+            hud.style.display = 'block';
+            document.getElementById('hud-angle').innerText = angleDeg.toFixed(0) + '°';
+            const msgEl = document.getElementById('hud-msg');
+            
+            if(angleDeg === 0 || angleDeg === 180) { msgEl.innerText = "Paralelo: Flujo Máximo"; msgEl.style.color = "var(--accent-green)"; }
+            else if(angleDeg === 90) { msgEl.innerText = "Perpendicular: Flujo Cero"; msgEl.style.color = "var(--accent-red)"; }
+            else { msgEl.innerText = "Flujo Parcial"; msgEl.style.color = "var(--accent-yellow)"; }
+
+        } else {
+            dsVector.visible = false;
+            dsAreaMesh.visible = false;
+            hud.style.display = 'none';
+        }
+    });
+
+    
+    function populateSubSelect() {
+        const sel = document.getElementById('sub-select');
+        sel.innerHTML = '';
+        subCasesMap[state.cat].forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id; opt.innerText = c.name;
+            sel.appendChild(opt);
+        });
+        state.sub = subCasesMap[state.cat][0].id;
+    }
+
+    document.getElementById('cat-select').addEventListener('change', (e) => {
+        state.cat = e.target.value;
+        populateSubSelect();
+        
+        // Ajustar Slider
+        const s = document.getElementById('gauss-radius');
+        if(state.cat === 'plano') { s.min = -3; s.max = 3; state.r = 1.5; s.value = 1.5; }
+        else { s.min = 0.1; s.max = 4.0; state.r = 2.5; s.value = 2.5; }
+        
+        document.getElementById('mat-group').style.display = (state.cat==='plano') ? 'none' : 'block';
+        
+        rebuildAll();
+    });
+
+    document.getElementById('sub-select').addEventListener('change', (e) => {
+        state.sub = e.target.value;
+        rebuildAll();
+    });
+
+    document.querySelectorAll('#mat-selector .radio-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('#mat-selector .radio-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            state.mat = e.target.dataset.mat;
+            rebuildAll();
+        });
+    });
+
+    document.getElementById('gauss-radius').addEventListener('input', (e) => {
+        state.r = parseFloat(e.target.value);
+        document.getElementById('gauss-val').innerText = Math.abs(state.r).toFixed(2);
+        updateGaussSize();
+        updateChart();
+        updateMathTheory();
+    });
+
+    document.getElementById('btn-cut').addEventListener('click', (e) => {
+        state.cut3D = !state.cut3D;
+        const btn = e.currentTarget;
+        if(state.cut3D) { btn.classList.add('active'); btn.innerHTML = '<i class="fa-solid fa-eye"></i> Restaurar Geometría'; }
+        else { btn.classList.remove('active'); btn.innerHTML = '<i class="fa-solid fa-scissors"></i> Corte Transversal 3D'; }
+        buildScene(); // Rebuild para aplicar clip planes a los materiales nuevos
+    });
+
+    document.getElementById('btn-vectors').addEventListener('click', (e) => {
+        showEVectors = !showEVectors;
+        const btn = e.currentTarget;
+        if(showEVectors) {
+            btn.classList.add('active'); 
+            btn.innerHTML = '<i class="fa-solid fa-arrow-up-right-dots"></i> Ocultar Vectores E'; 
+        } else {
+            btn.classList.remove('active'); 
+            btn.innerHTML = '<i class="fa-solid fa-arrow-up-right-dots"></i> Mostrar Vectores E'; 
+        }
+        buildScene();
+    });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    function rebuildAll() {
+        document.getElementById('gauss-val').innerText = Math.abs(state.r).toFixed(2);
+        buildScene();
+        updateChart();
+        updateMathTheory();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    // Inicio
+    populateSubSelect();
+    rebuildAll();
+    
+    // Renderizar ecuaciones LaTeX en el HUD (solo se hace una vez porque su texto base es estático)
+    renderMathInElement(document.getElementById('ds-hud'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+    
+    animate();
+
+</script>
+</body>
+</html>
