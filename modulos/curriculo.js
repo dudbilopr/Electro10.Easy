@@ -1,4 +1,4 @@
-// modulos/curriculo.js — Índice completo del curso (12 módulos)
+// modulos/curriculo.js — Índice completo del curso (13 módulos + presaberes)
 import { modulo0_presaberes } from './modulo0_presaberes.js';
 import { modulo1 }  from './modulo1.js';
 import { modulo2 }  from './modulo2.js';
@@ -12,6 +12,8 @@ import { modulo9 }  from './modulo9.js';
 import { modulo10 } from './modulo10.js';
 import { modulo11 } from './modulo11.js';
 import { modulo12 } from './modulo12.js';
+import { modulo13 } from './modulo13.js';
+
 export const curriculoData = {
     "titulo": "Introducción al Electromagnetismo",
     "subtitulo": "Curso Universitario — CDAT",
@@ -19,6 +21,7 @@ export const curriculoData = {
         modulo0_presaberes,
         modulo1, modulo2, modulo3, modulo4,
         modulo5, modulo6, modulo7, modulo8,
-        modulo9, modulo10, modulo11, modulo12
+        modulo9, modulo10, modulo11, modulo12,
+        modulo13
     ]
 };

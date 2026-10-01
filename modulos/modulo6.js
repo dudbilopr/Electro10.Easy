@@ -14,41 +14,50 @@ export const modulo6 = {
         {
             "id": "m6-l2",
             "tipo": "multipresentacion",
-            "recurso": "./player.html?clase=6|./player.html?clase=6",
+            "recurso": "./player.html?clase=5|./player.html?clase=5",
             "titulo": "2. Diapositivas de Apoyo (2 Partes)",
             "descripcion": "Material visual utilizado en la clase magistral. Incluye demostraciones matemáticas de arreglos en serie y paralelo."
         },
         {
+            "id": "m6-j1",
+            "tipo": "juego",
+            "recurso": "juegos/Juego_5.html",
+            "titulo": "3. Physics Quest — Capacitancia",
+            "descripcion": "Diseña el capacitor óptimo para almacenar energía bajo restricciones de campo dieléctrico. ¡5 retos de física!",
+            "xp": 25,
+            "logro": { "id": "logro_m6", "nombre": "Ingeniero de Capacitores", "icono": "🔋" }
+        },
+        {
             "id": "m6-g1",
             "tipo": "grupo",
-            "titulo": "3. Laboratorio Virtual (Simuladores)",
+            "titulo": "4. Laboratorio Virtual (Simuladores)",
             "sublecciones": [
                 {
                     "id": "m6-l3",
                     "tipo": "simulador",
                     "recurso": "https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_es.html",
-                    "titulo": "3.1 Laboratorio de Capacitores (PhET)",
+                    "titulo": "4.1 Laboratorio de Capacitores (PhET)",
                     "descripcion": "Simulador interactivo de la Universidad de Colorado para visualizar el campo eléctrico, la carga en las placas y la energía almacenada."
                 },
                 {
                     "id": "m6-l4",
                     "tipo": "simulador",
                     "recurso": "https://www.falstad.com/circuit/e-cap.html",
-                    "titulo": "3.2 Falstad: Carga y Descarga (RC)",
+                    "titulo": "4.2 Falstad: Carga y Descarga (RC)",
                     "descripcion": "Osciloscopio en tiempo real para analizar la curva exponencial de carga y descarga en circuitos RC."
                 },
                 {
                     "id": "m6-l5",
                     "tipo": "simulador",
                     "recurso": "https://www.geogebra.org/m/jztkf22s",
-                    "titulo": "3.3 GeoGebra: Dieléctricos",
+                    "titulo": "4.3 GeoGebra: Dieléctricos",
                     "descripcion": "Modelo matemático interactivo que muestra cómo varía la capacitancia al introducir diferentes materiales dieléctricos."
                 },
                 {
                     "id": "m6-l6",
                     "tipo": "simulador",
                     "recurso": "simuladores/Capacitance.html",
-                    "titulo": "3.4 Calculadora de Arreglos (Nativa)",
+                    "titulo": "4.4 Calculadora de Arreglos (Nativa)",
                     "descripcion": "Módulo SaaS nativo de la plataforma para calcular capacitancia equivalente en topologías complejas."
                 }
             ]
@@ -57,14 +66,14 @@ export const modulo6 = {
             "id": "m6-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_6_Capacitancia.html",
-            "titulo": "4. Taller Práctico No. 6",
+            "titulo": "5. Taller Práctico No. 6 — Capacitancia",
             "descripcion": "Guía de ejercicios enfocada en el cálculo de cargas, voltajes en arreglos mixtos y energía potencial eléctrica."
         },
         {
             "id": "m6-q1",
             "tipo": "quiz",
             "recurso": "Examen/Cuestionario_6_Capacitancia.html",
-            "titulo": "5. Evaluación del Módulo 6",
+            "titulo": "6. Evaluación del Módulo 6",
             "descripcion": "Cuestionario de validación de conocimientos teóricos y prácticos sobre condensadores."
         },
         {

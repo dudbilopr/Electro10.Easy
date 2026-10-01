@@ -322,4 +322,30 @@ async function init() {
     }
 }
 
+// ============================================================
+// Escucha de Telemetría desde los Simuladores (iframes)
+// ============================================================
+window.addEventListener('message', async (e) => {
+    if (e.data && e.data.type === 'SIM_TELEMETRY') {
+        if (!window.currentUserUid) return; // Solo rastrear si hay usuario logueado
+        try {
+            const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+            const timestamp = new Date().toISOString();
+            // Evitar colisiones si ocurren múltiples eventos en un milisegundo usando Math.random()
+            const docId = `telemetry_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+            const telemetryRef = doc(window.firebaseDb, 'artifacts', window.APP_ID, 'users', window.currentUserUid, 'simulator_telemetry', docId);
+            
+            await setDoc(telemetryRef, {
+                action: e.data.action,
+                details: e.data.details,
+                simulatorPath: e.data.simulatorPath,
+                currentLeccionId: window._currentLeccionId || 'desconocida',
+                timestamp: timestamp
+            });
+        } catch (error) {
+            console.warn('Error guardando telemetría del simulador:', error);
+        }
+    }
+});
+
 window.addEventListener('DOMContentLoaded', init);

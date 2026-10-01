@@ -219,105 +219,153 @@
         const questions = [
             { 
                 type: 'mcq', 
-                text: "Dos partículas cargadas puntuales ejercen una fuerza de atracción de $F = 100 \\text{ N}$ entre sí cuando están separadas por una distancia $r$. Si la distancia entre ellas se incrementa a $2r$, ¿cuál será la nueva fuerza de atracción?", 
-                options: ["$200 \\text{ N}$", "$50 \\text{ N}$", "$25 \\text{ N}$", "$12.5 \\text{ N}$"], 
-                answer: 2, 
-                tip: "La Ley de Coulomb establece que la fuerza es inversamente proporcional al cuadrado de la distancia ($1/r^2$). Si la distancia aumenta por un factor de 2, la fuerza disminuye por un factor de $2^2 = 4$." 
-            },
-            { 
-                type: 'mcq', 
-                text: "Dos esferas conductoras idénticas, inicialmente con cargas de $+6 \\; \\mu\\text{C}$ y $-2 \\; \\mu\\text{C}$, se ponen en contacto físico y luego se separan. ¿Cuál es la carga neta de cada esfera después de separarse?", 
-                options: ["$+4 \\; \\mu\\text{C}$", "$+2 \\; \\mu\\text{C}$", "$0 \\; \\mu\\text{C}$", "$+8 \\; \\mu\\text{C}$"], 
+                text: "En un experimento de física moderna, un electrón y un protón se liberan simultáneamente desde el reposo en un campo eléctrico uniforme. Considerando los postulados del electromagnetismo clásico (Sears-Zemansky), ¿qué afirmación describe correctamente la cinemática de ambas partículas tras la liberación?", 
+                options: [
+                    "Experimentan fuerzas de igual magnitud pero el protón se acelera mucho más rápido.", 
+                    "Experimentan fuerzas de igual magnitud pero el electrón adquiere una aceleración mucho mayor debido a su menor masa.", 
+                    "El protón experimenta una fuerza mayor por tener una masa en reposo significativamente mayor.", 
+                    "Ambos adquieren la misma aceleración vectorial ya que están en el mismo campo eléctrico."
+                ], 
                 answer: 1, 
-                tip: "Principio de conservación de la carga y simetría. Suma las cargas totales y divídelas a partes iguales entre las dos esferas idénticas." 
+                tip: "La fuerza eléctrica es $F = qE$. Como tienen igual magnitud de carga ($e$), experimentan la misma magnitud de fuerza (en direcciones opuestas). Por la Segunda Ley de Newton ($a = F/m$), la aceleración es inversamente proporcional a la masa. El electrón, siendo $\\sim 1836$ veces más ligero, se acelera drásticamente más." 
             },
             { 
                 type: 'mcq', 
-                text: "La esfera A tiene una carga de $+10 \\; \\mu\\text{C}$ y la esfera B tiene una carga de $+1 \\; \\mu\\text{C}$. Se repelen entre sí con fuerzas electrostáticas. ¿Cuál es la relación entre la magnitud de la fuerza que A ejerce sobre B ($F_{AB}$) y la fuerza que B ejerce sobre A ($F_{BA}$)?", 
-                options: ["$F_{AB} = 10 F_{BA}$", "$F_{BA} = 10 F_{AB}$", "$F_{AB} = F_{BA}$", "$F_{AB} = 100 F_{BA}$"], 
+                text: "Considera dos esferas conductoras idénticas aisladas. La esfera A tiene una carga neta $+Q$ y la esfera B es neutra ($0$). Se conectan mediante un alambre conductor extremadamente delgado. De acuerdo con el principio de conservación de la carga y el equilibrio electrostático, ¿qué fracción de la energía potencial electrostática inicial del sistema se disipa como calor (efecto Joule) o radiación durante el proceso de transferencia?", 
+                options: [
+                    "0% (La energía se conserva completamente en sistemas aislados).", 
+                    "25%", 
+                    "50%", 
+                    "100%"
+                ], 
                 answer: 2, 
-                tip: "Recuerda la Tercera Ley de Newton (Acción y Reacción). La magnitud de las fuerzas de interacción entre dos objetos siempre es idéntica, independientemente de sus cargas." 
+                tip: "Tras el contacto, cada esfera adquiere carga $+Q/2$. La energía inicial es proporcional a $Q^2$. La energía final es proporcional a $(Q/2)^2 + (Q/2)^2 = Q^2/4 + Q^2/4 = Q^2/2$. Por ende, exactamente la mitad de la energía inicial ($50\\%$) se irradia o disipa durante la redistribución de los portadores de carga." 
             },
             { 
                 type: 'mcq', 
-                text: "Debido a la cuantización de la carga en el universo, ¿cuál de las siguientes cantidades de carga eléctrica neta **NO** puede existir en una partícula o gota de aceite estable aisada?", 
-                options: ["$3.2 \\times 10^{-19} \\text{ C}$", "$4.8 \\times 10^{-19} \\text{ C}$", "$2.4 \\times 10^{-19} \\text{ C}$", "$1.6 \\times 10^{-18} \\text{ C}$"], 
-                answer: 2, 
-                tip: "Toda carga debe ser un múltiplo entero de la carga elemental $e \approx 1.6 \times 10^{-19} \\text{ C}$. Divide cada opción entre $e$; si el resultado no es un número entero, esa carga es imposible." 
-            },
-            { 
-                type: 'mcq', 
-                text: "Se tienen dos cargas puntuales $+q$ y $+4q$ fijas, separadas por una distancia $L$. ¿En qué posición, medida desde la carga $+q$, se debe colocar una tercera carga de prueba para que la fuerza electrostática neta sobre ella sea cero?", 
-                options: ["A una distancia $L/2$", "A una distancia $L/3$", "A una distancia $L/4$", "A una distancia $2L/3$"], 
+                text: "Una carga puntual $+q$ está situada en el centro de un cascarón esférico conductor grueso que está inicialmente descargado. Si se analiza el flujo eléctrico a través de superficies gaussianas esféricas concéntricas en tres regiones distintas (dentro de la cavidad hueca, dentro del material conductor sólido, y fuera del cascarón), el flujo neto $\\Phi_E$ en estas tres regiones respectivamente es:", 
+                options: [
+                    "$\\frac{q}{\\epsilon_0}$, $\\frac{q}{\\epsilon_0}$, y $\\frac{q}{\\epsilon_0}$", 
+                    "$\\frac{q}{\\epsilon_0}$, $0$, y $\\frac{q}{\\epsilon_0}$", 
+                    "$0$, $0$, y $\\frac{q}{\\epsilon_0}$", 
+                    "$\\frac{q}{\\epsilon_0}$, $0$, y $0$"
+                ], 
                 answer: 1, 
-                tip: "Para estar en equilibrio, las fuerzas de repulsión deben igualarse: $k\\frac{q \\cdot Q}{x^2} = k\\frac{4q \\cdot Q}{(L-x)^2}$. Saca la raíz cuadrada de ambos lados para resolver." 
+                tip: "Aplicando la Ley de Gauss: en la cavidad interior, la carga encerrada es $q$. En el conductor sólido, el campo eléctrico es estrictamente cero en condiciones electrostáticas, por lo que el flujo es cero (las cargas inducidas cancelan a $q$). Fuera del cascarón, la carga neta encerrada vuelve a ser $q$ (ya que el cascarón es neutro), retornando el flujo a $q/\\epsilon_0$." 
+            },
+            { 
+                type: 'mcq', 
+                text: "Basado en el histórico experimento de la gota de aceite de Millikan para determinar la cuantización de la carga, se suspende una gota esférica de masa $m$ en un campo eléctrico uniforme dirigido hacia abajo. ¿Cuál es el requisito físico estricto, en términos de carga elemental $e$ y leyes de Newton, para que esta gota permanezca estacionaria (en equilibrio electrostático y gravitacional)?", 
+                options: [
+                    "La gota debe tener una carga neta nula ($q=0$) para no verse afectada por el campo eléctrico.", 
+                    "La gota debe estar cargada positivamente con un valor continuo que satisfaga $qE = mg$.", 
+                    "La gota debe portar un déficit de electrones (carga positiva) tal que $n \\cdot e \\cdot E = mg$, donde $n$ es cualquier número real.", 
+                    "La gota debe portar un exceso de electrones (carga negativa) cuantizado $q = -n \\cdot e$ (con $n \\in \\mathbb{Z}^+$) tal que la magnitud de la fuerza ascendente $|q|E$ iguale exactamente a $mg$."
+                ], 
+                answer: 3, 
+                tip: "Para contrarrestar la gravedad (fuerza hacia abajo), la fuerza eléctrica $F = qE$ debe ir hacia arriba. Puesto que el campo eléctrico va hacia abajo, la carga debe ser negativa (exceso de electrones). Además, Millikan demostró rigurosamente que $q$ no puede tomar valores arbitrarios (continuos), sino que debe ser un múltiplo entero estricto de la carga elemental ($1.602 \\times 10^{-19}$ C)." 
+            },
+            { 
+                type: 'mcq', 
+                text: "Dos cargas puntuales libres, $+q$ y $+4q$, están fijas en una línea recta y separadas por una distancia $L$. Si se introduce una tercera carga de prueba $Q$ (de signo no especificado) con el objetivo de lograr un equilibrio electrostático simultáneo para **las tres** partículas, ¿cuál debe ser la magnitud, el signo y la posición (medida desde $+q$) de esta carga $Q$?", 
+                options: [
+                    "Debe ser negativa, magnitud $Q = -4q/9$, y estar situada a una distancia $L/3$.", 
+                    "Debe ser negativa, magnitud $Q = -q/2$, y estar situada a una distancia $L/2$.", 
+                    "Debe ser positiva, magnitud $Q = +4q/9$, y estar situada a una distancia $L/3$.", 
+                    "Debe ser positiva, magnitud $Q = +q/2$, y estar situada a una distancia $2L/3$."
+                ], 
+                answer: 0, 
+                tip: "Sears-Zemansky plantea esto como un problema de triple equilibrio. 1) Para que $Q$ esté en equilibrio, debe ubicarse a $L/3$ (las fuerzas repulsivas de $q$ y $4q$ se anulan). 2) Para que $+q$ y $+4q$ no salgan expulsadas por su propia repulsión, $Q$ debe ser estrictamente **negativa** para atraerlas hacia el centro. 3) Calculando el equilibrio sobre $+q$: $k(q)(4q)/L^2 = k(q)|Q|/(L/3)^2 \\Rightarrow 4q/L^2 = 9|Q|/L^2 \\Rightarrow |Q| = 4q/9$." 
             },
             { 
                 type: 'fill', 
-                text: "La constante de proporcionalidad de Coulomb, $k$, en el vacío tiene un valor aproximado de $9 \\times 10^n$ en unidades del SI. Escribe el valor del exponente $n$.", 
+                text: "En el SI, la ley de Coulomb en su forma vectorial define la permitividad del vacío $\\epsilon_0$. Su relación con la velocidad de la luz $c$ y la permeabilidad magnética $\\mu_0$ es $c = 1 / \\sqrt{\\epsilon_0 \\mu_0}$. Sabiendo que $k = 1/(4\\pi\\epsilon_0)$, escribe el exponente aproximado en base 10 (ej. '9') de la constante $k$.", 
                 answer: "9", 
-                tip: "Es un valor enorme que demuestra que la fuerza eléctrica es extremadamente potente a nivel microscópico. $k \\approx 9 \\times 10^9 \\text{ N}\\cdot\\text{m}^2/\\text{C}^2$." 
+                tip: "La constante $k$ deriva de las propiedades electromagnéticas del vacío. Numéricamente $k \\approx 8.987 \\times 10^9 \\text{ N}\\cdot\\text{m}^2/\\text{C}^2$, que solemos redondear a $9 \\times 10^9$ para cálculos." 
             },
             { 
                 type: 'mcq', 
-                text: "Cuatro cargas puntuales idénticas $+Q$ se encuentran fijas en las esquinas de un cuadrado de lado $a$. Si se coloca una carga de prueba $-q$ exactamente en el centro geométrico del cuadrado, la fuerza neta sobre esta será:", 
-                options: ["Dirigida hacia arriba.", "Proporcional a $1/a^2$.", "Exactamente cero.", "Infinita."], 
+                text: "Un dipolo eléctrico (formado por $+q$ y $-q$ separadas por una pequeña distancia $d$) se somete a un campo eléctrico externo uniforme $E$. Inicialmente, el momento dipolar $p$ es perpendicular a $E$. ¿Cuál de los siguientes es el resultado dinámico sobre el dipolo según las leyes del electromagnetismo?", 
+                options: [
+                    "Experimenta una fuerza neta y un momento de torsión nulo.", 
+                    "Experimenta una fuerza neta en la dirección del campo y se desplaza rectilíneamente.", 
+                    "Experimenta una fuerza neta nula, pero un momento de torsión máximo que tiende a alinear $p$ con $E$.", 
+                    "El dipolo se polariza aún más, separando sus cargas hasta el infinito."
+                ], 
                 answer: 2, 
-                tip: "Evalúa la simetría del problema (Principio de Superposición). Por cada carga atrayendo a $-q$ en una dirección, existe una carga idéntica en la esquina opuesta atrayéndola con la misma magnitud pero en dirección contraria." 
+                tip: "En un campo uniforme, la fuerza sobre $+q$ es $qE$ y sobre $-q$ es $-qE$, sumando cero fuerza traslacional neta. Sin embargo, al no estar alineadas con $E$, estas fuerzas crean un par (torque) $\\tau = p \\times E$. Al estar perpendiculares, $\\sin(90^\\circ)=1$, generando un torque máximo que lo hace rotar." 
             },
             { 
                 type: 'equation', 
-                text: "Escribe la expresión algebraica para la magnitud de la fuerza electrostática $F$ entre dos partículas con cargas $q_1$ y $q_2$ separadas por una distancia $r$. (Usa la constante de Coulomb como 'k'. Escribe algo como k*q1*q2/r^2)", 
-                answer: "k*q1*q2/r^2", 
-                tip: "Es la famosa Ley de Coulomb. Multiplica las cargas, divide por la distancia al cuadrado, y todo afectado por la constante." 
+                text: "Escribe la expresión vectorial de la fuerza electrostática $\\vec{F}$ que una partícula 1 (carga $q_1$) ejerce sobre una partícula 2 (carga $q_2$) separadas por una distancia $r$, usando el vector unitario $\\hat{r}$ que va de 1 a 2. Usa 'k' para la constante.", 
+                answer: "k*q1*q2/r^2*r^", 
+                tip: "La forma vectorial rigurosa es $\\vec{F} = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{r^2} \\hat{r}$. El vector unitario asegura que si las cargas tienen el mismo signo el producto es positivo (fuerza en la dirección de $\\hat{r}$, repulsión), y si difieren es negativo (atracción)." 
             },
             { 
                 type: 'mcq', 
-                text: "Se dispone de una barra cargada negativamente. Se acerca a una esfera metálica neutra aislada (sin tocarla), y mientras está cerca, la esfera se conecta momentáneamente a tierra mediante un cable. Finalmente, se retira la conexión a tierra y se aleja la barra. ¿Cómo queda cargada la esfera?", 
-                options: ["Negativamente.", "Positivamente.", "Vuelve a quedar neutra.", "Se polariza temporalmente."], 
+                text: "Se dispone de un cubo conductor sólido y eléctricamente neutro. Si se le acerca (sin tocarlo) una varilla cargada positivamente por la cara derecha, y en presencia de la varilla se conecta la cara izquierda del cubo a tierra, ¿qué le ocurre termodinámicamente a los electrones del cubo y a su carga neta tras desconectar la tierra?", 
+                options: [
+                    "Los electrones escapan a tierra; el cubo queda con carga neta positiva.", 
+                    "Electrones de tierra fluyen hacia el cubo atraídos por la varilla; al cortar la tierra, el cubo queda con carga neta negativa.", 
+                    "La tierra neutraliza la polarización interna, devolviendo el cubo a estado neutro permanente.", 
+                    "Los protones de la varilla ionizan el aire y saltan al cubo, cargándolo positivamente."
+                ], 
                 answer: 1, 
-                tip: "Este es el proceso de 'Carga por Inducción'. La barra repelió a los electrones libres del metal hacia la tierra. Al cortar la tierra, la esfera queda con déficit de electrones." 
+                tip: "Al acercar la varilla positiva, los electrones libres del cubo migran a la cara derecha, dejando la izquierda positiva. Al conectar la tierra, el sistema 'cubo+tierra' busca su estado de menor energía; los electrones suben desde tierra neutralizando la cara izquierda. Al cortar el cable, el cubo atrapó esos electrones extra, quedando con carga neta negativa (carga por inducción)." 
             },
             { 
                 type: 'mcq', 
-                text: "En un átomo de hidrógeno, la fuerza dominante que mantiene al electrón en órbita alrededor del protón es:", 
-                options: ["La fuerza de la Gravedad de Newton.", "La fuerza Magnética.", "La fuerza Electrostática de Coulomb.", "La fuerza Nuclear Fuerte."], 
+                text: "De acuerdo con el Principio de Superposición en electrostática, si tenemos $N$ cargas puntuales fuente interactuando simultáneamente con una carga de prueba $q_0$:", 
+                options: [
+                    "La fuerza neta es el producto escalar de las fuerzas individuales.", 
+                    "La fuerza eléctrica que una carga $q_i$ ejerce sobre $q_0$ se debilita por la presencia de las demás cargas pantalla.", 
+                    "La fuerza neta es la suma vectorial estricta de las fuerzas individuales como si cada pareja interactuara en el vacío sin ser afectada por las demás.", 
+                    "El principio solo aplica a distribuciones de carga continua, no a cargas discretas."
+                ], 
                 answer: 2, 
-                tip: "Si bien ambas partículas tienen masa y experimentan gravedad, la fuerza eléctrica entre ellas es aproximadamente $10^{39}$ veces más grande que su atracción gravitacional." 
+                tip: "El Principio de Superposición establece una linealidad estricta en el electromagnetismo clásico: la interacción de Coulomb entre cualquier par de cargas es absolutamente independiente de la presencia de otras cargas en su vecindad. Por tanto, la fuerza resultante es matemáticamente la suma vectorial de cada fuerza binaria." 
             },
             { 
                 type: 'mcq', 
-                text: "Al frotar una varilla de vidrio con un trozo de seda, el vidrio adquiere una carga neta positiva. A nivel atómico, esto significa que el vidrio:", 
-                options: ["Ganó protones de la seda.", "Creó carga positiva por la fricción.", "Cedió electrones a la seda.", "Polarizó sus propios átomos sin transferencia."], 
+                text: "Durante un proceso de triboelectrificación, una varilla de vidrio adquiere una carga de $+5 \\text{ nC}$ tras ser frotada vigorosamente con seda. Desde el punto de vista del modelo atómico de Bohr y la mecánica cuántica de sólidos, ¿qué describe con precisión la fenomenología subyacente de esta transferencia de carga?", 
+                options: [
+                    "El trabajo mecánico (fricción) arrancó protones de los núcleos de la seda, transfiriéndolos al vidrio.", 
+                    "La fricción generó nueva carga neta positiva a partir de la energía térmica disipada.", 
+                    "Los electrones de valencia del vidrio superaron su función de trabajo gracias a la fricción y fueron capturados por la afinidad electrónica de la seda.", 
+                    "La seda indujo un reordenamiento interno de dipolos en el vidrio, polarizándolo sin transferencia real de electrones."
+                ], 
                 answer: 2, 
-                tip: "Los núcleos (donde están los protones) están fijos en la estructura sólida. Toda carga por fricción se debe exclusivamente a la transferencia de la capa superficial de electrones libres." 
+                tip: "En sólidos, los núcleos masivos (con protones) ocupan posiciones fijas en la red cristalina. La triboelectrificación implica únicamente la migración de electrones de valencia (periféricos). El vidrio cede electrones a la seda debido a que su retención de electrones superficiales es más débil que la de la seda." 
             },
             { 
                 type: 'fill', 
-                text: "En el Sistema Internacional de Unidades (SI), la unidad fundamental de carga eléctrica, equivalente a un amperio-segundo, recibe el nombre de ______.", 
-                answer: "coulomb", 
-                tip: "En honor al físico francés Charles-Augustin de Coulomb. Se denota con la letra C mayúscula." 
+                text: "El Coulomb (C) es una unidad derivada en el SI. Está definido en términos de la corriente eléctrica (Amperios) y el tiempo (segundos). Sabiendo que $1 \\text{ C} = 1 \\text{ A} \\cdot 1 \\text{ s}$, ¿cuántos electrones, aproximadamente (redondeado al entero más cercano por $10^{18}$), conforman $1 \\text{ C}$ de carga negativa? Escribe solo la mantisa, ej. si es $6 \\times 10^{18}$, escribe '6'.", 
+                answer: "6", 
+                tip: "Si $e = 1.602 \\times 10^{-19} \\text{ C}$, el número de electrones es $N = 1 / e \\approx 6.24 \\times 10^{18}$. El valor redondeado de la mantisa es 6." 
             },
             { 
                 type: 'mcq', 
-                text: "La constante de Coulomb $k$ está matemáticamente relacionada con la permitividad eléctrica del vacío $\\epsilon_0$ mediante la expresión:", 
-                options: ["$k = 4\\pi\\epsilon_0$", "$k = \\frac{1}{4\\pi\\epsilon_0}$", "$k = \\epsilon_0 c^2$", "$k = \\sqrt{\\epsilon_0}$"], 
+                text: "La permitividad eléctrica del vacío, $\\epsilon_0$, aparece en el denominador de la constante de Coulomb ($k = 1 / 4\\pi\\epsilon_0$). Físicamente, ¿qué representa una constante dieléctrica o permitividad relativa ($\\kappa = \\epsilon / \\epsilon_0$) mayor a 1 cuando dos cargas se sumergen en un fluido aislante como el agua pura ($\\kappa \\approx 80$)?", 
+                options: [
+                    "El fluido amplifica drásticamente la fuerza eléctrica entre las cargas mediante conductividad iónica.", 
+                    "Las moléculas polares del fluido se alinean con el campo, creando un campo eléctrico interno que cancela parcialmente el campo original, reduciendo la fuerza neta entre las cargas.", 
+                    "La distancia efectiva entre las cargas aumenta virtualmente por un factor de $\\kappa$, reduciendo la fuerza según la ley del cuadrado inverso.", 
+                    "La velocidad de interacción (fotones virtuales) se reduce, incrementando el tiempo que tarda la fuerza en actuar."
+                ], 
                 answer: 1, 
-                tip: "En el SI, la ley de Coulomb a menudo se escribe como $F = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{r^2}$." 
+                tip: "La fuerza en un dieléctrico es $F = \\frac{1}{4\\pi \\kappa \\epsilon_0} \\frac{q_1 q_2}{r^2}$. El material polar (como el agua) orienta sus dipolos oponiéndose al campo externo. Este 'apantallamiento' dieléctrico debilita el campo neto en un factor de $\\kappa$, reduciendo la fuerza electrostática a $1/80$ de su valor en el vacío." 
             },
             { 
                 type: 'mcq', 
-                text: "Un neutrón viaja a alta velocidad y pasa exactamente a la mitad de distancia entre un protón y un electrón fijos. La fuerza electrostática neta de Coulomb que experimenta el neutrón en ese instante es:", 
-                options: ["Atracción hacia el protón.", "Atracción hacia el electrón.", "Cero.", "Repulsión hacia ambos lados."], 
+                text: "En un acelerador de partículas, un neutrón térmico viaja a alta velocidad y atraviesa la región comprendida entre dos electrodos paralelos altamente cargados (uno positivo y otro negativo). ¿Cuál será la deflexión balística que experimentará el neutrón debido exclusivamente a la fuerza de Coulomb transversal?", 
+                options: [
+                    "Se desviará hacia el electrodo negativo.", 
+                    "Se desviará hacia el electrodo positivo.", 
+                    "Su trayectoria no sufrirá deflexión electrostática alguna.", 
+                    "Será frenado en seco por el campo longitudinal inducido."
+                ], 
                 answer: 2, 
-                tip: "El neutrón es una partícula subatómica, y como su nombre lo indica, no posee carga eléctrica neta ($q = 0$). Aplica esto en la fórmula de Coulomb." 
-            },
-            { 
-                type: 'mcq', 
-                text: "Si dos cargas puntuales se sumergen en agua pura (aislante eléctrico dieléctrico con permitividad relativa $\\kappa \\approx 80$) manteniendo la misma distancia que tenían en el aire, la fuerza electrostática entre ellas:", 
-                options: ["Aumenta 80 veces.", "Disminuye unas 80 veces.", "Permanece idéntica.", "Se vuelve instantáneamente nula."], 
-                answer: 1, 
-                tip: "La fuerza en un medio está dada por $F = \\frac{1}{4\\pi \\kappa \\epsilon_0} \\frac{q_1 q_2}{r^2}$. Un medio con alto poder dieléctrico apantalla drásticamente la interacción." 
+                tip: "El neutrón ($n^0$) es un barión compuesto por un quark up y dos quarks down (carga $2/3 - 1/3 - 1/3 = 0$). Al no poseer carga eléctrica neta, la fuerza electromagnética de Lorentz ($F = q(E + v \\times B)$) es estrictamente cero. Pasa recto." 
             },
             { 
                 type: 'drag', 
@@ -331,23 +379,33 @@
             },
             { 
                 type: 'mcq', 
-                text: "Dos electrones libres se encuentran inicialmente separados por $1\\text{ mm}$ en el vacío. Al soltarlos desde el reposo, estos inmediatamente:", 
-                options: ["Se atraen y se aceleran mutuamente.", "Se quedan estáticos.", "Se repelen y se aceleran alejándose.", "Giran uno alrededor del otro."], 
+                text: "Dos electrones libres se encuentran inicialmente en reposo en el vacío, separados por una distancia macroscópica de $1\\text{ mm}$. Al ser liberados, la cinemática de su repulsión mutua obedece ecuaciones diferenciales complejas porque la fuerza eléctrica decae con la distancia. Considerando el infinito como estado de referencia, ¿qué principio físico fundamental permite calcular la velocidad final (asintótica) de los electrones de forma analítica exacta sin integrar la fuerza de Coulomb?", 
+                options: [
+                    "El teorema del impulso y la cantidad de movimiento.", 
+                    "La Tercera Ley de Newton (Acción-Reacción).", 
+                    "El Principio de Conservación de la Energía Mecánica.", 
+                    "El Principio de Superposición de Campos Magnéticos."
+                ], 
                 answer: 2, 
-                tip: "Cargas de igual signo siempre se repelen por una fuerza que las empuja en la dirección del vector unitario que las separa. Como experimentan fuerza con masa muy pequeña, se aceleran velozmente." 
+                tip: "La fuerza de Coulomb es conservativa. Todo el trabajo realizado por la fuerza de repulsión proviene de la pérdida de Energía Potencial Eléctrica ($U = k q_1 q_2 / r$). Al plantear $U_{inicial} + K_{inicial} = U_{final} + K_{final}$ (con $U_{final}=0$ en el infinito), obtenemos las velocidades finales de forma directa." 
             },
             { 
                 type: 'mcq', 
-                text: "Una barra plástica cargada negativamente se acerca a trocitos de papel, que son neutros y aislantes. Los pedacitos saltan hacia la barra. Esto ocurre físicamente por un proceso de:", 
-                options: ["Ionización en el aire.", "Inducción metálica.", "Polarización atómica del dieléctrico.", "Radiación electromagnética."], 
+                text: "Una barra dieléctrica fuertemente cargada negativamente se acerca a trozos de papel neutros. A pesar de que el papel es un aislante casi perfecto y no posee electrones libres de conducción, los trozos experimentan una fuerza de atracción neta hacia la barra que supera a la gravedad. Este fenómeno macromecánico es una evidencia directa de:", 
+                options: [
+                    "La ionización termoiónica del aire circundante.", 
+                    "La transferencia de carga por contacto microscópico a través de la humedad.", 
+                    "La polarización dieléctrica, donde las nubes electrónicas moleculares se distorsionan, creando momentos dipolares inducidos.", 
+                    "El efecto fotoeléctrico desencadenado por la fricción inicial de la barra."
+                ], 
                 answer: 2, 
-                tip: "Aunque el papel es aislante (sin electrones libres), sus nubes electrónicas se deforman levemente (polarización), haciendo que el lado positivo del átomo quede más cerca de la barra negativa." 
+                tip: "En un dieléctrico, el campo eléctrico externo (de la barra) empuja la nube electrónica molecular del papel alejándola levemente del núcleo. Esto induce un dipolo: el lado positivo de la molécula queda ligeramente más cerca de la barra negativa que el lado negativo, generando una fuerza neta de atracción." 
             },
             { 
                 type: 'equation', 
-                text: "Usando notación decimal con exponentes, escribe la magnitud (en Coulombs) de la carga elemental de un solo electrón/protón. Ej: usa `1.6*10^-19`", 
+                text: "La carga elemental $e$ es un cuanto fundamental del universo. Su valor exacto adoptado en la redefinición del SI de 2019 rige la magnitud tanto del protón como del electrón. Escribe el valor numérico de esta carga en notación científica (ej: 1.6*10^-19), que funge como límite indivisible de carga libre observable.", 
                 answer: "1.6*10^-19", 
-                tip: "Es el valor fundamental $e$. Su magnitud se descubrió históricamente en el experimento de la gota de aceite de Millikan." 
+                tip: "Aunque los quarks tienen cargas fraccionarias de $\\pm 1/3 e$ o $\\pm 2/3 e$, el confinamiento de color impide observarlos libres. La mínima carga libre detectable es $e = 1.602176634 \\times 10^{-19}$ C." 
             },
             { 
                 type: 'canvas', 

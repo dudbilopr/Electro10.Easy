@@ -1,5 +1,6 @@
 # Configuración sensible (Asegurada por Firebase Rules en producción)
 
-# Archivos de sistema
+# Archivos de sistema y backups
 .DS_Store
 Thumbs.db
+old_index.html

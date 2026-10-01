@@ -1,42 +1,41 @@
-// modulos/modulo12.js — Circuitos RL, LC, RLC y Corriente Alterna
+// modulos/modulo12.js — Ecuaciones de Maxwell y Ondas Electromagnéticas
 // 📓 NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
 export const modulo12 = {
-    "titulo": "Módulo 12: Circuitos RL, LC, RLC y CA",
-    "color": "#65a30d",
-    "icono": "ac_unit",
-    "descripcionCorta": "Circuitos con inductores y capacitores en corriente alterna: resonancia y fasores",
-    "subtemas": ["Circuito RL: transitorio y estado estable","Circuito LC: oscilaciones electromagnéticas","Amortiguamiento en circuito RLC","Corriente alterna: representación fasorial","Reactancia inductiva y capacitiva","Impedancia compleja","Resonancia en serie y paralelo","Factor de potencia y potencia reactiva","Transformadores en CA","Filtros RC y RL: pasa-bajas y pasa-altas"],
+    "titulo": "Módulo 12: Ecuaciones de Maxwell y Ondas EM",
+    "color": "#4f46e5",
+    "icono": "waves",
+    "descripcionCorta": "Síntesis del electromagnetismo clásico y ondas electromagnéticas",
+    "subtemas": ["Cuatro ecuaciones de Maxwell en forma integral","Forma diferencial de Maxwell","Corriente de desplazamiento de Maxwell","Ondas electromagnéticas planas","Velocidad de la luz como constante EM","Espectro electromagnético","Densidad de energía EM","Vector de Poynting","Polarización de ondas"],
     "lecciones": [
-        { "id":"m12-l1","tipo":"multivideo","recurso":"2HxTt0Kl8KM|NHhK6RHFB4c|L4fTVV7mMBc|8p82v2_KYVQ|j-JK4GVv6BA|mFTfzQFdSJ8|SLFi1M0j2To","titulo":"1. Videos — Circuitos RL, LC, RLC y CA","descripcion":"Desde el circuito RL transitorio hasta resonancia y fasores en corriente alterna.","xp":10 },
-        { "id":"m12-l2","tipo":"presentacion","recurso":"./player.html?clase=12","titulo":"2. Diapositivas Interactivas","descripcion":"Diagramas fasoriales animados, curvas de resonancia y respuesta en frecuencia.","xp":15 },
+        { "id":"m12-l1","tipo":"multivideo","recurso":"F3GFTvKu7vM|LKuOc5kqPZw|F4j1N9GepPg|RIUqZ6UiHxs|UeVdq0VFtk8|Y0oN0mTiP3k","titulo":"1. Videos — Ecuaciones de Maxwell","descripcion":"Las 4 ecuaciones que unifican la electricidad, el magnetismo y la óptica.","xp":10 },
+        { "id":"m12-l2","tipo":"presentacion","recurso":"./player.html?clase=11","titulo":"2. Diapositivas Interactivas","descripcion":"Visualización completa de las ondas EM propagándose: campos E y B perpendiculares.","xp":15 },
         { "id":"m12-g1","tipo":"grupo","titulo":"3. Laboratorio Virtual",
           "sublecciones":[
-            { "id":"m12-s1","tipo":"simulador","recurso":"simuladores/Sim_M12_OsciladorLC.html","titulo":"3.1 Circuito LC Oscilante","descripcion":"Energía oscilando entre L y C: analogía con péndulo.","xp":20 },
-            { "id":"m12-s2","tipo":"simulador","recurso":"simuladores/Sim_M12_RLC.html","titulo":"3.2 Respuesta RLC en Frecuencia","descripcion":"Curva de resonancia y factor Q del circuito RLC.","xp":20 },
-            { "id":"m12-s3","tipo":"simulador","recurso":"simuladores/Sim_M12_Fasores.html","titulo":"3.3 Fasores Interactivos","descripcion":"Suma fasorial de voltajes en circuitos AC.","xp":20 }
+            { "id":"m12-s1","tipo":"simulador","recurso":"simuladores/Sim_M11_OndaEM.html","titulo":"3.1 Campos EM Acoplados","descripcion":"Campo eléctrico y magnético variando en fase: visualización de onda EM.","xp":20 },
+            { "id":"m12-s2","tipo":"simulador","recurso":"simuladores/Sim_M11_EcuacionesMaxwell.html","titulo":"3.2 Maxwell Integral vs. Diferencial","descripcion":"Equivalencia entre las formas integral y diferencial de Maxwell.","xp":20 }
           ]
         },
-        { "id":"m12-j1","tipo":"juego","recurso":"juegos/Juego_12.html","titulo":"4. Physics Quest — Circuitos CA","descripcion":"¡Sintoniza el circuito RLC a la frecuencia de resonancia! 5 desafíos de ingeniería AC.","xp":25,"logro":{"id":"logro_m12","nombre":"Maestro de la Resonancia","icono":"〰️"} },
-        { "id":"m12-l7","tipo":"ejercicio","recurso":"talleres/Taller_12_Circuitos_CA.html","titulo":"5. Taller Práctico — Circuitos CA","descripcion":"Impedancia, resonancia, fasores y factor de potencia. Transitorios.","xp":30 },
-        { "id":"m12-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_12.html","titulo":"6. Quiz Adaptativo — Módulo 12","descripcion":"Evalúa desde conceptos de impedancia hasta cálculos de potencia en CA.","xp":40 },
+        { "id":"m12-j1","tipo":"juego","recurso":"juegos/Juego_11.html","titulo":"4. Physics Quest — Maxwell","descripcion":"Completa las 4 ecuaciones de Maxwell y desbloquea el poder de la onda EM. ¡El desafío final!","xp":25,"logro":{"id":"logro_m12","nombre":"Físico Teórico","icono":"🌌"} },
+        { "id":"m12-l7","tipo":"ejercicio","recurso":"talleres/Taller_11_Ecuaciones_Maxwell.html","titulo":"5. Taller Práctico — Maxwell","descripcion":"Problemas de corriente de desplazamiento, ondas EM y vector de Poynting.","xp":30 },
+        { "id":"m12-q1","tipo":"quiz","recurso":"Examen/Quiz_Adaptativo_11.html","titulo":"6. Quiz Adaptativo — Módulo 12","descripcion":"Evalúa desde la identificación de las ecuaciones hasta el cálculo de velocidad de onda.","xp":40 },
+        { "id":"m12-eval","tipo":"quiz","recurso":"Examen/Cuestionario_12_Ecuaciones_Maxwell.html","titulo":"7. Evaluación Sumativa — Ecuaciones de Maxwell","descripcion":"Cuestionario exhaustivo sobre la síntesis de Maxwell y propagación ondulatoria.","xp":50 },
         { "id":"m12-nb1","tipo":"notebooklm",
           // 📓 NOTEBOOKLM MÓDULO 12: Reemplaza "#" con tu link
           "llmLink": "#",
-          "titulo": "8. NotebookLLM — Circuitos CA","descripcion":"IA para circuitos CA: fasores, impedancia, resonancia y filtros.","xp":10 },
-        { "id":"m12-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre circuitos RLC, corriente alterna y análisis de señales.","xp":10,
+          "titulo": "8. NotebookLLM — Ecuaciones de Maxwell","descripcion":"IA para Maxwell: explica las 4 ecuaciones, sus consecuencias y la teoría de ondas EM.","xp":10 },
+        { "id":"m12-e1","tipo":"referencias","titulo": "9. Referencias Bibliográficas","descripcion":"Fuentes sobre las ecuaciones de Maxwell y ondas electromagnéticas.","xp":10,
           "secciones":[
             { "tituloSeccion":"📘 Libros de texto","links":[
-                { "url":"https://openstax.org/books/university-physics-volume-2/pages/14-1-mutual-inductance","titulo":"OpenStax: Inductancia y Circuitos AC — Cap. 14–15","descripcion":"Inductores, RLC, corriente alterna y transformadores." },
-                { "url":"https://www.amazon.com/dp/0073380679","titulo":"Hayt — Engineering Circuit Analysis Cap. 14","descripcion":"Análisis de circuitos en CA con fasores." },
-                { "url":"https://www.amazon.com/dp/0132116056","titulo":"Nilsson & Riedel — Electric Circuits","descripcion":"Capítulo de CA: impedancia, resonancia y potencia." }
+                { "url":"https://openstax.org/books/university-physics-volume-2/pages/16-1-maxwells-equations-and-electromagnetic-waves","titulo":"OpenStax: Ecuaciones de Maxwell — Cap. 16","descripcion":"Síntesis del EM clásico, ondas y vector de Poynting." },
+                { "url":"https://www.amazon.com/dp/0321971174","titulo":"Griffiths — Electrodynamics Cap. 9","descripcion":"Ondas electromagnéticas rigurosas." },
+                { "url":"https://www.amazon.com/dp/0471213403","titulo":"Jackson — Classical Electrodynamics","descripcion":"Referencia avanzada sobre ondas EM y radiación." }
             ]},
             { "tituloSeccion":"🌐 Recursos web","links":[
-                { "url":"https://www.allaboutcircuits.com/textbook/alternating-current/","titulo":"All About Circuits: AC","descripcion":"Guía completa de circuitos CA con fasores y filtros." },
-                { "url":"https://www.electronics-tutorials.ws/accircuits/ac-resistance.html","titulo":"Electronics Tutorials: Circuitos AC","descripcion":"Impedancia, resonancia y filtros explicados visualmente." }
+                { "url":"https://maxwells-equations.com/","titulo":"Maxwell's Equations (recurso web)","descripcion":"Guía visual e interactiva de las 4 ecuaciones." },
+                { "url":"https://www.feynmanlectures.caltech.edu/II_18.html","titulo":"Feynman Lectures: Maxwell","descripcion":"Derivación con la perspectiva única de Feynman." }
             ]},
             { "tituloSeccion":"🔬 Simuladores externos","links":[
-                { "url":"https://phet.colorado.edu/es/simulations/circuit-construction-kit-ac","titulo":"PhET: Circuitos AC","descripcion":"Construye circuitos AC con inductores y capacitores." },
-                { "url":"https://www.falstad.com/circuit/","titulo":"Falstad: Simulador AC","descripcion":"Simula circuitos RLC con respuesta en frecuencia en tiempo real." }
+                { "url":"https://phet.colorado.edu/es/simulations/radio-waves-and-electromagnetic-fields","titulo":"PhET: Ondas de Radio y EM","descripcion":"Genera ondas EM con cargas oscilantes." }
             ]}
           ]
         }
