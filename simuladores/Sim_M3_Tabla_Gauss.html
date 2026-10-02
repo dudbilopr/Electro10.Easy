@@ -16,6 +16,8 @@
 
     <!-- Babel para compilar JSX en tiempo real en el navegador -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body>
     <div id="root"></div>
@@ -394,7 +396,7 @@
           return (
             <div className="mt-4">
               <button onClick={toggleTip} className={`flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl transition-colors ${isOpen ? 'bg-amber-100 text-amber-800' : 'bg-white border-2 border-slate-200 text-slate-500 hover:border-amber-300 hover:text-amber-600'}`}>
-                <Lightbulb size={16} className={isOpen ? 'text-amber-500' : ''}/> {isOpen ? 'Ocultar Pista' : '💡 Revelar Pista Pedagógica'}
+                <Lightbulb size={16} className={isOpen ? 'text-amber-500' : ''}/> {isOpen ? 'Ocultar Pista' : '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">lightbulb</span> Revelar Pista Pedagógica'}
               </button>
               {isOpen && (
                 <div className="mt-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm leading-relaxed animate-in slide-in-from-top-2">

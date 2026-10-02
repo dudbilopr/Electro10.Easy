@@ -48,12 +48,14 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,t
 .case-tab.active{background:var(--accent);color:#000}
 .star-rating i{font-size:24px;color:#888;cursor:pointer;transition:0.2s} .star-rating i:hover, .star-rating i.active{color:#f1c40f}
 </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body class="light-mode">
 <header class="glass">
     <div style="display:flex;align-items:center;gap:15px">
         <h2 style="color:var(--accent);font-size:1.2rem;margin:0"><i class="ph ph-lightning"></i> CoulombLab10.easy</h2>
-        <span id="room-info" style="font-size:.85rem;color:#888;background:var(--card-bg);padding:4px 8px;border-radius:4px">🌐 Caso Local</span>
+        <span id="room-info" style="font-size:.85rem;color:#888;background:var(--card-bg);padding:4px 8px;border-radius:4px"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Caso Local</span>
     </div>
     <div style="display:flex;align-items:center;gap:15px">
         <button class="btn" onclick="toggleTheme()" title="Modo Día/Noche"><i class="ph ph-moon"></i></button>
@@ -167,7 +169,7 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,t
 
 <div class="modal" id="profile-setup-modal"><div class="modal-content glass"><span class="close-btn" onclick="hideModal('profile-setup-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-user-circle"></i> Mi Perfil</h3><p style="font-size:.85rem;color:var(--text);margin-bottom:10px">Elige un avatar y actualiza tus datos.</p>
 <div style="display:flex;justify-content:space-around;background:rgba(78,204,163,0.1);padding:10px;border-radius:8px;margin-bottom:15px;border:1px solid var(--accent)"><div style="text-align:center"><b>Nivel</b><br><span id="prof-nivel-disp" style="font-size:1.5rem;color:var(--accent)">1</span></div><div style="text-align:center"><b>Puntos</b><br><span id="prof-puntos-disp" style="font-size:1.5rem;color:#f1c40f">0</span></div></div>
-<div id="prof-avatars" style="display:flex;justify-content:center;gap:15px;font-size:2rem;margin-bottom:15px;cursor:pointer"><span class="avt" onclick="selAvt(this)" style="border-color:var(--accent);transform:scale(1.2)">👨‍🔬</span><span class="avt" onclick="selAvt(this)">👩‍🔬</span><span class="avt" onclick="selAvt(this)">🤖</span><span class="avt" onclick="selAvt(this)">👽</span><span class="avt" onclick="selAvt(this)">🦸</span></div><input type="text" id="prof-name" placeholder="Nombre completo" style="margin-bottom:10px"><input type="text" id="prof-alias" placeholder="Alias (Ej: ElectroMaster)" style="margin-bottom:10px"><input type="number" id="prof-age" placeholder="Edad" style="margin-bottom:10px"><select id="prof-gender" style="margin-bottom:10px"><option value="">Género...</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select><input type="text" id="prof-major" placeholder="Carrera / Institución" style="margin-bottom:15px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveProfile()">Guardar Perfil</button></div></div>
+<div id="prof-avatars" style="display:flex;justify-content:center;gap:15px;font-size:2rem;margin-bottom:15px;cursor:pointer"><span class="avt" onclick="selAvt(this)" style="border-color:var(--accent);transform:scale(1.2)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">stars</span></span></div><input type="text" id="prof-name" placeholder="Nombre completo" style="margin-bottom:10px"><input type="text" id="prof-alias" placeholder="Alias (Ej: ElectroMaster)" style="margin-bottom:10px"><input type="number" id="prof-age" placeholder="Edad" style="margin-bottom:10px"><select id="prof-gender" style="margin-bottom:10px"><option value="">Género...</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select><input type="text" id="prof-major" placeholder="Carrera / Institución" style="margin-bottom:15px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveProfile()">Guardar Perfil</button></div></div>
 
 <div class="modal" id="admin-modal"><div class="modal-content glass" style="max-width:900px;width:95%"><span class="close-btn" onclick="hideModal('admin-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-shield-star"></i> Control General (Admin)</h3><div id="admin-stats" style="display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap"><div class="card" style="flex:1;text-align:center;min-width:120px"><h4>Usuarios</h4><div id="adm-users-count" style="font-size:24px;color:var(--accent);font-weight:bold">0</div></div><div class="card" style="flex:1;text-align:center;min-width:120px"><h4>Rating Gral.</h4><div id="adm-rating-avg" style="font-size:24px;color:#f1c40f;font-weight:bold">0.0 ⭐</div></div></div><div class="section-title">Gestión de Usuarios, Roles y Grupos</div><div style="overflow-x:auto;max-height:400px;background:var(--card-bg);border-radius:6px;padding:5px"><table style="width:100%;min-width:700px"><thead><tr><th>Usuario</th><th>Nombre</th><th>Rol (Permiso)</th><th>Asignar Grupo</th><th>Acción</th></tr></thead><tbody id="adm-users-list"></tbody></table></div></div></div>
 
@@ -528,7 +530,7 @@ const cfg = {apiKey:"AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",authDomain:"labora
 const app=initializeApp(cfg), db=getFirestore(app), rtdb=getDatabase(app), auth=getAuth(app);
 const APP_ID = 'coulombLab10';
 
-let selAvatar='👨‍🔬', appRating=0, curRoomRef=null, unsubRoom=null, isRecv=!1, chatRef=null;
+let selAvatar='<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span>', appRating=0, curRoomRef=null, unsubRoom=null, isRecv=!1, chatRef=null;
 let localPoints = 0, localLevel = 1;
 
 window.selAvt = (el) => { document.querySelectorAll('.avt').forEach(a=>{a.style.transform='scale(1)';a.style.borderColor='transparent'}); el.style.transform='scale(1.2)'; el.style.borderColor='var(--accent)'; selAvatar=el.innerText; };
@@ -539,7 +541,7 @@ window.addPoints = async (pts) => {
     localPoints += pts;
     localLevel = Math.floor(localPoints / 100) + 1;
     
-    document.getElementById('user-stats').innerText = `🏆 Nivel ${localLevel} | ${localPoints} pts`;
+    document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel ${localLevel} | ${localPoints} pts`;
     document.getElementById('prof-nivel-disp').innerText = localLevel;
     document.getElementById('prof-puntos-disp').innerText = localPoints;
 
@@ -554,7 +556,7 @@ window.resetLocalState = () => {
     localPoints = 0; localLevel = 1;
     document.getElementById('prof-nivel-disp').innerText = '1';
     document.getElementById('prof-puntos-disp').innerText = '0';
-    document.getElementById('user-stats').innerText = `🏆 Nivel 1 | 0 pts`;
+    document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel 1 | 0 pts`;
 };
 
 onAuthStateChanged(auth, async u => {
@@ -568,15 +570,15 @@ onAuthStateChanged(auth, async u => {
             const s = await getDoc(doc(db,`artifacts/${APP_ID}/users/${u.uid}/profile/data`));
             if(!s.exists()) {
                 window.resetLocalState();
-                document.getElementById('user-info').innerText = `👤 ${u.email.split('@')[0]}`;
+                document.getElementById('user-info').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${u.email.split('@')[0]}`;
                 showModal('profile-setup-modal'); 
             } else {
                 const pd = s.data();
                 localPoints = pd.puntos || 0;
                 localLevel = Math.floor(localPoints / 100) + 1;
                 
-                document.getElementById('user-info').innerText = `${pd.avatar||'👤'} ${pd.alias||pd.nombre||u.email.split('@')[0]} (${pd.rol||'estudiante'})`;
-                document.getElementById('user-stats').innerText = `🏆 Nivel ${localLevel} | ${localPoints} pts`;
+                document.getElementById('user-info').innerText = `${pd.avatar||'<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>'} ${pd.alias||pd.nombre||u.email.split('@')[0]} (${pd.rol||'estudiante'})`;
+                document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel ${localLevel} | ${localPoints} pts`;
                 document.getElementById('prof-nivel-disp').innerText = localLevel;
                 document.getElementById('prof-puntos-disp').innerText = localPoints;
                 
@@ -665,7 +667,7 @@ window.crearUnirseSala = async () => {
 
 window.joinRoom = (id) => {
     hideModal('rooms-modal');
-    document.getElementById('room-info').innerText = `🌐 Sala: ${id}`;
+    document.getElementById('room-info').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: ${id}`;
     if (unsubRoom) unsubRoom();
     
     curRoomRef = ref(rtdb, `salas/${id}/state`);
@@ -777,7 +779,7 @@ window.openRooms = async () => {
             rl.innerHTML += `<div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:10px;margin-bottom:8px">
                 <div><b>${u.avatar||''} ${u.alias||u.nombre}</b><br><span style="font-size:0.75rem;color:#888">Grupo: ${u.grupo||'General'} | Rol: ${u.rol}</span></div> 
                 <div style="display:flex;gap:5px">
-                    <button class="btn" style="background:rgba(231,76,60,0.2);color:#e74c3c;padding:4px 8px" onclick="enviarRegalo('${u.id}')" title="Enviar Regalo">🎁 ${u.regalos||0}</button>
+                    <button class="btn" style="background:rgba(231,76,60,0.2);color:#e74c3c;padding:4px 8px" onclick="enviarRegalo('${u.id}')" title="Enviar Regalo"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">card_giftcard</span> ${u.regalos||0}</button>
                     <button class="btn" style="background:rgba(241,196,15,0.2);color:#f1c40f;padding:4px 8px" onclick="darEstrella('${u.id}')" title="Dar Estrella">⭐ ${u.estrellas||0}</button>
                 </div>
             </div>`;
@@ -788,7 +790,7 @@ window.openRooms = async () => {
         arr.sort((a,b) => (b.puntos||0) - (a.puntos||0));
         const rk = document.getElementById('ranking-list'); rk.innerHTML = '';
         arr.slice(0, 10).forEach((u, i) => {
-            let badge = i===0 ? '🥇' : i===1 ? '🥈' : i===2 ? '🥉' : `#${i+1}`;
+            let badge = i===0 ? '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">military_tech</span>' : i===1 ? '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">military_tech</span>' : i===2 ? '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">military_tech</span>' : `#${i+1}`;
             rk.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; background:var(--card-bg); border-radius:4px; font-size:0.85rem; border:1px solid rgba(128,128,128,0.2);">
                 <span><b>${badge}</b> ${u.avatar||''} ${u.alias||u.nombre}</span>
                 <span style="color:#f1c40f; font-weight:bold;">${u.puntos||0} pts</span>

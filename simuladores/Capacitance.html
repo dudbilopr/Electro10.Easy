@@ -119,6 +119,8 @@ tr:hover td { background:rgba(255,255,255,0.05); }
 .star-group{font-size:2rem; color:var(--accent); display:flex; gap:8px; cursor:pointer;}
 .physics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; border:1px solid rgba(255,255,255,0.05); }
 </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body class="dark">
 
@@ -496,7 +498,7 @@ $('btn-add-tab').onclick = () => {
 
 onAuthStateChanged(auth, async u => {
     st.user = u;
-    // 🔒 REGLA ESTRICTA: Solo si hay usuario y tiene correo electrónico
+    // <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">lock</span> REGLA ESTRICTA: Solo si hay usuario y tiene correo electrónico
     if(u && u.email) {
         modal('modal-auth', false);
         const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'directory', u.uid);
@@ -522,7 +524,7 @@ onAuthStateChanged(auth, async u => {
                 await setDoc(userRef, st.profile);
             } else {
                 let data = d.data();
-                // 🛡️ AUTO-SANADOR DE BASE DE DATOS: Limpia valores 'undefined' corruptos
+                // <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">security</span>️ AUTO-SANADOR DE BASE DE DATOS: Limpia valores 'undefined' corruptos
                 st.profile = {
                     nombre: (data.nombre && data.nombre !== 'undefined') ? data.nombre : defaultProfile.nombre,
                     alias: (data.alias && data.alias !== 'undefined') ? data.alias : defaultProfile.alias,
@@ -582,7 +584,7 @@ $('btn-theme').onclick = () => {
 // Profile Update (Visualización Segura)
 $('btn-profile').onclick = () => {
     if(!st.user || !st.profile) return toast('Inicia sesión');
-    // 🛡️ Fallbacks visuales para asegurar que NUNCA diga 'undefined' en pantalla
+    // <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">security</span>️ Fallbacks visuales para asegurar que NUNCA diga 'undefined' en pantalla
     $('prof-name').innerText = st.profile.nombre || 'Investigador'; 
     $('prof-role').innerText = st.profile.rol || 'Estudiante'; 
     $('prof-level').innerText = st.profile.nivel || 1; 
@@ -819,7 +821,7 @@ const drawComp = (c) => {
     if(c.isEq) { strokeCol = c.stepColor || 'var(--accent)'; }
     ctx.strokeStyle = strokeCol; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = 'var(--text)';
 
-    if(c.exploded) { ctx.fillStyle='red'; ctx.font='20px Arial'; ctx.fillText('💥', -10, 5); ctx.restore(); return; }
+    if(c.exploded) { ctx.fillStyle='red'; ctx.font='20px Arial'; ctx.fillText('<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span>', -10, 5); ctx.restore(); return; }
 
     if(c.type !== 'cap_electro') {
         ctx.beginPath(); ctx.moveTo(-20,0); ctx.lineTo(-10,0); ctx.moveTo(20,0); ctx.lineTo(10,0); ctx.stroke();
@@ -1261,8 +1263,8 @@ $('btn-solve').onclick = () => {
         let isReverse = distFromPos[cRef.n2] < distFromPos[cRef.n1];
         if(cRef.polar && isReverse) { vCap = -Math.abs(vCap||1); } // Forzar negativo si está al revés
 
-        if(cRef.polar && vCap < 0) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} 💥 Polar Inv</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
-        else if (cRef.maxV && Math.abs(vCap) > cRef.maxV) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} ⚡ Ruptura</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
+        if(cRef.polar && vCap < 0) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Polar Inv</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
+        else if (cRef.maxV && Math.abs(vCap) > cRef.maxV) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Ruptura</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
         else { html += `<tr style="${bgStr}"><td><b>${e.id.substring(0,4)}</b></td><td>${e.val.toFixed(2)}</td><td>${vCap.toFixed(2)}</td><td>${qCap.toFixed(2)}</td><td>${uCap.toFixed(2)}</td></tr>`; }
     });
     

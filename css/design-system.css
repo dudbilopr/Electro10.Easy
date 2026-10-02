@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Electro10.Easy — Sistema de Diseño Centralizado (Core Design System)
+   Identidad Universitaria UNAB & Estética de Laboratorio Cuántico
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    /* ── 1. Paleta Institucional & Primaria ────────────────────────────── */
+    --unab-blue: #003865;
+    --unab-blue-dark: #002240;
+    --unab-orange: #E85C0B;
+    --unab-orange-hover: #d04f05;
+    
+    /* Acentos Cuánticos y Tecnológicos */
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --primary-light: #e0f2fe;
+    --primary-glow: rgba(2, 132, 199, 0.25);
+    
+    --secondary: #0ea5e9;
+    --secondary-hover: #0284c7;
+    --secondary-light: #f0f9ff;
+    
+    --accent: #E85C0B;
+    --accent-hover: #c94e07;
+    --accent-glow: rgba(232, 92, 11, 0.2);
+
+    /* ── 2. Estados y Semántica ────────────────────────────────────────── */
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --info: #3b82f6;
+    --info-light: #eff6ff;
+
+    /* ── 3. Superficies y Fondos (Modo Claro - Default) ────────────────── */
+    --bg-app: #f8fafd;
+    --bg-surface: #ffffff;
+    --bg-surface-elevated: #ffffff;
+    --bg-surface-secondary: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
+    --bg-glass: rgba(255, 255, 255, 0.85);
+
+    /* ── 4. Bordes y Delimitadores ─────────────────────────────────────── */
+    --border-subtle: rgba(226, 232, 240, 0.9);
+    --border-medium: #cbd5e1;
+    --border-strong: #94a3b8;
+    --border-focus: var(--primary);
+
+    /* ── 5. Tipografía y Jerarquía ─────────────────────────────────────── */
+    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-inverse: #ffffff;
+
+    /* ── 6. Elevaciones y Sombras ──────────────────────────────────────── */
+    --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+    --shadow-quantum: 0 0 25px var(--primary-glow);
+
+    /* ── 7. Radios de Borde (Shapes) ───────────────────────────────────── */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* ── 8. Animaciones y Transiciones ─────────────────────────────────── */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Tema Oscuro (Laboratorio Cuántico Inmersivo)
+   ========================================================================== */
+html.dark, body.dark-theme, .theme-dark {
+    --primary: #38bdf8;
+    --primary-hover: #0ea5e9;
+    --primary-light: rgba(56, 189, 248, 0.15);
+    --primary-glow: rgba(56, 189, 248, 0.25);
+
+    --secondary: #0284c7;
+    --secondary-hover: #38bdf8;
+    --secondary-light: rgba(2, 132, 199, 0.2);
+
+    --bg-app: #070b14;
+    --bg-surface: #0f172a;
+    --bg-surface-elevated: #1e293b;
+    --bg-surface-secondary: #162032;
+    --bg-surface-hover: #233249;
+    --bg-glass: rgba(15, 23, 42, 0.85);
+
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.14);
+    --border-strong: rgba(255, 255, 255, 0.25);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-inverse: #0f172a;
+
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+    --shadow-quantum: 0 0 30px rgba(56, 189, 248, 0.2);
+}
+
+/* ==========================================================================
+   Componentes Estandarizados Reutilizables
+   ========================================================================== */
+
+/* Botones */
+.btn-core {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    user-select: none;
+}
+
+.btn-core:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-core-primary {
+    background-color: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 2px 4px var(--primary-glow);
+}
+.btn-core-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px var(--primary-glow);
+}
+
+.btn-core-accent {
+    background-color: var(--unab-orange);
+    color: #ffffff;
+}
+.btn-core-accent:hover {
+    background-color: var(--unab-orange-hover);
+    transform: translateY(-1px);
+}
+
+.btn-core-secondary {
+    background-color: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-medium);
+}
+.btn-core-secondary:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--border-strong);
+}
+
+.btn-core-ghost {
+    background-color: transparent;
+    color: var(--text-secondary);
+}
+.btn-core-ghost:hover {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
+}
+
+.btn-core-danger {
+    background-color: var(--danger);
+    color: #ffffff;
+}
+.btn-core-danger:hover {
+    filter: brightness(0.9);
+}
+
+/* Tarjetas Bento y Paneles Glass */
+.card-bento {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.card-bento:hover {
+    border-color: var(--border-medium);
+    box-shadow: var(--shadow-md);
+}
+
+.card-glass {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+/* Indicadores de Métrica (HUD Cards) */
+.metric-pill {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    background-color: var(--bg-surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+}
+
+.metric-pill-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.metric-pill-value {
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 2px;
+}
+
+/* Formularios y Controles */
+.input-field {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 8px 12px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-field:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-surface-secondary);
+    border-radius: var(--radius-full);
+    outline: none;
+    border: 1px solid var(--border-subtle);
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-fast);
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Avisos y Mensajes de Estado */
+.alert-box {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-left: 4px solid transparent;
+}
+
+.alert-box-info {
+    background-color: var(--info-light);
+    border-left-color: var(--info);
+    color: #1e3a8a;
+}
+html.dark .alert-box-info {
+    background-color: rgba(59, 130, 246, 0.12);
+    color: #93c5fd;
+}
+
+.alert-box-warning {
+    background-color: var(--warning-light);
+    border-left-color: var(--warning);
+    color: #92400e;
+}
+html.dark .alert-box-warning {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #fcd34d;
+}
+
+.alert-box-success {
+    background-color: var(--success-light);
+    border-left-color: var(--success);
+    color: #065f46;
+}
+html.dark .alert-box-success {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #6ee7b7;
+}
+
+.alert-box-danger {
+    background-color: var(--danger-light);
+    border-left-color: var(--danger);
+    color: #991b1b;
+}
+html.dark .alert-box-danger {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+}
+
+/* Contenedor de Fórmulas Matemáticas */
+.formula-card {
+    background-color: var(--bg-surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    text-align: center;
+    margin: 12px 0;
+    font-size: 1rem;
+}

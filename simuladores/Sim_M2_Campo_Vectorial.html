@@ -209,11 +209,13 @@
         }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body>
 
 <header>
-    <div><h2>🧲 Campo Eléctrico IA</h2></div>
+    <div><h2><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">magnet</span> Campo Eléctrico IA</h2></div>
     <div class="version">v1.3.0 (Pizarra Libre + Texto)</div>
 </header>
 
@@ -222,12 +224,12 @@
         <div>
             <div class="section-title">Herramientas</div>
             <div class="toolbar">
-                <button class="btn-tool active" onclick="setTool('draw', this)" title="Dibuja cargas (+/-), puntos y vectores de campo">🤖 Lápiz IA (Objetos)</button>
-                <button class="btn-tool" onclick="setTool('draw_free', this)" title="Dibuja explicaciones sin afectar los cálculos">🖌️ Marcador (Libre)</button>
-                <button class="btn-tool" onclick="setTool('text', this)" title="Haz clic en el lienzo para escribir texto">🔤 Escribir Texto</button>
+                <button class="btn-tool active" onclick="setTool('draw', this)" title="Dibuja cargas (+/-), puntos y vectores de campo"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span> Lápiz IA (Objetos)</button>
+                <button class="btn-tool" onclick="setTool('draw_free', this)" title="Dibuja explicaciones sin afectar los cálculos"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">brush</span>️ Marcador (Libre)</button>
+                <button class="btn-tool" onclick="setTool('text', this)" title="Haz clic en el lienzo para escribir texto"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">spellcheck</span> Escribir Texto</button>
                 <button class="btn-tool" onclick="setTool('move', this)">✋ Mover / Editar</button>
                 <button class="btn-tool" onclick="undo()">↩️ Deshacer</button>
-                <button class="btn-tool btn-danger" onclick="limpiarTodo()">🗑️ Limpiar Todo</button>
+                <button class="btn-tool btn-danger" onclick="limpiarTodo()"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">delete</span>️ Limpiar Todo</button>
             </div>
             
             <div class="color-picker-container">
@@ -238,7 +240,7 @@
             <hr style="border:0; border-top:1px solid var(--border-color); margin: 15px 0;">
             <div class="section-title">Visualización</div>
             <div class="toolbar">
-                <button id="btn-equipotentials" class="btn-tool btn-toggle" onclick="toggleEquipotentials()">👁️ Ver Líneas Equipotenciales</button>
+                <button id="btn-equipotentials" class="btn-tool btn-toggle" onclick="toggleEquipotentials()"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">visibility</span>️ Ver Líneas Equipotenciales</button>
             </div>
         </div>
         <hr style="border:0; border-top:1px solid var(--border-color); margin: 5px 0;">
@@ -277,12 +279,12 @@
             <div id="charges-container"></div>
         </div>
         
-        <button class="btn-tool btn-action" style="margin-top:15px;" onclick="analizarFisica()">🔍 RECALCULAR</button>
+        <button class="btn-tool btn-action" style="margin-top:15px;" onclick="analizarFisica()"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">search</span> RECALCULAR</button>
     </div>
 
     <div class="canvas-area" id="canvas-wrapper">
         <canvas id="main-canvas"></canvas>
-        <button id="float-delete" onclick="deleteSelected()">🗑️ Eliminar</button>
+        <button id="float-delete" onclick="deleteSelected()"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">delete</span>️ Eliminar</button>
         <input type="text" id="text-input-overlay" placeholder="Escribe aquí y presiona Enter...">
         <div id="labels-overlay"></div>
         <div id="coords-indicator">x: 0, y: 0</div>
@@ -307,7 +309,7 @@
             <div class="feedback-card" id="validation-box">...</div>
             
             <div class="tip-card" id="static-tip">
-                <strong>💡 Tip de Campo ($E$):</strong><br>
+                <strong><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">lightbulb</span> Tip de Campo ($E$):</strong><br>
                 El vector $E$ siempre se <b>ALEJA</b> de las cargas positivas y se <b>ACERCA</b> a las cargas negativas.
             </div>
         </div>

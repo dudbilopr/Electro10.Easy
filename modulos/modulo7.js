@@ -1,5 +1,5 @@
 // modulos/modulo7.js — Circuitos de Corriente Continua (CC)
-// 📓 NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
+// NOTEBOOKLM: Reemplaza "#" en llmLink con tu link real
 export const modulo7 = {
     "titulo": "Módulo 7: Circuitos de Corriente Continua (CC)",
     "color": "#059669",
@@ -78,7 +78,7 @@ export const modulo7 = {
             "titulo": "4. Physics Quest — Circuitos DC",
             "descripcion": "Diseña redes eléctricas para satisfacer especificaciones de voltaje y corriente. ¡5 misiones de ingeniería!",
             "xp": 25,
-            "logro": { "id": "logro_m7", "nombre": "Arquitecto de Redes", "icono": "🔌" }
+            "logro": { "id": "logro_m7", "nombre": "Arquitecto de Redes", "icono": "schema" }
         },
         {
             "id": "m7-t",
@@ -135,7 +135,7 @@ export const modulo7 = {
             "xp": 10,
             "secciones": [
                 {
-                    "tituloSeccion": "📘 Libros de texto",
+                    "tituloSeccion": "Libros de texto",
                     "links": [
                         { "url": "https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force", "titulo": "OpenStax: Circuitos DC — Cap. 10", "descripcion": "FEM, resistencia interna, Kirchhoff y circuitos RC." },
                         { "url": "https://openstax.org/books/college-physics-2e/pages/21-introduction-to-circuits-and-dc-instruments", "titulo": "OpenStax College Physics: Circuitos y Mediciones CC", "descripcion": "Instrumentos de medición CC, amperímetros, voltímetros y divisor de tensión." },
@@ -143,7 +143,7 @@ export const modulo7 = {
                     ]
                 },
                 {
-                    "tituloSeccion": "🌐 Recursos web",
+                    "tituloSeccion": "Recursos web",
                     "links": [
                         { "url": "https://www.allaboutcircuits.com/textbook/direct-current/", "titulo": "All About Circuits: Direct Current", "descripcion": "Guía completa de circuitos DC con esquemas y explicaciones intuitivas." },
                         { "url": "https://es.khanacademy.org/science/electrical-engineering/ee-circuit-analysis-topic", "titulo": "Khan Academy: Circuitos Eléctricos", "descripcion": "Videos instructivos y ejercicios paso a paso de Kirchhoff y Thévenin." },
@@ -151,7 +151,7 @@ export const modulo7 = {
                     ]
                 },
                 {
-                    "tituloSeccion": "🔬 Simuladores externos",
+                    "tituloSeccion": "Simuladores externos",
                     "links": [
                         { "url": "https://phet.colorado.edu/es/simulations/circuit-construction-kit-dc", "titulo": "PhET: Construcción de Circuitos DC", "descripcion": "Construye y mide voltajes y corrientes en tiempo real." },
                         { "url": "https://www.falstad.com/circuit/", "titulo": "Falstad Circuit Simulator", "descripcion": "Simulador profesional de circuitos electrónicos en el navegador." },
