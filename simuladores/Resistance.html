@@ -1059,15 +1059,6 @@ const buildGraph = () => {
 };
 
 // Algoritmo para limpiar cables muertos visuales en los pasos de reducción
-const pruneStepWires = (comps, wires, sourceEdge) => {
-    let activeNodes = new Set();
-    comps.forEach(c => {
-        if(c.isEq) {
-            if(c.n1) activeNodes.add(c.n1);
-            if(c.n2) activeNodes.add(c.n2);
-        } else {
-            let rad = c.rot*Math.PI/180;
-            let p1 = {x: c.x - 20*Math.cos(rad), y: c.y - 20*Math.sin(rad)};
             let p2 = {x: c.x + 20*Math.cos(rad), y: c.y + 20*Math.sin(rad)};
             cur().nodes.forEach(n => {
                 if(dist(n.x,n.y,p1.x,p1.y)<30 || dist(n.x,n.y,p2.x,p2.y)<30) activeNodes.add(n.id);
@@ -1156,6 +1147,31 @@ $('btn-solve').onclick = () => {
     
     cur().circuitStates = [ { comps: JSON.parse(JSON.stringify(cur().comps)), wires: JSON.parse(JSON.stringify(cur().wires)), nodes: JSON.parse(JSON.stringify(cur().nodes)), name: "Paso 0: Original" } ];
     
+    const pruneDeadEnds = (comps, wires) => {
+        let changed = true;
+        while(changed) {
+            changed = false;
+            let deg = {};
+            wires.forEach(w => { 
+                if(w.n1) deg[w.n1] = (deg[w.n1]||0) + 1; 
+                if(w.n2) deg[w.n2] = (deg[w.n2]||0) + 1; 
+            });
+            comps.forEach(c => { 
+                if(c.n1) deg[c.n1] = (deg[c.n1]||0) + 1; 
+                if(c.n2) deg[c.n2] = (deg[c.n2]||0) + 1; 
+            });
+            for(let i = wires.length-1; i>=0; i--) {
+                let w = wires[i];
+                if((w.n1 && deg[w.n1] === 1) || (w.n2 && deg[w.n2] === 1)) {
+                    if(w.n1 === vSrc.n1 || w.n1 === vSrc.n2 || w.n2 === vSrc.n1 || w.n2 === vSrc.n2) continue;
+                    wires.splice(i, 1);
+                    changed = true;
+                }
+            }
+        }
+        return wires;
+    };
+
     while(workingEdges.length > 1 && step < 50) {
         let reduced = false; let sColor = STEP_COLORS[(step-1) % STEP_COLORS.length];
         
@@ -1176,15 +1192,18 @@ $('btn-solve').onclick = () => {
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
                 
-                let anchor = curComps.find(c => c.id === group[0].id); let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200;
+                let anchor = curComps.find(c => c.id === group[0].id); 
+                let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200, crot = anchor ? anchor.rot : 0;
+                let cn1 = anchor ? anchor.n1 : group[0].n1, cn2 = anchor ? anchor.n2 : group[0].n2;
+                
                 group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); }); 
                 
-                let n1Obj = cur().nodes.find(n=>n.id===group[0].n1) || {x:cx-40, y:cy}; let n2Obj = cur().nodes.find(n=>n.id===group[0].n2) || {x:cx+40, y:cy};
-                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: group[0].n1, n2: group[0].n2 });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-20,y:cy}, {x:cx-20,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+20,y:cy}, {x:cx+20,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                // Colocar Req exactamente en el lugar del ancla, manteniendo la geometría
+                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:crot, isEq:true, stepColor:sColor, n1: cn1, n2: cn2, label: eqName });
                 
-                curWires = pruneStepWires(curComps, curWires, vSrc);
+                // Las ramas paralelas eliminadas dejarán cables muertos, los podamos:
+                curWires = pruneDeadEnds(curComps, curWires);
+                
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Paralelo` });
                 step++; reduced=true; break;
             }
@@ -1217,15 +1236,28 @@ $('btn-solve').onclick = () => {
                 
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
-                let anchor = curComps.find(c => c.id === group[0].id); let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200;
+                
+                let anchor = curComps.find(c => c.id === group[0].id); 
+                let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200, crot = anchor ? anchor.rot : 0;
+                let cn1 = anchor ? anchor.n1 : group[0].n1, cn2 = anchor ? anchor.n2 : group[0].n2;
+                
+                // Reemplazar los componentes secundarios con cables sólidos para no romper la geometría serie
+                for(let i=1; i<group.length; i++) {
+                    let cOther = curComps.find(c => c.id === group[i].id);
+                    if(cOther) {
+                        let rad = cOther.rot * Math.PI / 180;
+                        let p1 = {x: cOther.x - 20*Math.cos(rad), y: cOther.y - 20*Math.sin(rad)};
+                        let p2 = {x: cOther.x + 20*Math.cos(rad), y: cOther.y + 20*Math.sin(rad)};
+                        curWires.push({ id:uid(), dashed:true, color:sColor, path:[p1, p2], n1: cOther.n1, n2: cOther.n2 });
+                    }
+                }
+                
                 group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); });
                 
-                let n1Obj = cur().nodes.find(n=>n.id===endNodes[0]) || {x:cx-40, y:cy}; let n2Obj = cur().nodes.find(n=>n.id===endNodes[1]) || {x:cx+40, y:cy};
-                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: endNodes[0], n2: endNodes[1] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-20,y:cy}, {x:cx-20,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+20,y:cy}, {x:cx+20,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                // Colocar Req exactamente en el lugar del ancla
+                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:crot, isEq:true, stepColor:sColor, n1: cn1, n2: cn2, label: eqName });
                 
-                curWires = pruneStepWires(curComps, curWires, vSrc);
+                curWires = pruneDeadEnds(curComps, curWires);
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Serie` });
                 step++; reduced=true;
             }
@@ -1237,7 +1269,7 @@ $('btn-solve').onclick = () => {
     if (workingEdges.length === 1) {
         Rtot = workingEdges[0].val; 
         Itot = vSrc.val / Rtot;
-        blocks.push({type:'math', content:`\\textbf{Síntesis Equivalente}\\\\ \\rule{6cm}{0.4pt} \\\\ R_{eq} = ${Rtot.toFixed(2)}\\Omega \\\\ I_{total} = \\frac{V}{R_{eq}} = ${Itot.toFixed(2)}A`});
+        blocks.push({type:'math', content:`\\textbf{Síntesis Equivalente}\\\\ \\rule{6cm}{0.4pt} \\\\ R_{eq} = ${Rtot.toFixed(2)}\\Omega \\\\ I_{total} = \\frac{V_{fuente}}{R_{eq}} = ${Itot.toFixed(2)}A`});
         blocks.push({type:'math', content:`\\textbf{Retro-Propagación Física}\\\\ \\rule{6cm}{0.4pt}`});
         workingEdges[0].I = Itot; workingEdges[0].V = vSrc.val;
         
