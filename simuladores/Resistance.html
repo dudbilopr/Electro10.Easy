@@ -244,7 +244,7 @@ tr:hover td { background:rgba(255,255,255,0.05); }
             <div style="background:rgba(255,255,255,0.2); padding:20px; border-radius:50%; margin-bottom:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
                 <i class="ph ph-lightning" style="font-size: 5rem;"></i>
             </div>
-            <h2 style="font-size: 2rem; margin-bottom: 12px; font-weight: 900; letter-spacing:1px;">Capacitance10</h2>
+            <h2 style="font-size: 2rem; margin-bottom: 12px; font-weight: 900; letter-spacing:1px;">Resistance10</h2>
             <p style="opacity: 0.95; font-size: 1rem; line-height: 1.6; font-weight:500;">Plataforma profesional de simulación de circuitos, análisis de campos eléctricos y algoritmos equivalentes para ingeniería.</p>
         </div>
         
@@ -358,7 +358,7 @@ tr:hover td { background:rgba(255,255,255,0.05); }
         </div>
         <div class="input-group" style="margin-top:12px;">
             <label>Comentarios Constructivos (Feedback)</label>
-            <textarea id="rate-comment" rows="4" placeholder="Describe tu experiencia detallada con Capacitance10..."></textarea>
+            <textarea id="rate-comment" rows="4" placeholder="Describe tu experiencia detallada con Resistance10..."></textarea>
         </div>
         <button class="btn" id="btn-submit-rate" style="margin-top:20px; font-size:1.1rem; padding:14px;"><i class="ph ph-paper-plane-tilt"></i> Enviar Reporte</button>
     </div>
@@ -373,7 +373,7 @@ tr:hover td { background:rgba(255,255,255,0.05); }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getDatabase, ref, set, get, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 // Híbrido: Detectar si estamos en un entorno inyectado o usamos las credenciales quemadas
 let firebaseConfig;
@@ -387,7 +387,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const rtdb = getDatabase(app);
 const auth = getAuth(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'capacitance10';
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'resistance10';
 
 // ✅ EVALUAR REDIRECCIONES AL CARGAR (Captura el login de Google)
 getRedirectResult(auth).then(result => {
@@ -552,14 +552,18 @@ $('btn-login-email').onclick = async () => {
     try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') { try { await createUserWithEmailAndPassword(auth, e, p); } catch(ex) { toast(ex.message); } } else toast(err.message); }
 };
 
-// ✅ SOLUCIÓN PERFECTA GOOGLE SSO: Redirección pura con selección forzada de cuenta
-$('btn-login-google').onclick = () => { 
+// ✅ SOLUCIÓN GOOGLE SSO: Popup (Más compatible que Redirect en iframes y localhost)
+$('btn-login-google').onclick = async () => { 
     const provider = new GoogleAuthProvider();
-    // Obliga a Google a mostrar la pantalla de elegir cuenta siempre
     provider.setCustomParameters({ prompt: 'select_account' });
-    toast("Redirigiendo de forma segura a Google...");
-    // Evita el error COOP de window.closed realizando una redirección nativa
-    signInWithRedirect(auth, provider);
+    toast("Abriendo ventana de Google...");
+    try {
+        await signInWithPopup(auth, provider);
+        toast("Autenticación exitosa");
+    } catch(err) {
+        console.error(err);
+        toast("Error de Auth Google: " + err.message);
+    }
 };
 
 $('btn-logout').onclick = () => { signOut(auth); modal('modal-profile', false); if(st.room) leaveRoom(); };
@@ -1117,48 +1121,9 @@ $('btn-solve').onclick = () => {
         
         for(let k in pMap) {
             if(pMap[k].length > 1) { 
-                let group = pMap[k]; let cEq = group.reduce((s,c)=>s+c.val,0);
+                let group = pMap[k]; let invSum = group.reduce((s,c)=>s+c.val, 0); let cEq = invSum;
                 let names = group.map(c=>`R_{${c.id.substring(0,3)}}`).join(' + ');
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Paralelo } \\Rightarrow R_{eq${step}} = ${names} = ${cEq.toFixed(2)}\\mu Ω`});
-                
-                let eqEdge = {id:`eq${step}`, val:cEq, n1:group[0].n1, n2:group[0].n2, isEq:true, comps:group, type:'P', color: sColor};
-                workingEdges = workingEdges.filter(e => !group.includes(e)); workingEdges.push(eqEdge); history.push(eqEdge);
-                
-                let lastState = cur().circuitStates[cur().circuitStates.length-1];
-                let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
-                let anchor = curComps.find(c => c.id === group[0].id); let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200;
-                group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); }); 
-                
-                let n1Obj = cur().nodes.find(n=>n.id===group[0].n1) || {x:cx-40, y:cy}; let n2Obj = cur().nodes.find(n=>n.id===group[0].n2) || {x:cx+40, y:cy};
-                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: group[0].n1, n2: group[0].n2 });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-20,y:cy}, {x:cx-20,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+20,y:cy}, {x:cx+20,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
-                
-                // Ocultar cables muertos
-                curWires = pruneStepWires(curComps, curWires, vSrc);
-                cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Paralelo` });
-                step++; reduced=true; break;
-            }
-        }
-        if(reduced) continue;
-
-        let nCounts = {}; workingEdges.forEach(e=>{ nCounts[e.n1]=(nCounts[e.n1]||0)+1; nCounts[e.n2]=(nCounts[e.n2]||0)+1; });
-
-        let d2Nodes = Object.keys(nCounts).filter(n => nCounts[n]===2 && n!==vSrc.n1 && n!==vSrc.n2);
-        if(d2Nodes.length > 0) {
-            let chainNodes = new Set(), chainEdges = new Set(), queue = [d2Nodes[0]];
-            while(queue.length > 0) {
-                let n = queue.pop(); if(chainNodes.has(n)) continue; chainNodes.add(n);
-                workingEdges.filter(e => e.n1===n || e.n2===n).forEach(e => {
-                    chainEdges.add(e); let other = e.n1===n ? e.n2 : e.n1;
-                    if(nCounts[other]===2 && other!==vSrc.n1 && other!==vSrc.n2) queue.push(other);
-                });
-            }
-            let group = Array.from(chainEdges);
-            if(group.length > 1) { 
-                let invSum = group.reduce((s,c)=>s+(1/c.val), 0); let cEq = 1/invSum;
-                let names = group.map(c=>`\\frac{1}{R_{${c.id.substring(0,3)}}}`).join(' + ');
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Serie } \\Rightarrow R_{eq${step}} = \\left(${names}\\right)^{-1} = ${cEq.toFixed(2)}\\mu Ω`});
+                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Serie } \\Rightarrow R_{eq${step}} = ${names} = ${cEq.toFixed(2)}\\Omega`});
 
                 let endNodes = []; group.forEach(e => { if(!chainNodes.has(e.n1)) endNodes.push(e.n1); if(!chainNodes.has(e.n2)) endNodes.push(e.n2); });
                 let eqEdge = {id:`eq${step}`, val:cEq, n1:endNodes[0], n2:endNodes[1], isEq:true, comps:group, type:'S', color:sColor};
@@ -1183,30 +1148,31 @@ $('btn-solve').onclick = () => {
         if(!reduced) break; 
     }
 
-    let Ctot = workingEdges.length===1 ? workingEdges[0].val : edges.reduce((s,c)=>s+c.val,0);
-    let Qtot = Ctot * vSrc.val;
-    blocks.push({type:'math', content:`\\textbf{Síntesis Equivalente}\\\\ \\rule{6cm}{0.4pt} \\\\ R_{eq} = ${Ctot.toFixed(2)}\\mu Ω \\\\ Q_{total} = ${Qtot.toFixed(2)}\\mu C`});
+    let Rtot = workingEdges.length===1 ? workingEdges[0].val : workingEdges.reduce((s,c)=>s+c.val,0); // Rtot is the final single edge or series of remaining edges
+    if(workingEdges.length > 1) { Rtot = workingEdges.reduce((s,c)=>s+c.val,0); } 
+    let Itot = vSrc.val / Rtot;
+    blocks.push({type:'math', content:`\\textbf{Síntesis Equivalente}\\\\ \\rule{6cm}{0.4pt} \\\\ R_{eq} = ${Rtot.toFixed(2)}\\Omega \\\\ I_{total} = \\frac{V}{R_{eq}} = ${Itot.toFixed(2)}A`});
 
-    blocks.push({type:'math', content:`\\textbf{Retro-Propagación Ωísica}\\\\ \\rule{6cm}{0.4pt}`});
-    workingEdges.forEach(e => { e.V = vSrc.val; e.Q = e.val * e.V; });
+    blocks.push({type:'math', content:`\\textbf{Retro-Propagación Física}\\\\ \\rule{6cm}{0.4pt}`});
+    workingEdges.forEach(e => { e.I = Itot; e.V = e.I * e.val; });
 
     for(let i = history.length - 1; i >= 0; i--) {
-        let eq = history[i]; let eqV = eq.V || 0; let eqQ = eq.Q || 0;
-        if(eq.type === 'P') {
+        let eq = history[i]; let eqV = eq.V || 0; let eqI = eq.I || 0;
+        if(eq.type === 'P') { // En paralelo el Voltaje es igual, se divide la Corriente
             eq.comps.forEach(c => { 
-                c.V = eqV; c.Q = c.val * eqV; 
+                c.V = eqV; c.I = eqV / c.val; c.P = c.V * c.I;
                 let actualComp = cur().comps.find(x => x.id === c.id); 
-                if(actualComp) { actualComp.V = c.V; actualComp.Q = c.Q; actualComp.stepBg = eq.color; } 
+                if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; } 
             });
-            let t = `R_{${eq.id}} \\text{ (Paralelo): } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `Q_{${c.id.substring(0,3)}} = ${(c.Q).toFixed(2)}\\mu C`).join(', ');
+            let t = `R_{${eq.id}} \\text{ (Paralelo): } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `I_{${c.id.substring(0,3)}} = ${(c.I).toFixed(2)}A`).join(', ');
             blocks.push({type:'math', content: t});
-        } else if(eq.type === 'S') {
+        } else if(eq.type === 'S') { // En serie la Corriente es igual, se divide el Voltaje
             eq.comps.forEach(c => { 
-                c.Q = eqQ; c.V = eqQ / c.val; 
+                c.I = eqI; c.V = eqI * c.val; c.P = c.V * c.I;
                 let actualComp = cur().comps.find(x => x.id === c.id);
-                if(actualComp) { actualComp.V = c.V; actualComp.Q = c.Q; actualComp.stepBg = eq.color; }
+                if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; }
             });
-            let t = `R_{${eq.id}} \\text{ (Serie): } Q = ${eqQ.toFixed(2)}\\mu C \\Rightarrow ` + eq.comps.map(c => `V_{${c.id.substring(0,3)}} = ${(c.V).toFixed(2)}V`).join(', ');
+            let t = `R_{${eq.id}} \\text{ (Serie): } I = ${eqI.toFixed(2)}A \\Rightarrow ` + eq.comps.map(c => `V_{${c.id.substring(0,3)}} = ${(c.V).toFixed(2)}V`).join(', ');
             blocks.push({type:'math', content: t});
         }
     }
@@ -1217,28 +1183,25 @@ $('btn-solve').onclick = () => {
     
     // Tabla de Resultados Profesional
     let tb = $('table-results'); tb.style.display='block';
-    let html = '<table><tr><th>Comp</th><th>C (Ω)</th><th>V (V)</th><th>Q (µC)</th><th>U (µJ)</th></tr>';
-    html += `<tr style="background:rgba(255,255,255,0.05)"><td><b>Fuente DC</b></td><td>-</td><td>${vSrc.val.toFixed(2)}</td><td>${Qtot.toFixed(2)}</td><td>-</td></tr>`;
+    let html = '<table><tr><th>Comp</th><th>R (Ω)</th><th>V (V)</th><th>I (A)</th><th>P (W)</th></tr>';
+    html += `<tr style="background:rgba(255,255,255,0.05)"><td><b>Fuente DC</b></td><td>-</td><td>${vSrc.val.toFixed(2)}</td><td>${Itot.toFixed(2)}</td><td>${(vSrc.val * Itot).toFixed(2)}</td></tr>`;
     
     let allOk = true;
     edges.forEach(e => {
         let cRef = cur().comps.find(x => x.id === e.id); if(!cRef) return;
-        let vCap = cRef.V || e.V || 0; let qCap = cRef.Q || e.Q || 0; let uCap = 0.5 * e.val * (vCap*vCap);
+        let vCap = cRef.V || e.V || 0; let iCap = cRef.I || e.I || 0; let pCap = Math.abs(vCap * iCap);
         
         let colorForTable = cRef.stepBg || 'transparent';
-        // Hacer el color de la tabla más sólido para que se vea bien
         let bgStr = `background-color: ${colorForTable};`;
 
-        // CHECK EXPLOSION REVERSA POR DIJKSTRA BFS
-        let isReverse = distFromPos[cRef.n2] < distFromPos[cRef.n1];
-        if(cRef.polar && isReverse) { vCap = -Math.abs(vCap||1); } // Ωorzar negativo si está al revés
-
-        if(cRef.polar && vCap < 0) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Polar Inv</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
-        else if (cRef.maxV && Math.abs(vCap) > cRef.maxV) { cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Ruptura</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; } 
-        else { html += `<tr style="${bgStr}"><td><b>${e.id.substring(0,4)}</b></td><td>${e.val.toFixed(2)}</td><td>${vCap.toFixed(2)}</td><td>${qCap.toFixed(2)}</td><td>${uCap.toFixed(2)}</td></tr>`; }
+        if (cRef.maxV && pCap > cRef.maxV) { // Para resistores cRef.maxV es Potencia máxima (W)
+            cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); 
+            html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> ¡Quemado! >${cRef.maxV}W</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; 
+        } 
+        else { html += `<tr style="${bgStr}"><td><b>${e.id.substring(0,4)}</b></td><td>${e.val.toFixed(2)}</td><td>${vCap.toFixed(2)}</td><td>${iCap.toFixed(2)}</td><td>${pCap.toFixed(2)}</td></tr>`; }
     });
     
-    html += `<tr style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(5, 150, 105, 0.4)); font-size:1.1rem;"><td><b>TOTAL</b></td><td><b>${Ctot.toFixed(2)}</b></td><td><b>-</b></td><td><b>${Qtot.toFixed(2)}</b></td><td><b>${(0.5*Ctot*vSrc.val*vSrc.val).toFixed(2)}</b></td></tr>`;
+    html += `<tr style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(5, 150, 105, 0.4)); font-size:1.1rem;"><td><b>TOTAL</b></td><td><b>${Rtot.toFixed(2)}</b></td><td><b>-</b></td><td><b>${Itot.toFixed(2)}</b></td><td><b>${(vSrc.val * Itot).toFixed(2)}</b></td></tr>`;
     html += '</table>'; tb.innerHTML = html; render(); syncState();
 
     if(allOk) {
