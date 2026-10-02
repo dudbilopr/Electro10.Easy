@@ -18,7 +18,7 @@ export const modulo6 = {
         {
             "id": "m6-l1",
             "tipo": "multivideo",
-            "recurso": "z-fv_QDESSc|Sw6vtplA_68|enQ8QuUBYNE|6w51PrhXy04|b_nBNDkJUJE|g2YK35fR7yE|XHAfc4EbH1Q|a7jaxpYtZAQ|DPCcImv1Xko|SizL_9HP6nY|gJasVOhHbao",
+            "recurso": "uccFphmYho0|vysLa8EVOlI|TFeRqLeZHzw|hz3fxaXpdVc|iwb1I_vvluk|PcMgFpZkUq4|M-ErLmd2SZM",
             "titulo": "1. Teoría y Deducción: Capacitancia y Dieléctricos",
             "descripcion": "Fundamentación analítica de la capacitancia, análisis de campo interior, efecto de los dieléctricos y cálculo de energía.",
             "xp": 10
