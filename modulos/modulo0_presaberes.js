@@ -1,8 +1,24 @@
 export const modulo0_presaberes = {
     id: "m0",
     titulo: "Módulo 0: Examen Diagnóstico de Presaberes",
+    color: "#64748b",
+    icono: "fact_check",
+    descripcionCorta: "Evaluación diagnóstica de estilos de aprendizaje (CHAEA/Kolb) y competencias matemáticas universitarias previas al curso",
+    subtemas: [
+        "Estilos de aprendizaje: modelo CHAEA (Honey-Alonso) y ciclo de Kolb",
+        "Inteligencias múltiples de Gardner aplicadas a la ingeniería",
+        "Álgebra vectorial: producto escalar, vectorial y triple mixto",
+        "Cálculo diferencial: derivadas ordinarias y parciales",
+        "Cálculo integral: técnicas de integración y cambio de variable",
+        "Cálculo vectorial: divergencia, rotacional, gradiente y operador nabla",
+        "Teoremas de Gauss (divergencia), Stokes y Green",
+        "Ecuaciones diferenciales lineales de primer y segundo orden",
+        "Cinemática y dinámica newtoniana: leyes de Newton y trabajo-energía",
+        "Gravitación, rotación y momento de inercia"
+    ],
     descripcion: "Prueba obligatoria para evaluar tus bases matemáticas avanzadas antes de iniciar el curso. Puntaje mínimo: 65%.",
     lecciones: [
+
         {
             id: "m0_l0",
             titulo: "Diagnóstico Holístico (CHAEA + Kolb + IM)",
