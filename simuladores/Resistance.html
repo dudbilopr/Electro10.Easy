@@ -921,8 +921,47 @@ const render = () => {
     }
 
     st.particles.forEach((p,i) => { ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6); ctx.fill(); p.x+=p.vx; p.y+=p.vy; p.a-=0.02; if(p.a<=0) st.particles.splice(i,1); });
+    
+    // Dibujar electrones/corriente dinámica
+    let time = Date.now() / 1000;
+    renderWires.forEach(w => {
+        let current = w.I || 0; // Usar la corriente si está pre-calculada en el cable
+        // Buscar si el cable conecta con algo que tenga I
+        if(!current) {
+            let comp = renderComps.find(c => c.id === w.n1 || c.id === w.n2 || w.id.includes(c.id));
+            if(comp && comp.I) current = comp.I;
+        }
+        // Asignar corriente genérica para visualización si el sistema está resuelto
+        if(tCur.circuitStates && tCur.circuitStates.length > 1) {
+            current = current || 1; 
+        }
+        
+        if(current > 0 && w.path && w.path.length > 1) {
+            ctx.fillStyle = '#3b82f6'; // Azul eléctrico
+            let speed = Math.min(5, Math.max(1, current * 2));
+            let offset = (time * speed) % 1;
+            
+            for(let i=0; i<w.path.length-1; i++) {
+                let p1 = w.path[i], p2 = w.path[i+1];
+                let dx = p2.x - p1.x, dy = p2.y - p1.y;
+                let len = Math.hypot(dx, dy);
+                if(len === 0) continue;
+                
+                // Varias cargas por segmento
+                let numCharges = Math.floor(len / 30);
+                for(let j=0; j<=numCharges; j++) {
+                    let segmentOffset = (offset + j/numCharges) % 1;
+                    let ex = p1.x + dx * segmentOffset;
+                    let ey = p1.y + dy * segmentOffset;
+                    ctx.beginPath(); ctx.arc(ex, ey, 3, 0, Math.PI*2); ctx.fill();
+                }
+            }
+        }
+    });
+
     ctx.restore();
-    if(st.particles.length>0) requestAnimatiomΩrame(render);
+    // Animación continua siempre para los electrones
+    requestAnimationFrame(render);
 };
 
 // Panel Propiedades (Ventana Ωlotante)
@@ -1160,7 +1199,7 @@ $('btn-solve').onclick = () => {
                 let group = pMap[k]; let invSum = group.reduce((s,c)=>s+(1/c.val), 0); let cEq = 1/invSum;
                 let names = group.map(c => `\\frac{1}{${nameMap[c.id] || c.id}}`).join(' + ');
                 let eqName = `R_{eq${step}}`;
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Paralelo } \\Rightarrow ${eqName} = \\left(${names}\\right)^{-1} = ${cEq.toFixed(2)}\\Omega`});
+                blocks.push({type:'math', content:`\\text{\\textbf{Paso } } ${step}\\text{\\textbf{: Reducción en Paralelo}}\\\\ \\text{Los componentes comparten terminales (Voltaje constante).}\\\\ \\Rightarrow ${eqName} = \\left(${names}\\right)^{-1} = ${cEq.toFixed(2)}\\Omega`});
 
                 let eqEdge = {id:`eq${step}`, val:cEq, n1:group[0].n1, n2:group[0].n2, isEq:true, comps:group, type:'P', color:sColor};
                 nameMap[`eq${step}`] = eqName;
@@ -1202,7 +1241,7 @@ $('btn-solve').onclick = () => {
                 let cEq = group.reduce((s,c)=>s+c.val, 0);
                 let names = group.map(c => nameMap[c.id] || c.id).join(' + ');
                 let eqName = `R_{eq${step}}`;
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Serie } \\Rightarrow ${eqName} = ${names} = ${cEq.toFixed(2)}\\Omega`});
+                blocks.push({type:'math', content:`\\text{\\textbf{Paso } } ${step}\\text{\\textbf{: Reducción en Serie}}\\\\ \\text{Los componentes comparten un solo nodo (Corriente constante).}\\\\ \\Rightarrow ${eqName} = ${names} = ${cEq.toFixed(2)}\\Omega`});
 
                 let endNodes = []; group.forEach(e => { if(!chainNodes.has(e.n1)) endNodes.push(e.n1); if(!chainNodes.has(e.n2)) endNodes.push(e.n2); });
                 let eqEdge = {id:`eq${step}`, val:cEq, n1:endNodes[0], n2:endNodes[1], isEq:true, comps:group, type:'S', color:sColor};
@@ -1244,7 +1283,7 @@ $('btn-solve').onclick = () => {
                     let actualComp = cur().comps.find(x => x.id === c.id); 
                     if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; } 
                 });
-                let t = `${nameMap[eq.id]} \\text{ (Paralelo): } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `I_{${nameMap[c.id].replace('R_{','')}} = ${(c.I).toFixed(2)}A`).join(', ');
+                let t = `\\text{\\textbf{Desglose de }} ${nameMap[eq.id]} \\text{ (Paralelo)}\\\\ \\text{Voltaje cte: } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `I_{${nameMap[c.id].replace('R_{','')}} = ${(c.I).toFixed(2)}A`).join(', ');
                 blocks.push({type:'math', content: t});
             } else if(eq.type === 'S') { 
                 eq.comps.forEach(c => { 
@@ -1252,7 +1291,7 @@ $('btn-solve').onclick = () => {
                     let actualComp = cur().comps.find(x => x.id === c.id);
                     if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; }
                 });
-                let t = `${nameMap[eq.id]} \\text{ (Serie): } I = ${eqI.toFixed(2)}A \\Rightarrow ` + eq.comps.map(c => `V_{${nameMap[c.id].replace('R_{','')}} = ${(c.V).toFixed(2)}V`).join(', ');
+                let t = `\\text{\\textbf{Desglose de }} ${nameMap[eq.id]} \\text{ (Serie)}\\\\ \\text{Corriente cte: } I = ${eqI.toFixed(2)}A \\Rightarrow ` + eq.comps.map(c => `V_{${nameMap[c.id].replace('R_{','')}} = ${(c.V).toFixed(2)}V`).join(', ');
                 blocks.push({type:'math', content: t});
             }
         }
