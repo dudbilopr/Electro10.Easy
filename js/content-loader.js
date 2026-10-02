@@ -32,7 +32,8 @@ export function getIconForType(tipo) {
 function getYoutubeEmbed(rawCode) {
     if (rawCode.length > 15) {
         // Asume que es un ID de TikTok (que son numeros largos de ~19 digitos)
-        return `https://www.tiktok.com/embed/v2/${rawCode}?lang=es-ES`;
+        // Usamos player/v1 para evitar el error 'overload-protect triggered'
+        return `https://www.tiktok.com/player/v1/${rawCode}?&music_info=1&description=1`;
     }
     let finalUrl = "https://www.youtube.com/embed/";
     if (rawCode.includes('&t=')) {
