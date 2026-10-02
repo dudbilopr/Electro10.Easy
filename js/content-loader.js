@@ -30,6 +30,10 @@ export function getIconForType(tipo) {
 
 // ── Helper: URL de embed de YouTube ─────────────────────────
 function getYoutubeEmbed(rawCode) {
+    if (rawCode.length > 15) {
+        // Asume que es un ID de TikTok (que son numeros largos de ~19 digitos)
+        return `https://www.tiktok.com/embed/v2/${rawCode}?lang=es-ES`;
+    }
     let finalUrl = "https://www.youtube.com/embed/";
     if (rawCode.includes('&t=')) {
         const parts   = rawCode.split('&t=');
@@ -242,9 +246,14 @@ export function loadContent(leccion, modulo, progressData, evalData) {
 
         const recursos = leccion.recurso.split('|');
         recursos.forEach((rec, index) => {
-            let thumbUrl = leccion.tipo === 'multivideo'
-                ? `https://img.youtube.com/vi/${rec.split('&')[0]}/mqdefault.jpg`
-                : `https://ui-avatars.com/api/?name=Part+${index + 1}&background=2563eb&color=fff&size=120`;
+            let thumbUrl = `https://ui-avatars.com/api/?name=Part+${index + 1}&background=2563eb&color=fff&size=120`;
+            if (leccion.tipo === 'multivideo') {
+                if (rec.length > 15) { // TikTok
+                    thumbUrl = `https://ui-avatars.com/api/?name=TikTok+Video&background=000&color=00f0ff&size=120`;
+                } else { // YouTube
+                    thumbUrl = `https://img.youtube.com/vi/${rec.split('&')[0]}/mqdefault.jpg`;
+                }
+            }
 
             const card = document.createElement('div');
             card.className = `thumbnail-card ${index === 0 ? 'active' : ''}`;
