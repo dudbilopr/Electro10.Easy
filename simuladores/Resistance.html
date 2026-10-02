@@ -1058,42 +1058,6 @@ const buildGraph = () => {
     return { edges: edges.filter(e=>e.n1!==e.n2), vSrc };
 };
 
-// Algoritmo para limpiar cables muertos visuales en los pasos de reducción
-            let p2 = {x: c.x + 20*Math.cos(rad), y: c.y + 20*Math.sin(rad)};
-            cur().nodes.forEach(n => {
-                if(dist(n.x,n.y,p1.x,p1.y)<30 || dist(n.x,n.y,p2.x,p2.y)<30) activeNodes.add(n.id);
-            });
-        }
-    });
-    if(sourceEdge) { activeNodes.add(sourceEdge.n1); activeNodes.add(sourceEdge.n2); }
-    
-    let adj = {};
-    wires.forEach(w => {
-        if(!w.n1 || !w.n2) return;
-        adj[w.n1] = adj[w.n1] || []; adj[w.n1].push(w);
-        adj[w.n2] = adj[w.n2] || []; adj[w.n2].push(w);
-    });
-    
-    let visitedWires = new Set();
-    let q = Array.from(activeNodes);
-    let visitedNodes = new Set(q);
-    
-    while(q.length > 0) {
-        let curr = q.shift();
-        if(adj[curr]) {
-            adj[curr].forEach(w => {
-                if(!visitedWires.has(w.id)) {
-                    visitedWires.add(w.id);
-                    let nxt = w.n1 === curr ? w.n2 : w.n1;
-                    if(!visitedNodes.has(nxt)) {
-                        visitedNodes.add(nxt); q.push(nxt);
-                    }
-                }
-            });
-        }
-    }
-    return wires.filter(w => w.dashed || visitedWires.has(w.id));
-};
 
 const setTimelineView = (idx) => {
     let tCur = cur();
