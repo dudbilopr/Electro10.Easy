@@ -1154,7 +1154,7 @@ $('btn-show-steps').onclick = () => setTimelineView(0);
 
 $('btn-solve').onclick = () => {
     if(!auth.currentUser) return toast('Debe iniciar sesión para resolver');
-    cur().comps.forEach(c => { c.stepBg = null; c.V = undefined; c.Q = undefined; }); 
+    cur().comps.forEach(c => { c.stepBg = null; c.V = undefined; c.Q = undefined; c.I = undefined; c.P = undefined; }); 
 
     let { edges, vSrc } = buildGraph();
     let mw = $('math-window'); mw.style.display = 'flex'; mw.classList.remove('minimized');
@@ -1163,7 +1163,6 @@ $('btn-solve').onclick = () => {
     if(!vSrc) { kc.innerHTML = '<div style="color:var(--danger); padding:16px; border-radius:8px; background:rgba(239,68,68,0.1);"><b>Error Crítico:</b> No hay fuente conectada a nodos válidos. Asegúrate de conectar los cables directamente a los pines de los componentes.</div>'; return; }
     if(edges.length===0) { kc.innerHTML = '<div style="color:var(--danger); padding:16px; border-radius:8px; background:rgba(239,68,68,0.1);"><b>Aviso:</b> No hay resistores en bucle cerrado.</div>'; return; }
 
-    // Generar nombres elegantes (R_1, R_2, ...)
     let nameMap = {};
     let rCount = 1;
     let sortedEdges = [...edges].sort((a,b) => {
@@ -1191,6 +1190,7 @@ $('btn-solve').onclick = () => {
     while(workingEdges.length > 1 && step < 50) {
         let reduced = false; let sColor = STEP_COLORS[(step-1) % STEP_COLORS.length];
         
+        // 1. PARALLEL
         let pMap = {};
         workingEdges.forEach(e => { let k = e.n1<e.n2 ? `${e.n1}-${e.n2}` : `${e.n2}-${e.n1}`; (pMap[k]=pMap[k]||[]).push(e); });
         
@@ -1207,15 +1207,31 @@ $('btn-solve').onclick = () => {
                 
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
+                
+                // MANTENER LA GEOMETRÍA EXACTA: Usamos el primer componente como ancla
+                let anchorEdge = group[0];
+                let anchorComp = curComps.find(c => c.id === anchorEdge.id);
+                
+                // Borrar todos los componentes del grupo de curComps
                 group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); });
                 
-                let n1Obj = cur().nodes.find(n=>n.id===group[0].n1); let n2Obj = cur().nodes.find(n=>n.id===group[0].n2);
-                let cx = (n1Obj.x + n2Obj.x) / 2; let cy = (n1Obj.y + n2Obj.y) / 2;
-                
-                // Manhattan path elegante
-                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: group[0].n1, n2: group[0].n2 });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-12,y:cy}, {x:cx-12,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+12,y:cy}, {x:cx+12,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                if(anchorComp) {
+                    // Colocar el equivalente EXACTAMENTE donde estaba el ancla
+                    curComps.push({ id: `eq${step}`, type:'res_fixed', x:anchorComp.x, y:anchorComp.y, val:cEq, unit:'Ω', rot:anchorComp.rot, isEq:true, stepColor:sColor, n1: group[0].n1, n2: group[0].n2 });
+                    
+                    // Colorear los cables que tocaban al ancla para que resalten, y marcarlos como dashed
+                    let rad = anchorComp.rot*Math.PI/180;
+                    let p1 = {x: anchorComp.x - 20*Math.cos(rad), y: anchorComp.y - 20*Math.sin(rad)};
+                    let p2 = {x: anchorComp.x + 20*Math.cos(rad), y: anchorComp.y + 20*Math.sin(rad)};
+                    
+                    curWires.forEach(w => {
+                        let touches = false;
+                        w.path.forEach(p => {
+                            if(dist(p.x, p.y, p1.x, p1.y) < 15 || dist(p.x, p.y, p2.x, p2.y) < 15) touches = true;
+                        });
+                        if(touches) { w.dashed = true; w.color = sColor; }
+                    });
+                }
                 
                 curWires = pruneStepWires(curComps, curWires, vSrc);
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Paralelo` });
@@ -1224,6 +1240,7 @@ $('btn-solve').onclick = () => {
         }
         if(reduced) continue;
 
+        // 2. SERIES
         let nCounts = {}; workingEdges.forEach(e=>{ nCounts[e.n1]=(nCounts[e.n1]||0)+1; nCounts[e.n2]=(nCounts[e.n2]||0)+1; });
         let d2Nodes = Object.keys(nCounts).filter(n => nCounts[n]===2 && n!==vSrc.n1 && n!==vSrc.n2);
         
@@ -1250,14 +1267,40 @@ $('btn-solve').onclick = () => {
                 
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
-                group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); });
                 
-                let n1Obj = cur().nodes.find(n=>n.id===endNodes[0]); let n2Obj = cur().nodes.find(n=>n.id===endNodes[1]);
-                let cx = (n1Obj.x + n2Obj.x) / 2; let cy = (n1Obj.y + n2Obj.y) / 2;
+                // MANTENER LA GEOMETRÍA EXACTA
+                let anchorEdge = group[0];
+                let anchorComp = curComps.find(c => c.id === anchorEdge.id);
                 
-                curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: endNodes[0], n2: endNodes[1] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-12,y:cy}, {x:cx-12,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+12,y:cy}, {x:cx+12,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                // Para los demás componentes en la serie, los reemplazamos por un cable directo para mantener el circuito cerrado ortogonalmente
+                group.forEach(g => { 
+                    if(g.id !== anchorEdge.id) {
+                        let gComp = curComps.find(c => c.id === g.id);
+                        if(gComp) {
+                            let rad = gComp.rot*Math.PI/180;
+                            let p1 = {x: gComp.x - 20*Math.cos(rad), y: gComp.y - 20*Math.sin(rad)};
+                            let p2 = {x: gComp.x + 20*Math.cos(rad), y: gComp.y + 20*Math.sin(rad)};
+                            curWires.push({ id:uid(), dashed:true, color:sColor, path:[p1, p2], n1:g.n1, n2:g.n2 }); // Cortocircuito donde estaba el resistor
+                        }
+                    }
+                    curComps = curComps.filter(c => c.id !== g.id); 
+                });
+                
+                if(anchorComp) {
+                    curComps.push({ id: `eq${step}`, type:'res_fixed', x:anchorComp.x, y:anchorComp.y, val:cEq, unit:'Ω', rot:anchorComp.rot, isEq:true, stepColor:sColor, n1: endNodes[0], n2: endNodes[1] });
+                    
+                    let rad = anchorComp.rot*Math.PI/180;
+                    let p1 = {x: anchorComp.x - 20*Math.cos(rad), y: anchorComp.y - 20*Math.sin(rad)};
+                    let p2 = {x: anchorComp.x + 20*Math.cos(rad), y: anchorComp.y + 20*Math.sin(rad)};
+                    
+                    curWires.forEach(w => {
+                        let touches = false;
+                        w.path.forEach(p => {
+                            if(dist(p.x, p.y, p1.x, p1.y) < 15 || dist(p.x, p.y, p2.x, p2.y) < 15) touches = true;
+                        });
+                        if(touches) { w.dashed = true; w.color = sColor; }
+                    });
+                }
                 
                 curWires = pruneStepWires(curComps, curWires, vSrc);
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Serie` });
