@@ -1124,38 +1124,59 @@ $('btn-solve').onclick = () => {
     if(!vSrc) { kc.innerHTML = '<div style="color:var(--danger); padding:16px; border-radius:8px; background:rgba(239,68,68,0.1);"><b>Error Crítico:</b> No hay fuente conectada a nodos válidos. Asegúrate de conectar los cables directamente a los pines de los componentes.</div>'; return; }
     if(edges.length===0) { kc.innerHTML = '<div style="color:var(--danger); padding:16px; border-radius:8px; background:rgba(239,68,68,0.1);"><b>Aviso:</b> No hay resistores en bucle cerrado.</div>'; return; }
 
+    // Generar nombres elegantes (R_1, R_2, ...)
+    let nameMap = {};
+    let rCount = 1;
+    let sortedEdges = [...edges].sort((a,b) => {
+        let ca = cur().comps.find(x=>x.id===a.id);
+        let cb = cur().comps.find(x=>x.id===b.id);
+        if(ca && cb) {
+            if(Math.abs(ca.y - cb.y) > 20) return ca.y - cb.y;
+            return ca.x - cb.x;
+        }
+        return 0;
+    });
+    sortedEdges.forEach(e => {
+        nameMap[e.id] = `R_{${rCount}}`;
+        let c = cur().comps.find(x=>x.id===e.id);
+        if(c) c.label = `R${rCount}`;
+        rCount++;
+    });
+
     let blocks = [{type:'math', content:`\\textbf{Fase Analítica de Reducción}\\\\ \\rule{6cm}{0.4pt} \\\\ V_{fuente} = ${vSrc.val}V`}];
     let step = 1; let workingEdges = JSON.parse(JSON.stringify(edges)); 
     let history = []; 
     
     cur().circuitStates = [ { comps: JSON.parse(JSON.stringify(cur().comps)), wires: JSON.parse(JSON.stringify(cur().wires)), nodes: JSON.parse(JSON.stringify(cur().nodes)), name: "Paso 0: Original" } ];
     
-    // REDUCTION LOOP
     while(workingEdges.length > 1 && step < 50) {
         let reduced = false; let sColor = STEP_COLORS[(step-1) % STEP_COLORS.length];
         
-        // 1. PARALLEL
         let pMap = {};
         workingEdges.forEach(e => { let k = e.n1<e.n2 ? `${e.n1}-${e.n2}` : `${e.n2}-${e.n1}`; (pMap[k]=pMap[k]||[]).push(e); });
         
         for(let k in pMap) {
             if(pMap[k].length > 1) { 
                 let group = pMap[k]; let invSum = group.reduce((s,c)=>s+(1/c.val), 0); let cEq = 1/invSum;
-                let names = group.map(c=>`\\frac{1}{R_{${c.id.substring(0,3)}}}`).join(' + ');
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Paralelo } \\Rightarrow R_{eq${step}} = \\left(${names}\\right)^{-1} = ${cEq.toFixed(2)}\\Omega`});
+                let names = group.map(c => `\\frac{1}{${nameMap[c.id] || c.id}}`).join(' + ');
+                let eqName = `R_{eq${step}}`;
+                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Paralelo } \\Rightarrow ${eqName} = \\left(${names}\\right)^{-1} = ${cEq.toFixed(2)}\\Omega`});
 
                 let eqEdge = {id:`eq${step}`, val:cEq, n1:group[0].n1, n2:group[0].n2, isEq:true, comps:group, type:'P', color:sColor};
+                nameMap[`eq${step}`] = eqName;
                 workingEdges = workingEdges.filter(e => !group.includes(e)); workingEdges.push(eqEdge); history.push(eqEdge);
                 
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
-                let anchor = curComps.find(c => c.id === group[0].id); let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200;
                 group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); });
                 
-                let n1Obj = cur().nodes.find(n=>n.id===group[0].n1) || {x:cx-40, y:cy}; let n2Obj = cur().nodes.find(n=>n.id===group[0].n2) || {x:cx+40, y:cy};
+                let n1Obj = cur().nodes.find(n=>n.id===group[0].n1); let n2Obj = cur().nodes.find(n=>n.id===group[0].n2);
+                let cx = (n1Obj.x + n2Obj.x) / 2; let cy = (n1Obj.y + n2Obj.y) / 2;
+                
+                // Manhattan path elegante
                 curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: group[0].n1, n2: group[0].n2 });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-20,y:cy}, {x:cx-20,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+20,y:cy}, {x:cx+20,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-12,y:cy}, {x:cx-12,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
+                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+12,y:cy}, {x:cx+12,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
                 
                 curWires = pruneStepWires(curComps, curWires, vSrc);
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Paralelo` });
@@ -1164,7 +1185,6 @@ $('btn-solve').onclick = () => {
         }
         if(reduced) continue;
 
-        // 2. SERIES
         let nCounts = {}; workingEdges.forEach(e=>{ nCounts[e.n1]=(nCounts[e.n1]||0)+1; nCounts[e.n2]=(nCounts[e.n2]||0)+1; });
         let d2Nodes = Object.keys(nCounts).filter(n => nCounts[n]===2 && n!==vSrc.n1 && n!==vSrc.n2);
         
@@ -1180,22 +1200,25 @@ $('btn-solve').onclick = () => {
             let group = Array.from(chainEdges);
             if(group.length > 1) { 
                 let cEq = group.reduce((s,c)=>s+c.val, 0);
-                let names = group.map(c=>`R_{${c.id.substring(0,3)}}`).join(' + ');
-                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Serie } \\Rightarrow R_{eq${step}} = ${names} = ${cEq.toFixed(2)}\\Omega`});
+                let names = group.map(c => nameMap[c.id] || c.id).join(' + ');
+                let eqName = `R_{eq${step}}`;
+                blocks.push({type:'math', content:`\\text{Paso } ${step}: \\text{Serie } \\Rightarrow ${eqName} = ${names} = ${cEq.toFixed(2)}\\Omega`});
 
                 let endNodes = []; group.forEach(e => { if(!chainNodes.has(e.n1)) endNodes.push(e.n1); if(!chainNodes.has(e.n2)) endNodes.push(e.n2); });
                 let eqEdge = {id:`eq${step}`, val:cEq, n1:endNodes[0], n2:endNodes[1], isEq:true, comps:group, type:'S', color:sColor};
+                nameMap[`eq${step}`] = eqName;
                 workingEdges = workingEdges.filter(e => !group.includes(e)); workingEdges.push(eqEdge); history.push(eqEdge);
                 
                 let lastState = cur().circuitStates[cur().circuitStates.length-1];
                 let curComps = JSON.parse(JSON.stringify(lastState.comps)); let curWires = JSON.parse(JSON.stringify(lastState.wires));
-                let anchor = curComps.find(c => c.id === group[0].id); let cx = anchor ? anchor.x : 200, cy = anchor ? anchor.y : 200;
                 group.forEach(g => { curComps = curComps.filter(c => c.id !== g.id); });
                 
-                let n1Obj = cur().nodes.find(n=>n.id===endNodes[0]) || {x:cx-40, y:cy}; let n2Obj = cur().nodes.find(n=>n.id===endNodes[1]) || {x:cx+40, y:cy};
+                let n1Obj = cur().nodes.find(n=>n.id===endNodes[0]); let n2Obj = cur().nodes.find(n=>n.id===endNodes[1]);
+                let cx = (n1Obj.x + n2Obj.x) / 2; let cy = (n1Obj.y + n2Obj.y) / 2;
+                
                 curComps.push({ id: `eq${step}`, type:'res_fixed', x:cx, y:cy, val:cEq, unit:'Ω', rot:0, isEq:true, stepColor:sColor, n1: endNodes[0], n2: endNodes[1] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-20,y:cy}, {x:cx-20,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
-                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+20,y:cy}, {x:cx+20,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
+                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx-12,y:cy}, {x:cx-12,y:n1Obj.y}, {x:n1Obj.x,y:n1Obj.y}] });
+                curWires.push({ id:uid(), dashed:true, color:sColor, path:[{x:cx+12,y:cy}, {x:cx+12,y:n2Obj.y}, {x:n2Obj.x,y:n2Obj.y}] });
                 
                 curWires = pruneStepWires(curComps, curWires, vSrc);
                 cur().circuitStates.push({ comps: curComps, wires: curWires, nodes: cur().nodes, name: `Paso ${step}: Eq Serie` });
@@ -1207,7 +1230,6 @@ $('btn-solve').onclick = () => {
 
     let Rtot = 0, Itot = 0;
     if (workingEdges.length === 1) {
-        // Reducible Completamente
         Rtot = workingEdges[0].val; 
         Itot = vSrc.val / Rtot;
         blocks.push({type:'math', content:`\\textbf{Síntesis Equivalente}\\\\ \\rule{6cm}{0.4pt} \\\\ R_{eq} = ${Rtot.toFixed(2)}\\Omega \\\\ I_{total} = \\frac{V}{R_{eq}} = ${Itot.toFixed(2)}A`});
@@ -1222,7 +1244,7 @@ $('btn-solve').onclick = () => {
                     let actualComp = cur().comps.find(x => x.id === c.id); 
                     if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; } 
                 });
-                let t = `R_{${eq.id}} \\text{ (Paralelo): } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `I_{${c.id.substring(0,3)}} = ${(c.I).toFixed(2)}A`).join(', ');
+                let t = `${nameMap[eq.id]} \\text{ (Paralelo): } V = ${eqV.toFixed(2)}V \\Rightarrow ` + eq.comps.map(c => `I_{${nameMap[c.id].replace('R_{','')}} = ${(c.I).toFixed(2)}A`).join(', ');
                 blocks.push({type:'math', content: t});
             } else if(eq.type === 'S') { 
                 eq.comps.forEach(c => { 
@@ -1230,20 +1252,18 @@ $('btn-solve').onclick = () => {
                     let actualComp = cur().comps.find(x => x.id === c.id);
                     if(actualComp) { actualComp.V = c.V; actualComp.I = c.I; actualComp.P = c.P; actualComp.stepBg = eq.color; }
                 });
-                let t = `R_{${eq.id}} \\text{ (Serie): } I = ${eqI.toFixed(2)}A \\Rightarrow ` + eq.comps.map(c => `V_{${c.id.substring(0,3)}} = ${(c.V).toFixed(2)}V`).join(', ');
+                let t = `${nameMap[eq.id]} \\text{ (Serie): } I = ${eqI.toFixed(2)}A \\Rightarrow ` + eq.comps.map(c => `V_{${nameMap[c.id].replace('R_{','')}} = ${(c.V).toFixed(2)}V`).join(', ');
                 blocks.push({type:'math', content: t});
             }
         }
     } else {
-        // Malla Irreductible -> Análisis Nodal
         blocks.push({type:'math', content:`\\textbf{Malla Irreductible detectada}\\\\ \\rule{6cm}{0.4pt} \\\\ \\text{Aplicando Análisis Nodal (Leyes de Kirchhoff)}`});
         
         let allNodes = new Set();
         edges.forEach(e => { allNodes.add(e.n1); allNodes.add(e.n2); });
         
-        // n1 es Positivo, n2 es Negativo (Tierra)
         let vKnown = {};
-        vKnown[vSrc.n2] = 0; // Tierra
+        vKnown[vSrc.n2] = 0; 
         vKnown[vSrc.n1] = vSrc.val; 
         
         let unkNodes = Array.from(allNodes).filter(n => n !== vSrc.n1 && n !== vSrc.n2);
@@ -1266,7 +1286,6 @@ $('btn-solve').onclick = () => {
                 if (j !== -1 && vKnown[e.n1] !== undefined) B[j] += vKnown[e.n1] * g;
             });
             
-            // Gauss-Jordan
             for (let i = 0; i < N; i++) {
                 let maxRow = i;
                 for (let k = i + 1; k < N; k++) if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) maxRow = k;
@@ -1297,7 +1316,7 @@ $('btn-solve').onclick = () => {
             let actualComp = cur().comps.find(x => x.id === e.id);
             if(actualComp) { 
                 actualComp.V = e.V; actualComp.I = e.I; actualComp.P = e.V * e.I; 
-                actualComp.stepBg = 'rgba(139,92,246,0.3)'; // Color para mallas
+                actualComp.stepBg = 'rgba(139,92,246,0.3)'; 
             }
             
             if (e.n1 === vSrc.n1) Itot += (v1 - v2)/e.val;
@@ -1328,11 +1347,13 @@ $('btn-solve').onclick = () => {
         let colorForTable = cRef.stepBg || 'transparent';
         let bgStr = `background-color: ${colorForTable};`;
 
+        let niceName = cRef.label ? `<b>${cRef.label}</b>` : `<b>${e.id.substring(0,4)}</b>`;
+
         if (cRef.maxV && pCap > cRef.maxV) { 
             cRef.exploded = true; allOk = false; triggerExplosion(cRef.x, cRef.y); 
-            html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${e.id.substring(0,4)} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> ¡Quemado! >${cRef.maxV}W</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; 
+            html += `<tr style="${bgStr} color:var(--danger); font-weight:bold;"><td>${niceName} <span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> ¡Quemado! >${cRef.maxV}W</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`; 
         } 
-        else { html += `<tr style="${bgStr}"><td><b>${e.id.substring(0,4)}</b></td><td>${e.val.toFixed(2)}</td><td>${vCap.toFixed(2)}</td><td>${iCap.toFixed(2)}</td><td>${pCap.toFixed(2)}</td></tr>`; }
+        else { html += `<tr style="${bgStr}"><td>${niceName}</td><td>${e.val.toFixed(2)}</td><td>${vCap.toFixed(2)}</td><td>${iCap.toFixed(2)}</td><td>${pCap.toFixed(2)}</td></tr>`; }
     });
     
     html += `<tr style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(5, 150, 105, 0.4)); font-size:1.1rem;"><td><b>TOTAL</b></td><td><b>${Rtot.toFixed(2)}</b></td><td><b>-</b></td><td><b>${Itot.toFixed(2)}</b></td><td><b>${(vSrc.val * Itot).toFixed(2)}</b></td></tr>`;
