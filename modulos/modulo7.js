@@ -71,6 +71,14 @@ export const modulo7 = {
                     "titulo": "3.4 Simulador Falstad de Circuitos en Tiempo Real",
                     "descripcion": "Osciloscopio y visualizador interactivo del flujo de corriente y caídas de voltaje en tiempo real.",
                     "xp": 20
+                },
+                {
+                    "id": "m7-s5",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Resistance.html",
+                    "titulo": "3.5 Calculadora de Redes Resistivas Pro",
+                    "descripcion": "Módulo analítico nativo de la plataforma para calcular resistencia equivalente, corriente y potencia en topologías complejas.",
+                    "xp": 25
                 }
             ]
         },
