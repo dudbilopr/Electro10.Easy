@@ -19,11 +19,12 @@ export const modulo7 = {
         {
             "id": "m7-l1",
             "tipo": "multivideo",
-            "recurso": "Z_XkDlMFXGA|8Fy4-FOgNlA|gxbA_iy4aWM|y5X2AMZVMxM|s7YUiSeMJ0g|cFPjijfVTtU|WUmxkuYVHsQ|Oq7Dfh85-VE|wwcBAZoPGrE",
+            "recurso": "qPm5XVvZIac|245-usgm-pk|Oq7Dfh85-VE|rP65AmXLv_4|vGQWLgpxkWI|1NC9kGDn7Bg|a7-vJK2-4Tc",
             "titulo": "1. Videos — Circuitos de Corriente Continua (CC)",
             "descripcion": "Corriente, resistencia, reglas de Kirchhoff, mallas, Thévenin y circuitos RC con demostraciones completas.",
             "xp": 10
         },
+
         {
             "id": "m7-l2",
             "tipo": "presentacion",
