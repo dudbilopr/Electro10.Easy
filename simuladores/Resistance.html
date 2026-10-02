@@ -1080,9 +1080,7 @@ const pruneStepWires = (comps, wires, sourceEdge) => {
     // 2. Un cable solo sobrevive si ambos extremos terminan eventualmente en un activeNode
     // Construimos grafo de cables
     let adj = {};
-    let validWires = [];
     wires.forEach(w => {
-        if(w.dashed) { validWires.push(w); return; } // Los cables nuevos siempre viven
         if(!w.n1 || !w.n2) return;
         adj[w.n1] = adj[w.n1] || []; adj[w.n1].push(w);
         adj[w.n2] = adj[w.n2] || []; adj[w.n2].push(w);
@@ -1117,7 +1115,7 @@ const pruneStepWires = (comps, wires, sourceEdge) => {
         changed = false;
         let deg = {};
         finalWires.forEach(w => {
-            if(w.dashed) return;
+            // if(w.dashed) return; // REMOVED: Dashed wires MUST contribute to degree so they keep solid wires alive!
             deg[w.n1] = (deg[w.n1]||0) + 1;
             deg[w.n2] = (deg[w.n2]||0) + 1;
         });
