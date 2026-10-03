@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador: Diagrama de Fasores</title>
+    <title>PhasorLab10.easy - Diagrama de Fasores</title>
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        :root {
+            --accent: #06b6d4;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; overflow: hidden; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -23,17 +28,24 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        input[type="range"] { accent-color: #3b82f6; }
+        input[type="range"] { accent-color: #06b6d4; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body class="h-screen flex flex-col">
 
-    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center px-4 z-20 shrink-0 shadow-md">
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-sky-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-sky-500/20">V</div>
-            <h1 class="text-lg font-bold text-white">Simulador <span class="text-sky-400">Diagrama de Fasores (Voltajes)</span></h1>
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #06b6d4);">
+                <i class="ph ph-wave-sine" style="font-size: 1.25rem;"></i>
+            </div>
+            <h1 class="text-lg font-bold text-white">PhasorLab10<span style="color:var(--accent, #06b6d4);">.easy</span> <span class="text-xs text-slate-400 font-normal">| Diagrama Fasorial RLC</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
         </div>
     </header>
 
@@ -76,9 +88,10 @@
             </div>
 
             <div class="mt-auto">
-                 <button id="anim-btn" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg mb-2">
-                    Iniciar Rotación ($\omega t$)
+                 <button id="anim-btn" class="w-full py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg mb-2 flex items-center justify-center gap-2">
+                    <i class="ph ph-play"></i> Iniciar Rotación ($\omega t$)
                 </button>
+                <div id="fasores-continue-wrap" class="mt-4 pt-3 border-t border-slate-800"></div>
             </div>
         </aside>
 
@@ -135,12 +148,12 @@
 
             <!-- Theory and Math (Bottom) -->
             <div class="w-full h-1/3 p-6 overflow-y-auto bg-slate-950 scrollbar-thin">
-                <h3 class="text-xs font-bold text-sky-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph ph-calculator"></i>
                     Suma Vectorial de Voltajes
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="glass-panel p-4 rounded-xl border-sky-500/30 border flex flex-col justify-center">
+                    <div class="glass-panel p-4 rounded-xl border-cyan-500/30 border flex flex-col justify-center">
                         <div id="math-steps-1" class="text-sm text-slate-300 font-light">
                             <!-- Injected -->
                         </div>
@@ -206,9 +219,9 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     animation: false,
-                    plugins: { legend: { display: false } }, // Hide legend to save space, colors are obvious
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: { display: false, min: 0, max: 4 * Math.PI }, // 2 full waves
+                        x: { display: false, min: 0, max: 4 * Math.PI },
                         y: { title: { display: true, text: 'Voltaje (V)', color: '#64748b' }, grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' }, suggestedMin: -150, suggestedMax: 150 }
                     }
                 }
@@ -303,12 +316,12 @@
         animBtn.addEventListener('click', () => {
             state.animating = !state.animating;
             if (state.animating) {
-                animBtn.innerText = "Pausar Rotación";
-                animBtn.classList.replace('bg-sky-600', 'bg-red-600');
+                animBtn.innerHTML = '<i class="ph ph-pause"></i> Pausar Rotación';
+                animBtn.classList.replace('bg-cyan-600', 'bg-red-600');
                 requestAnimationFrame(animate);
             } else {
-                animBtn.innerText = "Reanudar Rotación";
-                animBtn.classList.replace('bg-red-600', 'bg-sky-600');
+                animBtn.innerHTML = '<i class="ph ph-play"></i> Reanudar Rotación';
+                animBtn.classList.replace('bg-red-600', 'bg-cyan-600');
             }
         });
 
@@ -323,7 +336,7 @@
             const phi = Math.atan2(Vy, Vx) * 180 / Math.PI;
 
             mSteps1.innerHTML = `
-                <div>Los voltajes en un circuito RLC en serie no se suman algebraicamente sino vectorialmente (como fasores) debido a los desfases.</div>
+                <div>Los voltajes en un circuito RLC en serie no se suman algebraicamente sino vectorialmente (como fasores) debido a los desfases:</div>
                 <ul class="list-disc pl-5 mt-2 space-y-1">
                     <li><span class="text-amber-400 font-bold">Resistencia ($V_R$):</span> En fase con la corriente.</li>
                     <li><span class="text-indigo-400 font-bold">Inductor ($V_L$):</span> Adelanta $90^\\circ$ a la corriente.</li>
@@ -333,16 +346,26 @@
 
             mSteps2.innerHTML = `
                 <span class="text-xs text-red-400 uppercase tracking-wider font-bold">Voltaje Total ($V_s$)</span><br>
-                <span class="text-xl font-mono text-white">$$ V_s = \\sqrt{V_R^2 + (V_L - V_C)^2} $$</span>
+                <div class="text-xl font-mono text-white my-1">$$ V_s = \\sqrt{V_R^2 + (V_L - V_C)^2} $$</div>
                 <div class="mt-2 text-sm text-slate-300">
                     $$ V_s = ${Vs.toFixed(1)}\\ \\text{V} $$<br>
                     $$ \\phi = ${phi.toFixed(1)}^\\circ $$
                 </div>
             `;
 
-            // Prevent mathjax spam if animating
-            if (window.MathJax && !state.animating) {
-                MathJax.typesetPromise([mSteps1, mSteps2]);
+            if (window.renderMathInElement) {
+                renderMathInElement(mSteps1, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+                renderMathInElement(mSteps2, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
             }
 
             if(!state.animating) updateVisuals();
@@ -364,6 +387,55 @@
         updateVisuals();
 
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Ondas Electromagnéticas (M11)'
+    const contWrap = document.getElementById('fasores-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M11_OndaEM.html', 'Ondas Electromagnéticas (M11)', () => {
+            const Vx = state.Vr;
+            const Vy = state.Vl - state.Vc;
+            const Vs = Math.sqrt(Vx * Vx + Vy * Vy);
+            return {
+                source: 'PhasorLab10',
+                Vr: state.Vr,
+                Vl: state.Vl,
+                Vc: state.Vc,
+                Vs: Vs,
+                phi: Math.atan2(Vy, Vx),
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante (ej: desde Oscilador LC o RLC)
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            if (typeof scenarioData.V0 === 'number') {
+                state.Vr = Math.min(Math.max(Math.round(scenarioData.V0 * 3), 10), 90);
+                vrSlider.value = state.Vr;
+            }
+            if (typeof scenarioData.omega === 'number') {
+                state.Vl = Math.min(Math.max(Math.round(state.Vr * 1.5), 10), 100);
+                state.Vc = Math.min(Math.max(Math.round(state.Vr * 0.8), 10), 100);
+                vlSlider.value = state.Vl;
+                vcSlider.value = state.Vc;
+            }
+            handleInput();
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
