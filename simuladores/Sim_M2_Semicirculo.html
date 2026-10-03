@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Campo Eléctrico: Anillo Semicircular</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript" async
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -90,7 +91,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
-<body class="min-h-screen p-4">
+<body class="min-h-screen p-4 flex flex-col items-center">
+
+<!-- Lab10 Header -->
+<header class="w-full max-w-screen-2xl mx-auto mb-4 flex justify-between items-center p-4 rounded-xl shadow-lg border border-slate-800" style="background: rgba(15, 23, 42, 0.9);">
+    <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #3b82f6);">
+            <i class="ph ph-circle-notch" style="font-size: 1.3rem;"></i>
+        </div>
+        <div>
+            <h1 class="text-base font-bold text-white flex items-center gap-2">
+                SemicircleLab10<span style="color:var(--accent, #3b82f6);">.easy</span>
+                <span class="text-xs text-blue-400 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-700/50">M2 Distribución Anular 2D</span>
+            </h1>
+            <p class="text-slate-400 text-xs mt-0.5">Campo Eléctrico de un Arco Anular con Integración Diferencial</p>
+        </div>
+    </div>
+    <div class="flex items-center gap-3">
+        <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+            <i class="ph ph-user"></i> Modo Invitado
+        </div>
+    </div>
+</header>
 
 <div class="w-full max-w-screen-2xl mx-auto flex flex-col lg:flex-row gap-4">
     <!-- Main Simulation Area -->
@@ -154,6 +176,8 @@
                         </label>
                         <span class="ml-2 text-sm font-medium">Oscuro</span>
                     </div>
+
+                    <div id="semicirculo-continue-wrap" class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800"></div>
                 </div>
 
                 <!-- Datos Tab -->
@@ -531,7 +555,14 @@ document.addEventListener('DOMContentLoaded', () => {
             tabContents.forEach(content => {
                 content.id === tabId ? content.classList.add('active') : content.classList.remove('active');
             });
-            if (window.MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
         });
     });
 
@@ -556,6 +587,42 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeCanvas();
     document.querySelector('.tab-button[data-tab="controles"]').click();
 });
+</script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Tablero Comparativo de Líneas (M2)'
+    const contWrap = document.getElementById('semicirculo-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Tablero_Lineas.html', 'Tablero de Líneas (M2)', () => {
+            return {
+                source: 'SemicircleLab10',
+                geometry: 'annular_sector',
+                r1: parseFloat(document.getElementById('r1Slider').value),
+                r2: parseFloat(document.getElementById('r2Slider').value),
+                angle: parseFloat(document.getElementById('angleSlider').value),
+                density: parseFloat(document.getElementById('densitySlider').value),
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            console.log('Escenario recibido en SemicircleLab10:', scenarioData);
+        }
+    });
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
