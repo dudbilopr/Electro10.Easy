@@ -6,18 +6,20 @@
     <title>Laboratorio Maestro: Ley de Coulomb Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        :root {
+            --accent: #4ecca3;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
         
@@ -72,16 +74,21 @@
 <body class="h-screen flex flex-col overflow-hidden">
 
     <!-- Navbar -->
-    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-20">
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-20 shadow-md">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">C</div>
-            <h1 class="text-lg font-bold tracking-tight text-white hidden md:block">Simulador <span class="text-blue-400">Coulomb Expert</span></h1>
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #4ecca3);">
+                <i class="ph ph-lightning" style="font-size: 1.25rem;"></i>
+            </div>
+            <h1 class="text-lg font-bold text-white">CoulombExpert<span style="color:var(--accent, #4ecca3);">.easy</span> <span class="text-xs text-slate-400 font-normal">| Ley de Coulomb & Fuerzas Electrostáticas</span></h1>
         </div>
         <div class="flex items-center gap-4 text-xs md:text-sm text-slate-400">
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
                 <span class="w-2 h-2 rounded-full bg-red-500"></span> +Q
                 <span class="w-2 h-2 rounded-full bg-blue-500 ml-2"></span> -Q
-                <span class="w-2 h-2 rounded-full bg-green-500 ml-2"></span> Resultante
+                <span class="w-2 h-2 rounded-full bg-emerald-400 ml-2"></span> Resultante
+            </div>
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
             </div>
         </div>
     </header>
@@ -158,6 +165,7 @@
                 <button onclick="resetSim()" class="w-full py-1.5 text-slate-500 hover:text-white text-xs transition-colors">
                     Reiniciar Todo
                 </button>
+                <div id="coulomb-continue-wrap" class="mt-4 pt-3 border-t border-slate-800"></div>
             </div>
 
             <!-- Tabla de Datos -->
@@ -681,7 +689,14 @@
             }
             
             document.getElementById('math-steps').innerHTML = mathHTML;
-            if (window.MathJax) MathJax.typesetPromise([document.getElementById('problem-statement'), document.getElementById('math-steps')]);
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('problem-statement'), {
+                    delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+                });
+                renderMathInElement(document.getElementById('math-steps'), {
+                    delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+                });
+            }
         }
 
         // --- DCL & CANVAS LOGIC ---
@@ -861,6 +876,51 @@
 
         init();
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Campo Vectorial (M2)'
+    const contWrap = document.getElementById('coulomb-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Campo_Vectorial.html', 'Campo Eléctrico Vectorial (M2)', () => {
+            return {
+                source: 'CoulombExpertLab10',
+                charges: charges.map(c => ({
+                    id: c.id,
+                    q: c.q,
+                    x: c.x,
+                    y: c.y
+                })),
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante (ej: desde Maxwell o Sim_M1_Cargas)
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+            charges = scenarioData.charges.map(c => ({
+                id: c.id || 1,
+                x: c.x || canvas.width / 2,
+                y: c.y || canvas.height / 2,
+                q: typeof c.q === 'number' ? c.q : 5e-6,
+                fixed: false
+            }));
+            selectedIdx = 0;
+            updateUI();
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
