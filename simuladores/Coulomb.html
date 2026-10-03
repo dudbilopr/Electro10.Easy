@@ -4,6 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link rel="stylesheet" href="../css/lab10-core.css">
 <style>
 :root{--accent:#4ecca3;--danger:#ff6b6b;--panel-w:380px}
 body.light-mode{--bg:#eef2f5;--glass:rgba(255,255,255,0.6);--glass-border:rgba(255,255,255,0.5);--text:#2c3e50;--panel-bg:rgba(255,255,255,0.85);--card-bg:rgba(255,255,255,0.7);--shadow:rgba(0,0,0,0.1)}
@@ -520,14 +521,16 @@ document.addEventListener("DOMContentLoaded",()=>{if(!localStorage.getItem('tour
 </script>
 
 <script type="module">
-// MIGRACIÓN A FIRESTORE + RTDB (Arquitectura Híbrida Optimizada)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// MIGRACIÓN A FIRESTORE + RTDB (Arquitectura Híbrida Optimizada con Lab10 Core)
+import { auth, db } from '../js/firebase.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+import { doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getDatabase, ref, set, get, push, onValue, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-const cfg = {apiKey:"AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",authDomain:"laboratorio-de-coulomb.firebaseapp.com",databaseURL:"https://laboratorio-de-coulomb-default-rtdb.firebaseio.com",projectId:"laboratorio-de-coulomb",storageBucket:"laboratorio-de-coulomb.firebasestorage.app",messagingSenderId:"525944850850",appId:"1:525944850850:web:eca9c0b79809358e8d8afb",measurementId:"G-SZECJNG25E"};
-const app=initializeApp(cfg), db=getFirestore(app), rtdb=getDatabase(app), auth=getAuth(app);
+const rtdb = getDatabase(auth.app);
 const APP_ID = 'coulombLab10';
 
 let selAvatar='<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span>', appRating=0, curRoomRef=null, unsubRoom=null, isRecv=!1, chatRef=null;
@@ -589,8 +592,13 @@ onAuthStateChanged(auth, async u => {
         } catch(e) { console.error("Error Auth: ", e); }
     } else {
         window.resetLocalState();
-        showModal('auth-modal'); document.getElementById('btn-logout').style.display='none'; document.getElementById('btn-rooms').style.display='none'; document.getElementById('btn-admin').style.display='none'; document.getElementById('user-stats').style.display='none'; document.getElementById('btn-chat').style.display='none';
-        if(unsubRoom)unsubRoom(); curRoomRef=null; window.limpiarTodo();
+        document.getElementById('btn-logout').style.display='none';
+        document.getElementById('btn-rooms').style.display='none';
+        document.getElementById('btn-admin').style.display='none';
+        document.getElementById('user-stats').style.display='none';
+        document.getElementById('btn-chat').style.display='none';
+        if(unsubRoom) unsubRoom();
+        curRoomRef=null;
     }
 });
 
@@ -825,6 +833,56 @@ window.submitAppReview = async () => {
         hideModal('review-modal');
     } catch(e) { alert("Error guardando review: "+e.message); }
 };
+
+// ── Integración Lab10 Bus (Continuar en Campo Vectorial M2) ───────────────────
+const getChargesScenario = () => {
+    const chs = state.objects.filter(o => o.type && o.type.startsWith('charge'));
+    return {
+        source: 'CoulombLab10',
+        charges: chs.map(c => ({
+            id: c.id,
+            q: c.q,
+            x: c.physX !== undefined ? c.physX : c.x,
+            y: c.physY !== undefined ? c.physY : c.y,
+            pixelX: c.x,
+            pixelY: c.y
+        })),
+        unitCharge: document.getElementById('charge-unit')?.value || '1e-6',
+        unitDist: document.getElementById('dist-unit')?.value || '1',
+        timestamp: Date.now()
+    };
+};
+
+const rightPanel = document.getElementById('right-panel');
+if (rightPanel) {
+    const contWrap = document.createElement('div');
+    contWrap.id = 'coulomb-continue-bus-wrap';
+    contWrap.style.cssText = 'margin-top:14px; width:100%;';
+    rightPanel.appendChild(contWrap);
+    lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Campo_Vectorial.html', 'Campo Vectorial (M2)', getChargesScenario);
+}
+
+// Escuchar escenarios entrantes de otros laboratorios
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+        scenarioData.charges.forEach((ch, idx) => {
+            const px = ch.pixelX || (cvs.width/2 + (ch.x || 0)*60);
+            const py = ch.pixelY || (cvs.height/2 - (ch.y || 0)*60);
+            const newObj = {
+                id: ch.id || (state.objects.length + 1 + idx),
+                type: (ch.q >= 0) ? 'charge_pos' : 'charge_neg',
+                x: px,
+                y: py,
+                q: ch.q || 1,
+                physX: typeof getPhysX === 'function' ? getPhysX(px) : px,
+                physY: typeof getPhysY === 'function' ? getPhysY(py) : py
+            };
+            state.objects.push(newObj);
+        });
+        if (typeof analizarFisica === 'function') analizarFisica();
+        if (typeof redraw === 'function') redraw();
+    }
+});
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
