@@ -7,11 +7,12 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -227,7 +228,10 @@
                 </div>
             `;
 
-            if (window.MathJax) MathJax.typesetPromise([mSteps1, mSteps2]);
+            if (window.renderMathInElement) {
+                renderMathInElement(mSteps1, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}] });
+                renderMathInElement(mSteps2, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}] });
+            }
 
             updateChart();
         }
@@ -249,6 +253,47 @@
         handleInput();
 
     </script>
+
+<script type="module">
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+
+// Inyectar botón de continuidad hacia Oscilador LC
+const sidebar = document.querySelector('aside');
+if (sidebar) {
+    const contWrap = document.createElement('div');
+    contWrap.id = 'rlc-continue-bus-wrap';
+    contWrap.style.marginTop = '16px';
+    sidebar.appendChild(contWrap);
+    lab10Bus.injectContinueButton(contWrap, 'Sim_M12_OsciladorLC.html', 'Oscilador LC (M12)', () => ({
+        source: 'RLCLab10',
+        R: state.R,
+        L: state.L,
+        C: state.C,
+        f: state.f,
+        timestamp: Date.now()
+    }));
+}
+
+// Escuchar escenarios entrantes de ResistanceLab10 o CapacitanceLab10
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData) {
+        if (scenarioData.equivalentResistance) {
+            state.R = Math.min(500, Math.max(10, Math.round(scenarioData.equivalentResistance)));
+            const rSl = document.getElementById('R-slider');
+            if (rSl) rSl.value = state.R;
+        }
+        if (scenarioData.equivalentCapacitance) {
+            const uF = scenarioData.equivalentCapacitance * 1e6;
+            state.C = Math.min(500e-6, Math.max(1e-6, scenarioData.equivalentCapacitance));
+            const cSl = document.getElementById('C-slider');
+            if (cSl) cSl.value = Math.max(1, Math.min(500, Math.round(uF)));
+        }
+        if (typeof handleInput === 'function') handleInput();
+    }
+});
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
