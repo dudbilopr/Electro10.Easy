@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <!-- Chart.js -->
@@ -246,6 +248,7 @@
         <div class="panel-content" id="math-content">
             <!-- Dinámico vía JS -->
         </div>
+        <div id="gauss-continue-wrap" style="padding: 12px 16px;"></div>
     </div>
 
 </div>
@@ -986,7 +989,42 @@
     renderMathInElement(document.getElementById('ds-hud'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
     
     animate();
-
 </script>
+
+<script type="module">
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+
+// Inyectar botón de continuidad hacia Capacitancia M5
+const contWrap = document.getElementById('gauss-continue-wrap');
+if (contWrap) {
+    lab10Bus.injectContinueButton(contWrap, 'Capacitance.html', 'Capacitancia y Almacenamiento (M5)', () => {
+        const qVal = parseFloat(document.getElementById('q1-val')?.value || 1);
+        return {
+            source: 'GaussLab10',
+            charge: qVal,
+            geometry: typeof currentGeo !== 'undefined' ? currentGeo : 'esfera',
+            timestamp: Date.now()
+        };
+    });
+}
+
+// Escuchar escenarios entrantes de PotentialLab10 o FieldLab10
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+        const netQ = scenarioData.charges.reduce((acc, c) => acc + (c.q || 0), 0);
+        const qInput = document.getElementById('q1-val');
+        if (qInput) {
+            qInput.value = Math.abs(netQ).toFixed(1);
+            const disp = document.getElementById('q1-disp');
+            if (disp) disp.innerText = `${qInput.value} μC`;
+            if (typeof rebuildAll === 'function') rebuildAll();
+        }
+    }
+});
+</script>
+
+<script src="../js/sim_telemetry.js"></script>
 </body>
 </html>
