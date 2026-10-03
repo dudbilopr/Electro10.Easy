@@ -14,6 +14,8 @@
     
     <!-- LIBRERÍA: Math.js para evaluar el Campo Vectorial -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     
     <style>
         :root {
@@ -341,6 +343,7 @@
                 <strong><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">lightbulb</span> Tip de Simulación:</strong><br>
                 Enciende la capa <b>"Campo Vectorial"</b> para visualizar la dirección de la fuerza resultante en todo el espacio mediante flechas dinámicas.
             </div>
+            <div id="potential-continue-wrap" style="margin-top: 14px;"></div>
         </div>
 
         <div id="chat-section" style="display: none;">
@@ -357,7 +360,7 @@
 </div>
 
 <!-- Modales -->
-<div class="modal" id="auth-modal" style="display: flex;">
+<div class="modal" id="auth-modal" style="display: none;">
     <div class="modal-content" style="text-align: center;">
         <h3 style="margin-top:0; color: #4ecca3;"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">lock</span> Acceso al Laboratorio</h3>
         <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">Inicia sesión para jugar en grupo o entra como invitado para modo individual.</p>
@@ -1128,25 +1131,15 @@
 </script>
 
 <script type="module">
-    // --- INTEGRACIÓN CON REALTIME DATABASE (V 12.9.0) ---
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getDatabase, ref, set, get, onValue, push, update, increment } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-    import { getAuth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    // --- INTEGRACIÓN CON LAB10 CORE & FIREBASE UNIFICADO ---
+    import { auth, db as firestoreDb } from '../js/firebase.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Shell } from '../js/lab10-shell.js';
+    import { getDatabase, ref, set, get, onValue, push, update, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+    import { signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-    // === CONFIGURACIÓN DE FIREBASE DE TU DOMINIO ===
-    const firebaseConfig = {
-        apiKey: "AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",
-        authDomain: "laboratorio-de-coulomb.firebaseapp.com",
-        databaseURL: "https://laboratorio-de-coulomb-default-rtdb.firebaseio.com",
-        projectId: "laboratorio-de-coulomb",
-        storageBucket: "laboratorio-de-coulomb.firebasestorage.app",
-        messagingSenderId: "525944850850",
-        appId: "1:525944850850:web:eca9c0b79809358e8d8afb"
-    };
-    
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+    const db = getDatabase(auth.app);
 
     let currentRoomRef = null;
     let chatRoomRef = null;
@@ -1158,20 +1151,18 @@
     onAuthStateChanged(auth, (user) => {
         if (user) {
             document.getElementById('auth-modal').style.display = 'none';
-            document.getElementById('user-info').innerText = user.isAnonymous ? `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> Invitado-${user.uid.slice(0,4)}` : `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${user.displayName || user.email || 'Usuario'}`;
+            document.getElementById('user-info').innerHTML = user.isAnonymous ? `<i class="ph ph-user"></i> Invitado-${user.uid.slice(0,4)}` : `<i class="ph ph-user"></i> ${user.displayName || user.email || 'Usuario'}`;
             document.getElementById('btn-logout').style.display = 'inline-block';
             document.getElementById('user-stats').style.display = 'inline-flex';
             
             if (window.iniciarGamificacion) window.iniciarGamificacion(user.uid);
-            
-            if (!currentRoomRef) window.abrirModalSala();
         } else {
-            document.getElementById('auth-modal').style.display = 'flex';
+            document.getElementById('auth-modal').style.display = 'none';
             document.getElementById('room-modal').style.display = 'none';
-            document.getElementById('user-info').innerText = 'No conectado';
+            document.getElementById('user-info').innerText = 'Modo Invitado';
             document.getElementById('user-stats').style.display = 'none';
             document.getElementById('btn-logout').style.display = 'none';
-            document.getElementById('room-info').innerText = '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: Ninguna';
+            document.getElementById('room-info').innerHTML = '<i class="ph ph-globe"></i> Sala: Ninguna';
             document.getElementById('btn-share-room').style.display = 'none';
             document.getElementById('chat-section').style.display = 'none';
             
@@ -1179,7 +1170,6 @@
             if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
             currentRoomRef = null; chatRoomRef = null;
             if (window.detenerGamificacion) window.detenerGamificacion();
-            window.limpiarTodo();
         }
     });
 
@@ -1424,6 +1414,46 @@
             activeBoardIndex: window.appState.activeBoardIndex
         }).then(() => { window.isSendingData = false; });
     };
+
+    // ── Integración Lab10 Bus (Continuar en Ley de Gauss M3-M5) ────────────────
+    const contWrap = document.getElementById('potential-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Laboratorio_Gauss_Avanzado.html', 'Ley de Gauss (M3-M5)', () => {
+            const chs = (window.appState && window.appState.objects) ? window.appState.objects.filter(o => o.type && o.type.startsWith('charge')) : [];
+            return {
+                source: 'PotentialLab10',
+                charges: chs.map(c => ({
+                    id: c.id,
+                    q: c.type === 'charge_neg' ? -c.q : c.q,
+                    x: c.x,
+                    y: c.y
+                })),
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenarios entrantes de FieldLab10 o CoulombLab10
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+            const canvas = document.getElementById('main-canvas');
+            const cw = canvas ? canvas.width : 800;
+            const ch = canvas ? canvas.height : 600;
+            scenarioData.charges.forEach((c, idx) => {
+                const px = c.pixelX || (cw / 2 + (c.x || 0) * 40);
+                const py = c.pixelY || (ch / 2 - (c.y || 0) * 40);
+                window.appState.objects.push({
+                    type: (c.q >= 0) ? 'charge_pos' : 'charge_neg',
+                    id: c.id || (Date.now() + idx),
+                    x: px,
+                    y: py,
+                    q: Math.abs(c.q || 1)
+                });
+            });
+            if (typeof window.analizarFisica === 'function') window.analizarFisica();
+            if (typeof window.redraw === 'function') window.redraw();
+        }
+    });
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
