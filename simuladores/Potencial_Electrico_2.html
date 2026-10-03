@@ -983,7 +983,7 @@
         const box = document.getElementById('problem-statement'); const cU = document.getElementById('charge-unit'); const cUnitTxt = cU.options[cU.selectedIndex].text;
         const hasEqui = works && works.some(w => w.isEqui), hasNormal = works && works.some(w => !w.isEqui);
         if (hasEqui && !hasNormal) { box.innerHTML = `<strong>¡Equipotencial!</strong> $\\Delta V \\approx 0$. <strong>Trabajo neto NULO</strong> ($W=0$).`; box.style.borderLeftColor = "#2ecc71"; } 
-        else if (hasNormal) { const lastWork = works[works.length-1]; if (!lastWork.isEqui) { box.innerHTML = `<strong>Problema:</strong> Mover $q_0$ desde ${lastWork.from} hasta ${lastWork.to}. <br> <strong>Trabajo Total:</strong> $W = ${lastWork.W.toExponential(2)} \\text{ J}$`; box.style.borderLeftColor = "#9b59b6"; } } 
+        else if (hasNormal) { const lastWork = works[works.length-1]; if (!lastWork.isEqui) { box.innerHTML = `<strong>Trayectoria Físicamente Evaluada:</strong> Mover $q_0$ desde ${lastWork.from} hasta ${lastWork.to}. <br> <strong>Trabajo Total:</strong> $W = ${lastWork.W.toExponential(2)} \\text{ J}$`; box.style.borderLeftColor = "#9b59b6"; } } 
         else { if (nQ === 0) { box.innerHTML = `Dibuja cargas fuente. Escala: ${cUnitTxt}`; return; } if (nP < 2) { box.innerHTML = "Coloca dos puntos (A y B)."; return; } if (nT === 0) { box.innerHTML = "Conecta los puntos con una trayectoria."; return; } }
         renderMathInElement(box, {delimiters: [{left: "$", right: "$", display: false}]});
     }

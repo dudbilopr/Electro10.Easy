@@ -294,7 +294,7 @@
 
     <div class="panel panel-right">
         <div>
-            <div class="section-title">Enunciado del Problema</div>
+            <div class="section-title">Planteamiento del Reto Físico</div>
             <div id="problem-statement" class="statement-card">
                 <i>Dibuja cargas fuente y un punto de prueba.</i>
             </div>
@@ -926,7 +926,7 @@
 
         const tId = testPoints[0].id;
         const sources = charges.map(c => `$q_${c.id}$`);
-        let text = `<strong>Problema:</strong> Determinar la magnitud y dirección del <strong>Campo Eléctrico Resultante</strong> en el punto de prueba <strong>$P_${tId}$</strong> debido al sistema de cargas <strong>${sources.join(', ')}</strong>.`;
+        let text = `<strong>Desafío Físico:</strong> Determinar la magnitud y dirección del <strong>Campo Eléctrico Resultante</strong> en el punto de prueba <strong>$P_${tId}$</strong> debido al sistema de cargas <strong>${sources.join(', ')}</strong>.`;
         text += `<br><small style="color:#aaa; margin-top:5px; display:block">Considere $k_e = 8.99 \\times 10^9 N\\cdot m^2/C^2$</small>`;
         
         box.innerHTML = text;

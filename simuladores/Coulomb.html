@@ -137,8 +137,8 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,t
         <div class="window-controls" style="position:relative;top:0;right:0;justify-content:flex-end;margin-bottom:10px">
             <button class="win-btn win-close" onclick="togglePanel()"></button>
         </div>
-        <div class="section-title"><i class="ph ph-book-bookmark"></i> Enunciado Dinámico</div>
-        <div class="card" id="problem-statement" style="font-size:.85rem;font-style:italic;line-height:1.5;color:var(--text)">Dibuja dos o más cargas en el lienzo para autogenerar un problema.</div>
+        <div class="section-title"><i class="ph ph-book-bookmark"></i> Reto Interactivo Dinámico</div>
+        <div class="card" id="problem-statement" style="font-size:.85rem;font-style:italic;line-height:1.5;color:var(--text)">Dibuja dos o más cargas en el lienzo para autogenerar una actividad interactiva.</div>
         
         <div class="section-title" style="margin-top:15px"><i class="ph ph-gear"></i> Parámetros Globales</div>
         <div class="card" style="display:flex;flex-direction:column;gap:10px">
@@ -157,7 +157,7 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,t
 </div>
 
 <footer>
-    <div>&copy; 2026 CoulombLab10.easy. Entorno Educativo Avanzado.</div>
+    <div>&copy; 2026 CoulombLab10.easy. Entorno Educativo Interactivo.</div>
     <div class="footer-links">
         <a href="#" onclick="showModal('review-modal'); return false;"><i class="ph ph-star"></i> Calíficame</a>
         <a href="https://wa.me/1234567890" target="_blank"><i class="ph ph-whatsapp-logo"></i> Soporte Oficial</a>
@@ -421,7 +421,7 @@ window.openDCL = function(id) {
 
 function updateStatement(chs, qU) {
     const el = document.getElementById('problem-statement');
-    if(chs.length < 2) { el.innerHTML = "Coloca al menos dos cargas en el lienzo e interactúa con ellas para generar el problema."; return; }
+    if(chs.length < 2) { el.innerHTML = "Coloca al menos dos cargas en el lienzo e interactúa con ellas para generar el reto interactivo."; return; }
     let t = `Un sistema consta de ${chs.length} cargas puntuales interaccionando en el vacío: `;
     t += chs.map(c => `<b>q<sub>${c.id}</sub> = ${formatExpHTML(c.q * qU)} C</b>`).join(', ') + '. ';
     t += `<br><br>Determine analítica y gráficamente la magnitud y dirección de la <b>fuerza eléctrica resultante</b> sobre cada una de las cargas originada por el resto del sistema.`;

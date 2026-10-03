@@ -223,10 +223,10 @@
                     <div id="problem-statement" class="mb-6 p-4 bg-slate-800/50 rounded-xl border border-slate-700">
                         <h3 class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            Enunciado del Problema Generado
+                            Planteamiento del Reto Físico
                         </h3>
                         <div id="statement-text" class="text-slate-300 text-sm leading-relaxed font-light">
-                            Seleccione una carga en el simulador para generar el planteamiento del problema físico automáticamente.
+                            Seleccione una carga en el simulador para generar el planteamiento del reto interactivo automáticamente.
                         </div>
                     </div>
 
@@ -591,7 +591,7 @@
                 document.getElementById('controls-area').classList.add('opacity-50', 'pointer-events-none');
                 document.getElementById('selected-id-badge').textContent = "Ninguna";
                 document.getElementById('problem-statement').classList.add('opacity-50');
-                document.getElementById('statement-text').innerHTML = "Seleccione una carga para generar el problema.";
+                document.getElementById('statement-text').innerHTML = "Seleccione una carga para generar el reto interactivo.";
                 document.getElementById('math-steps').innerHTML = "<p class='italic text-slate-600'>Esperando selección...</p>";
                 return;
             }
@@ -633,7 +633,7 @@
             const dMult = getDistMultiplier();
 
             // 1. ENUNCIADO
-            let text = `<p class="mb-2"><strong class="text-white">Problema:</strong> Se tiene una carga puntual <span class="${target.q>=0?'text-red-400':'text-blue-400'}">$q_{${target.id}} = ${(target.q/qMult).toFixed(2)} \\text{ ${qUnit}}$</span> ubicada en la posición $\\vec{r}_{${target.id}} = (${(target.x*PIXELS_TO_METERS/dMult).toFixed(2)} \\hat{i} - ${(target.y*PIXELS_TO_METERS/dMult).toFixed(2)} \\hat{j})$ ${dUnit}.</p>`;
+            let text = `<p class="mb-2"><strong class="text-white">Reto Conceptual:</strong> Se tiene una carga puntual <span class="${target.q>=0?'text-red-400':'text-blue-400'}">$q_{${target.id}} = ${(target.q/qMult).toFixed(2)} \\text{ ${qUnit}}$</span> ubicada en la posición $\\vec{r}_{${target.id}} = (${(target.x*PIXELS_TO_METERS/dMult).toFixed(2)} \\hat{i} - ${(target.y*PIXELS_TO_METERS/dMult).toFixed(2)} \\hat{j})$ ${dUnit}.</p>`;
             
             if (others.length > 0) {
                 text += `<p class="mb-2">Determine la fuerza eléctrica neta que ejercen sobre ella las siguientes cargas:</p><ul class="list-disc pl-5 space-y-1 mb-2">`;

@@ -16,7 +16,7 @@ export const modulo0_presaberes = {
         "Cinemática y dinámica newtoniana: leyes de Newton y trabajo-energía",
         "Gravitación, rotación y momento de inercia"
     ],
-    descripcion: "Prueba obligatoria para evaluar tus bases matemáticas avanzadas antes de iniciar el curso. Puntaje mínimo: 65%.",
+    descripcion: "Evaluación diagnóstica para verificar tus bases matemáticas fundamentales antes de iniciar el curso. Puntaje recomendado: 65%.",
     lecciones: [
 
         {
