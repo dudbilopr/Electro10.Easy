@@ -7,11 +7,13 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -30,10 +32,17 @@
 </head>
 <body class="h-screen flex flex-col">
 
-    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center px-4 z-20 shrink-0 shadow-md">
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-pink-500/20">LC</div>
-            <h1 class="text-lg font-bold text-white">Simulador <span class="text-pink-400">Circuito Tanque (Oscilador LC)</span></h1>
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #ec4899);">
+                <i class="ph ph-wave-sine" style="font-size: 1.25rem;"></i>
+            </div>
+            <h1 class="text-lg font-bold text-white">OsciladorLC<span class="text-pink-400">Lab10.easy</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
         </div>
     </header>
 
@@ -76,9 +85,10 @@
             </div>
 
             <div class="mt-auto">
-                 <button id="anim-btn" class="w-full py-2 bg-pink-600 hover:bg-pink-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg mb-2">
-                    Iniciar Oscilación
+                 <button id="anim-btn" class="w-full py-2 bg-pink-600 hover:bg-pink-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg mb-2 flex items-center justify-center gap-2">
+                    <i class="ph ph-play"></i> Iniciar Oscilación
                 </button>
+                <div id="lc-continue-wrap" class="mt-4 pt-3 border-t border-slate-800"></div>
             </div>
         </aside>
 
@@ -148,7 +158,7 @@
                 <!-- Math Panel -->
                 <div class="flex-1 min-w-[300px]">
                     <h3 class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <i class="ph ph-function" style="font-size: 1.1rem;"></i>
                         Frecuencia de Resonancia
                     </h3>
                     <div class="glass-panel p-4 rounded-xl border-pink-500/30 border">
@@ -161,7 +171,7 @@
                 <!-- Graphic Panel -->
                 <div class="flex-1 min-w-[300px] flex flex-col">
                     <h3 class="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                        <i class="ph ph-chart-line-up" style="font-size: 1.1rem;"></i>
                         Carga $Q(t)$ y Corriente $I(t)$
                     </h3>
                     <div class="flex-1 glass-panel rounded-xl p-3 relative">
@@ -366,7 +376,14 @@
             `;
             
             mathSteps.innerHTML = html;
-            if (window.MathJax && !state.animating) MathJax.typesetPromise([mathSteps]);
+            if (window.renderMathInElement && !state.animating) {
+                renderMathInElement(mathSteps, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
 
             if (!state.animating) {
                 generateChartData();
@@ -392,6 +409,53 @@
         handleInput();
 
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Fasores AC (M12)'
+    const contWrap = document.getElementById('lc-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M12_Fasores.html', 'Fasores de Corriente Alterna (M12)', () => {
+            const w = 1 / Math.sqrt(state.L * state.C);
+            return {
+                source: 'OsciladorLCLab10',
+                L: state.L,
+                C: state.C,
+                V0: state.V0,
+                omega: w,
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante (ej: desde RLC o Capacitance)
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            if (typeof scenarioData.L === 'number') {
+                const lMilli = scenarioData.L * 1000;
+                const lVal = Math.min(Math.max(lMilli, 10), 200);
+                lSlider.value = lVal;
+            }
+            if (typeof scenarioData.C === 'number' || typeof scenarioData.C_eq === 'number') {
+                const cVal = scenarioData.C || scenarioData.C_eq;
+                const cMicro = cVal * 1e6;
+                const cClamp = Math.min(Math.max(cMicro, 1), 100);
+                cSlider.value = cClamp;
+            }
+            handleInput();
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
