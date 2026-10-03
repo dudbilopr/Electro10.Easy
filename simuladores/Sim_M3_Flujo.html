@@ -1,107 +1,165 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Flujo Eléctrico y Ley de Gauss Pro</title>
+    <title>FluxLab10.easy - Flujo Eléctrico y Ley de Gauss 3D</title>
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
+    <!-- Three.js & Math.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js"></script>
+    
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #0f172a; }
+        :root {
+            --accent: #0284c7;
+        }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #0b0e14; color: #e2e8f0; }
         canvas { display: block; }
-        .control-panel { scrollbar-width: thin; scrollbar-color: #4b5563 #1f2937; }
+        .control-panel { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
+        .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
-<body class="text-white">
+<body class="h-screen flex flex-col overflow-hidden">
 
-    <!-- UI Overlay -->
-    <div id="ui" class="absolute inset-0 pointer-events-none flex flex-row justify-between p-4">
-        
-        <!-- Panel Izquierdo: Controles -->
-        <div class="control-panel w-80 bg-slate-900/90 backdrop-blur-md p-6 rounded-xl border border-slate-700 pointer-events-auto overflow-y-auto max-h-full flex flex-col gap-5 shadow-2xl">
-            <header>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">Ley de Gauss Pro</h1>
-                <p class="text-[10px] text-slate-400 uppercase tracking-tighter">Interactúa directamente con los objetos</p>
-            </header>
-
-            <!-- Selección de Superficie -->
-            <section class="space-y-3">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Superficie</h2>
-                <select id="surfaceType" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm outline-none focus:ring-2 ring-blue-500">
-                    <optgroup label="Abiertas">
-                        <option value="rect">Rectángulo</option>
-                        <option value="circle">Disco</option>
-                    </optgroup>
-                    <optgroup label="Cerradas">
-                        <option value="cube">Cubo</option>
-                        <option value="sphere">Cascarón Esférico</option>
-                        <option value="cylinder">Cilindro</option>
-                        <option value="irregular">Superficie Irregular</option>
-                    </optgroup>
-                </select>
-                <div class="space-y-1">
-                    <label class="block text-xs text-slate-400">Tamaño</label>
-                    <input type="range" id="surfaceSize" min="0.5" max="4" step="0.1" value="2" class="w-full accent-blue-500">
-                </div>
-            </section>
-
-            <!-- Configuración del Campo -->
-            <section class="space-y-3 border-t border-slate-800 pt-4">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Campo Eléctrico</h2>
-                <select id="fieldType" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm outline-none">
-                    <option value="uniform">Campo Uniforme</option>
-                    <option value="point">Carga Puntual</option>
-                </select>
-
-                <div id="uniformSettings" class="space-y-2">
-                    <label class="block text-xs">Intensidad (E)</label>
-                    <input type="range" id="fieldStrength" min="-5" max="5" step="0.1" value="2" class="w-full accent-yellow-500">
-                </div>
-
-                <div id="pointSettings" class="hidden space-y-2">
-                    <label class="block text-xs">Carga (q)</label>
-                    <input type="range" id="chargeValue" min="-10" max="10" step="1" value="5" class="w-full accent-yellow-500">
-                    <p class="text-[10px] text-yellow-400 italic">Mueve la carga arrastrándola.</p>
-                </div>
-            </section>
-
-            <section class="mt-auto bg-blue-900/20 p-4 rounded-lg border border-blue-500/30">
-                <h3 class="text-blue-400 font-bold mb-1 text-sm">Análisis de Gauss</h3>
-                <p id="theoryText" class="text-[11px] text-slate-300 leading-tight italic">
-                    El flujo neto depende de la carga encerrada.
-                </p>
-            </section>
-        </div>
-
-        <!-- Panel Derecho: Datos -->
-        <div class="w-72 space-y-4 pointer-events-none">
-            <div class="bg-slate-900/90 backdrop-blur-md p-5 rounded-xl border border-slate-700 pointer-events-auto shadow-xl">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3 text-center">Mediciones</h2>
-                <div class="space-y-3">
-                    <div class="p-3 bg-slate-800/50 rounded-lg text-center">
-                        <span class="block text-[10px] text-slate-400 mb-1">FLUJO ELÉCTRICO NETO (Φ)</span>
-                        <span id="fluxValue" class="text-4xl font-mono font-bold text-yellow-400">0.00</span>
-                    </div>
-                    <div id="fluxStatus" class="w-full text-center py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-gray-700">
-                        Calculando...
-                    </div>
-                </div>
+    <!-- Header Glass Superior -->
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-20 shadow-md">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #0284c7);">
+                <i class="ph ph-cylinder" style="font-size: 1.25rem;"></i>
             </div>
-
-            <div class="bg-slate-900/90 backdrop-blur-md p-5 rounded-xl border border-slate-700 pointer-events-auto shadow-xl">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-2">Paso a paso</h2>
-                <div id="calculationSteps" class="text-xs font-mono text-slate-300 space-y-2"></div>
+            <h1 class="text-lg font-bold text-white">FluxLab10<span style="color:var(--accent, #0284c7);">.easy</span> <span class="text-xs text-slate-400 font-normal">| Flujo Eléctrico y Superficies Gaussianas 3D</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-indigo-600 px-6 py-2 rounded-full text-sm font-medium shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50">
-        ¡Usa el mouse para arrastrar los objetos!
+    <div class="flex-1 relative overflow-hidden">
+        <!-- UI Overlay -->
+        <div id="ui" class="absolute inset-0 pointer-events-none flex flex-row justify-between p-4 z-10">
+            
+            <!-- Panel Izquierdo: Controles -->
+            <div class="control-panel w-80 glass-panel p-5 rounded-2xl pointer-events-auto overflow-y-auto max-h-full flex flex-col gap-4 shadow-2xl">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 border-b border-slate-800 pb-1.5 flex items-center gap-1.5">
+                        <i class="ph ph-cube"></i> Superficie Gaussiana
+                    </h2>
+                    <select id="surfaceType" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-sky-500">
+                        <optgroup label="Superficies Abiertas">
+                            <option value="rect">Rectángulo Plano</option>
+                            <option value="circle">Disco Circular</option>
+                        </optgroup>
+                        <optgroup label="Superficies Cerradas (Gauss)">
+                            <option value="cube">Cubo</option>
+                            <option value="sphere">Cascarón Esférico</option>
+                            <option value="cylinder">Cilindro</option>
+                            <option value="irregular">Superficie Irregular</option>
+                        </optgroup>
+                    </select>
+                    <div class="mt-3">
+                        <div class="flex justify-between text-xs text-slate-400 mb-1">
+                            <span>Dimensión / Escala</span>
+                            <span id="sizeVal" class="font-mono text-sky-400">2.0 m</span>
+                        </div>
+                        <input type="range" id="surfaceSize" min="0.5" max="4" step="0.1" value="2" class="w-full accent-sky-500">
+                    </div>
+                </div>
+
+                <!-- Configuración del Campo -->
+                <div class="border-t border-slate-800 pt-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                        <i class="ph ph-wave-sine"></i> Campo Eléctrico ($\vec{E}$)
+                    </h2>
+                    <select id="fieldType" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-sky-500 mb-3">
+                        <option value="uniform">Campo Uniforme ($\vec{E} = E_0 \hat{k}$)</option>
+                        <option value="point">Carga Puntual ($q$)</option>
+                    </select>
+
+                    <div id="uniformSettings" class="space-y-1">
+                        <div class="flex justify-between text-xs text-slate-400 mb-1">
+                            <span>Intensidad ($E$)</span>
+                            <span id="fieldVal" class="font-mono text-amber-400">2.0 N/C</span>
+                        </div>
+                        <input type="range" id="fieldStrength" min="-5" max="5" step="0.1" value="2" class="w-full accent-amber-500">
+                    </div>
+
+                    <div id="pointSettings" class="hidden space-y-1">
+                        <div class="flex justify-between text-xs text-slate-400 mb-1">
+                            <span>Magnitud de Carga ($q$)</span>
+                            <span id="chargeVal" class="font-mono text-red-400">5.0 nC</span>
+                        </div>
+                        <input type="range" id="chargeValue" min="-10" max="10" step="1" value="5" class="w-full accent-red-500">
+                        <p class="text-[10px] text-amber-400/90 italic mt-1 flex items-center gap-1">
+                            <i class="ph ph-hand-pointing"></i> Arrastra la carga en 3D para evaluar la región interior.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Análisis de Gauss -->
+                <div class="bg-sky-950/40 p-3.5 rounded-xl border border-sky-500/30">
+                    <h3 class="text-sky-400 font-bold mb-1 text-xs flex items-center gap-1.5">
+                        <i class="ph ph-scales"></i> Principio Físico
+                    </h3>
+                    <p id="theoryText" class="text-xs text-slate-300 leading-snug">
+                        El flujo eléctrico neto a través de una superficie cerrada depende exclusivamente de la carga neta encerrada:
+                    </p>
+                    <div class="text-center font-mono text-xs text-sky-300 mt-2">
+                        $$ \Phi_E = \oint \vec{E} \cdot d\vec{A} = \frac{Q_{enc}}{\varepsilon_0} $$
+                    </div>
+                </div>
+
+                <!-- Inter-simulator Bus Connection -->
+                <div id="flujo-continue-wrap" class="mt-auto pt-2 border-t border-slate-800"></div>
+            </div>
+
+            <!-- Panel Derecho: Datos -->
+            <div class="w-72 space-y-4 pointer-events-none">
+                <div class="glass-panel p-5 rounded-2xl pointer-events-auto shadow-xl border border-slate-800">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center flex items-center justify-center gap-1.5">
+                        <i class="ph ph-activity"></i> Flujo Neto
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-slate-800/60 rounded-xl text-center border border-slate-700/50">
+                            <span class="block text-[10px] text-slate-400 mb-1">FLUJO ELÉCTRICO ($\Phi_E$)</span>
+                            <span id="fluxValue" class="text-3xl font-mono font-bold text-amber-400">0.00</span>
+                            <span class="block text-[10px] text-slate-400 mt-1">$\text{N}\cdot\text{m}^2/\text{C}$</span>
+                        </div>
+                        <div id="fluxStatus" class="w-full text-center py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-slate-800 text-slate-400 border border-slate-700">
+                            Calculando...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl pointer-events-auto shadow-xl border border-slate-800">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                        <i class="ph ph-calculator"></i> Desglose de Cálculo
+                    </h2>
+                    <div id="calculationSteps" class="text-xs font-mono text-slate-300 space-y-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div id="canvas-container" class="w-full h-full"></div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-sky-600 px-5 py-2 rounded-full text-xs font-medium shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center gap-2">
+            <i class="ph ph-info"></i> Usa el mouse para orbitar y arrastrar los elementos en 3D
+        </div>
     </div>
 
     <script>
@@ -125,23 +183,24 @@
             positive: '#fbbf24',
             negative: '#ef4444',
             null: '#94a3b8',
-            surface: 0x3b82f6,
+            surface: 0x0284c7,
             chargePos: 0xf87171,
             chargeNeg: 0x60a5fa
         };
 
         // --- Inicialización ---
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
+            scene.background = new THREE.Color(0x0b0e14);
 
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 56), 0.1, 1000);
             camera.position.set(6, 6, 10);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(window.innerWidth, window.innerHeight - 56);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            document.body.appendChild(renderer.domElement);
+            container.appendChild(renderer.domElement);
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -149,7 +208,7 @@
             raycaster = new THREE.Raycaster();
             mouse = new THREE.Vector2();
 
-            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
             const sun = new THREE.DirectionalLight(0xffffff, 0.8);
             sun.position.set(5, 10, 7);
             scene.add(sun);
@@ -166,7 +225,7 @@
             setupInteractions();
             animate();
             
-            setTimeout(() => showToast("Pasa el mouse sobre la carga para arrastrarla"), 1000);
+            setTimeout(() => showToast("Pasa el mouse sobre la carga para arrastrarla en el espacio 3D"), 1000);
         }
 
         function createSurface() {
@@ -175,7 +234,6 @@
                 const rot = surface.rotation.clone();
                 scene.remove(surface);
                 surface.geometry.dispose();
-                // Preservar posición al cambiar de tipo
                 config.lastPos = pos;
                 config.lastRot = rot;
             }
@@ -216,7 +274,7 @@
 
             if (normalArrow) scene.remove(normalArrow);
             if (['rect', 'circle'].includes(config.surfType)) {
-                normalArrow = new THREE.ArrowHelper(new THREE.Vector3(0,0,1), new THREE.Vector3(0,0,0), 1.2, 0xff0000);
+                normalArrow = new THREE.ArrowHelper(new THREE.Vector3(0,0,1), new THREE.Vector3(0,0,0), 1.2, 0xef4444);
                 surface.add(normalArrow);
             }
         }
@@ -258,7 +316,6 @@
             }
         }
 
-        // --- Lógica de Interacción Mejorada ---
         function setupInteractions() {
             const onPointerDown = (e) => {
                 updateMousePos(e);
@@ -268,9 +325,8 @@
                 if (intersects.length > 0) {
                     draggedObject = intersects[0].object;
                     isDragging = true;
-                    controls.enabled = false; // Bloquear rotación de cámara
+                    controls.enabled = false;
                     
-                    // Definir plano de arrastre orientado a la cámara
                     camera.getWorldDirection(planeNormal);
                     planeNormal.negate();
                     dragPlane.setFromNormalAndCoplanarPoint(planeNormal, draggedObject.position);
@@ -287,7 +343,6 @@
                         if (draggedObject.name === "charge") createField();
                     }
                 } else {
-                    // Feedback visual al pasar el mouse
                     raycaster.setFromCamera(mouse, camera);
                     const intersects = raycaster.intersectObjects([chargeMesh, surface]);
                     renderer.domElement.style.cursor = intersects.length > 0 ? 'pointer' : 'grab';
@@ -297,13 +352,13 @@
             const onPointerUp = () => {
                 isDragging = false;
                 draggedObject = null;
-                controls.enabled = true; // Liberar cámara
+                controls.enabled = true;
                 renderer.domElement.style.cursor = 'grab';
             };
 
             const updateMousePos = (e) => {
                 mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                mouse.y = -((e.clientY - 56) / (window.innerHeight - 56)) * 2 + 1;
             };
 
             window.addEventListener('pointerdown', onPointerDown);
@@ -311,7 +366,8 @@
             window.addEventListener('pointerup', onPointerUp);
         }
 
-        // --- Cálculos de Física ---
+        let currentFlux = 0;
+
         function updatePhysics() {
             const stepsEl = document.getElementById('calculationSteps');
             const theoryEl = document.getElementById('theoryText');
@@ -328,15 +384,14 @@
                     const field = new THREE.Vector3(0, 0, config.fieldStrength);
                     const cosTheta = normal.dot(field.clone().normalize());
                     flux = config.fieldStrength * area * cosTheta;
-                    theoryEl.innerText = "Superficie abierta: El flujo depende del ángulo de incidencia.";
-                    stepsEl.innerHTML = `<div>• E = ${config.fieldStrength} N/C</div><div>• Área = ${area.toFixed(2)} m²</div><div>• cos(θ) = ${cosTheta.toFixed(2)}</div>`;
+                    theoryEl.innerText = "Superficie abierta: El flujo depende del ángulo de incidencia entre el vector normal y el campo.";
+                    stepsEl.innerHTML = `<div>• E = ${config.fieldStrength.toFixed(1)} N/C</div><div>• Área = ${area.toFixed(2)} m²</div><div>• cos(θ) = ${cosTheta.toFixed(2)}</div>`;
                 } else {
                     flux = 0;
-                    theoryEl.innerText = "Campo Uniforme: El flujo que entra es igual al que sale (Φ_neto = 0).";
-                    stepsEl.innerHTML = `<div>• Superficie Cerrada</div><div>• Φ_neto = 0 (Gauss)</div>`;
+                    theoryEl.innerText = "Campo Uniforme en Superficie Cerrada: Toda línea que entra, sale (Φ_neto = 0).";
+                    stepsEl.innerHTML = `<div>• Superficie Cerrada</div><div>• Campo uniforme</div><div>• Φ_neto = 0 (Ley de Gauss)</div>`;
                 }
             } else {
-                // Punto de carga
                 const bbox = new THREE.Box3().setFromObject(surface);
                 const isInsideBBox = bbox.containsPoint(chargeMesh.position);
                 let reallyInside = false;
@@ -357,23 +412,25 @@
                 if (isOpen) {
                     const dist = chargeMesh.position.distanceTo(surface.position);
                     flux = (config.chargeValue / (1 + dist * 0.5)) * (reallyInside ? 1 : 0.3);
-                    theoryEl.innerText = "Carga y superficie abierta: El flujo varía con la distancia.";
+                    theoryEl.innerText = "Carga puntual sobre superficie abierta: El flujo varía con la distancia y el ángulo sólido subtendido.";
+                    stepsEl.innerHTML = `<div>• Carga q = ${config.chargeValue} nC</div><div>• Distancia r = ${dist.toFixed(2)} m</div>`;
                 } else {
                     flux = reallyInside ? config.chargeValue : 0;
-                    theoryEl.innerText = reallyInside ? "¡Carga Encerrada! Hay flujo neto." : "Carga Exterior: Flujo neto cero.";
-                    stepsEl.innerHTML = `<div>• Carga q = ${config.chargeValue}</div><div>• ¿Interior? ${reallyInside ? 'SÍ' : 'NO'}</div>`;
+                    theoryEl.innerText = reallyInside ? "¡Carga Encerrada! Se produce flujo neto proporcional a q_enc / ε_0." : "Carga Exterior a Superficie Cerrada: Flujo neto exactamente cero.";
+                    stepsEl.innerHTML = `<div>• Carga q = ${config.chargeValue} nC</div><div>• ¿Interior? ${reallyInside ? 'SÍ (Qenc ≠ 0)' : 'NO (Qenc = 0)'}</div>`;
                 }
             }
 
+            currentFlux = flux;
             fluxValueEl.innerText = flux.toFixed(2);
             if (Math.abs(flux) < 0.05) {
-                statusEl.className = "w-full text-center py-1 rounded-full text-[10px] font-bold uppercase bg-slate-700";
+                statusEl.className = "w-full text-center py-1.5 rounded-full text-[10px] font-bold uppercase bg-slate-800 text-slate-400 border border-slate-700";
                 statusEl.innerText = "Flujo Nulo";
                 fluxValueEl.style.color = COLORS.null;
             } else {
                 const isPos = flux > 0;
-                statusEl.className = `w-full text-center py-1 rounded-full text-[10px] font-bold uppercase ${isPos ? 'bg-yellow-600' : 'bg-red-600'}`;
-                statusEl.innerText = isPos ? "Flujo Positivo" : "Flujo Negativo";
+                statusEl.className = `w-full text-center py-1.5 rounded-full text-[10px] font-bold uppercase ${isPos ? 'bg-amber-600/80 text-amber-100 border border-amber-500' : 'bg-red-600/80 text-red-100 border border-red-500'}`;
+                statusEl.innerText = isPos ? "Flujo Positivo (Saliente)" : "Flujo Negativo (Entrante)";
                 fluxValueEl.style.color = isPos ? COLORS.positive : COLORS.negative;
             }
         }
@@ -400,6 +457,7 @@
 
         document.getElementById('surfaceSize').addEventListener('input', (e) => {
             config.surfaceSize = parseFloat(e.target.value);
+            document.getElementById('sizeVal').innerText = `${config.surfaceSize.toFixed(1)} m`;
             createSurface();
         });
 
@@ -412,23 +470,70 @@
 
         document.getElementById('fieldStrength').addEventListener('input', (e) => {
             config.fieldStrength = parseFloat(e.target.value);
+            document.getElementById('fieldVal').innerText = `${config.fieldStrength.toFixed(1)} N/C`;
             createField();
         });
 
         document.getElementById('chargeValue').addEventListener('input', (e) => {
             config.chargeValue = parseFloat(e.target.value);
+            document.getElementById('chargeVal').innerText = `${config.chargeValue.toFixed(1)} nC`;
             chargeMesh.material.color.set(config.chargeValue >= 0 ? COLORS.chargePos : COLORS.chargeNeg);
             createField();
         });
 
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = window.innerWidth / (window.innerHeight - 56);
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(window.innerWidth, window.innerHeight - 56);
         });
 
         init();
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Laboratorio Gauss Avanzado (M3)'
+    const contWrap = document.getElementById('flujo-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Laboratorio_Gauss_Avanzado.html', 'Laboratorio Gauss Avanzado (M3)', () => {
+            return {
+                source: 'FluxLab10',
+                surfaceType: config.surfType,
+                flux: currentFlux,
+                charge: config.chargeValue,
+                fieldStrength: config.fieldStrength,
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            if (scenarioData.charge) {
+                config.chargeValue = scenarioData.charge;
+                document.getElementById('chargeValue').value = config.chargeValue;
+                document.getElementById('chargeVal').innerText = `${config.chargeValue.toFixed(1)} nC`;
+                config.fieldType = 'point';
+                document.getElementById('fieldType').value = 'point';
+                document.getElementById('uniformSettings').classList.add('hidden');
+                document.getElementById('pointSettings').classList.remove('hidden');
+                createCharge();
+                createField();
+            }
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
