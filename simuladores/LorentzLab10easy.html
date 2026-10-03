@@ -5,6 +5,7 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link rel="stylesheet" href="../css/lab10-core.css">
 <!-- Three.js para la simulación 3D interactiva -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -672,18 +673,16 @@ window.hideModal = (id) => { document.getElementById(id).style.display='none'; }
 </script>
 
 <script type="module">
-// --- FIREBASE ARCHITECTURE ---
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// --- FIREBASE ARCHITECTURE (Unified Lab10 Core) ---
+import { auth, db } from '../js/firebase.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-    apiKey: "AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA", authDomain: "laboratorio-de-coulomb.firebaseapp.com",
-    databaseURL: "https://laboratorio-de-coulomb-default-rtdb.firebaseio.com", projectId: "laboratorio-de-coulomb"
-};
-
-const app = initializeApp(firebaseConfig), db = getFirestore(app), rtdb = getDatabase(app), auth = getAuth(app);
+const rtdb = getDatabase(auth.app);
 const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'lorentzLab10';
 
 let curRoomRef=null, unsubRoom=null, isRecv=!1;
@@ -701,23 +700,23 @@ onAuthStateChanged(auth, async u => {
         document.getElementById('auth-modal').style.display='none';
         try {
             const s = await getDoc(doc(db, `artifacts/${APP_ID}/users/${u.uid}/profile/data`));
-            if(s.exists()){ const pd = s.data(); uiInfo.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${pd.nombre || pd.alias || u.email.split('@')[0]}`; document.getElementById('prof-name').value = pd.nombre || ''; }
-            else { uiInfo.innerHTML = u.isAnonymous ? "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> Usuario Anónimo" : `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${u.email ? u.email.split('@')[0] : u.uid.substring(0,6)}`; }
-        } catch(e) { uiInfo.innerHTML = u.isAnonymous ? "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> Usuario Anónimo" : `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> Conectado`; }
+            if(s.exists()){ const pd = s.data(); uiInfo.innerHTML = `<i class="ph ph-user"></i> ${pd.nombre || pd.alias || u.email.split('@')[0]}`; document.getElementById('prof-name').value = pd.nombre || ''; }
+            else { uiInfo.innerHTML = u.isAnonymous ? "<i class='ph ph-user'></i> Usuario Anónimo" : `<i class="ph ph-user"></i> ${u.email ? u.email.split('@')[0] : u.uid.substring(0,6)}`; }
+        } catch(e) { uiInfo.innerHTML = u.isAnonymous ? "<i class='ph ph-user'></i> Usuario Anónimo" : "<i class='ph ph-user-check'></i> Conectado"; }
         document.getElementById('btn-rooms').style.display='inline-flex';
     } else { uiInfo.innerHTML = "<i class='ph ph-warning'></i> Desconectado"; }
 });
 
 window.saveProfile = async () => {
     if(!auth.currentUser) return; const n = document.getElementById('prof-name').value;
-    try { await setDoc(doc(db,`artifacts/${APP_ID}/users/${auth.currentUser.uid}/profile/data`), {nombre: n}, {merge: true}); document.getElementById('user-info').innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${n}`; hideModal('profile-setup-modal'); }
+    try { await setDoc(doc(db,`artifacts/${APP_ID}/users/${auth.currentUser.uid}/profile/data`), {nombre: n}, {merge: true}); document.getElementById('user-info').innerHTML = `<i class="ph ph-user"></i> ${n}`; hideModal('profile-setup-modal'); }
     catch(e) { alert("Error guardando: " + e.message); }
 }
 
 window.crearUnirseSala = async () => { const n = document.getElementById('new-room-name').value.trim(); if(!n) return alert("Ingresa el nombre de la sala"); joinRoom(n); };
 
 window.joinRoom = (id) => {
-    hideModal('rooms-modal'); document.getElementById('room-info').innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: <b>${id}</b>`;
+    hideModal('rooms-modal'); document.getElementById('room-info').innerHTML = `<i class="ph ph-globe"></i> Sala: <b>${id}</b>`;
     if (unsubRoom) unsubRoom();
     
     curRoomRef = ref(rtdb, `salas/${APP_ID}/${id}/state`);
@@ -753,6 +752,45 @@ window.sendData = () => {
     }).then(() => { window.isSendingData = false; });
 };
 window.openRooms = () => { showModal('rooms-modal'); };
+
+// ── Integración Lab10 Bus (Continuar en FEM Inducida M10) ────────────────────
+const rightPanel = document.getElementById('right-panel');
+if (rightPanel) {
+    const contWrap = document.createElement('div');
+    contWrap.id = 'lorentz-continue-bus-wrap';
+    contWrap.style.cssText = 'margin-top:14px; width:100%;';
+    rightPanel.appendChild(contWrap);
+    lab10Bus.injectContinueButton(contWrap, 'Sim_M10_FEM_Movimiento.html', 'FEM Inducida (M10)', () => ({
+        source: 'LorentzLab10',
+        magneticField: {
+            bx: parseFloat(document.getElementById('b-x')?.value || 0),
+            by: parseFloat(document.getElementById('b-y')?.value || 0),
+            bz: parseFloat(document.getElementById('b-z')?.value || 0)
+        },
+        velocity: {
+            vx: parseFloat(document.getElementById('v-x')?.value || 0),
+            vy: parseFloat(document.getElementById('v-y')?.value || 0),
+            vz: parseFloat(document.getElementById('v-z')?.value || 0)
+        },
+        charge: parseFloat(document.getElementById('charge-q')?.value || 1),
+        timestamp: Date.now()
+    }));
+}
+
+// Escuchar escenarios entrantes de otros simuladores magnéticos
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData) {
+        if (scenarioData.magneticField) {
+            if (document.getElementById('b-x')) document.getElementById('b-x').value = scenarioData.magneticField.bx || 0;
+            if (document.getElementById('b-y')) document.getElementById('b-y').value = scenarioData.magneticField.by || 0;
+            if (document.getElementById('b-z')) document.getElementById('b-z').value = scenarioData.magneticField.bz || 0;
+        }
+        if (scenarioData.charge && document.getElementById('charge-q')) {
+            document.getElementById('charge-q').value = scenarioData.charge;
+        }
+        if (typeof window.updateSim === 'function') window.updateSim();
+    }
+});
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
