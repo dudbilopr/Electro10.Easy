@@ -29,7 +29,7 @@ export const modulo7 = {
         {
             "id": "m7-l2",
             "tipo": "presentacion",
-            "recurso": "./clase_7.html",
+            "recurso": "./player.html?clase=modulo7",
             "titulo": "2. Diapositivas Interactivas — Circuitos Resistivos",
             "descripcion": "Análisis de circuitos con métodos de reducción, mallas y nodos visualizados paso a paso.",
             "xp": 15

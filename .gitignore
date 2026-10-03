@@ -4,3 +4,8 @@
 .DS_Store
 Thumbs.db
 old_index.html
+node_modules/
+package.json
+package-lock.json
+scratch/
+
