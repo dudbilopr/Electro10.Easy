@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador: Onda Electromagnética</title>
+    <title>WaveLab10.easy - Onda Electromagnética Plana 3D</title>
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <style>
+        :root {
+            --accent: #06b6d4;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; overflow: hidden; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -24,17 +29,24 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        input[type="range"] { accent-color: #10b981; }
+        input[type="range"] { accent-color: #06b6d4; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body class="h-screen flex flex-col">
 
-    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center px-4 z-20 shrink-0 shadow-md">
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">EM</div>
-            <h1 class="text-lg font-bold text-white">Simulador <span class="text-emerald-400">Onda Electromagnética Plana</span></h1>
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #06b6d4);">
+                <i class="ph ph-broadcast" style="font-size: 1.25rem;"></i>
+            </div>
+            <h1 class="text-lg font-bold text-white">WaveLab10<span style="color:var(--accent, #06b6d4);">.easy</span> <span class="text-xs text-slate-400 font-normal">| Onda Electromagnética Plana 3D</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
         </div>
     </header>
 
@@ -59,9 +71,9 @@
                     <!-- Frecuencia -->
                     <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
                         <div class="flex justify-between text-xs mb-2">
-                            <span class="text-blue-400 font-medium">Vel. Animación</span>
+                            <span class="text-cyan-400 font-medium">Vel. Animación</span>
                         </div>
-                        <input type="range" id="f-slider" min="0" max="5" step="0.1" value="2.0" class="w-full accent-blue-500">
+                        <input type="range" id="f-slider" min="0" max="5" step="0.1" value="2.0" class="w-full accent-cyan-500">
                     </div>
 
                     <!-- Amplitud E -->
@@ -76,9 +88,10 @@
             </div>
 
             <div class="mt-auto">
-                 <button onclick="resetSim()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-colors border border-slate-700">
-                    Reiniciar
+                 <button onclick="resetSim()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-colors border border-slate-700 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i> Reiniciar
                 </button>
+                <div id="onda-continue-wrap" class="mt-4 pt-3 border-t border-slate-800"></div>
             </div>
         </aside>
 
@@ -87,27 +100,28 @@
             <!-- 3D Canvas -->
             <div id="canvas-container" class="w-full h-2/3 border-b border-slate-800 relative cursor-move">
                 <div class="absolute top-4 left-4 z-10 glass-panel px-3 py-2 rounded-lg pointer-events-none">
-                    <div class="text-xs font-bold text-slate-400 mb-1">Propagación en 3D</div>
-                    <div class="text-[10px] text-red-400">Rojo: Campo Eléctrico ($\vec{E}$)</div>
-                    <div class="text-[10px] text-blue-400">Azul: Campo Magnético ($\vec{B}$)</div>
+                    <div class="text-xs font-bold text-slate-400 mb-1 flex items-center gap-1.5"><i class="ph ph-cube"></i> Propagación Transversal 3D</div>
+                    <div class="text-[10px] text-red-400">Rojo: Campo Eléctrico ($\vec{E} \parallel \hat{j}$)</div>
+                    <div class="text-[10px] text-blue-400">Azul: Campo Magnético ($\vec{B} \parallel \hat{k}$)</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Propagación: Vector de Poynting $\vec{S} \parallel \hat{i}$</div>
                 </div>
             </div>
 
             <!-- Theory and Math (Bottom) -->
             <div class="w-full h-1/3 p-6 overflow-y-auto bg-slate-900 scrollbar-thin">
-                <h3 class="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    Ecuaciones de la Onda (Propagación en $x$)
+                <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph ph-waves"></i>
+                    Ecuaciones de la Onda Electromagnética (Propagación en $x$)
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="glass-panel p-4 rounded-xl border-emerald-500/30 border">
-                        <div id="math-steps-1" class="text-sm text-slate-300 font-light text-center">
-                            $$ \vec{E}(x,t) = E_{max} \cos(kx - \omega t) \hat{j} $$
-                            $$ \vec{B}(x,t) = B_{max} \cos(kx - \omega t) \hat{k} $$
+                    <div class="glass-panel p-4 rounded-xl border-cyan-500/30 border">
+                        <div id="math-steps-1" class="text-sm text-slate-300 font-light text-center space-y-2">
+                            <div>$$ \vec{E}(x,t) = E_{max} \cos(kx - \omega t) \hat{j} $$</div>
+                            <div>$$ \vec{B}(x,t) = B_{max} \cos(kx - \omega t) \hat{k} $$</div>
                         </div>
                     </div>
-                    <div class="glass-panel p-4 rounded-xl border-slate-700 border">
-                        <div id="math-steps-2" class="text-sm text-slate-300 font-light text-center">
+                    <div class="glass-panel p-4 rounded-xl border-slate-700 border flex items-center justify-center">
+                        <div id="math-steps-2" class="text-sm text-slate-300 font-light text-center w-full">
                             <!-- Injected -->
                         </div>
                     </div>
@@ -132,6 +146,7 @@
         const eSlider = document.getElementById('E-slider');
         const lVal = document.getElementById('l-val');
         const eVal = document.getElementById('E-val');
+        const mathSteps1 = document.getElementById('math-steps-1');
         const mathSteps2 = document.getElementById('math-steps-2');
 
         // Three.js Setup
@@ -200,7 +215,6 @@
 
             // Wavenumber k for visualization
             // Map lambda 400-700 to a k value that looks good on our L=15 screen.
-            // visual_lambda ranges from 3 to 6
             const visLambda = (state.lambda * 1e9) / 100; // 400nm -> 4 units
             const k = (2 * Math.PI) / visLambda;
             
@@ -246,20 +260,27 @@
             const Bmax = state.Emax / c; // Tesla
 
             let html = `
-                <div class="grid grid-cols-2 text-left">
-                    <div>
-                        <div class="text-[11px] text-slate-400">Frecuencia ($f = c/\\lambda$)</div>
-                        <div class="text-sm">$$ f = ${(freq).toExponential(2)}\\ \\text{Hz} $$</div>
+                <div class="grid grid-cols-2 text-left gap-4">
+                    <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-700/50">
+                        <div class="text-[11px] text-cyan-400 font-semibold mb-1">Frecuencia ($f = c/\\lambda$)</div>
+                        <div class="text-sm font-mono text-white">$$ f = ${(freq).toExponential(2)}\\ \\text{Hz} $$</div>
                     </div>
-                    <div>
-                        <div class="text-[11px] text-slate-400">Amplitud $B_{max} = E_{max}/c$</div>
-                        <div class="text-sm">$$ B_{max} = ${(Bmax).toExponential(2)}\\ \\text{T} $$</div>
+                    <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-700/50">
+                        <div class="text-[11px] text-blue-400 font-semibold mb-1">Amplitud $B_{max} = E_{max}/c$</div>
+                        <div class="text-sm font-mono text-white">$$ B_{max} = ${(Bmax).toExponential(2)}\\ \\text{T} $$</div>
                     </div>
                 </div>
             `;
             
             mathSteps2.innerHTML = html;
-            if (window.MathJax) MathJax.typesetPromise([mathSteps2]);
+            if (window.renderMathInElement) {
+                renderMathInElement(mathSteps1, {
+                    delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+                });
+                renderMathInElement(mathSteps2, {
+                    delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+                });
+            }
         }
 
         function handleInput() {
@@ -286,6 +307,47 @@
         handleInput();
 
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Ecuaciones de Maxwell (M11)'
+    const contWrap = document.getElementById('onda-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M11_EcuacionesMaxwell.html', 'Ecuaciones de Maxwell (M11)', () => {
+            const freq = c / state.lambda;
+            const Bmax = state.Emax / c;
+            return {
+                source: 'WaveLab10',
+                lambda: state.lambda,
+                frequency: freq,
+                Emax: state.Emax,
+                Bmax: Bmax,
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante (ej: desde Fasores o Oscilador LC)
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            if (typeof scenarioData.Vs === 'number') {
+                state.Emax = Math.min(Math.max(Math.round(scenarioData.Vs), 10), 200);
+                eSlider.value = state.Emax;
+            }
+            handleInput();
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
