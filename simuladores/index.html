@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab10.easy | Hub Central de Laboratorios Virtuales</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#06b6d4',
+                            blue: '#3b82f6',
+                            violet: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Phosphor Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <link rel="stylesheet" href="../css/lab10-core.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #070b14;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        .hub-bg-glow {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 80%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .filter-btn.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 16px rgba(37, 99, 235, 0.35);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #070b14; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-blue-600 selection:text-white">
+
+    <div class="hub-bg-glow"></div>
+
+    <!-- Header Principal -->
+    <header class="sticky top-0 z-50 bg-[#070b14]/85 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="flex items-center gap-2.5 group" title="Regresar al Portal Principal">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+                        <i class="ph ph-atom text-2xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-black text-lg text-white tracking-tight">Lab10<span class="text-cyan-400">.easy</span></span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-950/80 text-blue-400 border border-blue-800/50">Hub 32 Labs</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Ecosistema Unificado de Laboratorios Virtuales</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="user-info-pill" class="flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300">
+                    <i class="ph ph-user text-slate-400"></i>
+                    <span id="user-display-name">Modo Invitado</span>
+                </div>
+
+                <a href="../index.html" class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700">
+                    <i class="ph ph-arrow-left"></i>
+                    <span class="hidden sm:inline">Volver al Curso</span>
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 relative z-10">
+
+        <!-- Hero Section -->
+        <section class="text-center max-w-3xl mx-auto mb-10">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-3">
+                Explora el Universo del <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400">Electromagnetismo</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-400 font-normal leading-relaxed">
+                Laboratorios interactivos de física experimental con renderizado matemático KaTeX ultrarrápido y bus de interconexión de datos entre simuladores.
+            </p>
+
+            <!-- Barra de Búsqueda -->
+            <div class="mt-6 max-w-xl mx-auto relative">
+                <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none"></i>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Buscar por concepto, fórmula o módulo (ej: Coulomb, Gauss, Biot-Savart)..." 
+                    class="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-inner"
+                >
+            </div>
+        </section>
+
+        <!-- Filtros por Dominio Físico -->
+        <nav class="flex flex-wrap items-center justify-center gap-2 mb-8">
+            <button class="filter-btn active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="all">
+                <i class="ph ph-grid-four"></i> Todos (<span id="count-all">32</span>)
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="electrostatica">
+                <i class="ph ph-sparkle text-cyan-400"></i> Electrostática
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="distribuciones">
+                <i class="ph ph-circle-dashed text-blue-400"></i> Distribuciones 2D
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="gauss">
+                <i class="ph ph-sphere text-indigo-400"></i> Gauss & Potencial
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="circuitos">
+                <i class="ph ph-circuitry text-emerald-400"></i> Circuitos & Resistencia
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="magnetismo">
+                <i class="ph ph-magnet text-amber-400"></i> Magnetismo & Biot-Savart
+            </button>
+            <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-category="ondas">
+                <i class="ph ph-wave-sine text-rose-400"></i> Ondas EM & Fasores
+            </button>
+        </nav>
+
+        <!-- Grid de Simuladores -->
+        <div id="simulators-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Renderizado dinámico vía JS -->
+        </div>
+
+        <!-- Estado Vacío -->
+        <div id="empty-state" class="hidden text-center py-16">
+            <i class="ph ph-magnifying-glass text-4xl text-slate-600 mb-3 inline-block"></i>
+            <h3 class="text-lg font-bold text-slate-300">No se encontraron simuladores</h3>
+            <p class="text-sm text-slate-500 mt-1">Intenta con otros términos de búsqueda o cambia la categoría de filtro.</p>
+        </div>
+
+        <!-- Banner Explicativo: Bus de Datos Inter-Simulador -->
+        <section class="mt-16 glass-card p-6 sm:p-8 rounded-3xl border border-blue-900/40 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+                <div class="max-w-xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-700/40 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
+                        <i class="ph ph-plugs-connected"></i> Lab10 Data Bus
+                    </div>
+                    <h2 class="text-2xl font-black text-white tracking-tight mb-2">Simuladores que se Potencian entre Sí</h2>
+                    <p class="text-sm text-slate-400 leading-relaxed font-normal">
+                        En toda la suite Lab10.easy, los datos calculados en un laboratorio (cargas, trayectorias, resistencias, corrientes) se exportan automáticamente mediante el botón <span class="text-white font-semibold">"Continuar en..."</span>, permitiendo una experiencia de aprendizaje secuencial y conectada.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
+                    <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-cyan-400 font-semibold flex items-center gap-1.5"><i class="ph ph-sparkle"></i> Cargas (M1)</span>
+                    <i class="ph ph-arrow-right text-slate-600"></i>
+                    <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-blue-400 font-semibold flex items-center gap-1.5"><i class="ph ph-compass"></i> Campo (M2)</span>
+                    <i class="ph ph-arrow-right text-slate-600"></i>
+                    <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-indigo-400 font-semibold flex items-center gap-1.5"><i class="ph ph-sphere"></i> Gauss 3D (M3)</span>
+                    <i class="ph ph-arrow-right text-slate-600"></i>
+                    <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-emerald-400 font-semibold flex items-center gap-1.5"><i class="ph ph-battery-charging"></i> Capacitancia (M5)</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-slate-800/80 bg-[#070b14] py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 Electro10.easy | Plataforma de Física y Electromagnetismo para Ingeniería.</p>
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="hover:text-slate-400 transition-colors">Portal Principal</a>
+                <span class="text-slate-800">•</span>
+                <span class="text-blue-500 font-semibold">32 Laboratorios Estandarizados</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Catálogo de Simuladores y Lógica de Búsqueda -->
+    <script>
+        if (location.protocol === 'http:' || location.protocol === 'https:') {
+            import('../js/lab10-auth.js').then(({ lab10Auth }) => {
+                lab10Auth.onUserChange((user) => {
+                    const nameEl = document.getElementById('user-display-name');
+                    if (nameEl) {
+                        nameEl.textContent = user ? (user.displayName || user.email || 'Estudiante') : 'Modo Invitado';
+                    }
+                });
+            }).catch(() => {});
+        }
+
+        const SIMULATORS = [
+            // ── Electrostática ─────────────────────────────────────────────
+            {
+                id: 'coulomb',
+                name: 'CoulombLab10.easy',
+                title: 'Ley de Coulomb y Fuerzas Puntuales',
+                desc: 'Interacción electrostática entre cargas en el vacío, cálculo vectorial de fuerza neta y diagrama de cuerpo libre dinámico.',
+                category: 'electrostatica',
+                modulo: 'Módulo 1',
+                file: 'Coulomb.html',
+                icon: 'ph-sparkle',
+                color: 'text-cyan-400',
+                accentHex: '#06b6d4',
+                busNext: 'Sim_M2_Campo_Vectorial.html',
+                busLabel: 'Continuar en Campo Vectorial'
+            },
+            {
+                id: 'vector-coulomb',
+                name: 'VectorCoulombLab10.easy',
+                title: 'Configuración Libre de Cargas',
+                desc: 'Ubicación interactiva de cargas con visualización gráfica de vectores de fuerza neta y magnitud instantánea.',
+                category: 'electrostatica',
+                modulo: 'Módulo 1',
+                file: 'Sim_M1_Cargas.html',
+                icon: 'ph-arrows-split',
+                color: 'text-cyan-400',
+                accentHex: '#06b6d4',
+                busNext: 'Coulomb.html',
+                busLabel: 'Continuar en CoulombLab10'
+            },
+            {
+                id: 'coulomb-expert',
+                name: 'CoulombExpertLab10.easy',
+                title: 'Análisis Vectorial 2D Riguroso',
+                desc: 'Entorno de precisión con coordenadas cartesianas exactas, descomposición en componentes y cálculo analítico guiado.',
+                category: 'electrostatica',
+                modulo: 'Módulo 1',
+                file: 'Sim_M1_Coulomb_Pro.html',
+                icon: 'ph-math-operations',
+                color: 'text-cyan-400',
+                accentHex: '#06b6d4',
+                busNext: 'Sim_M2_Campo_Vectorial.html',
+                busLabel: 'Continuar en Campo Vectorial'
+            },
+
+            // ── Distribuciones Continuas 2D ────────────────────────────────
+            {
+                id: 'field-vector',
+                name: 'FieldLab10.easy',
+                title: 'Campo Eléctrico Vectorial',
+                desc: 'Mapeo bidimensional del vector campo eléctrico resultante generado por configuraciones múltiples de cargas fuente.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Campo_Vectorial.html',
+                icon: 'ph-compass',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Potencial_Electrico.html',
+                busLabel: 'Continuar en Potencial Eléctrico'
+            },
+            {
+                id: 'rod-lab',
+                name: 'RodLab10.easy',
+                title: 'Varilla Finita Cargada',
+                desc: 'Campo eléctrico de una varilla de longitud L con densidad lineal uniforme a lo largo del eje perpendicular.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Varilla.html',
+                icon: 'ph-line-segment',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Anillo.html',
+                busLabel: 'Continuar en Anillo Cargado'
+            },
+            {
+                id: 'ring-lab',
+                name: 'RingLab10.easy',
+                title: 'Anillo Circular Cargado',
+                desc: 'Deducción e integración del campo eléctrico en el eje axial de simetría con cancelación de componentes perpendiculares.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Anillo.html',
+                icon: 'ph-circle',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Disco.html',
+                busLabel: 'Continuar en Disco Cargado'
+            },
+            {
+                id: 'disk-lab',
+                name: 'DiskLab10.easy',
+                title: 'Disco Circular Cargado',
+                desc: 'Superposición continua de anillos concéntricos con transición al modelo asintótico de plano infinito.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Disco.html',
+                icon: 'ph-disc',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Cilindro.html',
+                busLabel: 'Continuar en Cilindro Cargado'
+            },
+            {
+                id: 'cylinder-lab',
+                name: 'CylinderLab10.easy',
+                title: 'Cilindro Sólido Cargado',
+                desc: 'Integración volumétrica de discos cargados a lo largo de la longitud del cilindro evaluado en el eje axial.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Cilindro.html',
+                icon: 'ph-cylinder',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Arco.html',
+                busLabel: 'Continuar en Arco Cargado'
+            },
+            {
+                id: 'arc-lab',
+                name: 'ArcLab10.easy',
+                title: 'Arco Circular de Carga',
+                desc: 'Campo en el centro de curvatura para un arco con ángulo de apertura variable desde 10° hasta 360°.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Arco.html',
+                icon: 'ph-circle-notch',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Semicirculo.html',
+                busLabel: 'Continuar en Semicírculo'
+            },
+            {
+                id: 'semicircle-lab',
+                name: 'SemicircleLab10.easy',
+                title: 'Arco Anular con Integración Diferencial',
+                desc: 'Apertura angular y radial con control del elemento diferencial de anillo para visualización del proceso integral.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Semicirculo.html',
+                icon: 'ph-circle-half',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Tablero_Lineas.html',
+                busLabel: 'Continuar en Tablero de Líneas'
+            },
+            {
+                id: 'lines-board',
+                name: 'LineChargeLab10.easy',
+                title: 'Tablero Comparativo de Líneas',
+                desc: 'Estudio conjunto de geometrías unidimensionales: línea finita, anillo y arco en un mismo entorno interactivo.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Tablero_Lineas.html',
+                icon: 'ph-rows',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Sim_M2_Tablero_Distribuciones.html',
+                busLabel: 'Continuar en Tablero 2D'
+            },
+            {
+                id: 'dist-board',
+                name: 'ChargeDistLab10.easy',
+                title: 'Tablero de Distribuciones 2D y 3D',
+                desc: 'Comparativa en paralelo de anillo, disco y cilindro para comprobar transiciones asintóticas de campo.',
+                category: 'distribuciones',
+                modulo: 'Módulo 2',
+                file: 'Sim_M2_Tablero_Distribuciones.html',
+                icon: 'ph-squares-four',
+                color: 'text-blue-400',
+                accentHex: '#3b82f6',
+                busNext: 'Laboratorio_Gauss_Avanzado.html',
+                busLabel: 'Continuar en Gauss 3D'
+            },
+
+            // ── Gauss & Potencial ──────────────────────────────────────────
+            {
+                id: 'flux-lab',
+                name: 'FluxLab10.easy',
+                title: 'Flujo Eléctrico y Superficies Cerradas',
+                desc: 'Cálculo del producto escalar entre campo y diferencial de área con superficies esféricas, cilíndricas y cúbicas.',
+                category: 'gauss',
+                modulo: 'Módulo 3',
+                file: 'Sim_M3_Flujo.html',
+                icon: 'ph-arrows-out-cardinal',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Laboratorio_Gauss_Avanzado.html',
+                busLabel: 'Continuar en Gauss 3D'
+            },
+            {
+                id: 'gauss-3d',
+                name: 'GaussLab3D10.easy',
+                title: 'Simetrías 3D y Ley de Gauss',
+                desc: 'Simulador 3D WebGL con corte transversal y visualización vectorial del flujo elemental dΦ = E·dS.',
+                category: 'gauss',
+                modulo: 'Módulo 3',
+                file: 'Laboratorio_Gauss_Avanzado.html',
+                icon: 'ph-sphere',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Capacitance.html',
+                busLabel: 'Continuar en Capacitancia'
+            },
+            {
+                id: 'gauss-matrix',
+                name: 'GaussMatrixLab10.easy',
+                title: 'Matriz Formativa de Gauss',
+                desc: 'Laboratorio LMS con problemas paramétricos para deducir carga encerrada y campo en cascarones concéntricos.',
+                category: 'gauss',
+                modulo: 'Módulo 5',
+                file: 'Tabla_Gauss.html',
+                icon: 'ph-matrix',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Laboratorio_Gauss_Avanzado.html',
+                busLabel: 'Continuar en Gauss 3D'
+            },
+            {
+                id: 'potential-lab',
+                name: 'PotentialLab10.easy',
+                title: 'Potencial Eléctrico y Equipotenciales',
+                desc: 'Cálculo analítico del potencial escalar V y evaluación del trabajo requerido para mover cargas de prueba.',
+                category: 'gauss',
+                modulo: 'Módulo 4',
+                file: 'Potencial_Electrico.html',
+                icon: 'ph-chart-polar',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Capacitance.html',
+                busLabel: 'Continuar en Capacitancia'
+            },
+            {
+                id: 'potential-2',
+                name: 'PotentialLab10.easy (v2)',
+                title: 'Trayectorias y Trabajo Electrostático',
+                desc: 'Trazado dinámico de trayectorias con validación inmediata de conservación de energía e independencia del camino.',
+                category: 'gauss',
+                modulo: 'Módulo 4',
+                file: 'Potencial_Electrico_2.html',
+                icon: 'ph-path',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Capacitance.html',
+                busLabel: 'Continuar en Capacitancia'
+            },
+            {
+                id: 'capacitance',
+                name: 'Capacitance10.easy',
+                title: 'Capacitor Plano y Dieléctricos',
+                desc: 'Laboratorio interactivo de capacitancia C = ε₀A/d, almacenamiento de energía y polarización con materiales dieléctricos.',
+                category: 'gauss',
+                modulo: 'Módulo 5',
+                file: 'Capacitance.html',
+                icon: 'ph-battery-charging',
+                color: 'text-indigo-400',
+                accentHex: '#8b5cf6',
+                busNext: 'Resistance.html',
+                busLabel: 'Continuar en Redes Resistivas'
+            },
+
+            // ── Circuitos & Resistencia ────────────────────────────────────
+            {
+                id: 'resistance',
+                name: 'Resistance10.easy',
+                title: 'Reducción de Circuitos Resistivos',
+                desc: 'Solucionador interactivo paso a paso para redes en serie, paralelo, mallas complejas y puentes de Wheatstone.',
+                category: 'circuitos',
+                modulo: 'Módulo 6',
+                file: 'Resistance.html',
+                icon: 'ph-circuitry',
+                color: 'text-emerald-400',
+                accentHex: '#10b981',
+                busNext: 'Sim_M6_Resistividad.html',
+                busLabel: 'Continuar en Resistividad'
+            },
+            {
+                id: 'resistivity',
+                name: 'ResistivityLab10.easy',
+                title: 'Resistividad y Ley de Pouillet',
+                desc: 'Modelo macroscópico y microscópico de conducción con deriva electrónica y dependencia de temperatura.',
+                category: 'circuitos',
+                modulo: 'Módulo 6',
+                file: 'Sim_M6_Resistividad.html',
+                icon: 'ph-ruler',
+                color: 'text-emerald-400',
+                accentHex: '#10b981',
+                busNext: 'Sim_M6_CircuitoDC.html',
+                busLabel: 'Continuar en Circuito DC'
+            },
+            {
+                id: 'circuit-dc',
+                name: 'CircuitDCLab10.easy',
+                title: 'Circuito Eléctrico DC Básico',
+                desc: 'Relación fundamental entre voltaje, corriente y resistencia según la Ley de Ohm con disipación de calor Joule.',
+                category: 'circuitos',
+                modulo: 'Módulo 6',
+                file: 'Sim_M6_CircuitoDC.html',
+                icon: 'ph-lightning',
+                color: 'text-emerald-400',
+                accentHex: '#10b981',
+                busNext: 'LorentzLab10easy.html',
+                busLabel: 'Continuar en Fuerza de Lorentz'
+            },
+
+            // ── Magnetismo & Fuentes de B ──────────────────────────────────
+            {
+                id: 'lorentz-lab',
+                name: 'LorentzLab10.easy',
+                title: 'Fuerza de Lorentz en 3D',
+                desc: 'Trayectoria circular y helicoidal de partículas cargadas inmersas en campos eléctricos y magnéticos combinados.',
+                category: 'magnetismo',
+                modulo: 'Módulo 7',
+                file: 'LorentzLab10easy.html',
+                icon: 'ph-magnet',
+                color: 'text-amber-400',
+                accentHex: '#f59e0b',
+                busNext: 'Sim_M8_BiotSavart_Hilo.html',
+                busLabel: 'Continuar en Hilo Rectilíneo'
+            },
+            {
+                id: 'biot-wire',
+                name: 'BiotSavartWireLab10.easy',
+                title: 'Conductor Rectilíneo Largo',
+                desc: 'Líneas de campo magnético concéntricas B = μ₀I/(2πr) con aplicación interactiva de la regla de la mano derecha.',
+                category: 'magnetismo',
+                modulo: 'Módulo 8',
+                file: 'Sim_M8_BiotSavart_Hilo.html',
+                icon: 'ph-arrows-clockwise',
+                color: 'text-amber-400',
+                accentHex: '#f59e0b',
+                busNext: 'Sim_M8_BiotSavart_Anillo.html',
+                busLabel: 'Continuar en Espira Circular'
+            },
+            {
+                id: 'biot-ring',
+                name: 'BiotSavartRingLab10.easy',
+                title: 'Espira Circular con Corriente',
+                desc: 'Campo magnético a lo largo del eje central de una espira circular y configuración de momento dipolar magnético.',
+                category: 'magnetismo',
+                modulo: 'Módulo 8',
+                file: 'Sim_M8_BiotSavart_Anillo.html',
+                icon: 'ph-circle-dashed',
+                color: 'text-amber-400',
+                accentHex: '#f59e0b',
+                busNext: 'Sim_M9_Solenoide.html',
+                busLabel: 'Continuar en Solenoide'
+            },
+            {
+                id: 'solenoid-lab',
+                name: 'SolenoidLab10.easy',
+                title: 'Solenoide y Bobinas',
+                desc: 'Superposición del campo magnético interior uniforme generado por N espiras compactas.',
+                category: 'magnetismo',
+                modulo: 'Módulo 9',
+                file: 'Sim_M9_Solenoide.html',
+                icon: 'ph-spiral',
+                color: 'text-amber-400',
+                accentHex: '#f59e0b',
+                busNext: 'Sim_M9_Tabla_Ampere.html',
+                busLabel: 'Continuar en Ley de Ampère'
+            },
+            {
+                id: 'ampere-table',
+                name: 'AmpereTableLab10.easy',
+                title: 'Ley de Ampère y Circulación',
+                desc: 'Evaluación de la integral de línea de B a lo largo de curvas cerradas amparadas por corriente neta encerrada.',
+                category: 'magnetismo',
+                modulo: 'Módulo 9',
+                file: 'Sim_M9_Tabla_Ampere.html',
+                icon: 'ph-arrow-counter-clockwise',
+                color: 'text-amber-400',
+                accentHex: '#f59e0b',
+                busNext: 'Sim_M10_FEM_Movimiento.html',
+                busLabel: 'Continuar en FEM de Movimiento'
+            },
+
+            // ── Inducción, Ondas y AC ──────────────────────────────────────
+            {
+                id: 'motion-emf',
+                name: 'MotionEMFLab10.easy',
+                title: 'FEM de Movimiento y Fuerza Magnética',
+                desc: 'Barra conductora en movimiento dentro de campo B transversal con generación de corriente inducida y fem E = BLv.',
+                category: 'ondas',
+                modulo: 'Módulo 10',
+                file: 'Sim_M10_FEM_Movimiento.html',
+                icon: 'ph-sliders-horizontal',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M10_FlujoMagnetico.html',
+                busLabel: 'Continuar en Flujo Magnético'
+            },
+            {
+                id: 'mag-flux',
+                name: 'MagFluxLab10.easy',
+                title: 'Flujo Magnético y Ley de Faraday',
+                desc: 'Variación temporal del flujo magnético dΦ/dt con comprobación directa de la oposición según la Ley de Lenz.',
+                category: 'ondas',
+                modulo: 'Módulo 10',
+                file: 'Sim_M10_FlujoMagnetico.html',
+                icon: 'ph-magnet-straight',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M11_OndaEM.html',
+                busLabel: 'Continuar en Onda EM'
+            },
+            {
+                id: 'wave-em',
+                name: 'WaveLab10.easy',
+                title: 'Onda Electromagnética 3D',
+                desc: 'Propagación en el espacio de campos E y B en cuadratura espacial perpendicular a la velocidad de la luz c.',
+                category: 'ondas',
+                modulo: 'Módulo 11',
+                file: 'Sim_M11_OndaEM.html',
+                icon: 'ph-wave-sine',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M11_EcuacionesMaxwell.html',
+                busLabel: 'Continuar en Maxwell'
+            },
+            {
+                id: 'maxwell-lab',
+                name: 'MaxwellLab10.easy',
+                title: 'Las Cuatro Ecuaciones de Maxwell',
+                desc: 'Compendio interactivo de Gauss, Gauss Magnético, Faraday y Ampère-Maxwell en formulación integral y diferencial.',
+                category: 'ondas',
+                modulo: 'Módulo 11',
+                file: 'Sim_M11_EcuacionesMaxwell.html',
+                icon: 'ph-brackets-curly',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M12_OsciladorLC.html',
+                busLabel: 'Continuar en Oscilador LC'
+            },
+            {
+                id: 'lc-oscillator',
+                name: 'LCOscillatorLab10.easy',
+                title: 'Oscilador Armónico LC',
+                desc: 'Intercambio armónico continuo entre energía electrostática en el capacitor y energía magnética en el inductor.',
+                category: 'ondas',
+                modulo: 'Módulo 12',
+                file: 'Sim_M12_OsciladorLC.html',
+                icon: 'ph-wave-triangle',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M12_RLC.html',
+                busLabel: 'Continuar en Circuito RLC'
+            },
+            {
+                id: 'rlc-circuit',
+                name: 'RLCLab10.easy',
+                title: 'Circuito RLC Transitorio',
+                desc: 'Respuesta transitoria en corriente continua con regímenes sobreamortiguado, crítico y subamortiguado.',
+                category: 'ondas',
+                modulo: 'Módulo 12',
+                file: 'Sim_M12_RLC.html',
+                icon: 'ph-chart-line-up',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Sim_M12_Fasores.html',
+                busLabel: 'Continuar en Diagrama de Fasores'
+            },
+            {
+                id: 'phasor-lab',
+                name: 'PhasorLab10.easy',
+                title: 'Diagrama Fasorial e Impedancia AC',
+                desc: 'Plano complejo con representación de voltaje, corriente, desfase angular φ e impedancia reactiva en corriente alterna.',
+                category: 'ondas',
+                modulo: 'Módulo 12',
+                file: 'Sim_M12_Fasores.html',
+                icon: 'ph-arrows-clockwise',
+                color: 'text-rose-400',
+                accentHex: '#f43f5e',
+                busNext: 'Coulomb.html',
+                busLabel: 'Reiniciar Cadena en Coulomb'
+            }
+        ];
+
+        // ── Renderizado Dinámico ──────────────────────────────────────────
+        const grid = document.getElementById('simulators-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        function renderSimulators() {
+            const filtered = SIMULATORS.filter(sim => {
+                const matchesCat = currentCategory === 'all' || sim.category === currentCategory;
+                const matchesSearch = searchQuery === '' || 
+                    sim.name.toLowerCase().includes(searchQuery) ||
+                    sim.title.toLowerCase().includes(searchQuery) ||
+                    sim.desc.toLowerCase().includes(searchQuery) ||
+                    sim.modulo.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(sim => `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 ${sim.color}">
+                                ${sim.modulo}
+                            </span>
+                            <div class="w-8 h-8 rounded-lg bg-slate-900/90 border border-slate-800 flex items-center justify-center ${sim.color}">
+                                <i class="ph ${sim.icon} text-lg"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="text-base font-bold text-white tracking-tight mb-1 flex items-center gap-1.5">
+                            ${sim.name}
+                        </h3>
+                        <h4 class="text-xs font-semibold text-slate-300 mb-2.5">
+                            ${sim.title}
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-normal mb-4">
+                            ${sim.desc}
+                        </p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                        <div class="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
+                            <i class="ph ph-plugs-connected text-cyan-400"></i> Bus activo
+                        </div>
+
+                        <a href="${sim.file}" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-600/20 flex items-center gap-1.5 group">
+                            <span>Abrir Lab</span>
+                            <i class="ph ph-arrow-right group-hover:translate-x-0.5 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Eventos de Filtro
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                renderSimulators();
+            });
+        });
+
+        // Evento de Búsqueda
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderSimulators();
+        });
+
+        // Inicio
+        renderSimulators();
+    </script>
+</body>
+</html>
