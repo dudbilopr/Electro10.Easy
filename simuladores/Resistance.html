@@ -9,6 +9,7 @@
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../css/lab10-core.css">
 <style>
 /* Minificación Estructural Extrema - UI y Glassmorphism */
 :root{--bg1:#f0f4f8;--bg2:#d9e2ec;--text:#102a43;--glass-bg:rgba(255,255,255,0.7);--glass-border:rgba(255,255,255,0.5);--accent:#dc2626;--accent-hover:#0284c7;--danger:#ef4444;--success:#10b981;--grid:rgba(16,42,67,0.05)}
@@ -371,38 +372,23 @@ tr:hover td { background:rgba(255,255,255,0.05); }
 // ==========================================
 // 1. IMPORTACIONES & CONFIG ΩIREBASE CORREGIDA
 // ==========================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { auth, db } from '../js/firebase.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+import { doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getDatabase, ref, set, get, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-// Híbrido: Detectar si estamos en un entorno inyectado o usamos las credenciales quemadas
-let firebaseConfig;
-if (typeof __firebase_config !== 'undefined') {
-    firebaseConfig = JSON.parse(__firebase_config);
-} else {
-    firebaseConfig = { apiKey:"AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA", authDomain:"laboratorio-de-coulomb.firebaseapp.com", databaseURL:"https://laboratorio-de-coulomb-default-rtdb.firebaseio.com", projectId:"laboratorio-de-coulomb", storageBucket:"laboratorio-de-coulomb.firebasestorage.app", messagingSenderId:"525944850850", appId:"1:525944850850:web:eca9c0b79809358e8d8afb" };
-}
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const rtdb = getDatabase(app);
-const auth = getAuth(app);
+const rtdb = getDatabase(auth.app);
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'resistance10';
 
-// ✅ EVALUAR REDIRECCIONES AL CARGAR (Captura el login de Google)
+// Evaluar redirecciones si se usó signInWithRedirect
 getRedirectResult(auth).then(result => {
     if (result) toast("Autenticación con Google completada exitosamente.");
 }).catch(error => {
-    console.error("Error en redirección de Google:", error);
+    console.warn("Redirección Auth:", error);
 });
-
-const initAuth = async () => {
-    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e) { console.error("Error Auth Token:", e); }
-    }
-};
-initAuth();
 
 // ==========================================
 // 2. ESTADO GLOBAL & TABS MULTI-LIENZO
@@ -544,9 +530,16 @@ onAuthStateChanged(auth, async u => {
     } else { 
         st.profile = null; 
         $('btn-admin').style.display = 'none'; 
-        modal('modal-auth', true); 
+        // No forzar modal-auth bloqueante para permitir modo invitado e iframe fluido
+        modal('modal-auth', false); 
     }
 });
+
+// Helpers para controles de ventanas OS
+window.closeWin = (id) => window.toggleWin ? window.toggleWin(id, 'close') : ($(id) ? $(id).style.display = 'none' : null);
+window.minWin = (id) => window.toggleWin ? window.toggleWin(id, 'min') : ($(id) ? $(id).classList.toggle('minimized') : null);
+window.maxWin = (id) => window.toggleWin ? window.toggleWin(id, 'max') : ($(id) ? $(id).classList.toggle('maximized') : null);
+
 
 $('btn-login-email').onclick = async () => {
     const e = $('auth-email').value, p = $('auth-pass').value; if(!e||!p) return toast('Llene campos');
@@ -702,7 +695,6 @@ const getClosestPin = (x, y) => {
 
 cv.onmousedown = cv.ontouchstart = e => {
     if(e.button === 1) { e.preventDefault(); st.isMdown = true; st.dragging = 'pan'; const m = getMouse(e); st.mx=m.x; st.my=m.y; return; } // Middle click pan
-    if(!auth.currentUser) return toast('Accede para usar simulador');
     if(cur().currentViewIdx !== -1) return toast('Modo visor activado. Cierra el visor para editar.');
     cv.focus();
     
@@ -1077,7 +1069,6 @@ $('btn-show-steps').onclick = () => setTimelineView(0);
 
 
 $('btn-solve').onclick = () => {
-    if(!auth.currentUser) return toast('Debe iniciar sesión para resolver');
     cur().comps.forEach(c => { c.stepBg = null; c.V = undefined; c.Q = undefined; c.I = undefined; c.P = undefined; }); 
 
     let { edges, vSrc } = buildGraph();
@@ -1362,8 +1353,25 @@ $('btn-solve').onclick = () => {
 
     if(allOk) {
         toast('¡Circuito simulado con éxito!');
-        updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'directory', st.user.uid), { puntos: increment(10) });
+        if (st.user && st.user.uid) {
+            updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'directory', st.user.uid), { puntos: increment(10) }).catch(e => console.warn(e));
+        }
         window.parent.postMessage({ type: 'PROGRESS_UPDATE', lesson: 'resistores', completed: true, score: 100 }, '*');
+
+        // Lab10 Bus: Inyectar botón de continuidad formativa hacia RLC si no existe
+        if (!document.getElementById('btn-continue-rlc-wrap')) {
+            const contWrapper = document.createElement('div');
+            contWrapper.id = 'btn-continue-rlc-wrap';
+            contWrapper.style.cssText = 'margin-top:16px; width:100%;';
+            $('katex-container').appendChild(contWrapper);
+            lab10Bus.injectContinueButton(contWrapper, 'Sim_M12_RLC.html', 'Circuito RLC (M12)', () => ({
+                source: 'ResistanceLab10',
+                equivalentResistance: Rtot,
+                voltageSource: vSrc.val,
+                currentTotal: Itot,
+                timestamp: Date.now()
+            }));
+        }
     } else toast('¡SISTEMA DETENIDO! Explosión detectada por Sobrevoltaje.');
 };
 
