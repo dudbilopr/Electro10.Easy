@@ -7,11 +7,12 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <!-- MathJax -->
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -388,8 +389,9 @@
             `;
             
             mathSteps.innerHTML = html;
-            // Solo actualizamos mathjax si no estamos animando, para evitar lag
-            if (window.MathJax && !state.animating) MathJax.typesetPromise([mathSteps]);
+            if (window.renderMathInElement) {
+                renderMathInElement(mathSteps, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}] });
+            }
 
             updateVisuals();
             updateChart();
@@ -412,6 +414,51 @@
         handleInput();
 
     </script>
+
+<script type="module">
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+
+// Inyectar botón de continuidad hacia Flujo Magnético M10
+const sidebar = document.querySelector('aside');
+if (sidebar) {
+    const contWrap = document.createElement('div');
+    contWrap.id = 'fem-continue-bus-wrap';
+    contWrap.style.marginTop = '16px';
+    sidebar.appendChild(contWrap);
+    lab10Bus.injectContinueButton(contWrap, 'Sim_M10_FlujoMagnetico.html', 'Flujo Magnético (M10)', () => ({
+        source: 'FEMMovimientoLab10',
+        B: state.B,
+        L: state.L,
+        v: state.v,
+        timestamp: Date.now()
+    }));
+}
+
+// Escuchar escenarios entrantes de LorentzLab10
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData) {
+        if (scenarioData.magneticField) {
+            const bMag = Math.hypot(scenarioData.magneticField.bx || 0, scenarioData.magneticField.by || 0, scenarioData.magneticField.bz || 0);
+            if (bMag > 0) {
+                state.B = Math.min(5, Math.max(0.1, parseFloat(bMag.toFixed(1))));
+                const bSl = document.getElementById('B-slider');
+                if (bSl) bSl.value = state.B;
+            }
+        }
+        if (scenarioData.velocity) {
+            const vMag = Math.hypot(scenarioData.velocity.vx || 0, scenarioData.velocity.vy || 0, scenarioData.velocity.vz || 0);
+            if (vMag > 0) {
+                state.v = Math.min(10, Math.max(-10, parseFloat(vMag.toFixed(1))));
+                const vSl = document.getElementById('v-slider');
+                if (vSl) vSl.value = state.v;
+            }
+        }
+        if (typeof handleInput === 'function') handleInput();
+    }
+});
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
