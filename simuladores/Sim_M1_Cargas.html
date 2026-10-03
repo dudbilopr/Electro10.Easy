@@ -1,49 +1,74 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhysicsLab: Ley de Coulomb Pro</title>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>VectorCoulombLab10.easy - Superposición y D.C.L.</title>
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
+    
     <style>
-        .canvas-container { position: relative; background: #ffffff; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        :root {
+            --accent: #4ecca3;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0b0e14; color: #e2e8f0; }
+        .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .canvas-container { position: relative; background: #0f172a; border-radius: 12px; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); }
         canvas { display: block; touch-action: none; width: 100%; height: auto; }
         .dragging { cursor: grabbing !important; }
         .hovering { cursor: grab !important; }
-        .exercise-box { background-color: #fffaf0; border-left: 4px solid #f6ad55; }
-        .math-color-inherit .mjx-chtml { color: inherit !important; }
+        .exercise-box { background-color: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--accent, #4ecca3); }
+        .input-dark { background: #1e293b; border: 1px solid #334155; color: white; padding: 6px 10px; border-radius: 6px; outline: none; }
+        .input-dark:focus { border-color: var(--accent, #4ecca3); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
-<body class="bg-slate-50 p-4 md:p-8">
+<body class="bg-slate-950 text-slate-200 p-4 md:p-6 min-h-screen flex flex-col items-center">
 
-    <header class="max-w-6xl mx-auto text-center mb-8">
-        <h1 class="text-3xl font-bold text-slate-800">Analizador Vectorial Electrostático</h1>
-        <p class="text-slate-500">Visualización avanzada del principio de superposición de fuerzas</p>
+    <header class="w-full max-w-7xl mx-auto mb-6 flex justify-between items-center glass-panel p-4 rounded-2xl shadow-lg border border-slate-800">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-950 font-bold shadow-lg" style="background: var(--accent, #4ecca3);">
+                <i class="ph ph-vector-three" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                    VectorCoulombLab10<span style="color:var(--accent, #4ecca3);">.easy</span>
+                    <span class="text-xs text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/50">M1 Superposición</span>
+                </h1>
+                <p class="text-slate-400 text-xs mt-0.5">Analizador Vectorial Electrostático & Diagrama de Cuerpo Libre (D.C.L.)</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
+        </div>
     </header>
 
-    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <main class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Panel Izquierdo -->
         <div class="space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <span><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">settings</span></span> Configuración
+            <div class="glass-panel p-5 rounded-2xl shadow-sm border border-slate-800">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2 border-b border-slate-700/60 pb-2">
+                    <i class="ph ph-sliders"></i> Configuración de Carga
                 </h2>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Magnitud de la Carga:</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Magnitud de la Carga:</label>
                         <div class="flex gap-2">
-                            <input type="number" id="qInput" value="10" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
-                            <select id="qUnit" class="p-2 border rounded-md bg-slate-50">
+                            <input type="number" id="qInput" value="10" class="input-dark w-full text-sm">
+                            <select id="qUnit" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md px-2">
                                 <option value="1e-6">µC</option>
                                 <option value="1e-9">nC</option>
                                 <option value="1e-12">pC</option>
@@ -51,98 +76,116 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Escala del Mundo (50px = ):</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Escala del Mundo (50px = ):</label>
                         <div class="flex gap-2">
-                            <input type="number" id="dInput" value="1" class="w-full p-2 border rounded-md">
-                            <select id="dUnit" class="p-2 border rounded-md bg-slate-50">
+                            <input type="number" id="dInput" value="1" class="input-dark w-full text-sm">
+                            <select id="dUnit" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md px-2">
                                 <option value="1">m</option>
                                 <option value="0.001">mm</option>
                             </select>
                         </div>
                     </div>
-                    <button onclick="addCharge()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
-                        + Generar Nueva Carga
+                    <button onclick="addCharge()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg transition-all shadow-md flex items-center justify-center gap-2 text-sm">
+                        <i class="ph ph-plus-circle font-bold"></i> Generar Nueva Carga
                     </button>
-                    <button onclick="resetApp()" class="w-full text-red-500 text-sm hover:underline">
-                        Reiniciar simulación
+                    <button onclick="resetApp()" class="w-full text-red-400 text-xs hover:underline flex items-center justify-center gap-1">
+                        <i class="ph ph-trash"></i> Reiniciar simulación
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-semibold mb-2 italic"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">explore</span> Vista Local (D.C.L.)</h2>
-                <div class="relative flex justify-center bg-slate-900 rounded-lg overflow-hidden border">
+            <div class="glass-panel p-5 rounded-2xl shadow-sm border border-slate-800">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <i class="ph ph-compass"></i> Vista Local (D.C.L.)
+                </h2>
+                <div class="relative flex justify-center bg-slate-900/90 rounded-xl overflow-hidden border border-slate-800">
                     <canvas id="dclCanvas" width="400" height="400"></canvas>
                 </div>
                 <div class="mt-4">
-                    <label class="text-xs font-bold text-slate-400 uppercase">Sensibilidad del Vector</label>
-                    <input type="range" id="vZoom" min="10" max="400" value="150" class="w-full">
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>Sensibilidad del Vector</span>
+                        <span id="zoom-val" class="font-mono text-emerald-400">150</span>
+                    </div>
+                    <input type="range" id="vZoom" min="10" max="400" value="150" class="w-full accent-emerald-400">
                 </div>
             </div>
+
+            <!-- Inter-simulator Connection -->
+            <div id="cargas-continue-wrap" class="glass-panel p-4 rounded-2xl border border-slate-800"></div>
         </div>
 
         <!-- Panel Central/Derecho -->
         <div class="lg:col-span-2 space-y-6">
-            <div class="exercise-box p-6 rounded-xl shadow-sm border border-orange-100">
-                <h3 class="text-orange-700 font-bold mb-2 flex items-center gap-2">
-                    <span><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">edit_note</span></span> Enunciado del Problema Físico
+            <div class="exercise-box p-5 rounded-2xl shadow-sm border border-slate-800">
+                <h3 class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <i class="ph ph-notepad"></i> Enunciado del Problema Físico
                 </h3>
-                <div id="exerciseText" class="text-slate-700 leading-relaxed">Agregue cargas para comenzar la generación del problema.</div>
+                <div id="exerciseText" class="text-slate-300 text-sm leading-relaxed">Agregue cargas para comenzar la generación del problema.</div>
             </div>
 
-            <div class="bg-white p-2 rounded-xl shadow-md border border-slate-200">
-                <div class="canvas-container">
+            <div class="glass-panel p-3 rounded-2xl shadow-md border border-slate-800">
+                <div class="canvas-container overflow-hidden">
                     <canvas id="mainCanvas" width="800" height="500"></canvas>
                 </div>
-                <p class="text-[10px] text-slate-400 p-2 text-center uppercase tracking-widest">Arrastra para mover • Click derecho para seleccionar centro de análisis</p>
+                <p class="text-[11px] text-slate-400 p-2 text-center uppercase tracking-widest flex items-center justify-center gap-3">
+                    <span><i class="ph ph-hand-pointing"></i> Arrastra para mover</span>
+                    <span>•</span>
+                    <span><i class="ph ph-cursor-click"></i> Click derecho para centro de análisis</span>
+                </p>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <span><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">location_on</span></span> Coordenadas del Sistema
+            <div class="glass-panel p-5 rounded-2xl shadow-sm border border-slate-800 overflow-x-auto">
+                <h3 class="font-bold text-white text-sm mb-4 flex items-center gap-2">
+                    <i class="ph ph-crosshair text-emerald-400"></i> Coordenadas del Sistema
                 </h3>
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="text-slate-400 text-xs uppercase border-b border-slate-100">
-                            <th class="py-2 px-4">ID</th>
-                            <th class="py-2 px-4">Carga (µC)</th>
-                            <th class="py-2 px-4 text-center">X (px)</th>
-                            <th class="py-2 px-4 text-center">Y (px)</th>
-                            <th class="py-2 px-4 text-right">Borrar</th>
+                        <tr class="text-slate-400 uppercase border-b border-slate-800">
+                            <th class="py-2 px-3">ID</th>
+                            <th class="py-2 px-3">Carga (µC)</th>
+                            <th class="py-2 px-3 text-center">X (px)</th>
+                            <th class="py-2 px-3 text-center">Y (px)</th>
+                            <th class="py-2 px-3 text-right">Borrar</th>
                         </tr>
                     </thead>
                     <tbody id="chargeTableBody"></tbody>
                 </table>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4">Desarrollo Matemático Paso a Paso</h3>
-                <div id="latexArea" class="space-y-4 math-color-inherit"></div>
+            <div class="glass-panel p-6 rounded-2xl shadow-sm border border-slate-800">
+                <h3 class="font-bold text-emerald-400 text-sm mb-4 flex items-center gap-2">
+                    <i class="ph ph-calculator"></i> Desarrollo Matemático Paso a Paso
+                </h3>
+                <div id="latexArea" class="space-y-4"></div>
             </div>
 
             <!-- TEORÍA EXPANDIDA -->
-            <div class="bg-indigo-950 p-8 rounded-xl border border-indigo-900 space-y-6 text-white">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6 text-white">
                 <div>
-                    <h3 class="text-xl font-bold text-indigo-300 mb-2"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> La Ley de Coulomb</h3>
-                    <p class="text-indigo-100 leading-relaxed opacity-90 text-sm">
+                    <h3 class="text-base font-bold text-emerald-400 mb-2 flex items-center gap-2">
+                        <i class="ph ph-lightning"></i> La Ley de Coulomb
+                    </h3>
+                    <p class="text-slate-300 leading-relaxed text-xs">
                         La magnitud de la fuerza electrostática entre dos cargas puntuales ($q_1$ y $q_2$) es directamente proporcional al producto de las magnitudes de las cargas e inversamente proporcional al cuadrado de la distancia ($r$) que las separa.
                     </p>
-                    <div class="bg-indigo-900/50 p-4 my-4 rounded-lg border border-indigo-700 text-center">
+                    <div class="bg-slate-900/80 p-3 my-3 rounded-xl border border-slate-800 text-center text-sm">
                         $$ \vec{F}_{12} = K \frac{q_1 q_2}{r^2} \hat{r}_{12} $$
                     </div>
-                    <ul class="text-xs text-indigo-200 space-y-2 list-disc pl-5">
+                    <ul class="text-xs text-slate-400 space-y-1 list-disc pl-5">
                         <li><b>$K$:</b> Constante de Coulomb $\approx 8.99 \times 10^9 \text{ N}\cdot\text{m}^2/\text{C}^2$.</li>
                         <li><b>$\hat{r}_{12}$:</b> Vector unitario que apunta desde la carga 1 hacia la carga 2.</li>
                         <li><b>Signos:</b> Si el producto $q_1 q_2$ es positivo, la fuerza es repulsiva; si es negativo, es atractiva.</li>
                     </ul>
                 </div>
 
-                <div class="border-t border-indigo-800 pt-4">
-                    <h3 class="text-xl font-bold text-indigo-300 mb-2"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">library_books</span> Principio de Superposición</h3>
-                    <p class="text-indigo-100 leading-relaxed opacity-90 text-sm">
-                        Cuando una carga interactúa con múltiples cargas a la vez, la fuerza neta es la <b>suma vectorial</b> de las fuerzas ejercidas por cada carga de forma individual, ignorando la presencia de las demás durante el cálculo de cada par.
+                <div class="border-t border-slate-800 pt-4">
+                    <h3 class="text-base font-bold text-emerald-400 mb-2 flex items-center gap-2">
+                        <i class="ph ph-intersect"></i> Principio de Superposición
+                    </h3>
+                    <p class="text-slate-300 leading-relaxed text-xs">
+                        Cuando una carga interactúa con múltiples cargas a la vez, la fuerza neta es la <b>suma vectorial</b> de las fuerzas ejercidas por cada carga de forma individual:
                     </p>
-                    <div class="bg-indigo-900/50 p-4 mt-4 rounded-lg border border-indigo-700 text-center">
+                    <div class="bg-slate-900/80 p-3 mt-3 rounded-xl border border-slate-800 text-center text-sm">
                         $$ \vec{F}_{neta} = \sum_{i=1}^{n} \vec{F}_i = \vec{F}_1 + \vec{F}_2 + \dots + \vec{F}_n $$
                     </div>
                 </div>
@@ -150,10 +193,7 @@
         </div>
     </main>
 
-    <div id="math-helper" style="position: absolute; visibility: hidden; pointer-events: none;"></div>
-
 <script>
-// Usamos var para permitir la reinicialización del script sin errores de "already declared"
 var K = 8.99e9;
 var canvas = document.getElementById('mainCanvas');
 var ctx = canvas.getContext('2d');
@@ -176,7 +216,12 @@ function addCharge() {
 }
 
 function resetApp() {
-    charges = []; selectedIdx = -1; update();
+    charges = [
+        { x: 300, y: 250, q: 10e-6 },
+        { x: 500, y: 250, q: -10e-6 }
+    ];
+    selectedIdx = 0;
+    update();
 }
 
 function removeCharge(index) {
@@ -219,9 +264,14 @@ window.addEventListener('mouseup', () => { isDragging = false; dragIdx = -1; can
 canvas.oncontextmenu = e => e.preventDefault();
 document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', update));
 
-async function update() {
+document.getElementById('vZoom').addEventListener('input', (e) => {
+    document.getElementById('zoom-val').innerText = e.target.value;
+    renderDCLAndMath();
+});
+
+function update() {
     renderMain();
-    await renderDCLAndMath();
+    renderDCLAndMath();
     updateTable();
     updateExercise();
 }
@@ -229,8 +279,8 @@ async function update() {
 function renderMain() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Grilla
-    ctx.strokeStyle = "#f1f5f9"; ctx.lineWidth = 1;
+    // Grilla técnica
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)"; ctx.lineWidth = 1;
     for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
     for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
 
@@ -241,9 +291,9 @@ function renderMain() {
         charges.forEach((c, i) => {
             if (i === selectedIdx) return;
             
-            // LÍNEA PUNTEADA DE UNIÓN
-            ctx.setLineDash([5, 5]);
-            ctx.strokeStyle = "#cbd5e1";
+            // Línea punteada de unión
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
             ctx.beginPath(); ctx.moveTo(target.x, target.y); ctx.lineTo(c.x, c.y); ctx.stroke();
             ctx.setLineDash([]);
 
@@ -259,38 +309,44 @@ function renderMain() {
     }
 
     charges.forEach((c, i) => {
-        // Sombra de selección
+        // Halo de selección
         if (i === selectedIdx) {
-            ctx.beginPath(); ctx.arc(c.x, c.y, 25, 0, 7);
-            ctx.fillStyle = "rgba(59, 130, 246, 0.2)"; ctx.fill();
+            ctx.beginPath(); ctx.arc(c.x, c.y, 25, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(78, 204, 163, 0.25)"; ctx.fill();
+            ctx.strokeStyle = "#4ecca3"; ctx.lineWidth = 2; ctx.stroke();
         }
         
-        ctx.beginPath(); ctx.arc(c.x, c.y, 18, 0, 7);
-        ctx.fillStyle = c.q > 0 ? '#f87171' : '#60a5fa'; ctx.fill();
-        ctx.strokeStyle = (i === selectedIdx) ? '#1e293b' : 'rgba(0,0,0,0.1)';
-        ctx.lineWidth = (i === selectedIdx) ? 3 : 1; ctx.stroke();
+        ctx.beginPath(); ctx.arc(c.x, c.y, 18, 0, Math.PI * 2);
+        ctx.fillStyle = c.q > 0 ? '#ef4444' : '#3b82f6'; ctx.fill();
+        ctx.strokeStyle = (i === selectedIdx) ? '#ffffff' : 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 2; ctx.stroke();
         
-        ctx.fillStyle = "white"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("q" + i, c.x, c.y + 5);
+        ctx.fillStyle = "white"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText("q" + i, c.x, c.y);
     });
 }
 
-async function renderDCLAndMath() {
+function renderDCLAndMath() {
     dclCtx.clearRect(0, 0, dclCanvas.width, dclCanvas.height);
     const mx = dclCanvas.width / 2;
     const my = dclCanvas.height / 2;
     const zoom = parseFloat(document.getElementById('vZoom').value);
 
     // Ejes cartesianos
-    dclCtx.strokeStyle = "#334155"; dclCtx.lineWidth = 1;
+    dclCtx.strokeStyle = "rgba(255, 255, 255, 0.15)"; dclCtx.lineWidth = 1;
     dclCtx.beginPath(); dclCtx.moveTo(mx, 0); dclCtx.lineTo(mx, dclCanvas.height); dclCtx.moveTo(0, my); dclCtx.lineTo(dclCanvas.width, my); dclCtx.stroke();
 
-    if (selectedIdx === -1 || !charges[selectedIdx]) return;
+    if (selectedIdx === -1 || !charges[selectedIdx]) {
+        dclCtx.fillStyle = '#64748b'; dclCtx.textAlign = 'center'; dclCtx.textBaseline = 'middle';
+        dclCtx.font = '12px sans-serif';
+        dclCtx.fillText("Seleccione carga de análisis", mx, my);
+        return;
+    }
 
     const target = charges[selectedIdx];
     const pxToM = (parseFloat(document.getElementById('dInput').value) * parseFloat(document.getElementById('dUnit').value)) / 50;
     let nFx = 0, nFy = 0;
-    let htmlContent = `<div class='mb-2 text-slate-500 text-sm uppercase font-bold tracking-tighter'>Sumatoria de vectores para $q_{${selectedIdx}}$:</div>`;
+    let htmlContent = `<div class='mb-2 text-slate-400 text-xs uppercase font-bold tracking-wider'>Sumatoria de fuerzas sobre $q_{${selectedIdx}}$:</div>`;
 
     for (let i = 0; i < charges.length; i++) {
         if (i === selectedIdx) continue;
@@ -307,30 +363,41 @@ async function renderDCLAndMath() {
 
         const color = vectorColors[i % vectorColors.length];
         
-        await drawDCLVector(dclCtx, mx, my, fx, fy, color, 2, zoom, `\\vec{F}_{${i}\\to${selectedIdx}}`, true);
+        drawDCLVector(dclCtx, mx, my, fx, fy, color, 2, zoom, `F_{${i}\\to${selectedIdx}}`, true);
         
-        htmlContent += `<div style="color:${color}" class="p-3 bg-slate-50 rounded-lg border-l-4 border-current">
-            <div class="text-xs font-bold uppercase mb-1">Interacción con $q_{${i}}$:</div>
-            $$\\vec{F}_{${i}\\to${selectedIdx}} = (${fx.toExponential(2)}\\hat{i} ${fy>=0?'+':''}${fy.toExponential(2)}\\hat{j})\\text{ N} \\quad [|F| = ${F.toExponential(2)}\\text{ N}]$$
+        htmlContent += `<div style="border-left-color: ${color};" class="p-3 bg-slate-800/60 rounded-xl border-l-4 border-slate-700">
+            <div class="text-xs font-bold uppercase mb-1" style="color: ${color}">Interacción con $q_{${i}}$:</div>
+            <div class="text-xs font-mono text-slate-200">
+                $$\\vec{F}_{${i}\\to${selectedIdx}} = (${fx.toExponential(2)}\\hat{i} ${fy>=0?'+':''}${fy.toExponential(2)}\\hat{j})\\text{ N} \\quad [|F| = ${F.toExponential(2)}\\text{ N}]$$
+            </div>
         </div>`;
     }
 
     if (charges.length > 1) {
-        await drawDCLVector(dclCtx, mx, my, nFx, nFy, "#22c55e", 4, zoom, "\\vec{F}_R", false);
+        drawDCLVector(dclCtx, mx, my, nFx, nFy, "#4ecca3", 3, zoom, "F_R", false);
         const total = Math.hypot(nFx, nFy);
         const deg = (Math.atan2(nFy, nFx) * 180 / Math.PI).toFixed(1);
-        htmlContent += `<div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-900">
-                <div class="text-xs font-bold uppercase mb-2">Fuerza Resultante Final:</div>
-                $$\\vec{F}_R = \\sum \\vec{F} = (${nFx.toExponential(2)}\\hat{i} ${nFy>=0?'+':''}${nFy.toExponential(2)}\\hat{j})\\text{ N}$$
-                <div class="text-xl mt-2">$$|\\vec{F}_R| = ${total.toExponential(3)}\\text{ N} \\quad \\theta = ${deg}^\\circ$$</div>
+        htmlContent += `<div class="mt-4 p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-xl text-emerald-300">
+                <div class="text-xs font-bold uppercase mb-2 flex items-center gap-1.5"><i class="ph ph-check-circle"></i> Fuerza Resultante Neta:</div>
+                <div class="text-sm font-mono text-white">
+                    $$\\vec{F}_R = \\sum \\vec{F} = (${nFx.toExponential(2)}\\hat{i} ${nFy>=0?'+':''}${nFy.toExponential(2)}\\hat{j})\\text{ N}$$
+                </div>
+                <div class="text-base font-bold text-emerald-400 mt-2 font-mono">
+                    $$|\\vec{F}_R| = ${total.toExponential(3)}\\text{ N} \\quad \\theta_R = ${deg}^\\circ$$
+                </div>
             </div>`;
     }
 
-    document.getElementById('latexArea').innerHTML = htmlContent;
-    if (window.MathJax) MathJax.typesetPromise([document.getElementById('latexArea')]);
+    const latexEl = document.getElementById('latexArea');
+    latexEl.innerHTML = htmlContent;
+    if (window.renderMathInElement) {
+        renderMathInElement(latexEl, {
+            delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+        });
+    }
 }
 
-async function drawDCLVector(c, x, y, vx, vy, color, w, scale, latex, showAngle) {
+function drawDCLVector(c, x, y, vx, vy, color, w, scale, label, showAngle) {
     const mag = Math.hypot(vx, vy);
     if (mag === 0) return;
     const tx = x + (vx / mag) * scale;
@@ -340,41 +407,28 @@ async function drawDCLVector(c, x, y, vx, vy, color, w, scale, latex, showAngle)
     c.strokeStyle = color; c.fillStyle = color; c.lineWidth = w;
     c.beginPath(); c.moveTo(x, y); c.lineTo(tx, ty); c.stroke();
     
+    // Flecha
     c.beginPath(); c.moveTo(tx, ty);
     c.lineTo(tx - 10 * Math.cos(angle - 0.4), ty - 10 * Math.sin(angle - 0.4));
     c.lineTo(tx - 10 * Math.cos(angle + 0.4), ty - 10 * Math.sin(angle + 0.4));
     c.fill();
 
-    const helper = document.getElementById('math-helper');
-    helper.style.color = color;
-    helper.innerHTML = `$${latex}$`;
-    await MathJax.typesetPromise([helper]);
-    const svg = helper.querySelector('svg');
-    if (svg) {
-        const svgData = new XMLSerializer().serializeToString(svg);
-        const img = new Image();
-        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-        const url = URL.createObjectURL(svgBlob);
-        
-        await new Promise(resolve => {
-            img.onload = () => {
-                const labelX = tx + 25 * Math.cos(angle) - (img.width/4);
-                const labelY = ty + 25 * Math.sin(angle) - (img.height/4);
-                c.drawImage(img, labelX, labelY, img.width/2, img.height/2);
-                URL.revokeObjectURL(url);
-                resolve();
-            };
-            img.src = url;
-        });
-    }
+    // Etiqueta
+    const labelX = tx + 18 * Math.cos(angle);
+    const labelY = ty + 18 * Math.sin(angle);
+    c.font = "bold 11px sans-serif";
+    c.fillStyle = color;
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(label.replace(/\\vec\{|\}|\\to/g, '').replace('_', ''), labelX, labelY);
 
     if (showAngle) {
-        c.setLineDash([2, 2]); c.strokeStyle = "rgba(255,255,255,0.3)"; c.lineWidth = 1;
-        c.beginPath(); c.moveTo(x + 40, y); c.arc(x, y, 40, 0, angle, angle < 0); c.stroke();
+        c.setLineDash([2, 2]); c.strokeStyle = "rgba(255,255,255,0.25)"; c.lineWidth = 1;
+        c.beginPath(); c.moveTo(x + 35, y); c.arc(x, y, 35, 0, angle, angle < 0); c.stroke();
         c.setLineDash([]);
         const deg = (angle * 180 / Math.PI).toFixed(0) + "°";
-        c.fillStyle = "rgba(255,255,255,0.5)"; c.font = "10px sans-serif";
-        c.fillText(deg, x + 55 * Math.cos(angle/2), y + 55 * Math.sin(angle/2));
+        c.fillStyle = "rgba(255,255,255,0.6)"; c.font = "10px sans-serif";
+        c.fillText(deg, x + 48 * Math.cos(angle/2), y + 48 * Math.sin(angle/2));
     }
 }
 
@@ -385,8 +439,9 @@ function drawSimpleVector(c, x, y, vx, vy, color, w, scale, label) {
     const ty = y + (vy / mag) * scale;
     c.strokeStyle = color; c.fillStyle = color; c.lineWidth = w;
     c.beginPath(); c.moveTo(x, y); c.lineTo(tx, ty); c.stroke();
-    c.font = "9px sans-serif";
-    c.fillText(label, tx + 5, ty + 5);
+    c.font = "10px sans-serif";
+    c.fillStyle = color;
+    c.fillText(label, tx + 6, ty + 6);
 }
 
 function updateTable() {
@@ -394,13 +449,13 @@ function updateTable() {
     tbody.innerHTML = "";
     charges.forEach((c, i) => {
         const row = document.createElement('tr');
-        row.className = `border-b border-slate-50 transition-colors ${i === selectedIdx ? 'bg-blue-50' : ''}`;
+        row.className = `border-b border-slate-800 transition-colors ${i === selectedIdx ? 'bg-emerald-950/30' : ''}`;
         row.innerHTML = `
-            <td class="py-2 px-4 font-bold text-slate-400">#${i}</td>
-            <td class="py-2 px-4 text-slate-700 font-medium">${(c.q * 1e6).toFixed(2)}</td>
-            <td class="py-2 px-4 text-center"><input type="number" value="${Math.round(c.x)}" onchange="updateCoord(${i}, 'x', this.value)" class="w-16 border rounded text-center text-xs p-1"></td>
-            <td class="py-2 px-4 text-center"><input type="number" value="${Math.round(c.y)}" onchange="updateCoord(${i}, 'y', this.value)" class="w-16 border rounded text-center text-xs p-1"></td>
-            <td class="py-2 px-4 text-right"><button onclick="removeCharge(${i})" class="text-slate-300 hover:text-red-500 transition-colors">✕</button></td>
+            <td class="py-2 px-3 font-bold text-slate-400">#${i}</td>
+            <td class="py-2 px-3 text-slate-200 font-medium">${(c.q * 1e6).toFixed(2)}</td>
+            <td class="py-2 px-3 text-center"><input type="number" value="${Math.round(c.x)}" onchange="updateCoord(${i}, 'x', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded text-center text-xs p-1 text-white"></td>
+            <td class="py-2 px-3 text-center"><input type="number" value="${Math.round(c.y)}" onchange="updateCoord(${i}, 'y', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded text-center text-xs p-1 text-white"></td>
+            <td class="py-2 px-3 text-right"><button onclick="removeCharge(${i})" class="text-slate-400 hover:text-red-400 transition-colors"><i class="ph ph-trash"></i></button></td>
         `;
         tbody.appendChild(row);
     });
@@ -413,7 +468,7 @@ function updateExercise() {
         return;
     }
     if (selectedIdx === -1) {
-        textEl.innerHTML = `Hay ${charges.length} cargas en el sistema. <b>Haga click derecho sobre una de ellas</b> para establecerla como punto de análisis (D.C.L.).`;
+        textEl.innerHTML = `Hay ${charges.length} cargas en el sistema. <b>Haga click derecho sobre una de ellas</b> para seleccionarla como centro de análisis (D.C.L.).`;
         return;
     }
 
@@ -421,26 +476,74 @@ function updateExercise() {
     const qVal = (target.q * 1e6).toFixed(2);
     let others = charges.map((_, i) => i).filter(i => i !== selectedIdx);
     
-    let enunciado = `Considere un sistema electrostático donde una carga de prueba $q_{${selectedIdx}} = ${qVal} \\mu C$ se encuentra fija en el punto $P(${Math.round(target.x)}, ${Math.round(target.y)})$. <br><br>`;
+    let enunciado = `Considere un sistema electrostático donde una carga de prueba $q_{${selectedIdx}} = ${qVal}\\ \\mu\\text{C}$ se encuentra fija en el punto $P(${Math.round(target.x)}, ${Math.round(target.y)})$. <br><br>`;
     
     enunciado += "<b>Cargas del entorno:</b><ul class='list-disc pl-5 mt-2 space-y-1'>";
     others.forEach(idx => {
         const c = charges[idx];
-        enunciado += `<li>Carga $q_{${idx}} = ${(c.q * 1e6).toFixed(2)} \\mu C$ ubicada en las coordenadas $(x:${Math.round(c.x)}, y:${Math.round(c.y)})$.</li>`;
+        enunciado += `<li>Carga $q_{${idx}} = ${(c.q * 1e6).toFixed(2)}\\ \\mu\\text{C}$ en coordenadas $(x:${Math.round(c.x)}, y:${Math.round(c.y)})$.</li>`;
     });
     enunciado += "</ul><br>";
 
     if (others.length === 1) {
-        enunciado += `Calcule la fuerza electrostática resultante sobre $q_{${selectedIdx}}$ aplicando la Ley de Coulomb. Exprese su resultado en notación vectorial unitaria $(\\hat{i}, \\hat{j})$.`;
+        enunciado += `Calcule la fuerza electrostática resultante sobre $q_{${selectedIdx}}$ aplicando la Ley de Coulomb en notación vectorial unitaria $(\\hat{i}, \\hat{j})$.`;
     } else {
-        enunciado += `Haciendo uso del <b>Principio de Superposición</b>, determine la fuerza neta resultante sobre la carga $q_{${selectedIdx}}$. Para ello, calcule individualmente los vectores de fuerza ejercidos por cada carga del entorno y realice la suma vectorial correspondiente.`;
+        enunciado += `Haciendo uso del <b>Principio de Superposición</b>, determine la fuerza neta resultante sobre la carga $q_{${selectedIdx}}$.`;
     }
 
     textEl.innerHTML = enunciado;
-    if (window.MathJax) MathJax.typesetPromise([textEl]);
+    if (window.renderMathInElement) {
+        renderMathInElement(textEl, {
+            delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}]
+        });
+    }
 }
 
-update();
+// Cargar estado inicial
+resetApp();
+</script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Campo Eléctrico Vectorial (M2)'
+    const contWrap = document.getElementById('cargas-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Campo_Vectorial.html', 'Campo Eléctrico Vectorial (M2)', () => {
+            return {
+                source: 'VectorCoulombLab10',
+                charges: charges.map((c, i) => ({
+                    id: i,
+                    q: c.q,
+                    x: c.x,
+                    y: c.y
+                })),
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+            charges = scenarioData.charges.map(c => ({
+                x: c.x || 400,
+                y: c.y || 250,
+                q: typeof c.q === 'number' ? c.q : 10e-6
+            }));
+            selectedIdx = 0;
+            update();
+        }
+    });
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
