@@ -15,11 +15,14 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="../css/lab10-core.css">
+    <script src="../js/lab10-intelligence.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --accent: #4ecca3;
+            --accent-glow: rgba(78, 204, 163, 0.4);
             --bg-light: #f8fafc; /* slate-50 */
             --bg-dark: #0f172a;  /* slate-900 */
             --text-light: #1e293b; /* slate-800 */
@@ -28,7 +31,7 @@
             --border-dark: #334155; /* slate-700 */
             --panel-light: #ffffff;
             --panel-dark: #1e293b; /* slate-800 */
-            --accent-color: #3b82f6; /* blue-500 */
+            --accent-color: var(--accent); /* Unificado con Lab10 */
             --tab-inactive-light: #f1f5f9; /* slate-100 */
             --tab-inactive-dark: #334155; /* slate-700 */
         }
@@ -119,18 +122,18 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
-<body class="min-h-screen p-4">
+<body data-domain="electro" class="min-h-screen p-4">
 
 <!-- Lab10 Header -->
 <header class="w-full max-w-screen-2xl mx-auto mb-4 flex justify-between items-center p-4 rounded-xl shadow-lg border border-slate-800" style="background: rgba(15, 23, 42, 0.9);">
     <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #3b82f6);">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-950 font-bold shadow-lg" style="background: var(--accent, #4ecca3);">
             <i class="ph ph-line-segment" style="font-size: 1.3rem;"></i>
         </div>
         <div>
             <h1 class="text-base font-bold text-white flex items-center gap-2">
-                RodLab10<span style="color:var(--accent, #3b82f6);">.easy</span>
-                <span class="text-xs text-blue-400 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-700/50">M2 Distribución 1D</span>
+                RodLab10<span style="color:var(--accent, #4ecca3);">.easy</span>
+                <span class="text-xs text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/50">M2 Distribución 1D</span>
             </h1>
             <p class="text-slate-400 text-xs mt-0.5">Campo Eléctrico de una Varilla Delgada Finita</p>
         </div>
@@ -316,6 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let state = { ...initialState };
     let calculatedFields = {}; // To store calculated field values
+    window.simState = state;
+    window.simCalculated = calculatedFields;
 
     // Estado del arrastre (drag)
     let isDraggingP = false;
@@ -689,41 +694,100 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Activar la primera pestaña por defecto
     document.querySelector('.tab-button[data-tab="controles"]').click();
+    window.updateSimulation = updateSimulation;
+    window.simState = state;
+    window.simCalculated = calculatedFields;
+    if (window.lab10AI) window.lab10AI.updateIntelligence();
 });
 </script>
 
-<script type="module">
-    import { lab10Bus } from '../js/lab10-bus.js';
-    import { lab10Auth } from '../js/lab10-auth.js';
+<script>
+    // Inicializar Asistente Físico Inteligente y HUD
+    window.lab10AI.init({
+        labName: 'Rod',
+        moduleTag: 'M2 Distribución 1D',
+        domain: 'electro',
+        icon: 'ph-line-segment',
+        solver: () => {
+            const s = window.simState;
+            const c = window.simCalculated;
+            if (!s || !c || typeof c.E_total_mag === 'undefined') return null;
 
-    // Escuchar sesión
-    lab10Auth.onUserChange((user) => {
-        const uInfo = document.getElementById('user-info');
-        if (uInfo) {
-            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
-        }
+            const L = s.rodLength || 4.0;
+            const lambda = (s.chargeDensity || 5.0) * 1e-9 * (s.chargeSign || 1);
+            const k = 8.98755e9;
+            const Q = lambda * L;
+            const px = s.p.x;
+            const py = s.p.y;
+            const r = Math.hypot(px, py);
+            const E_puntual = (k * Math.abs(Q)) / (r * r || 1);
+            const E_exacto = c.E_total_mag || 0;
+            const discrepancia = E_exacto > 0 ? (Math.abs(E_exacto - E_puntual) / E_exacto * 100).toFixed(1) : 0;
+            
+            const latex = `E_x = ${c.Ex_total ? c.Ex_total.toExponential(2) : '0'}\\text{ N/C},\\quad E_y = ${c.Ey_total ? c.Ey_total.toExponential(2) : '0'}\\text{ N/C}\\implies |\\vec{E}| = ${E_exacto.toExponential(2)}\\text{ N/C}`;
+            const limits = `
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                    <span>Carga neta $Q = \\lambda L$:</span>
+                    <strong style="color:var(--accent);">${(Q * 1e9).toFixed(2)} nC</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                    <span>Distancia radial al centro $r$:</span>
+                    <strong style="color:var(--accent);">${r.toFixed(2)} m</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                    <span>Límite puntual ($E \\approx kq/r^2$):</span>
+                    <strong>${E_puntual.toExponential(2)} N/C</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span>Convergencia asintótica:</span>
+                    <span class="room-badge" style="color:${discrepancia < 5 ? 'var(--accent)' : '#ffbd2e'}">${discrepancia}% ${discrepancia < 5 ? '(Límite puntual verificado)' : '(Efectos de longitud finita)'}</span>
+                </div>
+            `;
+            return { latex, limits };
+        },
+        presets: [
+            { id: 'bisector', label: 'Eje de Simetría (x=0)', icon: 'ph-arrows-split' },
+            { id: 'far_field', label: 'Límite Puntual (r >> L)', icon: 'ph-arrows-out' },
+            { id: 'long_rod', label: 'Varilla Larga (L=8m)', icon: 'ph-arrows-horizontal' },
+            { id: 'near_field', label: 'Campo Cercano (y=0.5m)', icon: 'ph-magnifying-glass-plus' }
+        ],
+        onPreset: (id) => {
+            const s = window.simState;
+            if (!s) return;
+            if (id === 'bisector') {
+                s.p.x = 0; s.p.y = 3;
+            } else if (id === 'far_field') {
+                s.p.x = 0; s.p.y = 15;
+            } else if (id === 'long_rod') {
+                s.rodLength = 8;
+                const sl = document.getElementById('lengthSlider');
+                if (sl) { sl.value = 8; sl.dispatchEvent(new Event('input')); }
+            } else if (id === 'near_field') {
+                s.p.x = 0; s.p.y = 0.5;
+            }
+            if (typeof window.updateSimulation === 'function') window.updateSimulation();
+        },
+        nextLab: { name: 'Anillo Cargado (M2)', url: 'Sim_M2_Anillo.html' }
     });
 
-    // Inyectar botón 'Continuar en Anillo Cargado (M2)'
-    const contWrap = document.getElementById('varilla-continue-wrap');
-    if (contWrap) {
-        lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Anillo.html', 'Anillo Cargado (M2)', () => {
-            return {
-                source: 'RodLab10',
-                geometry: 'rod',
-                length: parseFloat(document.getElementById('lengthSlider').value),
-                density: parseFloat(document.getElementById('densitySlider').value),
-                timestamp: Date.now()
-            };
+    // Escuchar sesión si está disponible
+    if (window.lab10Auth) {
+        window.lab10Auth.onUserChange((user) => {
+            const uInfo = document.getElementById('user-info');
+            if (uInfo) {
+                uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+            }
         });
     }
 
-    // Escuchar escenario entrante
-    lab10Bus.checkIncomingScenario((scenarioData) => {
-        if (scenarioData) {
-            console.log('Escenario recibido en RodLab10:', scenarioData);
-        }
-    });
+    // Gancho de actualización continua
+    if (typeof updateSimulation === 'function') {
+        const _origUpdate = updateSimulation;
+        updateSimulation = function() {
+            _origUpdate();
+            lab10AI.updateIntelligence();
+        };
+    }
 </script>
 
 <script src="../js/sim_telemetry.js"></script>

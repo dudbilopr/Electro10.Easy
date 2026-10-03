@@ -176,8 +176,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body>
+<body data-domain="potential">
 
 <header>
     <div><h2><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Potencial y Trabajo Eléctrico PRO</h2></div>
@@ -1457,5 +1458,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Potential2D',
+            moduleTag: 'M4 Potencial Eléctrico',
+            domain: 'potential',
+            icon: 'ph-waves',
+            solver: () => {
+                return {
+                    latex: String.raw`V(r) = \frac{k q}{r},\quad \vec{E} = -\vec{\nabla}V`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M4 Potencial Eléctrico</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "dipole_pot", "label": "Dipolo de Potencial", "icon": "ph-arrows-left-right"}, {"id": "gradient", "label": "Gradiente y Campo", "icon": "ph-arrow-up-right"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Equipotenciales 3D (M4)", "url": "Potencial_Electrico_2.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

@@ -34,8 +34,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col">
+<body data-domain="circuits" class="h-screen flex flex-col">
 
     <!-- Header -->
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
@@ -389,5 +390,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Resistivity',
+            moduleTag: 'M6 Ley de Pouillet',
+            domain: 'circuits',
+            icon: 'ph-circuitry',
+            solver: () => {
+                return {
+                    latex: String.raw`R = \rho \frac{L}{A},\quad \rho(T) = \rho_0[1 + \alpha(T - T_0)]`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M6 Ley de Pouillet</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "copper", "label": "Cobre (\rho = 1.7\times 10^{-8})", "icon": "ph-sparkle"}, {"id": "aluminum", "label": "Aluminio (\rho = 2.8\times 10^{-8})", "icon": "ph-shield"}, {"id": "carbon", "label": "Grafito (\rho = 3.5\times 10^{-5})", "icon": "ph-fire"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Reducción de Circuitos (M6)", "url": "Resistance.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

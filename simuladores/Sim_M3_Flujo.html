@@ -30,8 +30,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
     <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body data-domain="gauss" class="h-screen flex flex-col overflow-hidden">
 
     <!-- Header Glass Superior -->
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-20 shadow-md">
@@ -536,5 +537,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Flux',
+            moduleTag: 'M3 Ley de Gauss',
+            domain: 'gauss',
+            icon: 'ph-bounding-box',
+            solver: () => {
+                return {
+                    latex: String.raw`\Phi_E = \oint_S \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\varepsilon_0}`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M3 Ley de Gauss</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "sphere", "label": "Superficie Esférica", "icon": "ph-globe"}, {"id": "cylinder", "label": "Superficie Cilíndrica", "icon": "ph-cylinder"}, {"id": "zero_flux", "label": "Carga Fuera (Phi = 0)", "icon": "ph-prohibit"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Matriz Gaussiana (M3)", "url": "Tabla_Gauss.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

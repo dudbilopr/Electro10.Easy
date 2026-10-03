@@ -32,8 +32,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
     <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col">
+<body data-domain="ac" class="h-screen flex flex-col">
 
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
@@ -438,5 +439,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Phasors',
+            moduleTag: 'M12 Circuitos AC',
+            domain: 'ac',
+            icon: 'ph-circle-dashed',
+            solver: () => {
+                return {
+                    latex: String.raw`V(t) = V_0\sin(\omega t + \phi),\quad I(t) = I_0\sin(\omega t)`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M12 Circuitos AC</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "pure_r", "label": "Resistivo Puro (phi = 0)", "icon": "ph-line-segment"}, {"id": "pure_l", "label": "Inductivo Puro (phi = 90°)", "icon": "ph-spiral"}, {"id": "pure_c", "label": "Capacitivo Puro (phi = -90°)", "icon": "ph-rows"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Oscilador LC (M12)", "url": "Sim_M12_OsciladorLC.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

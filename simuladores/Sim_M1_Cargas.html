@@ -32,8 +32,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
     <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 p-4 md:p-6 min-h-screen flex flex-col items-center">
+<body data-domain="electro" class="bg-slate-950 text-slate-200 p-4 md:p-6 min-h-screen flex flex-col items-center">
 
     <header class="w-full max-w-7xl mx-auto mb-6 flex justify-between items-center glass-panel p-4 rounded-2xl shadow-lg border border-slate-800">
         <div class="flex items-center gap-3">
@@ -547,5 +548,49 @@ resetApp();
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'VectorCoulomb',
+            moduleTag: 'M1 Superposición',
+            domain: 'electro',
+            icon: 'ph-vector-three',
+            solver: () => {
+                return {
+                    latex: String.raw`F_e = \frac{k |q_1 q_2|}{r^2},\quad \vec{F}_{\text{neta}} = \sum_{i} \vec{F}_i`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M1 Superposición</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "dipole", "label": "Dipolo (+ / -)", "icon": "ph-arrows-left-right"}, {"id": "repulsion", "label": "Repulsión (+ / +)", "icon": "ph-arrows-out"}, {"id": "triangle", "label": "Triángulo Equilátero", "icon": "ph-triangle"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Campo Vectorial 2D (M2)", "url": "Sim_M2_Campo_Vectorial.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

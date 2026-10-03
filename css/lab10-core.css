@@ -17,8 +17,21 @@
     --radius-full: 9999px;
 }
 
-/* ── Temas Globales (Modo Claro & Modo Oscuro) ───────────────────────── */
-body.light-mode {
+/* ── Temas Globales (Modo Claro & Modo Oscuro con compatibilidad total) ───────────────────────── */
+:root {
+    --accent: #4ecca3;          /* Turquesa neón por defecto */
+    --accent-glow: rgba(78, 204, 163, 0.4);
+    --danger: #ef4444;          /* Color para borrado / alertas */
+    --danger-bg: rgba(239, 68, 68, 0.15);
+    --panel-w: 380px;           /* Ancho del panel lateral deslizable */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+}
+
+/* Modo Claro */
+html:not(.dark), body.light-mode, body:not(.dark):not(.dark-mode) {
     --bg: #eef2f5;
     --glass: rgba(255, 255, 255, 0.72);
     --glass-border: rgba(255, 255, 255, 0.6);
@@ -33,7 +46,8 @@ body.light-mode {
     --grid-line: rgba(100, 116, 139, 0.12);
 }
 
-body.dark-mode {
+/* Modo Oscuro (Predeterminado para Laboratorios de Física) */
+html.dark, body.dark-mode, body.dark {
     --bg: #0b0e14;
     --glass: rgba(15, 17, 26, 0.75);
     --glass-border: rgba(255, 255, 255, 0.1);
@@ -46,6 +60,58 @@ body.dark-mode {
     --shadow: rgba(0, 0, 0, 0.5);
     --shadow-lg: rgba(0, 0, 0, 0.7);
     --grid-line: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Paleta de Colores por Dominio Físico Curricular ───────────────────── */
+/* Dominio 1: Electrostática (M1, M2) */
+[data-domain="electro"], body.theme-electro, .theme-electro {
+    --accent: #4ecca3 !important;
+    --accent-glow: rgba(78, 204, 163, 0.4) !important;
+}
+/* Dominio 2: Ley de Gauss y Flujo (M3) */
+[data-domain="gauss"], body.theme-gauss, .theme-gauss {
+    --accent: #10b981 !important;
+    --accent-glow: rgba(16, 185, 129, 0.4) !important;
+}
+/* Dominio 3: Potencial Eléctrico y Energía (M4) */
+[data-domain="potential"], body.theme-potential, .theme-potential {
+    --accent: #06b6d4 !important;
+    --accent-glow: rgba(6, 182, 212, 0.4) !important;
+}
+/* Dominio 4: Dieléctricos y Capacitancia (M5) */
+[data-domain="capacitance"], body.theme-capacitance, .theme-capacitance {
+    --accent: #3b82f6 !important;
+    --accent-glow: rgba(59, 130, 246, 0.4) !important;
+}
+/* Dominio 5: Corriente, Resistencia y Circuitos CC (M6, M7) */
+[data-domain="circuits"], body.theme-circuits, .theme-circuits {
+    --accent: #f59e0b !important;
+    --accent-glow: rgba(245, 158, 11, 0.4) !important;
+}
+/* Dominio 6: Campo Magnético y Lorentz (M7, M8) */
+[data-domain="magnetism"], body.theme-magnetism, .theme-magnetism {
+    --accent: #a855f7 !important;
+    --accent-glow: rgba(168, 85, 247, 0.4) !important;
+}
+/* Dominio 7: Ley de Ampère y Solenoides (M9) */
+[data-domain="ampere"], body.theme-ampere, .theme-ampere {
+    --accent: #6366f1 !important;
+    --accent-glow: rgba(99, 102, 241, 0.4) !important;
+}
+/* Dominio 8: Faraday, Inducción y FEM (M10) */
+[data-domain="induction"], body.theme-induction, .theme-induction {
+    --accent: #eab308 !important;
+    --accent-glow: rgba(234, 179, 8, 0.4) !important;
+}
+/* Dominio 9: Ecuaciones de Maxwell y Ondas EM (M11) */
+[data-domain="waves"], body.theme-waves, .theme-waves {
+    --accent: #ec4899 !important;
+    --accent-glow: rgba(236, 72, 153, 0.4) !important;
+}
+/* Dominio 10: Circuitos AC, Fasores y Resonancia (M12) */
+[data-domain="ac"], body.theme-ac, .theme-ac {
+    --accent: #f43f5e !important;
+    --accent-glow: rgba(244, 63, 94, 0.4) !important;
 }
 
 /* ── Reset y Estructura Principal ───────────────────────────────────── */
@@ -497,5 +563,233 @@ footer.lab10-footer, footer {
 }
 
 .close-btn:hover {
+    color: var(--accent);
+}
+
+/* ==========================================================================
+   Lab10 Glassmorphism Bridge & Utility Harmonizer
+   Transforma automáticamente layouts con Tailwind o CSS ad-hoc al estándar Lab10
+   ========================================================================== */
+.bg-slate-950, .bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/80,
+.bg-slate-800, .bg-slate-800\/80, .bg-slate-800\/50, .bg-slate-900\/60,
+.bg-gray-900, .bg-gray-800, .panel, .glass-panel,
+.border-slate-800, .border-slate-700, .border-slate-700\/50, .border-slate-700\/60 {
+    background-color: var(--panel-bg) !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text) !important;
+    backdrop-filter: blur(20px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+    box-shadow: 0 8px 32px var(--shadow) !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Range Sliders de Grado Laboratorio con Acento Neón */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    height: 24px;
+}
+input[type="range"]:focus {
+    outline: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--input-border);
+    transition: background 0.2s ease;
+}
+input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--input-border);
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    border: 2px solid #ffffff;
+    cursor: grab;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    border: 2px solid #ffffff;
+    cursor: grab;
+}
+input[type="range"]:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.25);
+    box-shadow: 0 0 18px var(--accent);
+}
+
+/* Inputs numéricos y selects estilizados */
+.input-dark, select.bg-slate-800, input.bg-slate-800 {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 6px 10px !important;
+    outline: none !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.input-dark:focus, select.bg-slate-800:focus, input.bg-slate-800:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+
+/* ==========================================================================
+   Asistente Físico Inteligente (Lab10Intelligence)
+   Dinamismo pedagógico, deducción KaTeX en vivo y análisis de límites
+   ========================================================================== */
+.lab10-ia-pill {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 900;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-bg);
+    border: 1px solid var(--accent);
+    box-shadow: 0 8px 25px var(--accent-glow);
+    color: var(--text);
+    padding: 9px 18px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.88rem;
+    backdrop-filter: blur(20px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lab10-ia-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px var(--accent-glow);
+    background: var(--accent);
+    color: #0b0e14;
+}
+.lab10-ia-pill i {
+    font-size: 1.15rem;
+    color: var(--accent);
+    transition: color 0.2s;
+}
+.lab10-ia-pill:hover i {
+    color: #0b0e14;
+}
+
+.lab10-ia-drawer {
+    position: fixed;
+    bottom: 74px;
+    right: 20px;
+    width: 460px;
+    max-width: calc(100vw - 40px);
+    max-height: 82vh;
+    background: var(--panel-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 60px -15px var(--shadow-lg), 0 0 20px var(--accent-glow);
+    z-index: 950;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+.lab10-ia-drawer.open {
+    display: flex;
+    animation: lab10DrawerIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes lab10DrawerIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lab10-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--glass);
+}
+.lab10-drawer-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.lab10-drawer-body {
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.lab10-insight-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.lab10-insight-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.lab10-insight-value {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.45;
+}
+
+.lab10-preset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+.lab10-preset-btn {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.lab10-preset-btn:hover {
+    border-color: var(--accent);
+    background: rgba(128, 128, 128, 0.15);
+    transform: translateY(-1px);
+}
+.lab10-preset-btn i {
     color: var(--accent);
 }

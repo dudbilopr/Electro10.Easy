@@ -32,8 +32,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col">
+<body data-domain="magnetism" class="h-screen flex flex-col">
 
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
@@ -467,5 +468,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'WireBiotSavart',
+            moduleTag: 'M8 Hilo Conductor',
+            domain: 'magnetism',
+            icon: 'ph-line-segment',
+            solver: () => {
+                return {
+                    latex: String.raw`B = \frac{\mu_0 I}{2\pi r},\quad d\vec{B} = \frac{\mu_0 I}{4\pi}\frac{d\vec{l}\times\hat{r}}{r^2}`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M8 Hilo Conductor</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "high_current", "label": "Corriente Alta (I=10A)", "icon": "ph-lightning"}, {"id": "near_wire", "label": "Punto Cercano (r=2cm)", "icon": "ph-target"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Espira Circular Biot-Savart (M8)", "url": "Sim_M8_BiotSavart_Anillo.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

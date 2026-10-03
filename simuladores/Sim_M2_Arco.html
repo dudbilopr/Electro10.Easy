@@ -90,7 +90,7 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
-<body class="min-h-screen p-4 flex flex-col items-center">
+<body data-domain="electro" class="min-h-screen p-4 flex flex-col items-center">
 
 <!-- Lab10 Header -->
 <header class="w-full max-w-screen-2xl mx-auto mb-4 flex justify-between items-center p-4 rounded-xl shadow-lg border border-slate-800" style="background: rgba(15, 23, 42, 0.9);">
@@ -660,6 +660,49 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Arc',
+            moduleTag: 'M2 Distribución Circular',
+            domain: 'electro',
+            icon: 'ph-circle-notch',
+            solver: () => {
+                return {
+                    latex: String.raw`E_x = \frac{2k\lambda}{R}\sin(\theta/2)`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M2 Distribución Circular</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "quarter", "label": "Cuarto de Círculo (90°)", "icon": "ph-chart-pie"}, {"id": "semicircle", "label": "Semicírculo (180°)", "icon": "ph-circle-half"}, {"id": "complete", "label": "Anillo Completo (360°)", "icon": "ph-circle"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Semicírculo Cargado (M2)", "url": "Sim_M2_Semicirculo.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>
 

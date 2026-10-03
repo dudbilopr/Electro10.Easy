@@ -380,8 +380,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body>
+<body data-domain="electro">
 
     <!-- SVG Oculto con atributos seguros para definiciones globales -->
     <svg style="position: absolute; width: 0; height: 0; pointer-events: none; z-index: -1;">
@@ -1169,5 +1170,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'LinesMatrix',
+            moduleTag: 'M2 Comparativa 1D',
+            domain: 'electro',
+            icon: 'ph-rows',
+            solver: () => {
+                return {
+                    latex: String.raw`E_{\text{infinita}} = \frac{\lambda}{2\pi\varepsilon_0 r}`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M2 Comparativa 1D</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "infinite", "label": "Línea Infinita", "icon": "ph-infinity"}, {"id": "semi_infinite", "label": "Línea Semi-Infinita", "icon": "ph-arrow-right"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Flujo Eléctrico y Gauss (M3)", "url": "Sim_M3_Flujo.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

@@ -70,8 +70,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body data-domain="electro" class="h-screen flex flex-col overflow-hidden">
 
     <!-- Navbar -->
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-20 shadow-md">
@@ -923,5 +924,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'CoulombPro',
+            moduleTag: 'M1 Ley de Coulomb',
+            domain: 'electro',
+            icon: 'ph-atom',
+            solver: () => {
+                return {
+                    latex: String.raw`F = \frac{k |q_1 q_2|}{\varepsilon_r r^2},\quad k = \frac{1}{4\pi\varepsilon_0}`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M1 Ley de Coulomb</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "vacuum", "label": "Vacío (epsilon = 1)", "icon": "ph-sparkle"}, {"id": "water", "label": "Agua (epsilon = 80)", "icon": "ph-drop"}, {"id": "micro", "label": "Distancia micrométrica", "icon": "ph-magnifying-glass"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Superposición de Cargas (M1)", "url": "Sim_M1_Cargas.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

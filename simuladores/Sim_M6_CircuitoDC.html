@@ -37,8 +37,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="h-screen flex flex-col">
+<body data-domain="circuits" class="h-screen flex flex-col">
 
     <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
         <div class="flex items-center gap-3">
@@ -388,5 +389,48 @@
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'DCCircuit',
+            moduleTag: 'M6 Leyes de Kirchhoff',
+            domain: 'circuits',
+            icon: 'ph-cpu',
+            solver: () => {
+                return {
+                    latex: String.raw`\sum I_{\text{nodo}} = 0,\quad \sum \Delta V_{\text{malla}} = 0`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M6 Leyes de Kirchhoff</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "series", "label": "Circuito Serie", "icon": "ph-rows"}, {"id": "parallel", "label": "Circuito Paralelo", "icon": "ph-columns"}, {"id": "bridge", "label": "Puente de Wheatstone", "icon": "ph-crosshair"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Fuerza de Lorentz (M8)", "url": "LorentzLab10easy.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

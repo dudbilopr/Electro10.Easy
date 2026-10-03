@@ -90,8 +90,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body class="min-h-screen p-4 flex flex-col items-center">
+<body data-domain="electro" class="min-h-screen p-4 flex flex-col items-center">
 
 <!-- Lab10 Header -->
 <header class="w-full max-w-screen-2xl mx-auto mb-4 flex justify-between items-center p-4 rounded-xl shadow-lg border border-slate-800" style="background: rgba(15, 23, 42, 0.9);">
@@ -626,5 +627,48 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'Semicircle',
+            moduleTag: 'M2 Distribución Curva',
+            domain: 'electro',
+            icon: 'ph-circle-half',
+            solver: () => {
+                return {
+                    latex: String.raw`E_y = \frac{2k\lambda}{R},\quad E_x = 0\text{ (por simetría)}`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M2 Distribución Curva</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "high_lambda", "label": "Densidad Alta (10 nC/m)", "icon": "ph-lightning"}, {"id": "small_radius", "label": "Radio Compacto (R=1m)", "icon": "ph-target"}, {"id": "large_radius", "label": "Radio Amplio (R=5m)", "icon": "ph-arrows-out"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Cilindro Cargado (M2)", "url": "Sim_M2_Cilindro.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>

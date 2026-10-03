@@ -213,8 +213,9 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
 </head>
-<body>
+<body data-domain="electro">
 
 <header>
     <div><h2><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">magnet</span> Campo Eléctrico IA</h2></div>
@@ -1290,5 +1291,48 @@ lab10Bus.checkIncomingScenario((scenarioData) => {
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
+
+<!-- Lab10 Intelligence & Resource Core Engine -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lab10AI) {
+        window.lab10AI.init({
+            labName: 'VectorField',
+            moduleTag: 'M2 Campo Eléctrico',
+            domain: 'electro',
+            icon: 'ph-compass',
+            solver: () => {
+                return {
+                    latex: String.raw`\vec{E}(x,y) = \sum_{i=1}^N \frac{k q_i}{r_i^2}\hat{r}_i`,
+                    limits: `
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Dominio Físico:</span>
+                            <strong style="color:var(--accent);">M2 Campo Eléctrico</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                            <span>Estado de Simulación:</span>
+                            <span class="room-badge" style="color:var(--accent);"><i class="ph ph-check-circle"></i> Activo & Sincronizado</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                            Interactúa con los controles y lienzos para explorar las leyes fundamentales en tiempo real.
+                        </div>
+                    `
+                };
+            },
+            presets: [{"id": "dipole", "label": "Dipolo Eléctrico", "icon": "ph-arrows-left-right"}, {"id": "quadrupole", "label": "Cuadripolo Eléctrico", "icon": "ph-square"}, {"id": "uniform_line", "label": "Línea de Campo", "icon": "ph-line-segment"}],
+            onPreset: (presetId) => {
+                console.log('[Lab10] Preset aplicado:', presetId);
+                const firstSlider = document.querySelector('input[type="range"]');
+                if (firstSlider) {
+                    firstSlider.dispatchEvent(new Event('input', { bubbles: true }));
+                    firstSlider.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            },
+            nextLab: {"name": "Varilla Cargada (M2)", "url": "Sim_M2_Varilla.html"}
+        });
+    }
+});
+</script>
+
 </body>
 </html>
