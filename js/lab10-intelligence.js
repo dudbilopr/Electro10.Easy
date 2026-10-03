@@ -1,14 +1,199 @@
 // ==========================================================================
 // Lab10 Intelligence & Resource Engine — Electro10.Easy
 // Motor unificado universal (sin dependencias CORS) para:
-// 1. Unificacion visual de paleta y temas (Modo Claro / Modo Oscuro)
-// 2. Dinamismo pedagogico con deduccion analitica KaTeX en vivo
-// 3. Analisis de limites asintoticos y simetrias fisicas
-// 4. Aprovechamiento continuo de datos (Lab10Bus inter-simulador)
+// 1. Renderizado Universal y Reactivo de KaTeX (estático y dinámico)
+// 2. Unificación visual de paleta y temas (Modo Claro / Modo Oscuro)
+// 3. Dinamismo pedagógico con deducción analítica KaTeX en vivo
+// 4. Análisis de límites asintóticos y simetrías físicas
+// 5. Aprovechamiento continuo de datos (Lab10Bus inter-simulador)
 // ==========================================================================
 
 (function(global) {
     'use strict';
+
+    // ── 0. Motor Universal de Renderizado KaTeX y Observador Reactivo ──────────
+    const KATEX_CONFIG = {
+        delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false }
+        ],
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option', 'canvas', 'svg', 'math'],
+        ignoredClasses: ['katex', 'katex-display', 'katex-html', 'no-katex', 'no-latex'],
+        throwOnError: false,
+        errorColor: '#ef4444',
+        strict: false,
+        trust: true
+    };
+
+    let isRenderingLatex = false;
+    let latexDebounceTimer = null;
+    let isObserverAttached = false;
+    let isInputWatcherAttached = false;
+
+    function renderAllLatex(root) {
+        const target = root || (document.body || document.documentElement);
+        if (!target) return;
+
+        if (typeof window.renderMathInElement !== 'function') {
+            ensureKaTeXReady(() => renderAllLatex(target));
+            return;
+        }
+
+        if (isRenderingLatex) return;
+        try {
+            isRenderingLatex = true;
+            window.renderMathInElement(target, KATEX_CONFIG);
+        } catch (err) {
+            console.warn('[Lab10 KaTeX] Error al renderizar expresiones:', err);
+        } finally {
+            isRenderingLatex = false;
+        }
+    }
+
+    function ensureKaTeXReady(callback) {
+        if (typeof window.renderMathInElement === 'function') {
+            if (callback) callback();
+            return;
+        }
+
+        // Asegurar stylesheet de KaTeX
+        if (typeof document !== 'undefined' && !document.querySelector('link[href*="katex.min.css"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+            (document.head || document.documentElement).appendChild(link);
+        }
+
+        // Inyección dinámica de scripts si no estaban presentes en el HTML
+        function injectScript(src, next) {
+            if (document.querySelector(`script[src="${src}"]`)) {
+                // Ya existe el tag, esperar a que cargue
+                let attempts = 0;
+                const check = setInterval(() => {
+                    attempts++;
+                    if (typeof window.renderMathInElement === 'function' || attempts > 50) {
+                        clearInterval(check);
+                        if (next) next();
+                    }
+                }, 50);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = false;
+            script.onload = next;
+            script.onerror = () => console.warn('[Lab10 KaTeX] No se pudo cargar:', src);
+            (document.head || document.documentElement).appendChild(script);
+        }
+
+        if (typeof window.katex === 'undefined') {
+            injectScript('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js', () => {
+                if (typeof window.renderMathInElement === 'undefined') {
+                    injectScript('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js', () => {
+                        if (callback) callback();
+                    });
+                } else if (callback) {
+                    callback();
+                }
+            });
+        } else if (typeof window.renderMathInElement === 'undefined') {
+            injectScript('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js', () => {
+                if (callback) callback();
+            });
+        } else {
+            if (callback) callback();
+        }
+    }
+
+    function setupLatexMutationObserver() {
+        if (isObserverAttached || typeof MutationObserver === 'undefined') return;
+        if (!document.body) {
+            document.addEventListener('DOMContentLoaded', setupLatexMutationObserver, { once: true });
+            return;
+        }
+
+        isObserverAttached = true;
+        const observer = new MutationObserver((mutations) => {
+            if (isRenderingLatex) return;
+
+            let needsRender = false;
+            const elementsToRender = new Set();
+
+            for (let i = 0; i < mutations.length; i++) {
+                const m = mutations[i];
+                // Si la mutación ocurrió dentro de un nodo ya procesado por KaTeX, ignorar para evitar bucles
+                if (m.target && m.target.closest && m.target.closest('.katex, .katex-html, script, style, svg, canvas')) {
+                    continue;
+                }
+
+                if (m.addedNodes && m.addedNodes.length > 0) {
+                    for (let j = 0; j < m.addedNodes.length; j++) {
+                        const node = m.addedNodes[j];
+                        if (node.nodeType === 1) { // ELEMENT_NODE
+                            if (node.classList && (node.classList.contains('katex') || node.classList.contains('katex-html'))) {
+                                continue;
+                            }
+                            const txt = node.textContent || '';
+                            if (txt.includes('$') || txt.includes('\\(') || txt.includes('\\[')) {
+                                needsRender = true;
+                                elementsToRender.add(node);
+                            }
+                        } else if (node.nodeType === 3) { // TEXT_NODE
+                            const txt = node.nodeValue || '';
+                            if (txt.includes('$') || txt.includes('\\(') || txt.includes('\\[')) {
+                                needsRender = true;
+                                if (node.parentElement) elementsToRender.add(node.parentElement);
+                            }
+                        }
+                    }
+                }
+
+                if (m.type === 'characterData') {
+                    const txt = m.target.nodeValue || '';
+                    if (txt.includes('$') || txt.includes('\\(') || txt.includes('\\[')) {
+                        needsRender = true;
+                        if (m.target.parentElement) elementsToRender.add(m.target.parentElement);
+                    }
+                }
+            }
+
+            if (needsRender) {
+                clearTimeout(latexDebounceTimer);
+                latexDebounceTimer = setTimeout(() => {
+                    elementsToRender.forEach((el) => {
+                        if (document.body.contains(el)) {
+                            renderAllLatex(el);
+                        }
+                    });
+                }, 30);
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+    }
+
+    function setupDynamicInputWatcher() {
+        if (isInputWatcherAttached || typeof document === 'undefined') return;
+        isInputWatcherAttached = true;
+
+        const triggerUpdate = () => {
+            clearTimeout(latexDebounceTimer);
+            latexDebounceTimer = setTimeout(() => {
+                if (document.body) {
+                    renderAllLatex(document.body);
+                }
+            }, 60);
+        };
+
+        document.addEventListener('input', triggerUpdate, true);
+        document.addEventListener('change', triggerUpdate, true);
+    }
 
     // ── Bus de Datos Integrado (Universal / Zero CORS) ──────────────────────
     class LocalLab10Bus {
@@ -81,9 +266,34 @@
             this.nextLab = null;
 
             this.initThemeSync();
+            this.initLatexEngine();
         }
 
-        // ── 1. Sincronización Dinámica de Tema y Colores ─────────────────────
+        // ── 1. Inicializador Universal de KaTeX ──────────────────────────────
+        initLatexEngine() {
+            ensureKaTeXReady(() => {
+                const doRender = () => {
+                    renderAllLatex(document.body);
+                    setupLatexMutationObserver();
+                    setupDynamicInputWatcher();
+                };
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', doRender, { once: true });
+                } else {
+                    doRender();
+                }
+
+                if (typeof window !== 'undefined') {
+                    window.addEventListener('load', () => renderAllLatex(document.body));
+                }
+                setTimeout(() => renderAllLatex(document.body), 150);
+                setTimeout(() => renderAllLatex(document.body), 500);
+                setTimeout(() => renderAllLatex(document.body), 1500);
+            });
+        }
+
+        // ── 2. Sincronización Dinámica de Tema y Colores ─────────────────────
         initThemeSync() {
             const savedTheme = localStorage.getItem('electro10_theme') || 'dark';
             this.setTheme(savedTheme, false);
@@ -105,28 +315,27 @@
         }
 
         setTheme(theme, broadcast = true) {
-            if (document.documentElement) {
-                if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                } else {
-                    document.documentElement.classList.add('dark');
+            try {
+                if (typeof document !== 'undefined' && document.documentElement && document.documentElement.classList) {
+                    if (theme === 'light') {
+                        document.documentElement.classList.remove('dark');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                    }
                 }
-            }
 
-            if (document.body) {
-                if (theme === 'light') {
-                    document.body.classList.remove('dark', 'dark-mode');
-                    document.body.classList.add('light-mode');
-                } else {
-                    document.body.classList.remove('light-mode');
-                    document.body.classList.add('dark', 'dark-mode');
-                }
-            } else {
-                // Si el body aún no existe al ejecutarse en <head>, aplicar al cargar DOM
-                if (document.readyState === 'loading') {
+                if (typeof document !== 'undefined' && document.body && document.body.classList) {
+                    if (theme === 'light') {
+                        document.body.classList.remove('dark', 'dark-mode');
+                        document.body.classList.add('light-mode');
+                    } else {
+                        document.body.classList.remove('light-mode');
+                        document.body.classList.add('dark', 'dark-mode');
+                    }
+                } else if (typeof document !== 'undefined' && document.readyState === 'loading') {
                     document.addEventListener('DOMContentLoaded', () => this.setTheme(theme, false), { once: true });
                 }
-            }
+            } catch (_) {}
 
             try {
                 localStorage.setItem('electro10_theme', theme);
@@ -146,7 +355,7 @@
             });
         }
 
-        // ── 2. Inicializador del Asistente Físico Inteligente ───────────────
+        // ── 3. Inicializador del Asistente Físico Inteligente ───────────────
         init({
             labName = 'Laboratorio',
             moduleTag = 'Módulo',
@@ -173,6 +382,7 @@
                 }
                 this.enhanceHeader();
                 this.injectIntelligenceDrawer();
+                renderAllLatex(document.body);
             };
 
             if (document.readyState === 'loading') {
@@ -188,7 +398,7 @@
             });
         }
 
-        // ── 3. Estandarización y Embellecimiento del Header HUD ──────────────
+        // ── 4. Estandarización y Embellecimiento del Header HUD ──────────────
         enhanceHeader() {
             let header = document.querySelector('header');
             if (!header) return;
@@ -224,7 +434,7 @@
             }
         }
 
-        // ── 4. Inyección del Asistente Flotante y Drawer ─────────────────────
+        // ── 5. Inyección del Asistente Flotante y Drawer ─────────────────────
         injectIntelligenceDrawer() {
             if (document.getElementById('lab10-ia-pill')) return;
 
@@ -319,7 +529,7 @@
             }
         }
 
-        // ── 5. Actualización Dinámica del Análisis Físico ───────────────────
+        // ── 6. Actualización Dinámica del Análisis Físico ───────────────────
         updateIntelligence() {
             if (!this.registeredSolver) return;
 
@@ -343,17 +553,7 @@
                 const limitsContainer = document.getElementById('lab10-limits-check');
                 if (limitsContainer && analysis.limits) {
                     limitsContainer.innerHTML = analysis.limits;
-                    if (window.renderMathInElement) {
-                        try {
-                            window.renderMathInElement(limitsContainer, {
-                                delimiters: [
-                                    { left: '$$', right: '$$', display: true },
-                                    { left: '$', right: '$', display: false }
-                                ],
-                                throwOnError: false
-                            });
-                        } catch (_) {}
-                    }
+                    renderAllLatex(limitsContainer);
                 }
             } catch (e) {
                 console.warn('[Lab10Intelligence] Error al evaluar física:', e);
@@ -382,8 +582,12 @@
     const lab10AI = new Lab10Intelligence();
     global.Lab10Intelligence = Lab10Intelligence;
     global.lab10AI = lab10AI;
+    global.renderAllLatex = renderAllLatex;
+    global.renderMath = renderAllLatex;
+    global.renderLatexInElement = renderAllLatex;
+    global.renderLatex = renderAllLatex;
 
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = { Lab10Intelligence, lab10AI };
+        module.exports = { Lab10Intelligence, lab10AI, renderAllLatex };
     }
 })(typeof window !== 'undefined' ? window : globalThis);
