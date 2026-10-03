@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
     
     <style>
         :root {
@@ -317,6 +319,7 @@
             <div class="section-title">Solución Paso a Paso</div>
             <div id="dcl-buttons" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;"></div>
             <div class="latex-box" id="latex-result">$$ \text{---} $$</div>
+            <div id="field-continue-wrap" style="margin-top:12px;"></div>
         </div>
     </div>
 </div>
@@ -1233,6 +1236,57 @@
     document.addEventListener("DOMContentLoaded", function() {
         renderMathInElement(document.getElementById('static-tip'), {delimiters: [{left: "$", right: "$", display: false}]});
     });
+</script>
+
+<script type="module">
+import { lab10Bus } from '../js/lab10-bus.js';
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Shell } from '../js/lab10-shell.js';
+
+// ── Inyectar botón de continuidad formativa hacia Potencial Eléctrico (M4) ───
+const contWrap = document.getElementById('field-continue-wrap');
+if (contWrap) {
+    lab10Bus.injectContinueButton(contWrap, 'Potencial_Electrico.html', 'Potencial Eléctrico (M4)', () => {
+        const chs = state.objects.filter(o => o.type && o.type.startsWith('charge'));
+        return {
+            source: 'FieldLab10',
+            charges: chs.map(c => ({
+                id: c.id,
+                q: c.type === 'charge_neg' ? -c.q : c.q,
+                x: c.x,
+                y: c.y
+            })),
+            timestamp: Date.now()
+        };
+    });
+}
+
+// ── Escuchar escenarios entrantes de CoulombLab10 ─────────────────────────────
+lab10Bus.checkIncomingScenario((scenarioData) => {
+    if (scenarioData && Array.isArray(scenarioData.charges) && scenarioData.charges.length > 0) {
+        scenarioData.charges.forEach((ch, idx) => {
+            const px = ch.pixelX || (canvas.width / 2 + (ch.x || 0) * 50);
+            const py = ch.pixelY || (canvas.height / 2 - (ch.y || 0) * 50);
+            state.objects.push({
+                type: (ch.q >= 0) ? 'charge_pos' : 'charge_neg',
+                id: ch.id || (Date.now() + idx),
+                x: px,
+                y: py,
+                q: Math.abs(ch.q || 1)
+            });
+        });
+        if (!state.objects.some(o => o.type === 'test_point')) {
+            state.objects.push({
+                type: 'test_point',
+                id: 'P',
+                x: canvas.width / 2 + 100,
+                y: canvas.height / 2
+            });
+        }
+        if (typeof analizarFisica === 'function') analizarFisica();
+        if (typeof redraw === 'function') redraw();
+    }
+});
 </script>
 
 <script src="../js/sim_telemetry.js"></script>
