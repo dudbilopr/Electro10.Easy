@@ -3,66 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla Interactiva: Ecuaciones de Maxwell</title>
+    <title>MaxwellLab10.easy - Ecuaciones Fundamentales de Maxwell</title>
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
-    <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
+    
     <style>
+        :root {
+            --accent: #6366f1;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .step-card { transition: all 0.3s ease; opacity: 0; transform: translateY(10px); }
         .step-card.visible { opacity: 1; transform: translateY(0); }
+        .eq-btn.active { border-color: #6366f1; background-color: rgba(99, 102, 241, 0.15); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
-    <header class="w-full max-w-5xl mb-6 flex justify-between items-center glass-panel p-4 rounded-2xl shadow-lg">
-        <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span class="bg-indigo-500 text-white px-2 py-1 rounded-lg text-sm">M11</span>
-                Ecuaciones de Maxwell
-            </h1>
-            <p class="text-slate-400 text-sm mt-1">Comparación Forma Integral vs Forma Diferencial</p>
+    <header class="w-full max-w-5xl mb-6 flex justify-between items-center glass-panel p-4 rounded-2xl shadow-lg border border-slate-800">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #6366f1);">
+                <i class="ph ph-atom" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                    MaxwellLab10<span style="color:var(--accent, #6366f1);">.easy</span>
+                    <span class="text-xs text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-700/50">M11 Unificación</span>
+                </h1>
+                <p class="text-slate-400 text-xs mt-0.5">Ecuaciones Fundamentales: Forma Integral vs Forma Diferencial</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
         </div>
     </header>
 
     <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Sidebar -->
-        <aside class="glass-panel p-5 rounded-2xl h-fit">
-            <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">Selecciona la Ecuación</h2>
-            
-            <div class="space-y-3">
-                <button onclick="loadEq('gaussE')" class="w-full text-left p-4 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800 transition-all focus:border-indigo-500 focus:bg-slate-800">
-                    <div class="font-bold text-indigo-400">Ley de Gauss (Eléctrica)</div>
-                </button>
+        <aside class="glass-panel p-5 rounded-2xl h-fit flex flex-col justify-between space-y-6 border border-slate-800">
+            <div>
+                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">Selecciona la Ecuación</h2>
                 
-                <button onclick="loadEq('gaussB')" class="w-full text-left p-4 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800 transition-all focus:border-indigo-500 focus:bg-slate-800">
-                    <div class="font-bold text-indigo-400">Ley de Gauss (Magnética)</div>
-                </button>
+                <div class="space-y-3">
+                    <button id="btn-gaussE" onclick="loadEq('gaussE')" class="eq-btn w-full text-left p-3.5 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800/80 transition-all flex items-center gap-3">
+                        <i class="ph ph-circle-dashed text-xl text-indigo-400"></i>
+                        <div>
+                            <div class="font-bold text-indigo-400 text-sm">Ley de Gauss</div>
+                            <div class="text-[11px] text-slate-400">Campo Eléctrico</div>
+                        </div>
+                    </button>
+                    
+                    <button id="btn-gaussB" onclick="loadEq('gaussB')" class="eq-btn w-full text-left p-3.5 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800/80 transition-all flex items-center gap-3">
+                        <i class="ph ph-magnet text-xl text-indigo-400"></i>
+                        <div>
+                            <div class="font-bold text-indigo-400 text-sm">Ley de Gauss</div>
+                            <div class="text-[11px] text-slate-400">Campo Magnético</div>
+                        </div>
+                    </button>
 
-                <button onclick="loadEq('faraday')" class="w-full text-left p-4 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800 transition-all focus:border-indigo-500 focus:bg-slate-800">
-                    <div class="font-bold text-indigo-400">Ley de Faraday</div>
-                </button>
+                    <button id="btn-faraday" onclick="loadEq('faraday')" class="eq-btn w-full text-left p-3.5 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800/80 transition-all flex items-center gap-3">
+                        <i class="ph ph-arrows-clockwise text-xl text-indigo-400"></i>
+                        <div>
+                            <div class="font-bold text-indigo-400 text-sm">Ley de Faraday</div>
+                            <div class="text-[11px] text-slate-400">Inducción Electromagnética</div>
+                        </div>
+                    </button>
 
-                <button onclick="loadEq('ampere')" class="w-full text-left p-4 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800 transition-all focus:border-indigo-500 focus:bg-slate-800">
-                    <div class="font-bold text-indigo-400">Ley de Ampere-Maxwell</div>
-                </button>
+                    <button id="btn-ampere" onclick="loadEq('ampere')" class="eq-btn w-full text-left p-3.5 rounded-xl border border-slate-700 hover:border-indigo-500 hover:bg-slate-800/80 transition-all flex items-center gap-3">
+                        <i class="ph ph-lightning text-xl text-indigo-400"></i>
+                        <div>
+                            <div class="font-bold text-indigo-400 text-sm">Ampere - Maxwell</div>
+                            <div class="text-[11px] text-slate-400">Corriente de Desplazamiento</div>
+                        </div>
+                    </button>
+                </div>
             </div>
-            
+
+            <!-- Inter-simulator Bus Connection -->
+            <div id="maxwell-continue-wrap" class="pt-4 border-t border-slate-800"></div>
         </aside>
 
         <!-- Main Content -->
         <div id="steps-container" class="lg:col-span-2 space-y-4">
-            <div class="glass-panel p-10 rounded-2xl flex flex-col items-center justify-center text-center text-slate-500 min-h-[400px]">
-                <svg class="w-16 h-16 mb-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                <p>Selecciona una ecuación en el menú lateral para estudiarla a fondo.</p>
+            <div class="glass-panel p-10 rounded-2xl flex flex-col items-center justify-center text-center text-slate-500 min-h-[420px] border border-slate-800">
+                <i class="ph ph-books text-5xl mb-4 text-slate-600"></i>
+                <p class="text-sm">Selecciona una ecuación en el menú lateral para estudiarla a fondo.</p>
             </div>
         </div>
 
@@ -74,73 +113,137 @@
                 title: "Ley de Gauss (Campo Eléctrico)",
                 desc: "Las cargas eléctricas son las fuentes y sumideros del campo eléctrico.",
                 steps: [
-                    { t: "Forma Integral", m: "$$ \\oint_S \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{enc}}{\\varepsilon_0} $$", c: "bg-blue-900/40 border-blue-500" },
-                    { t: "Forma Diferencial", m: "$$ \\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\varepsilon_0} $$", c: "bg-emerald-900/40 border-emerald-500" },
-                    { t: "Significado Físico", m: "El flujo eléctrico neto a través de una superficie cerrada es proporcional a la carga neta encerrada. La divergencia de $\\vec{E}$ indica si un punto del espacio es un manantial (carga positiva) o un sumidero (carga negativa).", c: "bg-slate-800 border-slate-600" }
+                    { t: "Forma Integral", m: "$$ \\oint_S \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{enc}}{\\varepsilon_0} $$", c: "bg-blue-900/40 border-blue-500/50" },
+                    { t: "Forma Diferencial", m: "$$ \\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\varepsilon_0} $$", c: "bg-emerald-900/40 border-emerald-500/50" },
+                    { t: "Significado Físico", m: "El flujo eléctrico neto a través de una superficie cerrada es proporcional a la carga neta encerrada. La divergencia de $\\vec{E}$ indica si un punto del espacio es un manantial (carga positiva) o un sumidero (carga negativa).", c: "bg-slate-800/80 border-slate-700" }
                 ]
             },
             gaussB: {
                 title: "Ley de Gauss (Campo Magnético)",
                 desc: "No existen monopolos magnéticos aislados en la naturaleza.",
                 steps: [
-                    { t: "Forma Integral", m: "$$ \\oint_S \\vec{B} \\cdot d\\vec{A} = 0 $$", c: "bg-blue-900/40 border-blue-500" },
-                    { t: "Forma Diferencial", m: "$$ \\nabla \\cdot \\vec{B} = 0 $$", c: "bg-emerald-900/40 border-emerald-500" },
-                    { t: "Significado Físico", m: "Las líneas de campo magnético siempre forman bucles cerrados continuos. Toda línea que entra a una superficie cerrada debe salir. Por tanto, la divergencia de $\\vec{B}$ siempre es cero.", c: "bg-slate-800 border-slate-600" }
+                    { t: "Forma Integral", m: "$$ \\oint_S \\vec{B} \\cdot d\\vec{A} = 0 $$", c: "bg-blue-900/40 border-blue-500/50" },
+                    { t: "Forma Diferencial", m: "$$ \\nabla \\cdot \\vec{B} = 0 $$", c: "bg-emerald-900/40 border-emerald-500/50" },
+                    { t: "Significado Físico", m: "Las líneas de campo magnético siempre forman bucles cerrados continuos. Toda línea que entra a una superficie cerrada debe salir. Por tanto, la divergencia de $\\vec{B}$ siempre es cero.", c: "bg-slate-800/80 border-slate-700" }
                 ]
             },
             faraday: {
                 title: "Ley de Faraday de la Inducción",
                 desc: "Un campo magnético cambiante en el tiempo induce un campo eléctrico rotacional.",
                 steps: [
-                    { t: "Forma Integral", m: "$$ \\oint_C \\vec{E} \\cdot d\\vec{l} = - \\frac{d\\Phi_B}{dt} $$", c: "bg-blue-900/40 border-blue-500" },
-                    { t: "Forma Diferencial", m: "$$ \\nabla \\times \\vec{E} = - \\frac{\\partial \\vec{B}}{\\partial t} $$", c: "bg-emerald-900/40 border-emerald-500" },
-                    { t: "Significado Físico", m: "La circulación del campo eléctrico alrededor de un camino cerrado no es cero si el flujo magnético está cambiando. El rotacional de $\\vec{E}$ es directamente proporcional a la tasa de cambio de $\\vec{B}$ (con signo negativo por la Ley de Lenz).", c: "bg-slate-800 border-slate-600" }
+                    { t: "Forma Integral", m: "$$ \\oint_C \\vec{E} \\cdot d\\vec{l} = - \\frac{d\\Phi_B}{dt} $$", c: "bg-blue-900/40 border-blue-500/50" },
+                    { t: "Forma Diferencial", m: "$$ \\nabla \\times \\vec{E} = - \\frac{\\partial \\vec{B}}{\\partial t} $$", c: "bg-emerald-900/40 border-emerald-500/50" },
+                    { t: "Significado Físico", m: "La circulación del campo eléctrico alrededor de un camino cerrado no es cero si el flujo magnético está cambiando. El rotacional de $\\vec{E}$ es directamente proporcional a la tasa de cambio de $\\vec{B}$ (con signo negativo por la Ley de Lenz).", c: "bg-slate-800/80 border-slate-700" }
                 ]
             },
             ampere: {
                 title: "Ley de Ampere-Maxwell",
                 desc: "Los campos magnéticos se generan por corrientes eléctricas Y por campos eléctricos cambiantes.",
                 steps: [
-                    { t: "Forma Integral", m: "$$ \\oint_C \\vec{B} \\cdot d\\vec{l} = \\mu_0 I_{enc} + \\mu_0 \\varepsilon_0 \\frac{d\\Phi_E}{dt} $$", c: "bg-blue-900/40 border-blue-500" },
-                    { t: "Forma Diferencial", m: "$$ \\nabla \\times \\vec{B} = \\mu_0 \\vec{J} + \\mu_0 \\varepsilon_0 \\frac{\\partial \\vec{E}}{\\partial t} $$", c: "bg-emerald-900/40 border-emerald-500" },
-                    { t: "Significado Físico", m: "Maxwell agregó el término de 'corriente de desplazamiento' ($\\frac{d\\Phi_E}{dt}$) para que las matemáticas de las ondas EM funcionaran y resolvió la discontinuidad en circuitos con capacitores. El rotacional de $\\vec{B}$ depende de la densidad de corriente $\\vec{J}$ y del cambio en $\\vec{E}$.", c: "bg-slate-800 border-slate-600" }
+                    { t: "Forma Integral", m: "$$ \\oint_C \\vec{B} \\cdot d\\vec{l} = \\mu_0 I_{enc} + \\mu_0 \\varepsilon_0 \\frac{d\\Phi_E}{dt} $$", c: "bg-blue-900/40 border-blue-500/50" },
+                    { t: "Forma Diferencial", m: "$$ \\nabla \\times \\vec{B} = \\mu_0 \\vec{J} + \\mu_0 \\varepsilon_0 \\frac{\\partial \\vec{E}}{\\partial t} $$", c: "bg-emerald-900/40 border-emerald-500/50" },
+                    { t: "Significado Físico", m: "Maxwell agregó el término de 'corriente de desplazamiento' ($\\varepsilon_0 \\frac{\\partial \\vec{E}}{\\partial t}$) para completar el principio de conservación de carga y predecir las ondas electromagnéticas.", c: "bg-slate-800/80 border-slate-700" }
                 ]
             }
         };
 
-        async function loadEq(key) {
+        let currentKey = null;
+
+        function loadEq(key) {
+            currentKey = key;
             const container = document.getElementById('steps-container');
             const geom = data[key];
+            if (!geom) return;
+
+            // Highlight button
+            document.querySelectorAll('.eq-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${key}`);
+            if (activeBtn) activeBtn.classList.add('active');
             
             let html = `
-                <div class="glass-panel p-6 rounded-2xl mb-4 border-l-4 border-indigo-500">
-                    <h2 class="text-xl font-bold text-white mb-2">${geom.title}</h2>
-                    <p class="text-slate-300 font-light">${geom.desc}</p>
+                <div class="glass-panel p-6 rounded-2xl mb-4 border-l-4 border-indigo-500 shadow-lg">
+                    <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="ph ph-check-circle text-indigo-400"></i> ${geom.title}
+                    </h2>
+                    <p class="text-slate-300 font-light text-sm">${geom.desc}</p>
                 </div>
             `;
 
             geom.steps.forEach((step, index) => {
                 html += `
-                    <div class="step-card glass-panel p-5 rounded-xl border ${step.c}" id="step-${index}">
-                        <h3 class="text-sm font-bold text-white mb-2">${step.t}</h3>
-                        <div class="text-white text-sm">${step.m}</div>
+                    <div class="step-card glass-panel p-5 rounded-xl border ${step.c} shadow-md" id="step-${index}">
+                        <h3 class="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-2">${step.t}</h3>
+                        <div class="text-white text-sm math-block">${step.m}</div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
             
-            // Typeset MathJax
-            if (window.MathJax) await MathJax.typesetPromise();
+            // Typeset KaTeX
+            if (window.renderMathInElement) {
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
 
-            // Animate steps
+            // Animate steps smoothly
             geom.steps.forEach((_, i) => {
                 setTimeout(() => {
-                    document.getElementById(`step-${i}`).classList.add('visible');
-                }, i * 200);
+                    const el = document.getElementById(`step-${i}`);
+                    if (el) el.classList.add('visible');
+                }, i * 150);
             });
         }
+
+        // Cargar por defecto la primera ecuación al iniciar
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                loadEq('ampere');
+            }, 300);
+        });
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Electrostática (CoulombLab10)' para cerrar el gran ciclo formativo
+    const contWrap = document.getElementById('maxwell-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Coulomb.html', 'Electrostática Fundamental (M1)', () => {
+            return {
+                source: 'MaxwellLab10',
+                activeEquation: currentKey || 'ampere',
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante (ej: desde WaveLab10 o Lorentz)
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            if (scenarioData.source === 'WaveLab10') {
+                loadEq('ampere');
+            } else if (scenarioData.source === 'LorentzLab10') {
+                loadEq('gaussB');
+            } else if (scenarioData.source === 'FaradayLab10' || scenarioData.source === 'FlujoMagneticoLab10') {
+                loadEq('faraday');
+            }
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
