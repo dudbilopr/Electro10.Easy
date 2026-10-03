@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
 
     <style>
         :root {
@@ -401,8 +404,23 @@
         </div>
     </div>
 
-    <header>
-        <h1>Integración por Recursividad: Anillo, Disco y Cilindro</h1>
+    <header style="background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #059669; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                <i class="ph ph-stack" style="font-size: 1.3rem;"></i>
+            </div>
+            <div>
+                <h1 style="color: white; margin: 0; font-size: 1.15rem; text-align: left; text-transform: none; letter-spacing: 0;">ChargeDistLab10<span style="color:#059669;">.easy</span> <span style="font-size: 0.8rem; color: #94a3b8; font-weight: normal;">| Recursividad Espacial: Anillo, Disco y Cilindro</span></h1>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div id="user-info" style="font-size: 0.75rem; color: #cbd5e1; padding: 4px 10px; border-radius: 6px; border: 1px solid #334155; background: rgba(30, 41, 59, 0.8);">
+                <i class="ph ph-user"></i> Modo Invitado
+            </div>
+        </div>
+    </header>
+
+    <div style="margin-bottom: 15px;">
         <div class="info-panels">
             <div class="panel">
                 <strong>Instrucciones:</strong>
@@ -413,7 +431,7 @@
                 Observe cómo la solución del Anillo (1D) se convierte en el diferencial $d\vec{E}$ para calcular el Disco (2D). Asimismo, el campo del Disco es el diferencial para el Cilindro (3D). Preste atención a la notación vectorial $d\vec{E}$.
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="main-layout">
         <!-- BARRA LATERAL (BANCO DE FÓRMULAS) -->
@@ -422,6 +440,7 @@
             <div id="formula-bank" class="formula-bank">
                 <!-- Fórmulas inyectadas por JS -->
             </div>
+            <div id="dist-continue-wrap" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border-color);"></div>
         </aside>
 
         <!-- TABLA PRINCIPAL -->
@@ -1125,6 +1144,38 @@
             setupInteractions();
         };
     </script>
+
+<script type="module">
+    import { lab10Bus } from '../js/lab10-bus.js';
+    import { lab10Auth } from '../js/lab10-auth.js';
+
+    // Escuchar sesión
+    lab10Auth.onUserChange((user) => {
+        const uInfo = document.getElementById('user-info');
+        if (uInfo) {
+            uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
+        }
+    });
+
+    // Inyectar botón 'Continuar en Laboratorio Gauss Avanzado (M3)'
+    const contWrap = document.getElementById('dist-continue-wrap');
+    if (contWrap) {
+        lab10Bus.injectContinueButton(contWrap, 'Laboratorio_Gauss_Avanzado.html', 'Laboratorio Gauss Avanzado (M3)', () => {
+            return {
+                source: 'ChargeDistLab10',
+                completed: state.score,
+                timestamp: Date.now()
+            };
+        });
+    }
+
+    // Escuchar escenario entrante
+    lab10Bus.checkIncomingScenario((scenarioData) => {
+        if (scenarioData) {
+            console.log('Escenario recibido en ChargeDistLab10:', scenarioData);
+        }
+    });
+</script>
 
 <script src="../js/sim_telemetry.js"></script>
 </body>
