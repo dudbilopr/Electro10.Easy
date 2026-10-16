@@ -31,10 +31,14 @@
         .math-display { font-size: clamp(12px, 1.05vw, 15px); font-weight: bold; color: #1e40af; text-align: center; margin: 0.8vmin 0; overflow-x: auto;}
         .canvas-wrapper { border: 1px solid #cbd5e1; border-radius: 0.5rem; overflow: hidden; position: relative; background: radial-gradient(circle at center, #1e293b, #020617); cursor: grab; }
         .canvas-wrapper:active { cursor: grabbing; }
-        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 1vmin; display: flex; flex-direction: column; gap: 0.8vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 14px); }
+        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 0.8vmin; display: flex; flex-direction: column; gap: 0.8vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 13px); }
         .btn-ui { padding: 0.35rem 0.7rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
-        .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .btn-ui:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 4px; } 
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;}
         .tab-btn:hover { color: #3b82f6; background: #eff6ff; }
@@ -43,7 +47,7 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .param-input { width: 70px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px; font-family: monospace; font-size: 12px; font-weight: bold; background-color: #ffffff; color: #0f172a; }
+        .param-input { width: 70px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 4px; font-family: monospace; font-size: 12px; font-weight: bold; background-color: #ffffff; color: #0f172a; }
         .param-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.25); }
     </style>
 </head>
@@ -65,11 +69,11 @@
             <!-- CUERPO PRINCIPAL: 2 COLUMNAS -->
             <div class="flex-1 flex flex-row p-[1.5vmin] gap-[1.5vmin] min-h-0 bg-slate-100">
                 
-                <!-- COLUMNA IZQUIERDA: PESTAÑAS ACADÉMICAS -->
+                <!-- COLUMNA IZQUIERDA: PESTAÑAS ACADÉMICAS (48%) -->
                 <div class="w-[48%] flex flex-col bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
                     
                     <!-- BARRA DE PESTAÑAS -->
-                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
+                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto no-scrollbar">
                         <button class="tab-btn active shrink-0" data-tab="tab-teoria"><i data-lucide="book-open" class="w-4 h-4 text-blue-600"></i> 1. Ley de Laplace &amp; Espiras</button>
                         <button class="tab-btn shrink-0" data-tab="tab-ejercicios"><i data-lucide="edit-3" class="w-4 h-4 text-amber-600"></i> 2. Ejercicios Resueltos</button>
                         <button class="tab-btn shrink-0" data-tab="tab-calc"><i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> 3. Calculadora de Corrientes</button>
@@ -84,8 +88,8 @@
                             
                             <!-- DEDUCCIÓN DE CARGA A CORRIENTE -->
                             <div class="bg-blue-50 p-3.5 rounded-lg border-l-4 border-blue-600 shadow-sm">
-                                <h2 class="font-bold text-blue-900 flex items-center gap-2 text-base border-b border-blue-200 pb-1.5 mb-2">
-                                    <i data-lucide="git-branch" class="w-5 h-5 text-blue-600"></i> Deducción Micro $\to$ Macroscópica: De Lorentz a Laplace
+                                <h2 class="font-bold text-blue-900 flex items-center gap-2 text-sm border-b border-blue-200 pb-1.5 mb-2">
+                                    <i data-lucide="git-branch" class="w-4 h-4 text-blue-600"></i> Deducción Micro $\to$ Macroscópica: De Lorentz a Laplace
                                 </h2>
                                 <p class="text-xs text-blue-950 leading-relaxed text-justify mb-2">
                                     Una corriente eléctrica macroscópica $I$ no es más que el flujo colectivo de una gran densidad de portadores de carga $n$ con velocidad de deriva promedio $\vec{v}_d$ a través de una sección transversal $A$.
@@ -104,7 +108,7 @@
 
                             <!-- CONDUCTORES CURVOS Y CIRCUITOS CERRADOS -->
                             <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2">
-                                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                <h3 class="font-bold text-slate-900 text-xs flex items-center gap-2">
                                     <i data-lucide="maximize" class="w-4 h-4 text-indigo-600"></i> Conductores Curvos y Teorema del Desplazamiento Neto
                                 </h3>
                                 <p class="text-xs text-slate-700 leading-relaxed text-justify">
@@ -121,7 +125,7 @@
 
                             <!-- ESPIRAS, MOMENTO MAGNÉTICO Y TORQUE -->
                             <div class="bg-amber-50 p-3.5 rounded-lg border-l-4 border-amber-500 shadow-sm space-y-2 text-amber-950">
-                                <h3 class="font-bold text-sm flex items-center gap-2 text-amber-900">
+                                <h3 class="font-bold text-xs flex items-center gap-2 text-amber-900">
                                     <i data-lucide="rotate-cw" class="w-4 h-4 text-amber-600"></i> Momento Dipolar Magnético y Torque en Motores DC
                                 </h3>
                                 <p class="text-xs leading-relaxed text-justify">
@@ -129,7 +133,7 @@
                                 </p>
                                 <div class="bg-white p-2.5 rounded border border-amber-200 text-xs space-y-1">
                                     <p><strong>Momento dipolar magnético:</strong> $\vec{\mu} = N I \vec{A}$</p>
-                                    <p class="text-[11px] text-amber-800">($N$ = número de espiras, $I$ = corriente, $\vec{A}$ = vector área perpendicular a la espira según la regla de la mano derecha).</p>
+                                    <p class="text-[11px] text-amber-800">($N$ = número de espiras, $I$ = corriente, $\vec{A}$ = vector área normal según regla mano derecha).</p>
                                     <p><strong>Torque vectorial:</strong> $\vec{\tau} = \vec{\mu} \times \vec{B} \implies \tau = N I A B \sin\phi$</p>
                                     <p><strong>Energía potencial magnética:</strong> $U = -\vec{\mu} \cdot \vec{B} = -\mu B \cos\phi$</p>
                                 </div>
@@ -144,10 +148,10 @@
                         <div id="tab-ejercicios" class="tab-content space-y-4">
                             
                             <!-- EJERCICIO 5: LEVITACIÓN MAGNÉTICA DE BARRA -->
-                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                                    <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 5 (Rigor Universitario)</span>
-                                    <span class="text-xs font-bold text-slate-500">Conductores &bull; Levitación</span>
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-2.5">
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5">
+                                    <span class="bg-blue-600 text-white text-[11px] font-bold px-2 py-0.5 rounded">Ejercicio 5 (Rigor Universitario)</span>
+                                    <span class="text-[11px] font-bold text-slate-500">Conductores &bull; Levitación</span>
                                 </div>
                                 <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
                                     <strong>Enunciado:</strong> Una varilla de cobre rectilínea de longitud $L = 0.50\,\text{m}$ y masa $m = 60.0\,\text{g}$ reposa sobre rieles horizontales sin fricción. En la región existe un campo magnético uniforme $B = 0.40\,\text{T}$ horizontal dirigido hacia el <strong>Norte</strong> ($+\hat{\jmath}$). Se conecta una fuente para hacer circular una corriente $I$.
@@ -156,10 +160,10 @@
                                     <br>c) Si la resistencia eléctrica total es $R_e = 0.25\,\Omega$, determine la potencia disipada por efecto Joule.
                                 </p>
 
-                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
+                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-1.5">
                                     <p class="font-bold text-indigo-700">Paso 1: Análisis vectorial y Regla de la Mano Derecha</p>
                                     <p class="text-[11px] text-slate-700 text-justify">
-                                        El peso de la barra apunta hacia el centro de la Tierra: $\vec{P} = -mg\,\hat{k}$. Para que la fuerza magnética $\vec{F}_B = I(\vec{L}\times\vec{B})$ levite la barra, debe apuntar exactamente hacia el cielo: $\vec{F}_B = +F_B\,\hat{k}$.
+                                        El peso de la barra apunta hacia abajo: $\vec{P} = -mg\,\hat{k}$. Para que la fuerza magnética $\vec{F}_B = I(\vec{L}\times\vec{B})$ levite la barra, debe apuntar exactamente hacia arriba: $\vec{F}_B = +F_B\,\hat{k}$.
                                         <br>El campo es $\vec{B} = B\,\hat{\jmath}$ (Norte).
                                         <br>Recordando los productos cruz unitarios: $\hat{\imath} \times \hat{\jmath} = \hat{k}$ y $(-\hat{\imath}) \times \hat{\jmath} = -\hat{k}$.
                                         <br>Por lo tanto, $\vec{L}$ debe apuntar hacia $+\hat{\imath}$ (<strong>de Oeste a Este</strong>).
@@ -180,84 +184,12 @@
                                 </div>
                             </div>
 
-                            <!-- EJERCICIO 6: CONDUCTOR SEMICIRCULAR POR INTEGRACIÓN -->
-                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                                    <span class="bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 6 (Cálculo Integral)</span>
-                                    <span class="text-xs font-bold text-slate-500">Geometría Curva &bull; $d\vec{F} = I(d\vec{l}\times\vec{B})$</span>
-                                </div>
-                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
-                                    <strong>Enunciado:</strong> Un alambre conductor rígido transporta una corriente continua $I = 4.0\,\text{A}$ a lo largo de un arco semicircular de radio $R = 0.25\,\text{m}$ ubicado en el plano $xy$, extendiéndose desde el punto $a(-R, 0, 0)$ hasta el punto $b(+R, 0, 0)$. Existe un campo uniforme saliendo perpendicularmente del plano: $\vec{B} = 0.60\,\text{T}\,\hat{k}$.
-                                    <br>Calcule la fuerza magnética neta por <strong>integración diferencial</strong> y compárela con el método del <strong>vector desplazamiento</strong>.
-                                </p>
-
-                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
-                                    <p class="font-bold text-amber-800">Método 1: Integral de Línea Paramétrica</p>
-                                    <p class="text-[11px] text-slate-700 text-justify">
-                                        Parametrizamos el semicírculo con el ángulo polar $\theta$ recorriendo desde $\pi$ (en $x=-R$) hasta $0$ (en $x=+R$):
-                                        <br>$\vec{r}(\theta) = R\cos\theta\,\hat{\imath} + R\sin\theta\,\hat{\jmath}$
-                                        <br>$d\vec{l} = (-R\sin\theta\,\hat{\imath} + R\cos\theta\,\hat{\jmath})d\theta$
-                                    </p>
-                                    <p class="text-[11px] text-slate-700">Efectuamos el producto cruz con $\vec{B} = B\hat{k}$:</p>
-                                    <div class="math-display">$$d\vec{l} \times \vec{B} = \begin{vmatrix} \hat{\imath} & \hat{\jmath} & \hat{k} \\ -R\sin\theta d\theta & R\cos\theta d\theta & 0 \\ 0 & 0 & B \end{vmatrix} = (R B \cos\theta d\theta)\hat{\imath} + (R B \sin\theta d\theta)\hat{\jmath}$$</div>
-                                    <p class="text-[11px] text-slate-700">Integrando componente a componente entre $\theta = \pi$ y $\theta = 0$:</p>
-                                    <div class="math-display">$$F_x = I R B \int_\pi^0 \cos\theta d\theta = I R B [\sin(0) - \sin(\pi)] = 0 \quad (\text{por simetría})$$</div>
-                                    <div class="math-display">$$F_y = I R B \int_\pi^0 \sin\theta d\theta = I R B [-\cos(0) - (-\cos\pi)] = I R B [-1 - (1)] = -2 I R B$$</div>
-
-                                    <p class="font-bold text-amber-800">Método 2: Vector Desplazamiento Directo ($\vec{L}'$)</p>
-                                    <div class="math-display">$$\vec{L}' = \vec{r}_b - \vec{r}_a = (R\hat{\imath}) - (-R\hat{\imath}) = 2R\,\hat{\imath}$$</div>
-                                    <div class="math-display">$$\vec{F} = I(\vec{L}' \times \vec{B}) = I(2R\hat{\imath} \times B\hat{k}) = 2 I R B (\hat{\imath}\times\hat{k}) = -2 I R B\,\hat{\jmath}$$</div>
-
-                                    <div class="bg-amber-100 p-2 rounded text-amber-950 font-mono text-[11px]">
-                                        $F = 2(4.0\,\text{A})(0.25\,\text{m})(0.60\,\text{T}) = \mathbf{1.20\,\text{N}} \quad \text{en dirección } -\hat{\jmath}$
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- EJERCICIO 7: MOTOR DC, BOBINA RECTANGULAR, TORQUE Y TRABAJO -->
-                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                                    <span class="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 7 (Motores Eléctricos)</span>
-                                    <span class="text-xs font-bold text-slate-500">Bobina &bull; Torque &bull; Trabajo</span>
-                                </div>
-                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
-                                    <strong>Enunciado:</strong> Una bobina rectangular de motor eléctrico tiene $N = 250$ espiras, mide $a = 12\,\text{cm}$ de ancho por $b = 8\,\text{cm}$ de largo y conduce una corriente continua $I = 2.5\,\text{A}$. Está inmersa en un campo magnético homogéneo $B = 0.75\,\text{T}$. El plano de la bobina forma un ángulo de $30^\circ$ con las líneas de campo $\vec{B}$.
-                                    <br>a) Determine el momento dipolar magnético $\mu$ de la bobina.
-                                    <br>b) Calcule el torque magnético ejercido sobre la bobina en esa posición.
-                                    <br>c) Encuentre el torque máximo posible.
-                                    <br>d) Calcule el trabajo externo necesario para girar la bobina desde su posición actual hasta la posición antiparalela ($\phi = 180^\circ$).
-                                </p>
-
-                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
-                                    <p class="font-bold text-purple-700">Paso 1: Área y Momento Magnético $\vec{\mu}$</p>
-                                    <div class="math-display">$$A = (0.12\,\text{m})(0.08\,\text{m}) = 0.0096\,\text{m}^2 = 9.60 \times 10^{-3}\,\text{m}^2$$</div>
-                                    <div class="math-display">$$\mu = N I A = (250)(2.5\,\text{A})(0.0096\,\text{m}^2) = \mathbf{6.00\,\text{A}\cdot\text{m}^2} \quad (\text{o }\text{J/T})$$</div>
-
-                                    <p class="font-bold text-purple-700">Paso 2: Ángulo con la Normal y Torque Actual</p>
-                                    <p class="text-[11px] text-slate-700 text-justify">
-                                        ¡CUIDADO! El ángulo dado es entre el <em>plano</em> y el campo ($\alpha = 30^\circ$). El ángulo que entra en la fórmula vectorial es con el <em>vector normal</em> $\hat{n}$:
-                                        <br>$\phi = 90^\circ - \alpha = 90^\circ - 30^\circ = 60^\circ$.
-                                    </p>
-                                    <div class="math-display">$$\tau = \mu B \sin(60^\circ) = (6.00)(0.75)\left(\frac{\sqrt{3}}{2}\right) = 4.50 \cdot 0.8660 = \mathbf{3.897\,\text{N}\cdot\text{m}}$$</div>
-
-                                    <p class="font-bold text-purple-700">Paso 3: Torque Máximo</p>
-                                    <div class="math-display">$$\tau_{max} = \mu B = (6.00\,\text{A}\cdot\text{m}^2)(0.75\,\text{T}) = \mathbf{4.50\,\text{N}\cdot\text{m}} \quad (\text{cuando }\phi = 90^\circ)$$</div>
-
-                                    <p class="font-bold text-purple-700">Paso 4: Trabajo Externo ($W_{ext} = \Delta U$)</p>
-                                    <p class="text-[11px] text-slate-700">
-                                        $U_1 = -\mu B \cos(60^\circ) = -(4.50)(0.50) = -2.25\,\text{J}$
-                                        <br>$U_2 = -\mu B \cos(180^\circ) = -(4.50)(-1) = +4.50\,\text{J}$
-                                    </p>
-                                    <div class="math-display">$$W_{ext} = U_2 - U_1 = 4.50\,\text{J} - (-2.25\,\text{J}) = \mathbf{+6.75\,\text{J}}$$</div>
-                                </div>
-                            </div>
-
                         </div>
 
                         <!-- TAB 3: CALCULADORA DE CORRIENTES Y MOTORES -->
                         <div id="tab-calc" class="tab-content space-y-4">
                             <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
-                                <h3 class="font-bold text-slate-900 text-sm mb-2 flex items-center gap-2">
+                                <h3 class="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2">
                                     <i data-lucide="sliders" class="w-4 h-4 text-emerald-600"></i> Calculadora Interactiva de Laplace y Espiras
                                 </h3>
                                 
@@ -424,7 +356,7 @@
                     </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: SIMULADOR INTERACTIVO 3D/2D -->
+                <!-- COLUMNA DERECHA: SIMULADOR INTERACTIVO 3D/2D (52%) -->
                 <div class="w-[52%] flex flex-col min-w-0 gap-[1vmin]">
                     
                     <!-- PANEL DE CONTROL DEL SIMULADOR -->
@@ -433,22 +365,24 @@
                             <div class="flex items-center gap-2">
                                 <label class="font-bold text-slate-800 text-xs">Simulación:</label>
                                 <select id="sim-scenario" class="bg-white border border-slate-300 rounded px-2 py-0.5 text-xs font-bold text-slate-700 outline-none cursor-pointer">
-                                    <option value="rieles">1. Barra Conductora en Rieles de Laplace</option>
-                                    <option value="motor">2. Espira Rectangular 3D (Motor DC)</option>
+                                    <option value="rieles_deslizamiento">1. Acelerador de Laplace (Deslizamiento Horizontal: a = ILB/m)</option>
+                                    <option value="rieles_levitacion">2. Levitación Magnética de Barra (Equilibrio F_B = mg)</option>
+                                    <option value="motor">3. Motor DC &amp; Espira Rectangular 3D (Torque τ = μ × B)</option>
                                 </select>
                             </div>
 
                             <div class="flex items-center gap-1">
-                                <button id="btn-sim-play" class="btn-ui bg-emerald-100 text-emerald-800 border-emerald-300 text-xs">
+                                <button id="btn-sim-play" class="btn-ui bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-1 px-3 shadow-sm">
                                     <i data-lucide="play" class="w-3.5 h-3.5"></i> Iniciar
                                 </button>
-                                <button id="btn-sim-reset" class="btn-ui bg-slate-200 text-slate-700 text-xs">
+                                <button id="btn-sim-reset" class="btn-ui bg-slate-200 text-slate-700 hover:bg-slate-300 text-xs py-1 px-2.5 shadow-sm">
                                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
                                 </button>
                             </div>
                         </div>
 
                         <!-- CONTROLES DINÁMICOS SEGÚN ESCENARIO -->
+                        <!-- 1. CONTROLES RIELES (DESLIZAMIENTO O LEVITACIÓN) -->
                         <div id="controls-rieles" class="grid grid-cols-3 gap-2 text-xs pt-1">
                             <div>
                                 <label class="flex justify-between font-bold text-blue-700 text-[11px]">
@@ -473,6 +407,7 @@
                             </div>
                         </div>
 
+                        <!-- 2. CONTROLES MOTOR DC 3D -->
                         <div id="controls-motor" class="grid grid-cols-3 gap-2 text-xs pt-1 hidden">
                             <div>
                                 <label class="flex justify-between font-bold text-purple-700 text-[11px]">
@@ -508,13 +443,13 @@
                         <div id="container-motor-3d" class="w-full h-full absolute inset-0 hidden"></div>
 
                         <!-- BADGE SUPERIOR DE MODO -->
-                        <div class="absolute top-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1.5 shadow pointer-events-none">
+                        <div class="absolute top-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1.5 shadow pointer-events-none z-10">
                             <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span id="status-text" class="font-semibold">Modo Rieles: $F_{mag} = I L B$</span>
+                            <span id="status-text" class="font-semibold font-mono text-[11px]">Modo Rieles: Aceleración F = ILB</span>
                         </div>
 
-                        <!-- LEYENDA VECTORES -->
-                        <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white p-2 rounded text-[11px] space-y-1 pointer-events-none">
+                        <!-- LEYENDA VECTORES FLOTANTE -->
+                        <div id="legend-box" class="absolute bottom-2 left-2 bg-slate-900/90 backdrop-blur border border-slate-700 text-white p-2 rounded text-[10px] space-y-1 pointer-events-none z-10 font-mono">
                             <div class="flex items-center gap-2">
                                 <span class="w-3 h-1 bg-emerald-400 inline-block rounded"></span>
                                 <span>Fuerza Magnética ($\vec{F}_B$)</span>
@@ -533,20 +468,20 @@
                     <!-- TELEMETRÍA EN TIEMPO REAL -->
                     <div class="bg-slate-900 text-white p-2.5 rounded-lg border border-slate-700 shadow-sm grid grid-cols-4 gap-2 text-center">
                         <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
-                            <span class="block text-[10px] text-slate-400 font-bold">Fuerza Magnética $F_B$</span>
-                            <span id="tele-fb" class="font-mono font-bold text-emerald-400 text-sm">0.588 N</span>
+                            <span class="block text-[10px] text-slate-400 font-bold" id="lbl-tele-1">Fuerza Magnética $F_B$</span>
+                            <span id="tele-fb" class="font-mono font-bold text-emerald-400 text-xs">0.588 N</span>
                         </div>
                         <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
-                            <span class="block text-[10px] text-slate-400 font-bold">Fuerza Neta Vertical</span>
-                            <span id="tele-fnet" class="font-mono font-bold text-yellow-400 text-sm">0.000 N (Levitación)</span>
+                            <span class="block text-[10px] text-slate-400 font-bold" id="lbl-tele-2">Aceleración $a$ / Neta</span>
+                            <span id="tele-fnet" class="font-mono font-bold text-yellow-400 text-xs">+9.80 m/s²</span>
                         </div>
                         <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
-                            <span class="block text-[10px] text-slate-400 font-bold">Momento Magnético $\mu$</span>
-                            <span id="tele-mu" class="font-mono font-bold text-blue-400 text-sm">6.00 A&bull;m²</span>
+                            <span class="block text-[10px] text-slate-400 font-bold" id="lbl-tele-3">Rapidez $v$ / Momento $\mu$</span>
+                            <span id="tele-mu" class="font-mono font-bold text-blue-400 text-xs">0.00 m/s</span>
                         </div>
                         <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
-                            <span class="block text-[10px] text-slate-400 font-bold">Torque Magnético $\tau$</span>
-                            <span id="tele-tau" class="font-mono font-bold text-purple-400 text-sm">3.90 N&bull;m</span>
+                            <span class="block text-[10px] text-slate-400 font-bold" id="lbl-tele-4">Potencia $P$ / Torque $\tau$</span>
+                            <span id="tele-tau" class="font-mono font-bold text-purple-400 text-xs">2.16 W</span>
                         </div>
                     </div>
 
@@ -556,7 +491,7 @@
         </div>
     </div>
 
-    <!-- SCRIPTS DE COMPORTAMIENTO Y SIMULACIÓN -->
+    <!-- SCRIPTS DE COMPORTAMIENTO Y SIMULACIÓN RIGUROSA -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) lucide.createIcons();
@@ -580,7 +515,7 @@
                 });
             });
 
-            // MODOS DE CALCULADORA
+            // MODOS DE CALCULADORA EN TAB 3
             const btnCalcLaplace = document.getElementById('btn-calc-mode-laplace');
             const btnCalcMotor = document.getElementById('btn-calc-mode-motor');
             const panelLaplace = document.getElementById('panel-calc-laplace');
@@ -647,7 +582,7 @@
             });
 
             // -------------------------------------------------------------
-            // SIMULADOR: CAMBIO DE ESCENARIO (RIELES VS MOTOR)
+            // GESTIÓN DEL SIMULADOR: 3 ESCENARIOS FÍSICOS
             // -------------------------------------------------------------
             const simScenarioSelect = document.getElementById('sim-scenario');
             const controlsRieles = document.getElementById('controls-rieles');
@@ -655,33 +590,54 @@
             const canvasRieles = document.getElementById('canvas-rieles');
             const containerMotor = document.getElementById('container-motor-3d');
             const statusText = document.getElementById('status-text');
+            const statusDot = document.getElementById('status-dot');
+
+            let currentScenario = 'rieles_deslizamiento';
 
             simScenarioSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'rieles') {
-                    controlsRieles.classList.remove('hidden');
-                    controlsMotor.classList.add('hidden');
-                    canvasRieles.classList.remove('hidden');
-                    containerMotor.classList.add('hidden');
-                    statusText.innerHTML = "Modo Rieles: $F_{mag} = I L B$";
-                } else {
+                currentScenario = e.target.value;
+                if (currentScenario === 'motor') {
                     controlsRieles.classList.add('hidden');
                     controlsMotor.classList.remove('hidden');
                     canvasRieles.classList.add('hidden');
                     containerMotor.classList.remove('hidden');
-                    statusText.innerHTML = "Modo Motor 3D: $\\vec{\\tau} = \\vec{\\mu} \\times \\vec{B}$";
+                    statusText.innerHTML = "Motor DC 3D: $\\vec{\\tau} = \\vec{\\mu} \\times \\vec{B}$";
+                    statusDot.className = "w-2 h-2 rounded-full bg-purple-400 animate-pulse";
                     onWindowResize3D();
+                    updateMotor3D();
+                } else if (currentScenario === 'rieles_levitacion') {
+                    controlsRieles.classList.remove('hidden');
+                    controlsMotor.classList.add('hidden');
+                    canvasRieles.classList.remove('hidden');
+                    containerMotor.classList.add('hidden');
+                    statusText.innerHTML = "Levitación de Barra: $F_B = mg$ ($I_{lev} = 2.94\\,\\text{A}$)";
+                    statusDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+                } else {
+                    // rieles_deslizamiento
+                    controlsRieles.classList.remove('hidden');
+                    controlsMotor.classList.add('hidden');
+                    canvasRieles.classList.remove('hidden');
+                    containerMotor.classList.add('hidden');
+                    statusText.innerHTML = "Acelerador de Rieles: $a = I L B / m$";
+                    statusDot.className = "w-2 h-2 rounded-full bg-blue-400 animate-pulse";
                 }
                 if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([statusText]);
             });
 
             // -------------------------------------------------------------
-            // ESCENARIO 1: CANVAS 2D RIELES DE LAPLACE & LEVITACIÓN
+            // SIMULADOR 2D: RIELES DE LAPLACE (DESLIZAMIENTO Y LEVITACIÓN)
             // -------------------------------------------------------------
             const ctx = canvasRieles.getContext('2d');
             let isPlaying = true;
-            let barY = 0; // posición vertical de la barra en píxeles de desviación respecto al riel
-            let barVelocityY = 0;
+            
+            // Estado cinemático del deslizador horizontal
+            let barPosX = 0.20; // fracción del ancho de rieles (0.15 a 0.85)
+            let barVelocityX = 0; // m/s relativo
             let currentOffset = 0;
+
+            // Estado cinemático de levitación vertical
+            let barLevY = 0; // píxeles de elevación vertical
+            let barLevVelY = 0;
 
             const sliderI = document.getElementById('slider-sim-i');
             const sliderB = document.getElementById('slider-sim-b');
@@ -701,141 +657,249 @@
             sliderB.addEventListener('input', updateRielesLabels);
             sliderM.addEventListener('input', updateRielesLabels);
 
-            function resizeCanvas() {
-                canvasRieles.width = canvasRieles.parentElement.clientWidth;
-                canvasRieles.height = canvasRieles.parentElement.clientHeight;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
             function drawRieles() {
-                if (canvasRieles.classList.contains('hidden')) return;
+                if (currentScenario !== 'motor') {
+                    const width = canvasRieles.width = canvasRieles.parentElement.clientWidth;
+                    const height = canvasRieles.height = canvasRieles.parentElement.clientHeight;
 
-                const width = canvasRieles.width;
-                const height = canvasRieles.height;
-                ctx.clearRect(0, 0, width, height);
+                    ctx.clearRect(0, 0, width, height);
 
-                const I = parseFloat(sliderI.value);
-                const B = parseFloat(sliderB.value);
-                const mKg = parseFloat(sliderM.value) / 1000;
-                const L = 0.50; // m
-                const g = 9.80;
+                    const I = parseFloat(sliderI.value);
+                    const B = parseFloat(sliderB.value);
+                    const mKg = parseFloat(sliderM.value) / 1000;
+                    const L = 0.50; // m
+                    const g = 9.80;
 
-                const F_mag = I * L * B; // N
-                const P_weight = mKg * g; // N
-                const F_net = F_mag - P_weight; // Hacia arriba positivo
+                    const F_mag = I * L * B; // N
+                    const P_weight = mKg * g; // N
 
-                // Telemetría
-                document.getElementById('tele-fb').textContent = F_mag.toFixed(3) + ' N';
-                if (Math.abs(F_net) < 0.02) {
-                    document.getElementById('tele-fnet').textContent = "0.000 N (Levitación)";
-                    document.getElementById('tele-fnet').className = "font-mono font-bold text-emerald-400 text-sm";
-                } else if (F_net > 0) {
-                    document.getElementById('tele-fnet').textContent = "+" + F_net.toFixed(3) + " N (Asciende)";
-                    document.getElementById('tele-fnet').className = "font-mono font-bold text-yellow-400 text-sm";
-                } else {
-                    document.getElementById('tele-fnet').textContent = F_net.toFixed(3) + " N (Presiona riel)";
-                    document.getElementById('tele-fnet').className = "font-mono font-bold text-rose-400 text-sm";
-                }
+                    if (currentScenario === 'rieles_deslizamiento') {
+                        // MODO 1: DESLIZAMIENTO HORIZONTAL (ACELERADOR ELECTROMAGNÉTICO)
+                        document.getElementById('lbl-tele-1').textContent = "Fuerza Laplace F_B";
+                        document.getElementById('lbl-tele-2').textContent = "Aceleración a";
+                        document.getElementById('lbl-tele-3').textContent = "Velocidad Bar";
+                        document.getElementById('lbl-tele-4').textContent = "Potencia Joule";
 
-                // Dinámica física vertical suave
-                if (isPlaying) {
-                    if (F_net > 0) {
-                        barVelocityY -= (F_net / mKg) * 0.05; // sube hacia arriba (y disminuye)
+                        const a_accel = F_mag / mKg;
+                        document.getElementById('tele-fb').textContent = F_mag.toFixed(3) + ' N';
+                        document.getElementById('tele-fnet').textContent = (a_accel >= 0 ? '+' : '') + a_accel.toFixed(2) + ' m/s²';
+                        document.getElementById('tele-mu').textContent = barVelocityX.toFixed(2) + ' m/s';
+                        document.getElementById('tele-tau').textContent = (I * I * 0.25).toFixed(2) + ' W';
+
+                        // Física de integración horizontal
+                        if (isPlaying) {
+                            barVelocityX += a_accel * 0.003;
+                            // Fricción suave
+                            barVelocityX *= 0.995;
+                            barPosX += barVelocityX * 0.005;
+
+                            // Rebote suave en extremos de rieles
+                            if (barPosX < 0.20) { barPosX = 0.20; barVelocityX = Math.abs(barVelocityX) * 0.4; }
+                            if (barPosX > 0.82) { barPosX = 0.82; barVelocityX = -Math.abs(barVelocityX) * 0.4; }
+
+                            currentOffset += (I * 0.8);
+                        }
+
+                        // Fondo de campo magnético: cruces uniformes ⊗ B
+                        ctx.fillStyle = "rgba(56, 189, 248, 0.20)";
+                        ctx.font = "bold 13px monospace";
+                        for (let x = 40; x < width - 40; x += 45) {
+                            for (let y = 35; y < height - 35; y += 45) {
+                                ctx.fillText("⊗ B", x, y);
+                            }
+                        }
+
+                        // Rieles horizontales de cobre
+                        const railY1 = height * 0.35;
+                        const railY2 = height * 0.70;
+                        const railLeft = width * 0.15;
+                        const railRight = width * 0.85;
+
+                        // Circuito de la batería a la izquierda
+                        ctx.strokeStyle = "#475569";
+                        ctx.lineWidth = 4;
+                        ctx.beginPath();
+                        ctx.moveTo(railLeft, railY1);
+                        ctx.lineTo(railLeft - 40, railY1);
+                        ctx.lineTo(railLeft - 40, railY2);
+                        ctx.lineTo(railLeft, railY2);
+                        ctx.stroke();
+
+                        // Símbolo de fuente DC (Batería)
+                        ctx.fillStyle = "#f59e0b";
+                        ctx.fillRect(railLeft - 48, (railY1 + railY2) / 2 - 18, 16, 36);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.font = "bold 11px sans-serif";
+                        ctx.fillText("+", railLeft - 44, (railY1 + railY2) / 2 - 6);
+                        ctx.fillText("-", railLeft - 42, (railY1 + railY2) / 2 + 14);
+
+                        // Riel Superior e Inferior
+                        ctx.strokeStyle = "#d97706";
+                        ctx.lineWidth = 10;
+                        ctx.lineCap = "round";
+                        ctx.beginPath();
+                        ctx.moveTo(railLeft, railY1); ctx.lineTo(railRight, railY1);
+                        ctx.moveTo(railLeft, railY2); ctx.lineTo(railRight, railY2);
+                        ctx.stroke();
+
+                        // Barra móvil conductora de cobre (Cilíndrica)
+                        const barPixelX = width * barPosX;
+                        const barTop = railY1 - 12;
+                        const barBottom = railY2 + 12;
+
+                        ctx.strokeStyle = "#f97316";
+                        ctx.lineWidth = 14;
+                        ctx.beginPath();
+                        ctx.moveTo(barPixelX, barTop);
+                        ctx.lineTo(barPixelX, barBottom);
+                        ctx.stroke();
+
+                        // Flujo animado de corriente (puntos amarillos)
+                        if (Math.abs(I) > 0.05) {
+                            ctx.fillStyle = "#facc15";
+                            const numDots = 6;
+                            for (let i = 0; i < numDots; i++) {
+                                let yPos = barTop + 10 + ((i * 35 + currentOffset) % (barBottom - barTop - 20));
+                                ctx.beginPath();
+                                ctx.arc(barPixelX, yPos, 4, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+
+                        // Vectores en la barra
+                        const barMidY = (railY1 + railY2) / 2;
+                        const lenF = Math.min(100, Math.abs(F_mag) * 80);
+                        if (lenF > 3) {
+                            const fEndX = barPixelX + Math.sign(F_mag) * lenF;
+                            drawArrow(ctx, barPixelX, barMidY, fEndX, barMidY, "#10b981", `F_B = ${F_mag.toFixed(2)}N`);
+                        }
+
+                        if (Math.abs(barVelocityX) > 0.05) {
+                            const lenV = Math.min(80, Math.abs(barVelocityX) * 30);
+                            const vEndX = barPixelX + Math.sign(barVelocityX) * lenV;
+                            drawArrow(ctx, barPixelX, barMidY + 25, vEndX, barMidY + 25, "#d946ef", `v = ${barVelocityX.toFixed(1)}m/s`);
+                        }
+
+                        // Etiqueta de la barra
+                        ctx.fillStyle = "#ffffff";
+                        ctx.font = "bold 12px sans-serif";
+                        ctx.fillText(`Barra Cu (${sliderM.value}g, L=0.5m)`, barPixelX + 15, railY1 - 8);
+
                     } else {
-                        // Presiona el riel, se frena en y = 0
-                        barVelocityY += 0.5;
-                    }
-                    barY += barVelocityY;
-                    if (barY > 0) { barY = 0; barVelocityY = 0; }
-                    if (barY < -height * 0.35) { barY = -height * 0.35; barVelocityY = 0; }
-                    currentOffset += (I * 0.5);
-                }
+                        // MODO 2: LEVITACIÓN MAGNÉTICA ESTRICTA (EJERCICIO 5)
+                        document.getElementById('lbl-tele-1').textContent = "Fuerza Magnética F_B";
+                        document.getElementById('lbl-tele-2').textContent = "Fuerza Neta Vertical";
+                        document.getElementById('lbl-tele-3').textContent = "Peso Barra P = mg";
+                        document.getElementById('lbl-tele-4').textContent = "Estado de Levitación";
 
-                // Fondo de campo magnético: Cruces o Puntos según signo de B
-                ctx.save();
-                ctx.fillStyle = "rgba(59, 130, 246, 0.25)";
-                ctx.font = "14px monospace";
-                for (let x = 40; x < width - 40; x += 45) {
-                    for (let y = 40; y < height - 40; y += 45) {
-                        ctx.fillText("⊗ B", x, y);
-                    }
-                }
-                ctx.restore();
+                        const F_net = F_mag - P_weight; // Neta vertical hacia arriba
+                        document.getElementById('tele-fb').textContent = F_mag.toFixed(3) + ' N';
+                        document.getElementById('tele-mu').textContent = P_weight.toFixed(3) + ' N';
+                        document.getElementById('tele-tau').textContent = (I * I * 0.25).toFixed(2) + ' W';
 
-                // Rieles horizontales dorados
-                const railY1 = height * 0.45;
-                const railY2 = height * 0.75;
-                const railLeft = width * 0.15;
-                const railRight = width * 0.85;
+                        if (Math.abs(F_net) < 0.015) {
+                            document.getElementById('tele-fnet').textContent = "0.000 N (¡LEVITANDO!)";
+                            document.getElementById('tele-fnet').className = "font-mono font-bold text-emerald-400 text-xs";
+                        } else if (F_net > 0) {
+                            document.getElementById('tele-fnet').textContent = "+" + F_net.toFixed(3) + " N (Asciende)";
+                            document.getElementById('tele-fnet').className = "font-mono font-bold text-yellow-400 text-xs";
+                        } else {
+                            document.getElementById('tele-fnet').textContent = F_net.toFixed(3) + " N (En reposo sobre soporte)";
+                            document.getElementById('tele-fnet').className = "font-mono font-bold text-slate-300 text-xs";
+                        }
 
-                ctx.strokeStyle = "#d97706";
-                ctx.lineWidth = 10;
-                ctx.lineCap = "round";
-                // Riel superior
-                ctx.beginPath();
-                ctx.moveTo(railLeft, railY1);
-                ctx.lineTo(railRight, railY1);
-                ctx.stroke();
-                // Riel inferior
-                ctx.beginPath();
-                ctx.moveTo(railLeft, railY2);
-                ctx.lineTo(railRight, railY2);
-                ctx.stroke();
+                        // Dinámica de elevación
+                        if (isPlaying) {
+                            if (F_net > 0) {
+                                barLevVelY -= (F_net / mKg) * 0.04;
+                            } else {
+                                // Soporte mecánico frena en el suelo (y = 0)
+                                barLevVelY += 0.8;
+                            }
+                            barLevY += barLevVelY;
+                            if (barLevY > 0) { barLevY = 0; barLevVelY = 0; }
+                            if (barLevY < -height * 0.40) { barLevY = -height * 0.40; barLevVelY = 0; }
+                            currentOffset += (I * 0.6);
+                        }
 
-                // Barra conductora móvil vertical de cobre (con desplazamiento barY)
-                const barX = width * 0.50;
-                const barTop = railY1 - 15 + barY;
-                const barBottom = railY2 + 15 + barY;
+                        // Fondo con flechas de campo horizontal B (hacia el Norte / derecha)
+                        ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+                        ctx.font = "bold 13px sans-serif";
+                        for (let x = 60; x < width - 60; x += 70) {
+                            for (let y = 50; y < height - 50; y += 50) {
+                                ctx.fillText("→ B (Norte)", x, y);
+                            }
+                        }
 
-                ctx.strokeStyle = "#f97316";
-                ctx.lineWidth = 14;
-                ctx.beginPath();
-                ctx.moveTo(barX, barTop);
-                ctx.lineTo(barX, barBottom);
-                ctx.stroke();
+                        // Soporte mecánico horizontal fijo
+                        const baseGroundY = height * 0.72;
+                        ctx.fillStyle = "#334155";
+                        ctx.fillRect(width * 0.25, baseGroundY + 10, width * 0.50, 16);
+                        ctx.fillStyle = "#64748b";
+                        ctx.font = "bold 11px sans-serif";
+                        ctx.fillText("SOPORTE MECÁNICO (GUÍAS AISLANTES)", width * 0.32, baseGroundY + 23);
 
-                // Flujo de corriente: flechas animadas a lo largo de la barra
-                if (Math.abs(I) > 0.05) {
-                    ctx.fillStyle = "#facc15";
-                    const numArrows = 5;
-                    const dir = Math.sign(I);
-                    for (let i = 0; i < numArrows; i++) {
-                        let yPos = barTop + ((i * 40 + currentOffset) % (barBottom - barTop));
-                        if (yPos > barTop && yPos < barBottom) {
-                            ctx.beginPath();
-                            ctx.arc(barX, yPos, 4, 0, Math.PI * 2);
-                            ctx.fill();
+                        // Barra horizontal que levita
+                        const barX1 = width * 0.30;
+                        const barX2 = width * 0.70;
+                        const currentBarY = baseGroundY + barLevY;
+
+                        // Efecto resplandor si levita
+                        if (barLevY < -3) {
+                            ctx.shadowColor = "#34d399";
+                            ctx.shadowBlur = 15;
+                        }
+
+                        ctx.strokeStyle = "#f97316";
+                        ctx.lineWidth = 14;
+                        ctx.beginPath();
+                        ctx.moveTo(barX1, currentBarY);
+                        ctx.lineTo(barX2, currentBarY);
+                        ctx.stroke();
+                        ctx.shadowBlur = 0;
+
+                        // Puntos de corriente de Oeste a Este (izquierda a derecha)
+                        if (Math.abs(I) > 0.05) {
+                            ctx.fillStyle = "#facc15";
+                            for (let i = 0; i < 7; i++) {
+                                let xPos = barX1 + 15 + ((i * 45 + currentOffset) % (barX2 - barX1 - 30));
+                                ctx.beginPath();
+                                ctx.arc(xPos, currentBarY, 4, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+
+                        // Vectores en el Centro de Masa
+                        const cmX = (barX1 + barX2) / 2;
+                        
+                        // Vector Peso (Rojo hacia abajo)
+                        const lenP = Math.min(90, P_weight * 110);
+                        drawArrow(ctx, cmX + 20, currentBarY, cmX + 20, currentBarY + lenP, "#ef4444", `P = ${P_weight.toFixed(2)}N`);
+
+                        // Vector Fuerza Magnética (Verde hacia arriba)
+                        const lenFB = Math.min(100, Math.abs(F_mag) * 110);
+                        if (lenFB > 2) {
+                            drawArrow(ctx, cmX - 20, currentBarY, cmX - 20, currentBarY - lenFB, "#10b981", `F_B = ${F_mag.toFixed(2)}N`);
+                        }
+
+                        // Mensaje de Levitation State
+                        if (barLevY < -5) {
+                            ctx.fillStyle = "#34d399";
+                            ctx.font = "bold 13px sans-serif";
+                            ctx.fillText(`¡LEVITACIÓN ACTIVA! Altura = ${(-barLevY * 0.5).toFixed(1)} cm`, cmX - 90, currentBarY - lenFB - 15);
+                        } else if (Math.abs(F_net) < 0.02) {
+                            ctx.fillStyle = "#facc15";
+                            ctx.font = "bold 13px sans-serif";
+                            ctx.fillText(`EQUILIBRIO EXACTO (F_B = P = 0.588 N)`, cmX - 90, currentBarY - 25);
                         }
                     }
-                }
-
-                // Vectores de fuerza en el centro de masa de la barra
-                const cmY = (barTop + barBottom) / 2;
-
-                // Vector Peso (Rojo, hacia abajo)
-                const lenP = Math.min(100, P_weight * 120);
-                drawArrow(ctx, barX, cmY, barX, cmY + lenP, "#ef4444", "P = mg");
-
-                // Vector Fuerza Magnética (Verde, hacia arriba o abajo según signo)
-                const lenF = Math.min(120, Math.abs(F_mag) * 120);
-                const dirF = F_mag >= 0 ? -1 : 1;
-                drawArrow(ctx, barX - 10, cmY, barX - 10, cmY + (dirF * lenF), "#10b981", "F_B = ILB");
-
-                // Etiqueta flotante
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 12px sans-serif";
-                ctx.fillText(`Barra Cu (m = ${sliderM.value}g, L = 0.50m)`, barX + 15, cmY - 15);
-                if (barY < -5) {
-                    ctx.fillStyle = "#34d399";
-                    ctx.fillText(`¡LEVITANDO! Δh = ${(-barY).toFixed(1)} px`, barX + 15, cmY + 5);
                 }
 
                 requestAnimationFrame(drawRieles);
             }
 
             function drawArrow(ctx, fromX, fromY, toX, toY, color, label) {
-                const headlen = 10;
+                const headlen = 9;
                 const angle = Math.atan2(toY - fromY, toX - fromX);
                 ctx.strokeStyle = color;
                 ctx.fillStyle = color;
@@ -857,10 +921,11 @@
                 }
             }
 
+            // Iniciar animación 2D (Solo 1 llamada inicial!)
             requestAnimationFrame(drawRieles);
 
             // -------------------------------------------------------------
-            // ESCENARIO 2: THREE.JS ESPIRA 3D & MOTOR DC
+            // ESCENARIO 3: THREE.JS ESPIRA 3D & MOTOR DC
             // -------------------------------------------------------------
             let scene3D, camera3D, renderer3D, controls3D;
             let loopMesh, muArrow, tauArrow, fieldArrows = [];
@@ -891,20 +956,24 @@
 
             function initMotor3D() {
                 scene3D = new THREE.Scene();
-                camera3D = new THREE.PerspectiveCamera(45, containerMotor.clientWidth / containerMotor.clientHeight, 0.1, 100);
+                
+                // Dimensión de respaldo a prueba de 'hidden'
+                const w = Math.max(containerMotor.clientWidth || 0, 480);
+                const h = Math.max(containerMotor.clientHeight || 0, 340);
+
+                camera3D = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
                 camera3D.position.set(4, 3, 5);
 
                 renderer3D = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer3D.setSize(containerMotor.clientWidth, containerMotor.clientHeight);
-                renderer3D.setPixelRatio(window.devicePixelRatio);
+                renderer3D.setSize(w, h);
+                renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
                 containerMotor.appendChild(renderer3D.domElement);
 
                 controls3D = new THREE.OrbitControls(camera3D, renderer3D.domElement);
                 controls3D.enableDamping = true;
 
                 // Luces
-                const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
-                scene3D.add(ambLight);
+                scene3D.add(new THREE.AmbientLight(0xffffff, 0.7));
                 const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
                 dirLight.position.set(5, 10, 7);
                 scene3D.add(dirLight);
@@ -988,37 +1057,48 @@
                 const mu = N * I * (a * b);
                 const tau = mu * B * Math.sin(phi);
 
-                document.getElementById('tele-mu').textContent = mu.toFixed(2) + " A·m²";
-                document.getElementById('tele-tau').textContent = Math.abs(tau).toFixed(2) + " N·m";
+                document.getElementById('lbl-tele-1').textContent = "Momento Dipolar μ";
+                document.getElementById('lbl-tele-2').textContent = "Torque Magnético τ";
+                document.getElementById('lbl-tele-3').textContent = "Torque Máximo τ_max";
+                document.getElementById('lbl-tele-4').textContent = "Energía Potencial U";
+
+                document.getElementById('tele-fb').textContent = mu.toFixed(2) + " A·m²";
+                document.getElementById('tele-fnet').textContent = Math.abs(tau).toFixed(2) + " N·m";
+                document.getElementById('tele-mu').textContent = (mu * B).toFixed(2) + " N·m";
+                document.getElementById('tele-tau').textContent = (-mu * B * Math.cos(phi)).toFixed(2) + " J";
             }
 
             function animate3D() {
                 requestAnimationFrame(animate3D);
-                if (isMotorSpinning) {
-                    currentMotorAngle += 0.025;
-                    if (currentMotorAngle > Math.PI * 2) currentMotorAngle -= Math.PI * 2;
-                    sliderPhi.value = Math.round(currentMotorAngle * 180 / Math.PI);
-                    updateMotorLabels();
-                    updateMotor3D();
-                }
-                if (controls3D) controls3D.update();
-                if (renderer3D && scene3D && camera3D) {
-                    renderer3D.render(scene3D, camera3D);
+                if (currentScenario === 'motor') {
+                    if (isMotorSpinning) {
+                        currentMotorAngle += 0.025;
+                        if (currentMotorAngle > Math.PI * 2) currentMotorAngle -= Math.PI * 2;
+                        sliderPhi.value = Math.round(currentMotorAngle * 180 / Math.PI);
+                        updateMotorLabels();
+                        updateMotor3D();
+                    }
+                    if (controls3D) controls3D.update();
+                    if (renderer3D && scene3D && camera3D) {
+                        renderer3D.render(scene3D, camera3D);
+                    }
                 }
             }
 
             function onWindowResize3D() {
-                if (!camera3D || !renderer3D) return;
-                camera3D.aspect = containerMotor.clientWidth / containerMotor.clientHeight;
+                if (!camera3D || !renderer3D || !containerMotor) return;
+                const w = Math.max(containerMotor.clientWidth || 0, 480);
+                const h = Math.max(containerMotor.clientHeight || 0, 340);
+                camera3D.aspect = w / h;
                 camera3D.updateProjectionMatrix();
-                renderer3D.setSize(containerMotor.clientWidth, containerMotor.clientHeight);
+                renderer3D.setSize(w, h);
             }
             window.addEventListener('resize', onWindowResize3D);
 
             // BOTÓN PLAY/PAUSE SIMULACIÓN
             const btnPlay = document.getElementById('btn-sim-play');
             btnPlay.addEventListener('click', () => {
-                if (simScenarioSelect.value === 'rieles') {
+                if (currentScenario !== 'motor') {
                     isPlaying = !isPlaying;
                     btnPlay.innerHTML = isPlaying ? '<i data-lucide="pause" class="w-3.5 h-3.5"></i> Pausa' : '<i data-lucide="play" class="w-3.5 h-3.5"></i> Reanudar';
                 } else {
@@ -1030,7 +1110,8 @@
 
             // RESET
             document.getElementById('btn-sim-reset').addEventListener('click', () => {
-                barY = 0; barVelocityY = 0;
+                barPosX = 0.20; barVelocityX = 0;
+                barLevY = 0; barLevVelY = 0;
                 currentMotorAngle = 60 * Math.PI / 180;
                 sliderPhi.value = 60;
                 sliderI.value = 2.94;

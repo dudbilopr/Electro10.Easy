@@ -36,7 +36,9 @@
         .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 1vmin; display: flex; flex-direction: column; gap: 1vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 14px); }
         .btn-ui { padding: 0.4rem 0.8rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
         .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 4px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;}
         .tab-btn:hover { color: #3b82f6; background: #eff6ff; }
@@ -71,7 +73,7 @@
                 <div class="w-[45%] flex flex-col bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
                     
                     <!-- NAVEGACIÓN -->
-                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
+                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto no-scrollbar">
                         <button class="tab-btn active shrink-0" data-tab="tab-deduccion"><i data-lucide="file-text" class="w-4 h-4"></i> 1. Deducción Fórmulas</button>
                         <button class="tab-btn shrink-0" data-tab="tab-ejercicios-frec"><i data-lucide="pen-tool" class="w-4 h-4 text-blue-600"></i> 2. Ejercicios Resueltos</button>
                         <button class="tab-btn shrink-0" data-tab="tab-calc-ciclotron"><i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> 3. Calculadora Ciclotrón</button>

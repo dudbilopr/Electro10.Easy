@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio Experto: Electrodinámica y Magnetismo</title>
+    <title>M8.1: Fuerza de Lorentz y Producto Cruz Vectorial Paso a Paso</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- MathJax para Fórmulas -->
+    <!-- MathJax 3 -->
     <script>
         window.MathJax = { 
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']], tags: 'none' }, 
@@ -20,7 +20,7 @@
     </script>
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     
-    <!-- Three.js Motor 3D -->
+    <!-- Three.js y OrbitControls -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
@@ -28,103 +28,104 @@
         body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #0f172a; display: flex; justify-content: center; align-items: center; font-family: system-ui, -apple-system, sans-serif; touch-action: none; }
         #slide-wrapper { width: 100%; height: 100%; max-width: 1920px; padding: 1.5vmin; box-sizing: border-box; display: flex; }
         .slide { background-color: #f8fafc; width: 100%; height: 100%; border-radius: 1.5vmin; box-shadow: 0 10px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; overflow: hidden; }
-        .math-display { font-size: clamp(12px, 1.1vw, 15px); font-weight: bold; color: #1e40af; text-align: center; margin: 1vmin 0; }
+        .math-display { font-size: clamp(12px, 1.1vw, 15px); font-weight: bold; color: #1e40af; text-align: center; margin: 0.8vmin 0; }
         .canvas-wrapper, .graph-wrapper, .dcl-wrapper { border: 1px solid #cbd5e1; border-radius: 0.5rem; overflow: hidden; position: relative; }
         .canvas-wrapper { background: radial-gradient(circle at center, #1e293b, #020617); cursor: grab; }
         .canvas-wrapper:active { cursor: grabbing; }
-        .graph-wrapper { background: #ffffff; } .dcl-wrapper { background: #0f172a; }
-        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 1vmin; display: flex; flex-wrap: wrap; gap: 1.5vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 14px); }
-        .btn-ui { padding: 0.4rem 0.8rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
-        .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
-        .btn-ui:disabled { opacity: 0.5; cursor: not-allowed; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
-        .hint-overlay { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.95); padding: 10px 16px; border-radius: 6px; font-size: 13px; color: #1e293b; pointer-events: none; border-left: 4px solid #3b82f6; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px;}
-        input[type=range] { accent-color: #2563eb; cursor: pointer; width: 5vw; }
+        .graph-wrapper { background: #ffffff; } 
+        .dcl-wrapper { background: #0f172a; }
+        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 0.8vmin; display: flex; flex-direction: column; gap: 0.8vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 13px); }
+        .btn-ui { padding: 0.35rem 0.7rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+        .btn-ui:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 4px; } 
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* App-Like Tab System */
-        .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+        .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap; }
         .tab-btn:hover { color: #3b82f6; background: #eff6ff; }
         .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; background: #eff6ff; }
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tooltip System Avanzado */
-        .tip-trigger { cursor: help; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background-color: #e0f2fe; color: #0284c7; margin-left: 6px; transition: all 0.2s; }
-        .tip-trigger:hover { background-color: #bae6fd; color: #0369a1; }
-        #global-tip { position: fixed; background: #fffbeb; border: 1px solid #fcd34d; padding: 14px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 999999; opacity: 0; visibility: hidden; font-family: system-ui; font-size: 13px; color: #92400e; max-width: 320px; transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out; transform: translateY(-5px); pointer-events: none; line-height: 1.4; }
-        #global-tip.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .param-input { width: 65px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 4px; font-family: monospace; font-size: 12px; font-weight: bold; background-color: #ffffff; color: #0f172a; }
+        .param-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.25); }
     </style>
 </head>
 <body>
     <div id="slide-wrapper">
-        <div class="slide">            <!-- HEADER ACADÉMICO -->
+        <div class="slide">
+            <!-- HEADER ACADÉMICO -->
             <header class="flex-none bg-slate-900 text-white p-[1.5vmin] border-b-[0.5vmin] border-blue-500 shadow-md z-10 flex items-center justify-between">
-                <h1 class="font-bold text-2xl md:text-3xl flex items-center gap-3">
-                    <i data-lucide="crosshair" class="w-8 h-8 text-blue-400"></i>
-                    M8.1: Fuerza de Lorentz y Producto Cruz Vectorial Paso a Paso
+                <h1 class="font-bold text-xl md:text-2xl flex items-center gap-3">
+                    <i data-lucide="crosshair" class="w-7 h-7 text-blue-400"></i>
+                    <span>M8.1: Fuerza de Lorentz y Producto Cruz Vectorial en 3D</span>
                 </h1>
-                <div class="bg-slate-800 px-3 py-1.5 rounded border border-slate-600 text-sm text-slate-300 flex items-center gap-2">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i> Ejercicios Resueltos &middot; Tips de Examen
+                <div class="bg-slate-800 px-3 py-1.5 rounded border border-slate-600 text-xs text-slate-300 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+                    <span class="font-mono text-emerald-300">Regla Mano Derecha &bull; Determinante 3x3 &bull; Trabajo Cero</span>
                 </div>
             </header>
 
-            <div class="flex-1 flex flex-row p-[1.5vmin] gap-[2vmin] min-h-0 bg-slate-50">
+            <!-- CONTENIDO PRINCIPAL: 2 COLUMNAS PERFECTAS -->
+            <div class="flex-1 flex flex-row p-[1.5vmin] gap-[1.5vmin] min-h-0 bg-slate-100">
                 
-                <!-- COLUMNA IZQUIERDA: TARJETAS INTERACTIVAS CON CONTENIDO PEDAGÓGICO RIGUROSO -->
+                <!-- COLUMNA IZQUIERDA: PESTAÑAS PEDAGÓGICAS RIGUROSAS (45%) -->
                 <div class="w-[45%] flex flex-col bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
                     
                     <!-- NAVEGACIÓN DE TABS -->
-                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
+                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto no-scrollbar">
                         <button class="tab-btn active shrink-0" data-tab="tab-fundamentos"><i data-lucide="book-open" class="w-4 h-4"></i> 1. Ley de Lorentz</button>
                         <button class="tab-btn shrink-0" data-tab="tab-ejercicios-cruz"><i data-lucide="pen-tool" class="w-4 h-4 text-blue-600"></i> 2. Ejercicios Resueltos</button>
                         <button class="tab-btn shrink-0" data-tab="tab-calc-cruz"><i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> 3. Calculadora Vectorial</button>
                         <button class="tab-btn shrink-0" data-tab="tab-tips"><i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> 4. Tips &amp; Errores Comunes</button>
                     </div>
 
-                    <!-- CONTENIDO DE LAS TARJETAS -->
-                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 relative space-y-4">
+                    <!-- CONTENIDO DE LAS TARJETAS (SCROLLABLE) -->
+                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 space-y-4">
                         
                         <!-- TAB 1: FUNDAMENTOS -->
                         <div id="tab-fundamentos" class="tab-content active space-y-4">
-                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600 shadow-sm">
-                                <h2 class="font-bold text-blue-900 flex items-center gap-2 text-base border-b border-blue-200 pb-2 mb-2">
-                                    <i data-lucide="compass" class="w-5 h-5 text-blue-600"></i> La Ecuación Fundamental de Lorentz
+                            <div class="bg-blue-50 p-3.5 rounded-lg border-l-4 border-blue-600 shadow-sm">
+                                <h2 class="font-bold text-blue-900 flex items-center gap-2 text-sm border-b border-blue-200 pb-1.5 mb-2">
+                                    <i data-lucide="compass" class="w-4 h-4 text-blue-600"></i> La Ecuación Fundamental de Lorentz
                                 </h2>
-                                <p class="text-xs text-blue-900 leading-relaxed text-justify mb-2">
+                                <p class="text-xs text-blue-900 leading-relaxed text-justify mb-1.5">
                                     Cuando una partícula puntual con carga $q$ se desplaza a una velocidad $\vec{v}$ dentro de una región donde coexisten un campo eléctrico $\vec{E}$ y un campo magnético $\vec{B}$, experimenta la fuerza electromagnética total de Lorentz:
                                 </p>
                                 <div class="math-display">$$\vec{F} = q(\vec{E} + \vec{v} \times \vec{B})$$</div>
-                                <p class="text-xs text-blue-900 leading-relaxed text-justify mt-2">
+                                <p class="text-xs text-blue-900 leading-relaxed text-justify mt-1">
                                     Si no existe campo eléctrico ($\vec{E} = 0$), actúa la <strong>Fuerza Magnética Pura</strong>:
                                 </p>
                                 <div class="math-display">$$\vec{F}_B = q(\vec{v} \times \vec{B})$$</div>
                                 <p class="text-[11px] text-blue-800 italic text-center mt-1">Magnitud escalar: $F_B = |q| v B \sin\theta$, donde $\theta$ es el ángulo entre $\vec{v}$ y $\vec{B}$.</p>
                             </div>
 
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
-                                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2.5">
+                                <h3 class="font-bold text-slate-900 text-xs flex items-center gap-2">
                                     <i data-lucide="hand" class="w-4 h-4 text-indigo-600"></i> Regla de la Mano Derecha y Signo de la Carga
                                 </h3>
                                 <p class="text-xs text-slate-700 leading-relaxed text-justify">
                                     El producto vectorial $\vec{v} \times \vec{B}$ define una dirección estrictamente perpendicular al plano formado por $\vec{v}$ y $\vec{B}$.
                                 </p>
-                                <div class="bg-white p-3 rounded border border-slate-200 text-xs space-y-2">
+                                <div class="bg-white p-2.5 rounded border border-slate-200 text-xs space-y-1.5">
                                     <div class="flex items-start gap-2">
                                         <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px]">1</span>
                                         <span>Apunta con los 4 dedos extendidos de tu mano derecha en la dirección del vector velocidad $\vec{v}$.</span>
                                     </div>
                                     <div class="flex items-start gap-2">
                                         <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px]">2</span>
-                                        <span>Gira o cierra los dedos hacia el vector campo magnético $\vec{B}$ por el ángulo menor $\theta$.</span>
+                                        <span>Cierra los dedos hacia el vector campo magnético $\vec{B}$ por el ángulo menor $\theta$.</span>
                                     </div>
                                     <div class="flex items-start gap-2">
                                         <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px]">3</span>
                                         <span>El <strong>pulgar extendido a $90^\circ$</strong> indica la dirección de $\vec{v}\times\vec{B}$.</span>
                                     </div>
                                     <div class="flex items-start gap-2 bg-amber-50 p-2 rounded border border-amber-200">
-                                        <span class="bg-amber-500 text-white font-bold px-2 py-0.5 rounded text-[10px]">¡OJO!</span>
-                                        <span class="text-amber-900 font-semibold">Si la carga es negativa ($q < 0$, ej. electrón), el vector fuerza $\vec{F}_B$ apunta en <strong>sentido opuesto ($180^\circ$)</strong> al pulgar.</span>
+                                        <span class="bg-amber-500 text-white font-bold px-1.5 py-0.5 rounded text-[10px]">¡OJO!</span>
+                                        <span class="text-amber-900 font-semibold text-[11px]">Si la carga es negativa ($q < 0$, ej. electrón), el vector fuerza $\vec{F}_B$ apunta en <strong>sentido opuesto ($180^\circ$)</strong> al pulgar.</span>
                                     </div>
                                 </div>
                             </div>
@@ -134,9 +135,9 @@
                                 <p class="text-justify leading-relaxed">
                                     Dado que la fuerza magnética siempre es perpendicular al vector velocidad ($\vec{F}_B \perp \vec{v}$), la potencia desarrollada es:
                                 </p>
-                                <div class="math-display text-emerald-800">$$P = \vec{F}_B \cdot \vec{v} = q(\vec{v} \times \vec{B}) \cdot \vec{v} \equiv 0 \implies dW = \vec{F}_B \cdot d\vec{l} = 0$$</div>
+                                <div class="math-display text-emerald-800">$$P = \vec{F}_B \cdot \vec{v} = q(\vec{v} \times \vec{B}) \cdot \vec{v} \equiv 0 \implies W = \int \vec{F}_B \cdot d\vec{l} = 0$$</div>
                                 <p class="text-justify leading-relaxed mt-1">
-                                    <strong>Conclusión física vital:</strong> El campo magnético <em>nunca</em> realiza trabajo sobre una carga libre puntual, por lo que <strong>no puede cambiar su rapidez ni alterar su energía cinética</strong>. Solo curva y desvía la trayectoria.
+                                    <strong>Conclusión física vital:</strong> El campo magnético <em>nunca</em> realiza trabajo sobre una carga libre puntual, por lo que <strong>no altera su rapidez ni su energía cinética</strong>. Solo curva y desvía la trayectoria produciendo aceleración centrípeta pura.
                                 </p>
                             </div>
                         </div>
@@ -145,28 +146,28 @@
                         <div id="tab-ejercicios-cruz" class="tab-content space-y-4">
                             
                             <!-- EJERCICIO 1 -->
-                            <div class="bg-white border-2 border-blue-200 rounded-xl p-4 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between border-b border-blue-100 pb-2">
-                                    <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Ejercicio Resuelto 1</span>
-                                    <span class="text-xs text-slate-500 font-semibold">Carga Positiva &middot; Determinante 3D</span>
+                            <div class="bg-white border-2 border-blue-200 rounded-xl p-3.5 shadow-sm space-y-2.5">
+                                <div class="flex items-center justify-between border-b border-blue-100 pb-1.5">
+                                    <span class="bg-blue-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Ejercicio Resuelto 1</span>
+                                    <span class="text-[11px] text-slate-500 font-semibold">Carga Positiva &middot; Determinante 3D</span>
                                 </div>
                                 <p class="text-xs text-slate-800 leading-relaxed text-justify font-medium">
                                     <strong>Enunciado:</strong> Un ion de helio ($\text{He}^{2+}$) con carga $q = +3.2 \times 10^{-19}\,\text{C}$ ingresa a una región magnética con velocidad $\vec{v} = (3.0\hat{\imath} - 2.0\hat{\jmath} + 4.0\hat{k})\times 10^5\,\text{m/s}$ en un campo uniforme $\vec{B} = (0.50\hat{\imath} + 0.80\hat{\jmath} - 0.30\hat{k})\,\text{T}$. Calcula el vector fuerza magnética $\vec{F}_B$ y su magnitud.
                                 </p>
 
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2 text-xs text-slate-700 font-mono">
+                                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1.5 text-xs text-slate-700 font-mono">
                                     <p class="font-sans font-bold text-indigo-900 text-xs">Paso 1: Planteamiento del determinante $3\times 3$</p>
                                     <div class="math-display">$$\vec{v} \times \vec{B} = \begin{vmatrix} \hat{\imath} & \hat{\jmath} & \hat{k} \\ 3.0 & -2.0 & 4.0 \\ 0.50 & 0.80 & -0.30 \end{vmatrix} \times 10^5$$</div>
 
-                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-2">Paso 2: Expansión algebraica por cofactores</p>
-                                    <p>$$\hat{\imath}: [(-2.0)(-0.30) - (4.0)(0.80)] = (0.60 - 3.20) = -2.60$$</p>
+                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-1">Paso 2: Expansión algebraica por cofactores</p>
+                                    <p>$$\hat{\imath}: [(-2.0)(-0.30) - (4.0)(0.80)] = 0.60 - 3.20 = -2.60$$</p>
                                     <p>$$-\hat{\jmath}: -[(3.0)(-0.30) - (4.0)(0.50)] = -[-0.90 - 2.00] = +2.90$$</p>
-                                    <p>$$\hat{k}: [(3.0)(0.80) - (-2.0)(0.50)] = (2.40 + 1.00) = +3.40$$</p>
+                                    <p>$$\hat{k}: [(3.0)(0.80) - (-2.0)(0.50)] = 2.40 + 1.00 = +3.40$$</p>
                                     <div class="math-display text-blue-700">$$\vec{v} \times \vec{B} = (-2.60\hat{\imath} + 2.90\hat{\jmath} + 3.40\hat{k})\times 10^5\,\frac{\text{m}\cdot\text{T}}{\text{s}}$$</div>
 
-                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-2">Paso 3: Multiplicación por la carga $q$</p>
+                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-1">Paso 3: Multiplicación por la carga $q$</p>
                                     <div class="math-display">$$\vec{F}_B = (3.2\times 10^{-19}\,\text{C})(-2.60\hat{\imath} + 2.90\hat{\jmath} + 3.40\hat{k})\times 10^5$$</div>
-                                    <div class="bg-blue-100 p-2.5 rounded-lg border border-blue-300 text-center font-bold text-blue-900 text-xs">
+                                    <div class="bg-blue-100 p-2 rounded-lg border border-blue-300 text-center font-bold text-blue-900 text-xs">
                                         $$\vec{F}_B = (-8.32\hat{\imath} + 9.28\hat{\jmath} + 10.88\hat{k})\times 10^{-14}\,\text{N}$$
                                     </div>
                                     <p class="text-[11px] text-slate-600 mt-1 font-sans">
@@ -176,90 +177,95 @@
                             </div>
 
                             <!-- EJERCICIO 2 -->
-                            <div class="bg-white border-2 border-rose-200 rounded-xl p-4 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between border-b border-rose-100 pb-2">
-                                    <span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Ejercicio Resuelto 2</span>
-                                    <span class="text-xs text-slate-500 font-semibold">Carga Negativa &middot; Inversión de Sentido</span>
+                            <div class="bg-white border-2 border-rose-200 rounded-xl p-3.5 shadow-sm space-y-2.5">
+                                <div class="flex items-center justify-between border-b border-rose-100 pb-1.5">
+                                    <span class="bg-rose-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Ejercicio Resuelto 2</span>
+                                    <span class="text-[11px] text-slate-500 font-semibold">Carga Negativa &middot; Inversión de Sentido</span>
                                 </div>
                                 <p class="text-xs text-slate-800 leading-relaxed text-justify font-medium">
                                     <strong>Enunciado:</strong> Un electrón ($q = -1.602\times 10^{-19}\,\text{C}$, $m_e = 9.11\times 10^{-31}\,\text{kg}$) se dispara con velocidad $\vec{v} = (5.0\times 10^6\,\hat{\imath})\,\text{m/s}$ en un campo $\vec{B} = (0.20\hat{\jmath} + 0.15\hat{k})\,\text{T}$. Determina la fuerza magnética $\vec{F}_B$ y la aceleración instantánea $\vec{a}$.
                                 </p>
 
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2 text-xs text-slate-700 font-mono">
+                                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 space-y-1.5 text-xs text-slate-700 font-mono">
                                     <p class="font-sans font-bold text-rose-900 text-xs">Paso 1: Producto cruz con base ortonormal</p>
                                     <p>$$\vec{v} \times \vec{B} = (5.0\times 10^6\,\hat{\imath})\times(0.20\hat{\jmath} + 0.15\hat{k})$$</p>
                                     <p>Usando $\hat{\imath}\times\hat{\jmath} = \hat{k}$ y $\hat{\imath}\times\hat{k} = -\hat{\jmath}$:</p>
                                     <div class="math-display">$$\vec{v} \times \vec{B} = (1.00\times 10^6)\hat{k} + (0.75\times 10^6)(-\hat{\jmath}) = (-0.75\hat{\jmath} + 1.00\hat{k})\times 10^6\,\text{m}\cdot\text{T/s}$$</div>
 
-                                    <p class="font-sans font-bold text-rose-900 text-xs mt-2">Paso 2: Aplicación rigurosa del signo negativo de la carga</p>
+                                    <p class="font-sans font-bold text-rose-900 text-xs mt-1">Paso 2: Aplicación rigurosa del signo negativo de la carga</p>
                                     <div class="math-display">$$\vec{F}_B = (-1.602\times 10^{-19})(-0.75\hat{\jmath} + 1.00\hat{k})\times 10^6$$</div>
                                     <div class="bg-rose-100 p-2 rounded-lg border border-rose-300 text-center font-bold text-rose-900 text-xs">
                                         $$\vec{F}_B = (+1.202\hat{\jmath} - 1.602\hat{k})\times 10^{-13}\,\text{N}$$
                                     </div>
 
-                                    <p class="font-sans font-bold text-rose-900 text-xs mt-2">Paso 3: Aceleración instantánea ($\vec{a} = \vec{F}/m$)</p>
+                                    <p class="font-sans font-bold text-rose-900 text-xs mt-1">Paso 3: Aceleración instantánea ($\vec{a} = \vec{F}/m$)</p>
                                     <p>$$\vec{a} = \frac{(+1.202\hat{\jmath} - 1.602\hat{k})\times 10^{-13}\,\text{N}}{9.11\times 10^{-31}\,\text{kg}} = \mathbf{(+1.32\hat{\jmath} - 1.76\hat{k})\times 10^{17}\,\text{m/s}^2}$$</p>
-                                    <p class="text-[10px] text-rose-800 font-sans italic">¡Observa la magnitud descomunal de la aceleración debido a la diminuta masa del electrón!</p>
+                                    <p class="text-[10px] text-rose-800 font-sans italic">¡Observa la magnitud descomunal de la aceleración debido a la diminuta masa inercial del electrón!</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TAB 3: CALCULADORA VECTORIAL -->
+                        <!-- TAB 3: CALCULADORA VECTORIAL INTERACTIVA -->
                         <div id="tab-calc-cruz" class="tab-content space-y-4">
-                            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
-                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <div class="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm space-y-3">
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b border-slate-200 pb-1.5">
                                     <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> Calculadora Interactiva de Producto Cruz en Lorentz
                                 </h3>
                                 <p class="text-xs text-slate-600">Ingresa las componentes vectoriales y calcula instantáneamente la fuerza $\vec{F}_B = q(\vec{v}\times\vec{B})$:</p>
 
-                                <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
+                                <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
                                     <div class="col-span-3 font-bold text-slate-700">Carga Eléctrica $q$:</div>
                                     <div class="col-span-2">
                                         <input type="number" id="calc-q" value="1.6" step="0.1" class="w-full border border-slate-300 rounded px-2 py-1 font-mono text-xs">
                                     </div>
                                     <div class="text-[11px] text-slate-500 flex items-center">$\times 10^{-19}\,\text{C}$</div>
 
-                                    <div class="col-span-3 font-bold text-fuchsia-700 mt-2">Velocidad $\vec{v}$ ($\times 10^5\,\text{m/s}$):</div>
+                                    <div class="col-span-3 font-bold text-fuchsia-700 mt-1">Velocidad $\vec{v}$ ($\times 10^5\,\text{m/s}$):</div>
                                     <div><label class="text-[10px] text-slate-500">v_x:</label><input type="number" id="calc-vx" value="3.0" step="0.5" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
                                     <div><label class="text-[10px] text-slate-500">v_y:</label><input type="number" id="calc-vy" value="-2.0" step="0.5" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
                                     <div><label class="text-[10px] text-slate-500">v_z:</label><input type="number" id="calc-vz" value="4.0" step="0.5" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
 
-                                    <div class="col-span-3 font-bold text-cyan-700 mt-2">Campo $\vec{B}$ (Teslas):</div>
+                                    <div class="col-span-3 font-bold text-cyan-700 mt-1">Campo $\vec{B}$ (Teslas):</div>
                                     <div><label class="text-[10px] text-slate-500">B_x:</label><input type="number" id="calc-bx" value="0.5" step="0.1" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
                                     <div><label class="text-[10px] text-slate-500">B_y:</label><input type="number" id="calc-by" value="0.8" step="0.1" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
                                     <div><label class="text-[10px] text-slate-500">B_z:</label><input type="number" id="calc-bz" value="-0.3" step="0.1" class="w-full border rounded px-1.5 py-1 font-mono text-xs"></div>
                                 </div>
 
-                                <button id="btn-calc-vector" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs shadow-md transition-all flex items-center justify-center gap-2">
-                                    <i data-lucide="sparkles" class="w-4 h-4"></i> Calcular Vector Fuerza en Vivo
-                                </button>
+                                <div class="flex gap-2">
+                                    <button id="btn-calc-vector" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 rounded-lg text-xs shadow transition-all flex items-center justify-center gap-2">
+                                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Evaluar Fuerza
+                                    </button>
+                                    <button id="btn-send-to-3d" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow transition-all flex items-center gap-1.5" title="Cargar estos vectores al Simulador 3D de la derecha">
+                                        <i data-lucide="send" class="w-3.5 h-3.5"></i> Ver en 3D
+                                    </button>
+                                </div>
 
-                                <div id="calc-output" class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-950 font-mono space-y-1">
-                                    <div class="font-sans font-bold text-emerald-900">Resultado Vectorial:</div>
-                                    <div id="calc-result-str" class="font-bold text-blue-800 text-[13px] pt-1">$$\vec{F}_B = (-8.32\hat{\imath} + 9.28\hat{\jmath} + 10.88\hat{k})\times 10^{-14}\,\text{N}$$</div>
+                                <div id="calc-output" class="bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 text-xs text-emerald-950 font-mono space-y-1">
+                                    <div class="font-sans font-bold text-emerald-900 text-xs">Resultado Vectorial:</div>
+                                    <div id="calc-result-str" class="font-bold text-blue-800 text-xs pt-0.5">$$\vec{F}_B = (-8.32\hat{\imath} + 9.28\hat{\jmath} + 10.88\hat{k})\times 10^{-14}\,\text{N}$$</div>
                                     <div id="calc-result-mag" class="text-slate-600 text-[11px] font-sans">Magnitud: $|\vec{F}_B| = 1.656\times 10^{-13}\,\text{N}$ &middot; $\vec{F}_B \cdot \vec{v} = 0.00\,\text{W}$</div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- TAB 4: TIPS Y ERRORES COMUNES -->
-                        <div id="tab-tips" class="tab-content space-y-4">
-                            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm space-y-2">
-                                <h3 class="font-bold text-amber-900 text-sm flex items-center gap-2">
-                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i> Los 4 Errores Clásicos en Exámenes UNAB
+                        <div id="tab-tips" class="tab-content space-y-3">
+                            <div class="bg-amber-50 border-l-4 border-amber-500 p-3.5 rounded-r-lg shadow-sm space-y-2">
+                                <h3 class="font-bold text-amber-900 text-xs flex items-center gap-2">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i> Los 4 Errores Clásicos en Exámenes UNAB
                                 </h3>
-                                <ul class="list-disc pl-4 text-xs text-amber-900 space-y-2">
+                                <ul class="list-disc pl-4 text-xs text-amber-950 space-y-2">
                                     <li>
                                         <strong>Error 1: Olvidar el signo $(-)$ de la componente $\hat{\jmath}$ en el determinante.</strong><br>
-                                        Recuerda que la expansión por cofactores tiene alternancia de signos: $+\hat{\imath}(v_y B_z - v_z B_y) - \hat{\jmath}(v_x B_z - v_z B_x) + \hat{k}(v_x B_y - v_y B_x)$.
+                                        Recuerda la regla de cofactores: $+\hat{\imath}(v_y B_z - v_z B_y) - \hat{\jmath}(v_x B_z - v_z B_x) + \hat{k}(v_x B_y - v_y B_x)$.
                                     </li>
                                     <li>
-                                        <strong>Error 2: No invertir la dirección para electrones.</strong><br>
-                                        Muchos estudiantes usan la mano derecha y dejan el vector apuntando hacia el pulgar. Si la partícula es un electrón ($q = -e$), ¡el vector apunta exactamente en sentido contrario!
+                                        <strong>Error 2: No invertir la dirección para electrones o partículas negativas.</strong><br>
+                                        Si la partícula es un electrón ($q = -e$), el vector fuerza apunta exactamente en sentido contrario ($180^\circ$) al pulgar de la mano derecha.
                                     </li>
                                     <li>
                                         <strong>Error 3: Creer que el campo magnético puede acelerar una partícula aumentando su rapidez.</strong><br>
-                                        El campo magnético realiza trabajo cero ($W = 0$). Cambia la <em>dirección</em> (produce aceleración centrípeta), pero <em>nunca</em> aumenta los $\text{m/s}$ de una partícula puntual en el vacío.
+                                        El campo magnético realiza trabajo cero ($W = 0$). Cambia la <em>dirección</em> (curva), pero <em>nunca</em> aumenta los $\text{m/s}$ de una partícula en el vacío.
                                     </li>
                                     <li>
                                         <strong>Error 4: Confundir Teslas con Gauss.</strong><br>
@@ -268,7 +274,7 @@
                                 </ul>
                             </div>
 
-                            <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg shadow-sm">
+                            <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-lg shadow-sm">
                                 <h4 class="font-bold text-indigo-900 text-xs flex items-center gap-1.5 mb-1">
                                     <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i> Estrategia de Comprobación Rápida
                                 </h4>
@@ -279,633 +285,697 @@
                         </div>
 
                     </div>
-                </div>   </div>
-                        </div>
-
-                    </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: VISUALIZACIONES 3D Y CONTROLES -->
-                <div class="w-[58%] flex flex-col min-w-0 gap-[1vmin]">
+                <!-- COLUMNA DERECHA: LABORATORIO 3D DE FUERZA DE LORENTZ Y PRODUCTO CRUZ (55%) -->
+                <div class="w-[55%] flex flex-col min-w-0 gap-[1vmin]">
                     
                     <!-- PANEL DE CONTROL TÉCNICO -->
-                    <div class="control-panel flex-col items-start shadow-sm z-20">
-                        <!-- Fila 1: Configuración Física -->
-                        <div class="flex w-full gap-3 border-b border-slate-300 pb-2 mb-2 items-center justify-between">
-                            <div class="flex gap-2 items-center">
-                                <i data-lucide="layout-template" class="w-4 h-4 text-slate-600"></i>
-                                <select id="sel-scene" class="bg-white border border-slate-300 rounded px-2 py-1 outline-none font-semibold text-blue-700 shadow-sm text-xs cursor-pointer focus:ring-2 focus:ring-blue-300">
-                                    <option value="barra">Barra Rectangular</option>
-                                    <option value="herradura">Herradura Magnética</option>
-                                    <option value="disco">Disco (Altavoz)</option>
-                                    <option value="anillo">Anillo (Motor)</option>
-                                    <option value="tierra">Planeta Tierra (Geomagnetismo)</option>
+                    <div class="control-panel shadow-sm">
+                        <!-- Fila 1: Selector de Escenario / Preset & Partícula -->
+                        <div class="flex w-full gap-2 border-b border-slate-300 pb-1.5 items-center justify-between">
+                            <div class="flex gap-1.5 items-center">
+                                <i data-lucide="orbit" class="w-4 h-4 text-blue-600"></i>
+                                <select id="sel-preset" class="bg-white border border-slate-300 rounded px-2 py-0.5 font-bold text-slate-800 shadow-sm text-xs cursor-pointer outline-none">
+                                    <option value="perp">1. θ = 90° (Fuerza Máxima & Movimiento Circular)</option>
+                                    <option value="paralelo">2. θ = 0° (Paralelo: v || B ⇒ Fuerza NULA)</option>
+                                    <option value="helicoide">3. θ = 45° (Hélice Magnética Espacial 3D)</option>
+                                    <option value="antiparalelo">4. θ = 180° (Antiparalelo ⇒ Fuerza NULA)</option>
                                 </select>
                             </div>
-                            
-                            <div class="flex gap-2 items-center">
-                                <i data-lucide="atom" class="w-4 h-4 text-slate-600"></i>
-                                <select id="sel-material" class="bg-white border border-slate-300 rounded px-2 py-1 outline-none font-semibold text-emerald-700 shadow-sm text-xs cursor-pointer focus:ring-2 focus:ring-emerald-300">
-                                    <option value="1">Núcleo: Aire (Paramagnético)</option>
-                                    <option value="4">Núcleo: Hierro (Ferromagnético)</option>
-                                    <option value="-0.8">Núcleo: Bismuto (Diamagnético)</option>
+
+                            <div class="flex gap-1.5 items-center">
+                                <i data-lucide="atom" class="w-4 h-4 text-indigo-600"></i>
+                                <select id="sel-particle" class="bg-white border border-slate-300 rounded px-2 py-0.5 font-bold text-indigo-700 shadow-sm text-xs cursor-pointer outline-none">
+                                    <option value="proton">Protón (+e, mp)</option>
+                                    <option value="electron">Electrón (-e, me)</option>
+                                    <option value="alfa">Partícula Alfa (+2e)</option>
+                                    <option value="positron">Positrón (+e, me)</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Fila 2: Renderizado del Campo y Brújulas -->
-                        <div class="flex w-full gap-3 items-center flex-wrap">
-                            
-                            <div class="flex items-center gap-1 bg-white border border-slate-300 px-3 py-1.5 rounded-lg shadow-sm">
-                                <label class="text-[10px] font-bold text-slate-700 flex items-center gap-1" title="Resolución (Densidad de líneas)"><i data-lucide="grid-3x3" class="w-3 h-3 text-indigo-500"></i> Densidad</label>
-                                <input type="range" id="sl-den" min="2" max="6" step="0.5" value="3.5" class="w-14 mx-1">
-                                
-                                <div class="w-px h-5 bg-slate-300 mx-1"></div>
-                                
-                                <label class="text-[10px] font-bold text-slate-700 flex items-center gap-1" title="Expansión volumétrica del campo renderizado"><i data-lucide="scaling" class="w-3 h-3 text-rose-500"></i> Expansión</label>
-                                <input type="range" id="sl-vol" min="10" max="24" step="2" value="16" class="w-14 ml-1">
+                        <!-- Fila 2: Sliders Físicos -->
+                        <div class="grid grid-cols-3 gap-2 text-xs pt-0.5">
+                            <div>
+                                <label class="flex justify-between font-bold text-fuchsia-700 text-[11px]">
+                                    <span>Rapidez $v$:</span>
+                                    <span id="label-val-v" class="font-mono">5.0 × 10⁵ m/s</span>
+                                </label>
+                                <input type="range" id="slider-v" min="1" max="10" step="0.5" value="5.0" class="w-full accent-fuchsia-600 cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="flex justify-between font-bold text-cyan-700 text-[11px]">
+                                    <span>Campo $B$:</span>
+                                    <span id="label-val-b" class="font-mono">0.50 T</span>
+                                </label>
+                                <input type="range" id="slider-b" min="0.1" max="1.5" step="0.05" value="0.50" class="w-full accent-cyan-600 cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="flex justify-between font-bold text-amber-700 text-[11px]">
+                                    <span>Ángulo $\theta$:</span>
+                                    <span id="label-val-theta" class="font-mono">90.0°</span>
+                                </label>
+                                <input type="range" id="slider-theta" min="0" max="180" step="1" value="90" class="w-full accent-amber-600 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Fila 3: Acciones y Toggles -->
+                        <div class="flex w-full items-center justify-between pt-1 border-t border-slate-200">
+                            <div class="flex items-center gap-1.5">
+                                <button id="btn-play-sim" class="btn-ui bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 shadow-sm">
+                                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Lanzar Partícula
+                                </button>
+                                <button id="btn-reset-sim" class="btn-ui bg-slate-200 text-slate-700 hover:bg-slate-300 text-xs py-1 px-2.5 shadow-sm">
+                                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reiniciar
+                                </button>
                             </div>
 
-                            <button id="btn-add-comp" class="btn-ui text-[11px] bg-blue-600 text-white shadow-sm hover:bg-blue-700"><i data-lucide="plus-circle" class="w-3 h-3"></i> Añadir Brújula</button>
-                            <button id="btn-reset" class="btn-ui text-[11px] bg-white text-rose-600 border border-rose-200 hover:bg-rose-50 shadow-sm"><i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset</button>
-                            
-                            <div class="ml-auto flex items-center gap-3">
-                                <label class="flex items-center text-[11px] font-bold bg-white border border-slate-300 px-2 py-1.5 rounded cursor-pointer hover:bg-blue-50 transition text-slate-700 shadow-sm"><input type="checkbox" id="chk-grid" checked class="mr-1"> Ver $\vec{B}$</label>
-                                <button id="btn-3d" class="btn-ui text-[11px] bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"><i data-lucide="cuboid" class="w-3 h-3"></i> Cámara 3D</button>
+                            <div class="flex items-center gap-3 text-[11px] font-bold text-slate-700">
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="chk-show-vectors" checked class="accent-blue-600"> Ver Vectores</label>
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="chk-show-trail" checked class="accent-amber-600"> Estela Órbita</label>
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="chk-show-grid" checked class="accent-slate-600"> Ejes 3D</label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ZONA VISUAL 3D/2D -->
+                    <!-- ZONA VISUAL 3D Y DCL -->
                     <div class="flex-1 flex gap-[1vmin] min-h-0">
                         <!-- Canvas 3D -->
                         <div class="w-[65%] h-full canvas-wrapper relative shadow-inner" id="cont-3d">
                             <div class="hint-overlay text-blue-800">
-                                <i data-lucide="mouse-pointer-2" class="w-5 h-5 text-blue-600"></i>
-                                <div>
-                                    <strong class="text-xs">Espacio de Simulación:</strong>
-                                    <div class="text-[10px] font-normal leading-tight text-slate-600 mt-0.5">Arrastra el imán principal. Las brújulas están ancladas (sólo rotan).</div>
+                                <i data-lucide="mouse-pointer-2" class="w-4 h-4 text-blue-600"></i>
+                                <div class="text-[10px] leading-tight text-slate-600">
+                                    <strong>Control 3D:</strong> Arrastra para orbitar &bull; Rueda para zoom &bull; Observa cómo $\vec{F}_B$ se invierte al cambiar a Electrón.
                                 </div>
                             </div>
+
+                            <!-- BADGE DINÁMICO ESTADO FÍSICO -->
+                            <div id="sim-badge" class="absolute top-2 right-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1.5 shadow pointer-events-none z-10">
+                                <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span id="status-text" class="font-semibold font-mono text-[11px]">θ = 90° &bull; F_mag = q·v·B</span>
+                            </div>
+
                             <div id="canvas-3d" class="w-full h-full absolute top-0 left-0"></div>
+
+                            <!-- LEYENDA VECTORIAL FLOTANTE -->
+                            <div class="absolute bottom-2 left-2 bg-slate-900/90 backdrop-blur border border-slate-700 text-white p-2 rounded text-[10px] space-y-1 pointer-events-none z-10 font-mono">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-3 h-1 bg-fuchsia-400 inline-block rounded"></span>
+                                    <span>Velocidad $\vec{v}$ (Magenta)</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-3 h-1 bg-cyan-400 inline-block rounded"></span>
+                                    <span>Campo Magnético $\vec{B}$ (Cian)</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-3 h-1 bg-emerald-400 inline-block rounded"></span>
+                                    <span>$\vec{v}\times\vec{B}$ (Esmeralda)</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-3 h-1 bg-rose-500 inline-block rounded"></span>
+                                    <span>Fuerza $\vec{F}_B = q(\vec{v}\times\vec{B})$</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Gráficas y DCL -->
+                        <!-- Gráficas y DCL Lateral -->
                         <div class="w-[35%] h-full flex flex-col gap-[1vmin]">
-                            <!-- Diagrama DCL -->
-                            <div class="h-[50%] dcl-wrapper p-2 flex flex-col items-center shadow-inner relative">
-                                <p class="text-[11px] font-bold text-cyan-400 mb-1 z-10 bg-slate-900/80 px-3 py-1 rounded-full border border-cyan-800 flex items-center gap-2 shadow-md">
-                                    <i data-lucide="crosshair" class="w-3 h-3"></i> DCL: Brújula Activa
+                            <!-- Diagrama DCL Vectorial -->
+                            <div class="h-[52%] dcl-wrapper p-2 flex flex-col items-center shadow-inner relative">
+                                <p class="text-[11px] font-bold text-cyan-300 mb-1 z-10 bg-slate-900/80 px-2.5 py-0.5 rounded-full border border-cyan-800 flex items-center gap-1.5 shadow">
+                                    <i data-lucide="crosshair" class="w-3 h-3"></i> DCL Plano $(\vec{v}, \vec{B})$
                                 </p>
                                 <canvas id="cv-dcl" class="w-full h-full absolute top-0 left-0"></canvas>
-                                <div class="absolute bottom-2 right-2 text-[9px] text-white bg-slate-800/90 px-2 py-1.5 rounded border border-slate-600 shadow-md flex flex-col text-center">
-                                    <span class="text-cyan-400 font-bold">Vector Campo $\vec{B}$</span> 
-                                    <span class="text-rose-400 font-bold">Fuerza Tensión $\vec{F}$</span>
+                                <div class="absolute bottom-1 right-1 text-[9px] text-white bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">
+                                    <span class="text-rose-400 font-bold">$\vec{F}_B \perp \vec{v}$</span>
                                 </div>
                             </div>
                             
-                            <!-- Panel de Medición -->
-                            <div class="h-[50%] graph-wrapper p-3 flex flex-col shadow-sm border border-slate-200 bg-slate-50">
-                                <p class="text-xs font-bold text-slate-800 mb-2 text-center flex items-center justify-center gap-2 border-b border-slate-200 pb-2">
-                                    <i data-lucide="gauge" class="w-4 h-4 text-indigo-600"></i> Telemetría Física
+                            <!-- Panel de Telemetría Numérica -->
+                            <div class="h-[48%] graph-wrapper p-2.5 flex flex-col justify-between shadow-sm border border-slate-200 bg-slate-50 text-xs font-mono">
+                                <p class="font-bold text-slate-800 text-center flex items-center justify-center gap-1 border-b border-slate-200 pb-1 font-sans text-xs">
+                                    <i data-lucide="gauge" class="w-3.5 h-3.5 text-indigo-600"></i> Telemetría de Lorentz
                                 </p>
-                                <div class="text-xs font-mono flex flex-col gap-2 w-full mt-1">
-                                    <div class="bg-rose-50 text-rose-900 p-2.5 rounded border border-rose-200 flex justify-between shadow-sm items-center transition-colors duration-200" id="ui-f-box">
-                                        <span class="flex items-center gap-2" title="Fuerza espacial resistida mecánicamente por el anclaje."><i data-lucide="arrow-right-left" class="w-4 h-4"></i> Tensión $|\vec{F}|$</span>
-                                        <span class="font-bold text-base"><span id="ui-f">0.00</span> N</span>
-                                    </div>
-                                    <div class="bg-amber-50 text-amber-900 p-2.5 rounded border border-amber-200 flex justify-between shadow-sm items-center">
-                                        <span class="flex items-center gap-2" title="Momento de fuerza que obliga a la aguja a alinearse."><i data-lucide="rotate-cw" class="w-4 h-4"></i> Torque $|\vec{\tau}|$</span>
-                                        <span class="font-bold text-base"><span id="ui-tau">0.00</span> N·m</span>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500 leading-tight mt-1 text-justify font-sans">Las brújulas se orientan mediante el torque. Su centro de masa está fijado, por lo que la fuerza de traslación se lee como tensión mecánica.</p>
+
+                                <div class="bg-rose-50 border border-rose-200 p-1.5 rounded flex justify-between items-center">
+                                    <span class="text-rose-900 font-sans font-semibold text-[11px]">Fuerza $|\vec{F}_B|$:</span>
+                                    <span id="tele-f" class="font-bold text-rose-700 text-xs">4.00 × 10⁻¹⁴ N</span>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-200 p-1.5 rounded flex justify-between items-center">
+                                    <span class="text-emerald-900 font-sans font-semibold text-[11px]">Trabajo $W = \vec{F}\cdot\vec{v}$:</span>
+                                    <span id="tele-w" class="font-bold text-emerald-700 text-xs">0.00 W (Nulo)</span>
+                                </div>
+
+                                <div class="bg-blue-50 border border-blue-200 p-1.5 rounded flex justify-between items-center">
+                                    <span class="text-blue-900 font-sans font-semibold text-[11px]">Radio de Giro $R$:</span>
+                                    <span id="tele-r" class="font-bold text-blue-700 text-xs">1.04 cm</span>
+                                </div>
+
+                                <div class="bg-amber-50 border border-amber-200 p-1.5 rounded flex justify-between items-center">
+                                    <span class="text-amber-900 font-sans font-semibold text-[11px]">Aceleración $a_c$:</span>
+                                    <span id="tele-a" class="font-bold text-amber-700 text-xs">2.40 × 10¹³ m/s²</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Tooltip Global Flotante -->
-    <div id="global-tip"></div>
-
+    <!-- SCRIPT DE FÍSICA Y RENDERIZADO 3D -->
     <script>
-        // Inicializar Iconos Lucide
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
 
-        // Utilidades DOM Seguras (Bulletproof)
-        const $ = id => document.getElementById(id);
-        const getVal = (id, def) => $(id) ? parseFloat($(id).value) : def;
-        const isChecked = (id, def) => $(id) ? $(id).checked : def;
-        
-        // SISTEMA DE PESTAÑAS (TABS APP-LIKE)
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                btn.classList.add('active');
-                let target = $(btn.getAttribute('data-tab'));
-                if(target) target.classList.add('active');
+            // 1. SISTEMA DE TABS
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    const target = document.getElementById(btn.dataset.tab);
+                    if (target) {
+                        target.classList.add('active');
+                        if (window.MathJax && MathJax.typesetPromise) {
+                            MathJax.typesetPromise([target]);
+                        }
+                    }
+                });
             });
-        });
 
-        // CALCULADORA INTERACTIVA DE PRODUCTO CRUZ
-        function updateVectorCalc() {
-            const q = (parseFloat($('calc-q') ? $('calc-q').value : 1.6) || 1.6) * 1e-19;
-            const vx = (parseFloat($('calc-vx') ? $('calc-vx').value : 3.0) || 3.0) * 1e5;
-            const vy = (parseFloat($('calc-vy') ? $('calc-vy').value : -2.0) || -2.0) * 1e5;
-            const vz = (parseFloat($('calc-vz') ? $('calc-vz').value : 4.0) || 4.0) * 1e5;
-            const bx = parseFloat($('calc-bx') ? $('calc-bx').value : 0.5) || 0.5;
-            const by = parseFloat($('calc-by') ? $('calc-by').value : 0.8) || 0.8;
-            const bz = parseFloat($('calc-bz') ? $('calc-bz').value : -0.3) || -0.3;
+            // 2. PARÁMETROS FÍSICOS Y CONSTANTES
+            const PARTICLES = {
+                proton:   { q: 1.602e-19,  m: 1.673e-27, name: 'Protón (p⁺)', color: 0x3b82f6, sign: +1, radius: 0.35 },
+                electron: { q: -1.602e-19, m: 9.109e-31, name: 'Electrón (e⁻)', color: 0xef4444, sign: -1, radius: 0.25 },
+                alfa:     { q: 3.204e-19,  m: 6.644e-27, name: 'Alfa (He²⁺)', color: 0xf59e0b, sign: +2, radius: 0.45 },
+                positron: { q: 1.602e-19,  m: 9.109e-31, name: 'Positrón (e⁺)', color: 0x10b981, sign: +1, radius: 0.25 }
+            };
 
-            const cx = (vy * bz - vz * by);
-            const cy = -(vx * bz - vz * bx);
-            const cz = (vx * by - vy * bx);
+            let currentParticleKey = 'proton';
+            let speedV = 5.0e5; // m/s
+            let magB = 0.50; // Tesla
+            let thetaDeg = 90; // Grados
+            let isAnimating = false;
 
-            const fx = q * cx;
-            const fy = q * cy;
-            const fz = q * cz;
-            const fMag = Math.sqrt(fx * fx + fy * fy + fz * fz);
+            // Elementos DOM
+            const selPreset = document.getElementById('sel-preset');
+            const selParticle = document.getElementById('sel-particle');
+            const sliderV = document.getElementById('slider-v');
+            const sliderB = document.getElementById('slider-b');
+            const sliderTheta = document.getElementById('slider-theta');
+            const labelValV = document.getElementById('label-val-v');
+            const labelValB = document.getElementById('label-val-b');
+            const labelValTheta = document.getElementById('label-val-theta');
+            const btnPlay = document.getElementById('btn-play-sim');
+            const btnReset = document.getElementById('btn-reset-sim');
+            const chkVectors = document.getElementById('chk-show-vectors');
+            const chkTrail = document.getElementById('chk-show-trail');
+            const chkGrid = document.getElementById('chk-show-grid');
 
-            const strEl = $('calc-result-str');
-            const magEl = $('calc-result-mag');
-            if (strEl) {
-                const sFx = fx.toExponential(3);
-                const sFy = (fy >= 0 ? '+' : '') + fy.toExponential(3);
-                const sFz = (fz >= 0 ? '+' : '') + fz.toExponential(3);
-                strEl.innerHTML = `$$\\vec{F}_B = (${sFx}\\hat{\\imath} ${sFy}\\hat{\\jmath} ${sFz}\\hat{k})\\;\\text{N}$$`;
-                if (window.MathJax && MathJax.typesetPromise) {
-                    MathJax.typesetPromise([strEl]);
+            // 3. INICIALIZACIÓN THREE.JS
+            const cont3D = document.getElementById('canvas-3d');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+            const camera = new THREE.PerspectiveCamera(45, (cont3D.clientWidth || 500) / (cont3D.clientHeight || 350), 0.1, 100);
+            camera.position.set(6, 4.5, 7.5);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(cont3D.clientWidth || 500, cont3D.clientHeight || 350);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            cont3D.appendChild(renderer.domElement);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Luces
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            dirLight.position.set(10, 15, 10);
+            scene.add(dirLight);
+
+            // Rejilla y Ejes 3D
+            const gridHelper = new THREE.GridHelper(12, 12, 0x334155, 0x1e293b);
+            gridHelper.position.y = -2;
+            scene.add(gridHelper);
+
+            const axesHelper = new THREE.AxesHelper(3);
+            scene.add(axesHelper);
+
+            // 4. ELEMENTOS 3D DE LA PARTÍCULA Y VECTORES
+            // Partícula
+            const particleGroup = new THREE.Group();
+            const pGeo = new THREE.SphereGeometry(0.35, 32, 32);
+            const pMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3, metalness: 0.5 });
+            const particleMesh = new THREE.Mesh(pGeo, pMat);
+            particleGroup.add(particleMesh);
+
+            // Resplandor de Partícula
+            const glowGeo = new THREE.SphereGeometry(0.45, 16, 16);
+            const glowMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.25 });
+            const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+            particleGroup.add(glowMesh);
+            scene.add(particleGroup);
+
+            // Vectores con ArrowHelper
+            // Vector Velocidad (Magenta)
+            const arrowV = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 2.5, 0xd946ef, 0.4, 0.25);
+            arrowV.line.material.linewidth = 4;
+            scene.add(arrowV);
+
+            // Vector Campo B (Cian)
+            const arrowB = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 2.5, 0x06b6d4, 0.4, 0.25);
+            arrowB.line.material.linewidth = 4;
+            scene.add(arrowB);
+
+            // Vector v x B (Esmeralda)
+            const arrowCross = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 2.2, 0x10b981, 0.35, 0.2);
+            arrowCross.line.material.linewidth = 3;
+            scene.add(arrowCross);
+
+            // Vector Fuerza de Lorentz F_B (Rojo Rubí / Oro)
+            const arrowF = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 2.8, 0xef4444, 0.5, 0.3);
+            arrowF.line.material.linewidth = 5;
+            scene.add(arrowF);
+
+            // Estela de la Trayectoria (Line)
+            const maxTrailPoints = 300;
+            const trailPositions = new Float32Array(maxTrailPoints * 3);
+            const trailGeometry = new THREE.BufferGeometry();
+            trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+            const trailMaterial = new THREE.LineBasicMaterial({ color: 0xfacc15, linewidth: 2, transparent: true, opacity: 0.85 });
+            const trailLine = new THREE.Line(trailGeometry, trailMaterial);
+            scene.add(trailLine);
+            let trailCount = 0;
+
+            // Variables de Integración Dinámica
+            let simPos = new THREE.Vector3(0, 0, 0);
+            let simVel = new THREE.Vector3(0, 0, 0);
+            let simTime = 0;
+
+            function resetSimulation() {
+                isAnimating = false;
+                btnPlay.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5"></i> Lanzar Partícula`;
+                if (window.lucide) lucide.createIcons();
+
+                simPos.set(0, 0, 0);
+                particleGroup.position.set(0, 0, 0);
+                trailCount = 0;
+                for (let i = 0; i < maxTrailPoints * 3; i++) trailPositions[i] = 0;
+                trailGeometry.attributes.position.needsUpdate = true;
+                trailGeometry.setDrawRange(0, 0);
+
+                updateVectorPhysics();
+            }
+
+            function updateVectorPhysics() {
+                const p = PARTICLES[currentParticleKey];
+                
+                // Actualizar apariencia de la partícula
+                pMat.color.setHex(p.color);
+                glowMat.color.setHex(p.color);
+                particleMesh.scale.setScalar(p.radius / 0.35);
+                glowMesh.scale.setScalar(p.radius / 0.35);
+
+                const rad = thetaDeg * Math.PI / 180;
+                
+                // Definimos B a lo largo de +Z para visualización pedagógica
+                const bDir = new THREE.Vector3(0, 0, 1).normalize();
+                
+                // v en el plano YZ formando ángulo theta con B (+Z)
+                const vDir = new THREE.Vector3(0, Math.sin(rad), Math.cos(rad)).normalize();
+
+                // Vector v x B
+                const crossDir = new THREE.Vector3().crossVectors(vDir, bDir);
+                
+                // Vector Fuerza F_B = q * (v x B)
+                const fDir = crossDir.clone().multiplyScalar(Math.sign(p.q));
+
+                const lenV = 1.2 + (speedV / 1e6) * 1.5;
+                const lenB = 1.2 + magB * 1.5;
+                const sinTheta = Math.abs(Math.sin(rad));
+                const lenCross = Math.max(0.01, (lenV * lenB * sinTheta) * 0.45);
+                const lenF = Math.max(0.01, lenCross * Math.abs(p.sign));
+
+                arrowV.setDirection(vDir);
+                arrowV.setLength(lenV, 0.35, 0.2);
+
+                arrowB.setDirection(bDir);
+                arrowB.setLength(lenB, 0.35, 0.2);
+
+                if (crossDir.lengthSq() > 1e-4) {
+                    arrowCross.visible = chkVectors.checked;
+                    arrowCross.setDirection(crossDir.normalize());
+                    arrowCross.setLength(lenCross, 0.3, 0.15);
+
+                    arrowF.visible = chkVectors.checked;
+                    arrowF.setDirection(fDir.normalize());
+                    arrowF.setLength(lenF, 0.4, 0.2);
+                    arrowF.setColor(p.q < 0 ? 0xef4444 : 0xf59e0b);
+                } else {
+                    arrowCross.visible = false;
+                    arrowF.visible = false;
+                }
+
+                // Velocidad física para simulación
+                simVel.copy(vDir).multiplyScalar(speedV * 1e-5); // Escala para Three.js
+
+                // Cálculos teóricos
+                const F_mag = Math.abs(p.q) * speedV * magB * sinTheta;
+                const ac = F_mag / p.m;
+                const v_perp = speedV * sinTheta;
+                const R_orbit = v_perp > 1e-3 ? (p.m * v_perp) / (Math.abs(p.q) * magB) : 0;
+
+                // Telemetría
+                document.getElementById('tele-f').textContent = F_mag.toExponential(2) + ' N';
+                document.getElementById('tele-w').textContent = '0.00 W (Nulo)';
+                document.getElementById('tele-r').textContent = R_orbit > 0 ? (R_orbit < 0.1 ? (R_orbit * 100).toFixed(2) + ' cm' : R_orbit.toFixed(2) + ' m') : '∞ (Rectilíneo)';
+                document.getElementById('tele-a').textContent = ac.toExponential(2) + ' m/s²';
+
+                // Status Badge
+                const statusDot = document.getElementById('status-dot');
+                const statusText = document.getElementById('status-text');
+                if (Math.abs(thetaDeg - 90) < 1) {
+                    statusText.textContent = `θ = 90° · Fuerza Máxima (Giro Circular)`;
+                    statusDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+                } else if (thetaDeg === 0 || thetaDeg === 180) {
+                    statusText.textContent = `θ = ${thetaDeg}° · v || B ⇒ Fuerza CERO (Inercial)`;
+                    statusDot.className = "w-2 h-2 rounded-full bg-slate-400";
+                } else {
+                    statusText.textContent = `θ = ${thetaDeg}° · Movimiento Helicoidal (v_|| + v_⊥)`;
+                    statusDot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
+                }
+
+                draw2DDCL(rad, p.q, sinTheta);
+            }
+
+            // 5. DIAGRAMA 2D DCL
+            const cvDcl = document.getElementById('cv-dcl');
+            const ctxDcl = cvDcl.getContext('2d');
+
+            function draw2DDCL(rad, q, sinTheta) {
+                const w = cvDcl.width = cvDcl.parentElement.clientWidth;
+                const h = cvDcl.height = cvDcl.parentElement.clientHeight;
+                const cx = w / 2;
+                const cy = h / 2;
+
+                ctxDcl.clearRect(0, 0, w, h);
+
+                // Ejes de referencia tenues
+                ctxDcl.strokeStyle = "#334155";
+                ctxDcl.lineWidth = 1;
+                ctxDcl.beginPath();
+                ctxDcl.moveTo(20, cy); ctxDcl.lineTo(w - 20, cy);
+                ctxDcl.moveTo(cx, 20); ctxDcl.lineTo(cx, h - 20);
+                ctxDcl.stroke();
+
+                // Vector B hacia la derecha (+X en DCL)
+                const lenB = Math.min(w * 0.35, 70);
+                drawCanvasArrow(ctxDcl, cx, cy, cx + lenB, cy, "#06b6d4", "B");
+
+                // Vector v formando ángulo theta
+                const lenV = Math.min(w * 0.35, 75);
+                const vx = cx + lenV * Math.cos(-rad);
+                const vy = cy + lenV * Math.sin(-rad);
+                drawCanvasArrow(ctxDcl, cx, cy, vx, vy, "#d946ef", "v");
+
+                // Arco de ángulo theta
+                if (thetaDeg > 5 && thetaDeg < 175) {
+                    ctxDcl.beginPath();
+                    ctxDcl.strokeStyle = "#f59e0b";
+                    ctxDcl.lineWidth = 1.5;
+                    ctxDcl.arc(cx, cy, 25, 0, -rad, true);
+                    ctxDcl.stroke();
+                    ctxDcl.fillStyle = "#f59e0b";
+                    ctxDcl.font = "bold 10px sans-serif";
+                    ctxDcl.fillText(`θ=${thetaDeg}°`, cx + 30, cy - 12);
+                }
+
+                // Vector F_B perpendicular al plano o perpendicular a v
+                const lenF = Math.min(w * 0.32, 65 * sinTheta);
+                if (lenF > 5) {
+                    // Fuerza perpendicular a v hacia arriba o abajo según signo
+                    const perpAngle = -rad + (q > 0 ? -Math.PI / 2 : Math.PI / 2);
+                    const fx = cx + lenF * Math.cos(perpAngle);
+                    const fy = cy + lenF * Math.sin(perpAngle);
+                    drawCanvasArrow(ctxDcl, cx, cy, fx, fy, q < 0 ? "#ef4444" : "#10b981", "F_B");
+
+                    // Ángulo recto de 90° entre v y F_B
+                    ctxDcl.strokeStyle = "#ffffff";
+                    ctxDcl.lineWidth = 1;
+                    const sqSize = 10;
+                    const uVx = Math.cos(-rad), uVy = Math.sin(-rad);
+                    const uFx = Math.cos(perpAngle), uFy = Math.sin(perpAngle);
+                    ctxDcl.beginPath();
+                    ctxDcl.moveTo(cx + sqSize * uVx, cy + sqSize * uVy);
+                    ctxDcl.lineTo(cx + sqSize * (uVx + uFx), cy + sqSize * (uVy + uFy));
+                    ctxDcl.lineTo(cx + sqSize * uFx, cy + sqSize * uFy);
+                    ctxDcl.stroke();
+                }
+
+                // Partícula en el origen
+                ctxDcl.beginPath();
+                ctxDcl.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctxDcl.fillStyle = q < 0 ? "#ef4444" : "#3b82f6";
+                ctxDcl.fill();
+                ctxDcl.strokeStyle = "#ffffff";
+                ctxDcl.lineWidth = 1.5;
+                ctxDcl.stroke();
+            }
+
+            function drawCanvasArrow(ctx, fromX, fromY, toX, toY, color, label) {
+                const headlen = 8;
+                const angle = Math.atan2(toY - fromY, toX - fromX);
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(toX, toY);
+                ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+                ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+                ctx.fill();
+
+                if (label) {
+                    ctx.font = "bold 11px sans-serif";
+                    ctx.fillText(label, toX + 6, toY + 4);
                 }
             }
-            if (magEl) {
-                magEl.innerHTML = `Magnitud: $|\\vec{F}_B| = ${fMag.toExponential(3)}\\;\\text{N}$ &middot; Comprobación $\\vec{F}_B \\cdot \\vec{v} = 0.00\\;\\text{W}$ (Ortogonal)`;
-            }
-        }
-        if ($('btn-calc-vector')) $('btn-calc-vector').addEventListener('click', updateVectorCalc);
-        ['calc-q', 'calc-vx', 'calc-vy', 'calc-vz', 'calc-bx', 'calc-by', 'calc-bz'].forEach(id => {
-            if ($(id)) $(id).addEventListener('input', updateVectorCalc);
-        });
 
-        // ESTADO GLOBAL DEL MOTOR FÍSICO
-        const state = { 
-            config: 'barra', 
-            m_base: 5.0, 
-            is3D: false, 
-            fixed: { pos: new THREE.Vector3(0, 0, 0) }
-        };
-        let compasses = []; 
-        let activeDragObj = null;
-        let lastInteractedCompass = null;
+            // 6. EVENT LISTENERS
+            sliderV.addEventListener('input', () => {
+                speedV = parseFloat(sliderV.value) * 1e5;
+                labelValV.textContent = (speedV / 1e5).toFixed(1) + ' × 10⁵ m/s';
+                resetSimulation();
+            });
 
-        // 1. INICIALIZACIÓN THREE.JS
-        const cont3D = $('canvas-3d');
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020617, 0.015);
-        
-        const cam = new THREE.PerspectiveCamera(45, cont3D.clientWidth/cont3D.clientHeight, 0.1, 150);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(cont3D.clientWidth, cont3D.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
-        renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        cont3D.appendChild(renderer.domElement);
-        
-        const ctrl = new THREE.OrbitControls(cam, renderer.domElement);
-        ctrl.enableDamping = true; ctrl.dampingFactor = 0.05;
-        
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.7));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
-        dirLight.position.set(10, 20, 10); dirLight.castShadow = true;
-        scene.add(dirLight);
+            sliderB.addEventListener('input', () => {
+                magB = parseFloat(sliderB.value);
+                labelValB.textContent = magB.toFixed(2) + ' T';
+                resetSimulation();
+            });
 
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 }));
-        ground.rotation.x = -Math.PI / 2; ground.position.z = -3; ground.receiveShadow = true;
-        scene.add(ground);
-        
-        const gridHelper = new THREE.GridHelper(60, 60, 0x334155, 0x0f172a);
-        gridHelper.position.z = -2.99; gridHelper.rotation.x = Math.PI / 2;
-        scene.add(gridHelper);
+            sliderTheta.addEventListener('input', () => {
+                thetaDeg = parseInt(sliderTheta.value);
+                labelValTheta.textContent = thetaDeg.toFixed(1) + '°';
+                resetSimulation();
+            });
 
-        // 2. CONSTRUCCIÓN 3D Y MATERIALES PBR
-        const matN = new THREE.MeshPhysicalMaterial({ color: 0xe11d48, metalness: 0.4, roughness: 0.4, clearcoat: 0.3 }); // Rojo
-        const matS = new THREE.MeshPhysicalMaterial({ color: 0x2563eb, metalness: 0.4, roughness: 0.4, clearcoat: 0.3 }); // Azul
-        const matIron = new THREE.MeshPhysicalMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.4 });
-        const hitMat = new THREE.MeshBasicMaterial({ visible: false }); 
+            selPreset.addEventListener('change', () => {
+                const val = selPreset.value;
+                if (val === 'perp') { sliderTheta.value = 90; thetaDeg = 90; }
+                else if (val === 'paralelo') { sliderTheta.value = 0; thetaDeg = 0; }
+                else if (val === 'helicoide') { sliderTheta.value = 45; thetaDeg = 45; }
+                else if (val === 'antiparalelo') { sliderTheta.value = 180; thetaDeg = 180; }
+                labelValTheta.textContent = thetaDeg.toFixed(1) + '°';
+                resetSimulation();
+            });
 
-        const setupShadows = (grp) => { grp.traverse(child => { if(child.isMesh) { child.castShadow = true; child.receiveShadow = true; } }); };
+            selParticle.addEventListener('change', () => {
+                currentParticleKey = selParticle.value;
+                resetSimulation();
+            });
 
-        function createPoleLabel(text, size = 1.0) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 64; canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 44px system-ui, sans-serif';
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 4;
-            ctx.fillText(text, 32, 35);
-            const tex = new THREE.CanvasTexture(canvas);
-            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
-            sprite.scale.set(size, size, 1);
-            return sprite;
-        }
+            btnPlay.addEventListener('click', () => {
+                isAnimating = !isAnimating;
+                btnPlay.innerHTML = isAnimating 
+                    ? `<i data-lucide="pause" class="w-3.5 h-3.5"></i> Pausar Simulación` 
+                    : `<i data-lucide="play" class="w-3.5 h-3.5"></i> Reanudar`;
+                if (window.lucide) lucide.createIcons();
+            });
 
-        // --- Contenedor Imán Fijo Central ---
-        const fixedContainer = new THREE.Group(); scene.add(fixedContainer);
+            btnReset.addEventListener('click', resetSimulation);
 
-        const fixedBar = new THREE.Group();
-        const bN = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 1.5), matN); bN.position.x = 1;
-        const bS = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 1.5), matS); bS.position.x = -1;
-        let lbN = createPoleLabel('N', 1.5); lbN.position.z = 0.8; bN.add(lbN);
-        let lbS = createPoleLabel('S', 1.5); lbS.position.z = 0.8; bS.add(lbS);
-        fixedBar.add(bN, bS); setupShadows(fixedBar); fixedContainer.add(fixedBar);
+            chkVectors.addEventListener('change', () => {
+                arrowV.visible = chkVectors.checked;
+                arrowB.visible = chkVectors.checked;
+                updateVectorPhysics();
+            });
 
-        const fixedHorse = new THREE.Group();
-        const hN = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 1.5), matN); hN.position.set(0, 1.5, 0);
-        const hS = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 1.5), matS); hS.position.set(0, -1.5, 0);
-        const hB = new THREE.Mesh(new THREE.BoxGeometry(1, 4.5, 1.5), matIron); hB.position.set(1.5, 0, 0);
-        let lhN = createPoleLabel('N', 1.2); lhN.position.set(0, 0, 0.8); hN.add(lhN);
-        let lhS = createPoleLabel('S', 1.2); lhS.position.set(0, 0, 0.8); hS.add(lhS);
-        fixedHorse.add(hN, hS, hB); fixedHorse.position.set(1, 0, 0);
-        setupShadows(fixedHorse); fixedContainer.add(fixedHorse);
+            chkTrail.addEventListener('change', () => {
+                trailLine.visible = chkTrail.checked;
+            });
 
-        const fixedCoin = new THREE.Group();
-        const cN = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.5, 32), matN); cN.position.y = 0.25;
-        const cS = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.5, 32), matS); cS.position.y = -0.25;
-        let lcN = createPoleLabel('N', 1.5); lcN.position.set(0, 0.3, 0); lcN.rotation.x = -Math.PI/2; cN.add(lcN);
-        let lcS = createPoleLabel('S', 1.5); lcS.position.set(0, -0.3, 0); lcS.rotation.x = Math.PI/2; cS.add(lcS);
-        fixedCoin.add(cN, cS); fixedCoin.rotation.z = -Math.PI / 2;
-        setupShadows(fixedCoin); fixedContainer.add(fixedCoin);
+            chkGrid.addEventListener('change', () => {
+                gridHelper.visible = chkGrid.checked;
+                axesHelper.visible = chkGrid.checked;
+            });
 
-        const fixedRing = new THREE.Group();
-        const rN = new THREE.Mesh(new THREE.TorusGeometry(2, 0.6, 16, 64, Math.PI), matN);
-        const rS = new THREE.Mesh(new THREE.TorusGeometry(2, 0.6, 16, 64, Math.PI), matS);
-        rS.rotation.z = Math.PI; 
-        let rnLabel = createPoleLabel('N', 1.2); rnLabel.position.set(2, 0, 0.7); rN.add(rnLabel);
-        let rsLabel = createPoleLabel('S', 1.2); rsLabel.position.set(-2, 0, 0.7); rN.add(rsLabel);
-        fixedRing.add(rN, rS); fixedRing.rotation.z = -Math.PI / 2; 
-        setupShadows(fixedRing); fixedContainer.add(fixedRing);
+            // Conexión con la Calculadora de Tab 3
+            function updateVectorCalc() {
+                const q = (parseFloat(document.getElementById('calc-q').value) || 1.6) * 1e-19;
+                const vx = (parseFloat(document.getElementById('calc-vx').value) || 3.0) * 1e5;
+                const vy = (parseFloat(document.getElementById('calc-vy').value) || -2.0) * 1e5;
+                const vz = (parseFloat(document.getElementById('calc-vz').value) || 4.0) * 1e5;
+                const bx = parseFloat(document.getElementById('calc-bx').value) || 0.5;
+                const by = parseFloat(document.getElementById('calc-by').value) || 0.8;
+                const bz = parseFloat(document.getElementById('calc-bz').value) || -0.3;
 
-        const earthGroup = new THREE.Group();
-        const earthTex = new THREE.TextureLoader().load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
-        const earth = new THREE.Mesh(new THREE.SphereGeometry(3.5, 64, 64), new THREE.MeshStandardMaterial({ map: earthTex }));
-        earth.rotation.z = -23.5 * Math.PI / 180; // Inclinación real
-        const axGeo = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-5,0), new THREE.Vector3(0,5,0)]), new THREE.LineBasicMaterial({color:0xffffff, linewidth: 2}));
-        const axMag = new THREE.Group();
-        axMag.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,4.5,0)]), new THREE.LineBasicMaterial({color:0x3b82f6, linewidth: 3}))); 
-        axMag.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-4.5,0), new THREE.Vector3(0,0,0)]), new THREE.LineBasicMaterial({color:0xe11d48, linewidth: 3}))); 
-        let lblGeo = createPoleLabel('N. Geo', 0.8); lblGeo.position.set(0, 5.5, 0); axGeo.add(lblGeo);
-        let lblMag = createPoleLabel('S. Mag', 0.8); lblMag.position.set(0, 5.0, 0); axMag.add(lblMag);
-        axMag.rotation.z = -11 * Math.PI / 180; // Declinación magnética
-        earthGroup.add(earth, axGeo, axMag);
-        setupShadows(earthGroup); fixedContainer.add(earthGroup);
+                const cx = (vy * bz - vz * by);
+                const cy = -(vx * bz - vz * bx);
+                const cz = (vx * by - vy * bx);
 
-        const hitboxFixed = new THREE.Mesh(new THREE.SphereGeometry(4), hitMat);
-        hitboxFixed.userData = { type: 'fixed' };
-        fixedContainer.add(hitboxFixed);
+                const fx = q * cx;
+                const fy = q * cy;
+                const fz = q * cz;
+                const fMag = Math.sqrt(fx * fx + fy * fy + fz * fz);
 
-        // --- Brújulas Ancladas (Solo Rotan) ---
-        const createCompass = (x, y) => {
-            const grp = new THREE.Group();
-            
-            // Eje de anclaje (Pin)
-            const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.8, 8), new THREE.MeshStandardMaterial({color: 0x64748b}));
-            pin.rotation.x = Math.PI/2; pin.position.z = -0.3; grp.add(pin);
-
-            // Aguja Magnética
-            const needle = new THREE.Group();
-            const mN = new THREE.Mesh(new THREE.ConeGeometry(0.3, 1.4, 16), matN); mN.position.x = 0.7; mN.rotation.z = -Math.PI/2;
-            const mS = new THREE.Mesh(new THREE.ConeGeometry(0.3, 1.4, 16), matS); mS.position.x = -0.7; mS.rotation.z = Math.PI/2;
-            let lmN = createPoleLabel('N', 0.5); lmN.position.set(0, 0.4, 0); mN.add(lmN);
-            let lmS = createPoleLabel('S', 0.5); lmS.position.set(0, 0.4, 0); mS.add(lmS);
-            needle.add(mN, mS); grp.add(needle);
-
-            // Vector de Tensión
-            const forceArrow = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(0,0,0), 0, 0xe11d48, 0.5, 0.3);
-            forceArrow.line.material.linewidth = 3; forceArrow.position.z = 0.5; grp.add(forceArrow);
-
-            // Anillo de selección
-            const ring = new THREE.Mesh(new THREE.RingGeometry(1.4, 1.6, 32), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.8 }));
-            ring.visible = false; grp.add(ring);
-
-            const hitbox = new THREE.Mesh(new THREE.SphereGeometry(1.6), hitMat);
-            hitbox.userData = { type: 'compass' }; grp.add(hitbox);
-
-            setupShadows(grp); scene.add(grp);
-
-            const compData = {
-                group: grp, needle: needle, hitbox: hitbox, ring: ring, forceArrow: forceArrow,
-                pos: new THREE.Vector3(x, y, 0), theta: 0, omega: 0, m: 2.0
-            };
-            hitbox.userData.parent = compData;
-            compasses.push(compData);
-            if(!lastInteractedCompass) lastInteractedCompass = compData;
-            return compData;
-        };
-        createCompass(-6, 3);
-
-        $('btn-add-comp').onclick = () => {
-            if(compasses.length >= 8) { alert("Límite máximo de brújulas alcanzado para preservar rendimiento."); return; }
-            createCompass(-10 + Math.random()*20, -8 + Math.random()*16);
-        };
-
-        // --- Gestor Dinámico de Flechas Volumétricas 3D ---
-        const arrows = [], gridGrp = new THREE.Group(); scene.add(gridGrp);
-        
-        const buildFieldLines = () => {
-            gridGrp.clear(); arrows.length = 0;
-            let vol = getVal('sl-vol', 16);
-            let den = getVal('sl-den', 3.5);
-            let zLimit = state.is3D ? vol/2 : 0; 
-            
-            for(let z=-zLimit; z<=zLimit; z+=den) {
-                for(let x=-vol; x<=vol; x+=den) {
-                    for(let y=-vol; y<=vol; y+=den) {
-                        if(x===0 && y===0 && z===0) continue;
-                        let a = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(x,y,z), 1, 0xffffff, 0.4, 0.25);
-                        a.line.material.transparent = true; a.cone.material.transparent = true;
-                        gridGrp.add(a); arrows.push({a, x, y, z});
+                const strEl = document.getElementById('calc-result-str');
+                const magEl = document.getElementById('calc-result-mag');
+                if (strEl) {
+                    const sFx = fx.toExponential(2);
+                    const sFy = (fy >= 0 ? '+' : '') + fy.toExponential(2);
+                    const sFz = (fz >= 0 ? '+' : '') + fz.toExponential(2);
+                    strEl.innerHTML = `$$\\vec{F}_B = (${sFx}\\hat{\\imath} ${sFy}\\hat{\\jmath} ${sFz}\\hat{k})\\;\\text{N}$$`;
+                    if (window.MathJax && MathJax.typesetPromise) {
+                        MathJax.typesetPromise([strEl]);
                     }
                 }
+                if (magEl) {
+                    magEl.innerHTML = `Magnitud: $|\\vec{F}_B| = ${fMag.toExponential(2)}\\;\\text{N}$ &middot; $\\vec{F}_B \\cdot \\vec{v} = 0.00\\;\\text{W}$ (Ortogonal)`;
+                }
             }
-            updateArrows(true);
-        };
-        
-        // Listeners Seguros para Sliders
-        if($('sl-vol')) { $('sl-vol').addEventListener('mouseup', buildFieldLines); $('sl-vol').addEventListener('touchend', buildFieldLines); }
-        if($('sl-den')) { $('sl-den').addEventListener('mouseup', buildFieldLines); $('sl-den').addEventListener('touchend', buildFieldLines); }
 
-        // 3. MATEMÁTICA Y CAMPOS
-        const getFixedPoles = () => {
-            let mult = getVal('sel-material', 1); 
-            let m = state.m_base * mult; 
-            let px = state.fixed.pos.x, py = state.fixed.pos.y;
-            
-            if(state.config === 'barra') return [{x:px+1, y:py, q:m}, {x:px-1, y:py, q:-m}];
-            if(state.config === 'herradura') return [{x:px+1, y:py+1.5, q:m}, {x:px+1, y:py-1.5, q:-m}];
-            if(state.config === 'disco') return [{x:px+0.25, y:py, q:m}, {x:px-0.25, y:py, q:-m}];
-            if(state.config === 'anillo') return [{x:px+2, y:py, q:m}, {x:px-2, y:py, q:-m}];
-            if(state.config === 'tierra') {
-                let th = (-23.5 - 11) * Math.PI/180;
-                let dx = -Math.sin(th)*3.5, dy = Math.cos(th)*3.5;
-                return [{x: px+dx, y: py+dy, q: -m*3}, {x: px-dx, y: py-dy, q: m*3}];
-            } return [];
-        };
-        
-        const getB = (x, y, z=0) => {
-            let B = new THREE.Vector3();
-            getFixedPoles().forEach(p => {
-                let rx=x-p.x, ry=y-p.y, rz=z;
-                let r = Math.max(Math.sqrt(rx*rx+ry*ry+rz*rz), 0.8); 
-                let f = p.q/(r*r*r); B.add(new THREE.Vector3(rx*f, ry*f, rz*f));
+            document.getElementById('btn-calc-vector').addEventListener('click', updateVectorCalc);
+            ['calc-q', 'calc-vx', 'calc-vy', 'calc-vz', 'calc-bx', 'calc-by', 'calc-bz'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', updateVectorCalc);
             });
-            return B;
-        };
 
-        // 4. BUCLE DE INTEGRACIÓN FÍSICA (Oscilador Armónico Magnético)
-        let lastT = performance.now();
-        const updatePhysics = () => {
-            let dt = Math.min((performance.now() - lastT)/1000, 0.03); lastT = performance.now();
-            let refFnet = new THREE.Vector3(), refTau = 0; 
-            
-            let multMat = getVal('sel-material', 1);
-            
-            compasses.forEach((c) => {
-                let L=0.7, cos=Math.cos(c.theta), sin=Math.sin(c.theta);
-                let pN = {x: c.pos.x+L*cos, y: c.pos.y+L*sin, z: c.pos.z};
-                let pS = {x: c.pos.x-L*cos, y: c.pos.y-L*sin, z: c.pos.z};
-                
-                let BN = getB(pN.x, pN.y, pN.z); 
-                let BS = getB(pS.x, pS.y, pS.z);
-                
-                let FN = BN.multiplyScalar(c.m); 
-                let FS = BS.multiplyScalar(-c.m); 
-                let Fnet = FN.clone().add(FS);
-                
-                let tau = new THREE.Vector3(pN.x-c.pos.x, pN.y-c.pos.y, 0).cross(FN).z + 
-                          new THREE.Vector3(pS.x-c.pos.x, pS.y-c.pos.y, 0).cross(FS).z;
+            // Botón "Ver en 3D" desde Tab 3
+            document.getElementById('btn-send-to-3d').addEventListener('click', () => {
+                const vx = (parseFloat(document.getElementById('calc-vx').value) || 3.0) * 1e5;
+                const vy = (parseFloat(document.getElementById('calc-vy').value) || -2.0) * 1e5;
+                const vz = (parseFloat(document.getElementById('calc-vz').value) || 4.0) * 1e5;
+                const bx = parseFloat(document.getElementById('calc-bx').value) || 0.5;
+                const by = parseFloat(document.getElementById('calc-by').value) || 0.8;
+                const bz = parseFloat(document.getElementById('calc-bz').value) || -0.3;
 
-                if(c === lastInteractedCompass) { refFnet = Fnet.clone(); refTau = tau; }
+                const vVec = new THREE.Vector3(vx, vy, vz);
+                const bVec = new THREE.Vector3(bx, by, bz);
 
-                // ROTACIÓN GUIADA POR TORQUE (Oscilación amortiguada)
-                c.omega = (c.omega + (tau / 0.05) * dt) * 0.85; 
-                c.theta += c.omega * dt;
-                
-                c.group.position.copy(c.pos);
-                c.needle.rotation.z = c.theta;
-                
-                // Mostrar Tensión sobre el Anclaje
-                if (Fnet.length() > 0.2) {
-                    c.forceArrow.setDirection(Fnet.clone().normalize()); 
-                    c.forceArrow.setLength(Math.min(Fnet.length() * 0.4, 6), 0.6, 0.4);
-                    c.forceArrow.setColor(multMat < 0 ? 0x10b981 : 0xe11d48); 
-                    c.forceArrow.visible = true;
-                } else c.forceArrow.visible = false;
+                speedV = vVec.length();
+                magB = bVec.length();
+                const dot = vVec.dot(bVec);
+                const cosTheta = Math.max(-1, Math.min(1, dot / (speedV * magB)));
+                thetaDeg = Math.round(Math.acos(cosTheta) * 180 / Math.PI);
+
+                sliderV.value = Math.min(10, Math.max(1, speedV / 1e5));
+                sliderB.value = Math.min(1.5, Math.max(0.1, magB));
+                sliderTheta.value = thetaDeg;
+
+                labelValV.textContent = (speedV / 1e5).toFixed(1) + ' × 10⁵ m/s';
+                labelValB.textContent = magB.toFixed(2) + ' T';
+                labelValTheta.textContent = thetaDeg.toFixed(1) + '°';
+
+                resetSimulation();
             });
-            
-            fixedContainer.position.copy(state.fixed.pos);
-            
-            // Refrescar UI Telemetría Segura
-            if($('ui-f')) $('ui-f').innerText = refFnet.length().toFixed(2); 
-            if($('ui-tau')) $('ui-tau').innerText = Math.abs(refTau).toFixed(2);
-            
-            let fBox = $('ui-f-box');
-            if(fBox) {
-                if (multMat < 0) {
-                    fBox.classList.remove('bg-rose-50', 'border-rose-200', 'text-rose-900');
-                    fBox.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
-                } else {
-                    fBox.classList.remove('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
-                    fBox.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+
+            // 7. BUCLE DE ANIMACIÓN FÍSICA Y RENDER 3D
+            const dt = 0.03;
+            function animate() {
+                requestAnimationFrame(animate);
+
+                if (isAnimating) {
+                    const p = PARTICLES[currentParticleKey];
+                    const rad = thetaDeg * Math.PI / 180;
+                    
+                    // Movimiento armónico / helicoidal exacto alrededor del eje B (+Z)
+                    const omega = (Math.abs(p.q) * magB) / p.m;
+                    const omegaVisual = 2.5; // Rapidez angular visual agradable
+                    
+                    simTime += dt;
+                    const v_perp_scale = 1.8 * Math.sin(rad);
+                    const v_par_scale = 0.8 * Math.cos(rad);
+
+                    // Radio visual en Three.js
+                    const rVisual = Math.max(0.2, v_perp_scale * 1.2);
+                    
+                    // Trayectoria: Giro en plano XY, avance a lo largo de Z (dirección de B)
+                    const signTurn = p.q > 0 ? 1 : -1;
+                    simPos.x = rVisual * Math.cos(signTurn * omegaVisual * simTime);
+                    simPos.y = rVisual * Math.sin(signTurn * omegaVisual * simTime);
+                    simPos.z = v_par_scale * simTime;
+
+                    // Centrar si se escapa muy lejos en Z
+                    if (Math.abs(simPos.z) > 4.5) {
+                        simTime = 0;
+                        trailCount = 0;
+                    }
+
+                    particleGroup.position.copy(simPos);
+
+                    // Actualizar posición de la estela
+                    if (trailCount < maxTrailPoints) {
+                        trailPositions[trailCount * 3] = simPos.x;
+                        trailPositions[trailCount * 3 + 1] = simPos.y;
+                        trailPositions[trailCount * 3 + 2] = simPos.z;
+                        trailCount++;
+                        trailGeometry.setDrawRange(0, trailCount);
+                    } else {
+                        // Shift array
+                        for (let i = 0; i < (maxTrailPoints - 1) * 3; i++) {
+                            trailPositions[i] = trailPositions[i + 3];
+                        }
+                        trailPositions[(maxTrailPoints - 1) * 3] = simPos.x;
+                        trailPositions[(maxTrailPoints - 1) * 3 + 1] = simPos.y;
+                        trailPositions[(maxTrailPoints - 1) * 3 + 2] = simPos.z;
+                    }
+                    trailGeometry.attributes.position.needsUpdate = true;
                 }
+
+                controls.update();
+                renderer.render(scene, camera);
             }
 
-            drawDCL(refFnet, lastInteractedCompass, multMat); 
-            updateArrows(false);
-        };
-
-        const updateArrows = (forceUpdate = false) => {
-            let chk = $('chk-grid');
-            if(!chk || !chk.checked) { gridGrp.visible = false; return; }
-            gridGrp.visible = true;
-            
-            let stepDen = getVal('sl-den', 3.5);
-            
-            arrows.forEach(({a,x,y,z}) => {
-                if(!state.is3D && z !== 0) { a.visible = false; return; } 
-                
-                let B = getB(x,y,z); let mag = B.length();
-                let isInsideEarth = state.config === 'tierra' && Math.sqrt(Math.pow(x-state.fixed.pos.x,2)+Math.pow(y-state.fixed.pos.y,2)+Math.pow(z,2)) < 3.8;
-                
-                if(mag>0.05 && !isInsideEarth) {
-                    a.setDirection(B.normalize());
-                    let baseLen = Math.min(Math.pow(mag, 0.3)*1.2, stepDen * 0.8);
-                    a.setLength(baseLen, baseLen*0.35, baseLen*0.25);
-                    a.setColor(new THREE.Color().setHSL(0.55 - Math.min(mag/15, 0.55), 0.9, 0.5));
-                    a.line.material.opacity = state.is3D ? 0.35 : 0.7; a.visible = true;
-                } else a.visible = false;
+            // Redimensionamiento Responsivo
+            window.addEventListener('resize', () => {
+                const w = cont3D.clientWidth || 500;
+                const h = cont3D.clientHeight || 350;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+                updateVectorPhysics();
             });
-        };
 
-        // 5. INTERACCIONES, CÁMARA Y ARRASTRE
-        const setView = () => {
-            if(state.is3D) {
-                cam.position.set(0, -28, 25);
-                cam.lookAt(0,0,0); ctrl.enableRotate = true;
-                if($('btn-3d')) {
-                    $('btn-3d').innerHTML = `<i data-lucide="monitor-down" class="w-4 h-4"></i> Vista 2D`;
-                    $('btn-3d').classList.replace('bg-indigo-600', 'bg-purple-600');
-                    $('btn-3d').classList.replace('hover:bg-indigo-700', 'hover:bg-purple-700');
-                }
-            } else {
-                cam.position.set(0, 0, 38);
-                cam.rotation.set(0,0,0); ctrl.enableRotate = false;
-                if($('btn-3d')) {
-                    $('btn-3d').innerHTML = `<i data-lucide="cuboid" class="w-4 h-4"></i> Cámara 3D`;
-                    $('btn-3d').classList.replace('bg-purple-600', 'bg-indigo-600');
-                    $('btn-3d').classList.replace('hover:bg-purple-700', 'hover:bg-indigo-700');
-                }
-                state.fixed.pos.z = 0; compasses.forEach(c => c.pos.z = 0);
-            }
-            buildFieldLines();
-            lucide.createIcons();
-        };
-        
-        if($('btn-3d')) $('btn-3d').onclick = () => { state.is3D = !state.is3D; setView(); };
-        
-        if($('sel-scene')) {
-            $('sel-scene').onchange = e => {
-                state.config = e.target.value;
-                fixedBar.visible = state.config === 'barra'; 
-                fixedHorse.visible = state.config === 'herradura'; 
-                fixedCoin.visible = state.config === 'disco';
-                fixedRing.visible = state.config === 'anillo';
-                earthGroup.visible = state.config === 'tierra';
-                state.fixed.pos.set(0, 0, 0);
-            };
-        }
-        
-        if($('btn-reset')) {
-            $('btn-reset').onclick = () => { 
-                state.fixed.pos.set(0,0,0);
-                compasses.forEach((c, idx) => { c.pos.set(-8 + idx*3, 6 - idx*2, 0); c.theta=0; c.omega=0; });
-            };
-        }
-
-        const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2(), plane = new THREE.Plane(new THREE.Vector3(0,0,1),0);
-        
-        renderer.domElement.onpointerdown = e => {
-            let r = renderer.domElement.getBoundingClientRect();
-            mouse.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
-            raycaster.setFromCamera(mouse, cam);
-            
-            let hitboxes = [hitboxFixed, ...compasses.map(c => c.hitbox)];
-            let intersects = raycaster.intersectObjects(hitboxes);
-            
-            if(intersects.length > 0) {
-                let hitObj = intersects[0].object;
-                if(hitObj.userData.type === 'fixed') { activeDragObj = state.fixed; } 
-                else { activeDragObj = hitObj.userData.parent; lastInteractedCompass = activeDragObj; activeDragObj.ring.visible = true; }
-                ctrl.enabled = false; document.body.style.cursor = 'grabbing';
-            }
-        };
-        
-        renderer.domElement.onpointermove = e => {
-            let r = renderer.domElement.getBoundingClientRect();
-            mouse.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
-            if(activeDragObj) {
-                raycaster.setFromCamera(mouse, cam);
-                if(state.is3D) plane.setFromNormalAndCoplanarPoint(cam.getWorldDirection(new THREE.Vector3()).multiplyScalar(-1), activeDragObj.pos);
-                else plane.set(new THREE.Vector3(0,0,1),0);
-                
-                let i = new THREE.Vector3(); raycaster.ray.intersectPlane(plane, i);
-                if(i) {
-                    let maxLim = getVal('sl-vol', 16);
-                    let nx = Math.max(-maxLim, Math.min(maxLim, i.x)); let ny = Math.max(-maxLim, Math.min(maxLim, i.y));
-                    let nz = state.is3D ? Math.max(-maxLim/2, Math.min(maxLim/2, i.z)) : 0;
-                    if(activeDragObj.pos) activeDragObj.pos.set(nx, ny, nz);
-                }
-            } else {
-                raycaster.setFromCamera(mouse, cam);
-                let hitboxes = [hitboxFixed, ...compasses.map(c => c.hitbox)];
-                if(raycaster.intersectObjects(hitboxes).length > 0) document.body.style.cursor = 'grab';
-                else document.body.style.cursor = 'default';
-            }
-        };
-        const endDrag = () => { if(activeDragObj && activeDragObj.ring) activeDragObj.ring.visible = false; activeDragObj = null; ctrl.enabled = true; };
-        renderer.domElement.onpointerup = endDrag; renderer.domElement.onpointercancel = endDrag;
-
-        // 6. DCL Dinámico
-        const cvDcl = $('cv-dcl'), ctx = cvDcl.getContext('2d');
-        const drawDclArrow = (v, color, s, cx, cy) => {
-            let len = v.length()*s; if(len<1) return;
-            let vn = v.clone().normalize().multiplyScalar(Math.min(len, cvDcl.width/2 - 15));
-            let ex = cx+vn.x, ey = cy-vn.y, ang = Math.atan2(-vn.y, vn.x);
-            ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=4; ctx.lineCap='round'; ctx.lineJoin='round';
-            ctx.moveTo(cx,cy); ctx.lineTo(ex,ey);
-            ctx.lineTo(ex-8*Math.cos(ang-0.5), ey-8*Math.sin(ang-0.5)); ctx.moveTo(ex,ey);
-            ctx.lineTo(ex-8*Math.cos(ang+0.5), ey-8*Math.sin(ang+0.5)); ctx.stroke();
-        };
-        
-        const drawDCL = (F, refCompass, multMat) => {
-            if(!cvDcl || !cvDcl.parentElement) return;
-            cvDcl.width = cvDcl.parentElement.clientWidth; cvDcl.height = cvDcl.parentElement.clientHeight;
-            let cx = cvDcl.width/2, cy = cvDcl.height/2; ctx.clearRect(0,0,cvDcl.width,cvDcl.height);
-            ctx.beginPath(); ctx.strokeStyle = "#1e293b"; ctx.lineWidth = 1; ctx.moveTo(0,cy); ctx.lineTo(cvDcl.width, cy); ctx.moveTo(cx,0); ctx.lineTo(cx, cvDcl.height); ctx.stroke();
-            if(!refCompass) return;
-
-            ctx.save(); ctx.translate(cx,cy); ctx.rotate(-refCompass.theta);
-            ctx.fillStyle="#2563eb"; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-20,10); ctx.lineTo(-20,-10); ctx.fill(); 
-            ctx.fillStyle="#e11d48"; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(20,10); ctx.lineTo(20,-10); ctx.fill(); 
-            ctx.fillStyle="#ffffff"; ctx.font="bold 14px system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; 
-            ctx.fillText("S", -12, 0); ctx.fillText("N", 12, 0);
-            ctx.restore();
-            
-            drawDclArrow(getB(refCompass.pos.x, refCompass.pos.y, refCompass.pos.z), "#22d3ee", 15, cx, cy); 
-            drawDclArrow(F, multMat < 0 ? "#10b981" : "#e11d48", 3, cx, cy); // Fuerza cambia de color si es repulsión
-        };
-
-        // 7. Tooltips MathJax Dinámicos
-        const globalTip = $('global-tip');
-        document.querySelectorAll(".tip-trigger").forEach(el => {
-            el.addEventListener("mouseenter", () => {
-                const rect = el.getBoundingClientRect(); 
-                globalTip.innerHTML = el.getAttribute('data-tip'); 
-                
-                // Forzar renderizado kLaTeX asíncrono
-                if (window.MathJax && window.MathJax.typesetPromise) {
-                    MathJax.typesetPromise([globalTip]).then(() => {
-                        globalTip.style.top = (rect.bottom + 10) + "px"; globalTip.style.left = Math.max(10, rect.left - 150) + "px"; globalTip.classList.add('visible');
-                    }).catch(err => console.log(err));
-                } else {
-                    globalTip.style.top = (rect.bottom + 10) + "px"; globalTip.style.left = Math.max(10, rect.left - 150) + "px"; globalTip.classList.add('visible');
-                }
-            });
-            el.addEventListener("mouseleave", () => { globalTip.classList.remove('visible'); });
+            // Inicialización inicial
+            updateVectorPhysics();
+            updateVectorCalc();
+            animate();
         });
-
-        // Event Listener Global para evitar errores de inicialización
-        window.addEventListener('DOMContentLoaded', () => {
-            buildFieldLines();
-            setView(); 
-            if($('sel-scene')) $('sel-scene').dispatchEvent(new Event('change'));
-            const anim = () => { 
-                requestAnimationFrame(anim); 
-                updatePhysics(); ctrl.update(); 
-                if(state.config==='tierra' && earthGroup.children.length > 0) earthGroup.children[0].rotation.y += 0.002; 
-                renderer.render(scene, cam); 
-            };
-            anim();
-
-            // Responsive
-            new ResizeObserver(() => {
-                cam.aspect = cont3D.clientWidth / cont3D.clientHeight; cam.updateProjectionMatrix();
-                renderer.setSize(cont3D.clientWidth, cont3D.clientHeight);
-                if(cvDcl && cvDcl.parentElement) { cvDcl.width = cvDcl.parentElement.clientWidth; cvDcl.height = cvDcl.parentElement.clientHeight; }
-            }).observe(cont3D);
-        });
-
     </script>
 </body>
 </html>
