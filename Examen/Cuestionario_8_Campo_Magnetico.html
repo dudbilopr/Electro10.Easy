@@ -74,7 +74,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-bold text-slate-800">Física Electromagnética</h1>
-                    <p class="text-xs md:text-sm text-slate-500 font-medium">Evaluación: Carga Eléctrica y Ley de Coulomb</p>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">Evaluación: Campo Magnético y Fuerza de Lorentz</p>
                 </div>
             </div>
             <div class="flex gap-3 items-center">
@@ -125,7 +125,7 @@
                 <h2 class="text-lg font-bold text-blue-900 mb-2 flex items-center gap-2">
                     <i class="ph ph-info text-xl"></i> Instrucciones de la Evaluación
                 </h2>
-                <p class="text-sm text-blue-800 mb-2 leading-relaxed">Resuelve los 20 problemas sobre Cargas y Ley de Coulomb basados en el currículo de nivel universitario (AP Physics 2). Utiliza las herramientas y los <strong>tips metodológicos</strong> si necesitas apoyo.</p>
+                <p class="text-sm text-blue-800 mb-2 leading-relaxed">Resuelve los 20 problemas sobre Campo Magnético y Fuerza de Lorentz basados en el currículo de física universitaria (Sears-Zemansky / Griffiths). Utiliza las herramientas y los <strong>tips metodológicos</strong> si necesitas apoyo.</p>
                 <p class="text-sm text-blue-800 font-semibold bg-blue-100 p-2 rounded inline-block">Tu progreso se respaldará automáticamente en la nube de Firebase si tu nota supera el 70%.</p>
             </div>
 
@@ -202,160 +202,263 @@
 
         // Escuchamos el estado de auth. Al estar en iframe en tu plataforma, detectará automáticamente la sesión
         onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            const statusEl = document.getElementById('auth-status');
             if (user) {
+                currentUser = user;
+                const statusEl = document.getElementById('auth-status');
                 const userName = user.email ? user.email.split('@')[0] : 'Estudiante';
                 statusEl.innerHTML = `<div class="w-2 h-2 rounded-full bg-green-500 mr-1 animate-pulse"></div> <span class="truncate max-w-[100px]">${userName}</span>`;
                 statusEl.classList.remove('hidden');
                 loadProgress();
-            } else {
+            } else if (!currentUser) {
+                const statusEl = document.getElementById('auth-status');
                 statusEl.innerHTML = `<i class="ph ph-warning-circle text-amber-500"></i> Debes iniciar sesión en la plataforma`;
                 statusEl.classList.remove('hidden');
             }
         });
 
-        // --- 2. EXAM DATA (20 Questions: Charge & Coulomb's Law) ---
-        const questions = [{
-    type: 'mcq',
-    text: 'Pregunta 1 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 2 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 3 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 4 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 5 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 6 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 7 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 8 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 9 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 10 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 11 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 12 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 13 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 14 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 15 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 16 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 17 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 18 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 19 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-},
-{
-    type: 'mcq',
-    text: 'Pregunta 20 de Campo Magnético: ¿Cuál es la unidad del campo magnético?',
-    options: ['Tesla', 'Weber', 'Faradio', 'Henry'],
-    answer: 0,
-    tip: 'El Tesla (T) es la unidad del SI.'
-}];
+        // Soporte de sincronización de sesión vía postMessage desde la plataforma principal
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SYNC_UID') {
+                const uid = event.data.uid;
+                const email = event.data.email || 'Estudiante';
+                currentUser = { uid: uid, email: email };
+                const statusEl = document.getElementById('auth-status');
+                if (statusEl) {
+                    const userName = email.split('@')[0];
+                    statusEl.innerHTML = `<div class="w-2 h-2 rounded-full bg-green-500 mr-1 animate-pulse"></div> <span class="truncate max-w-[100px]">${userName}</span>`;
+                    statusEl.classList.remove('hidden');
+                }
+                loadProgress();
+            }
+        });
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'REQUEST_AUTH_SYNC' }, '*');
+        }
+
+        // --- 2. EXAM DATA (20 Questions: Magnetic Field & Lorentz Force - Sears-Zemansky / Griffiths) ---
+        const questions = [
+            {
+                type: 'mcq',
+                text: 'Una partícula con carga $q = -2\\,\\mu\\text{C}$ se desplaza con velocidad $\\vec{v} = (4\\times 10^5\\,\\hat{\\imath})\\,\\text{m/s}$ en una región con campo magnético uniforme $\\vec{B} = (0.5\\,\\hat{k})\\,\\text{T}$. ¿Cuál es el vector de la fuerza magnética $\\vec{F}_B$ ejercida sobre la partícula?',
+                options: [
+                    '\\(+0.4\\,\\hat{\\jmath}\\;\\text{N}\\)',
+                    '\\(-0.4\\,\\hat{\\jmath}\\;\\text{N}\\)',
+                    '\\(+0.2\\,\\hat{\\imath}\\;\\text{N}\\)',
+                    '\\(-0.2\\,\\hat{k}\\;\\text{N}\\)'
+                ],
+                answer: 0,
+                tip: 'Aplica $\\vec{F}_B = q(\\vec{v}\\times\\vec{B})$. Para los vectores unitarios, $\\hat{\\imath}\\times\\hat{k} = -\\hat{\\jmath}$. Al multiplicar por la carga negativa $q = -2\\,\\mu\\text{C}$, el signo negativo se invierte, resultando en dirección $+\\hat{\\jmath}$.'
+            },
+            {
+                type: 'mcq',
+                text: '¿Por qué la fuerza magnética pura de Lorentz $\\vec{F}_B = q(\\vec{v}\\times\\vec{B})$ nunca realiza trabajo mecánico sobre una partícula cargada puntual libre?',
+                options: [
+                    'Porque $\\vec{F}_B$ es siempre perpendicular al desplazamiento instantáneo ($d\\vec{l} = \\vec{v}\\,dt$), por lo que $\\vec{F}_B \\cdot d\\vec{l} = 0$, modificando la dirección del movimiento pero manteniendo constante la energía cinética.',
+                    'Porque la divergencia del campo magnético es nula en todo el espacio según la ley de Gauss magnética.',
+                    'Porque la aceleración de la partícula es puramente tangencial y se disipa en el medio.',
+                    'Porque el campo magnético solo interactúa con el momento dipolar intrínseco y no con el momento lineal.'
+                ],
+                answer: 0,
+                tip: 'La potencia mecánica instantánea es $P = \\vec{F}_B \\cdot \\vec{v} = q(\\vec{v}\\times\\vec{B})\\cdot\\vec{v} \\equiv 0$. Por el teorema de las fuerzas vivas, la rapidez $v$ y la energía cinética permanecen invariables.'
+            },
+            {
+                type: 'mcq',
+                text: 'En un selector de velocidades de Wien, se aplican campos perpendiculares $\\vec{E} = (6.0\\times 10^4\\,\\hat{\\jmath})\\,\\text{V/m}$ y $\\vec{B} = (0.15\\,\\hat{k})\\,\\text{T}$. ¿Qué rapidez $v$ deben poseer iones positivos para atravesar el dispositivo en línea recta sin desviarse?',
+                options: [
+                    '\\(4.0\\times 10^5\\;\\text{m/s}\\)',
+                    '\\(9.0\\times 10^3\\;\\text{m/s}\\)',
+                    '\\(2.5\\times 10^6\\;\\text{m/s}\\)',
+                    '\\(1.5\\times 10^5\\;\\text{m/s}\\)'
+                ],
+                answer: 0,
+                tip: 'Para que la partícula no se desvíe, la fuerza neta de Lorentz debe anularse: $\\vec{F} = q(\\vec{E} + \\vec{v}\\times\\vec{B}) = 0 \\implies qE = qvB$, de donde la velocidad seleccionada es $v = E/B = (6.0\\times 10^4)/(0.15) = 4.0\\times 10^5\\,\\text{m/s}$.'
+            },
+            {
+                type: 'mcq',
+                text: 'Un protón entra en una región con campo magnético uniforme formando un ángulo de $60^\\circ$ con las líneas de inducción $\\vec{B}$, describiendo una trayectoria helicoidal. ¿De qué parámetros físicos depende el periodo de revolución $T$ de la hélice en el régimen no relativista?',
+                options: [
+                    'Únicamente de la masa $m$, la carga $q$ y la magnitud del campo $B$ ($T = \\frac{2\\pi m}{qB}$), siendo independiente de la rapidez y del ángulo de inclinación.',
+                    'Es directamente proporcional a la rapidez tangencial $v_\\perp$ y al radio orbital.',
+                    'Depende del cuadrado del ángulo de entrada $\\theta$ respecto al eje magnético.',
+                    'De la longitud del paso helicoidal dividida por la componente paralela $v_\\parallel$.'
+                ],
+                answer: 0,
+                tip: 'La frecuencia angular de ciclotrón es $\\omega = \\frac{qB}{m}$, por lo que el periodo $T = \\frac{2\\pi}{\\omega} = \\frac{2\\pi m}{qB}$ no depende ni del radio ni de la velocidad (isocronismo).'
+            },
+            {
+                type: 'mcq',
+                text: 'En un espectrómetro de masas de Bainbridge, dos iones con idéntica carga positiva $q$ y misma rapidez $v$ ingresan a una cámara con campo magnético uniforme $B$. Si el ion 1 describe una semicircunferencia de radio $R_1 = 8.0\\,\\text{cm}$ y el ion 2 una de $R_2 = 12.0\\,\\text{cm}$, ¿cuál es la razón entre sus masas $m_2 / m_1$?',
+                options: [
+                    '\\(1.5\\)',
+                    '\\(0.67\\)',
+                    '\\(2.25\\)',
+                    '\\(1.25\\)'
+                ],
+                answer: 0,
+                tip: 'Del balance centrípeto $qvB = \\frac{mv^2}{R}$, se deduce $R = \\frac{mv}{qB}$. Con carga y rapidez idénticas, el radio es directamente proporcional a la masa del isótopo: $m_2/m_1 = R_2/R_1 = 12.0/8.0 = 1.5$.'
+            },
+            {
+                type: 'mcq',
+                text: 'Un segmento rectilíneo de alambre de longitud $L = 0.50\\,\\text{m}$ transporta una corriente $I = 4.0\\,\\text{A}$ en la dirección $+x$. El alambre está inmerso en un campo magnético uniforme $\\vec{B} = (0.30\\,\\hat{\\jmath} + 0.40\\,\\hat{k})\\,\\text{T}$. ¿Cuál es la magnitud de la fuerza magnética sobre el conductor?',
+                options: [
+                    '\\(1.0\\;\\text{N}\\)',
+                    '\\(0.6\\;\\text{N}\\)',
+                    '\\(0.8\\;\\text{N}\\)',
+                    '\\(1.4\\;\\text{N}\\)'
+                ],
+                answer: 0,
+                tip: 'Aplica $\\vec{F} = I(\\vec{L}\\times\\vec{B}) = 4.0(0.50\\,\\hat{\\imath} \\times (0.30\\,\\hat{\\jmath} + 0.40\\,\\hat{k})) = 4.0(0.15\\,\\hat{k} - 0.20\\,\\hat{\\jmath}) = -0.80\\,\\hat{\\jmath} + 0.60\\,\\hat{k}\\,\\text{N}$. Su magnitud es $|\\vec{F}| = \\sqrt{(-0.80)^2 + 0.60^2} = 1.0\\,\\text{N}$.'
+            },
+            {
+                type: 'mcq',
+                text: 'En un experimento del Efecto Hall sobre una cinta conductora que transporta corriente hacia $+x$ bajo un campo magnético en $+z$, ¿qué magnitud física fundamental se determina mediante el signo algebraico y la amplitud del voltaje transversal de Hall $V_H$?',
+                options: [
+                    'El signo algebraico de los portadores de carga mayoritarios y la concentración volumétrica de portadores $n$.',
+                    'La conductividad térmica del material y su permeabilidad magnética.',
+                    'La susceptibilidad dieléctrica y la inductancia parásita.',
+                    'El coeficiente de dilatación piezoresistiva de la red cristalina.'
+                ],
+                answer: 0,
+                tip: 'El signo del potencial transversal $V_H$ indica si las cargas móviles son electrones o huecos, y su magnitud permite calcular la densidad de portadores mediante $n = \\frac{IB}{q d V_H}$.'
+            },
+            {
+                type: 'mcq',
+                text: 'Una espira rectangular plana de dimensiones $10\\,\\text{cm} \\times 20\\,\\text{cm}$ consta de $N = 100$ vueltas y transporta una corriente $I = 3.0\\,\\text{A}$. ¿Cuál es la torca máxima que experimentará si se introduce en un campo magnético uniforme de $0.25\\,\\text{T}$?',
+                options: [
+                    '\\(1.5\\;\\text{N}\\cdot\\text{m}\\)',
+                    '\\(3.0\\;\\text{N}\\cdot\\text{m}\\)',
+                    '\\(0.75\\;\\text{N}\\cdot\\text{m}\\)',
+                    '\\(6.0\\;\\text{N}\\cdot\\text{m}\\)'
+                ],
+                answer: 0,
+                tip: 'El momento dipolar magnético es $\\mu = N I A = 100 \\times 3.0 \\times (0.10 \\times 0.20) = 6.0\\,\\text{A}\\cdot\\text{m}^2$. La torca máxima se produce a $\\theta = 90^\\circ$: $\\tau_{max} = \\mu B = 6.0 \\times 0.25 = 1.5\\,\\text{N}\\cdot\\text{m}$.'
+            },
+            {
+                type: 'mcq',
+                text: 'Un dipolo magnético con momento dipolar $\\vec{\\mu}$ se halla inmerso en un campo uniforme $\\vec{B}$. ¿Cuál es la energía potencial $U$ del dipolo cuando su vector momento está orientado de forma estrictamente antiparalela a $\\vec{B}$?',
+                options: [
+                    '\\(U = +\\mu B\\;\\text{(máxima energía, equilibrio inestable)}\\)',
+                    '\\(U = -\\mu B\\;\\text{(mínima energía, equilibrio estable)}\\)',
+                    '\\(U = 0\\;\\text{(energía nula)}\\)',
+                    '\\(U = -2\\mu B\\)'
+                ],
+                answer: 0,
+                tip: 'La energía potencial de interacción dipolar es $U = -\\vec{\\mu}\\cdot\\vec{B} = -\\mu B \\cos\\theta$. En orientación antiparalela, $\\theta = 180^\\circ \\implies \\cos(180^\\circ) = -1$, resultando en $U = +\\mu B$.'
+            },
+            {
+                type: 'mcq',
+                text: 'La segunda ley de Maxwell (Ley de Gauss para el magnetismo) establece que $\\oint_S \\vec{B} \\cdot d\\vec{A} = 0$ para cualquier superficie gaussiana cerrada. ¿Cuál es su significado físico esencial?',
+                options: [
+                    'Las líneas de campo magnético son continuas y cerradas, lo cual implica la inexistencia de monopolos magnéticos aislados en el universo.',
+                    'El campo magnético no ejerce fuerzas sobre conductores con corriente eléctrica.',
+                    'La circulación del campo magnético a lo largo de cualquier contorno cerrado es siempre nula.',
+                    'El flujo magnético solo puede concentrarse en conductores perfectos.'
+                ],
+                answer: 0,
+                tip: 'En forma diferencial $\\nabla \\cdot \\vec{B} = 0$. Como no existen cargas magnéticas puntuales o monopolos libres aislados, toda línea de campo que penetra una superficie cerrada debe salir de ella.'
+            },
+            {
+                type: 'mcq',
+                text: 'Un alambre semicircular de radio $R$ transporta una corriente $I$ en sentido antihorario en el plano $xy$. Un campo magnético uniforme $\\vec{B} = B\\,\\hat{k}$ es perpendicular a su plano. Si los extremos del semicírculo se ubican en $(-R, 0)$ y $(+R, 0)$, ¿cuál es la fuerza magnética total sobre el arco conductor?',
+                options: [
+                    '\\(2 I R B\\;(-\\hat{\\jmath})\\)',
+                    '\\(\\pi I R B\\;(+\\hat{\\jmath})\\)',
+                    'Cero, porque las fuerzas magnéticas opuestas en cada cuadrante se anulan simétricamente',
+                    '\\(I R B\\;(-\\hat{\\imath})\\)'
+                ],
+                answer: 0,
+                tip: 'En un campo magnético uniforme, la fuerza magnética total sobre cualquier trayectoria conductora abierta es idéntica a la del vector desplazamiento rectilíneo entre sus extremos: $\\vec{F} = I(\\vec{L}'\\times\\vec{B}) = I(2R\\,\\hat{\\imath} \\times B\\,\\hat{k}) = -2IRB\\,\\hat{\\jmath}$.'
+            },
+            {
+                type: 'mcq',
+                text: 'Cuando partículas relativistas con velocidades próximas a la de la luz son desviadas por campos magnéticos intensos en trayectorias curvas dentro de aceleradores circulares, emiten una radiación electromagnética tangencial muy energética llamada:',
+                options: [
+                    'Radiación de Sincrotrón (Synchrotron Radiation)',
+                    'Radiación de Cherenkov en el vacío',
+                    'Efecto Fotoeléctrico Inverso resonante',
+                    'Ondas magnetohidrodinámicas de Alfven'
+                ],
+                answer: 0,
+                tip: 'Por la electrodinámica relativista (fórmula de Liénard), toda carga con aceleración centrípeta relativista emite radiación electromagnética concentrada hacia adelante en un cono extremadamente angosto.'
+            },
+            {
+                type: 'mcq',
+                text: '¿Por qué en un ciclotrón clásico tradicional no es factible acelerar partículas a energías ultra-altas sin modular la frecuencia del oscilador eléctrico?',
+                options: [
+                    'Porque a rapideces relativistas el factor $\\gamma$ incrementa la masa inercial efectiva, reduciendo la frecuencia orbital e interrumpiendo la resonancia con el oscilador de RF.',
+                    'Porque la fuerza centrífuga supera la rigidez dieléctrica del vacío.',
+                    'Porque la carga de las partículas disminuye al aproximarse a la velocidad de la luz.',
+                    'Porque las cavidades en "D" se polarizan electrostáticamente bloqueando la brecha de aceleración.'
+                ],
+                answer: 0,
+                tip: 'La frecuencia orbital relativista es $\\omega = \\frac{qB}{\\gamma m_0}$. Al aumentar la velocidad, $\\gamma > 1$ reduce la frecuencia de giro, perdiendo el sincronismo con el potencial alterno.'
+            },
+            {
+                type: 'mcq',
+                text: 'En una configuración de campo magnético axial no uniforme donde las líneas convergen hacia los extremos (botella magnética), ¿qué fenómeno experimenta una partícula cargada que espirala hacia las zonas de campo más intenso?',
+                options: [
+                    'Experimenta una fuerza longitudinal reflectora ("espejo magnético") que detiene su avance axial y la hace rebotar, atrapándola.',
+                    'Es acelerada indefinidamente hacia el exterior disipando toda su carga.',
+                    'Invierte instantáneamente su vector momento magnético sin alterar su posición.',
+                    'Pierde su carga por inducción electromagnética del gradiente.'
+                ],
+                answer: 0,
+                tip: 'La convergencia de las líneas de inducción genera una componente radial $B_r$. El producto vectorial con la velocidad azimutal produce una fuerza axifuga que repele a la partícula de la zona de campo intenso.'
+            },
+            {
+                type: 'mcq',
+                text: 'Dos cargas puntuales idénticas $+q$ se mueven en trayectorias paralelas en el mismo sentido con rapidez constante $v \\ll c$. ¿Cuál es la relación teórica entre la fuerza magnética atractiva $F_B$ y la fuerza electrostática repulsiva $F_E$ entre ellas?',
+                options: [
+                    '\\(F_B = \\frac{v^2}{c^2} F_E\\;\\text{(la repulsión electrostática supera por mucho a la atracción magnética no relativista)}\\)',
+                    '\\(F_B = F_E\\;\\text{(se cancelan exactamente a cualquier rapidez)}\\)',
+                    '\\(F_B = \\frac{c}{v} F_E\\;\\text{(la atracción magnética siempre es mayor)}\\)',
+                    '\\(F_B = 0\\;\\text{porque no constituyen una corriente macroscópica}\\)'
+                ],
+                answer: 0,
+                tip: 'A partir de las relaciones fundamentales del electromagnetismo y la velocidad de la luz $c = 1/\\sqrt{\\varepsilon_0 \\mu_0}$, se demuestra rigurosamente que $F_B / F_E = \\mu_0 \\varepsilon_0 v^2 = v^2/c^2$.'
+            },
+            {
+                type: 'mcq',
+                text: 'En un galvanómetro de cuadro móvil o de D\'Arsonval, ¿qué objetivo cumple insertar un cilindro central de hierro dulce en el interior de la bobina giratoria?',
+                options: [
+                    'Hacer que el campo magnético en el entrehierro sea radial, garantizando que el par de torsión sea estrictamente proporcional a la corriente ($\\tau \\propto I$) en cualquier ángulo de rotación.',
+                    'Incrementar la resistencia óhmica interna del instrumento para amortiguar sobretensiones.',
+                    'Eliminar la constante de elasticidad del resorte helicoidal.',
+                    'Convertir señales de corriente alterna en continua por histéresis.'
+                ],
+                answer: 0,
+                tip: 'El campo magnético radial asegura que las líneas de campo siempre sean paralelas al plano de la espira en los lados activos, de modo que el ángulo entre el campo y la normal sea siempre $90^\\circ$ ($\\sin\\theta = 1$), produciendo una escala de lectura uniforme.'
+            },
+            {
+                type: 'fill',
+                text: 'Escribe el nombre del acelerador de partículas circular pionero inventado por E. O. Lawrence en 1932 que acelera iones en órbitas espirales entre dos cámaras semicirculares huecas llamadas "Dees":',
+                answer: 'ciclotron',
+                tip: 'Dispositivo circular donde los iones son acelerados por un campo eléctrico alterno cada vez que cruzan la brecha entre los electrodos semicirculares (escribe: ciclotron).'
+            },
+            {
+                type: 'equation',
+                text: 'Escribe la expresión algebraica para el radio orbital $R$ de una partícula de masa $m$ y carga $q$ que se mueve perpendicularmente a un campo magnético uniforme $B$ con rapidez $v$ (usa notación algebraica plana, ej: m*v/(q*B)):',
+                answer: 'm*v/(q*B)',
+                tip: 'Iguala la fuerza centrípeta $F_c = \\frac{m v^2}{R}$ con la fuerza magnética de Lorentz $F_B = q v B$ y despeja el radio $R$.'
+            },
+            {
+                type: 'equation',
+                text: 'Escribe la fórmula algebraica para el voltaje de Hall transversal $\\Delta V_H$ en una cinta conductora de espesor $d$ con corriente $I$ inmersa en un campo magnético perpendicular $B$, densidad volumétrica de portadores $n$ y carga $q$ (usa notación plana, ej: I*B/(n*q*d)):',
+                answer: 'I*B/(n*q*d)',
+                tip: 'A partir del equilibrio entre fuerza eléctrica y magnética $q E_H = q v_d B$ y de la relación de corriente $I = n q w d v_d$, despeja el potencial transversal $\\Delta V_H = E_H w$.'
+            },
+            {
+                type: 'drag',
+                text: 'Empareja cada dispositivo o fenómeno magnético fundamental con el principio físico o ecuación que rige su operación experimental:',
+                pairs: [
+                    { question: 'Selector de Velocidades (Filtro de Wien)', answer: 'Equilibrio de fuerzas cruzadas: v = E / B' },
+                    { question: 'Espectrómetro de Masas', answer: 'Separación por radio orbital: R = m*v / (q*B)' },
+                    { question: 'Efecto Hall Transversal', answer: 'Diferencia de potencial: V_H = I*B / (n*q*d)' },
+                    { question: 'Motor de Corriente Continua', answer: 'Par de torsión sobre momento magnético: tau = mu x B' }
+                ],
+                tip: 'Asocia el balance $\\vec{F}_E + \\vec{F}_B = 0$ con Wien, la dependencia de $R$ con la masa $m$ en el espectrómetro, el potencial transversal con Hall, y la rotación mecánica con el par de torsión.'
+            }
+        ];
 
         let currentQuestion = 0;
         let userState = questions.map(() => ({ answered: false, flagged: false, value: null }));
@@ -596,7 +699,8 @@
                         zone.classList.add('bg-blue-50', 'border-solid', 'border-blue-400');
                         zone.classList.remove('border-dashed', 'text-slate-400');
                         
-                        const qIndex = 15;
+                        const qCard = zone.closest('.q-card');
+                        const qIndex = qCard ? parseInt(qCard.id.replace('q-card-', '')) : 19;
                         const allZones = document.getElementById(`q-card-${qIndex}`).querySelectorAll('.dropzone');
                         let fullZones = 0;
                         allZones.forEach(z => { if(z.querySelector('.draggable')) fullZones++; });
@@ -706,7 +810,14 @@
 
         function cleanString(str) {
             if(!str) return "";
-            return str.toLowerCase().replace(/\s+/g, '').replace(/[\(\)]/g, '').replace(/\*/g, '').replace(/\\/g, '').replace(/[{}]/g, '');
+            return str.toLowerCase()
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .replace(/\s+/g, '')
+                      .replace(/[\(\)]/g, '')
+                      .replace(/\*/g, '')
+                      .replace(/\\/g, '')
+                      .replace(/[{}]/g, '');
         }
 
         function showConfirmModal() {
@@ -786,11 +897,11 @@
 
             const msg = document.getElementById('feedback-message');
             if (percentage >= 70) {
-                msg.textContent = "¡Aprobado! Demuestras una excelente comprensión de las fuerzas electrostáticas y la Ley de Coulomb.";
+                msg.textContent = "¡Aprobado! Demuestras una excelente comprensión de la Fuerza de Lorentz, trayectorias en campos magnéticos y el Efecto Hall.";
                 msg.className = "text-xl font-bold text-green-700 mb-6 text-center max-w-lg";
                 document.getElementById('btn-save').classList.remove('hidden');
             } else {
-                msg.textContent = "Reprobado. Necesitas repasar los métodos de carga y la constante de Coulomb. Requiere mínimo 70%.";
+                msg.textContent = "Reprobado. Necesitas repasar la regla de la mano derecha, selector de velocidades y el radio orbital. Requiere mínimo 70%.";
                 msg.className = "text-xl font-bold text-red-600 mb-6 text-center max-w-lg";
             }
             
@@ -817,8 +928,9 @@
                 // Guardamos directamente en la Realtime Database usando la ruta y configuración de tu Dashboard
                 const progresoRef = ref(db, 'usuarios/' + currentUser.uid + '/progreso_curso');
                 await update(progresoRef, {
-                    'm1-q1': true, // ESTO HARÁ QUE EL CHULITO VERDE APAREZCA EN TU DASHBOARD AL CERRAR EL EXAMEN
-                    'examen_coulomb_score': window.lastScore
+                    'm8-q1': true, // ESTO HARÁ QUE EL CHULITO VERDE APAREZCA EN TU DASHBOARD AL CERRAR EL EXAMEN
+                    'm8-eval': true,
+                    'examen_lorentz_score': window.lastScore
                 });
                 
                 showToast("¡Progreso sincronizado con tu Plataforma UNAB!", "success");
@@ -838,8 +950,8 @@
             try {
                 const progresoRef = ref(db, 'usuarios/' + currentUser.uid + '/progreso_curso');
                 const snapshot = await get(progresoRef);
-                if (snapshot.exists() && snapshot.val().examen_coulomb_score) {
-                    showToast(`¡Bienvenido de nuevo! Tu récord anterior es: ${snapshot.val().examen_coulomb_score}%`, "success");
+                if (snapshot.exists() && snapshot.val().examen_lorentz_score) {
+                    showToast(`¡Bienvenido de nuevo! Tu récord anterior en Campo Magnético es: ${snapshot.val().examen_lorentz_score}%`, "success");
                 }
             } catch (e) { /* ignore silently */ }
         }
@@ -869,14 +981,14 @@
             showToast("Generando PDF detallado... Esto puede tardar unos segundos.", "info");
             
             const titleHTML = `<div id="pdf-header" class="mb-8 border-b-2 border-blue-200 pb-4">
-                                  <h1 class="text-3xl font-black text-blue-900">Resultados: Cargas y Ley de Coulomb</h1>
+                                  <h1 class="text-3xl font-black text-blue-900">Resultados: Campo Magnético y Fuerza de Lorentz</h1>
                                   <p class="text-lg text-slate-600 font-bold mt-2">Puntaje obtenido: ${window.lastScore}%</p>
                                </div>`;
             element.insertAdjacentHTML('afterbegin', titleHTML);
 
             html2pdf().set({
                 margin: [15, 10, 15, 10], 
-                filename: 'Examen_Coulomb.pdf',
+                filename: 'Examen_Campo_Magnetico_Lorentz.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
