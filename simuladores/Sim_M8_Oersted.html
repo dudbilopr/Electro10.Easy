@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OerstedLab10.easy — El Experimento de Oersted (1820)</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/lab10-core.css">
+    <link rel="stylesheet" href="../css/simulator-base.css">
+    <script src="../js/lab10-intelligence.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; overflow: hidden; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-dark { background: #1e293b; border: 1px solid #334155; color: white; padding: 6px; border-radius: 6px; width: 100%; font-size: 0.85rem; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        input[type="range"] { accent-color: #f59e0b; }
+    </style>
+</head>
+<body data-domain="magnetism" class="h-screen flex flex-col">
+
+    <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0 shadow-md">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg" style="background: var(--accent, #f59e0b);">
+                <i class="ph ph-compass" style="font-size: 1.25rem;"></i>
+            </div>
+            <h1 class="text-lg font-bold text-white">Oersted<span class="text-amber-400">Lab10.easy</span></h1>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded font-mono hidden md:inline">Abril de 1820 &bull; Nacimiento del Electromagnetismo</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="../player.html?clase=modulo8" class="text-xs bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white px-3 py-1.5 rounded transition flex items-center gap-1.5 border border-blue-500/30">
+                <i class="ph ph-presentation"></i> Ver Diapositivas
+            </a>
+            <div id="user-info" class="text-xs text-slate-300 px-3 py-1 rounded border border-slate-700 bg-slate-800/80">
+                <i class="ph ph-user"></i> Modo Universitario
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- Controls Sidebar -->
+        <aside class="w-80 glass-panel border-r border-slate-800 flex flex-col shrink-0 overflow-y-auto z-10 p-4 space-y-5">
+            
+            <div>
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-b border-slate-700 pb-2">Controles del Circuito</h2>
+                
+                <div class="space-y-4">
+                    <!-- Interruptor -->
+                    <button id="btn-switch" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg">
+                        <i class="ph ph-power"></i> <span id="lbl-switch">Cerrar Interruptor</span>
+                    </button>
+
+                    <!-- Invertir Polaridad -->
+                    <button id="btn-invert" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition border border-slate-700 flex items-center justify-center gap-2">
+                        <i class="ph ph-arrows-left-right"></i> Invertir Polaridad Batería
+                    </button>
+
+                    <!-- Corriente -->
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-amber-400 font-medium">Corriente Eléctrica ($I$)</span>
+                            <span id="val-i" class="font-mono text-slate-300">5.0 A</span>
+                        </div>
+                        <input type="range" id="slider-i" min="1.0" max="15.0" step="0.5" value="5.0" class="w-full accent-amber-500 cursor-pointer">
+                    </div>
+
+                    <!-- Distancia -->
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-blue-400 font-medium">Distancia a la Brújula ($r$)</span>
+                            <span id="val-r" class="font-mono text-slate-300">2.5 cm</span>
+                        </div>
+                        <input type="range" id="slider-r" min="1.0" max="8.0" step="0.5" value="2.5" class="w-full accent-blue-500 cursor-pointer">
+                    </div>
+
+                    <!-- Posición Relativa -->
+                    <div>
+                        <label class="text-xs font-medium text-slate-400 block mb-1">Posición de la Brújula</label>
+                        <select id="sel-pos" class="input-dark cursor-pointer">
+                            <option value="debajo">DEBAJO del conductor (Z &lt; 0)</option>
+                            <option value="encima">ENCIMA del conductor (Z &gt; 0)</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo Terrestre -->
+                    <div class="flex items-center justify-between bg-slate-800/50 p-2.5 rounded-lg border border-slate-700/50 text-xs">
+                        <span class="text-slate-300">Campo Terrestre $B_T$ (50 &mu;T)</span>
+                        <input type="checkbox" id="chk-earth" checked class="w-4 h-4 accent-amber-500 cursor-pointer">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-3 border-t border-slate-800 space-y-2">
+                <button id="btn-reset" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-colors border border-slate-700 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i> Reiniciar Mesa
+                </button>
+            </div>
+        </aside>
+
+        <!-- Center Area -->
+        <div class="flex-1 flex flex-col relative bg-slate-950">
+            <!-- 2D Canvas de la Mesa -->
+            <div class="w-full h-3/5 border-b border-slate-800 relative">
+                <canvas id="canvas-main" class="w-full h-full block"></canvas>
+                
+                <div class="absolute top-4 left-4 z-10 glass-panel px-3 py-2 rounded-lg pointer-events-none">
+                    <div class="text-xs font-bold text-amber-400 mb-0.5">Mesa Experimental de Copenhague (1820)</div>
+                    <div class="text-[11px] text-slate-400">Hans Christian Ørsted observa la deflexión de la aguja magnética.</div>
+                </div>
+
+                <div class="absolute bottom-4 right-4 z-10 glass-panel px-3 py-2 rounded-lg pointer-events-none text-right">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase">Ley de Biot-Savart / Circulación</div>
+                    <div class="text-xs font-mono font-bold text-amber-300">B = (&mu;₀ I) / (2&pi; r)</div>
+                </div>
+            </div>
+
+            <!-- Theory & Math (Bottom) -->
+            <div class="w-full h-2/5 p-4 overflow-y-auto bg-slate-900 scrollbar-thin flex gap-6 text-xs text-slate-300">
+                
+                <!-- Columna 1: Ecuación y Deducción -->
+                <div class="flex-1 space-y-2">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-1.5 text-amber-400">
+                        <i class="ph ph-function"></i> Superposición Vectorial y Ángulo de Deflexión
+                    </h3>
+                    <p class="text-justify leading-relaxed text-[11px] text-slate-400">
+                        La aguja de la brújula se orienta en la dirección del <strong>campo magnético neto</strong> resultante de la suma vectorial del campo magnético terrestre $\vec{B}_T$ (hacia el Norte) y el campo generado por el alambre $\vec{B}_{wire}$ (perpendicular al conductor según la regla de la mano derecha):
+                    </p>
+                    <div class="bg-slate-950 p-2.5 rounded border border-slate-800 font-mono text-[11px] text-center text-amber-300">
+                        $$\tan\theta = \frac{|\vec{B}_{wire}|}{|\vec{B}_T|} = \frac{\mu_0 I}{2\pi r B_T}$$
+                    </div>
+                    <p class="text-[11px] text-slate-400">
+                        Si la corriente es muy intensa o la brújula está muy cerca ($r \to 0$), el campo del cable predomina ($B_{wire} \gg B_T$) y la aguja se sitúa a casi $90^\circ$ perpendicular al cable.
+                    </p>
+                </div>
+
+                <!-- Columna 2: Telemetría Instantánea -->
+                <div class="w-72 bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2 font-mono">
+                    <h4 class="font-bold text-white text-xs border-b border-slate-800 pb-1 font-sans text-blue-400">Valores Físicos</h4>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Corriente $I$:</span>
+                        <span id="tele-i" class="font-bold text-amber-400">0.0 A</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Distancia $r$:</span>
+                        <span id="tele-r" class="font-bold text-blue-400">2.5 cm</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Campo Cable $B_{w}$:</span>
+                        <span id="tele-bw" class="font-bold text-purple-400">0.0 &mu;T</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Campo Terrestre $B_T$:</span>
+                        <span id="tele-bt" class="font-bold text-emerald-400">50.0 &mu;T</span>
+                    </div>
+                    <div class="flex justify-between border-t border-slate-800 pt-1">
+                        <span class="text-slate-300 font-bold">Deflexión $\theta$:</span>
+                        <span id="tele-theta" class="font-bold text-yellow-400 text-sm">0.0°</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+            }
+
+            const canvas = document.getElementById('canvas-main');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            let isClosed = false;
+            let currentPolarity = 1;
+            let currentAngle = 0;
+            let targetAngle = 0;
+            let angularVel = 0;
+            let flowOffset = 0;
+
+            const btnSwitch = document.getElementById('btn-switch');
+            const lblSwitch = document.getElementById('lbl-switch');
+            const btnInvert = document.getElementById('btn-invert');
+            const btnReset = document.getElementById('btn-reset');
+            const sliderI = document.getElementById('slider-i');
+            const sliderR = document.getElementById('slider-r');
+            const selPos = document.getElementById('sel-pos');
+            const chkEarth = document.getElementById('chk-earth');
+
+            function updateUI() {
+                document.getElementById('val-i').textContent = parseFloat(sliderI.value).toFixed(1) + ' A';
+                document.getElementById('val-r').textContent = parseFloat(sliderR.value).toFixed(1) + ' cm';
+            }
+
+            sliderI.addEventListener('input', updateUI);
+            sliderR.addEventListener('input', updateUI);
+
+            btnSwitch.addEventListener('click', () => {
+                isClosed = !isClosed;
+                lblSwitch.textContent = isClosed ? 'Abrir Interruptor' : 'Cerrar Interruptor';
+                btnSwitch.className = isClosed 
+                    ? 'w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg'
+                    : 'w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg';
+            });
+
+            btnInvert.addEventListener('click', () => { currentPolarity *= -1; });
+
+            btnReset.addEventListener('click', () => {
+                isClosed = false;
+                currentPolarity = 1;
+                sliderI.value = 5.0;
+                sliderR.value = 2.5;
+                currentAngle = 0;
+                targetAngle = 0;
+                angularVel = 0;
+                lblSwitch.textContent = 'Cerrar Interruptor';
+                btnSwitch.className = 'w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg';
+                updateUI();
+            });
+
+            function render() {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const I_val = isClosed ? parseFloat(sliderI.value) * currentPolarity : 0;
+                const r_cm = parseFloat(sliderR.value);
+                const r_m = r_cm / 100;
+                const isUnder = selPos.value === 'debajo';
+                const hasEarth = chkEarth.checked;
+
+                const B_wire_uT = isClosed ? ((2e-7 * Math.abs(I_val)) / r_m) * 1e6 : 0;
+                const B_earth_uT = hasEarth ? 50.0 : 0.001;
+
+                let dir = isUnder ? 1 : -1;
+                if (I_val < 0) dir *= -1;
+
+                if (isClosed && Math.abs(I_val) > 0) {
+                    targetAngle = dir * Math.atan(B_wire_uT / B_earth_uT);
+                } else {
+                    targetAngle = 0;
+                }
+
+                // Dinámica oscilatoria con amortiguamiento
+                const torque = (targetAngle - currentAngle) * 0.07;
+                angularVel = (angularVel + torque) * 0.88;
+                currentAngle += angularVel;
+
+                // Telemetría
+                document.getElementById('tele-i').textContent = I_val.toFixed(1) + ' A';
+                document.getElementById('tele-r').textContent = r_cm.toFixed(1) + ' cm';
+                document.getElementById('tele-bw').textContent = B_wire_uT.toFixed(1) + ' µT';
+                document.getElementById('tele-bt').textContent = hasEarth ? '50.0 µT' : '0.0 µT';
+                const deg = (currentAngle * 180 / Math.PI).toFixed(1);
+                document.getElementById('tele-theta').textContent = (deg > 0 ? '+' : '') + deg + '°';
+
+                // GEOMETRÍA
+                const centerX = w * 0.50;
+                const wireY = h * 0.38;
+
+                // Batería (Izquierda)
+                const batX = 60, batY = wireY + 70;
+                ctx.fillStyle = "#1e293b";
+                ctx.fillRect(batX, batY, 60, 80);
+                ctx.strokeStyle = "#475569";
+                ctx.strokeRect(batX, batY, 60, 80);
+                ctx.fillStyle = currentPolarity > 0 ? "#ef4444" : "#3b82f6";
+                ctx.fillRect(batX + 10, batY - 10, 14, 10);
+                ctx.fillStyle = currentPolarity > 0 ? "#3b82f6" : "#ef4444";
+                ctx.fillRect(batX + 36, batY - 10, 14, 10);
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 10px sans-serif";
+                ctx.fillText(currentPolarity > 0 ? "+" : "-", batX + 14, batY - 2);
+                ctx.fillText(currentPolarity > 0 ? "-" : "+", batX + 40, batY - 2);
+                ctx.fillStyle = "#facc15";
+                ctx.fillText("Batería", batX + 12, batY + 45);
+
+                // Interruptor
+                const swX = centerX - 40, swY = h * 0.84;
+                ctx.fillStyle = "#d97706";
+                ctx.beginPath(); ctx.arc(swX, swY, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(swX + 40, swY, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = isClosed ? "#10b981" : "#ef4444";
+                ctx.lineWidth = 3.5;
+                ctx.beginPath();
+                ctx.moveTo(swX, swY);
+                ctx.lineTo(swX + 40, isClosed ? swY : swY - 22);
+                ctx.stroke();
+
+                // Circuito cerrado
+                ctx.strokeStyle = "#64748b";
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(batX + 17, batY - 10);
+                ctx.lineTo(batX + 17, wireY);
+                ctx.lineTo(w - 80, wireY);
+                ctx.lineTo(w - 80, swY);
+                ctx.lineTo(swX + 40, swY);
+                ctx.moveTo(swX, swY);
+                ctx.lineTo(batX + 43, swY);
+                ctx.lineTo(batX + 43, batY - 10);
+                ctx.stroke();
+
+                // Alambre de cobre
+                ctx.strokeStyle = "#f59e0b";
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.moveTo(batX + 17, wireY);
+                ctx.lineTo(w - 80, wireY);
+                ctx.stroke();
+
+                // Flujo corriente animado
+                if (isClosed && Math.abs(I_val) > 0) {
+                    flowOffset += currentPolarity * 2;
+                    ctx.fillStyle = "#fef08a";
+                    for (let x = batX + 30; x < w - 90; x += 30) {
+                        let curX = x + (flowOffset % 30);
+                        if (curX > batX + 17 && curX < w - 80) {
+                            ctx.beginPath();
+                            ctx.arc(curX, wireY, 2.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+
+                // Brújula
+                const compassY = isUnder ? wireY + 70 : wireY - 70;
+                const compassR = 48;
+
+                ctx.strokeStyle = "#d97706";
+                ctx.lineWidth = 3.5;
+                ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+                ctx.beginPath();
+                ctx.arc(centerX, compassY, compassR, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = "#64748b";
+                ctx.font = "bold 10px sans-serif";
+                ctx.fillText("N", centerX - 4, compassY - compassR + 13);
+                ctx.fillText("S", centerX - 3, compassY + compassR - 5);
+                ctx.fillText("E", centerX + compassR - 12, compassY + 4);
+                ctx.fillText("O", centerX - compassR + 4, compassY + 4);
+
+                // Aguja
+                ctx.save();
+                ctx.translate(centerX, compassY);
+                ctx.rotate(currentAngle);
+
+                ctx.fillStyle = "#ef4444";
+                ctx.beginPath();
+                ctx.moveTo(0, -compassR + 6);
+                ctx.lineTo(5, 0); ctx.lineTo(-5, 0); ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = "#3b82f6";
+                ctx.beginPath();
+                ctx.moveTo(0, compassR - 6);
+                ctx.lineTo(5, 0); ctx.lineTo(-5, 0); ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = "#fbbf24";
+                ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+
+                requestAnimationFrame(render);
+            }
+
+            requestAnimationFrame(render);
+        });
+    </script>
+</body>
+</html>

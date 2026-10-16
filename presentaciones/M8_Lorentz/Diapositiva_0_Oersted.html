@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M8.0: El Experimento de Oersted y los Pioneros del Electromagnetismo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = { 
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']], tags: 'none' }, 
+            chtml: { matchFontHeight: false } 
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #0f172a; display: flex; justify-content: center; align-items: center; font-family: system-ui, -apple-system, sans-serif; touch-action: none; }
+        #slide-wrapper { width: 100%; height: 100%; max-width: 1920px; padding: 1.5vmin; box-sizing: border-box; display: flex; }
+        .slide { background-color: #f8fafc; width: 100%; height: 100%; border-radius: 1.5vmin; box-shadow: 0 10px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; overflow: hidden; }
+        .math-display { font-size: clamp(12px, 1.05vw, 15px); font-weight: bold; color: #1e40af; text-align: center; margin: 0.8vmin 0; overflow-x: auto;}
+        .canvas-wrapper { border: 1px solid #cbd5e1; border-radius: 0.5rem; overflow: hidden; position: relative; background: radial-gradient(circle at center, #1e293b, #020617); }
+        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 1vmin; display: flex; flex-direction: column; gap: 0.8vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 14px); }
+        .btn-ui { padding: 0.35rem 0.7rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+        .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        
+        .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;}
+        .tab-btn:hover { color: #d97706; background: #fffbeb; }
+        .tab-btn.active { color: #b45309; border-bottom-color: #d97706; background: #fffbeb; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .param-input { width: 70px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px; font-family: monospace; font-size: 12px; font-weight: bold; background-color: #ffffff; color: #0f172a; }
+    </style>
+</head>
+<body>
+    <div id="slide-wrapper">
+        <div class="slide">
+            <!-- HEADER APP -->
+            <header class="flex-none bg-slate-900 text-white p-[1.5vmin] border-b-[0.5vmin] border-amber-500 shadow-md z-10 flex items-center justify-between">
+                <h1 class="font-bold text-xl md:text-2xl flex items-center gap-3">
+                    <i data-lucide="compass" class="w-7 h-7 text-amber-400"></i>
+                    <span>M8.0: El Experimento de Oersted y los Pioneros del Electromagnetismo</span>
+                </h1>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded font-mono">Ørsted (1820) &bull; Ampère &bull; Lorentz &bull; Aplicaciones</span>
+                    <span class="text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded font-mono">Electro10.Easy</span>
+                </div>
+            </header>
+
+            <!-- CUERPO PRINCIPAL: 2 COLUMNAS -->
+            <div class="flex-1 flex flex-row p-[1.5vmin] gap-[1.5vmin] min-h-0 bg-slate-100">
+                
+                <!-- COLUMNA IZQUIERDA: PESTAÑAS HISTÓRICAS Y TEÓRICAS -->
+                <div class="w-[48%] flex flex-col bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                    
+                    <!-- BARRA DE PESTAÑAS -->
+                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
+                        <button class="tab-btn active shrink-0" data-tab="tab-oersted"><i data-lucide="compass" class="w-4 h-4 text-amber-600"></i> 1. El Experimento de Oersted (1820)</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-ampere"><i data-lucide="zap" class="w-4 h-4 text-blue-600"></i> 2. Ampère y la Electrodinámica</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-lorentz"><i data-lucide="atom" class="w-4 h-4 text-purple-600"></i> 3. Lorentz y la Teoría del Electrón</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-aplicaciones"><i data-lucide="cpu" class="w-4 h-4 text-emerald-600"></i> 4. Aplicaciones Tecnológicas</button>
+                    </div>
+
+                    <!-- CONTENIDO DE LAS PESTAÑAS -->
+                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 space-y-4">
+                        
+                        <!-- TAB 1: EL EXPERIMENTO DE OERSTED -->
+                        <div id="tab-oersted" class="tab-content active space-y-3">
+                            <div class="bg-amber-50 p-3.5 rounded-lg border-l-4 border-amber-600 shadow-sm">
+                                <h2 class="font-bold text-amber-900 flex items-center gap-2 text-base border-b border-amber-200 pb-1.5 mb-2">
+                                    <i data-lucide="award" class="w-5 h-5 text-amber-600"></i> El Descubrimiento que Unificó la Física (Abril de 1820)
+                                </h2>
+                                <p class="text-xs text-amber-950 leading-relaxed text-justify mb-2">
+                                    Hasta 1820, la humanidad consideraba que la <strong>electricidad</strong> (el rayo, la fricción del ámbar, la pila de Volta) y el <strong>magnetismo</strong> (la piedra imán, las brújulas de navegación) eran fenómenos de naturaleza totalmente independiente y ajenos entre sí.
+                                </p>
+                                <p class="text-xs text-amber-950 leading-relaxed text-justify">
+                                    Durante una clase magistral en la Universidad de Copenhague, el físico y filósofo danés <strong>Hans Christian Ørsted</strong> acercó una brújula magnética a un alambre de platino conectado a una batería voltaica. Al cerrar el circuito, ocurrió lo impensable: <em>la aguja imantada sufrió una violenta deflexión hasta orientarse perpendicularmente al conductor</em>.
+                                </p>
+                            </div>
+
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
+                                <h3 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                                    <i data-lucide="list-checks" class="w-4 h-4 text-indigo-600"></i> Las Observaciones Experimentales Clave de Oersted:
+                                </h3>
+                                <div class="bg-white p-2.5 rounded border border-slate-200 text-xs space-y-2">
+                                    <div class="flex items-start gap-2">
+                                        <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">1</span>
+                                        <span><strong>Circuito abierto ($I = 0$):</strong> La aguja se alinea de forma pasiva con el meridiano magnético terrestre (Norte geográfico).</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">2</span>
+                                        <span><strong>Corriente hacia el Norte (brújula DEBAJO del cable):</strong> El polo Norte de la aguja gira hacia el <strong>Oeste</strong>.</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">3</span>
+                                        <span><strong>Corriente hacia el Norte (brújula ENCIMA del cable):</strong> El polo Norte de la aguja gira hacia el <strong>Este</strong>.</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">4</span>
+                                        <span><strong>Inversión de polaridad:</strong> Si la corriente circula hacia el Sur, todos los sentidos de deflexión se invierten exactamente $180^\circ$.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-600 text-xs text-blue-950 space-y-1">
+                                <h4 class="font-bold text-blue-900">La Conclusión Teórica Revolucionaria</h4>
+                                <p class="text-justify leading-relaxed">
+                                    El campo magnético generado por una corriente no es lineal ni apunta hacia el alambre: <strong>forma círculos concéntricos cerrados que envuelven al conductor</strong>, gobernados por la Regla de la Mano Derecha:
+                                </p>
+                                <div class="math-display text-blue-800">$$\vec{B} = \frac{\mu_0 I}{2\pi r} \hat{\theta}$$</div>
+                                <p class="text-justify leading-relaxed">
+                                    Este hecho probó que no existen monopolos magnéticos aislados ($\nabla \cdot \vec{B} = 0$), sino que todo magnetismo tiene su origen último en <strong>cargas eléctricas en movimiento</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: AMPÈRE Y LA ELECTRODINÁMICA -->
+                        <div id="tab-ampere" class="tab-content space-y-3">
+                            <div class="bg-blue-50 p-3.5 rounded-lg border-l-4 border-blue-600 shadow-sm">
+                                <h2 class="font-bold text-blue-900 flex items-center gap-2 text-base border-b border-blue-200 pb-1.5 mb-2">
+                                    <i data-lucide="git-commit" class="w-5 h-5 text-blue-600"></i> André-Marie Ampère: "El Newton de la Electricidad"
+                                </h2>
+                                <p class="text-xs text-blue-950 leading-relaxed text-justify mb-2">
+                                    Al enterarse del experimento de Oersted en la Academia de Ciencias de París en septiembre de 1820, Ampère comprendió de inmediato que si una corriente ejerce una fuerza magnética sobre un imán, <em>por la tercera ley de Newton dos corrientes eléctricas deben ejercer fuerzas mutuas entre sí</em>.
+                                </p>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border border-slate-200 shadow-sm space-y-2 text-xs">
+                                <h3 class="font-bold text-slate-900 text-xs">Los Tres Grandes Trabajos de Ampère:</h3>
+                                
+                                <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+                                    <p class="font-bold text-blue-700">1. Fuerza entre Conductores Paralelos (1820):</p>
+                                    <p class="text-[11px] text-slate-700 text-justify mt-1">
+                                        Demostró que dos alambres paralelos con corrientes en el mismo sentido se <strong>atraen</strong>, y si circulan en sentido contrario se <strong>repelen</strong>:
+                                    </p>
+                                    <div class="math-display">$$\frac{F}{L} = \frac{\mu_0 I_1 I_2}{2\pi d}$$</div>
+                                    <p class="text-[10px] text-slate-500 italic">Esta ecuación fundamental definió formalmente el Amperio patrón en el Sistema Internacional durante casi un siglo.</p>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+                                    <p class="font-bold text-blue-700">2. Hipótesis de las Corrientes Moleculares (1823):</p>
+                                    <p class="text-[11px] text-slate-700 text-justify mt-1">
+                                        Propuso audazmente que el magnetismo permanente de los imanes no se debe a ningún "fluido magnético misterioso", sino a <strong>diminutas corrientes microscópicas que circulan sin cesar dentro de cada átomo</strong>. Cien años más tarde, la física cuántica confirmó esta visión al descubrir el espín y el momento magnético orbital del electrón.
+                                    </p>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+                                    <p class="font-bold text-blue-700">3. Ley de Circulación de Ampère (1826):</p>
+                                    <div class="math-display">$$\oint \vec{B} \cdot d\vec{l} = \mu_0 I_{enc}$$</div>
+                                    <p class="text-[11px] text-slate-700 text-justify">
+                                        Permite calcular con suma elegancia el campo magnético en solenoides, toroides y conductores coaxiales.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: LORENTZ Y LA TEORÍA DEL ELECTRÓN -->
+                        <div id="tab-lorentz" class="tab-content space-y-3">
+                            <div class="bg-purple-50 p-3.5 rounded-lg border-l-4 border-purple-600 shadow-sm">
+                                <h2 class="font-bold text-purple-900 flex items-center gap-2 text-base border-b border-purple-200 pb-1.5 mb-2">
+                                    <i data-lucide="atom" class="w-5 h-5 text-purple-600"></i> Hendrik Antoon Lorentz (Premio Nobel de Física 1902)
+                                </h2>
+                                <p class="text-xs text-purple-950 leading-relaxed text-justify mb-2">
+                                    A finales del siglo XIX, las leyes de Ampère y Maxwell describían campos continuos, pero no explicaban cómo interaccionaban las partículas elementales. Hendrik Lorentz introdujo la <strong>Teoría del Electrón</strong> (1892-1895).
+                                </p>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border border-slate-200 shadow-sm space-y-2 text-xs">
+                                <h3 class="font-bold text-purple-900 text-xs">Legado y Contribuciones Fundamentales:</h3>
+                                
+                                <div class="p-2.5 rounded bg-purple-50/50 border border-purple-200">
+                                    <p class="font-bold text-purple-800">1. La Fuerza de Lorentz Total (1895):</p>
+                                    <p class="text-[11px] text-slate-700 text-justify mt-1">
+                                        Unificó la fuerza electrostática de Coulomb y la magnética sobre partículas cargadas puntuales con velocidad $\vec{v}$:
+                                    </p>
+                                    <div class="math-display text-purple-900">$$\vec{F} = q\left(\vec{E} + \vec{v} \times \vec{B}\right)$$</div>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-purple-50/50 border border-purple-200">
+                                    <p class="font-bold text-purple-800">2. El Efecto Zeeman y el Premio Nobel (1902):</p>
+                                    <p class="text-[11px] text-slate-700 text-justify mt-1">
+                                        Pieter Zeeman descubrió que las líneas espectrales emitidas por átomos se desdoblan en presencia de un campo magnético. Lorentz explicó matemáticamente este fenómeno demostrando que los electrones oscilantes dentro de los átomos son desviados por la fuerza $\vec{v}\times\vec{B}$, lo que les valió a ambos el Premio Nobel de Física en 1902.
+                                    </p>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-purple-50/50 border border-purple-200">
+                                    <p class="font-bold text-purple-800">3. Transformaciones de Lorentz y la Relatividad de Einstein (1904):</p>
+                                    <p class="text-[11px] text-slate-700 text-justify mt-1">
+                                        Para resolver el problema del éter y la invariancia de la velocidad de la luz $c$ en las ecuaciones de Maxwell, Lorentz dedujo las ecuaciones de transformación espacio-temporal con el factor relativista $\gamma = 1/\sqrt{1 - v^2/c^2}$. Albert Einstein reconoció públicamente que las Transformaciones de Lorentz fueron el pilar sobre el cual erigió su <strong>Teoría de la Relatividad Especial (1905)</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4: APLICACIONES INDUSTRIALES -->
+                        <div id="tab-aplicaciones" class="tab-content space-y-3">
+                            <div class="bg-emerald-50 p-3.5 rounded-lg border-l-4 border-emerald-600 shadow-sm">
+                                <h2 class="font-bold text-emerald-900 flex items-center gap-2 text-base border-b border-emerald-200 pb-1.5 mb-2">
+                                    <i data-lucide="cpu" class="w-5 h-5 text-emerald-600"></i> Del Laboratorio a la Tecnología Moderna
+                                </h2>
+                                <p class="text-xs text-emerald-950 leading-relaxed text-justify mb-2">
+                                    Los experimentos pioneros de Oersted, Ampère y Lorentz no fueron curiosidades de laboratorio: son los cimientos de la civilización industrial y tecnológica actual.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-1 text-[11px]">
+                                        <i data-lucide="send" class="w-3.5 h-3.5 text-blue-600"></i> El Telégrafo (1837)
+                                    </h4>
+                                    <p class="text-[10px] text-slate-600 mt-1 text-justify">
+                                        Samuel Morse aplicó directamente el experimento de Oersted: una corriente enviada a kilómetros de distancia desviaba una aguja magnética para transmitir mensajes en código Morse en tiempo real.
+                                    </p>
+                                </div>
+
+                                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-1 text-[11px]">
+                                        <i data-lucide="activity" class="w-3.5 h-3.5 text-amber-600"></i> Galvanómetros y Sensores
+                                    </h4>
+                                    <p class="text-[10px] text-slate-600 mt-1 text-justify">
+                                        Instrumentos de bobina móvil de D'Arsonval que miden corrientes y voltajes microscópicos mediante el torque de deflexión sobre una aguja imantada.
+                                    </p>
+                                </div>
+
+                                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-1 text-[11px]">
+                                        <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-purple-600"></i> Motores y Generadores DC/AC
+                                    </h4>
+                                    <p class="text-[10px] text-slate-600 mt-1 text-justify">
+                                        Desde vehículos eléctricos hasta turbinas hidroeléctricas, toda la conversión de energía electromecánica se rige por la fuerza de Lorentz y el torque de Ampère sobre espiras.
+                                    </p>
+                                </div>
+
+                                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-1 text-[11px]">
+                                        <i data-lucide="microscope" class="w-3.5 h-3.5 text-emerald-600"></i> Microscopía Electrónica (TEM)
+                                    </h4>
+                                    <p class="text-[10px] text-slate-600 mt-1 text-justify">
+                                        Los microscopios electrónicos enfocan haces de electrones mediante lentes magnéticas que desvían las trayectorias con la fuerza $\vec{v}\times\vec{B}$, logrando resolución atómica.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
+                                <h4 class="font-bold text-slate-800">Fusión Nuclear y Aceleradores de Partículas (Tokamak &amp; CERN):</h4>
+                                <p class="text-[11px] text-slate-600 text-justify mt-1">
+                                    En reactores de fusión nuclear como ITER, el plasma a 150 millones de grados no puede tocar ninguna pared sólida; se confina en el vacío mediante campos magnéticos helicoidales toroidales gobernados estrictamente por la dinámica de Lorentz.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: SIMULADOR INTERACTIVO DEL EXPERIMENTO DE OERSTED -->
+                <div class="w-[52%] flex flex-col min-w-0 gap-[1vmin]">
+                    
+                    <!-- PANEL DE CONTROL DEL MONTAJE EXPERIMENTAL -->
+                    <div class="control-panel shadow-sm">
+                        <div class="flex items-center justify-between border-b border-slate-300 pb-1.5">
+                            <span class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                                <i data-lucide="sliders" class="w-4 h-4 text-amber-600"></i>
+                                Montaje Experimental Virtual de Oersted (1820)
+                            </span>
+
+                            <div class="flex items-center gap-1.5">
+                                <button id="btn-toggle-switch" class="btn-ui bg-amber-600 text-white text-xs">
+                                    <i data-lucide="power" class="w-3.5 h-3.5"></i> <span id="lbl-switch-state">Cerrar Interruptor</span>
+                                </button>
+                                <button id="btn-reverse-polaridad" class="btn-ui bg-slate-200 text-slate-700 text-xs">
+                                    <i data-lucide="repeat" class="w-3.5 h-3.5"></i> Invertir Polaridad (+/-)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CONTROLES DEL MONTAJE -->
+                        <div class="grid grid-cols-3 gap-2 text-xs pt-1">
+                            <div>
+                                <label class="flex justify-between font-bold text-amber-700 text-[11px]">
+                                    <span>Corriente $I$:</span>
+                                    <span id="lbl-val-i" class="font-mono">5.0 A</span>
+                                </label>
+                                <input type="range" id="slider-oersted-i" min="1" max="15" step="0.5" value="5.0" class="w-full accent-amber-600 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <label class="flex justify-between font-bold text-blue-700 text-[11px]">
+                                    <span>Distancia $r$:</span>
+                                    <span id="lbl-val-r" class="font-mono">2.5 cm</span>
+                                </label>
+                                <input type="range" id="slider-oersted-r" min="1.0" max="8.0" step="0.5" value="2.5" class="w-full accent-blue-600 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-purple-700 text-[11px] mb-0.5">Posición de Brújula:</label>
+                                <select id="sel-pos-compass" class="param-input w-full bg-white text-xs cursor-pointer py-1 font-semibold">
+                                    <option value="debajo">DEBAJO del cable</option>
+                                    <option value="encima">ENCIMA del cable</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CANVAS DE LA MESA DE LABORATORIO -->
+                    <div class="flex-1 canvas-wrapper relative min-h-[350px]">
+                        <canvas id="canvas-oersted" class="w-full h-full block"></canvas>
+
+                        <!-- BADGE SUPERIOR -->
+                        <div class="absolute top-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1.5 shadow pointer-events-none">
+                            <span id="oersted-led" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                            <span id="oersted-status-text" class="font-semibold">Circuito Abierto ($I = 0$, Aguja al Norte Terrestre)</span>
+                        </div>
+
+                        <!-- LEYENDA BRÚJULA -->
+                        <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white p-2 rounded text-[11px] space-y-1 pointer-events-none">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1.5 bg-red-500 inline-block rounded"></span>
+                                <span>Polo Norte de la Aguja Imantada</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1.5 bg-blue-500 inline-block rounded"></span>
+                                <span>Polo Sur de la Aguja</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1.5 bg-amber-400 inline-block rounded"></span>
+                                <span>Alambre de Cobre con Corriente</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TELEMETRÍA EXPERIMENTAL EN TIEMPO REAL -->
+                    <div class="bg-slate-900 text-white p-2.5 rounded-lg border border-slate-700 shadow-sm grid grid-cols-4 gap-2 text-center">
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Corriente $I$</span>
+                            <span id="tele-oer-i" class="font-mono font-bold text-amber-400 text-sm">0.0 A</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Campo Cable $B_{wire}$</span>
+                            <span id="tele-oer-b" class="font-mono font-bold text-blue-400 text-sm">0.00 &mu;T</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Campo Terrestre $B_T$</span>
+                            <span id="tele-oer-bt" class="font-mono font-bold text-emerald-400 text-sm">50.0 &mu;T</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Deflexión $\theta$</span>
+                            <span id="tele-oer-theta" class="font-mono font-bold text-purple-400 text-sm">0.0°</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE COMPORTAMIENTO Y CANVAS INTERACTIVO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+
+            // PESTAÑAS ACADÉMICAS
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    const target = document.getElementById(btn.dataset.tab);
+                    if (target) {
+                        target.classList.add('active');
+                        if (window.MathJax && MathJax.typesetPromise) {
+                            MathJax.typesetPromise([target]);
+                        }
+                    }
+                });
+            });
+
+            // -------------------------------------------------------------
+            // SIMULADOR INTERACTIVO DEL EXPERIMENTO DE OERSTED
+            // -------------------------------------------------------------
+            const canvas = document.getElementById('canvas-oersted');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // Variables del circuito
+            let isSwitchClosed = false;
+            let currentSign = 1; // +1 hacia la derecha (Norte), -1 hacia la izquierda (Sur)
+            let currentCompassAngle = 0; // radianes (0 = apuntando al Norte terrestre hacia arriba)
+            let targetAngle = 0;
+            let needleAngularVel = 0;
+            let electronOffset = 0;
+
+            const sliderI = document.getElementById('slider-oersted-i');
+            const sliderR = document.getElementById('slider-oersted-r');
+            const selPos = document.getElementById('sel-pos-compass');
+
+            const lblI = document.getElementById('lbl-val-i');
+            const lblR = document.getElementById('lbl-val-r');
+            const btnToggleSwitch = document.getElementById('btn-toggle-switch');
+            const lblSwitchState = document.getElementById('lbl-switch-state');
+            const btnReversePolarity = document.getElementById('btn-reverse-polaridad');
+            const oerstedLed = document.getElementById('oersted-led');
+            const oerstedStatusText = document.getElementById('oersted-status-text');
+
+            function updateInputs() {
+                lblI.textContent = parseFloat(sliderI.value).toFixed(1) + ' A';
+                lblR.textContent = parseFloat(sliderR.value).toFixed(1) + ' cm';
+            }
+
+            sliderI.addEventListener('input', updateInputs);
+            sliderR.addEventListener('input', updateInputs);
+
+            btnToggleSwitch.addEventListener('click', () => {
+                isSwitchClosed = !isSwitchClosed;
+                if (isSwitchClosed) {
+                    btnToggleSwitch.classList.replace('bg-amber-600', 'bg-red-600');
+                    lblSwitchState.textContent = 'Abrir Interruptor';
+                    oerstedLed.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping';
+                    oerstedStatusText.textContent = 'Circuito CERRADO: Flujo de Corriente Activo';
+                } else {
+                    btnToggleSwitch.classList.replace('bg-red-600', 'bg-amber-600');
+                    lblSwitchState.textContent = 'Cerrar Interruptor';
+                    oerstedLed.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+                    oerstedStatusText.textContent = 'Circuito Abierto (I = 0, Aguja al Norte Terrestre)';
+                }
+            });
+
+            btnReversePolarity.addEventListener('click', () => {
+                currentSign *= -1;
+            });
+
+            function drawOerstedLab() {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const I_magnitude = isSwitchClosed ? parseFloat(sliderI.value) : 0;
+                const I_net = I_magnitude * currentSign;
+                const r_cm = parseFloat(sliderR.value);
+                const r_m = r_cm / 100;
+                const isUnderWire = selPos.value === 'debajo';
+
+                // Constante mu0 = 4*pi*1e-7 T*m/A
+                // B_wire = (mu0 * I) / (2 * pi * r) = (2e-7 * I) / r Tesla
+                const B_wire_Tesla = (2e-7 * Math.abs(I_net)) / r_m;
+                const B_wire_microT = B_wire_Tesla * 1e6; // microTeslas
+                const B_earth_microT = 50.0; // Campo magnético terrestre aprox 50 uT
+
+                // Dirección del campo en la brújula:
+                // Cable horizontal va de izquierda a derecha (+x).
+                // Si la corriente va a la derecha (+x):
+                // Por la regla de la mano derecha, las líneas de campo circulan saliendo por arriba y entrando por abajo.
+                // Si la brújula está DEBAJO del cable: el campo magnético del cable apunta hacia adentro/perpendicular (-y / Oeste).
+                // Si la brújula está ENCIMA del cable: apunta en sentido contrario (+y / Este).
+                let dirFactor = isUnderWire ? 1 : -1;
+                if (I_net < 0) dirFactor *= -1;
+
+                // Ángulo de equilibrio: tan(theta) = B_wire / B_earth
+                if (I_magnitude > 0) {
+                    targetAngle = dirFactor * Math.atan(B_wire_microT / B_earth_microT);
+                } else {
+                    targetAngle = 0; // vuelve al Norte
+                }
+
+                // Dinámica oscilatoria con amortiguamiento (oscilador armónico amortiguado)
+                const springK = 0.08;
+                const damping = 0.88;
+                const torque = (targetAngle - currentCompassAngle) * springK;
+                needleAngularVel = (needleAngularVel + torque) * damping;
+                currentCompassAngle += needleAngularVel;
+
+                // Actualizar telemetría
+                document.getElementById('tele-oer-i').textContent = I_net.toFixed(1) + ' A';
+                document.getElementById('tele-oer-b').textContent = B_wire_microT.toFixed(1) + ' µT';
+                document.getElementById('tele-oer-bt').textContent = B_earth_microT.toFixed(1) + ' µT';
+                const deg = (currentCompassAngle * 180 / Math.PI).toFixed(1);
+                document.getElementById('tele-oer-theta').textContent = (deg > 0 ? '+' : '') + deg + '°';
+
+                // DIBUJAR MESA Y ELEMENTOS
+                const centerX = w * 0.50;
+                const wireY = h * 0.40;
+
+                // 1. Rosa de los vientos de referencia magnética
+                ctx.save();
+                ctx.translate(w - 50, 50);
+                ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, -25); ctx.lineTo(0, 25);
+                ctx.moveTo(-25, 0); ctx.lineTo(25, 0);
+                ctx.stroke();
+                ctx.fillStyle = "#ef4444";
+                ctx.font = "bold 11px sans-serif";
+                ctx.fillText("N (Tierra)", -20, -30);
+                ctx.fillStyle = "#94a3b8";
+                ctx.fillText("S", -4, 38);
+                ctx.fillText("E", 30, 4);
+                ctx.fillText("O", -40, 4);
+                ctx.restore();
+
+                // 2. Batería Voltaica (Izquierda)
+                const batX = 50, batY = wireY + 70;
+                ctx.fillStyle = "#334155";
+                ctx.fillRect(batX, batY, 70, 90);
+                ctx.strokeStyle = "#64748b";
+                ctx.strokeRect(batX, batY, 70, 90);
+
+                // Bornes de batería
+                ctx.fillStyle = currentSign > 0 ? "#ef4444" : "#3b82f6";
+                ctx.fillRect(batX + 15, batY - 12, 14, 12);
+                ctx.fillStyle = currentSign > 0 ? "#3b82f6" : "#ef4444";
+                ctx.fillRect(batX + 42, batY - 12, 14, 12);
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 12px sans-serif";
+                ctx.fillText(currentSign > 0 ? "+" : "-", batX + 19, batY - 2);
+                ctx.fillText(currentSign > 0 ? "-" : "+", batX + 46, batY - 2);
+                ctx.fillStyle = "#facc15";
+                ctx.font = "10px sans-serif";
+                ctx.fillText("Pila Voltaica", batX + 6, batY + 45);
+
+                // 3. Interruptor de Cuchilla (Abajo centro)
+                const swX = centerX - 60, swY = h * 0.82;
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 3;
+                // Base bornes
+                ctx.fillStyle = "#d97706";
+                ctx.beginPath(); ctx.arc(swX, swY, 5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(swX + 50, swY, 5, 0, Math.PI * 2); ctx.fill();
+
+                // Cuchilla móvil
+                ctx.strokeStyle = isSwitchClosed ? "#10b981" : "#ef4444";
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(swX, swY);
+                if (isSwitchClosed) {
+                    ctx.lineTo(swX + 50, swY); // cerrado
+                } else {
+                    ctx.lineTo(swX + 40, swY - 28); // levantado abierto
+                }
+                ctx.stroke();
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 10px sans-serif";
+                ctx.fillText(isSwitchClosed ? "INTERRUPTOR CERRADO" : "INTERRUPTOR ABIERTO", swX - 20, swY + 22);
+
+                // 4. Cables del circuito (Retorno cerrado)
+                ctx.strokeStyle = "#64748b";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(batX + 22, batY - 12);
+                ctx.lineTo(batX + 22, wireY);
+                ctx.lineTo(w - 70, wireY);
+                ctx.lineTo(w - 70, swY);
+                ctx.lineTo(swX + 50, swY);
+                ctx.moveTo(swX, swY);
+                ctx.lineTo(batX + 49, swY);
+                ctx.lineTo(batX + 49, batY - 12);
+                ctx.stroke();
+
+                // 5. Alambre de cobre principal (Zona experimental horizontal)
+                ctx.strokeStyle = "#f59e0b";
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.moveTo(batX + 22, wireY);
+                ctx.lineTo(w - 70, wireY);
+                ctx.stroke();
+
+                // Electrones / Corriente fluyendo
+                if (isSwitchClosed) {
+                    electronOffset += currentSign * 2.5;
+                    ctx.fillStyle = "#fef08a";
+                    for (let x = batX + 40; x < w - 90; x += 35) {
+                        let curX = x + (electronOffset % 35);
+                        if (curX > batX + 22 && curX < w - 70) {
+                            ctx.beginPath();
+                            ctx.arc(curX, wireY, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // Flecha de sentido de corriente I convencional
+                    const arrowDir = currentSign > 0 ? 1 : -1;
+                    const arrowX = centerX + arrowDir * 60;
+                    ctx.fillStyle = "#facc15";
+                    ctx.font = "bold 13px sans-serif";
+                    ctx.fillText(`Corriente I (${I_net.toFixed(1)} A) ${arrowDir > 0 ? '➔' : '⬅'}`, centerX - 70, wireY - 15);
+                }
+
+                // 6. Brújula de Oersted
+                const compassY = isUnderWire ? wireY + 70 : wireY - 70;
+                const compassRadius = 45;
+
+                // Aro exterior de latón/dorado
+                ctx.strokeStyle = "#d97706";
+                ctx.lineWidth = 4;
+                ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+                ctx.beginPath();
+                ctx.arc(centerX, compassY, compassRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Marcas cardinales en la brújula
+                ctx.fillStyle = "#94a3b8";
+                ctx.font = "bold 10px sans-serif";
+                ctx.fillText("N", centerX - 4, compassY - compassRadius + 14);
+                ctx.fillText("S", centerX - 3, compassY + compassRadius - 6);
+                ctx.fillText("E", centerX + compassRadius - 14, compassY + 4);
+                ctx.fillText("O", centerX - compassRadius + 4, compassY + 4);
+
+                // Aguja Imantada rotatoria
+                ctx.save();
+                ctx.translate(centerX, compassY);
+                ctx.rotate(currentCompassAngle); // ángulo de rotación
+
+                // Polo Norte (Rojo aguzado hacia arriba)
+                ctx.fillStyle = "#ef4444";
+                ctx.beginPath();
+                ctx.moveTo(0, -compassRadius + 6);
+                ctx.lineTo(6, 0);
+                ctx.lineTo(-6, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                // Polo Sur (Azul aguzado hacia abajo)
+                ctx.fillStyle = "#3b82f6";
+                ctx.beginPath();
+                ctx.moveTo(0, compassRadius - 6);
+                ctx.lineTo(6, 0);
+                ctx.lineTo(-6, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                // Pivote central
+                ctx.fillStyle = "#fbbf24";
+                ctx.beginPath();
+                ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+
+                // Etiqueta de la brújula
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 11px sans-serif";
+                ctx.fillText(isUnderWire ? "Brújula DEBAJO del alambre" : "Brújula ENCIMA del alambre", centerX - 75, compassY + (isUnderWire ? compassRadius + 18 : -compassRadius - 8));
+
+                requestAnimationFrame(drawOerstedLab);
+            }
+
+            requestAnimationFrame(drawOerstedLab);
+        });
+    </script>
+</body>
+</html>

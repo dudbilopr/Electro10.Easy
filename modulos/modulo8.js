@@ -43,8 +43,8 @@ export const modulo8 = {
         "$$\\Delta V_H = \\frac{I B}{n q d} = R_H \\frac{I B}{d} \\quad \\text{(Voltaje de Hall transversal)}$$"
     ],
     "historia": {
-        "experimentoClave": "Fundamentación de la Fuerza Magnética y el Efecto Hall (1820 - 1895)",
-        "hallazgo": "Hans Christian Ørsted (1820) descubrió experimentalmente que las corrientes eléctricas desvían las agujas magnéticas. Hendrik Antoon Lorentz (1895) unificó las interacciones eléctrica y magnética sobre cargas puntuales móviles. Edwin Hall (1879) probó de manera irrefutable que los portadores de corriente en conductores metálicos son cargas negativas libres (electrones)."
+        "experimentoClave": "El Experimento de Oersted (1820), la Electrodinámica de Ampère (1826) y la Fuerza de Lorentz (1895)",
+        "hallazgo": "En abril de 1820, Hans Christian Ørsted descubrió accidentalmente que una corriente eléctrica desvía una brújula magnética, unificando por primera vez en la historia la electricidad y el magnetismo. Pocas semanas después, André-Marie Ampère formuló la ley de atracción entre corrientes paralelas y concibió las 'corrientes moleculares' (el origen microscópico del magnetismo sin monopolos). Finalmente, Hendrik Antoon Lorentz (1895, Premio Nobel 1902) derivó la fuerza fundamental F = q(E + v×B) sobre partículas cargadas individuales, formulando las transformaciones de Lorentz que sirvieron de cimiento a la Teoría de la Relatividad de Einstein."
     },
     "bibliografia": [
         "Sears, F. W., Zemansky, M. W., Young, H. D., & Freedman, R. A. Física Universitaria con Física Moderna (Vol. 2), Cap. 27: Campo Magnético y Fuerzas Magnéticas.",
@@ -56,9 +56,9 @@ export const modulo8 = {
         {
             "id": "m8-l1",
             "tipo": "multivideo",
-            "recurso": "9_p7MUf8QCE|YXA_F7qHiDM|LqT1VX18kEk|hBUpBwbmBwc|OsZRKqHrOTw|sLHNkl2TYOE",
-            "titulo": "1. Teoría y Deducción: Ley de Lorentz y Campo B",
-            "descripcion": "Fuerza magnética sobre cargas móviles, regla de la mano derecha, trayectorias circulares, selector de velocidades y efecto Hall.",
+            "recurso": "N_1yLphLoWQ|A8MWFEGuJXg|rp0-YdIva7o|IDVghi_IjsE|EHW5kFlU1cQ|zTqRtjjeze4|efBTzmpKvac|wvejixeN838",
+            "titulo": "1. Colección Magistral: De Oersted y Ampère a la Fuerza de Lorentz",
+            "descripcion": "8 lecciones audiovisuales completas: Experimento de Oersted, producto vectorial v×B, fuerza sobre cargas y corrientes, ciclotrón, selector de velocidades y efecto Hall.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
             "xp": 10
         },
@@ -76,6 +76,14 @@ export const modulo8 = {
             "tipo": "grupo",
             "titulo": "3. Laboratorio Virtual (Simuladores Científicos)",
             "sublecciones": [
+                {
+                    "id": "m8-s0",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Sim_M8_Oersted.html",
+                    "titulo": "3.0 OerstedLab10.easy — El Experimento de Oersted (1820)",
+                    "descripcion": "Recrea el experimento histórico de Hans Christian Ørsted: circuito de corriente continua, brújula magnética orientable, regla de la mano derecha y cálculo de B = (μ₀ I)/(2π r).",
+                    "xp": 25
+                },
                 {
                     "id": "m8-s1",
                     "tipo": "simulador",
