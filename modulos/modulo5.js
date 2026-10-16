@@ -47,7 +47,7 @@ export const modulo5 = {
                 {
                     "id": "m5-l3-b",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Flujo_Electrico.html",
+                    "recurso": "simuladores/Sim_M3_Flujo.html",
                     "titulo": "3.2 Analizador 3D de Flujo Eléctrico",
                     "descripcion": "Visualización tridimensional del vector campo eléctrico y el vector normal del diferencial de superficie.",
                     "xp": 20

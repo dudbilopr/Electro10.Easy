@@ -47,7 +47,7 @@ export const modulo1 = {
                 {
                     "id": "m1-l4",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Simulador_Cargas_Electricas.html",
+                    "recurso": "simuladores/Sim_M1_Cargas.html",
                     "titulo": "3.2 Dinámica de Partículas Cargadas",
                     "descripcion": "Entorno virtual para experimentar atracción y repulsión bajo la ley del cuadrado inverso.",
                     "xp": 20

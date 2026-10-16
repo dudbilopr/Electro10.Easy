@@ -39,7 +39,7 @@ export const modulo4 = {
                 {
                     "id": "m4-l3-a",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Varilla_Cargada.html",
+                    "recurso": "simuladores/Sim_M2_Varilla.html",
                     "titulo": "3.1 Campo de Varilla Finita e Infinita",
                     "descripcion": "Simulador interactivo con integración numérica y perfil vectorial del campo alrededor de una varilla.",
                     "xp": 20
@@ -47,7 +47,7 @@ export const modulo4 = {
                 {
                     "id": "m4-l3-b",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Arco_Cargado.html",
+                    "recurso": "simuladores/Sim_M2_Arco.html",
                     "titulo": "3.2 Campo en el Centro de un Arco Circular",
                     "descripcion": "Ajusta el ángulo de apertura del arco y la densidad de carga para calcular el campo resultante.",
                     "xp": 20
@@ -55,7 +55,7 @@ export const modulo4 = {
                 {
                     "id": "m4-l3-c",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Disco_Cargado.html",
+                    "recurso": "simuladores/Sim_M2_Disco.html",
                     "titulo": "3.3 Campo Axial de Disco y Plano Infinito",
                     "descripcion": "Comprueba la transición del campo de un disco finito hacia el límite de plano infinito uniforme.",
                     "xp": 20
