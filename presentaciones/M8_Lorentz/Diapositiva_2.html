@@ -57,125 +57,206 @@
             <!-- HEADER APP -->
             <header class="flex-none bg-slate-900 text-white p-[1.5vmin] border-b-[0.5vmin] border-blue-500 shadow-md z-10 flex items-center justify-between">
                 <h1 class="font-bold text-xl md:text-2xl flex items-center gap-3">
-                    <i data-lucide="zap" class="w-7 h-7 text-yellow-400"></i>
-                    Electrodinámica: Análisis Funcional y Lorentz 3D
+                    <i data-lucide="orbit" class="w-7 h-7 text-yellow-400"></i>
+                    M8.2: Dinámica de Cargas: Radio, Frecuencia de Ciclotrón y Periodo
                 </h1>
                 <div class="bg-slate-800 px-3 py-1.5 rounded border border-slate-600 text-xs text-emerald-400 flex items-center gap-2 font-mono">
-                    <i data-lucide="cpu" class="w-4 h-4"></i> Parseador Matemático (x,y,z,t) Activo
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Isocronismo &middot; Ejercicios Resueltos Paso a Paso
                 </div>
             </header>
 
             <div class="flex-1 flex flex-row p-[1.5vmin] gap-[2vmin] min-h-0 bg-slate-50">
                 
-                <!-- COLUMNA IZQUIERDA: TEORÍA Y DEMOSTRACIONES -->
-                <div class="w-[42%] flex flex-col bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
+                <!-- COLUMNA IZQUIERDA: TEORÍA, DEDUCCIONES Y EJERCICIOS RESUELTOS -->
+                <div class="w-[45%] flex flex-col bg-white border border-slate-200 shadow-sm rounded-lg overflow-hidden">
                     
                     <!-- NAVEGACIÓN -->
                     <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
-                        <button class="tab-btn active shrink-0" data-tab="tab-particulas"><i data-lucide="orbit" class="w-4 h-4"></i> Cargas Libre</button>
-                        <button class="tab-btn shrink-0" data-tab="tab-corrientes"><i data-lucide="git-commit" class="w-4 h-4"></i> De Partícula a Hilo</button>
-                        <button class="tab-btn shrink-0" data-tab="tab-regla"><i data-lucide="hand" class="w-4 h-4"></i> Análisis Espacial</button>
-                        <button class="tab-btn shrink-0" data-tab="tab-aplicaciones"><i data-lucide="microscope" class="w-4 h-4 text-rose-500"></i> Uso en la Realidad</button>
+                        <button class="tab-btn active shrink-0" data-tab="tab-deduccion"><i data-lucide="file-text" class="w-4 h-4"></i> 1. Deducción Fórmulas</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-ejercicios-frec"><i data-lucide="pen-tool" class="w-4 h-4 text-blue-600"></i> 2. Ejercicios Resueltos</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-calc-ciclotron"><i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> 3. Calculadora Ciclotrón</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-tips-frec"><i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> 4. Tips &amp; Isocronismo</button>
                     </div>
 
                     <!-- CONTENIDO DE TABS -->
-                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 relative">
+                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 relative space-y-4">
                         
-                        <!-- TAB 1: PARTÍCULAS -->
-                        <div id="tab-particulas" class="tab-content active space-y-4">
+                        <!-- TAB 1: DEDUCCIÓN DE FÓRMULAS -->
+                        <div id="tab-deduccion" class="tab-content active space-y-4">
                             <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600 shadow-sm">
                                 <h2 class="font-bold text-blue-900 flex items-center gap-2 text-base border-b border-blue-200 pb-2 mb-2">
-                                    <i data-lucide="crosshair" class="w-5 h-5 text-blue-600"></i> Interacción Lorentz Dinámica y Estática
+                                    <i data-lucide="orbit" class="w-5 h-5 text-blue-600"></i> Deducción del Radio y la Frecuencia de Ciclotrón
                                 </h2>
-                                <p class="mb-2 text-justify text-xs text-blue-900">La fuerza electromagnética instantánea sobre una carga que atraviesa campos dados por funciones escalares depende rigurosamente del producto cruz:</p>
-                                <div class="math-display">$$\vec{F} = q(\vec{E}(x,y,z,t) + \vec{v}(t) \times \vec{B}(x,y,z,t))$$</div>
+                                <p class="text-xs text-blue-900 leading-relaxed text-justify mb-2">
+                                    Una partícula cargada que ingresa con velocidad $\vec{v}_\perp$ perpendicular a un campo magnético uniforme $\vec{B}$ experimenta una fuerza magnética puramente centrípeta. Aplicando la <strong>Segunda Ley de Newton</strong>:
+                                </p>
+                                <div class="math-display">$$F_c = m a_c \implies |q| v_\perp B = m \frac{v_\perp^2}{R}$$</div>
+                                <p class="text-xs text-blue-900 leading-relaxed text-justify mt-2">
+                                    Despejando el <strong>Radio de Giro (Radio de Ciclotrón)</strong>:
+                                </p>
+                                <div class="bg-blue-100 p-2 rounded text-center font-bold text-blue-950 text-xs">
+                                    $$R = \frac{m v_\perp}{|q| B}$$
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm space-y-2">
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-indigo-600"></i> Frecuencia Angular, Frecuencia Lineal y Periodo
+                                </h3>
+                                <p class="text-xs text-slate-700 leading-relaxed text-justify">
+                                    Como la rapidez angular es $\omega_c = \frac{v_\perp}{R}$, sustituyendo el radio $R$:
+                                </p>
+                                <div class="math-display text-indigo-700">$$\omega_c = \frac{v_\perp}{\frac{m v_\perp}{|q| B}} = \frac{|q| B}{m} \quad \text{(Frecuencia de Ciclotrón)}$$</div>
                                 
-                                <p class="text-[11px] text-blue-900 text-justify mt-3 bg-white p-3 rounded-lg border border-blue-100 shadow-sm leading-relaxed">
-                                    <strong><i data-lucide="mouse-pointer-click" class="w-3 h-3 inline"></i> Prueba Analítica en el Simulador:</strong><br>
-                                    Pausa la simulación. En este instante de tiempo ($t$), la partícula está estática en el espacio, pero retiene su vector velocidad inicial $\vec{v}$. Modifica la ecuación del campo magnético (ej. pon <code>x</code> o <code>sin(t)</code>) y observa cómo el vector de la Fuerza $\vec{F}$ (Rojo) se re-dibuja y calcula instantáneamente antes de que la partícula inicie su movimiento.
+                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                    <div class="bg-white p-2.5 rounded border border-indigo-100 shadow-sm">
+                                        <p class="font-bold text-[11px] text-indigo-900">Frecuencia Lineal ($f$):</p>
+                                        <div class="math-display text-xs">$$f = \frac{\omega_c}{2\pi} = \frac{|q| B}{2\pi m}$$</div>
+                                    </div>
+                                    <div class="bg-white p-2.5 rounded border border-indigo-100 shadow-sm">
+                                        <p class="font-bold text-[11px] text-indigo-900">Periodo de Revolución ($T$):</p>
+                                        <div class="math-display text-xs">$$T = \frac{1}{f} = \frac{2\pi m}{|q| B}$$</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 p-3 rounded-lg border-l-4 border-amber-500 shadow-sm text-xs text-amber-950">
+                                <p class="font-bold mb-1 flex items-center gap-1.5"><i data-lucide="spiral" class="w-4 h-4 text-amber-600"></i> Movimiento Helicoidal 3D y Paso de la Hélice ($p$)</p>
+                                <p class="text-justify leading-relaxed">
+                                    Si la velocidad tiene una componente paralela al campo ($v_\parallel = v\cos\theta$), dicha componente no experimenta fuerza magnética ($\vec{v}_\parallel \times \vec{B} = 0$). La partícula avanza a velocidad constante a lo largo de las líneas de campo mientras rota en el plano transversal, describiendo una <strong>hélice</strong>.
+                                </p>
+                                <div class="math-display text-amber-900">$$p = v_\parallel T = (v \cos\theta) \left(\frac{2\pi m}{|q| B}\right)$$</div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: EJERCICIOS RESUELTOS -->
+                        <div id="tab-ejercicios-frec" class="tab-content space-y-4">
+                            
+                            <!-- EJERCICIO 3 -->
+                            <div class="bg-white border-2 border-indigo-200 rounded-xl p-4 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between border-b border-indigo-100 pb-2">
+                                    <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Ejercicio Resuelto 3</span>
+                                    <span class="text-xs text-slate-500 font-semibold">Ciclotrón Hospitalario &middot; Frecuencia RF</span>
+                                </div>
+                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-medium">
+                                    <strong>Enunciado:</strong> El ciclotrón de un centro de protonterapia médica utiliza un campo magnético uniforme de $B = 1.40\,\text{T}$ para acelerar protones ($m_p = 1.673\times 10^{-27}\,\text{kg}$, $q = +1.602\times 10^{-19}\,\text{C}$).
+                                    <br>1) ¿A qué frecuencia de radiofrecuencia (RF) debe sincronizarse el potencial oscilante de las "Dees"?
+                                    <br>2) Si el radio máximo de las Dees es $R = 0.50\,\text{m}$, ¿cuál es la energía cinética final en Joules y en $\text{MeV}$?
                                 </p>
 
-                                <div class="grid grid-cols-2 gap-2 mt-3">
-                                    <div class="bg-white p-2 rounded border border-indigo-100 text-center shadow-sm">
-                                        <p class="font-bold text-[11px] text-indigo-700">Radio de Giro ($R$)</p>
-                                        <div class="math-display text-xs">$$R = \frac{m|\vec{v}_\perp|}{|q||\vec{B}|}$$</div>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2 text-xs text-slate-700 font-mono">
+                                    <p class="font-sans font-bold text-indigo-900 text-xs">Paso 1: Frecuencia de sincronización de ciclotrón</p>
+                                    <p>$$f = \frac{q B}{2\pi m_p} = \frac{(1.602\times 10^{-19}\,\text{C})(1.40\,\text{T})}{2\pi (1.673\times 10^{-27}\,\text{kg})}$$</p>
+                                    <div class="bg-indigo-100 p-2 rounded text-center font-bold text-indigo-900 text-xs">
+                                        $$f = 2.135\times 10^7\,\text{Hz} = \mathbf{21.35\,\text{MHz}}$$
                                     </div>
-                                    <div class="bg-white p-2 rounded border border-indigo-100 text-center shadow-sm">
-                                        <p class="font-bold text-[11px] text-indigo-700">Frecuencia ($f$)</p>
-                                        <div class="math-display text-xs">$$f = \frac{|q||\vec{B}|}{2\pi m}$$</div>
+
+                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-2">Paso 2: Rapidez máxima alcanzada al radio $R = 0.50\,\text{m}$</p>
+                                    <p>$$v_{max} = \frac{q B R}{m_p} = \frac{(1.602\times 10^{-19})(1.40)(0.50)}{1.673\times 10^{-27}} = \mathbf{6.703\times 10^7\,\text{m/s}} \quad (\approx 22.3\% \text{ de } c)$$</p>
+
+                                    <p class="font-sans font-bold text-indigo-900 text-xs mt-2">Paso 3: Energía Cinética final</p>
+                                    <p>$$K = \frac{1}{2} m_p v_{max}^2 = \frac{1}{2}(1.673\times 10^{-27})(6.703\times 10^7)^2 = \mathbf{3.758\times 10^{-12}\,\text{J}}$$</p>
+                                    <p>Conversión a Mega-Electronvoltios ($1\,\text{eV} = 1.602\times 10^{-19}\,\text{J}$):</p>
+                                    <div class="bg-emerald-100 p-2 rounded text-center font-bold text-emerald-900 text-xs">
+                                        $$K = \frac{3.758\times 10^{-12}\,\text{J}}{1.602\times 10^{-13}\,\text{J/MeV}} = \mathbf{23.46\,\text{MeV}}$$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- EJERCICIO 4 -->
+                            <div class="bg-white border-2 border-fuchsia-200 rounded-xl p-4 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between border-b border-fuchsia-100 pb-2">
+                                    <span class="bg-fuchsia-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Ejercicio Resuelto 4</span>
+                                    <span class="text-xs text-slate-500 font-semibold">Movimiento Helicoidal &middot; Paso de la Hélice</span>
+                                </div>
+                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-medium">
+                                    <strong>Enunciado:</strong> Un electrón ($m_e = 9.11\times 10^{-31}\,\text{kg}$, $e = 1.602\times 10^{-19}\,\text{C}$) entra a un campo uniforme $B = 0.25\,\text{T}$ con rapidez $v = 8.0\times 10^6\,\text{m/s}$ formando un ángulo $\theta = 30^\circ$ con $\vec{B}$.
+                                    <br>Calcula: a) El radio de la hélice $R$, b) El periodo $T$, y c) El paso helicoidal $p$.
+                                </p>
+
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2 text-xs text-slate-700 font-mono">
+                                    <p class="font-sans font-bold text-fuchsia-900 text-xs">Paso 1: Descomposición de la velocidad en componentes ortogonales</p>
+                                    <p>$$v_\perp = v \sin(30^\circ) = (8.0\times 10^6)(0.5) = 4.0\times 10^6\,\text{m/s}$$</p>
+                                    <p>$$v_\parallel = v \cos(30^\circ) = (8.0\times 10^6)(\sqrt{3}/2) = 6.928\times 10^6\,\text{m/s}$$</p>
+
+                                    <p class="font-sans font-bold text-fuchsia-900 text-xs mt-2">Paso 2: Radio de la trayectoria helicoidal ($R$)</p>
+                                    <p>$$R = \frac{m_e v_\perp}{e B} = \frac{(9.11\times 10^{-31})(4.0\times 10^6)}{(1.602\times 10^{-19})(0.25)} = \mathbf{9.10\times 10^{-5}\,\text{m} = 0.091\,\text{mm}}$$</p>
+
+                                    <p class="font-sans font-bold text-fuchsia-900 text-xs mt-2">Paso 3: Periodo de rotación ($T$)</p>
+                                    <p>$$T = \frac{2\pi m_e}{e B} = \frac{2\pi (9.11\times 10^{-31})}{(1.602\times 10^{-19})(0.25)} = \mathbf{1.43\times 10^{-10}\,\text{s} = 0.143\,\text{ns}}$$</p>
+
+                                    <p class="font-sans font-bold text-fuchsia-900 text-xs mt-2">Paso 4: Paso de la hélice ($p = v_\parallel T$)</p>
+                                    <div class="bg-fuchsia-100 p-2 rounded text-center font-bold text-fuchsia-900 text-xs">
+                                        $$p = (6.928\times 10^6\,\text{m/s})(1.43\times 10^{-10}\,\text{s}) = \mathbf{9.91\times 10^{-4}\,\text{m} = 0.991\,\text{mm}}$$
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TAB 2: CORRIENTES (DEMOSTRACIÓN PEDIDA) -->
-                        <div id="tab-corrientes" class="tab-content space-y-4">
-                            <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-600 shadow-sm">
-                                <h2 class="font-bold text-emerald-900 flex items-center gap-2 text-base border-b border-emerald-200 pb-2 mb-2">
-                                    <i data-lucide="graduation-cap" class="w-5 h-5 text-emerald-600"></i> Demostración: De Partícula a Corriente
-                                </h2>
-                                <p class="text-xs text-emerald-800 mb-2 text-justify">La Ley de Laplace para un conductor (hilo) no es una ley nueva, sino la consecuencia directa de la fuerza de Lorentz actuando en simultáneo sobre billones de electrones en el hilo. El paso a paso es el siguiente:</p>
-                                
-                                <div class="bg-white border border-emerald-200 p-4 rounded-lg text-[11px] text-slate-800 shadow-sm">
-                                    <p class="mb-1"><strong>1. Fuerza individual:</strong> Un solo electrón ($q$) moviéndose a una velocidad de deriva $\vec{v}_d$ sufre:</p>
-                                    <div class="math-display text-xs text-emerald-700">$$\vec{f} = q(\vec{v}_d \times \vec{B})$$</div>
-                                    
-                                    <p class="mb-1 mt-2"><strong>2. Volumen del Conductor:</strong> Para un cable de longitud $L$, área $A$ y densidad de electrones $n$ (partículas por $m^3$), el número total de cargas es $N = n \cdot A \cdot L$.</p>
-                                    
-                                    <p class="mb-1 mt-2"><strong>3. Fuerza total integrada:</strong> Multiplicando la fuerza individual por $N$:</p>
-                                    <div class="math-display text-xs text-emerald-700">$$\vec{F}_{total} = (n A L) q (\vec{v}_d \times \vec{B})$$</div>
-                                    
-                                    <p class="mb-1 mt-2"><strong>4. Conversión a Corriente:</strong> Sabiendo que la corriente eléctrica se define como carga atravesando el área por segundo ($I = n q v_d A$), extraemos esos términos. Asociando la dirección de $\vec{v}_d$ al vector longitud $\vec{L}$, se obtiene finalmente:</p>
-                                    <div class="bg-emerald-100 p-2 rounded text-center font-bold text-emerald-900 text-sm mt-2">
-                                        $$\vec{F}_{Laplace} = I(\vec{L} \times \vec{B})$$
+                        <!-- TAB 3: CALCULADORA DE CICLOTRÓN -->
+                        <div id="tab-calc-ciclotron" class="tab-content space-y-4">
+                            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b border-slate-200 pb-2">
+                                    <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> Calculadora Interactiva de Ciclotrón
+                                </h3>
+                                <p class="text-xs text-slate-600">Selecciona la partícula y parámetros para computar radio, frecuencia, periodo y energía:</p>
+
+                                <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
+                                    <div class="col-span-2">
+                                        <label class="font-bold text-slate-700">Partícula:</label>
+                                        <select id="calc-part-sel" class="w-full border rounded px-2 py-1 font-semibold text-slate-800 bg-white mt-1">
+                                            <option value="proton">Protón (q = +1e, m = 1.67e-27 kg)</option>
+                                            <option value="electron">Electrón (q = -1e, m = 9.11e-31 kg)</option>
+                                            <option value="alfa">Partícula Alfa (q = +2e, m = 6.64e-27 kg)</option>
+                                            <option value="deuteron">Deuterón (q = +1e, m = 3.34e-27 kg)</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="font-bold text-cyan-700">Campo B (Tesla):</label>
+                                        <input type="number" id="calc-b-val" value="1.20" step="0.1" class="w-full border rounded px-2 py-1 font-mono text-xs mt-1">
+                                    </div>
+
+                                    <div>
+                                        <label class="font-bold text-fuchsia-700">Rapidez v (10^6 m/s):</label>
+                                        <input type="number" id="calc-v-val" value="4.0" step="0.5" class="w-full border rounded px-2 py-1 font-mono text-xs mt-1">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- TAB 3: REGLA DE LA MANO DERECHA -->
-                        <div id="tab-regla" class="tab-content space-y-4">
-                            <h2 class="font-bold text-slate-900 flex items-center gap-2 text-base border-b border-slate-200 pb-2">
-                                <i data-lucide="hand" class="w-5 h-5 text-rose-600"></i> Producto Cruz y Geometría 3D
-                            </h2>
-                            <p class="text-xs text-slate-700 mb-2">Para hallar la dirección de la fuerza sin usar las ecuaciones analíticas, usa la Regla de la Mano Derecha para cargas positivas:</p>
-                            
-                            <div class="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
-                                <ol class="list-decimal pl-5 text-xs text-slate-800 space-y-3 font-medium">
-                                    <li>Extiende la mano. Los dedos apuntan en la dirección de la <strong>Velocidad $\vec{v}$ (Magenta)</strong>.</li>
-                                    <li>Cierra los dedos (como haciendo un puño) hacia donde apunta el <strong>Campo $\vec{B}$ (Cian)</strong>.</li>
-                                    <li>Tu <strong>pulgar extendido</strong> indica indefectiblemente el vector <strong>Fuerza $\vec{F}$ (Rojo)</strong>.</li>
-                                </ol>
-                                
-                                <div class="mt-4 bg-rose-50 p-3 border-l-4 border-rose-400 rounded text-[11px] text-rose-900 shadow-sm text-justify">
-                                    <p class="font-bold mb-1 flex items-center gap-1"><i data-lucide="alert-triangle" class="w-4 h-4"></i> Excepción Cargas Negativas</p>
-                                    Si $q < 0$ (electrón), el producto se invierte matemáticamente por el escalar negativo. La fuerza apuntará en <strong>dirección contraria</strong> al pulgar. Puedes comprobarlo ajustando el valor de $q$ a negativo en el panel.
+                                <div id="ciclotron-results" class="bg-slate-900 text-white rounded-lg p-3 text-xs space-y-1.5 font-mono">
+                                    <div class="text-emerald-400 font-bold font-sans">Resultados Calculados:</div>
+                                    <div class="flex justify-between"><span>Radio Órbita R:</span><span id="res-r" class="text-yellow-400 font-bold">3.48 cm</span></div>
+                                    <div class="flex justify-between"><span>Frec. Angular ω:</span><span id="res-omega" class="text-cyan-400 font-bold">1.15e8 rad/s</span></div>
+                                    <div class="flex justify-between"><span>Frecuencia f:</span><span id="res-f" class="text-fuchsia-400 font-bold">18.30 MHz</span></div>
+                                    <div class="flex justify-between"><span>Periodo T:</span><span id="res-t" class="text-indigo-400 font-bold">54.64 ns</span></div>
+                                    <div class="flex justify-between"><span>Energía Cinética K:</span><span id="res-k" class="text-emerald-400 font-bold">83.5 keV</span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TAB 4: APLICACIONES (El "Para qué sirve") -->
-                        <div id="tab-aplicaciones" class="tab-content space-y-4">
-                            <h2 class="font-bold text-violet-900 flex items-center gap-2 text-base border-b border-violet-200 pb-2 mb-2">
-                                <i data-lucide="cpu" class="w-5 h-5 text-violet-600"></i> Aplicaciones Científicas y Reales
-                            </h2>
-                            <p class="text-xs text-violet-800 mb-3 text-justify">El dominio absoluto de estas ecuaciones es lo que diferencia la tecnología primitiva de la era cuántica y nuclear contemporánea. ¿Para qué sirve entender esto?</p>
-                            
-                            <div class="space-y-3">
-                                <div class="bg-white border border-violet-100 p-3 rounded-lg shadow-sm">
-                                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="filter" class="w-4 h-4 text-indigo-500"></i> 1. Espectrómetro de Masas</h3>
-                                    <p class="text-[11px] text-slate-600 mt-1 text-justify">Usando campos cruzados ortogonales ($\vec{E} \perp \vec{B}$), la partícula no se desvía solo si $v = E/B$ (Filtro de velocidades). Luego entra a una zona solo magnética donde $R = mv/qB$. Usado para calcular masas atómicas, datar fósiles con Carbono-14 y descubrir isótopos exóticos en astrofísica.</p>
-                                </div>
+                        <!-- TAB 4: TIPS Y PRINCIPIO DE ISOCRONISMO -->
+                        <div id="tab-tips-frec" class="tab-content space-y-4">
+                            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm space-y-2">
+                                <h3 class="font-bold text-amber-900 text-sm flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-5 h-5 text-amber-600"></i> El Principio de Isocronismo del Ciclotrón
+                                </h3>
+                                <p class="text-xs text-amber-900 text-justify leading-relaxed">
+                                    Observa la fórmula del periodo: $T = \frac{2\pi m}{|q| B}$. <strong>¡No contiene la velocidad ni el radio!</strong>
+                                    Esto significa que un protón lento cerca del centro tarda <em>exactamente el mismo tiempo</em> en dar una vuelta que un protón hiperveloz en la periferia de las Dees (ya que recorre una circunferencia mayor con mayor rapidez proporcionalmente).
+                                </p>
+                            </div>
 
-                                <div class="bg-white border border-violet-100 p-3 rounded-lg shadow-sm">
-                                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="radiation" class="w-4 h-4 text-amber-500"></i> 2. Reactores de Fusión (Tokamak)</h3>
-                                    <p class="text-[11px] text-slate-600 mt-1 text-justify">Para crear una estrella en la Tierra, el plasma alcanza 150 millones de grados Celsius, derritiendo cualquier pared material física. Se utilizan campos magnéticos colosales en forma de "Dona" para generar <strong>confinamiento magnético</strong>; las partículas cargadas quedan levitando en órbitas helicoidales, sin tocar el contenedor.</p>
-                                </div>
-                                
-                                <div class="bg-white border border-violet-100 p-3 rounded-lg shadow-sm">
-                                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="train" class="w-4 h-4 text-emerald-500"></i> 3. Trenes Maglev y Frenado</h3>
-                                    <p class="text-[11px] text-slate-600 mt-1 text-justify">Al mover rieles conductores en presencia de imanes, los electrones libres de la estructura sienten la fuerza de Lorentz, formando vórtices eléctricos que inducen repulsión magnética potente (Ley de Lenz), logrando trenes que flotan y se mueven sin rozamiento a más de 600 km/h.</p>
-                                </div>
+                            <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg shadow-sm space-y-2">
+                                <h4 class="font-bold text-rose-900 text-xs flex items-center gap-1.5">
+                                    <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600"></i> ¿Por qué fallan los ciclotrones a alta energía?
+                                </h4>
+                                <p class="text-xs text-rose-800 text-justify leading-relaxed">
+                                    A velocidades relativistas ($v > 0.1c$), la masa inercial efectiva aumenta según el factor de Lorentz: $m = \gamma m_0$. Por tanto, la frecuencia de giro disminuye:
+                                </p>
+                                <div class="math-display text-rose-900">$$\omega_{rel} = \frac{|q| B}{\gamma m_0}$$</div>
+                                <p class="text-xs text-rose-800 text-justify">
+                                    Las partículas se retrasan y pierden la resonancia con el oscilador de radiofrecuencia. Para resolver esto, los físicos inventaron el <strong>Sincrociclotrón</strong> (modula la frecuencia de RF conforme las partículas aceleran) y el <strong>Sincrotrón</strong> (varía el campo magnético $B$).
+                                </p>
                             </div>
                         </div>
 

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M8.4: Aplicaciones Tecnológicas: Selector de Wien, Espectrómetro y Efecto Hall</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = { 
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']], tags: 'none' }, 
+            chtml: { matchFontHeight: false } 
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #0f172a; display: flex; justify-content: center; align-items: center; font-family: system-ui, -apple-system, sans-serif; touch-action: none; }
+        #slide-wrapper { width: 100%; height: 100%; max-width: 1920px; padding: 1.5vmin; box-sizing: border-box; display: flex; }
+        .slide { background-color: #f8fafc; width: 100%; height: 100%; border-radius: 1.5vmin; box-shadow: 0 10px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; overflow: hidden; }
+        .math-display { font-size: clamp(12px, 1.05vw, 15px); font-weight: bold; color: #1e40af; text-align: center; margin: 0.8vmin 0; overflow-x: auto;}
+        .canvas-wrapper { border: 1px solid #cbd5e1; border-radius: 0.5rem; overflow: hidden; position: relative; background: radial-gradient(circle at center, #1e293b, #020617); cursor: crosshair; }
+        .control-panel { background: #f1f5f9; border-radius: 0.5rem; padding: 1vmin; margin-bottom: 1vmin; display: flex; flex-direction: column; gap: 0.8vmin; border: 1px solid #cbd5e1; font-size: clamp(11px, 0.9vw, 14px); }
+        .btn-ui { padding: 0.35rem 0.7rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+        .btn-ui:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.95; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; } .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        
+        .tab-btn { padding: 0.5rem 0.75rem; font-weight: 600; font-size: 0.8rem; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;}
+        .tab-btn:hover { color: #3b82f6; background: #eff6ff; }
+        .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; background: #eff6ff; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .param-input { width: 70px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px; font-family: monospace; font-size: 12px; font-weight: bold; background-color: #ffffff; color: #0f172a; }
+        .param-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.25); }
+    </style>
+</head>
+<body>
+    <div id="slide-wrapper">
+        <div class="slide">
+            <!-- HEADER APP -->
+            <header class="flex-none bg-slate-900 text-white p-[1.5vmin] border-b-[0.5vmin] border-teal-500 shadow-md z-10 flex items-center justify-between">
+                <h1 class="font-bold text-xl md:text-2xl flex items-center gap-3">
+                    <i data-lucide="filter" class="w-7 h-7 text-teal-400"></i>
+                    <span>M8.4: Aplicaciones Tecnológicas: Selector de Wien, Espectrómetro y Efecto Hall</span>
+                </h1>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 rounded font-mono">Wien &bull; Bainbridge &bull; Isótopos &bull; Efecto Hall</span>
+                    <span class="text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded font-mono">Electro10.Easy</span>
+                </div>
+            </header>
+
+            <!-- CUERPO PRINCIPAL: 2 COLUMNAS -->
+            <div class="flex-1 flex flex-row p-[1.5vmin] gap-[1.5vmin] min-h-0 bg-slate-100">
+                
+                <!-- COLUMNA IZQUIERDA: PESTAÑAS ACADÉMICAS -->
+                <div class="w-[48%] flex flex-col bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                    
+                    <!-- BARRA DE PESTAÑAS -->
+                    <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto custom-scroll">
+                        <button class="tab-btn active shrink-0" data-tab="tab-wien-teoria"><i data-lucide="layers" class="w-4 h-4 text-teal-600"></i> 1. Principios y Filtros</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-wien-ejercicios"><i data-lucide="check-square" class="w-4 h-4 text-blue-600"></i> 2. Ejercicios Resueltos</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-wien-calc"><i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i> 3. Calculadora de Isótopos</button>
+                        <button class="tab-btn shrink-0" data-tab="tab-wien-tips"><i data-lucide="help-circle" class="w-4 h-4 text-purple-600"></i> 4. Tips &amp; Efecto Hall</button>
+                    </div>
+
+                    <!-- CONTENIDO DE LAS PESTAÑAS -->
+                    <div class="flex-1 overflow-y-auto p-4 custom-scroll text-sm text-slate-800 space-y-4">
+                        
+                        <!-- TAB 1: TEORÍA Y FUNDAMENTOS -->
+                        <div id="tab-wien-teoria" class="tab-content active space-y-4">
+                            
+                            <!-- SELECTOR DE WIEN -->
+                            <div class="bg-teal-50 p-3.5 rounded-lg border-l-4 border-teal-600 shadow-sm">
+                                <h2 class="font-bold text-teal-900 flex items-center gap-2 text-base border-b border-teal-200 pb-1.5 mb-2">
+                                    <i data-lucide="sliders" class="w-5 h-5 text-teal-600"></i> 1. Selector de Velocidades de Wien
+                                </h2>
+                                <p class="text-xs text-teal-950 leading-relaxed text-justify mb-2">
+                                    Consiste en una región donde coexisten un campo eléctrico $\vec{E}$ y un campo magnético $\vec{B}$ perpendiculares entre sí y perpendiculares a la velocidad $\vec{v}$ del haz incidente.
+                                </p>
+                                <p class="text-xs text-teal-950 text-justify">
+                                    Para una partícula de carga $q$ que viaja horizontalmente a velocidad $\vec{v} = v\hat{\imath}$ con $\vec{E} = E\hat{\jmath}$ y $\vec{B} = B\hat{k}$:
+                                </p>
+                                <div class="math-display">$$\vec{F}_{neta} = q\vec{E} + q(\vec{v} \times \vec{B}) = q(E - v B)\hat{\jmath}$$</div>
+                                <div class="bg-white p-2.5 rounded border border-teal-200 text-xs text-teal-900 font-semibold space-y-1">
+                                    <p>Condición para trayectoria rectilínea sin deflexión ($\vec{F}_{neta} = 0$):</p>
+                                    <div class="math-display text-teal-700">$$q E = q v B \implies v = \frac{E}{B}$$</div>
+                                    <p class="text-[11px] text-teal-800 font-normal">
+                                        ¡Propiedad notable!: La velocidad seleccionada es <strong>completamente independiente de la masa $m$ y de la carga $q$</strong> de la partícula.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- ESPECTRÓMETRO DE BAINBRIDGE -->
+                            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2">
+                                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                    <i data-lucide="pie-chart" class="w-4 h-4 text-blue-600"></i> 2. Espectrómetro de Masas de Bainbridge
+                                </h3>
+                                <p class="text-xs text-slate-700 leading-relaxed text-justify">
+                                    Tras salir del selector de Wien con una rapidez $v = E/B$ conocida y estrictamente monocromática, los iones entran a una segunda cámara con solo un campo magnético uniforme $B'$.
+                                </p>
+                                <p class="text-xs text-slate-700 leading-relaxed text-justify">
+                                    Allí describen un semicírculo de radio $R = \frac{mv}{qB'}$, impactando sobre un detector ubicado a una distancia igual al diámetro $D$:
+                                </p>
+                                <div class="math-display">$$D = 2R = 2\left(\frac{m v}{q B'}\right) = \frac{2 m E}{q B B'}$$</div>
+                                <div class="bg-blue-50 p-2.5 rounded border border-blue-200 text-xs text-blue-950">
+                                    <strong>Separación de Isótopos:</strong> Como $q, E, B, B'$ son idénticos para todos los iones del haz, el diámetro de impacto es <strong>directamente proporcional a la masa $m$</strong>:
+                                    <div class="math-display text-blue-800">$$\Delta D = D_2 - D_1 = \frac{2 (m_2 - m_1) v}{q B'}$$</div>
+                                </div>
+                            </div>
+
+                            <!-- EFECTO HALL -->
+                            <div class="bg-purple-50 p-3.5 rounded-lg border-l-4 border-purple-600 shadow-sm space-y-2 text-purple-950">
+                                <h3 class="font-bold text-sm flex items-center gap-2 text-purple-900">
+                                    <i data-lucide="activity" class="w-4 h-4 text-purple-600"></i> 3. Efecto Hall: Determinación del Portador y Densidad $n$
+                                </h3>
+                                <p class="text-xs leading-relaxed text-justify">
+                                    Cuando una cinta conductora de espesor $t$ y ancho $d$ conduce una corriente $I$ inmersa en un campo magnético perpendicular $\vec{B}$, la fuerza magnética $F_B = q v_d B$ desvía los portadores hacia un borde, generando el <strong>Campo Eléctrico de Hall</strong> $E_H = v_d B$ y una diferencia de potencial transversal:
+                                </p>
+                                <div class="math-display text-purple-800">$$\Delta V_H = E_H \cdot d = \frac{I B}{n q t}$$</div>
+                                <p class="text-[11px] text-purple-900 text-justify">
+                                    donde $n$ es la densidad de portadores por $\text{m}^3$. El <strong>Coeficiente de Hall</strong> se define como $R_H = \frac{1}{nq} = \frac{\Delta V_H \cdot t}{I \cdot B}$.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- TAB 2: EJERCICIOS RESUELTOS PASO A PASO -->
+                        <div id="tab-wien-ejercicios" class="tab-content space-y-4">
+                            
+                            <!-- EJERCICIO 8: SELECTOR DE VELOCIDADES DE WIEN -->
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 8 (Filtros E&perp;B)</span>
+                                    <span class="text-xs font-bold text-slate-500">Selector de Wien &bull; Cargas $q$</span>
+                                </div>
+                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
+                                    <strong>Enunciado:</strong> En un selector de velocidades de Wien, las placas paralelas están separadas por una distancia $d = 5.0\,\text{mm}$ y se les aplica una diferencia de potencial $\Delta V = 300\,\text{V}$, produciendo un campo eléctrico uniforme $\vec{E} = +E\hat{\jmath}$. Un campo magnético uniforme de magnitud $B = 0.25\,\text{T}$ apunta hacia el observador: $\vec{B} = +B\hat{k}$. Un haz de iones con carga positiva $q = +e$ se dispara en la dirección $+x$.
+                                    <br>a) Determine la magnitud y dirección de las fuerzas eléctrica y magnética.
+                                    <br>b) Calcule la rapidez $v$ de los iones seleccionados que logran atravesar la rendija sin desviarse.
+                                    <br>c) ¿Qué trayectoria sigue un ion más rápido ($v' = 4.0\times 10^5\,\text{m/s}$)?
+                                </p>
+
+                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
+                                    <p class="font-bold text-teal-800">Paso 1: Cálculo del campo eléctrico entre las placas</p>
+                                    <div class="math-display">$$E = \frac{\Delta V}{d} = \frac{300\,\text{V}}{5.0 \times 10^{-3}\,\text{m}} = \mathbf{6.00 \times 10^4\,\text{V/m}} \quad (\text{hacia }+\hat{\jmath})$$</div>
+
+                                    <p class="font-bold text-teal-800">Paso 2: Análisis vectorial de fuerzas</p>
+                                    <p class="text-[11px] text-slate-700">
+                                        Fuerza eléctrica: $\vec{F}_E = q\vec{E} = +qE\,\hat{\jmath}$ (empuja hacia arriba).
+                                        <br>Fuerza magnética: $\vec{F}_B = q(\vec{v}\times\vec{B}) = q(v\hat{\imath} \times B\hat{k}) = q v B (\hat{\imath}\times\hat{k}) = -q v B\,\hat{\jmath}$ (empuja hacia abajo).
+                                    </p>
+
+                                    <p class="font-bold text-teal-800">Paso 3: Condición de equilibrio $F_E = F_B$</p>
+                                    <div class="math-display">$$v = \frac{E}{B} = \frac{6.00 \times 10^4\,\text{V/m}}{0.25\,\text{T}} = \mathbf{2.40 \times 10^5\,\text{m/s}} \quad (240\,\text{km/s})$$</div>
+
+                                    <p class="font-bold text-teal-800">Paso 4: Comportamiento para $v' > v$</p>
+                                    <p class="text-[11px] text-slate-700 text-justify">
+                                        Como $F_B \propto v$ y $F_E$ es constante, al ingresar con $v' = 4.0\times 10^5\,\text{m/s} > 2.4\times 10^5\,\text{m/s}$, la fuerza magnética hacia abajo supera a la eléctrica ($F_B > F_E$). El ion se curva hacia abajo ($-\hat{\jmath}$) e impacta contra la placa inferior.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- EJERCICIO 9: ESPECTRÓMETRO DE MASAS Y SEPARACIÓN C12/C14 -->
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 9 (Espectrometría Nuclear)</span>
+                                    <span class="text-xs font-bold text-slate-500">Isótopos &bull; $^{12}\text{C}$ vs $^{14}\text{C}$</span>
+                                </div>
+                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
+                                    <strong>Enunciado:</strong> En un laboratorio de datación arqueológica se inyecta una muestra ionizada de carbono monocargada ($q = +1.602\times 10^{-19}\,\text{C}$) compuesta por $^{12}\text{C}$ ($m_1 = 1.993\times 10^{-26}\,\text{kg}$) y $^{14}\text{C}$ ($m_2 = 2.325\times 10^{-26}\,\text{kg}$). Los iones salen del selector de Wien con una rapidez común $v = 3.00\times 10^5\,\text{m/s}$ y entran perpendicularmente a una cámara con campo magnético uniforme $B' = 0.50\,\text{T}$.
+                                    <br>a) Calcule el radio de curvatura y el punto de impacto para cada isótopo.
+                                    <br>b) Determine la distancia de separación física $\Delta D$ entre ambos picos sobre el detector.
+                                </p>
+
+                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
+                                    <p class="font-bold text-blue-800">Paso 1: Fórmulas de curvatura</p>
+                                    <div class="math-display">$$R = \frac{m v}{q B'} \quad \implies \quad D = 2R = \frac{2 m v}{q B'}$$</div>
+
+                                    <p class="font-bold text-blue-800">Paso 2: Cálculo para Carbono-12 ($^{12}\text{C}$)</p>
+                                    <div class="math-display">$$R_1 = \frac{(1.993 \times 10^{-26}\,\text{kg})(3.00 \times 10^5\,\text{m/s})}{(1.602 \times 10^{-19}\,\text{C})(0.50\,\text{T})} = \frac{5.979 \times 10^{-21}}{8.010 \times 10^{-20}} = 0.07464\,\text{m} = 7.464\,\text{cm}$$</div>
+                                    <div class="math-display text-blue-700">$$D_1 = 2 R_1 = \mathbf{14.93\,\text{cm}}$$</div>
+
+                                    <p class="font-bold text-blue-800">Paso 3: Cálculo para Carbono-14 ($^{14}\text{C}$)</p>
+                                    <div class="math-display">$$R_2 = \frac{(2.325 \times 10^{-26}\,\text{kg})(3.00 \times 10^5\,\text{m/s})}{(1.602 \times 10^{-19}\,\text{C})(0.50\,\text{T})} = \frac{6.975 \times 10^{-21}}{8.010 \times 10^{-20}} = 0.08708\,\text{m} = 8.708\,\text{cm}$$</div>
+                                    <div class="math-display text-blue-700">$$D_2 = 2 R_2 = \mathbf{17.42\,\text{cm}}$$</div>
+
+                                    <p class="font-bold text-blue-800">Paso 4: Separación espacial en el detector</p>
+                                    <div class="bg-blue-100 p-2 rounded text-blue-950 font-mono text-[11px]">
+                                        $\Delta D = D_2 - D_1 = 17.42\,\text{cm} - 14.93\,\text{cm} = \mathbf{2.49\,\text{cm}} \quad (24.9\,\text{mm})$
+                                    </div>
+                                    <p class="text-[11px] text-slate-700">¡Una separación de 2.5 cm es enorme y permite aislar e identificar los isótopos con 100% de pureza!</p>
+                                </div>
+                            </div>
+
+                            <!-- EJERCICIO 10: EFECTO HALL EN CINTA DE PLATA -->
+                            <div class="bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">Ejercicio 10 (Física del Estado Sólido)</span>
+                                    <span class="text-xs font-bold text-slate-500">Efecto Hall &bull; Densidad $n$</span>
+                                </div>
+                                <p class="text-xs text-slate-800 leading-relaxed text-justify font-serif">
+                                    <strong>Enunciado:</strong> Una cinta plana de plata de ancho $w = 1.50\,\text{cm}$ y espesor $t = 0.20\,\text{mm}$ transporta una corriente continua $I = 18.0\,\text{A}$ a lo largo del eje $+x$. La cinta se sumerge en un campo magnético perpendicular uniforme $B = 1.25\,\text{T}$ dirigido en la dirección $+y$. Se mide con un electrómetro sensible una diferencia de potencial transversal de Hall $\Delta V_H = 15.0\,\mu\text{V}$.
+                                    <br>a) Determine la densidad de electrones libres por $\text{m}^3$ ($n$).
+                                    <br>b) Calcule la velocidad de deriva promedio de los electrones ($v_d$).
+                                    <br>c) Determine el Coeficiente de Hall ($R_H$).
+                                </p>
+
+                                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs space-y-2">
+                                    <p class="font-bold text-purple-700">Paso 1: Densidad de portadores ($n$)</p>
+                                    <div class="math-display">$$\Delta V_H = \frac{I B}{n q t} \implies n = \frac{I B}{q \cdot t \cdot \Delta V_H}$$</div>
+                                    <div class="bg-white p-2 rounded border border-slate-200 font-mono text-[11px] text-slate-800 space-y-1">
+                                        <p>&bull; $I = 18.0\,\text{A}, \quad B = 1.25\,\text{T}$</p>
+                                        <p>&bull; $t = 0.20 \times 10^{-3}\,\text{m}, \quad \Delta V_H = 15.0 \times 10^{-6}\,\text{V}, \quad q = 1.602 \times 10^{-19}\,\text{C}$</p>
+                                        <p>&bull; $n = \frac{(18.0)(1.25)}{(1.602 \times 10^{-19})(2.0 \times 10^{-4})(1.50 \times 10^{-5})} = \frac{22.5}{4.806 \times 10^{-27}} = \mathbf{4.68 \times 10^{28}\,\text{electrones/m}^3}$</p>
+                                    </div>
+
+                                    <p class="font-bold text-purple-700">Paso 2: Velocidad de deriva ($v_d$)</p>
+                                    <div class="math-display">$$v_d = \frac{I}{n q A} = \frac{I}{n q (w \cdot t)} = \frac{18.0}{(4.68 \times 10^{28})(1.602 \times 10^{-19})(0.015 \times 0.0002)} = \mathbf{8.00 \times 10^{-4}\,\text{m/s}} \quad (0.80\,\text{mm/s})$$</div>
+
+                                    <p class="font-bold text-purple-700">Paso 3: Coeficiente de Hall ($R_H$)</p>
+                                    <div class="math-display">$$R_H = \frac{1}{n q} = \frac{1}{(4.68 \times 10^{28})(1.602 \times 10^{-19})} = \mathbf{1.33 \times 10^{-10}\,\text{m}^3/\text{C}}$$</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- TAB 3: CALCULADORA DE ISÓTOPOS -->
+                        <div id="tab-wien-calc" class="tab-content space-y-4">
+                            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                                <h3 class="font-bold text-slate-900 text-sm mb-2 flex items-center gap-2">
+                                    <i data-lucide="sliders" class="w-4 h-4 text-emerald-600"></i> Calculadora Interactiva de Espectrometría
+                                </h3>
+
+                                <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                                    <div>
+                                        <label class="block text-slate-600 font-semibold mb-1">Campo Eléctrico $E$ (V/m):</label>
+                                        <input type="number" id="wien-calc-E" value="60000" step="5000" class="param-input w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-slate-600 font-semibold mb-1">Campo Selector $B$ (T):</label>
+                                        <input type="number" id="wien-calc-B" value="0.25" step="0.05" class="param-input w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-slate-600 font-semibold mb-1">Campo Cámara $B'$ (T):</label>
+                                        <input type="number" id="wien-calc-Bprime" value="0.50" step="0.05" class="param-input w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-slate-600 font-semibold mb-1">Preajuste de Isótopos:</label>
+                                        <select id="wien-calc-preset" class="param-input w-full bg-white text-xs cursor-pointer">
+                                            <option value="carbon">Carbono (12C vs 14C)</option>
+                                            <option value="uranio">Uranio (235U vs 238U)</option>
+                                            <option value="hidrogeno">Hidrógeno (1H vs 2H)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button id="btn-run-wien-calc" class="btn-ui bg-teal-600 text-white w-full py-1.5 text-xs font-bold">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Calcular Separación Espectral
+                                </button>
+
+                                <div class="bg-white p-3 rounded border border-slate-200 text-xs space-y-1.5 font-mono mt-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Velocidad $v = E/B$:</span>
+                                        <span id="res-wien-v" class="font-bold text-teal-600">2.40 × 10⁵ m/s</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Diámetro Isótopo 1 ($D_1$):</span>
+                                        <span id="res-wien-d1" class="font-bold text-blue-600">11.94 cm</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Diámetro Isótopo 2 ($D_2$):</span>
+                                        <span id="res-wien-d2" class="font-bold text-purple-600">13.93 cm</span>
+                                    </div>
+                                    <div class="flex justify-between border-t border-slate-200 pt-1">
+                                        <span class="text-slate-800 font-bold">Separación $\Delta D$:</span>
+                                        <span id="res-wien-deltad" class="font-bold text-emerald-600 text-sm">1.99 cm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4: TIPS Y EFECTO HALL -->
+                        <div id="tab-wien-tips" class="tab-content space-y-3">
+                            <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-500 shadow-sm text-xs space-y-2">
+                                <h4 class="font-bold text-purple-900 flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-purple-600"></i> Tip 1: ¿Por qué el Efecto Hall revela el SIGNO del Portador?
+                                </h4>
+                                <p class="text-purple-950 text-justify leading-relaxed">
+                                    Imagina una corriente hacia la derecha ($+x$):
+                                    <br>&bull; Si los portadores son <strong>positivos ($+q$)</strong>, se mueven hacia $+x$. La fuerza magnética $q(\vec{v}\times\vec{B})$ los desvía hacia el borde superior. ¡El borde superior queda a mayor potencial ($V_{sup} > V_{inf}$)!
+                                    <br>&bull; Si los portadores son <strong>electrones ($-e$)</strong>, la corriente hacia $+x$ implica que los electrones se mueven hacia $-x$. La fuerza magnética $-e(\vec{v}\times\vec{B})$ ¡también los desvía hacia el borde superior! Pero como son negativos, el borde superior se carga negativamente ($V_{sup} < V_{inf}$).
+                                    <br><strong>Conclusión histórica:</strong> Midiendo qué cara del metal queda a mayor voltaje, Edwin Hall demostró en 1879 que en los metales quienes se mueven son cargas negativas (electrones).
+                                </p>
+                            </div>
+
+                            <div class="bg-teal-50 p-3 rounded-lg border-l-4 border-teal-500 shadow-sm text-xs space-y-2">
+                                <h4 class="font-bold text-teal-900 flex items-center gap-1.5">
+                                    <i data-lucide="filter" class="w-4 h-4 text-teal-600"></i> Tip 2: ¿Por qué el Selector de Wien NO depende de la masa ni de la carga?
+                                </h4>
+                                <p class="text-teal-950 text-justify leading-relaxed">
+                                    Tanto la fuerza eléctrica ($F_E = qE$) como la fuerza magnética ($F_B = qvB$) son directamente proporcionales a la carga $q$. Al igualar ambas ($qE = qvB$), el término $q$ se cancela algebraicamente.
+                                    <br>Tampoco aparece la masa $m$ porque no hay aceleración neta ($\vec{a} = 0$, movimiento rectilíneo uniforme).
+                                </p>
+                            </div>
+
+                            <div class="bg-amber-50 p-3 rounded-lg border-l-4 border-amber-500 shadow-sm text-xs space-y-2">
+                                <h4 class="font-bold text-amber-900 flex items-center gap-1.5">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i> Tip 3: Cuidado con los dos Campos Magnéticos ($B$ vs $B'$)
+                                </h4>
+                                <p class="text-amber-950 text-justify leading-relaxed">
+                                    En problemas de espectrómetros de Bainbridge, es habitual que el campo magnético del selector de Wien ($B$) sea diferente del campo de la cámara de deflexión semicircular ($B'$). ¡No los mezcles en la misma ecuación!
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: VISUALIZADOR INTERACTIVO ESPECTRÓMETRO -->
+                <div class="w-[52%] flex flex-col min-w-0 gap-[1vmin]">
+                    
+                    <!-- PANEL DE CONTROL DEL ESPECTRÓMETRO -->
+                    <div class="control-panel shadow-sm">
+                        <div class="flex items-center justify-between border-b border-slate-300 pb-1.5">
+                            <span class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                                <i data-lucide="monitor" class="w-4 h-4 text-teal-600"></i>
+                                Cámara de Espectrometría en Tiempo Real
+                            </span>
+
+                            <div class="flex items-center gap-1">
+                                <button id="btn-fire-beam" class="btn-ui bg-teal-600 text-white text-xs">
+                                    <i data-lucide="zap" class="w-3.5 h-3.5"></i> Disparar Haz Iónico
+                                </button>
+                                <button id="btn-wien-reset" class="btn-ui bg-slate-200 text-slate-700 text-xs">
+                                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Limpiar Placa
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SLIDERS RÁPIDOS -->
+                        <div class="grid grid-cols-3 gap-2 text-xs pt-1">
+                            <div>
+                                <label class="flex justify-between font-bold text-teal-700 text-[11px]">
+                                    <span>Campo $E$:</span>
+                                    <span id="lbl-live-e" class="font-mono">60 kV/m</span>
+                                </label>
+                                <input type="range" id="slider-live-e" min="30" max="100" step="5" value="60" class="w-full accent-teal-600 cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="flex justify-between font-bold text-blue-700 text-[11px]">
+                                    <span>Campo $B$:</span>
+                                    <span id="lbl-live-b" class="font-mono">0.25 T</span>
+                                </label>
+                                <input type="range" id="slider-live-b" min="0.10" max="0.50" step="0.05" value="0.25" class="w-full accent-blue-600 cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="flex justify-between font-bold text-purple-700 text-[11px]">
+                                    <span>Cámara $B'$:</span>
+                                    <span id="lbl-live-bprime" class="font-mono">0.50 T</span>
+                                </label>
+                                <input type="range" id="slider-live-bprime" min="0.20" max="1.00" step="0.05" value="0.50" class="w-full accent-purple-600 cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CANVAS DEL ESPECTRÓMETRO -->
+                    <div class="flex-1 canvas-wrapper relative min-h-[350px]">
+                        <canvas id="canvas-spectrometer" class="w-full h-full block"></canvas>
+
+                        <!-- BADGE SUPERIOR -->
+                        <div class="absolute top-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1.5 shadow pointer-events-none">
+                            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                            <span class="font-semibold">Simulación Bainbridge: Filtro Wien &rarr; Deflexión Semicircular</span>
+                        </div>
+
+                        <!-- LEYENDA DETECTORES -->
+                        <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur border border-slate-700 text-white p-2 rounded text-[11px] space-y-1 pointer-events-none">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1 bg-blue-400 inline-block rounded"></span>
+                                <span>Isótopo Ligero (Radio Menor $R_1$)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1 bg-purple-400 inline-block rounded"></span>
+                                <span>Isótopo Pesado (Radio Mayor $R_2$)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-1 bg-emerald-400 inline-block rounded"></span>
+                                <span>Impacto en Placa Fotográfica</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TELEMETRÍA DINÁMICA -->
+                    <div class="bg-slate-900 text-white p-2.5 rounded-lg border border-slate-700 shadow-sm grid grid-cols-4 gap-2 text-center">
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Velocidad $v = E/B$</span>
+                            <span id="tele-wien-v" class="font-mono font-bold text-teal-400 text-sm">240 km/s</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Radio $R_1$ (Ligero)</span>
+                            <span id="tele-wien-r1" class="font-mono font-bold text-blue-400 text-sm">5.97 cm</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Radio $R_2$ (Pesado)</span>
+                            <span id="tele-wien-r2" class="font-mono font-bold text-purple-400 text-sm">6.96 cm</span>
+                        </div>
+                        <div class="bg-slate-800/80 p-1.5 rounded border border-slate-700">
+                            <span class="block text-[10px] text-slate-400 font-bold">Separación $\Delta D$</span>
+                            <span id="tele-wien-delta" class="font-mono font-bold text-emerald-400 text-sm">1.99 cm</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE COMPORTAMIENTO Y CANVAS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+
+            // PESTAÑAS ACADÉMICAS
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    const target = document.getElementById(btn.dataset.tab);
+                    if (target) {
+                        target.classList.add('active');
+                        if (window.MathJax && MathJax.typesetPromise) {
+                            MathJax.typesetPromise([target]);
+                        }
+                    }
+                });
+            });
+
+            // PREAJUSTES DE ISÓTOPOS
+            const presetSelect = document.getElementById('wien-calc-preset');
+            const ISOTOPE_MASSES = {
+                carbon: { m1: 1.993e-26, m2: 2.325e-26, name1: '12C', name2: '14C' },
+                uranio: { m1: 3.903e-25, m2: 3.953e-25, name1: '235U', name2: '238U' },
+                hidrogeno: { m1: 1.673e-27, m2: 3.344e-27, name1: '1H', name2: '2H (Deuterio)' }
+            };
+
+            function runWienCalculator() {
+                const E = parseFloat(document.getElementById('wien-calc-E').value);
+                const B = parseFloat(document.getElementById('wien-calc-B').value);
+                const Bprime = parseFloat(document.getElementById('wien-calc-Bprime').value);
+                const presetKey = presetSelect.value;
+                const iso = ISOTOPE_MASSES[presetKey] || ISOTOPE_MASSES.carbon;
+                const q = 1.602e-19; // C
+
+                const v = E / B;
+                const R1 = (iso.m1 * v) / (q * Bprime);
+                const R2 = (iso.m2 * v) / (q * Bprime);
+                const D1 = 2 * R1;
+                const D2 = 2 * R2;
+                const deltaD = Math.abs(D2 - D1);
+
+                document.getElementById('res-wien-v').textContent = (v / 1000).toFixed(1) + ' km/s';
+                document.getElementById('res-wien-d1').textContent = (D1 * 100).toFixed(2) + ' cm (' + iso.name1 + ')';
+                document.getElementById('res-wien-d2').textContent = (D2 * 100).toFixed(2) + ' cm (' + iso.name2 + ')';
+                document.getElementById('res-wien-deltad').textContent = (deltaD * 100).toFixed(2) + ' cm (' + (deltaD * 1000).toFixed(1) + ' mm)';
+            }
+
+            document.getElementById('btn-run-wien-calc').addEventListener('click', runWienCalculator);
+            presetSelect.addEventListener('change', runWienCalculator);
+
+            // -------------------------------------------------------------
+            // CANVAS ANIMADO DE ESPECTRÓMETRO DE BAINBRIDGE
+            // -------------------------------------------------------------
+            const canvas = document.getElementById('canvas-spectrometer');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            const sliderE = document.getElementById('slider-live-e');
+            const sliderB = document.getElementById('slider-live-b');
+            const sliderBprime = document.getElementById('slider-live-bprime');
+
+            const lblE = document.getElementById('lbl-live-e');
+            const lblB = document.getElementById('lbl-live-b');
+            const lblBprime = document.getElementById('lbl-live-bprime');
+
+            function updateLiveLabels() {
+                lblE.textContent = sliderE.value + ' kV/m';
+                lblB.textContent = parseFloat(sliderB.value).toFixed(2) + ' T';
+                lblBprime.textContent = parseFloat(sliderBprime.value).toFixed(2) + ' T';
+            }
+
+            sliderE.addEventListener('input', updateLiveLabels);
+            sliderB.addEventListener('input', updateLiveLabels);
+            sliderBprime.addEventListener('input', updateLiveLabels);
+
+            let particles = [];
+            let hitMarks = [];
+
+            class IonParticle {
+                constructor(mass, charge, color) {
+                    this.mass = mass;
+                    this.charge = charge;
+                    this.color = color;
+                    this.x = 30;
+                    this.y = 0; // se define en draw
+                    this.vx = 0;
+                    this.vy = 0;
+                    this.inChamber = false;
+                    this.angle = 0;
+                    this.radius = 0;
+                    this.centerX = 0;
+                    this.centerY = 0;
+                    this.finished = false;
+                }
+            }
+
+            function fireBeam() {
+                const E_val = parseFloat(sliderE.value) * 1000;
+                const B_val = parseFloat(sliderB.value);
+                const v = E_val / B_val;
+
+                // Crear partículas ligeras y pesadas
+                for (let i = 0; i < 6; i++) {
+                    const p1 = new IonParticle(1.993e-26, 1.602e-19, '#60a5fa'); // 12C azul
+                    p1.vx = 4;
+                    p1.x = 20 - i * 15;
+                    particles.push(p1);
+
+                    const p2 = new IonParticle(2.325e-26, 1.602e-19, '#c084fc'); // 14C morado
+                    p2.vx = 4;
+                    p2.x = 20 - i * 15;
+                    particles.push(p2);
+                }
+            }
+
+            document.getElementById('btn-fire-beam').addEventListener('click', fireBeam);
+            document.getElementById('btn-wien-reset').addEventListener('click', () => {
+                particles = [];
+                hitMarks = [];
+            });
+
+            function drawSpectrometer() {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const E_val = parseFloat(sliderE.value) * 1000;
+                const B_val = parseFloat(sliderB.value);
+                const Bp_val = parseFloat(sliderBprime.value);
+                const q = 1.602e-19;
+                const v_real = E_val / B_val;
+
+                // Telemetría
+                const R1_real = (1.993e-26 * v_real) / (q * Bp_val);
+                const R2_real = (2.325e-26 * v_real) / (q * Bp_val);
+                const dD_real = Math.abs(2 * R2_real - 2 * R1_real);
+
+                document.getElementById('tele-wien-v').textContent = (v_real / 1000).toFixed(0) + ' km/s';
+                document.getElementById('tele-wien-r1').textContent = (R1_real * 100).toFixed(2) + ' cm';
+                document.getElementById('tele-wien-r2').textContent = (R2_real * 100).toFixed(2) + ' cm';
+                document.getElementById('tele-wien-delta').textContent = (dD_real * 100).toFixed(2) + ' cm';
+
+                // ZONAS GEOMÉTRICAS
+                const slitX = w * 0.40;
+                const midY = h * 0.65;
+
+                // 1. Selector de Wien (Izquierda)
+                ctx.fillStyle = "rgba(15, 23, 42, 0.7)";
+                ctx.fillRect(20, midY - 60, slitX - 30, 120);
+                ctx.strokeStyle = "#38bdf8";
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(20, midY - 60, slitX - 30, 120);
+
+                // Placas cargadas
+                ctx.fillStyle = "#ef4444";
+                ctx.fillRect(20, midY - 65, slitX - 30, 6); // Placa + Arriba
+                ctx.fillStyle = "#3b82f6";
+                ctx.fillRect(20, midY + 59, slitX - 30, 6); // Placa - Abajo
+
+                ctx.fillStyle = "#f8fafc";
+                ctx.font = "bold 11px sans-serif";
+                ctx.fillText("+ + + + Placa Positiva + + + +", 40, midY - 72);
+                ctx.fillText("- - - - Placa Negativa - - - -", 40, midY + 78);
+                ctx.fillText("Selector de Wien (E ⊥ B)", 40, midY - 45);
+
+                // Flechas campo eléctrico E hacia abajo
+                ctx.strokeStyle = "rgba(239, 68, 68, 0.4)";
+                ctx.lineWidth = 1;
+                for (let x = 60; x < slitX - 40; x += 35) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, midY - 40);
+                    ctx.lineTo(x, midY + 40);
+                    ctx.stroke();
+                }
+
+                // Símbolos de Campo B saliendo (puntos)
+                ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
+                ctx.font = "12px monospace";
+                for (let x = 45; x < slitX - 40; x += 40) {
+                    ctx.fillText("⊙ B", x, midY);
+                }
+
+                // 2. Rendija Colimadora
+                ctx.fillStyle = "#64748b";
+                ctx.fillRect(slitX - 10, 20, 10, midY - 8);
+                ctx.fillRect(slitX - 10, midY + 8, 10, h - midY - 28);
+
+                // 3. Cámara de Deflexión Magnética (Derecha)
+                ctx.fillStyle = "rgba(30, 41, 59, 0.5)";
+                ctx.fillRect(slitX, 20, w - slitX - 20, h - 40);
+                ctx.strokeStyle = "#475569";
+                ctx.strokeRect(slitX, 20, w - slitX - 20, h - 40);
+
+                // Fondo campo B' (cruces hacia adentro)
+                ctx.fillStyle = "rgba(168, 85, 247, 0.25)";
+                ctx.font = "12px monospace";
+                for (let x = slitX + 30; x < w - 30; x += 45) {
+                    for (let y = 40; y < h - 40; y += 45) {
+                        ctx.fillText("⊗ B'", x, y);
+                    }
+                }
+
+                // 4. Placa Fotográfica / Detector (Arriba a la derecha)
+                const plateY = midY;
+                ctx.fillStyle = "#334155";
+                ctx.fillRect(slitX + 20, plateY - 4, w - slitX - 40, 8);
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.strokeRect(slitX + 20, plateY - 4, w - slitX - 40, 8);
+                ctx.fillStyle = "#facc15";
+                ctx.font = "bold 11px sans-serif";
+                ctx.fillText("Placa Detectora CCD", slitX + 30, plateY - 12);
+
+                // Marcas métricas en la placa
+                for (let x = slitX + 50; x < w - 50; x += 30) {
+                    ctx.strokeStyle = "#94a3b8";
+                    ctx.beginPath();
+                    ctx.moveTo(x, plateY - 4);
+                    ctx.lineTo(x, plateY + 4);
+                    ctx.stroke();
+                }
+
+                // Marcas históricas de impactos
+                hitMarks.forEach(hm => {
+                    ctx.fillStyle = hm.color;
+                    ctx.beginPath();
+                    ctx.arc(hm.x, plateY, 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Escala de simulación de radios en píxeles
+                const scalePixel = (w * 0.25) / (R2_real);
+                const pixR1 = R1_real * scalePixel;
+                const pixR2 = R2_real * scalePixel;
+
+                // Trazas semicirculares teóricas guía
+                ctx.strokeStyle = "rgba(96, 165, 250, 0.3)";
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.arc(slitX + pixR1, midY, pixR1, Math.PI, 0, false);
+                ctx.stroke();
+
+                ctx.strokeStyle = "rgba(192, 132, 252, 0.3)";
+                ctx.beginPath();
+                ctx.arc(slitX + pixR2, midY, pixR2, Math.PI, 0, false);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Etiquetas de puntos de impacto
+                ctx.fillStyle = "#60a5fa";
+                ctx.fillText(`12C: ${ (2*R1_real*100).toFixed(1) }cm`, slitX + 2*pixR1 - 15, plateY + 20);
+                ctx.fillStyle = "#c084fc";
+                ctx.fillText(`14C: ${ (2*R2_real*100).toFixed(1) }cm`, slitX + 2*pixR2 - 15, plateY + 35);
+
+                // ACTUALIZACIÓN DE PARTÍCULAS
+                particles.forEach(p => {
+                    if (p.finished) return;
+
+                    if (!p.inChamber) {
+                        p.x += p.vx;
+                        p.y = midY;
+                        if (p.x >= slitX) {
+                            p.inChamber = true;
+                            const isHeavy = p.mass > 2.1e-26;
+                            p.radius = isHeavy ? pixR2 : pixR1;
+                            p.centerX = slitX + p.radius;
+                            p.centerY = midY;
+                            p.angle = Math.PI; // empieza a la izquierda del semicírculo
+                        }
+                    } else {
+                        // Movimiento semicircular hacia arriba
+                        p.angle -= 0.05; // gira en sentido horario hacia 0
+                        p.x = p.centerX + p.radius * Math.cos(p.angle);
+                        p.y = p.centerY - p.radius * Math.sin(p.angle); // sin es positivo, resta para ir hacia arriba
+
+                        if (p.angle <= 0) {
+                            p.finished = true;
+                            p.y = plateY;
+                            hitMarks.push({ x: p.x, color: p.color });
+                        }
+                    }
+
+                    // Dibujar partícula
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Eliminar partículas finalizadas que excedan límite
+                if (hitMarks.length > 60) hitMarks.splice(0, 20);
+
+                requestAnimationFrame(drawSpectrometer);
+            }
+
+            requestAnimationFrame(drawSpectrometer);
+        });
+    </script>
+</body>
+</html>
