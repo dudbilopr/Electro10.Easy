@@ -153,6 +153,14 @@ export function inicializarAuthObserver({ progressData, evalData, timeData, glob
                 }
             });
 
+            // Sincronizar sesión con simulador activo en iframe (SSO transparente)
+            const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
+            if (activeIframe && activeIframe.contentWindow) {
+                try {
+                    activeIframe.contentWindow.postMessage({ type: 'SYNC_UID', uid: user.uid }, '*');
+                } catch (_) {}
+            }
+
             if (onLogin) onLogin();
 
         } else {
@@ -161,6 +169,15 @@ export function inicializarAuthObserver({ progressData, evalData, timeData, glob
             document.getElementById('nav-admin').style.display = 'none';
             document.getElementById('btn-login-modal').style.display = 'flex';
             document.getElementById('auth-modal').style.display = 'flex';
+
+            // Notificar cierre de sesión al iframe activo
+            const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
+            if (activeIframe && activeIframe.contentWindow) {
+                try {
+                    activeIframe.contentWindow.postMessage({ type: 'SYNC_UID', uid: null }, '*');
+                } catch (_) {}
+            }
+
             if (onLogout) onLogout();
         }
     });

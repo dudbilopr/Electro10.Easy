@@ -154,6 +154,15 @@ export function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
     document.getElementById('theme-icon').innerText = isDark ? 'light_mode' : 'dark_mode';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+    // Sincronizar tema con simulador o presentación activa en iframe
+    const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
+    if (activeIframe && activeIframe.contentWindow) {
+        try {
+            activeIframe.contentWindow.postMessage({ type: 'THEME_SYNC', theme: isDark ? 'dark' : 'light' }, '*');
+        } catch (_) {}
+    }
+
     const dash = document.getElementById('student-dashboard');
     if (dash?.style.display === 'block') {
         const done = Object.keys(_progressData).length;

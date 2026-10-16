@@ -388,5 +388,80 @@
             requestAnimationFrame(render);
         });
     </script>
+
+    <script src="../js/sim_telemetry.js"></script>
+
+    <!-- Lab10 Intelligence & Resource Core Engine -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.lab10AI) {
+            window.lab10AI.init({
+                labName: 'OerstedExperiment',
+                moduleTag: 'M8 Experimento de Oersted (1820)',
+                domain: 'magnetism',
+                icon: 'ph-compass',
+                solver: () => {
+                    const I = parseFloat(document.getElementById('slider-i')?.value || 5.0);
+                    const r = parseFloat(document.getElementById('slider-r')?.value || 2.5) * 1e-2;
+                    const pos = document.getElementById('sel-pos')?.value || 'debajo';
+                    const hasEarth = document.getElementById('chk-earth')?.checked;
+                    const switchOn = document.getElementById('lbl-switch')?.innerText.includes('Abrir');
+                    
+                    const mu0 = 4 * Math.PI * 1e-7;
+                    const B_wire = switchOn ? (mu0 * I) / (2 * Math.PI * r) : 0;
+                    const B_wire_uT = B_wire * 1e6;
+                    const B_earth_uT = hasEarth ? 50.0 : 0.0;
+                    
+                    const theta_rad = B_earth_uT > 0 ? Math.atan(B_wire_uT / B_earth_uT) : (B_wire_uT > 0 ? Math.PI / 2 : 0);
+                    const theta_deg = (theta_rad * 180 / Math.PI).toFixed(1);
+
+                    return {
+                        latex: String.raw`B_{\text{hilo}} = \frac{\mu_0 I}{2\pi r} = \frac{(4\pi \times 10^{-7})(${I.toFixed(1)})}{2\pi (${r.toFixed(3)})} = ${B_wire_uT.toFixed(1)}\ \mu\text{T},\quad \theta = \arctan\left(\frac{B_{\text{hilo}}}{B_T}\right) = ${theta_deg}^\circ`,
+                        limits: `
+                            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                                <span>Corriente en el conductor:</span>
+                                <strong style="color:var(--accent);">${I.toFixed(1)} A</strong>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                                <span>Distancia al conductor $r$:</span>
+                                <strong style="color:var(--accent);">${(r*100).toFixed(1)} cm</strong>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                                <span>Campo inducido $B_{\\text{hilo}}$:</span>
+                                <strong>${B_wire_uT.toFixed(1)} $\\mu$T</strong>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                                <span>Ángulo de deflexión $\\theta$:</span>
+                                <span class="room-badge" style="color:var(--accent);"><i class="ph ph-compass"></i> ${theta_deg}&deg;</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;">
+                                <span>Posición de la aguja:</span>
+                                <span style="font-size:0.8rem;color:var(--text-muted);">${pos === 'debajo' ? 'Debajo (Regla Mano Derecha: deflexión Oeste)' : 'Encima (Regla Mano Derecha: deflexión Este)'}</span>
+                            </div>
+                        `
+                    };
+                },
+                presets: [
+                    { id: "max_current", label: "Corriente Máxima (15A)", icon: "ph-lightning" },
+                    { id: "close_compass", label: "Distancia Mínima (1cm)", icon: "ph-arrows-in" },
+                    { id: "no_earth", label: "Sin Campo Terrestre (90°)", icon: "ph-globe-simple" }
+                ],
+                onPreset: (presetId) => {
+                    if (presetId === 'max_current') {
+                        const si = document.getElementById('slider-i');
+                        if (si) { si.value = 15; si.dispatchEvent(new Event('input')); }
+                    } else if (presetId === 'close_compass') {
+                        const sr = document.getElementById('slider-r');
+                        if (sr) { sr.value = 1.0; sr.dispatchEvent(new Event('input')); }
+                    } else if (presetId === 'no_earth') {
+                        const chk = document.getElementById('chk-earth');
+                        if (chk) { chk.checked = false; chk.dispatchEvent(new Event('change')); }
+                    }
+                },
+                nextLab: { "name": "Biot-Savart Hilo Recto (M8)", "url": "Sim_M8_BiotSavart_Hilo.html" }
+            });
+        }
+    });
+    </script>
 </body>
 </html>

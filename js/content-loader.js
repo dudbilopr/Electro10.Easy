@@ -305,10 +305,12 @@ export function loadContent(leccion, modulo, progressData, evalData) {
         }
     }
 
-    // Enviar UID al iframe hijo (sincronización)
+    // Enviar UID y tema al iframe hijo (sincronización SSO y diseño)
     iframe.onload = function () {
-        if (window.currentUserUid) {
-            iframe.contentWindow.postMessage({ type: 'SYNC_UID', uid: window.currentUserUid }, '*');
+        const isDark = document.documentElement.classList.contains('dark');
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'SYNC_UID', uid: window.currentUserUid || null }, '*');
+            iframe.contentWindow.postMessage({ type: 'THEME_SYNC', theme: isDark ? 'dark' : 'light' }, '*');
         }
         
         // INYECCIÓN DE TELEMETRÍA AUTOMÁTICA
@@ -416,4 +418,42 @@ function _marcarCompletado(leccion, elementLi, progressData) {
         if (icon) { icon.innerText = 'check_circle'; icon.classList.add('icon-filled'); }
     }
     guardarProgresoNube(leccion.id);
+}
+
+// ── Sincronización Global con Simuladores (Lab10 Bus & SSO) ───────────────
+if (typeof window !== 'undefined') {
+    window.addEventListener('message', (e) => {
+        if (!e.data) return;
+
+        // 1. Solicitud de sesión desde simulador iframe (lab10-auth.js)
+        if (e.data.type === 'REQUEST_UID' && e.source) {
+            const isDark = document.documentElement.classList.contains('dark');
+            try {
+                e.source.postMessage({ type: 'SYNC_UID', uid: window.currentUserUid || null }, '*');
+                e.source.postMessage({ type: 'THEME_SYNC', theme: isDark ? 'dark' : 'light' }, '*');
+            } catch (_) {}
+        }
+
+        // 2. Navegación asistida inter-simulador (lab10-bus.js / lab10-intelligence.js)
+        if (e.data.type === 'NAVIGATE_SIMULATOR' && e.data.targetUrl) {
+            let target = e.data.targetUrl;
+            if (!target.startsWith('http') && !target.startsWith('/') && !target.startsWith('simuladores/')) {
+                target = 'simuladores/' + target;
+            }
+            console.log('[Lab10 Bus] Navegando simulador activo hacia:', target);
+            const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
+            if (activeIframe) {
+                activeIframe.src = target;
+            }
+        }
+    });
+}
+
+export function broadcastToActiveIframe(message) {
+    const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
+    if (activeIframe && activeIframe.contentWindow) {
+        try {
+            activeIframe.contentWindow.postMessage(message, '*');
+        } catch (_) {}
+    }
 }
