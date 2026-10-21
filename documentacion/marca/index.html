@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de marca 10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--e10-bg); color: var(--e10-ink); font: 400 var(--e10-text-md) / 1.6 var(--e10-font-body); }
+    main { max-width: 1040px; margin: 0 auto; padding: var(--e10-space-8) var(--e10-space-4) 80px; display: grid; gap: 56px; }
+    h1, h2, h3 { font-family: var(--e10-font-display); margin: 0; text-wrap: balance; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -0.02em; }
+    h2 { font-size: var(--e10-text-xl); letter-spacing: -0.01em; }
+    h3 { font-size: var(--e10-text-md); }
+    p { margin: 0; max-width: 68ch; }
+    section { display: grid; gap: var(--e10-space-4); }
+    .lead { color: var(--e10-muted); font-size: var(--e10-text-lg); }
+    .muted { color: var(--e10-muted); }
+    code { font-family: var(--e10-font-mono); font-size: 0.9em; background: var(--e10-primary-soft); padding: 1px 6px; border-radius: 6px; }
+    .grid { display: grid; gap: var(--e10-space-3); grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .swatch { display: grid; gap: 2px; padding: var(--e10-space-3); }
+    .swatch i { display: block; height: 64px; border-radius: var(--e10-radius-sm); margin-bottom: var(--e10-space-2); border: 1px solid var(--e10-line); }
+    .swatch b { font-size: var(--e10-text-sm); }
+    .swatch span { font: 400 var(--e10-text-xs) / 1.5 var(--e10-font-mono); color: var(--e10-muted); }
+    .logo-tile { background: #03060f; border-radius: var(--e10-radius-lg); aspect-ratio: 16 / 7; max-width: 100%; overflow: hidden; }
+    .logo-tile iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .rules { display: grid; gap: var(--e10-space-2); padding-left: 1.2em; margin: 0; }
+    .type-row { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: var(--e10-space-4); align-items: baseline; padding: var(--e10-space-3) 0; border-top: 1px solid var(--e10-line); }
+    .demo { display: flex; flex-wrap: wrap; gap: var(--e10-space-3); align-items: center; }
+    .two { display: grid; gap: var(--e10-space-4); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .two > * { min-width: 0; }
+    .formulas { display: grid; gap: var(--e10-space-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); }
+    pre { margin: 0; font: 400 var(--e10-text-sm) / 1.6 var(--e10-font-mono); background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: var(--e10-radius-md); padding: var(--e10-space-4); overflow-x: auto; }
+    .do, .dont { padding: var(--e10-space-4); }
+    .do h3 { color: var(--e10-success); }
+    .dont h3 { color: var(--e10-danger); }
+    @media (max-width: 560px) { .type-row { grid-template-columns: 1fr; gap: var(--e10-space-1); } }
+</style>
+</head>
+<body>
+<header class="e10-header">
+    <a class="e10-brand" href="../../index.html">Electro<span>10.easy</span></a>
+    <span class="e10-chip">Manual de marca · v1 · 2026-10-21</span>
+    <span class="e10-header__spacer"></span>
+    <button type="button" class="e10-btn" id="theme-btn" aria-pressed="false">Ver tema oscuro</button>
+</header>
+
+<main>
+    <section>
+        <span class="e10-eyebrow">10.Easy · física que se entiende</span>
+        <h1>Manual de marca</h1>
+        <p class="lead">Las reglas visuales de todo lo que publica 10.Easy: plataforma, simuladores, diapositivas, talleres y videos. La fuente de verdad es <code>css/tokens.css</code>; esta página solo la muestra.</p>
+    </section>
+
+    <section aria-labelledby="t-logo">
+        <span class="e10-eyebrow">1 · Logo</span>
+        <h2 id="t-logo">physics10.easy</h2>
+        <div class="logo-tile"><iframe src="../../recursos/Logo/Logo.html" title="Logo animado de physics10.easy"></iframe></div>
+        <ul class="rules">
+            <li>El logo vive siempre sobre su fondo oscuro <code>#03060F</code>, también dentro de una página clara.</li>
+            <li>No se recolorea ni se deforma. Sus neones cian y magenta son el origen de la paleta Plasma.</li>
+            <li>Nombres de producto: <b>[Tema]Lab<span style="color: var(--e10-primary)">10.easy</span></b> para simuladores (CoulombLab10.easy), <b>Electro10.Easy</b> para la plataforma.</li>
+        </ul>
+    </section>
+
+    <section aria-labelledby="t-color">
+        <span class="e10-eyebrow">2 · Color</span>
+        <h2 id="t-color">Paleta Plasma</h2>
+        <p class="muted">Tema claro por defecto. Todo texto cumple contraste 4,5:1 o más. El cian base es solo para gráficos; para texto se usa su versión fuerte.</p>
+        <div class="grid">
+            <div class="e10-card swatch"><i style="background: var(--e10-primary)"></i><b>Primario</b><span>--e10-primary · #B3246B</span><span>Botones, enlaces, marca · 6,2:1</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-accent)"></i><b>Acento</b><span>--e10-accent · #0B8CA8</span><span>Vectores y bordes · solo gráficos</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-accent-strong)"></i><b>Acento fuerte</b><span>--e10-accent-strong · #08758C</span><span>Texto y botones en cian · 5,3:1</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-ink)"></i><b>Tinta</b><span>--e10-ink · #22111B</span><span>Texto principal · 17:1</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-muted)"></i><b>Tinta suave</b><span>--e10-muted · #6A5562</span><span>Texto secundario · 6,4:1</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-bg)"></i><b>Fondo</b><span>--e10-bg · #FBF8FA</span><span>Fondo de la app</span></div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-fisica">
+        <span class="e10-eyebrow">3 · Física</span>
+        <h2 id="t-fisica">Colores con significado físico</h2>
+        <p class="muted">Un mismo objeto físico tiene el mismo color en toda la plataforma. El acento de cada simulador depende del dominio físico, no del número de módulo.</p>
+        <div class="grid">
+            <div class="e10-card swatch"><i style="background: var(--e10-q-pos)"></i><b>Carga positiva</b><span>--e10-q-pos · #D1402F</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-q-neg)"></i><b>Carga negativa</b><span>--e10-q-neg · #2A62D4</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-vec-force)"></i><b>Vector fuerza</b><span>--e10-vec-force</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-vec-field)"></i><b>Vector campo</b><span>--e10-vec-field · #6A4BD1</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-equipotential)"></i><b>Equipotencial</b><span>--e10-equipotential · #B5531A</span></div>
+        </div>
+        <div class="grid">
+            <div class="e10-card swatch"><i style="background: var(--e10-d-electro)"></i><b>Coulomb, campo, potencial</b><span>--e10-d-electro</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-gauss)"></i><b>Flujo y Gauss</b><span>--e10-d-gauss</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-capacitancia)"></i><b>Capacitancia</b><span>--e10-d-capacitancia</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-circuitos)"></i><b>Circuitos CC</b><span>--e10-d-circuitos</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-magnetismo)"></i><b>Lorentz, Biot–Savart, Ampère</b><span>--e10-d-magnetismo</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-faraday)"></i><b>Inducción y Faraday</b><span>--e10-d-faraday</span></div>
+            <div class="e10-card swatch"><i style="background: var(--e10-d-maxwell)"></i><b>Maxwell, ondas, CA</b><span>--e10-d-maxwell</span></div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-tipo">
+        <span class="e10-eyebrow">4 · Tipografía</span>
+        <h2 id="t-tipo">Tres voces</h2>
+        <div>
+            <div class="type-row"><span class="e10-eyebrow">Títulos · Sora</span><span style="font: 700 var(--e10-text-2xl) / 1.15 var(--e10-font-display); letter-spacing: -0.02em;">La carga se conserva</span></div>
+            <div class="type-row"><span class="e10-eyebrow">Texto · IBM Plex Sans</span><span>Dos cargas del mismo signo se repelen. Si duplicas la distancia, la fuerza se reduce a la cuarta parte.</span></div>
+            <div class="type-row"><span class="e10-eyebrow">Datos · IBM Plex Mono</span><span style="font-family: var(--e10-font-mono);">q₁ = +5 μC · r = 0,224 m · F = 4,5 N</span></div>
+            <div class="type-row"><span class="e10-eyebrow">Matemáticas · KaTeX</span><span>\( \vec{F}_{12} = k\,\dfrac{q_1 q_2}{r^2}\,\hat{r}_{12} \)</span></div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-mate">
+        <span class="e10-eyebrow">5 · Matemáticas</span>
+        <h2 id="t-mate">Toda fórmula se escribe en LaTeX</h2>
+        <p class="muted">Motor único: KaTeX 0.16.9. Nunca se escribe una fórmula como texto plano con caracteres Unicode. Decimales con coma, escrita <code>4{,}5</code> en LaTeX.</p>
+        <div class="formulas">
+            <div class="e10-formula">\[ \oint_S \vec{E}\cdot d\vec{A} = \frac{q_{\text{enc}}}{\varepsilon_0} \]</div>
+            <div class="e10-formula">\[ \mathcal{E} = -\frac{d\Phi_B}{dt} \]</div>
+            <div class="e10-formula">\[ F = k\,\frac{|q_1 q_2|}{r^2} = 4{,}5\ \text{N} \]</div>
+            <div class="e10-formula">\[ \vec{B} = \frac{\mu_0}{4\pi}\int \frac{I\,d\vec{\ell}\times\hat{r}}{r^2} \]</div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-comp">
+        <span class="e10-eyebrow">6 · Componentes</span>
+        <h2 id="t-comp">Piezas base</h2>
+        <div class="demo">
+            <button type="button" class="e10-btn e10-btn--primary">Comprobar mi predicción</button>
+            <button type="button" class="e10-btn e10-btn--accent">Continuar en Gauss</button>
+            <button type="button" class="e10-btn">Borrador</button>
+            <span class="e10-chip">Nivel 2</span>
+            <span class="e10-chip e10-chip--ok">Correcto</span>
+            <span class="e10-chip e10-chip--warn">Revisa el signo</span>
+        </div>
+        <div class="two">
+            <div class="e10-tip"><div class="e10-tip__title">Recomendación</div>Duplica la distancia entre las cargas y predice: ¿la fuerza se reduce a la mitad o a la cuarta parte?</div>
+            <div class="e10-card" style="padding: var(--e10-space-4); display: grid; gap: var(--e10-space-2);">
+                <span class="e10-eyebrow">Progreso del módulo</span>
+                <div class="e10-progress" role="progressbar" aria-label="Progreso del módulo" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span style="--e10-p: 40%"></span></div>
+                <span class="muted" style="font-size: var(--e10-text-sm);">4 de 10 actividades</span>
+            </div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-voz">
+        <span class="e10-eyebrow">7 · Tono</span>
+        <h2 id="t-voz">Cómo habla 10.Easy</h2>
+        <div class="two">
+            <div class="e10-card do">
+                <h3>Sí</h3>
+                <ul class="rules">
+                    <li>Tutear al estudiante y hablarle de lo que hace: «Mueve la carga y observa».</li>
+                    <li>Pedir una predicción antes de mostrar el resultado.</li>
+                    <li>Frases cortas, términos físicos exactos, unidades SI.</li>
+                    <li>Errores que dicen qué revisar: «Revisa el signo de \(q_2\)».</li>
+                </ul>
+            </div>
+            <div class="e10-card dont">
+                <h3>No</h3>
+                <ul class="rules">
+                    <li>Emojis en la interfaz de simuladores.</li>
+                    <li>Mencionar instituciones: 10.Easy es una marca propia.</li>
+                    <li>Datos, citas o valores físicos sin fuente verificable.</li>
+                    <li>Colores sueltos: todo color sale de <code>tokens.css</code>.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section aria-labelledby="t-uso">
+        <span class="e10-eyebrow">8 · Uso</span>
+        <h2 id="t-uso">Cómo aplicar la marca en una página</h2>
+<pre>&lt;link rel="stylesheet" href="../css/tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"&gt;
+&lt;script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"&gt;&lt;/script&gt;
+
+&lt;header class="e10-header"&gt;
+  &lt;a class="e10-brand"&gt;CoulombLab&lt;span&gt;10.easy&lt;/span&gt;&lt;/a&gt; …
+&lt;/header&gt;
+&lt;div class="e10-formula"&gt;\[ F = k\,\frac{|q_1 q_2|}{r^2} \]&lt;/div&gt;</pre>
+    </section>
+</main>
+
+<script>
+    (function () {
+        var btn = document.getElementById('theme-btn');
+        btn.addEventListener('click', function () {
+            var dark = document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode', !dark);
+            btn.setAttribute('aria-pressed', String(dark));
+            btn.textContent = dark ? 'Ver tema claro' : 'Ver tema oscuro';
+        });
+    })();
+</script>
+</body>
+</html>

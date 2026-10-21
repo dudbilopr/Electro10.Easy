@@ -164,6 +164,61 @@ body.dark-mode,
 }
 .e10-tip__title { font-weight: 600; font-size: var(--e10-text-xs); color: var(--e10-accent-strong); }
 
+/* Cabecera de app/simulador: marca a la izquierda, acciones a la derecha.
+   <header class="e10-header"><a class="e10-brand">CoulombLab<span>10.easy</span></a>…</header> */
+.e10-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e10-space-2) var(--e10-space-3);
+    padding: var(--e10-space-3) var(--e10-space-4);
+    background: var(--e10-surface);
+    border-bottom: 1px solid var(--e10-line);
+    color: var(--e10-ink);
+}
+.e10-header__spacer { flex: 1 1 auto; }
+.e10-brand {
+    font: 700 var(--e10-text-md) / 1 var(--e10-font-display);
+    letter-spacing: -0.01em;
+    color: var(--e10-ink);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.e10-brand span { color: var(--e10-primary); }
+
+/* Chip: estado, nivel, sala, unidad */
+.e10-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e10-space-1);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font: 500 var(--e10-text-xs) / 1.6 var(--e10-font-mono);
+    background: var(--e10-primary-soft);
+    color: var(--e10-primary);
+    white-space: nowrap;
+}
+.e10-chip--ok { background: var(--e10-success-soft); color: var(--e10-success); }
+.e10-chip--warn { background: var(--e10-warning-soft); color: var(--e10-warning); }
+
+/* Barra de progreso: <div class="e10-progress" role="progressbar" aria-valuenow="40"
+   aria-valuemin="0" aria-valuemax="100"><span style="--e10-p: 40%"></span></div> */
+.e10-progress {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--e10-line);
+    overflow: hidden;
+}
+.e10-progress > span {
+    display: block;
+    height: 100%;
+    width: var(--e10-p, 0%);
+    border-radius: inherit;
+    background: var(--e10-primary);
+    transition: width 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) { .e10-progress > span { transition: none; } }
+
 /* ── Matemáticas: KaTeX 0.16.9 es el único motor ──────────────────────
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
    Las fórmulas se escriben en LaTeX (\( … \) en línea, \[ … \] en bloque). */
