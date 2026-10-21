@@ -262,7 +262,7 @@
 
     <!-- Lógica Principal -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { app } from '../js/firebase.js';
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -281,15 +281,6 @@
 
         // Firebase Link Directo
         if (!isInIframe) {
-            const firebaseConfig = {
-                apiKey: "AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",
-                authDomain: "laboratorio-de-coulomb.firebaseapp.com",
-                projectId: "laboratorio-de-coulomb",
-                storageBucket: "laboratorio-de-coulomb.firebasestorage.app",
-                messagingSenderId: "525944850850",
-                appId: "1:525944850850:web:eca9c0b79809358e8d8afb"
-            };
-            const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             const auth = getAuth(app);
 

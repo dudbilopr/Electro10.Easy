@@ -1,6 +1,7 @@
 // ============================================================
-// ARCHIVO DE CONFIGURACIÓN PRIVADA — NO SUBIR A GIT
-// Este archivo está en .gitignore
+// CONFIGURACIÓN WEB DE FIREBASE (única fuente; la importa js/firebase.js)
+// Está versionada y se publica en GitHub Pages: las claves web de
+// Firebase son públicas por diseño.
 //
 // ⚠️  SEGURIDAD: Aunque estas claves sean visibles para el
 // cliente web (es normal en Firebase), protege tu proyecto
@@ -11,6 +12,7 @@
 export const firebaseConfig = {
     apiKey: "AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",
     authDomain: "laboratorio-de-coulomb.firebaseapp.com",
+    databaseURL: "https://laboratorio-de-coulomb-default-rtdb.firebaseio.com",
     projectId: "laboratorio-de-coulomb",
     storageBucket: "laboratorio-de-coulomb.firebasestorage.app",
     messagingSenderId: "525944850850",

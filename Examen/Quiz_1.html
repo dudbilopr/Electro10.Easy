@@ -64,33 +64,14 @@
         } from 'https://esm.sh/lucide-react@0.292.0';
         
         // Firebase (Gstatic)
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { app } from '../js/firebase.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, setDoc, doc, getDocs, getDoc, serverTimestamp, query, orderBy, onSnapshot, increment } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
         import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js';
 
-        // --- 1. FIREBASE INITIALIZATION ---
-        let firebaseConfig;
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-          firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-          firebaseConfig = {
-            apiKey: "AIzaSyCI0c7KgnEAn-sV_CrHs0Er1LXL13CvQSA",
-            authDomain: "laboratorio-de-coulomb.firebaseapp.com",
-            databaseURL: "https://laboratorio-de-coulomb-default-rtdb.firebaseio.com",
-            projectId: "laboratorio-de-coulomb",
-            storageBucket: "laboratorio-de-coulomb.firebasestorage.app",
-            messagingSenderId: "525944850850",
-            appId: "1:525944850850:web:eca9c0b79809358e8d8afb",
-            measurementId: "G-SZECJNG25E"
-          };
-        }
-
-        const app = initializeApp(firebaseConfig);
+        // --- 1. FIREBASE (app compartida de js/firebase.js) ---
         let analytics = null;
-        if (firebaseConfig.measurementId) {
-            try { analytics = getAnalytics(app); } catch(e) {}
-        }
+        try { analytics = getAnalytics(app); } catch(e) {}
         
         const auth = getAuth(app);
         const db = getFirestore(app);
