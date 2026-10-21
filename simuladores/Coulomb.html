@@ -1,184 +1,374 @@
 <!DOCTYPE html><html lang="es"><head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>CoulombLab10.easy - IA Physics</title>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
-<script src="https://unpkg.com/@phosphor-icons/web"></script>
-<link rel="stylesheet" href="../css/lab10-core.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>CoulombLab10.easy · Ley de Coulomb</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
 <style>
-:root{--accent:#4ecca3;--danger:#ff6b6b;--panel-w:380px}
-body.light-mode{--bg:#eef2f5;--glass:rgba(255,255,255,0.6);--glass-border:rgba(255,255,255,0.5);--text:#2c3e50;--panel-bg:rgba(255,255,255,0.85);--card-bg:rgba(255,255,255,0.7);--shadow:rgba(0,0,0,0.1)}
-body.dark-mode{--bg:#0b0e14;--glass:rgba(15,17,26,0.6);--glass-border:rgba(255,255,255,0.1);--text:#e2e8f0;--panel-bg:rgba(15,17,26,0.9);--card-bg:rgba(255,255,255,0.05);--shadow:rgba(0,0,0,0.5)}
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;font-family:'Segoe UI',system-ui,sans-serif}
-body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;transition:background .3s, color .3s}
-.glass{background:var(--glass);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid var(--glass-border);box-shadow:0 8px 32px var(--shadow)}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;z-index:100;border-bottom:1px solid var(--glass-border)}
-.h-menu{display:flex;gap:10px;overflow-x:auto;padding:10px 20px;background:var(--panel-bg);z-index:90;border-bottom:1px solid var(--glass-border);align-items:center}
-.h-menu::-webkit-scrollbar{height:4px}.h-menu::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid transparent;border-radius:8px;background:rgba(128,128,128,0.15);color:var(--text);cursor:pointer;transition:all .2s;font-size:.9rem;white-space:nowrap}
-.btn:hover{background:rgba(128,128,128,0.25)}.btn.active{background:var(--accent);color:#000;font-weight:bold;box-shadow:0 0 10px rgba(78,204,163,0.4)}.btn-primary{background:var(--accent);color:#000}.btn-danger{background:rgba(255,107,107,0.2);color:var(--danger)}
-.workspace{position:relative;flex:1;display:flex;overflow:hidden}
-.canvas-area{flex:1;position:relative;background:var(--bg);background-image:linear-gradient(rgba(128,128,128,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(128,128,128,0.1) 1px,transparent 1px);background-size:20px 20px;overflow:hidden;transition:background .3s}
+/* CoulombLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--danger:var(--e10-danger);--accent:var(--e10-primary);--text:var(--e10-ink);--card-bg:var(--e10-surface);--glass-border:var(--e10-line);--panel-bg:var(--e10-surface)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select,textarea{font-family:inherit}
+canvas,.h-menu,.e10-steps,header{user-select:none}
+
+/* Cabecera */
+header.e10-header{flex-shrink:0;z-index:100;gap:10px}
+header .e10-brand{font-size:1.1rem}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#room-info{font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-bg);padding:2px 8px;border-radius:999px;border:1px solid var(--e10-line)}
+
+/* Botones (los usan también lab10-bus y los modales) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-danger{color:var(--e10-danger);border-color:color-mix(in srgb,var(--e10-danger) 40%,transparent);background:var(--e10-danger-soft)}
+.btn-icon{width:40px;padding:0}
+.btn i{font-size:1.1em}
+
+/* Barra de herramientas agrupada por intención */
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+.tool-spacer{flex:1 1 auto}
+.annotate{position:relative}
+.annotate>summary{list-style:none}
+.annotate>summary::-webkit-details-marker{display:none}
+.annotate__menu{position:absolute;top:calc(100% + 6px);left:0;z-index:120;display:grid;gap:4px;padding:8px;min-width:180px;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow)}
+.annotate__menu .btn{justify-content:flex-start;border-color:transparent}
+.annotate__menu label{display:flex;align-items:center;gap:8px;padding:6px 14px;color:var(--e10-muted);font-size:var(--e10-text-xs)}
+.case-tabs{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.case-tab{min-height:34px;display:flex;align-items:center;padding:0 14px;border-radius:var(--e10-radius-sm);cursor:pointer;font-weight:500;color:var(--e10-muted)}
+.case-tab.active{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+/* Área de trabajo */
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
 canvas{position:absolute;top:0;left:0;z-index:1;cursor:crosshair;touch-action:none}
-#labels-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2}
-.canvas-label{position:absolute;background:var(--glass);padding:2px 6px;border-radius:4px;border:1px solid var(--accent);font-size:.85rem;color:var(--text);transform:translate(-50%,-100%);backdrop-filter:blur(4px);font-weight:bold}
-.slide-panel{position:absolute;right:0;top:0;height:100%;width:var(--panel-w);transform:translateX(100%);transition:transform .3s cubic-bezier(0.4,0,0.2,1);z-index:80;padding:20px;overflow-y:auto;background:var(--panel-bg);border-left:1px solid var(--glass-border);box-shadow:-5px 0 15px var(--shadow)}
-.slide-panel.open{transform:translateX(0)}
-.fab{position:absolute;right:20px;top:20px;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#000;display:flex;justify-content:center;align-items:center;cursor:pointer;z-index:85;box-shadow:0 4px 15px rgba(78,204,163,0.4);font-size:24px;transition:all .2s}
-.fab:hover{transform:scale(1.05)}
-.card{background:var(--card-bg);border:1px solid var(--glass-border);border-radius:8px;padding:12px;margin-bottom:12px;box-shadow:0 2px 8px var(--shadow)}
-.section-title{font-size:.8rem;text-transform:uppercase;color:#888;margin-bottom:10px;font-weight:bold;letter-spacing:1px;border-bottom:1px solid var(--glass-border);padding-bottom:5px}
-select,input[type="number"],input[type="text"],input[type="password"],input[type="email"],textarea{background:var(--card-bg);border:1px solid rgba(128,128,128,0.5);color:var(--text);padding:8px;border-radius:6px;width:100%;font-size:.9rem;outline:none;transition:border .2s;font-family:inherit}
-select:focus,input:focus,textarea:focus{border-color:var(--accent)}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(8px)}
-.modal-content{background:var(--panel-bg);padding:25px;border-radius:12px;width:90%;max-width:450px;border:1px solid var(--glass-border);position:relative;color:var(--text);box-shadow:0 15px 40px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto}
-.close-btn{position:absolute;top:15px;right:15px;cursor:pointer;font-size:20px;color:#888;transition:color .2s}.close-btn:hover{color:var(--accent)}
-#solution-overlay{position:absolute;bottom:20px;left:20px;width:450px;max-height:70vh;overflow-y:auto;display:none;z-index:75;resize:both;min-width:350px;background:var(--panel-bg)}
-#solution-overlay.maximized{width:85vw;height:85vh;top:7vh;left:7vw;max-height:none}
-.window-controls{display:flex;gap:8px;position:absolute;top:10px;right:10px;z-index:10}
-.win-btn{width:16px;height:16px;border-radius:50%;cursor:pointer;display:flex;justify-content:center;align-items:center;font-size:10px;color:transparent;border:none}
-.win-btn:hover{color:black}.win-close{background:#ff5f56}.win-min{background:#ffbd2e}.win-max{background:#27c93f}
-#context-menu{position:absolute;display:none;z-index:150;width:220px;padding:15px;background:var(--panel-bg)}
-footer{background:var(--panel-bg);border-top:1px solid var(--glass-border);padding:10px 20px;font-size:.85rem;color:#888;display:flex;justify-content:space-between;align-items:center;z-index:100;box-shadow:0 -2px 10px var(--shadow)}
-.footer-links a{color:var(--accent);text-decoration:none;margin-left:15px;display:inline-flex;align-items:center;gap:5px;font-weight:bold}
-.resize-handle{position:absolute;width:10px;height:10px;background:var(--accent);border:1px solid #000;z-index:10;pointer-events:none}
-table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,td{padding:8px;border-bottom:1px solid var(--glass-border)} th{color:var(--accent)}
-.avt{transition:transform .2s, border .2s;display:inline-block;border:2px solid transparent;border-radius:50%;padding:4px;user-select:none} .avt:hover{background:var(--glass-border)}
-.case-tabs{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10;background:var(--glass);padding:5px;border-radius:10px;border:1px solid var(--glass-border)}
-.case-tab{padding:6px 15px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85rem;color:var(--text);transition:0.2s}
-.case-tab.active{background:var(--accent);color:#000}
-.star-rating i{font-size:24px;color:#888;cursor:pointer;transition:0.2s} .star-rating i:hover, .star-rating i.active{color:#f1c40f}
+#labels-overlay{position:absolute;inset:0;pointer-events:none;z-index:2}
+.canvas-label{position:absolute;background:var(--e10-surface);padding:1px 6px;border-radius:6px;border:1px solid var(--e10-line);font-size:.9rem;color:var(--e10-ink);transform:translate(-50%,-100%)}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+
+/* Primer contacto: guía sobre el lienzo, sin modal */
+#e10-coach{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3;pointer-events:none;padding:16px}
+#e10-coach .coach-card{pointer-events:none;width:min(540px,100%);display:grid;gap:16px;padding:24px;border-radius:16px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+#e10-coach h2{font:700 1.4rem/1.25 var(--e10-font-display);letter-spacing:-.01em;text-wrap:balance}
+.coach-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.coach-step{display:grid;justify-items:center;gap:8px;padding:12px 6px;border-radius:12px;background:var(--e10-bg);text-align:center;font-size:var(--e10-text-xs)}
+.coach-step .shape{width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+.coach-pos{border:2.5px dashed var(--e10-q-pos);border-radius:50%}
+.coach-neg{border:2.5px dashed var(--e10-q-neg);border-radius:50%}
+.coach-neg::after{content:"";width:22px;height:3px;border-radius:2px;background:var(--e10-q-neg)}
+.coach-vec::before{content:"";width:44px;height:3px;background:var(--e10-accent);border-radius:2px}
+.coach-vec::after{content:"";border-left:11px solid var(--e10-accent);border-top:7px solid transparent;border-bottom:7px solid transparent}
+
+/* Chip de la IA de trazos */
+#e10-ai-chip{position:absolute;z-index:6;display:none;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:999px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);font:500 var(--e10-text-xs)/1 var(--e10-font-mono);transform:translate(-50%,0)}
+#e10-ai-chip button{font:600 var(--e10-text-xs)/1 var(--e10-font-body);min-height:26px;padding:0 8px;border:0;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary);cursor:pointer}
+
+/* Fórmula en vivo */
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:none;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto}
+#e10-live .katex{font-size:1.15em}
+
+/* Panel pedagógico: 4 pasos */
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#problem-statement{line-height:1.55}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#dcl-buttons-container{display:flex;gap:6px;flex-wrap:wrap}
+#dcl-buttons-container .btn{min-height:32px;padding:0 10px;font-size:var(--e10-text-xs)}
+.params{border:1px solid var(--e10-line);border-radius:var(--e10-radius-md)}
+.params>summary{cursor:pointer;padding:10px 12px;font-weight:500;color:var(--e10-muted)}
+.params>div{display:grid;gap:10px;padding:0 12px 12px}
+.params label{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted);margin-bottom:8px}
+
+/* Formularios */
+select,input[type="number"],input[type="text"],input[type="password"],input[type="email"],textarea{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font-size:var(--e10-text-sm);outline:none}
+select:focus,input:focus,textarea:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+
+/* Ventanas y tarjetas existentes */
+.glass{background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);padding:12px;margin-bottom:12px}
+.modal{display:none;position:fixed;inset:0;background:rgba(34,17,27,.45);z-index:2000;justify-content:center;align-items:center;padding:16px}
+.modal-content{background:var(--e10-surface);padding:24px;border-radius:var(--e10-radius-lg);width:100%;max-width:450px;border:1px solid var(--e10-line);position:relative;color:var(--e10-ink);box-shadow:var(--e10-shadow);max-height:90vh;overflow-y:auto}
+.close-btn{position:absolute;top:14px;right:16px;cursor:pointer;font-size:20px;color:var(--e10-muted)}.close-btn:hover{color:var(--e10-primary)}
+#solution-overlay{position:absolute;top:16px;left:16px;width:min(480px,calc(100% - 32px));max-height:calc(100% - 32px);overflow-y:auto;display:none;z-index:75;resize:both;min-width:300px;padding:16px;border-radius:var(--e10-radius-lg)}
+#solution-overlay.maximized{width:calc(100% - 32px);height:calc(100% - 32px);max-height:none}
+.window-controls{display:flex;gap:8px;position:absolute;top:12px;right:12px;z-index:10}
+.win-btn{width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;justify-content:center;align-items:center;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted)}
+.win-btn::before{font:600 14px/1 var(--e10-font-body)}
+.win-close::before{content:"×"}.win-min::before{content:"–"}.win-max::before{content:"□"}
+.win-btn:hover{color:var(--e10-primary);border-color:var(--e10-primary)}
+#context-menu{position:absolute;display:none;z-index:150;width:220px;padding:14px}
+#solution-conclusion,#theory-questions{margin-top:10px;padding:12px;border-radius:var(--e10-radius-md);font-size:var(--e10-text-sm);line-height:1.5}
+#solution-conclusion{background:var(--e10-success-soft)}
+#theory-questions{background:var(--e10-accent-soft)}
+#latex-result{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;min-height:80px}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.footer-links a{color:var(--e10-primary);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:600}
+table{width:100%;text-align:left;border-collapse:collapse;font-size:.9rem} th,td{padding:8px;border-bottom:1px solid var(--e10-line)} th{color:var(--e10-primary)}
+.avt{display:inline-block;border:2px solid transparent;border-radius:50%;padding:4px} .avt:hover{background:var(--e10-line)}
+.star-rating i{font-size:24px;color:var(--e10-muted);cursor:pointer} .star-rating i:hover,.star-rating i.active{color:var(--e10-warning)}
+
+/* Modo proyector */
+body.e10-projector{font-size:17px}
+body.e10-projector .canvas-label{font-size:1.15rem}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+/* Tema oscuro: los tokens cambian solos; solo ajustes puntuales */
+body.dark-mode .modal{background:rgba(0,0,0,.6)}
+
+/* Móvil: barra inferior de herramientas y hoja deslizable con los pasos */
+@media (max-width:900px){
+  header.e10-header{padding:8px 12px;flex-wrap:nowrap;min-height:56px}
+  header .e10-brand{font-size:1rem}
+  .header-actions{flex-wrap:nowrap;gap:6px}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .header-actions .btn-icon{width:38px;padding:0}
+  .header-actions .btn-label,#btn-projector{display:none}
+  #room-info,.module-chip{display:none}
+  .h-menu{order:3;position:relative;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:4px;border-top:1px solid var(--e10-line);border-bottom:0;justify-content:space-around;flex-wrap:nowrap}
+  .h-menu .tool-group__label,.h-menu .tool-sep,.h-menu .tool-spacer,.h-menu .annotate,.h-menu #btn-clear{display:none}
+  .h-menu .btn{flex-direction:column;gap:2px;min-width:60px;min-height:48px;font-size:11px;padding:0 6px}
+  .h-menu .btn-icon{width:auto}
+  .h-menu .tool-group{gap:4px}
+  .case-tabs{position:fixed;top:62px;right:8px;z-index:95;box-shadow:var(--e10-shadow)}
+  .case-tab{min-height:30px;padding:0 10px;font-size:12px}
+  #coords-indicator{right:auto;left:10px}
+  .h-menu .e10-mobile-only{display:inline}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:46%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:120px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:8px 12px;gap:10px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:1em}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
-<link rel="stylesheet" href="../css/simulator-base.css">
-    <script src="../js/lab10-intelligence.js"></script>
+<script>
+// 10.Easy: tema claro por defecto. Se lee la elección del estudiante ANTES de lab10-intelligence.js,
+// porque ese script guarda 'dark' por defecto al cargarse.
+window.__e10Theme=null;try{window.__e10Theme=localStorage.getItem('electro10_theme');}catch(_){}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(window.__e10Theme!=='dark'&&window.lab10AI){lab10AI.setTheme('light',false);try{localStorage.setItem('electro10_theme','light');}catch(_){}if(window.redraw)redraw();}},0));
+</script>
+<script src="../js/lab10-intelligence.js"></script>
 </head>
 <body data-domain="electro" class="light-mode">
-<header class="glass">
-    <div style="display:flex;align-items:center;gap:15px">
-        <h2 style="color:var(--accent);font-size:1.2rem;margin:0"><i class="ph ph-lightning"></i> CoulombLab10.easy</h2>
-        <span id="room-info" style="font-size:.85rem;color:#888;background:var(--card-bg);padding:4px 8px;border-radius:4px"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Caso Local</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:15px">
-        <button class="btn" onclick="toggleTheme()" title="Modo Día/Noche"><i class="ph ph-moon"></i></button>
-        <button id="btn-chat" class="btn" style="display:none;background:#3498db;color:#fff" onclick="document.getElementById('room-chat-panel').style.display='flex'"><i class="ph ph-chat-centered-dots"></i> Chat Sala</button>
-        <button id="btn-admin" class="btn" style="display:none;background:#ffbd2e;color:#000;font-weight:bold" onclick="showAdminDashboard()"><i class="ph ph-shield-star"></i> Panel Admin</button>
-        <span id="user-stats" class="btn" style="display:none;border-color:#f1c40f;color:#f1c40f" onclick="showModal('profile-setup-modal')"><i class="ph ph-trophy"></i> Nivel 1 | 0 pts</span>
-        <button id="user-info" class="btn" style="font-weight:bold;border:1px solid var(--accent)" onclick="editProfile()">Cargando...</button>
-        <button id="btn-rooms" class="btn" style="display:none" onclick="openRooms()"><i class="ph ph-users-three"></i> Salas</button>
-        <button id="btn-logout" class="btn btn-danger" style="display:none" onclick="cerrarSesion()"><i class="ph ph-sign-out"></i> Salir</button>
+<header class="e10-header">
+    <a class="e10-brand" href="../index.html">CoulombLab<span>10.easy</span></a>
+    <span class="e10-chip module-chip">Módulo 1 · Ley de Coulomb</span>
+    <span id="room-info">Caso local</span>
+    <span class="e10-header__spacer"></span>
+    <div class="header-actions">
+        <button type="button" class="btn" id="btn-projector" onclick="toggleProjector()" aria-pressed="false" title="Texto y fórmulas más grandes para proyectar"><i class="ph ph-projector-screen"></i><span class="btn-label">Modo proyector</span></button>
+        <button type="button" class="btn btn-icon" onclick="toggleTheme()" title="Tema claro u oscuro" aria-label="Cambiar tema"><i class="ph ph-moon"></i></button>
+        <button type="button" id="btn-chat" class="btn" style="display:none" onclick="document.getElementById('room-chat-panel').style.display='flex'"><i class="ph ph-chat-centered-dots"></i><span class="btn-label">Chat</span></button>
+        <button type="button" id="btn-admin" class="btn" style="display:none" onclick="showAdminDashboard()"><i class="ph ph-shield-star"></i><span class="btn-label">Admin</span></button>
+        <span id="user-stats" class="btn" style="display:none" onclick="showModal('profile-setup-modal')"><i class="ph ph-trophy"></i> Nivel 1 | 0 pts</span>
+        <button type="button" id="user-info" class="btn" style="border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600" onclick="editProfile()">Cargando…</button>
+        <button type="button" id="btn-rooms" class="btn" style="display:none" onclick="openRooms()"><i class="ph ph-users-three"></i><span class="btn-label">Salas</span></button>
+        <button type="button" id="btn-logout" class="btn btn-danger" style="display:none" onclick="cerrarSesion()"><i class="ph ph-sign-out"></i><span class="btn-label">Salir</span></button>
     </div>
 </header>
-<div class="h-menu glass">
-    <button class="btn active" onclick="setTool('draw',this)"><i class="ph ph-pencil-simple"></i> IA (Cargas)</button>
-    <button class="btn" onclick="setTool('draw_free',this)"><i class="ph ph-highlighter"></i> Dibujo</button>
-    <button class="btn" onclick="setTool('rect',this)"><i class="ph ph-rectangle"></i> Rect</button>
-    <button class="btn" onclick="setTool('circle',this)"><i class="ph ph-circle"></i> Círculo</button>
-    <button class="btn" onclick="setTool('line',this)"><i class="ph ph-line-segment"></i> Vector</button>
-    <button class="btn" onclick="setTool('laser',this)"><i class="ph ph-magic-wand"></i> Láser</button>
-    <button class="btn" onclick="setTool('text',this)"><i class="ph ph-text-t"></i> Texto</button>
-    <button class="btn" onclick="setTool('move',this)"><i class="ph ph-hand-grabbing"></i> Mover</button>
-    <div style="width:1px;background:var(--glass-border);margin:0 5px;height:20px"></div>
-    <input type="color" id="pencil-color" value="#3498db" style="width:30px;height:30px;padding:0;border:none;background:transparent;cursor:pointer" onchange="state.currentColor=this.value" title="Color">
-    <button class="btn" onclick="undo()" title="Deshacer"><i class="ph ph-arrow-u-up-left"></i></button>
-    <button class="btn" onclick="limpiarTodo()" title="Limpiar"><i class="ph ph-trash"></i></button>
-    <button class="btn btn-primary" onclick="analizarFisica()"><i class="ph ph-calculator"></i> Validar & Resolver</button>
+<div class="h-menu" role="toolbar" aria-label="Herramientas">
+    <div class="tool-group">
+        <span class="tool-group__label">FÍSICA</span>
+        <button type="button" class="btn active" onclick="setTool('draw',this)" title="Dibuja un círculo para crear una carga; con una raya dentro es negativa"><i class="ph ph-plus-circle"></i> Carga (IA)</button>
+        <button type="button" class="btn" onclick="setTool('line',this)" title="Dibuja la fuerza desde una carga"><i class="ph ph-arrow-up-right"></i> Vector</button>
+        <button type="button" class="btn" onclick="setTool('move',this)" title="Mover y editar: clic sobre una carga para cambiar su valor"><i class="ph ph-hand-grabbing"></i> Mover</button>
+    </div>
+    <span class="tool-sep"></span>
+    <div class="tool-group">
+        <span class="tool-group__label">EDITAR</span>
+        <button type="button" class="btn btn-icon" onclick="undo()" title="Deshacer" aria-label="Deshacer"><i class="ph ph-arrow-u-up-left"></i><span class="e10-mobile-only" hidden>Deshacer</span></button>
+        <button type="button" class="btn btn-icon" id="btn-clear" onclick="limpiarTodo()" title="Borrar todo" aria-label="Borrar todo"><i class="ph ph-trash"></i></button>
+    </div>
+    <span class="tool-sep"></span>
+    <details class="annotate">
+        <summary class="btn"><i class="ph ph-pencil-simple-line"></i> Anotar <i class="ph ph-caret-down"></i></summary>
+        <div class="annotate__menu">
+            <button type="button" class="btn" onclick="setTool('draw_free',this)"><i class="ph ph-highlighter"></i> Dibujo libre</button>
+            <button type="button" class="btn" onclick="setTool('text',this)"><i class="ph ph-text-t"></i> Texto</button>
+            <button type="button" class="btn" onclick="setTool('laser',this)"><i class="ph ph-magic-wand"></i> Láser</button>
+            <button type="button" class="btn" onclick="setTool('rect',this)"><i class="ph ph-rectangle"></i> Rectángulo</button>
+            <button type="button" class="btn" onclick="setTool('circle',this)"><i class="ph ph-circle"></i> Círculo</button>
+            <label>Color <input type="color" id="pencil-color" value="#6a4bd1" style="width:32px;min-height:28px;padding:0;border:0;background:transparent" onchange="state.currentColor=this.value"></label>
+        </div>
+    </details>
+    <span class="tool-spacer"></span>
+    <div class="case-tabs" role="tablist" aria-label="Casos">
+        <div class="case-tab active" id="tab-1" role="tab" tabindex="0" onclick="switchCase(1)">Caso 1</div>
+        <div class="case-tab" id="tab-2" role="tab" tabindex="0" onclick="switchCase(2)">Caso 2 · comparar</div>
+    </div>
 </div>
 <div class="workspace" id="main-workspace">
-    <div class="case-tabs">
-        <div class="case-tab active" id="tab-1" onclick="switchCase(1)">Caso 1 (Principal)</div>
-        <div class="case-tab" id="tab-2" onclick="switchCase(2)">Caso 2 (Comparación)</div>
-    </div>
     <div class="canvas-area" id="canvas-wrapper">
-        <canvas id="main-canvas"></canvas>
-        <button id="float-delete" class="btn btn-danger" style="position:absolute;display:none;z-index:10;box-shadow:0 4px 10px rgba(0,0,0,0.3);transform:translate(-50%,-100%);margin-top:-10px" onclick="deleteSelected()"><i class="ph ph-trash"></i> Eliminar</button>
-        <input type="text" id="text-input-overlay" style="position:absolute;display:none;z-index:100;background:rgba(0,0,0,0.8);border:1px dashed var(--accent);color:white;font-size:18px;padding:4px;transform:translateY(-50%)" placeholder="Escribe y presiona Enter...">
+        <canvas id="main-canvas" aria-label="Lienzo: dibuja cargas y vectores"></canvas>
+        <button type="button" id="float-delete" class="btn btn-danger" style="position:absolute;display:none;z-index:10;transform:translate(-50%,-100%);margin-top:-10px" onclick="deleteSelected()"><i class="ph ph-trash"></i> Eliminar</button>
+        <input type="text" id="text-input-overlay" style="position:absolute;display:none;z-index:100;width:auto;font-size:18px;transform:translateY(-50%)" placeholder="Escribe y presiona Enter…">
         <div id="labels-overlay"></div>
-        <div id="coords-indicator" class="glass" style="position:absolute;bottom:10px;right:10px;padding:4px 8px;border-radius:4px;font-family:monospace;font-size:.8rem;color:var(--accent);pointer-events:none;z-index:5;font-weight:bold">X:0 Y:0</div>
-        
+        <div id="coords-indicator">x: 0 · y: 0</div>
+
+        <div id="e10-coach">
+            <div class="coach-card">
+                <span class="e10-eyebrow">Empieza dibujando</span>
+                <h2>Dibuja dos cargas y descubre cómo se empujan o se atraen</h2>
+                <div class="coach-steps">
+                    <div class="coach-step"><span class="shape coach-pos"></span><span>Un <b>círculo</b><br>crea una carga +</span></div>
+                    <div class="coach-step"><span class="shape coach-neg"></span><span>Con una <b>raya</b> dentro<br>es una carga −</span></div>
+                    <div class="coach-step"><span class="shape coach-vec"></span><span>Una <b>línea</b> desde la<br>carga es la fuerza</span></div>
+                </div>
+                <span class="muted" style="color:var(--e10-muted);font-size:var(--e10-text-xs)">La IA reconoce tus trazos y te dice qué entendió. Si se equivoca, corrígela con un clic. Copia y pega con Ctrl+C / Ctrl+V.</span>
+            </div>
+        </div>
+
+        <div id="e10-ai-chip" role="status" aria-live="polite"><span id="e10-ai-text"></span><button type="button" id="e10-ai-fix">¿No era eso?</button></div>
+        <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><span id="e10-live-math"></span></div>
+
         <div id="solution-overlay" class="glass card">
             <div class="window-controls">
-                <button class="win-btn win-min" onclick="toggleWin('solution-overlay','min')"></button>
-                <button class="win-btn win-max" onclick="toggleWin('solution-overlay','max')"></button>
-                <button class="win-btn win-close" onclick="document.getElementById('solution-overlay').style.display='none'"></button>
+                <button type="button" class="win-btn win-min" aria-label="Minimizar" onclick="toggleWin('solution-overlay','min')"></button>
+                <button type="button" class="win-btn win-max" aria-label="Maximizar" onclick="toggleWin('solution-overlay','max')"></button>
+                <button type="button" class="win-btn win-close" aria-label="Cerrar" onclick="document.getElementById('solution-overlay').style.display='none'"></button>
             </div>
-            <div class="section-title" style="margin-top:10px"><i class="ph ph-math-operations"></i> Solución Matemática</div>
-            <div id="latex-result" style="background:var(--card-bg);color:var(--text);padding:15px;border-radius:6px;font-size:.9rem;overflow-x:auto;min-height:100px;border:1px solid var(--glass-border)">---</div>
-            <div id="solution-conclusion" style="margin-top:10px;padding:12px;background:rgba(78,204,163,0.1);border-left:4px solid var(--accent);font-size:.85rem;border-radius:0 6px 6px 0;line-height:1.5"></div>
-            <div id="theory-questions" style="margin-top:10px;padding:12px;background:rgba(241,196,15,0.1);border-left:4px solid #f1c40f;font-size:.85rem;border-radius:0 6px 6px 0;line-height:1.5"></div>
+            <div class="section-title" style="margin-top:6px">Solución paso a paso</div>
+            <div id="latex-result">—</div>
+            <div id="solution-conclusion"></div>
+            <div id="theory-questions"></div>
         </div>
-        
+
         <div id="context-menu" class="glass card">
-            <span class="close-btn" style="top:5px;right:10px;font-size:16px" onclick="closeCtx()">&times;</span>
-            <div class="section-title" style="margin-top:0"><i class="ph ph-sliders"></i> Propiedades Carga</div>
+            <span class="close-btn" style="top:8px;right:12px;font-size:18px" onclick="closeCtx()">&times;</span>
+            <div class="section-title">Propiedades de la carga</div>
             <div style="display:flex;flex-direction:column;gap:8px">
-                <label style="font-size:.8rem">Magnitud (Q): <input type="number" id="ctx-q" step="0.1" onchange="ctxUpdate()"></label>
-                <label style="font-size:.8rem">Posición X: <input type="number" id="ctx-x" onchange="ctxUpdate()"></label>
-                <label style="font-size:.8rem">Posición Y: <input type="number" id="ctx-y" onchange="ctxUpdate()"></label>
+                <label style="font-size:.8rem">Magnitud q (en la unidad elegida): <input type="number" id="ctx-q" step="0.1" onchange="ctxUpdate()"></label>
+                <label style="font-size:.8rem">Posición x: <input type="number" id="ctx-x" onchange="ctxUpdate()"></label>
+                <label style="font-size:.8rem">Posición y: <input type="number" id="ctx-y" onchange="ctxUpdate()"></label>
             </div>
         </div>
 
         <!-- Chat de Sala -->
         <div id="room-chat-panel" class="glass card" style="display:none; position:absolute; bottom:20px; right:20px; width:300px; height:350px; z-index:200; flex-direction:column;">
-            <div class="section-title" style="margin-top:0; display:flex; justify-content:space-between; align-items:center;">
-                <span><i class="ph ph-chats"></i> Chat de Sala</span>
+            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <span><i class="ph ph-chats"></i> Chat de sala</span>
                 <i class="ph ph-x" style="cursor:pointer; font-size:16px;" onclick="document.getElementById('room-chat-panel').style.display='none'"></i>
             </div>
             <div id="chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px; padding-right:5px; font-size:0.85rem;"></div>
             <div style="display:flex; gap:5px;">
-                <input type="text" id="chat-input" placeholder="Mensaje..." style="flex:1" onkeypress="if(event.key==='Enter') window.sendMsg()">
-                <button class="btn btn-primary" onclick="window.sendMsg()"><i class="ph ph-paper-plane-right"></i></button>
+                <input type="text" id="chat-input" placeholder="Mensaje…" style="flex:1" onkeypress="if(event.key==='Enter') window.sendMsg()">
+                <button type="button" class="btn btn-primary" onclick="window.sendMsg()" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
             </div>
         </div>
+    </div>
 
-    </div>
-    
-    <div class="fab" onclick="togglePanel()"><i class="ph ph-list-dashes"></i></div>
-    <div class="slide-panel glass" id="right-panel">
-        <div class="window-controls" style="position:relative;top:0;right:0;justify-content:flex-end;margin-bottom:10px">
-            <button class="win-btn win-close" onclick="togglePanel()"></button>
+    <aside class="slide-panel open" id="right-panel" aria-label="Pasos del reto">
+        <button type="button" class="sheet-handle" onclick="togglePanel()" aria-label="Mostrar u ocultar los pasos"><span></span></button>
+        <div class="panel-scroll">
+            <section class="e10-step" id="step-1" data-s="now">
+                <span class="e10-step__n">1</span>
+                <div class="e10-step__body">
+                    <span class="e10-step__title">Reto</span>
+                    <div id="problem-statement">Tu reto se escribe solo cuando haya al menos dos cargas en el lienzo.</div>
+                </div>
+            </section>
+            <section class="e10-step" id="step-2" data-s="todo">
+                <span class="e10-step__n">2</span>
+                <div class="e10-step__body">
+                    <span class="e10-step__title">Predice</span>
+                    <span id="predict-q" style="color:var(--e10-muted)">Antes de dibujar las fuerzas: ¿las cargas <span class="e10-pair">q₁ y q₂</span>…</span>
+                    <div class="predict-row">
+                        <button class="btn" type="button" data-pred="atraen" onclick="setPrediction('atraen')">se atraen</button>
+                        <button class="btn" type="button" data-pred="repelen" onclick="setPrediction('repelen')">se repelen</button>
+                    </div>
+                </div>
+            </section>
+            <section class="e10-step" id="step-3" data-s="todo">
+                <span class="e10-step__n">3</span>
+                <div class="e10-step__body">
+                    <span class="e10-step__title">Comprueba</span>
+                    <div id="validation-box"></div>
+                    <button class="btn btn-primary" type="button" onclick="comprobar()">Comprobar mis vectores</button>
+                    <span id="check-hint">Dibuja con la herramienta Vector la fuerza que actúa sobre cada carga.</span>
+                </div>
+            </section>
+            <section class="e10-step" id="step-4" data-s="todo">
+                <span class="e10-step__n">4</span>
+                <div class="e10-step__body">
+                    <span class="e10-step__title">Explica</span>
+                    <div class="e10-tip" id="e10-tip" hidden><div class="e10-tip__title">Recomendación</div><div id="e10-tip-text"></div></div>
+                    <div id="dcl-buttons-container"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <button id="btn-toggle-dcl" class="btn" type="button" onclick="toggleInCanvasDCL()"><i class="ph ph-eye"></i> DCL en el lienzo</button>
+                        <button class="btn" type="button" onclick="document.getElementById('solution-overlay').style.display='block'"><i class="ph ph-chalkboard-teacher"></i> Solución completa</button>
+                    </div>
+                </div>
+            </section>
+            <details class="params">
+                <summary>Unidades y escala</summary>
+                <div>
+                    <label>Unidad de carga <select id="charge-unit" onchange="analizarFisica()"><option value="1e-6">Microcoulombs (µC)</option><option value="1e-9">Nanocoulombs (nC)</option><option value="1e-3">Milicoulombs (mC)</option><option value="1">Coulombs (C)</option></select></label>
+                    <label>Unidad de distancia <select id="dist-unit" onchange="analizarFisica()"><option value="1">Metros (m)</option><option value="0.01">Centímetros (cm)</option><option value="1e-3">Milímetros (mm)</option></select></label>
+                    <label>Escala gráfica (píxeles por unidad) <input type="number" id="scale-input" value="100" onchange="analizarFisica()"></label>
+                </div>
+            </details>
         </div>
-        <div class="section-title"><i class="ph ph-book-bookmark"></i> Reto Interactivo Dinámico</div>
-        <div class="card" id="problem-statement" style="font-size:.85rem;font-style:italic;line-height:1.5;color:var(--text)">Dibuja dos o más cargas en el lienzo para autogenerar una actividad interactiva.</div>
-        
-        <div class="section-title" style="margin-top:15px"><i class="ph ph-gear"></i> Parámetros Globales</div>
-        <div class="card" style="display:flex;flex-direction:column;gap:10px">
-            <label style="font-size:.8rem">U. Carga: <select id="charge-unit" onchange="analizarFisica()"><option value="1e-6">Microcoulombs (µC)</option><option value="1e-9">Nanocoulombs (nC)</option><option value="1e-3">MiliCoulombs (mC)</option><option value="1">Coulombs (C)</option></select></label>
-            <label style="font-size:.8rem">U. Distancia: <select id="dist-unit" onchange="analizarFisica()"><option value="1">Metros (m)</option><option value="0.01">Centímetros (cm)</option><option value="1e-3">Milímetros (mm)</option></select></label>
-            <label style="font-size:.8rem">Escala Gráfica: <input type="number" id="scale-input" value="100" onchange="analizarFisica()"> px=1 unid.</label>
+        <div class="panel-progress">
+            <span class="e10-eyebrow">Progreso</span>
+            <div class="e10-progress" role="progressbar" aria-label="Pasos completados" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span id="e10-progress-bar" style="--e10-p:0%"></span></div>
+            <span id="e10-progress-text" style="font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-muted)">0 de 4</span>
         </div>
-        
-        <div class="section-title" style="margin-top:15px"><i class="ph ph-check-circle"></i> Validación Visual</div>
-        <div class="card" id="validation-box" style="font-size:.85rem;min-height:60px;line-height:1.4">...</div>
-        <div id="dcl-buttons-container" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px"></div>
-        
-        <button id="btn-toggle-dcl" class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px;margin-top:15px;" onclick="toggleInCanvasDCL()"><i class="ph ph-eye"></i> Visualizar DCL en Lienzo</button>
-        <button class="btn" style="width:100%;justify-content:center;background:#9b59b6;color:#fff" onclick="document.getElementById('solution-overlay').style.display='block'"><i class="ph ph-chalkboard-teacher"></i> Ver Solución Completa</button>
-    </div>
+    </aside>
 </div>
 
 <footer>
-    <div>&copy; 2026 CoulombLab10.easy. Entorno Educativo Interactivo.</div>
+    <div>&copy; 2026 CoulombLab10.easy · 10.Easy</div>
     <div class="footer-links">
-        <a href="#" onclick="showModal('review-modal'); return false;"><i class="ph ph-star"></i> Calíficame</a>
-        <a href="https://wa.me/1234567890" target="_blank"><i class="ph ph-whatsapp-logo"></i> Soporte Oficial</a>
-        <a href="https://paypal.me/" target="_blank"><i class="ph ph-coffee"></i> Invítame un café</a>
+        <a href="#" onclick="showModal('review-modal'); return false;"><i class="ph ph-star"></i> Califícame</a>
     </div>
 </footer>
 
 <!-- Modals -->
-<div class="modal" id="auth-modal"><div class="modal-content glass"><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-lock-key"></i> Acceso Seguro</h3><p style="font-size:.85rem;color:#888;margin-bottom:15px">Inicia sesión para guardar progreso, enviar regalos y participar.</p><input type="email" id="auth-email" placeholder="Correo electrónico" style="margin-bottom:10px"><input type="password" id="auth-pass" placeholder="Contraseña" style="margin-bottom:15px"><div style="display:flex;gap:10px"><button class="btn btn-primary" style="flex:1;justify-content:center" onclick="iniciarSesion()">Entrar</button><button class="btn" style="flex:1;justify-content:center;background:var(--card-bg)" onclick="registrarUsuario()">Registro</button></div><button class="btn" style="width:100%;justify-content:center;margin-top:10px;background:#fff;color:#000;font-weight:bold" onclick="iniciarSesionConGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px"> Google</button></div></div>
+<div class="modal" id="auth-modal"><div class="modal-content glass"><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-lock-key"></i> Acceso Seguro</h3><p style="font-size:.85rem;color:#888;margin-bottom:15px">Inicia sesión para guardar progreso, enviar regalos y participar.</p><input type="email" id="auth-email" placeholder="Correo electrónico" style="margin-bottom:10px"><input type="password" id="auth-pass" placeholder="Contraseña" style="margin-bottom:15px"><div style="display:flex;gap:10px"><button type="button" class="btn btn-primary" style="flex:1;justify-content:center" onclick="iniciarSesion()">Entrar</button><button type="button" class="btn" style="flex:1;justify-content:center;background:var(--card-bg)" onclick="registrarUsuario()">Registro</button></div><button type="button" class="btn" style="width:100%;justify-content:center;margin-top:10px;background:#fff;color:#000;font-weight:bold" onclick="iniciarSesionConGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px"> Google</button></div></div>
 
 <div class="modal" id="profile-setup-modal"><div class="modal-content glass"><span class="close-btn" onclick="hideModal('profile-setup-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-user-circle"></i> Mi Perfil</h3><p style="font-size:.85rem;color:var(--text);margin-bottom:10px">Elige un avatar y actualiza tus datos.</p>
 <div style="display:flex;justify-content:space-around;background:rgba(78,204,163,0.1);padding:10px;border-radius:8px;margin-bottom:15px;border:1px solid var(--accent)"><div style="text-align:center"><b>Nivel</b><br><span id="prof-nivel-disp" style="font-size:1.5rem;color:var(--accent)">1</span></div><div style="text-align:center"><b>Puntos</b><br><span id="prof-puntos-disp" style="font-size:1.5rem;color:#f1c40f">0</span></div></div>
-<div id="prof-avatars" style="display:flex;justify-content:center;gap:15px;font-size:2rem;margin-bottom:15px;cursor:pointer"><span class="avt" onclick="selAvt(this)" style="border-color:var(--accent);transform:scale(1.2)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">stars</span></span></div><input type="text" id="prof-name" placeholder="Nombre completo" style="margin-bottom:10px"><input type="text" id="prof-alias" placeholder="Alias (Ej: ElectroMaster)" style="margin-bottom:10px"><input type="number" id="prof-age" placeholder="Edad" style="margin-bottom:10px"><select id="prof-gender" style="margin-bottom:10px"><option value="">Género...</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select><input type="text" id="prof-major" placeholder="Carrera / Institución" style="margin-bottom:15px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveProfile()">Guardar Perfil</button></div></div>
+<div id="prof-avatars" style="display:flex;justify-content:center;gap:15px;font-size:2rem;margin-bottom:15px;cursor:pointer"><span class="avt" onclick="selAvt(this)" style="border-color:var(--accent);transform:scale(1.2)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">smart_toy</span></span><span class="avt" onclick="selAvt(this)"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">stars</span></span></div><input type="text" id="prof-name" placeholder="Nombre completo" style="margin-bottom:10px"><input type="text" id="prof-alias" placeholder="Alias (Ej: ElectroMaster)" style="margin-bottom:10px"><input type="number" id="prof-age" placeholder="Edad" style="margin-bottom:10px"><select id="prof-gender" style="margin-bottom:10px"><option value="">Género...</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select><input type="text" id="prof-major" placeholder="Carrera / Institución" style="margin-bottom:15px"><button type="button" class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveProfile()">Guardar Perfil</button></div></div>
 
 <div class="modal" id="admin-modal"><div class="modal-content glass" style="max-width:900px;width:95%"><span class="close-btn" onclick="hideModal('admin-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-shield-star"></i> Control General (Admin)</h3><div id="admin-stats" style="display:flex;gap:15px;margin-bottom:15px;flex-wrap:wrap"><div class="card" style="flex:1;text-align:center;min-width:120px"><h4>Usuarios</h4><div id="adm-users-count" style="font-size:24px;color:var(--accent);font-weight:bold">0</div></div><div class="card" style="flex:1;text-align:center;min-width:120px"><h4>Rating Gral.</h4><div id="adm-rating-avg" style="font-size:24px;color:#f1c40f;font-weight:bold">0.0 ⭐</div></div></div><div class="section-title">Gestión de Usuarios, Roles y Grupos</div><div style="overflow-x:auto;max-height:400px;background:var(--card-bg);border-radius:6px;padding:5px"><table style="width:100%;min-width:700px"><thead><tr><th>Usuario</th><th>Nombre</th><th>Rol (Permiso)</th><th>Asignar Grupo</th><th>Acción</th></tr></thead><tbody id="adm-users-list"></tbody></table></div></div></div>
 
 <div class="modal" id="rooms-modal"><div class="modal-content glass" style="max-width:800px; width:95%;"><span class="close-btn" onclick="hideModal('rooms-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-users"></i> Comunidad y Salas</h3><p style="font-size:0.85rem;color:var(--text);margin-bottom:10px">Interactúa con otros estudiantes. Únete a sesiones conjuntas o envía regalos.</p>
 <div style="display:flex; flex-wrap:wrap; gap:20px;">
     <div style="flex:1; min-width:250px;">
-        <div style="background:var(--card-bg);padding:12px;border-radius:8px;margin-bottom:15px;border:1px solid var(--accent)"><h4 style="font-size:0.9rem;margin-bottom:8px;color:var(--accent)"><i class="ph ph-door-open"></i> Unirse a Sala Compartida</h4><input type="text" id="new-room-name" placeholder="Nombre de la sala" style="margin-bottom:8px"><input type="password" id="new-room-pass" placeholder="Contraseña (opcional)" style="margin-bottom:8px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="crearUnirseSala()">Entrar / Crear Sala</button></div>
+        <div style="background:var(--card-bg);padding:12px;border-radius:8px;margin-bottom:15px;border:1px solid var(--accent)"><h4 style="font-size:0.9rem;margin-bottom:8px;color:var(--accent)"><i class="ph ph-door-open"></i> Unirse a Sala Compartida</h4><input type="text" id="new-room-name" placeholder="Nombre de la sala" style="margin-bottom:8px"><input type="password" id="new-room-pass" placeholder="Contraseña (opcional)" style="margin-bottom:8px"><button type="button" class="btn btn-primary" style="width:100%;justify-content:center" onclick="crearUnirseSala()">Entrar / Crear Sala</button></div>
         <div class="section-title">Directorio</div><div id="rooms-list" style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:5px"></div>
     </div>
     <div style="flex:1; min-width:250px;">
@@ -188,11 +378,10 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:0.9rem} th,t
 </div>
 <hr style="border-color:var(--glass-border);margin:10px 0"><p style="font-size:0.8rem;color:#888;text-align:center">Respeta las normas de la comunidad.</p></div></div>
 
-<div class="modal" id="review-modal"><div class="modal-content glass"><span class="close-btn" onclick="hideModal('review-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-star"></i> Calificar Simulador</h3><div style="text-align:center;margin-bottom:15px"><div class="star-rating" id="app-rating-stars"><i class="ph ph-star" onclick="setAppRating(1)"></i><i class="ph ph-star" onclick="setAppRating(2)"></i><i class="ph ph-star" onclick="setAppRating(3)"></i><i class="ph ph-star" onclick="setAppRating(4)"></i><i class="ph ph-star" onclick="setAppRating(5)"></i></div></div><label style="font-size:0.85rem;display:block;margin-bottom:5px">¿Qué tan fácil fue usarlo?</label><select id="rev-q1" style="margin-bottom:10px"><option value="Muy Fácil">Muy Fácil</option><option value="Fácil">Fácil</option><option value="Regular">Regular</option><option value="Difícil">Difícil</option></select><label style="font-size:0.85rem;display:block;margin-bottom:5px">¿Te ayudó a comprender mejor?</label><select id="rev-q2" style="margin-bottom:15px"><option value="Sí, mucho">Sí, mucho</option><option value="Algo">Algo</option><option value="No mucho">No mucho</option></select><textarea id="rev-comment" rows="3" placeholder="Deja un comentario o sugerencia..." style="margin-bottom:15px;resize:none"></textarea><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitAppReview()">Enviar Calificación</button></div></div>
+<div class="modal" id="review-modal"><div class="modal-content glass"><span class="close-btn" onclick="hideModal('review-modal')">&times;</span><h3 style="color:var(--accent);margin-bottom:10px"><i class="ph ph-star"></i> Calificar Simulador</h3><div style="text-align:center;margin-bottom:15px"><div class="star-rating" id="app-rating-stars"><i class="ph ph-star" onclick="setAppRating(1)"></i><i class="ph ph-star" onclick="setAppRating(2)"></i><i class="ph ph-star" onclick="setAppRating(3)"></i><i class="ph ph-star" onclick="setAppRating(4)"></i><i class="ph ph-star" onclick="setAppRating(5)"></i></div></div><label style="font-size:0.85rem;display:block;margin-bottom:5px">¿Qué tan fácil fue usarlo?</label><select id="rev-q1" style="margin-bottom:10px"><option value="Muy Fácil">Muy Fácil</option><option value="Fácil">Fácil</option><option value="Regular">Regular</option><option value="Difícil">Difícil</option></select><label style="font-size:0.85rem;display:block;margin-bottom:5px">¿Te ayudó a comprender mejor?</label><select id="rev-q2" style="margin-bottom:15px"><option value="Sí, mucho">Sí, mucho</option><option value="Algo">Algo</option><option value="No mucho">No mucho</option></select><textarea id="rev-comment" rows="3" placeholder="Deja un comentario o sugerencia..." style="margin-bottom:15px;resize:none"></textarea><button type="button" class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitAppReview()">Enviar Calificación</button></div></div>
 
-<div class="modal" id="tour-modal"><div class="modal-content glass" style="text-align:center"><h3 style="color:var(--accent);margin-bottom:10px">¡Bienvenido a CoulombLab10!</h3><p style="font-size:.9rem;color:var(--text);margin-bottom:15px">1. <b>IA:</b> Dibuja círculos y el sistema los volverá cargas.<br>2. <b>Vectores:</b> Dibuja líneas desde las cargas.<br>3. <b>Propiedades:</b> Usa la herramienta Mover y haz clic en una carga para editar su magnitud y ver cómo cambia de tamaño.<br>4. <b>Copiar/Pegar:</b> Usa <kbd>Ctrl+C</kbd> y <kbd>Ctrl+V</kbd> para copiar objetos entre casos.</p><button class="btn btn-primary" onclick="hideModal('tour-modal');localStorage.setItem('tourDone','1')">¡Entendido!</button></div></div>
 
-<div class="modal" id="fbd-modal"><div class="modal-content glass" style="text-align:center;max-width:450px"><div class="window-controls"><button class="win-btn win-min" onclick="hideModal('fbd-modal')"></button><button class="win-btn win-max" onclick="document.getElementById('fbd-canvas').style.transform='scale(1.5)'"></button><button class="win-btn win-close" onclick="hideModal('fbd-modal')"></button></div><h3 style="margin-bottom:10px;color:var(--accent)"><i class="ph ph-crosshair"></i> Diagrama Cuerpo Libre</h3><div style="background:#fff;border-radius:8px;padding:10px;overflow:hidden"><canvas id="fbd-canvas" width="400" height="400" style="position:relative;background:#fff;max-width:100%;height:auto;transition:transform .3s"></canvas></div></div></div>
+<div class="modal" id="fbd-modal"><div class="modal-content glass" style="text-align:center;max-width:450px"><div class="window-controls"><button type="button" class="win-btn win-min" onclick="hideModal('fbd-modal')"></button><button type="button" class="win-btn win-max" onclick="document.getElementById('fbd-canvas').style.transform='scale(1.5)'"></button><button type="button" class="win-btn win-close" onclick="hideModal('fbd-modal')"></button></div><h3 style="margin-bottom:10px;color:var(--accent)"><i class="ph ph-crosshair"></i> Diagrama Cuerpo Libre</h3><div style="background:#fff;border-radius:8px;padding:10px;overflow:hidden"><canvas id="fbd-canvas" width="400" height="400" style="position:relative;background:#fff;max-width:100%;height:auto;transition:transform .3s"></canvas></div></div></div>
 
 <script>
 // --- CORE LOGIC, AI ENGINE, PHYSICS, COPY-PASTE & MULTI-CASE ---
@@ -207,8 +396,94 @@ let casesData = {
 let activeCase = 1;
 let clipboard = [];
 
-let state={tool:'draw',currentColor:'#3498db',isDrawing:!1,showInCanvasDCL:!1,isDrawingFree:!1,isDrawingLine:!1,isDrawingShape:!1,isDragging:!1,isResizing:!1,resizeHandle:null,dragLastX:0,dragLastY:0,selectedObjects:[],selectionBox:null,isDraggingOrigin:!1,origin:{x:null,y:null},recognitionTimer:null,rawStrokes:[],currentStroke:[],currentFreeStroke:null,currentLine:null,currentShape:null,objects:[],calculatedForces:[],ctxTarget:null,laserPoints:[]};
+let state={tool:'draw',currentColor:'#6a4bd1',isDrawing:!1,showInCanvasDCL:!1,isDrawingFree:!1,isDrawingLine:!1,isDrawingShape:!1,isDragging:!1,isResizing:!1,resizeHandle:null,dragLastX:0,dragLastY:0,selectedObjects:[],selectionBox:null,isDraggingOrigin:!1,origin:{x:null,y:null},recognitionTimer:null,rawStrokes:[],currentStroke:[],currentFreeStroke:null,currentLine:null,currentShape:null,objects:[],calculatedForces:[],ctxTarget:null,laserPoints:[]};
 window.appState=state;let textPos={x:0,y:0};ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=3;
+
+// --- 10.EASY: COLORES DESDE css/tokens.css (cambian con el tema) ---
+const col=(n)=>getComputedStyle(document.body).getPropertyValue('--e10-'+n).trim()||'#888';
+
+// --- 10.EASY: CICLO PREDECIR → COMPROBAR → EXPLICAR ---
+state.prediction=null;state.checked=!1;
+window.setPrediction=(p)=>{state.prediction=p;document.querySelectorAll('[data-pred]').forEach(b=>b.classList.toggle('on',b.dataset.pred===p));updateSteps();};
+window.comprobar=()=>{state.checked=!0;analizarFisica();if(window.matchMedia('(max-width:900px)').matches)document.getElementById('right-panel').classList.add('open');};
+function firstPair(){const chs=state.objects.filter(o=>o.type.startsWith('charge'));return chs.length>=2?[chs[0],chs[1]]:null;}
+function setStep(n,s){const el=document.getElementById('step-'+n);if(el)el.dataset.s=s;}
+function updateSteps(){
+    const chs=state.objects.filter(o=>o.type.startsWith('charge')),vs=state.objects.filter(o=>o.type==='vector');
+    const s1=chs.length>=2,s2=s1&&!!state.prediction,ok=vs.filter(v=>v.validation==='correct').length;
+    const need=new Set(state.calculatedForces.map(f=>f.target)),covered=new Set(vs.filter(v=>v.validation==='correct').map(v=>v.targetId));
+    const s3=s1&&need.size>0&&[...need].every(id=>covered.has(id));
+    setStep(1,s1?'done':'now');setStep(2,s2?'done':(s1?'now':'todo'));setStep(3,s3?'done':(s2?'now':'todo'));setStep(4,s3?'now':'todo');
+    const done=[s1,s2,s3,s3&&state.checked].filter(Boolean).length;
+    const bar=document.getElementById('e10-progress-bar');if(bar)bar.style.setProperty('--e10-p',(done*25)+'%');
+    const pt=document.getElementById('e10-progress-text');if(pt)pt.textContent=done+' de 4';
+    const pb=document.querySelector('.panel-progress .e10-progress');if(pb)pb.setAttribute('aria-valuenow',done);
+    const pair=firstPair();document.querySelectorAll('.e10-pair').forEach(e=>e.textContent=pair?`q${pair[0].id} y q${pair[1].id}`:'q₁ y q₂');
+    const hint=document.getElementById('check-hint');
+    if(hint){if(!s1)hint.textContent='Dibuja al menos dos cargas para empezar.';else if(!vs.length)hint.textContent='Dibuja con la herramienta Vector la fuerza que actúa sobre cada carga.';else{const miss=[...need].filter(id=>!covered.has(id));hint.textContent=miss.length?`Falta una fuerza correcta sobre ${miss.map(id=>'q'+id).join(', ')}.`:'¡Todas las fuerzas están bien dibujadas!';}}
+    updateTip(chs,vs,pair);
+}
+function updateTip(chs,vs,pair){
+    const box=document.getElementById('e10-tip'),txt=document.getElementById('e10-tip-text');if(!box)return;let t='';
+    const bad=vs.find(v=>v.validation==='error');
+    if(state.checked&&bad){const o=chs.find(c=>c.id===bad.targetId);const same=o&&chs.filter(c=>c.id!==o.id).every(c=>c.q*o.q>0);t=same?`Cargas del mismo signo se repelen: la fuerza sobre \\(q_{${o.id}}\\) apunta alejándose de las demás.`:`Revisa la dirección sobre \\(q_{${o?o.id:''}}\\): cargas de signo opuesto se atraen, así que la fuerza apunta hacia la otra carga.`;}
+    else if(state.checked&&pair&&state.prediction){const real=pair[0].q*pair[1].q<0?'atraen':'repelen';t=state.prediction===real?`Tu predicción fue correcta: se ${real}. Ahora duplica la distancia y comprueba si la fuerza cae a la cuarta parte, porque \\(F\\propto 1/r^2\\).`:`Predijiste que se ${state.prediction}, pero se ${real}: el signo del producto \\(q_1q_2\\) decide si hay atracción (negativo) o repulsión (positivo).`;}
+    else if(vs.length&&pair){t='Por la 3.ª ley de Newton, la fuerza sobre cada carga tiene la misma magnitud y sentido opuesto.';}
+    box.hidden=!t;if(t){txt.innerHTML=t;renderMathInElement(txt,{delimiters:[{left:'\\(',right:'\\)',display:!1}],throwOnError:!1});}
+}
+function updateLive(){
+    const el=document.getElementById('e10-live'),m=document.getElementById('e10-live-math');const pair=firstPair();if(!el)return;
+    if(!pair){el.style.display='none';return;}const f=state.calculatedForces.find(x=>x.target===pair[0].id&&x.source===pair[1].id);if(!f){el.style.display='none';return;}
+    const qU=parseFloat(document.getElementById('charge-unit').value||1e-6);
+    const fx=(n)=>formatExp(n);
+    const narrow=window.matchMedia('(max-width:900px)').matches;
+    const tex=narrow?`F=k\\,\\dfrac{|q_{${pair[0].id}}\\,q_{${pair[1].id}}|}{r^2}=\\mathbf{${fx(f.mag)}\\ \\text{N}}\\quad(r=${fx(f.r)}\\ \\text{m})`
+        :`F=k\\,\\dfrac{|q_{${pair[0].id}}\\,q_{${pair[1].id}}|}{r^2}=\\dfrac{(8{,}99\\times10^{9})(${fx(Math.abs(pair[0].q*qU))})(${fx(Math.abs(pair[1].q*qU))})}{(${fx(f.r)})^2}=\\mathbf{${fx(f.mag)}\\ \\text{N}}`;
+    katex.render(tex,m,{throwOnError:!1});el.style.display='flex';
+}
+window.toggleProjector=()=>{const on=document.body.classList.toggle('e10-projector');const b=document.getElementById('btn-projector');if(b)b.setAttribute('aria-pressed',String(on));redraw();};
+function updateCoach(){const c=document.getElementById('e10-coach');if(c)c.style.display=(state.objects.some(o=>o.type.startsWith('charge'))||state.rawStrokes.length||state.isDrawing)?'none':'flex';}
+
+// --- 10.EASY: RECONOCIMIENTO DE TRAZOS CON LA CNN DEL AUTOR (modelos/trazos, 28×28) ---
+// Preprocesado igual al de entrenamiento: trazo negro sobre blanco, recorte cuadrado con margen,
+// escalado a 24×24 dentro de 28×28 y valor (255 − brillo)/255. Clases usadas: 0 carga +, 1 carga −, 2 vector.
+const e10CNN={model:null,loading:null,threshold:0.6};
+e10CNN.load=function(){
+    if(this.loading)return this.loading;
+    this.loading=new Promise((res)=>{
+        const go=()=>tf.loadLayersModel('modelos/trazos/physics-ai-model.json').then(m=>{this.model=m;res(m);}).catch(err=>{console.warn('[CoulombLab] CNN no disponible, uso reglas:',err&&err.message);res(null);});
+        if(window.tf)return go();
+        const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js';s.onload=go;s.onerror=()=>res(null);document.head.appendChild(s);
+    });
+    return this.loading;
+};
+e10CNN.classify=async function(strokes){
+    if(!this.model)return null;
+    const all=strokes.flat();const b=getBounds(all);const size=Math.max(b.w,b.h,1),k=200/size;
+    const W=Math.ceil(b.w*k)+60,H=Math.ceil(b.h*k)+60;const src=document.createElement('canvas');src.width=W;src.height=H;const sc=src.getContext('2d');
+    sc.fillStyle='#fff';sc.fillRect(0,0,W,H);sc.strokeStyle='#000';sc.lineWidth=10;sc.lineCap='round';sc.lineJoin='round';
+    strokes.forEach(s=>{sc.beginPath();s.forEach((p,i)=>{const x=(p.x-b.minX)*k+30,y=(p.y-b.minY)*k+30;i?sc.lineTo(x,y):sc.moveTo(x,y);});sc.stroke();});
+    const pad=20,minX=Math.max(0,30-pad),minY=Math.max(0,30-pad),maxX=Math.min(W,W-30+pad),maxY=Math.min(H,H-30+pad),bw=maxX-minX,bh=maxY-minY,sz=Math.max(bw,bh),cx=minX+bw/2,cy=minY+bh/2;
+    const p=document.createElement('canvas');p.width=28;p.height=28;const pc=p.getContext('2d',{willReadFrequently:!0});pc.fillStyle='#fff';pc.fillRect(0,0,28,28);pc.imageSmoothingEnabled=!0;pc.imageSmoothingQuality='high';
+    pc.drawImage(src,cx-sz/2,cy-sz/2,sz,sz,2,2,24,24);const d=pc.getImageData(0,0,28,28).data,inp=new Float32Array(784);
+    for(let i=0;i<d.length;i+=4)inp[i/4]=(255-(d[i]+d[i+1]+d[i+2])/3)/255;
+    const t=tf.tensor4d(inp,[1,28,28,1]),pr=this.model.predict(t),probs=Array.from(await pr.data());t.dispose();pr.dispose();
+    let best=0;probs.forEach((v,i)=>{if(v>probs[best])best=i;});
+    const map={0:'charge_pos',1:'charge_neg',2:'vector'};
+    return{type:map[best]||'unknown',conf:probs[best],usable:!!map[best]&&probs[best]>=this.threshold};
+};
+e10CNN.load();
+
+let chipTimer=null;
+function showAIChip(o,conf,source){
+    const chip=document.getElementById('e10-ai-chip'),txt=document.getElementById('e10-ai-text'),fix=document.getElementById('e10-ai-fix');if(!chip)return;
+    const name=o.type==='charge_pos'?'Carga +':o.type==='charge_neg'?'Carga −':'Vector';
+    txt.textContent=source==='cnn'?`${name} · IA ${Math.round(conf*100)} %`:source==='hibrido'?`${name} · IA ${Math.round(conf*100)} %, signo por trazo`:`${name}`;
+    const x=o.type==='vector'?(o.start.x+o.end.x)/2:o.x,y=o.type==='vector'?Math.max(o.start.y,o.end.y)+14:o.y+(o.radius||25)+12;
+    chip.style.left=x+'px';chip.style.top=y+'px';chip.style.display='flex';
+    fix.onclick=()=>{if(o.type.startsWith('charge')){o.type=o.type==='charge_pos'?'charge_neg':'charge_pos';o.q=-o.q;}else{state.objects=state.objects.filter(x=>x!==o);}chip.style.display='none';analizarFisica();window.reqSync(true);};
+    clearTimeout(chipTimer);chipTimer=setTimeout(()=>{chip.style.display='none';},6000);
+}
 
 // COPY-PASTE SYSTEM
 window.addEventListener('keydown', e => {
@@ -308,7 +583,7 @@ function hEnd(e){
     if(state.isDraggingOrigin){state.isDraggingOrigin=!1;window.reqSync(true);return;}
     if(state.selectionBox){const b=state.selectionBox,mx=b.x,Mx=b.x+b.w,my=b.y,My=b.y+b.h;state.selectedObjects=state.objects.filter(o=>{if(o.hidden&&state.tool!=='visibility')return!1;if(o.type.startsWith('charge')||o.type==='text')return o.x>=mx&&o.x<=Mx&&o.y>=my&&o.y<=My;else if(o.type==='vector'||o.type==='line')return Math.min(o.start.x,o.end.x)>=mx&&Math.max(o.start.x,o.end.x)<=Mx&&Math.min(o.start.y,o.end.y)>=my&&Math.max(o.start.y,o.end.y)<=My;else if(o.type==='rect'||o.type==='circle')return Math.min(o.start.x,o.end.x)>=mx&&Math.max(o.start.x,o.end.x)<=Mx&&Math.min(o.start.y,o.end.y)>=my&&Math.max(o.start.y,o.end.y)<=My;else if(o.type==='free_stroke')return o.points.some(p=>p.x>=mx&&p.x<=Mx&&p.y>=my&&p.y<=My);return!1;});state.selectionBox=null;updFD();redraw();return;}
     if(state.isDragging){state.isDragging=!1;if(state.possibleClick&&state.possibleClick.type.startsWith('charge')){openCtx(state.possibleClick,getCoords(e));} analizarFisica();window.reqSync(true);return;}
-    if(state.isDrawingLine&&state.currentLine){state.isDrawingLine=!1;if(Math.hypot(state.currentLine.end.x-state.currentLine.start.x,state.currentLine.end.y-state.currentLine.start.y)>5)state.objects.push(state.currentLine);state.currentLine=null;redraw();window.reqSync(true);return;}
+    if(state.isDrawingLine&&state.currentLine){state.isDrawingLine=!1;const L=state.currentLine;if(Math.hypot(L.end.x-L.start.x,L.end.y-L.start.y)>5){state.objects.push({type:'vector',id:L.id,start:L.start,end:L.end,validation:null,label:'?'});analizarFisica();}state.currentLine=null;redraw();window.reqSync(true);return;}
     if(state.isDrawingShape&&state.currentShape){state.isDrawingShape=!1;if(Math.hypot(state.currentShape.end.x-state.currentShape.start.x,state.currentShape.end.y-state.currentShape.start.y)>5)state.objects.push(state.currentShape);state.currentShape=null;redraw();window.reqSync(true);return;}
     if(state.isDrawingFree&&state.currentFreeStroke){state.isDrawingFree=!1;if(state.currentFreeStroke.points.length>2)state.objects.push(state.currentFreeStroke);state.currentFreeStroke=null;redraw();window.reqSync(true);return;}
     if(state.isDrawing){state.isDrawing=!1;if(state.currentStroke.length>3)state.rawStrokes.push([...state.currentStroke]);state.currentStroke=[];state.recognitionTimer=setTimeout(()=>{detConv();state.recognitionTimer=null;},1200);redraw();window.reqSync(true);}
@@ -323,7 +598,28 @@ function findObjAt(c){const vs=state.objects.filter(o=>state.tool==='visibility'
 function selectObj(o){state.selectedObjects=o?[o]:[];updFD();redraw();}
 function updFD(){if(!state.selectedObjects.length){fd.style.display='none';return;}let mx=Infinity,my=Infinity,Mx=-Infinity;state.selectedObjects.forEach(o=>{let bx,by;if(o.type.startsWith('charge')){bx=o.x;by=o.y-o.radius-15;}else if(o.type==='vector'||o.type==='line'||o.type==='rect'||o.type==='circle'){bx=(o.start.x+o.end.x)/2;by=Math.min(o.start.y,o.end.y)-20;}else if(o.type==='text'){bx=o.x+20;by=o.y-30;}else if(o.type==='free_stroke'){const p=o.points.reduce((p,c)=>c.y<p.y?c:p);bx=p.x;by=p.y-30;}if(bx<mx)mx=bx;if(bx>Mx)Mx=bx;if(by<my)my=by;});fd.style.left=((mx+Mx)/2)+'px';fd.style.top=my+'px';fd.style.display='block';}
 function deleteSelected(){if(state.selectedObjects.length){state.objects=state.objects.filter(o=>!state.selectedObjects.includes(o));state.selectedObjects=[];fd.style.display='none';analizarFisica();redraw();window.reqSync(true);}}window.deleteSelected=deleteSelected;
-function detConv(){const gs=groupStrokes(state.rawStrokes);const nOs=[];const used=new Set();gs.forEach(g=>{const b=getGBounds(g);const t=classGroup(g,b);if(t!=='unknown'){if(t.startsWith('charge')){const id=state.objects.filter(o=>o.type.startsWith('charge')).length+1;nOs.push({id:id,type:t,label:`q_${id}`,x:b.cx,y:b.cy,physX:getPhysX(b.cx),physY:getPhysY(b.cy),q:t==='charge_pos'?5:-5,hasVectors:!1,radius:25});}else if(t==='vector'){const e=getVecEps(g);nOs.push({type:'vector',start:e.start,end:e.end,validation:null,label:'?'});}g.forEach(i=>used.add(i));}});if(nOs.length){state.rawStrokes=state.rawStrokes.filter((_,i)=>!used.has(i));state.objects.push(...nOs);analizarFisica();}redraw();window.reqSync(true);}
+async function detConv(){
+    const gs=groupStrokes(state.rawStrokes);const nOs=[];const used=new Set();let last=null;
+    const chs=state.objects.filter(o=>o.type.startsWith('charge'));
+    for(const g of gs){
+        const b=getGBounds(g);
+        // Una raya horizontal dentro de una carga ya creada la vuelve negativa (el estudiante pudo hacer una pausa).
+        const host=chs.find(c=>Math.hypot(b.cx-c.x,b.cy-c.y)<(c.radius||25)&&b.w<(c.radius||25)*2.2&&b.w>b.h*1.5);
+        if(host){if(host.type==='charge_pos'){host.type='charge_neg';host.q=-Math.abs(host.q);}g.forEach(i=>used.add(i));last={o:host,conf:1,src:'reglas'};continue;}
+        // Híbrido: la CNN decide QUÉ es (carga o vector); el SIGNO de una carga lo deciden las reglas
+        // (raya interior = negativa), porque con círculos con raya la CNN tiende a responder «carga +».
+        const rules=classGroup(g,b);let t=rules,conf=1,src='reglas';
+        const ai=await e10CNN.classify(g.map(i=>state.rawStrokes[i])).catch(()=>null);
+        if(ai&&ai.usable){conf=ai.conf;if(ai.type.startsWith('charge')&&rules.startsWith('charge')){t=rules;src='hibrido';}else{t=ai.type;src='cnn';}}
+        if(t==='unknown')continue;
+        if(t.startsWith('charge')){const id=state.objects.filter(o=>o.type.startsWith('charge')).length+nOs.filter(o=>o.type.startsWith('charge')).length+1;const o={id:id,type:t,label:`q_${id}`,x:b.cx,y:b.cy,physX:getPhysX(b.cx),physY:getPhysY(b.cy),q:t==='charge_pos'?5:-5,hasVectors:!1,radius:25};nOs.push(o);last={o,conf,src};}
+        else if(t==='vector'){const e=getVecEps(g);const o={type:'vector',start:e.start,end:e.end,validation:null,label:'?'};nOs.push(o);last={o,conf,src};}
+        g.forEach(i=>used.add(i));
+    }
+    if(used.size){state.rawStrokes=state.rawStrokes.filter((_,i)=>!used.has(i));state.objects.push(...nOs);analizarFisica();}
+    if(last)showAIChip(last.o,last.conf,last.src);
+    redraw();window.reqSync(true);
+}
 function getGBounds(ids){let all=[];ids.forEach(i=>{if(state.rawStrokes[i])state.rawStrokes[i].forEach(p=>all.push(p));});if(!all.length)return{minX:0,maxX:0,minY:0,maxY:0,w:0,h:0,cx:0,cy:0};return getBounds(all);}
 function groupStrokes(ss){const gs=[];const v=new Set();for(let i=0;i<ss.length;i++){if(v.has(i))continue;const g=[i];v.add(i);for(let j=i+1;j<ss.length;j++){if(v.has(j))continue;if(stClose(ss[i],ss[j])){g.push(j);v.add(j);}}gs.push(g);}return gs;}
 function stClose(s1,s2){const b1=getBounds(s1),b2=getBounds(s2),p=30;return!(b2.minX>b1.maxX+p||b2.maxX<b1.minX-p||b2.minY>b1.maxY+p||b2.maxY<b1.minY-p);}
@@ -332,16 +628,16 @@ function getVecEps(ids){let mL=0,m=null;const ss=ids.map(i=>state.rawStrokes[i])
 function getBounds(ps){const xs=ps.map(p=>p.x),ys=ps.map(p=>p.y);return{minX:Math.min(...xs),maxX:Math.max(...xs),minY:Math.min(...ys),maxY:Math.max(...ys),w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys),cx:(Math.min(...xs)+Math.max(...xs))/2,cy:(Math.min(...ys)+Math.max(...ys))/2};}
 
 // PHYSICS, VALIDATION, DYNAMIC INSIGHTS
-function formatExp(n){if(n===0)return"0";let s=n.toExponential(2),p=s.split('e'),exp=parseInt(p[1]);if(exp===0)return p[0];return`${p[0]}\\times 10^{${exp}}`;}
-function formatExpHTML(n){if(n===0)return"0";let s=n.toExponential(2),p=s.split('e'),exp=parseInt(p[1]);if(exp===0)return p[0];return`${p[0]} &times; 10<sup>${exp}</sup>`;}
+function formatExp(n){if(n===0)return"0";let s=n.toExponential(2),p=s.split('e'),exp=parseInt(p[1]);const m=p[0].replace('.','{,}');if(exp===0)return m;return`${m}\\times 10^{${exp}}`;}
+function formatExpHTML(n){if(n===0)return"0";let s=n.toExponential(2),p=s.split('e'),exp=parseInt(p[1]);const m=p[0].replace('.',',');if(exp===0)return m;return`${m} &times; 10<sup>${exp}</sup>`;}
 
 function analizarFisica(){
     const chs=state.objects.filter(o=>o.type.startsWith('charge')),vs=state.objects.filter(o=>o.type==='vector'),Ke=8.987e9,sc=parseFloat(document.getElementById('scale-input').value||100),dU=parseFloat(document.getElementById('dist-unit').value||1),qU=parseFloat(document.getElementById('charge-unit').value||1e-6);
     chs.forEach(c=>c.hasVectors=!1); const ints=[];
     chs.forEach(t=>{chs.forEach(s=>{if(t.id===s.id)return;const dx=s.physX-t.physX,dy=s.physY-t.physY;let ang=Math.atan2(dy,dx);if(t.q*s.q>0)ang+=Math.PI;ang=(ang+4*Math.PI)%(2*Math.PI);const r=Math.hypot(dx,dy)/sc*dU,mag=r>0?(Ke*Math.abs(t.q*qU*s.q*qU))/(r*r):0;ints.push({target:t.id,source:s.id,label:`F_{${s.id}${t.id}}`,mag:mag,angleDeg:(ang*180/Math.PI)%360,Fx:mag*Math.cos(ang),Fy:mag*Math.sin(ang),r:r,t:t,s:s,ang:ang,isAttract:(t.q*s.q<0)});});});
     state.calculatedForces=ints; const vb=document.getElementById('validation-box'); vb.innerHTML='';
-    if(!vs.length)vb.innerHTML='<i>Dibuja vectores sobre las cargas.</i>';
-    vs.forEach(v=>{const o=chs.find(c=>Math.hypot(c.x-v.start.x,c.y-v.start.y)<60);if(!o){v.validation='warn';v.label='?';v.isAttract=!1;vb.innerHTML+=`<div style="color:var(--danger)">⚠️ Vector suelto</div>`;return;}o.hasVectors=!0;const vA=(Math.atan2(getPhysY(v.end.y)-getPhysY(v.start.y),v.end.x-v.start.x)+4*Math.PI)%(2*Math.PI);let b=null,mD=100;ints.filter(i=>i.t.id===o.id).forEach(c=>{let d=Math.abs(c.ang-vA);if(d>Math.PI)d=2*Math.PI-d;if(d<mD){mD=d;b=c;}});if(b&&mD<0.6){v.validation='correct';v.label=b.label;v.isAttract=b.isAttract;vb.innerHTML+=`<div style="color:var(--accent)">✅ $${b.label}$ en $${o.label}$</div>`;}else{v.validation='error';v.label='?';v.isAttract=!1;vb.innerHTML+=`<div style="color:var(--danger)">❌ Dir. Errada en $${o.label}$</div>`;}});
+    const row=(txt,chip,cls)=>`<div class="vrow"><span>${txt}</span><span class="e10-chip ${cls}">${chip}</span></div>`;
+    vs.forEach(v=>{const o=chs.find(c=>Math.hypot(c.x-v.start.x,c.y-v.start.y)<60);if(!o){v.validation='warn';v.label='?';v.targetId=null;vb.innerHTML+=row('Vector sin carga de origen','empieza en una carga','e10-chip--warn');return;}o.hasVectors=!0;v.targetId=o.id;const vA=(Math.atan2(getPhysY(v.end.y)-getPhysY(v.start.y),v.end.x-v.start.x)+4*Math.PI)%(2*Math.PI);let b=null,mD=100;ints.filter(i=>i.t.id===o.id).forEach(c=>{let d=Math.abs(c.ang-vA);if(d>Math.PI)d=2*Math.PI-d;if(d<mD){mD=d;b=c;}});if(b&&mD<0.6){v.validation='correct';v.label=b.label;v.isAttract=b.isAttract;vb.innerHTML+=row(`Fuerza $${b.label}$ sobre $${o.label}$`,'correcta','e10-chip--ok');}else{v.validation='error';v.label='?';v.isAttract=!1;vb.innerHTML+=row(`Fuerza sobre $${o.label}$`,'dirección errada','e10-chip--bad');}});
     
     updateStatement(chs, qU);
     renderLatex();
@@ -357,9 +653,11 @@ function analizarFisica(){
         const tIds = new Set(ints.map(i => i.target));
         tIds.forEach(tid => {
             const q = chs.find(c=>c.id===tid);
-            dclBtnBox.innerHTML += `<button class="btn btn-primary" style="padding:4px 8px;font-size:0.75rem" onclick="openDCL(${tid})">DCL ${q.label.replace(/[{}_]/g,'')}</button>`;
+            dclBtnBox.innerHTML += `<button type="button" class="btn" onclick="openDCL(${tid})">DCL ${q.label.replace(/[{}_]/g,'')}</button>`;
         });
     }
+    updateSteps();
+    updateLive();
     
     // Premiar por validación si está conectado (10 puntos)
     if(window.addPoints && ints.length > 0) window.addPoints(5);
@@ -377,9 +675,9 @@ window.openDCL = function(id) {
     cx.strokeStyle='#ccc'; cx.lineWidth=1;
     cx.beginPath(); cx.moveTo(200,0); cx.lineTo(200,400); cx.moveTo(0,200); cx.lineTo(400,200); cx.stroke();
     cx.beginPath(); cx.arc(200,200,15,0,2*Math.PI);
-    cx.fillStyle=ch.type==='charge_pos'?'#3498db':'#e74c3c'; cx.fill();
+    cx.fillStyle=ch.type==='charge_pos'?col('q-pos'):col('q-neg'); cx.fill();
     cx.fillStyle='white'; cx.font='bold 16px sans-serif'; cx.textAlign='center'; cx.textBaseline='middle';
-    cx.fillText(ch.type==='charge_pos'?'+':'-', 200, 202);
+    cx.fillText(ch.type==='charge_pos'?'+':'−', 200, 202);
     
     let sumFx = 0, sumFy = 0;
     fs.forEach(f => { sumFx += f.Fx; sumFy += f.Fy; });
@@ -397,19 +695,19 @@ window.openDCL = function(id) {
     };
 
     fs.forEach(f=>{
-        const dx=f.Fx*s, dy=-f.Fy*s, x2=200+dx, y2=200+dy, col='#f1c40f';
-        cx.strokeStyle='rgba(241, 196, 15, 0.4)'; cx.lineWidth=1.5; cx.setLineDash([4, 4]);
+        const dx=f.Fx*s, dy=-f.Fy*s, x2=200+dx, y2=200+dy, fc=col('accent');
+        cx.strokeStyle=fc+'66'; cx.lineWidth=1.5; cx.setLineDash([4, 4]);
         cx.beginPath(); cx.moveTo(x2, y2); cx.lineTo(x2, 200); cx.stroke();
         cx.beginPath(); cx.moveTo(x2, y2); cx.lineTo(200, y2); cx.stroke();
         cx.setLineDash([]);
-        cx.strokeStyle=col; cx.fillStyle=col; cx.lineWidth=3;
+        cx.strokeStyle=fc; cx.fillStyle=fc; cx.lineWidth=3;
         drawArr(200, 200, x2, y2);
-        cx.fillStyle='black'; cx.font="14px Arial"; cx.textAlign='left';
+        cx.fillStyle=col('ink'); cx.font="14px 'IBM Plex Sans',sans-serif"; cx.textAlign='left';
         cx.fillText(f.label.replace(/[{}_]/g,''), x2+10, y2);
     });
     if(fs.length > 0 && Rmag > 0) {
-        const Rx2 = 200 + sumFx*s, Ry2 = 200 - sumFy*s, Rcol = '#ff6b6b';
-        cx.strokeStyle='rgba(255, 107, 107, 0.4)'; cx.lineWidth=2; cx.setLineDash([4, 4]);
+        const Rx2 = 200 + sumFx*s, Ry2 = 200 - sumFy*s, Rcol = col('primary');
+        cx.strokeStyle=Rcol+'66'; cx.lineWidth=2; cx.setLineDash([4, 4]);
         cx.beginPath(); cx.moveTo(Rx2, Ry2); cx.lineTo(Rx2, 200); cx.stroke();
         cx.beginPath(); cx.moveTo(Rx2, Ry2); cx.lineTo(200, Ry2); cx.stroke();
         cx.setLineDash([]);
@@ -465,29 +763,29 @@ function renderLatex(){
 
 function drawPath(ps,c='#999',w=2){if(ps.length<2)return;ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(ps[0].x,ps[0].y);for(let i=1;i<ps.length;i++)ctx.lineTo(ps[i].x,ps[i].y);ctx.stroke();}
 function redraw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);lbls.innerHTML='';
-    if(state.origin.x!==null){ctx.beginPath();ctx.strokeStyle='rgba(128,128,128,0.3)';ctx.lineWidth=1;ctx.moveTo(0,state.origin.y);ctx.lineTo(cvs.width,state.origin.y);ctx.moveTo(state.origin.x,0);ctx.lineTo(state.origin.x,cvs.height);ctx.stroke();ctx.beginPath();ctx.arc(state.origin.x,state.origin.y,4,0,Math.PI*2);ctx.fillStyle=state.isDraggingOrigin?'#4ecca3':'rgba(128,128,128,0.5)';ctx.fill();}
+    ctx.clearRect(0,0,cvs.width,cvs.height);lbls.innerHTML='';updateCoach();
+    if(state.origin.x!==null){ctx.beginPath();ctx.strokeStyle='rgba(128,128,128,0.3)';ctx.lineWidth=1;ctx.moveTo(0,state.origin.y);ctx.lineTo(cvs.width,state.origin.y);ctx.moveTo(state.origin.x,0);ctx.lineTo(state.origin.x,cvs.height);ctx.stroke();ctx.beginPath();ctx.arc(state.origin.x,state.origin.y,4,0,Math.PI*2);ctx.fillStyle=state.isDraggingOrigin?col('primary'):'rgba(128,128,128,0.5)';ctx.fill();}
     const chs=state.objects.filter(o=>o.type.startsWith('charge'));
     if(chs.length>1){ctx.setLineDash([5,5]);ctx.strokeStyle='rgba(128,128,128,0.4)';ctx.lineWidth=1;for(let i=0;i<chs.length;i++)for(let j=i+1;j<chs.length;j++){ctx.beginPath();ctx.moveTo(chs[i].x,chs[i].y);ctx.lineTo(chs[j].x,chs[j].y);ctx.stroke();}ctx.setLineDash([]);}
     state.rawStrokes.forEach(s=>drawPath(s,'rgba(128,128,128,0.3)',2));if(state.currentStroke.length)drawPath(state.currentStroke,'#999',2);if(state.currentFreeStroke)drawPath(state.currentFreeStroke.points,state.currentFreeStroke.color,3);
     if(state.currentLine){ctx.strokeStyle=state.currentLine.color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(state.currentLine.start.x,state.currentLine.start.y);ctx.lineTo(state.currentLine.end.x,state.currentLine.end.y);ctx.stroke();}
     if(state.currentShape){ctx.strokeStyle=state.currentShape.color;ctx.lineWidth=3;if(state.currentShape.type==='rect')ctx.strokeRect(Math.min(state.currentShape.start.x,state.currentShape.end.x),Math.min(state.currentShape.start.y,state.currentShape.end.y),Math.abs(state.currentShape.end.x-state.currentShape.start.x),Math.abs(state.currentShape.end.y-state.currentShape.start.y));else if(state.currentShape.type==='circle'){ctx.beginPath();ctx.arc((state.currentShape.start.x+state.currentShape.end.x)/2,(state.currentShape.start.y+state.currentShape.end.y)/2,Math.hypot(state.currentShape.end.x-state.currentShape.start.x,state.currentShape.end.y-state.currentShape.start.y)/2,0,Math.PI*2);ctx.stroke();}}
-    if(state.selectionBox){ctx.fillStyle='rgba(78,204,163,0.1)';ctx.strokeStyle='#4ecca3';ctx.lineWidth=1;ctx.fillRect(state.selectionBox.x,state.selectionBox.y,state.selectionBox.w,state.selectionBox.h);ctx.strokeRect(state.selectionBox.x,state.selectionBox.y,state.selectionBox.w,state.selectionBox.h);}
-    state.objects.forEach(o=>{if(o.hidden&&state.tool!=='visibility')return;const pA=ctx.globalAlpha;if(o.hidden)ctx.globalAlpha=0.3;const isS=state.selectedObjects.includes(o);ctx.shadowBlur=isS?15:0;ctx.shadowColor='#4ecca3';
-        if(o.type.startsWith('charge')){const r=o.radius||25;ctx.beginPath();ctx.arc(o.x,o.y,r,0,Math.PI*2);ctx.fillStyle=o.type==='charge_pos'?'#3b82f6':'#ef4444';ctx.fill();ctx.strokeStyle=isS?'#4ecca3':'#fff';ctx.lineWidth=isS?3:2;ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(12,r-5)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.type==='charge_pos'?'+':'-',o.x,o.y+2);addLbl(o.x+r+5,o.y-r-5,o.label,o.hidden);
+    if(state.selectionBox){ctx.fillStyle=col('primary-soft');ctx.strokeStyle=col('primary');ctx.lineWidth=1;ctx.fillRect(state.selectionBox.x,state.selectionBox.y,state.selectionBox.w,state.selectionBox.h);ctx.strokeRect(state.selectionBox.x,state.selectionBox.y,state.selectionBox.w,state.selectionBox.h);}
+    state.objects.forEach(o=>{if(o.hidden&&state.tool!=='visibility')return;const pA=ctx.globalAlpha;if(o.hidden)ctx.globalAlpha=0.3;const isS=state.selectedObjects.includes(o);ctx.shadowBlur=isS?15:0;ctx.shadowColor=col('primary');
+        if(o.type.startsWith('charge')){const r=o.radius||25;ctx.beginPath();ctx.arc(o.x,o.y,r,0,Math.PI*2);ctx.fillStyle=o.type==='charge_pos'?col('q-pos'):col('q-neg');ctx.fill();ctx.strokeStyle=isS?col('primary'):'#fff';ctx.lineWidth=isS?3:2;ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(12,r-5)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.type==='charge_pos'?'+':'−',o.x,o.y+2);addLbl(o.x+r+5,o.y-r-5,o.label,o.hidden);
             if(isS){ctx.fillStyle='#fff';ctx.fillRect(o.x+r-5,o.y+r-5,10,10);ctx.strokeRect(o.x+r-5,o.y+r-5,10,10);} 
-        }else if(o.type==='vector'){const c=o.validation==='correct'?(o.isAttract?'#3b82f6':'#ef4444'):o.validation==='error'?'#ff6b6b':'#f1c40f';ctx.strokeStyle=isS?'#4ecca3':c;ctx.fillStyle=isS?'#4ecca3':c;ctx.lineWidth=isS?5:3;drawArrow(o.start.x,o.start.y,o.end.x,o.end.y);ctx.shadowBlur=0;if(o.label)addLbl(o.end.x,o.end.y-15,o.label,o.hidden);if(isS)drawHandles([o.start,o.end]);}
-        else if(o.type==='line'){ctx.strokeStyle=isS?'#4ecca3':o.color;ctx.lineWidth=isS?4:2;ctx.beginPath();ctx.moveTo(o.start.x,o.start.y);ctx.lineTo(o.end.x,o.end.y);ctx.stroke();ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
-        else if(o.type==='rect'){ctx.strokeStyle=isS?'#4ecca3':o.color;ctx.lineWidth=isS?4:2;ctx.strokeRect(Math.min(o.start.x,o.end.x),Math.min(o.start.y,o.end.y),Math.abs(o.end.x-o.start.x),Math.abs(o.end.y-o.start.y));ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
-        else if(o.type==='circle'){ctx.strokeStyle=isS?'#4ecca3':o.color;ctx.lineWidth=isS?4:2;ctx.beginPath();ctx.arc((o.start.x+o.end.x)/2,(o.start.y+o.end.y)/2,Math.hypot(o.end.x-o.start.x,o.end.y-o.start.y)/2,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
-        else if(o.type==='free_stroke'){drawPath(o.points,isS?'#4ecca3':o.color,isS?5:3);ctx.shadowBlur=0;if(isS){const b=getBounds(o.points);drawHandles([{x:b.minX,y:b.minY},{x:b.maxX,y:b.minY},{x:b.minX,y:b.maxY},{x:b.maxX,y:b.maxY}]);}}
-        else if(o.type==='text'){ctx.fillStyle=isS?'#4ecca3':o.color;ctx.font='bold 20px "Segoe UI",Arial';ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(o.text,o.x,o.y);ctx.shadowBlur=0;}
+        }else if(o.type==='vector'){const c=o.validation==='correct'?col('accent'):o.validation==='error'?col('danger'):col('warning');ctx.strokeStyle=isS?col('primary'):c;ctx.fillStyle=isS?col('primary'):c;ctx.lineWidth=isS?5:3;drawArrow(o.start.x,o.start.y,o.end.x,o.end.y);ctx.shadowBlur=0;if(o.label)addLbl(o.end.x,o.end.y-15,o.label,o.hidden);if(isS)drawHandles([o.start,o.end]);}
+        else if(o.type==='line'){ctx.strokeStyle=isS?col('primary'):o.color;ctx.lineWidth=isS?4:2;ctx.beginPath();ctx.moveTo(o.start.x,o.start.y);ctx.lineTo(o.end.x,o.end.y);ctx.stroke();ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
+        else if(o.type==='rect'){ctx.strokeStyle=isS?col('primary'):o.color;ctx.lineWidth=isS?4:2;ctx.strokeRect(Math.min(o.start.x,o.end.x),Math.min(o.start.y,o.end.y),Math.abs(o.end.x-o.start.x),Math.abs(o.end.y-o.start.y));ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
+        else if(o.type==='circle'){ctx.strokeStyle=isS?col('primary'):o.color;ctx.lineWidth=isS?4:2;ctx.beginPath();ctx.arc((o.start.x+o.end.x)/2,(o.start.y+o.end.y)/2,Math.hypot(o.end.x-o.start.x,o.end.y-o.start.y)/2,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;if(isS)drawHandles([o.start,o.end]);}
+        else if(o.type==='free_stroke'){drawPath(o.points,isS?col('primary'):o.color,isS?5:3);ctx.shadowBlur=0;if(isS){const b=getBounds(o.points);drawHandles([{x:b.minX,y:b.minY},{x:b.maxX,y:b.minY},{x:b.minX,y:b.maxY},{x:b.maxX,y:b.maxY}]);}}
+        else if(o.type==='text'){ctx.fillStyle=isS?col('primary'):o.color;ctx.font="600 20px 'IBM Plex Sans',sans-serif";ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(o.text,o.x,o.y);ctx.shadowBlur=0;}
         ctx.globalAlpha=pA;
     });
     const n=Date.now();state.laserPoints=state.laserPoints.filter(p=>n-p.t<400);
     if(state.laserPoints.length>1){ctx.beginPath();ctx.strokeStyle='#ff0000';ctx.lineWidth=4;ctx.shadowBlur=15;ctx.shadowColor='#ff0000';ctx.moveTo(state.laserPoints[0].x,state.laserPoints[0].y);for(let i=1;i<state.laserPoints.length;i++)ctx.lineTo(state.laserPoints[i].x,state.laserPoints[i].y);ctx.stroke();ctx.shadowBlur=0;}
     if(state.laserPoints.length>0)requestAnimationFrame(redraw);
-    if(state.showInCanvasDCL){chs.forEach(ch=>{if(ch.hasVectors){const fs=state.calculatedForces.filter(f=>f.target===ch.id);if(!fs.length)return;let sx=0,sy=0;fs.forEach(f=>{sx+=f.Fx;sy+=f.Fy;});const R=Math.hypot(sx,sy),max=Math.max(...fs.map(f=>f.mag),R,1e-9),s=90/max;ctx.strokeStyle='rgba(128,128,128,0.4)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(ch.x-100,ch.y);ctx.lineTo(ch.x+100,ch.y);ctx.moveTo(ch.x,ch.y-100);ctx.lineTo(ch.x,ch.y+100);ctx.stroke();ctx.setLineDash([]);fs.forEach(f=>{const x2=ch.x+f.Fx*s,y2=ch.y-f.Fy*s,c=f.isAttract?'#3b82f6':'#ef4444';ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=2;drawArrow(ch.x,ch.y,x2,y2);});if(R>0){const x2=ch.x+sx*s,y2=ch.y-sy*s;ctx.strokeStyle='#27c93f';ctx.fillStyle='#27c93f';ctx.lineWidth=3;drawArrow(ch.x,ch.y,x2,y2);ctx.fillText("FR",x2+10,y2);}}});}
+    if(state.showInCanvasDCL){chs.forEach(ch=>{if(ch.hasVectors){const fs=state.calculatedForces.filter(f=>f.target===ch.id);if(!fs.length)return;let sx=0,sy=0;fs.forEach(f=>{sx+=f.Fx;sy+=f.Fy;});const R=Math.hypot(sx,sy),max=Math.max(...fs.map(f=>f.mag),R,1e-9),s=90/max;ctx.strokeStyle='rgba(128,128,128,0.4)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(ch.x-100,ch.y);ctx.lineTo(ch.x+100,ch.y);ctx.moveTo(ch.x,ch.y-100);ctx.lineTo(ch.x,ch.y+100);ctx.stroke();ctx.setLineDash([]);fs.forEach(f=>{const x2=ch.x+f.Fx*s,y2=ch.y-f.Fy*s,c=col('accent');ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=2;drawArrow(ch.x,ch.y,x2,y2);});if(R>0){const x2=ch.x+sx*s,y2=ch.y-sy*s;ctx.strokeStyle=col('primary');ctx.fillStyle=col('primary');ctx.lineWidth=3;drawArrow(ch.x,ch.y,x2,y2);ctx.fillText("FR",x2+10,y2);}}});}
 }window.redraw=redraw;
 function drawHandles(pts){ctx.fillStyle='#fff';ctx.strokeStyle='#000';ctx.lineWidth=1;pts.forEach(p=>{ctx.fillRect(p.x-5,p.y-5,10,10);ctx.strokeRect(p.x-5,p.y-5,10,10);});}
 function drawArrow(x1,y1,x2,y2){const h=15,a=Math.atan2(y2-y1,x2-x1);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-h*Math.cos(a-Math.PI/6),y2-h*Math.sin(a-Math.PI/6));ctx.lineTo(x2-h*Math.cos(a+Math.PI/6),y2-h*Math.sin(a+Math.PI/6));ctx.fill();}
@@ -495,11 +793,13 @@ function addLbl(x,y,t,hid=!1){const d=document.createElement('div');d.className=
 function updateCoord(id,ax,v){const o=state.objects.find(x=>x.id===id),nv=parseFloat(v);if(!o||isNaN(nv))return;if(ax==='x'){o.physX=nv;o.x=nv+state.origin.x;}else{o.physY=nv;o.y=state.origin.y-nv;}analizarFisica();window.reqSync(true);}
 
 // UI Control
-function setTool(t,b){finalizeText();state.tool=t;document.querySelectorAll('.h-menu .btn').forEach(e=>e.classList.remove('active'));if(b)b.classList.add('active');if(t!=='move')selectObj(null);} window.setTool=setTool;
-window.toggleTheme=()=>{document.body.classList.toggle('dark-mode');document.body.classList.toggle('light-mode');const ic=document.querySelector('.ph-moon')||document.querySelector('.ph-sun');if(ic){ic.classList.toggle('ph-moon');ic.classList.toggle('ph-sun');}redraw();};
+function setTool(t,b){finalizeText();state.tool=t;document.querySelectorAll('.h-menu .btn').forEach(e=>e.classList.remove('active'));if(b){b.classList.add('active');const an=b.closest('.annotate');if(an){an.open=!1;an.querySelector('summary').classList.add('active');}}if(t!=='move')selectObj(null);} window.setTool=setTool;
+window.toggleTheme=()=>{document.body.classList.toggle('dark-mode');document.body.classList.toggle('light-mode');try{localStorage.setItem('electro10_theme',document.body.classList.contains('dark-mode')?'dark':'light');}catch(_){}const ic=document.querySelector('.ph-moon')||document.querySelector('.ph-sun');if(ic){ic.classList.toggle('ph-moon');ic.classList.toggle('ph-sun');}redraw();};
 function undo(){if(state.rawStrokes.length)state.rawStrokes.pop();else if(state.objects.length){state.objects.pop();analizarFisica();}redraw();window.reqSync(true);} window.undo=undo;
 function limpiarTodo(){state.objects=[];state.rawStrokes=[];state.selectedObjects=[];analizarFisica();redraw();fd.style.display='none';window.reqSync(true);} window.limpiarTodo=limpiarTodo;
-function togglePanel(){document.getElementById('right-panel').classList.toggle('open');} window.togglePanel=togglePanel;
+function togglePanel(){document.getElementById('right-panel').classList.toggle('open');setTimeout(resizeCvs,50);} window.togglePanel=togglePanel;
+if(window.matchMedia('(max-width:900px)').matches)document.getElementById('right-panel').classList.remove('open');
+document.querySelectorAll('.case-tab').forEach(t=>t.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();t.click();}}));
 function toggleWin(id,act){const e=document.getElementById(id);if(act==='min'){e.classList.remove('maximized');e.style.height='40px';e.style.overflow='hidden';}else if(act==='max'){e.style.height='auto';e.style.overflow='auto';e.classList.toggle('maximized');}} window.toggleWin=toggleWin;
 function toggleInCanvasDCL(){state.showInCanvasDCL=!state.showInCanvasDCL;document.getElementById('btn-toggle-dcl').classList.toggle('active',state.showInCanvasDCL);redraw();window.reqSync(true);} window.toggleInCanvasDCL=toggleInCanvasDCL;
 function showModal(id){document.getElementById(id).style.display='flex';} window.showModal=showModal;
@@ -518,7 +818,6 @@ function ctxUpdate(){
 
 function exportarImagen(){const t=document.createElement('canvas');t.width=cvs.width;t.height=cvs.height;const tx=t.getContext('2d');tx.fillStyle=document.body.classList.contains('light-mode')?'#eef2f5':'#0b0e14';tx.fillRect(0,0,t.width,t.height);tx.drawImage(cvs,0,0);const l=document.createElement('a');l.download='CoulombLab10.png';l.href=t.toDataURL('image/png');l.click();} window.exportarImagen=exportarImagen;
 
-document.addEventListener("DOMContentLoaded",()=>{if(!localStorage.getItem('tourDone'))showModal('tour-modal');});
 </script>
 
 <script type="module">
@@ -751,7 +1050,7 @@ window.showAdminDashboard = async () => {
                     </select>
                 </td>
                 <td><input type="text" id="adm-group-${uid}" value="${u.grupo||'General'}" style="padding:4px;font-size:0.8rem;background:transparent;border:1px solid var(--glass-border);width:100px"></td>
-                <td><button class="btn btn-primary" style="padding:4px 8px;font-size:0.75rem" onclick="adminUpdateUser('${uid}')">Guardar</button></td>
+                <td><button type="button" class="btn btn-primary" style="padding:4px 8px;font-size:0.75rem" onclick="adminUpdateUser('${uid}')">Guardar</button></td>
             </tr>`;
         });
         
@@ -788,8 +1087,8 @@ window.openRooms = async () => {
             rl.innerHTML += `<div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:10px;margin-bottom:8px">
                 <div><b>${u.avatar||''} ${u.alias||u.nombre}</b><br><span style="font-size:0.75rem;color:#888">Grupo: ${u.grupo||'General'} | Rol: ${u.rol}</span></div> 
                 <div style="display:flex;gap:5px">
-                    <button class="btn" style="background:rgba(231,76,60,0.2);color:#e74c3c;padding:4px 8px" onclick="enviarRegalo('${u.id}')" title="Enviar Regalo"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">card_giftcard</span> ${u.regalos||0}</button>
-                    <button class="btn" style="background:rgba(241,196,15,0.2);color:#f1c40f;padding:4px 8px" onclick="darEstrella('${u.id}')" title="Dar Estrella">⭐ ${u.estrellas||0}</button>
+                    <button type="button" class="btn" style="background:rgba(231,76,60,0.2);color:#e74c3c;padding:4px 8px" onclick="enviarRegalo('${u.id}')" title="Enviar Regalo"><span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">card_giftcard</span> ${u.regalos||0}</button>
+                    <button type="button" class="btn" style="background:rgba(241,196,15,0.2);color:#f1c40f;padding:4px 8px" onclick="darEstrella('${u.id}')" title="Dar Estrella">⭐ ${u.estrellas||0}</button>
                 </div>
             </div>`;
         });
@@ -859,7 +1158,7 @@ if (rightPanel) {
     const contWrap = document.createElement('div');
     contWrap.id = 'coulomb-continue-bus-wrap';
     contWrap.style.cssText = 'margin-top:14px; width:100%;';
-    rightPanel.appendChild(contWrap);
+    (rightPanel.querySelector('.panel-scroll')||rightPanel).appendChild(contWrap);
     lab10Bus.injectContinueButton(contWrap, 'Sim_M2_Campo_Vectorial.html', 'Campo Vectorial (M2)', getChargesScenario);
 }
 
