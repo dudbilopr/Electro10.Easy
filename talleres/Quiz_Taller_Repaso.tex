@@ -23,23 +23,23 @@
   headheight=15pt
 }
 
-% Paleta de colores UNAB
-\definecolor{unabBlue}{HTML}{003865}
-\definecolor{unabOrange}{HTML}{E85C0B}
+% Paleta 10.Easy (Plasma)
+\definecolor{eTenPrimary}{HTML}{B3246B}
+\definecolor{eTenAccent}{HTML}{08758C}
 
 % Encabezados
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
-\fancyhead[RE]{\textcolor{unabBlue}{\textit{Curso de Electromagnetismo}}}
-\fancyhead[LO]{\textcolor{unabBlue}{\textit{Quiz de Aplicación}}}
-\fancyfoot[C]{\textcolor{unabBlue}{\footnotesize Universidad Autónoma de Bucaramanga -- Departamento de Ciencias Básicas}}
+\fancyhead[RE]{\textcolor{eTenPrimary}{\textit{Curso de Electromagnetismo}}}
+\fancyhead[LO]{\textcolor{eTenPrimary}{\textit{Quiz de Aplicación}}}
+\fancyfoot[C]{\textcolor{eTenPrimary}{\footnotesize 10.Easy -- Curso de Electromagnetismo}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
 % Comando de sección
 \newcommand{\mysection}[1]{
-  \vspace{0.3cm}\noindent{\Large\bfseries\color{unabBlue} #1}
+  \vspace{0.3cm}\noindent{\Large\bfseries\color{eTenPrimary} #1}
   \vspace{0.1cm}\hrule\vspace{0.2cm}
 }
 
@@ -47,10 +47,10 @@
 \newcounter{problema}
 \newcommand{\problema}[1]{
     \stepcounter{problema}
-    \vspace{0.2cm}\noindent\textbf{\textcolor{unabBlue}{Problema \theproblema}}\ (#1)\par\vspace{0.1cm}\noindent
+    \vspace{0.2cm}\noindent\textbf{\textcolor{eTenPrimary}{Problema \theproblema}}\ (#1)\par\vspace{0.1cm}\noindent
 }
 
-\newcommand{\class}{\textcolor{unabBlue}{Tema: Electrostática y Campo Eléctrico}}
+\newcommand{\class}{\textcolor{eTenPrimary}{Tema: Electrostática y Campo Eléctrico}}
 \newcommand{\term}{Semestre en Curso}
 \newcommand{\examnum}{Quiz de Aplicación (RAEs)}
 \newcommand{\examdate}{Fecha:}
@@ -60,7 +60,7 @@
 
 \noindent
 \begin{minipage}[c]{0.12\textwidth}
-    \includegraphics[width=\linewidth]{../../Plantilla_LaTeX_Examen_Ciencia_de_Datos_UNAB/logo_ciencia_datos_negro.png}
+    {\Large\bfseries\color{eTenPrimary} 10.Easy}
 \end{minipage}%
 \hspace{0.03\textwidth}%
 \begin{minipage}[c]{0.85\textwidth}
