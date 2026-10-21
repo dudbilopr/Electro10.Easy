@@ -1,0 +1,180 @@
+/* ==========================================================================
+   10.Easy — Tokens de diseño (fuente única de verdad)
+   Paleta «Plasma»: magenta de plasma + cian de osciloscopio. Tema claro principal.
+   Elegida por el autor el 2026-10-21. Contraste verificado (WCAG): texto ≥ 4.5:1.
+
+   Uso:   <link rel="stylesheet" href="../css/tokens.css">
+   Tema:  claro por defecto; oscuro con body.dark-mode (lo pone js/lab10-auth.js)
+          o con [data-theme="dark"] en <html>.
+   Prefijo --e10-* para no chocar con las variables antiguas (--primary, --accent…)
+   de design-system.css y lab10-core.css mientras se migra cada página.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+    /* ── Marca ─────────────────────────────────────────────────────────── */
+    --e10-primary: #b3246b;          /* magenta plasma: botones, enlaces, marca */
+    --e10-primary-hover: #8f1b55;
+    --e10-primary-soft: #f8e6ef;     /* fondos suaves: panel de fórmula, chips */
+    --e10-accent: #0b8ca8;           /* cian: SOLO gráficos (vectores, bordes); 3.9:1 */
+    --e10-accent-strong: #08758c;    /* cian para texto o botones; 5.3:1 */
+    --e10-accent-soft: #e3f4f8;      /* recomendaciones, pistas */
+    --e10-on-primary: #ffffff;
+
+    /* ── Neutros (con sesgo hacia el magenta) ──────────────────────────── */
+    --e10-bg: #fbf8fa;               /* fondo de la app */
+    --e10-surface: #ffffff;          /* tarjetas, paneles */
+    --e10-surface-2: #fdfbfc;        /* lienzo de simulación */
+    --e10-grid: #f3e8ee;             /* rejilla técnica del lienzo */
+    --e10-line: #ecdde6;             /* bordes y divisores */
+    --e10-ink: #22111b;              /* texto principal; 17:1 */
+    --e10-muted: #6a5562;            /* texto secundario; 6.4:1 */
+
+    /* ── Semántica ─────────────────────────────────────────────────────── */
+    --e10-success: #1f7a52;
+    --e10-success-soft: #e3f3ea;
+    --e10-warning: #9a5b00;
+    --e10-warning-soft: #fdf1dc;
+    --e10-danger: #b42318;
+    --e10-danger-soft: #fdeceb;
+
+    /* ── Física: objetos ───────────────────────────────────────────────── */
+    --e10-q-pos: #d1402f;            /* carga positiva (relleno, signo blanco grande) */
+    --e10-q-neg: #2a62d4;            /* carga negativa */
+    --e10-vec-force: var(--e10-accent);
+    --e10-vec-field: #6a4bd1;
+    --e10-equipotential: #b5531a;
+
+    /* ── Física: acento por dominio (texto ≥ 5:1 sobre blanco) ─────────── */
+    --e10-d-electro: #b3246b;        /* cargas, Coulomb, campo, potencial */
+    --e10-d-gauss: #08758c;          /* flujo y Gauss */
+    --e10-d-capacitancia: #6a4bd1;   /* capacitancia y dieléctricos */
+    --e10-d-circuitos: #1f7a52;      /* resistencia y circuitos CC */
+    --e10-d-magnetismo: #2a5bc4;     /* Lorentz, Biot–Savart, Ampère */
+    --e10-d-faraday: #b5531a;        /* inducción y Faraday */
+    --e10-d-maxwell: #8a2fa8;        /* Maxwell, ondas EM, CA */
+
+    /* ── Tipografía ────────────────────────────────────────────────────── */
+    --e10-font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+    --e10-font-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    --e10-font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+    --e10-text-xs: 0.75rem;
+    --e10-text-sm: 0.875rem;
+    --e10-text-md: 1rem;
+    --e10-text-lg: 1.25rem;
+    --e10-text-xl: 1.75rem;
+    --e10-text-2xl: 2.25rem;
+
+    /* ── Forma y espacio ───────────────────────────────────────────────── */
+    --e10-radius-sm: 8px;
+    --e10-radius-md: 10px;
+    --e10-radius-lg: 14px;
+    --e10-space-1: 4px;
+    --e10-space-2: 8px;
+    --e10-space-3: 12px;
+    --e10-space-4: 16px;
+    --e10-space-6: 24px;
+    --e10-space-8: 32px;
+    --e10-shadow: 0 1px 2px rgba(34, 17, 27, 0.06), 0 4px 16px rgba(34, 17, 27, 0.06);
+    --e10-focus: 0 0 0 3px rgba(179, 36, 107, 0.35);
+}
+
+/* ── Tema oscuro (opcional) ───────────────────────────────────────────── */
+body.dark-mode,
+:root[data-theme="dark"] {
+    --e10-primary: #f06aa8;
+    --e10-primary-hover: #f590bf;
+    --e10-primary-soft: #3a1729;
+    --e10-accent: #38c4e0;
+    --e10-accent-strong: #38c4e0;
+    --e10-accent-soft: #10303a;
+    --e10-on-primary: #1a1016;
+
+    --e10-bg: #120b10;
+    --e10-surface: #1a1016;
+    --e10-surface-2: #160d13;
+    --e10-grid: #2a1a24;
+    --e10-line: #33212c;
+    --e10-ink: #f4e9ef;
+    --e10-muted: #b8a3b0;
+
+    --e10-success: #4fc78f;
+    --e10-success-soft: #12301f;
+    --e10-warning: #f0b54c;
+    --e10-warning-soft: #33260f;
+    --e10-danger: #ff8a7a;
+    --e10-danger-soft: #3a1512;
+
+    --e10-q-pos: #ff6a55;
+    --e10-q-neg: #6f9bff;
+    --e10-vec-field: #a48cff;
+    --e10-equipotential: #f08a4b;
+
+    --e10-d-electro: #f06aa8;
+    --e10-d-gauss: #38c4e0;
+    --e10-d-capacitancia: #a48cff;
+    --e10-d-circuitos: #4fc78f;
+    --e10-d-magnetismo: #6f9bff;
+    --e10-d-faraday: #f08a4b;
+    --e10-d-maxwell: #d68cf0;
+
+    --e10-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --e10-focus: 0 0 0 3px rgba(240, 106, 168, 0.45);
+    color-scheme: dark;
+}
+
+/* ── Componentes base ─────────────────────────────────────────────────── */
+.e10-btn {
+    font: 600 var(--e10-text-sm) / 1 var(--e10-font-body);
+    min-height: 44px;
+    padding: 0 var(--e10-space-4);
+    border-radius: var(--e10-radius-sm);
+    border: 1px solid var(--e10-line);
+    background: var(--e10-surface);
+    color: var(--e10-ink);
+    cursor: pointer;
+}
+.e10-btn:hover { border-color: var(--e10-primary); }
+.e10-btn:focus-visible { outline: none; box-shadow: var(--e10-focus); }
+.e10-btn--primary { background: var(--e10-primary); border-color: var(--e10-primary); color: var(--e10-on-primary); }
+.e10-btn--primary:hover { background: var(--e10-primary-hover); border-color: var(--e10-primary-hover); }
+.e10-btn--accent { background: var(--e10-accent-strong); border-color: var(--e10-accent-strong); color: var(--e10-on-primary); }
+
+.e10-card {
+    background: var(--e10-surface);
+    border: 1px solid var(--e10-line);
+    border-radius: var(--e10-radius-lg);
+}
+
+.e10-eyebrow {
+    font: 500 var(--e10-text-xs) / 1.2 var(--e10-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--e10-muted);
+}
+
+/* Recomendación pedagógica ("predice y comprueba") */
+.e10-tip {
+    background: var(--e10-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--e10-accent) 45%, transparent);
+    border-radius: var(--e10-radius-md);
+    padding: var(--e10-space-3);
+    color: var(--e10-ink);
+}
+.e10-tip__title { font-weight: 600; font-size: var(--e10-text-xs); color: var(--e10-accent-strong); }
+
+/* ── Matemáticas: KaTeX 0.16.9 es el único motor ──────────────────────
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+   Las fórmulas se escriben en LaTeX (\( … \) en línea, \[ … \] en bloque). */
+.e10-formula {
+    background: var(--e10-primary-soft);
+    border-radius: var(--e10-radius-md);
+    padding: var(--e10-space-3) var(--e10-space-4);
+    color: var(--e10-ink);
+    overflow-x: auto;
+}
+.e10-formula .katex { font-size: 1.15em; color: inherit; }
+.e10-formula .katex-display { margin: 0; }
+.katex .e10-q-pos, .e10-q-pos-text { color: var(--e10-q-pos); }
+.katex .e10-q-neg, .e10-q-neg-text { color: var(--e10-q-neg); }
