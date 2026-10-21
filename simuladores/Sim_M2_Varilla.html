@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Escuchar sesión si está disponible
     if (window.lab10Auth) {
-        window.lab10Auth.onUserChange((user) => {
+        window.lab10Auth.onAuthChange((_isAuth, user) => {
             const uInfo = document.getElementById('user-info');
             if (uInfo) {
                 uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;

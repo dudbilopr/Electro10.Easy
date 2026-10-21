@@ -228,7 +228,7 @@
     <script>
         if (location.protocol === 'http:' || location.protocol === 'https:') {
             import('../js/lab10-auth.js').then(({ lab10Auth }) => {
-                lab10Auth.onUserChange((user) => {
+                lab10Auth.onAuthChange((_isAuth, user) => {
                     const nameEl = document.getElementById('user-display-name');
                     if (nameEl) {
                         nameEl.textContent = user ? (user.displayName || user.email || 'Estudiante') : 'Modo Invitado';

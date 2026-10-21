@@ -416,7 +416,7 @@
     import { lab10Auth } from '../js/lab10-auth.js';
 
     // Escuchar sesión
-    lab10Auth.onUserChange((user) => {
+    lab10Auth.onAuthChange((_isAuth, user) => {
         const uInfo = document.getElementById('user-info');
         if (uInfo) {
             uInfo.innerHTML = user ? `<i class="ph ph-user-check"></i> ${user.displayName || user.email || 'Estudiante'}` : `<i class="ph ph-user"></i> Modo Invitado`;
