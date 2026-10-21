@@ -1236,7 +1236,7 @@
     function actualizarUIPerfil() {
         const d = window.userGameData; if (!d || !d.perfil) return;
         const p = d.perfil;
-        document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Lvl ${p.nivel} | ${p.puntos} pts`;
+        document.getElementById('user-stats').innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Lvl ${p.nivel} | ${p.puntos} pts`;
         document.getElementById('ui-nivel').innerText = p.nivel; document.getElementById('ui-puntos').innerText = p.puntos; document.getElementById('ui-tiempo').innerText = p.tiempo_sesion;
 
         const tareasDiv = document.getElementById('ui-tareas');
@@ -1272,7 +1272,7 @@
 
         const container = document.getElementById('ui-logros'); container.innerHTML = '';
         if(d.logros) {
-            const dictLogros = { "inicio_sesion": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">school</span> Bienvenido", "fisico_experto": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">bolt</span> Físico Experto", "nivel_2_alcanzado": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">star</span> Graduado Nivel 1", "nivel_3_alcanzado": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">rocket_launch</span> Investigador Nivel 2", "nivel_4_alcanzado": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">psychology</span> Científico Nivel 3", "nivel_5_alcanzado": "<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">workspace_premium</span> Nobel de Física" };
+            const dictLogros = { "inicio_sesion": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>school</span> Bienvenido", "fisico_experto": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>bolt</span> Físico Experto", "nivel_2_alcanzado": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>star</span> Graduado Nivel 1", "nivel_3_alcanzado": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>rocket_launch</span> Investigador Nivel 2", "nivel_4_alcanzado": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>psychology</span> Científico Nivel 3", "nivel_5_alcanzado": "<span class='material-symbols-outlined' style='font-size:1.1em;vertical-align:middle;'>workspace_premium</span> Nobel de Física" };
             Object.keys(d.logros).forEach(key => { if(d.logros[key] && dictLogros[key]) container.innerHTML += `<span style="background: #e67e22; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">${dictLogros[key]}</span>`; });
         }
     }
@@ -1319,13 +1319,13 @@
             if(!window.userGameData || !window.userGameData.tareas) return;
             const t = window.userGameData.tareas; const lvl = window.userGameData.perfil?.nivel || 1;
             if (lvl === 1 && t.tarea_1 && t.tarea_2 && t.tarea_3) {
-                window.userGameData.perfil.nivel = 2; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 2, puntos: increment(200) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_2_alcanzado: true }); alert("<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">star</span> ¡FELICITACIONES! Has completado el Nivel 1. ¡Subiste al NIVEL 2 y ganaste 200 pts!"); actualizarUIPerfil();
+                window.userGameData.perfil.nivel = 2; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 2, puntos: increment(200) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_2_alcanzado: true }); alert("¡FELICITACIONES! Has completado el Nivel 1. ¡Subiste al NIVEL 2 y ganaste 200 pts!"); actualizarUIPerfil();
             } else if (lvl === 2 && t.tarea_4 && t.tarea_5 && t.tarea_6) {
-                window.userGameData.perfil.nivel = 3; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 3, puntos: increment(400) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_3_alcanzado: true }); alert("<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">rocket_launch</span> ¡IMPRESIONANTE! Completaste el Nivel 2. ¡Subiste al NIVEL 3 y ganaste 400 pts!"); actualizarUIPerfil();
+                window.userGameData.perfil.nivel = 3; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 3, puntos: increment(400) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_3_alcanzado: true }); alert("¡IMPRESIONANTE! Completaste el Nivel 2. ¡Subiste al NIVEL 3 y ganaste 400 pts!"); actualizarUIPerfil();
             } else if (lvl === 3 && t.tarea_7 && t.tarea_8 && t.tarea_9) {
-                window.userGameData.perfil.nivel = 4; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 4, puntos: increment(800) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_4_alcanzado: true }); alert("<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">psychology</span> ¡ERES UN GENIO! Completaste el Nivel 3. ¡Subiste al NIVEL 4 y ganaste 800 pts!"); actualizarUIPerfil();
+                window.userGameData.perfil.nivel = 4; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 4, puntos: increment(800) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_4_alcanzado: true }); alert("¡ERES UN GENIO! Completaste el Nivel 3. ¡Subiste al NIVEL 4 y ganaste 800 pts!"); actualizarUIPerfil();
             } else if (lvl === 4 && t.tarea_10 && t.tarea_11 && t.tarea_12) {
-                window.userGameData.perfil.nivel = 5; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 5, puntos: increment(1500) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_5_alcanzado: true }); alert("<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">workspace_premium</span> ¡LEYENDA! Has completado el Laboratorio. ¡Alcanzaste el NIVEL MÁXIMO (5)!"); actualizarUIPerfil();
+                window.userGameData.perfil.nivel = 5; update(ref(db, 'usuarios_potencial/' + uid + '/perfil'), { nivel: 5, puntos: increment(1500) }); update(ref(db, 'usuarios_potencial/' + uid + '/logros'), { nivel_5_alcanzado: true }); alert("¡LEYENDA! Has completado el Laboratorio. ¡Alcanzaste el NIVEL MÁXIMO (5)!"); actualizarUIPerfil();
             }
         }, 1000);
     };
@@ -1346,7 +1346,7 @@
             }
             
             document.getElementById('room-modal').style.display = 'none';
-            document.getElementById('room-info').innerText = '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: ' + salaId;
+            document.getElementById('room-info').innerHTML = '<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: ' + salaId;
             document.getElementById('btn-share-room').style.display = 'inline-block';
             document.getElementById('chat-section').style.display = 'block';
             
