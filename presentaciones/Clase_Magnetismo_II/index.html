@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetismo II · Fuerza sobre corrientes, Biot–Savart y Ampère</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+:root {
+  --bg: #0b0e14; --panel: rgba(20, 24, 36, 0.85); --border: rgba(255,255,255,0.08);
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #8b5cf6; --accent2: #ec4899;
+  --ok: #4ecca3; --warn: #f59e0b; --cur: #f97316; --field: #38bdf8; --force: #facc15;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif; overflow: hidden; }
+body { background-image: linear-gradient(rgba(128,128,128,0.06) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(128,128,128,0.06) 1px, transparent 1px); background-size: 24px 24px; }
+header { position: fixed; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center;
+  gap: 14px; padding: 0 20px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 10; }
+header .logo { font-weight: 800; color: var(--accent); letter-spacing: .3px; }
+header .sec { color: var(--muted); font-size: .9rem; }
+header .sp { flex: 1; }
+header button, .navbtn { background: rgba(139,92,246,.15); color: var(--text); border: 1px solid rgba(139,92,246,.4);
+  border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: .9rem; }
+header button:hover, .navbtn:hover { background: rgba(139,92,246,.35); }
+#progress { position: fixed; top: 52px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); z-index: 10; transition: width .3s; }
+.slide { position: absolute; inset: 60px 0 56px 0; padding: 18px 40px; display: none; overflow-y: auto; }
+.slide.active { display: block; animation: fade .35s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+footer { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center;
+  justify-content: center; gap: 16px; background: var(--panel); border-top: 1px solid var(--border); z-index: 10; }
+#counter { color: var(--muted); min-width: 80px; text-align: center; }
+h1 { font-size: 2.6rem; margin: .2em 0; }
+h2 { font-size: 1.9rem; margin: .1em 0 .5em; color: #fff; }
+h2 .tag { font-size: .85rem; vertical-align: middle; background: rgba(139,92,246,.2); color: #c4b5fd;
+  border: 1px solid rgba(139,92,246,.4); padding: 3px 10px; border-radius: 999px; margin-left: 10px; }
+h3 { color: #c4b5fd; margin: .6em 0 .3em; }
+p, li { font-size: 1.15rem; line-height: 1.55; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
+.card.hl { border-color: rgba(139,92,246,.5); box-shadow: 0 0 24px rgba(139,92,246,.12); }
+.eq { font-size: 1.35rem; text-align: center; padding: 6px 0; }
+.big { font-size: 1.6rem; }
+.muted { color: var(--muted); }
+.key { color: var(--force); font-weight: 700; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .85rem; font-weight: 700; }
+.pill.q { background: rgba(236,72,153,.18); color: #f9a8d4; }
+.pill.t { background: rgba(78,204,163,.18); color: #6ee7b7; }
+canvas { width: 100%; background: rgba(0,0,0,.35); border: 1px solid var(--border); border-radius: 12px; display: block; }
+.ctrl { display: grid; grid-template-columns: 150px 1fr 90px; gap: 8px 12px; align-items: center; margin: 10px 0; font-size: 1rem; }
+.ctrl input[type=range] { width: 100%; accent-color: var(--accent); }
+.ctrl output { font-family: Consolas, monospace; color: var(--force); text-align: right; }
+.readout { font-family: Consolas, monospace; font-size: 1.1rem; background: rgba(0,0,0,.3); border-radius: 10px; padding: 10px 14px; line-height: 1.7; }
+.readout b { color: var(--force); }
+.btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+details { background: rgba(0,0,0,.25); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; margin-top: 8px; }
+details summary { cursor: pointer; color: var(--ok); font-weight: 700; }
+.prob { margin-bottom: 14px; }
+.prob h3 { margin-top: 0; }
+ol.steps li { margin-bottom: 4px; }
+.think { border-left: 4px solid var(--accent2); padding: 6px 14px; background: rgba(236,72,153,.07); border-radius: 0 10px 10px 0; margin: 10px 0; }
+a.sim { color: var(--field); text-decoration: none; font-weight: 600; }
+a.sim:hover { text-decoration: underline; }
+table.t { border-collapse: collapse; width: 100%; font-size: 1.05rem; }
+table.t td, table.t th { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+table.t th { color: #c4b5fd; }
+@media (max-width: 1000px) { .grid2, .grid3 { grid-template-columns: 1fr; } .slide { padding: 14px 16px; } h1 { font-size: 1.9rem; } }
+</style>
+</head>
+<body>
+<header>
+  <span class="logo"><i class="ph ph-magnet"></i> MagnetLab10.easy</span>
+  <span class="sec" id="secname"></span>
+  <span class="sp"></span>
+  <button onclick="toggleFS()" title="Pantalla completa (F)"><i class="ph ph-arrows-out"></i></button>
+</header>
+<div id="progress"></div>
+
+<!-- 0 · PORTADA -->
+<section class="slide" data-sec="Inicio">
+  <div style="max-width:1100px;margin:4vh auto 0;">
+    <p class="muted" style="letter-spacing:3px;">ELECTROMAGNETISMO · UNAB · MÓDULO 8–9</p>
+    <h1>Magnetismo II</h1>
+    <p class="big">Fuerza sobre corrientes · Ley de Biot–Savart · Ley de Ampère</p>
+    <div class="grid3" style="margin-top:28px;">
+      <div class="card hl"><h3><i class="ph ph-number-circle-one"></i> ¿Qué siente una corriente?</h3><p>De \(q\vec v\times\vec B\) a \(I\vec L\times\vec B\). Espiras y torque: el motor eléctrico.</p></div>
+      <div class="card hl"><h3><i class="ph ph-number-circle-two"></i> ¿Qué campo produce?</h3><p>Biot–Savart: sumar el aporte de cada trocito de corriente.</p></div>
+      <div class="card hl"><h3><i class="ph ph-number-circle-three"></i> El atajo por simetría</h3><p>Ampère: \(\oint \vec B\cdot d\vec l=\mu_0 I_{enc}\).</p></div>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <p style="margin:0;"><i class="ph ph-target"></i> <b>Al final de la clase podrás:</b> (1) calcular magnitud y dirección de la fuerza sobre un conductor; (2) calcular el torque sobre una espira; (3) obtener \(B\) de un hilo y una espira con Biot–Savart; (4) elegir una trayectoria amperiana y obtener \(B\) por simetría.</p>
+    </div>
+    <p class="muted" style="margin-top:18px;"><i class="ph ph-keyboard"></i> Navega con ← → o la barra inferior · F = pantalla completa</p>
+  </div>
+</section>
+
+<!-- 1 · PUENTE -->
+<section class="slide" data-sec="1 · Fuerza sobre corrientes">
+  <h2>Puente con la clase anterior <span class="tag">de una carga a una corriente</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Lo que ya sabemos</h3>
+      <div class="eq">\(\vec F = q\,\vec v\times\vec B\)</div>
+      <p>Una corriente es <b>muchas cargas</b> moviéndose con velocidad de arrastre \(\vec v_d\). En un tramo de longitud \(L\) y sección \(A\) hay \(N=nAL\) portadores.</p>
+      <div class="eq">\(\vec F = (nAL)\,q\,\vec v_d\times\vec B\)</div>
+      <p>Como \(I = nqv_dA\):</p>
+      <div class="eq big">\(\boxed{\vec F = I\,\vec L\times\vec B}\qquad F = ILB\sin\theta\)</div>
+      <p class="muted">\(\vec L\) apunta en el sentido de la corriente convencional.</p>
+    </div>
+    <div class="card">
+      <h3>Regla de la mano derecha</h3>
+      <ol class="steps">
+        <li>Dedos en la dirección de \(\vec L\) (corriente).</li>
+        <li>Dóblalos hacia \(\vec B\) por el ángulo menor.</li>
+        <li>El pulgar da \(\vec F\).</li>
+      </ol>
+      <div class="think"><span class="pill q">Pregunta rápida</span><p>Un cable vertical con corriente hacia arriba está en un campo \(\vec B\) que apunta al norte. ¿Hacia dónde lo empuja la fuerza?</p>
+        <details><summary>Respuesta</summary><p>\(\hat z\times\hat y=-\hat x\): hacia el <b>oeste</b> (con \(\hat x\)=este, \(\hat y\)=norte, \(\hat z\)=arriba).</p></details></div>
+      <div class="think"><span class="pill q">Idea clave</span><p>Si \(\vec L\parallel\vec B\), la fuerza es <b>cero</b>. La fuerza máxima ocurre con \(\theta=90^\circ\).</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · INTERACTIVO FUERZA -->
+<section class="slide" data-sec="1 · Fuerza sobre corrientes">
+  <h2>Laboratorio 1: fuerza sobre un conductor recto <span class="tag">interactivo</span></h2>
+  <div class="grid2">
+    <div><canvas id="cvF" width="760" height="460"></canvas></div>
+    <div class="card">
+      <div class="ctrl"><label>Corriente \(I\)</label><input type="range" id="fI" min="-10" max="10" step="0.5" value="4"><output id="oI"></output></div>
+      <div class="ctrl"><label>Longitud \(L\)</label><input type="range" id="fL" min="0.1" max="1" step="0.05" value="0.5"><output id="oL"></output></div>
+      <div class="ctrl"><label>Campo \(B\)</label><input type="range" id="fB" min="0" max="1" step="0.05" value="0.3"><output id="oB"></output></div>
+      <div class="ctrl"><label>Ángulo \(\theta\) entre \(\vec L\) y \(\vec B\)</label><input type="range" id="fT" min="0" max="180" step="1" value="30"><output id="oT"></output></div>
+      <div class="readout" id="rF"></div>
+      <div class="think"><span class="pill q">Predice y luego prueba</span>
+        <ul><li>¿Qué pasa con \(\vec F\) si inviertes la corriente?</li><li>¿Para qué ángulo se anula la fuerza? ¿Y para cuál es máxima?</li><li>¿Qué cambia entre \(\theta=60^\circ\) y \(\theta=120^\circ\)?</li></ul></div>
+      <p class="muted">\(\odot\) = sale de la pantalla · \(\otimes\) = entra en la pantalla</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · CONDUCTOR CURVO -->
+<section class="slide" data-sec="1 · Fuerza sobre corrientes">
+  <h2>Conductores de cualquier forma <span class="tag">dF = I dl × B</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="eq big">\(\vec F = I\displaystyle\int_a^b d\vec l\times\vec B\)</div>
+      <p>Si \(\vec B\) es <b>uniforme</b> sale de la integral:</p>
+      <div class="eq">\(\vec F = I\left(\displaystyle\int_a^b d\vec l\right)\times\vec B = I\,\vec L'\times\vec B\)</div>
+      <p>\(\vec L'\) es el vector que va del <b>inicio al final</b> del alambre, sin importar su forma.</p>
+      <div class="think"><span class="pill t">Consecuencia</span><p>Sobre una espira <b>cerrada</b> en campo uniforme: \(\vec L'=\vec 0\Rightarrow \vec F_{neta}=\vec 0\). ¡Pero el torque no tiene por qué ser cero!</p></div>
+    </div>
+    <div class="card">
+      <h3>Ejemplo resuelto: semicírculo</h3>
+      <p>Alambre en forma de semicírculo de radio \(R\) con corriente \(I\), en un campo \(\vec B\) perpendicular a su plano.</p>
+      <ol class="steps">
+        <li>Extremos separados por el diámetro: \(L'=2R\).</li>
+        <li>\(\vec L'\perp\vec B\Rightarrow F = I(2R)B\).</li>
+        <li>Comprobación por integral: \(dF = IBR\,d\phi\); solo sobrevive la componente perpendicular al diámetro: \(\int_0^\pi IBR\sin\phi\,d\phi = 2IBR\). ✔</li>
+      </ol>
+      <p>Con \(R=10\) cm, \(I=2\) A, \(B=0.5\) T: \(F = 2(0.20)(0.5)=\mathbf{0.20\ N}\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · TORQUE -->
+<section class="slide" data-sec="1 · Fuerza sobre corrientes">
+  <h2>Laboratorio 2: torque sobre una espira → motor DC <span class="tag">interactivo</span></h2>
+  <div class="grid2">
+    <div>
+      <canvas id="cvT" width="760" height="300"></canvas>
+      <canvas id="cvTg" width="760" height="170" style="margin-top:10px;"></canvas>
+    </div>
+    <div class="card">
+      <div class="eq big">\(\vec\tau = \vec\mu\times\vec B,\qquad \mu = NIA\)</div>
+      <p class="muted" style="margin-top:0">\(\vec\mu\) es perpendicular al plano de la espira (mano derecha con la corriente).</p>
+      <div class="ctrl"><label>Vueltas \(N\)</label><input type="range" id="tN" min="1" max="100" step="1" value="50"><output id="otN"></output></div>
+      <div class="ctrl"><label>Corriente \(I\)</label><input type="range" id="tI" min="0" max="5" step="0.1" value="1.5"><output id="otI"></output></div>
+      <div class="ctrl"><label>Área \(A\)</label><input type="range" id="tA" min="0.005" max="0.05" step="0.005" value="0.02"><output id="otA"></output></div>
+      <div class="ctrl"><label>Campo \(B\)</label><input type="range" id="tB" min="0" max="1" step="0.05" value="0.4"><output id="otB"></output></div>
+      <div class="ctrl"><label>Ángulo \(\vec\mu\)–\(\vec B\)</label><input type="range" id="tT" min="0" max="360" step="1" value="60"><output id="otT"></output></div>
+      <div class="btnrow">
+        <button class="navbtn" id="tPlay"><i class="ph ph-play"></i> Girar libremente</button>
+        <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="tComm"> Conmutador (invierte \(I\) cada media vuelta)</label>
+      </div>
+      <div class="readout" id="rT"></div>
+      <div class="think"><span class="pill q">Discute</span><p>Sin conmutador la espira oscila alrededor de \(\theta=0\). ¿Por qué? ¿Qué hace el conmutador de un motor real?</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · FUERZA ENTRE CONDUCTORES -->
+<section class="slide" data-sec="1 → 2 · Puente">
+  <h2>¿Y de dónde sale \(\vec B\)? <span class="tag">Oersted, 1820</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <p>Oersted observó que una brújula se desvía cerca de un cable con corriente: <b>las corrientes producen campo magnético</b>.</p>
+      <p>Hasta ahora el campo \(\vec B\) era un dato del problema. Ahora vamos a <b>calcularlo</b> a partir de la corriente que lo produce.</p>
+      <table class="t">
+        <tr><th>Electrostática</th><th>Magnetostática</th></tr>
+        <tr><td>Fuente: carga \(dq\)</td><td>Fuente: elemento de corriente \(I\,d\vec l\)</td></tr>
+        <tr><td>Coulomb: \(d\vec E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{dq\,\hat r}{r^2}\)</td><td>Biot–Savart: \(d\vec B = \dfrac{\mu_0}{4\pi}\dfrac{I\,d\vec l\times\hat r}{r^2}\)</td></tr>
+        <tr><td>Gauss: \(\oint\vec E\cdot d\vec A = Q_{enc}/\varepsilon_0\)</td><td>Ampère: \(\oint\vec B\cdot d\vec l = \mu_0 I_{enc}\)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Dos cables paralelos: se juntan las dos mitades</h3>
+      <p>El cable 1 crea \(B_1=\dfrac{\mu_0 I_1}{2\pi d}\) en la posición del cable 2, y este siente \(F = I_2 L B_1\):</p>
+      <div class="eq big">\(\dfrac{F}{L} = \dfrac{\mu_0 I_1 I_2}{2\pi d}\)</div>
+      <ul><li>Corrientes en el <b>mismo</b> sentido se <b>atraen</b>.</li><li>Corrientes en sentidos <b>opuestos</b> se <b>repelen</b>.</li></ul>
+      <p class="muted">\(\mu_0 \approx 4\pi\times10^{-7}\ \text{T·m/A}\). Desde 2019 el ampere se define a partir de la carga elemental \(e\); antes se definía justamente con esta fuerza entre cables.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · BIOT SAVART TEORIA -->
+<section class="slide" data-sec="2 · Biot–Savart">
+  <h2>Ley de Biot–Savart <span class="tag">sumar trocitos de corriente</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="eq big">\(d\vec B = \dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec l\times\hat r}{r^2}\)</div>
+      <ul>
+        <li>\(\hat r\) va <b>del elemento de corriente al punto</b> donde calculas \(\vec B\).</li>
+        <li>\(d\vec B\) es perpendicular a \(d\vec l\) y a \(\hat r\): los campos <b>rodean</b> la corriente.</li>
+        <li>Decae como \(1/r^2\), igual que Coulomb.</li>
+      </ul>
+      <h3>Receta en 5 pasos</h3>
+      <ol class="steps">
+        <li>Dibuja un \(d\vec l\) genérico y el punto P.</li>
+        <li>Escribe \(\vec r\), \(r\) y el ángulo entre \(d\vec l\) y \(\hat r\).</li>
+        <li>Determina la dirección de \(d\vec B\) (mano derecha).</li>
+        <li>Usa la simetría: ¿qué componentes se cancelan?</li>
+        <li>Integra solo las que sobreviven.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Ejemplo: segmento recto (distancia \(a\))</h3>
+      <p>Hilo sobre el eje \(y\) desde \(y_1\) hasta \(y_2\); P en \((a,0)\). Cada \(dy\) aporta en la misma dirección:</p>
+      <div class="eq">\(dB = \dfrac{\mu_0 I}{4\pi}\dfrac{a\,dy}{(a^2+y^2)^{3/2}}\)</div>
+      <div class="eq">\(B = \dfrac{\mu_0 I}{4\pi a}\left[\dfrac{y_2}{\sqrt{y_2^2+a^2}}-\dfrac{y_1}{\sqrt{y_1^2+a^2}}\right]\)</div>
+      <p>Hilo infinito \((y_1\to-\infty,\ y_2\to\infty)\):</p>
+      <div class="eq big">\(\boxed{B=\dfrac{\mu_0 I}{2\pi a}}\)</div>
+      <h3>Espira circular (en su eje)</h3>
+      <div class="eq">\(B_z=\dfrac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}}\ \xrightarrow{z=0}\ \dfrac{\mu_0 I}{2R}\)</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · BIOT SAVART INTERACTIVO -->
+<section class="slide" data-sec="2 · Biot–Savart">
+  <h2>Laboratorio 3: Biot–Savart como suma numérica <span class="tag">interactivo</span></h2>
+  <div class="grid2">
+    <div><canvas id="cvB" width="760" height="500"></canvas></div>
+    <div class="card">
+      <div class="ctrl"><label>Corriente \(I\)</label><input type="range" id="bI" min="1" max="20" step="1" value="10"><output id="obI"></output></div>
+      <div class="ctrl"><label>Distancia \(a\)</label><input type="range" id="bA" min="1" max="20" step="0.5" value="5"><output id="obA"></output></div>
+      <div class="ctrl"><label>Extremo inferior \(y_1\)</label><input type="range" id="bY1" min="-60" max="0" step="1" value="-20"><output id="obY1"></output></div>
+      <div class="ctrl"><label>Extremo superior \(y_2\)</label><input type="range" id="bY2" min="1" max="60" step="1" value="20"><output id="obY2"></output></div>
+      <div class="ctrl"><label>Nº de trocitos \(N\)</label><input type="range" id="bN" min="1" max="200" step="1" value="8"><output id="obN"></output></div>
+      <div class="readout" id="rB"></div>
+      <div class="think"><span class="pill q">Experimenta</span>
+        <ul><li>Sube \(N\): ¿cómo se acerca la suma \(\sum dB\) a la integral?</li>
+        <li>¿Qué trocitos aportan más? (barras naranjas)</li>
+        <li>Alarga el hilo: ¿a partir de qué longitud el resultado ya es casi \(\mu_0I/2\pi a\)?</li></ul></div>
+      <p class="muted">Simuladores relacionados: <a class="sim" href="../../simuladores/Sim_M8_BiotSavart_Hilo.html" target="_blank">hilo recto</a> · <a class="sim" href="../../simuladores/Sim_M8_BiotSavart_Anillo.html" target="_blank">espira circular</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · AMPERE TEORIA -->
+<section class="slide" data-sec="3 · Ampère">
+  <h2>Ley de Ampère <span class="tag">el atajo cuando hay simetría</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="eq big">\(\displaystyle\oint_C \vec B\cdot d\vec l = \mu_0\, I_{enc}\)</div>
+      <ul>
+        <li>\(C\) es una curva cerrada <b>imaginaria</b> (trayectoria amperiana).</li>
+        <li>\(I_{enc}\): corriente neta que <b>atraviesa</b> la superficie limitada por \(C\). El signo se da con la mano derecha según el sentido en que recorres \(C\).</li>
+        <li>Las corrientes de afuera <b>sí</b> generan \(\vec B\) sobre \(C\), pero su circulación neta es cero.</li>
+      </ul>
+      <h3>¿Cuándo sirve para calcular \(B\)?</h3>
+      <p>Cuando puedes elegir \(C\) de modo que, en cada tramo, \(\vec B\parallel d\vec l\) con \(|\vec B|\) constante, o \(\vec B\perp d\vec l\). Entonces \(\oint\vec B\cdot d\vec l\) se vuelve \(B\cdot(\text{longitud})\).</p>
+    </div>
+    <div class="card">
+      <h3>Hilo infinito en 3 líneas</h3>
+      <ol class="steps">
+        <li>Por simetría, \(\vec B\) es tangente a círculos centrados en el hilo y \(|\vec B|\) solo depende de \(r\).</li>
+        <li>\(C\) = círculo de radio \(r\): \(\oint\vec B\cdot d\vec l = B(2\pi r)\).</li>
+        <li>\(B(2\pi r)=\mu_0 I\Rightarrow B=\dfrac{\mu_0 I}{2\pi r}\). ✔ Coincide con Biot–Savart.</li>
+      </ol>
+      <div class="think"><span class="pill t">Comparación</span><p>Biot–Savart siempre funciona, pero implica integrar. Ampère siempre es cierta, pero solo resuelve \(B\) cuando hay simetría (hilo, cilindro, solenoide, toroide). Es la misma relación que hay entre Coulomb y Gauss.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · AMPERE INTERACTIVO -->
+<section class="slide" data-sec="3 · Ampère">
+  <h2>Laboratorio 4: comprueba la ley de Ampère <span class="tag">interactivo</span></h2>
+  <div class="grid2">
+    <div><canvas id="cvA" width="760" height="520"></canvas></div>
+    <div class="card">
+      <p><b>Arrastra</b> la trayectoria amperiana (curva de color). <b>Haz clic</b> en un cable para cambiar su corriente: \(\odot\) +, \(\otimes\) −, apagado.</p>
+      <div class="ctrl"><label>Radio de \(C\)</label><input type="range" id="aR" min="20" max="240" step="1" value="110"><output id="oaR"></output></div>
+      <div class="ctrl"><label>Forma de \(C\)</label>
+        <select id="aShape" style="grid-column: span 2; background:#111827;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px;">
+          <option value="circle">Círculo</option><option value="square">Cuadrado</option><option value="blob">Curva irregular</option></select></div>
+      <div class="btnrow"><button class="navbtn" id="aField"><i class="ph ph-wind"></i> Mostrar/ocultar \(\vec B\)</button></div>
+      <div class="readout" id="rA"></div>
+      <div class="think"><span class="pill q">Retos</span>
+        <ul><li>Encierra solo el cable de +8 A. Ahora cambia la forma de \(C\): ¿cambia la circulación?</li>
+        <li>Deja un cable afuera pero muy cerca: ¿cambia \(\oint\)? ¿Y \(\vec B\) sobre la curva?</li>
+        <li>Encierra +8 A y −8 A juntos: \(\oint = 0\). ¿Significa eso que \(B=0\) sobre la curva?</li></ul></div>
+      <p class="muted">Simuladores relacionados: <a class="sim" href="../../simuladores/Sim_M9_Solenoide.html" target="_blank">solenoide</a> · <a class="sim" href="../../simuladores/Sim_M9_Tabla_Ampere.html" target="_blank">tabla de Ampère</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · APLICACIONES AMPERE -->
+<section class="slide" data-sec="3 · Ampère">
+  <h2>Resultados clásicos con Ampère <span class="tag">memorizar el método, no la fórmula</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Cilindro sólido de radio \(R\), corriente \(I\) uniforme</h3>
+      <p>Dentro \((r<R)\): \(I_{enc}=I\dfrac{\pi r^2}{\pi R^2}\Rightarrow B=\dfrac{\mu_0 I r}{2\pi R^2}\) (crece lineal)</p>
+      <p>Fuera \((r>R)\): \(B=\dfrac{\mu_0 I}{2\pi r}\) (decae como \(1/r\))</p>
+      <canvas id="cvCyl" width="700" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3>Solenoide ideal (\(n=N/L\) vueltas por metro)</h3>
+      <p>Rectángulo amperiano con un lado adentro y otro afuera (\(B_{fuera}\approx0\)):</p>
+      <div class="eq">\(B\,\ell = \mu_0 (n\ell) I\Rightarrow \boxed{B=\mu_0 n I}\)</div>
+      <h3>Toroide de \(N\) vueltas</h3>
+      <div class="eq">\(B(2\pi r)=\mu_0 N I\Rightarrow B=\dfrac{\mu_0 N I}{2\pi r}\)</div>
+      <p class="muted">Adentro del toroide \(B\) no es uniforme: depende de \(r\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · TALLER 1 -->
+<section class="slide" data-sec="Taller en clase">
+  <h2>Taller en clase (parte A): fuerza y torque <span class="tag">parejas · 15 min</span></h2>
+  <div class="grid2">
+    <div>
+      <div class="card prob"><h3>A1 · Conductor recto</h3><p>Un alambre de 0.50 m con 4.0 A forma 30° con un campo de 0.30 T. Calcula la magnitud de la fuerza.</p>
+        <details><summary>Solución</summary><p>\(F = ILB\sin\theta = (4.0)(0.50)(0.30)\sin30^\circ = \mathbf{0.30\ N}\). Compruébalo en el Laboratorio 1.</p></details></div>
+      <div class="card prob"><h3>A2 · Levitación magnética</h3><p>Una barra horizontal con densidad lineal de masa \(\lambda=0.040\) kg/m está en un campo horizontal de 0.50 T, perpendicular a ella. ¿Qué corriente la mantiene suspendida? ¿En qué sentido debe circular?</p>
+        <details><summary>Solución</summary><ol class="steps"><li>Equilibrio: \(ILB=mg\Rightarrow I=\dfrac{\lambda g}{B}\) (la longitud se cancela).</li><li>\(I=\dfrac{(0.040)(9.8)}{0.50}=\mathbf{0.78\ A}\).</li><li>Sentido: el que haga que \(\vec L\times\vec B\) apunte hacia arriba (mano derecha).</li></ol></details></div>
+    </div>
+    <div>
+      <div class="card prob"><h3>A3 · Semicírculo</h3><p>Un alambre semicircular de radio 10 cm lleva 2.0 A en un campo uniforme de 0.50 T perpendicular a su plano. ¿Cuánto vale la fuerza neta?</p>
+        <details><summary>Solución</summary><p>\(F = I(2R)B = (2.0)(0.20)(0.50)=\mathbf{0.20\ N}\), perpendicular al diámetro.</p></details></div>
+      <div class="card prob"><h3>A4 · Bobina de un motor</h3><p>Bobina rectangular de 10 cm × 20 cm, 50 vueltas, 1.5 A, en un campo de 0.40 T. El ángulo entre \(\vec\mu\) y \(\vec B\) es 60°. Calcula \(\mu\) y \(\tau\). ¿En qué ángulo el torque es máximo?</p>
+        <details><summary>Solución</summary><ol class="steps"><li>\(A=0.020\ \text{m}^2\); \(\mu=NIA=(50)(1.5)(0.020)=\mathbf{1.5\ A\cdot m^2}\).</li><li>\(\tau=\mu B\sin60^\circ=(1.5)(0.40)(0.866)=\mathbf{0.52\ N\cdot m}\).</li><li>Máximo en \(90^\circ\): \(\tau_{max}=0.60\ \text{N·m}\). Compruébalo en el Laboratorio 2.</li></ol></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · TALLER 2 -->
+<section class="slide" data-sec="Taller en clase">
+  <h2>Taller en clase (parte B): calcular campos <span class="tag">parejas · 20 min</span></h2>
+  <div class="grid2">
+    <div>
+      <div class="card prob"><h3>B1 · Hilo frente a espira</h3><p>Con 10 A: (a) \(B\) a 5.0 cm de un hilo recto infinito; (b) \(B\) en el centro de una espira de radio 5.0 cm. ¿Cuál es mayor y por qué factor?</p>
+        <details><summary>Solución</summary><ol class="steps"><li>(a) \(B=\dfrac{\mu_0I}{2\pi a}=\dfrac{(2\times10^{-7})(10)}{0.050}=\mathbf{4.0\times10^{-5}\ T}=40\ \mu T\).</li><li>(b) \(B=\dfrac{\mu_0I}{2R}=\dfrac{(4\pi\times10^{-7})(10)}{0.10}=\mathbf{1.26\times10^{-4}\ T}\approx126\ \mu T\).</li><li>Cociente: \(\pi\). En la espira todos los \(d\vec l\) están a la misma distancia (\(R\)) y todos aportan en la misma dirección.</li></ol></details></div>
+      <div class="card prob"><h3>B2 · Cables paralelos</h3><p>Dos cables separados 10 cm llevan 5.0 A cada uno en el mismo sentido. Calcula la fuerza por unidad de longitud. ¿Se atraen o se repelen?</p>
+        <details><summary>Solución</summary><p>\(\dfrac{F}{L}=\dfrac{\mu_0I_1I_2}{2\pi d}=\dfrac{(2\times10^{-7})(25)}{0.10}=\mathbf{5.0\times10^{-5}\ N/m}\). Se <b>atraen</b>.</p></details></div>
+    </div>
+    <div>
+      <div class="card prob"><h3>B3 · Cilindro conductor (Ampère)</h3><p>Un alambre de radio 2.0 mm lleva 8.0 A distribuidos uniformemente. Calcula \(B\) en \(r=1.0\) mm, \(r=2.0\) mm y \(r=4.0\) mm. ¿Qué observas?</p>
+        <details><summary>Solución</summary><ol class="steps"><li>Adentro: \(B=\dfrac{\mu_0Ir}{2\pi R^2}=\dfrac{(2\times10^{-7})(8.0)(1.0\times10^{-3})}{(2.0\times10^{-3})^2}=\mathbf{4.0\times10^{-4}\ T}\).</li><li>Superficie: \(B=\dfrac{(2\times10^{-7})(8.0)}{2.0\times10^{-3}}=\mathbf{8.0\times10^{-4}\ T}\) (máximo).</li><li>Afuera: \(B=\dfrac{(2\times10^{-7})(8.0)}{4.0\times10^{-3}}=\mathbf{4.0\times10^{-4}\ T}\).</li><li>A \(R/2\) y a \(2R\) el campo es igual: uno crece como \(r\) y el otro decae como \(1/r\).</li></ol></details></div>
+      <div class="card prob"><h3>B4 · Solenoide</h3><p>Un solenoide de 30 cm tiene 600 vueltas y lleva 2.0 A. Calcula \(B\) en su interior. Si se duplica la longitud con el mismo número de vueltas, ¿qué pasa con \(B\)?</p>
+        <details><summary>Solución</summary><ol class="steps"><li>\(n=600/0.30=2000\ \text{m}^{-1}\).</li><li>\(B=\mu_0nI=(4\pi\times10^{-7})(2000)(2.0)=\mathbf{5.0\times10^{-3}\ T}\).</li><li>Con el doble de longitud, \(n\) se reduce a la mitad y \(B\) también.</li></ol></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · CIERRE -->
+<section class="slide" data-sec="Cierre">
+  <h2>Cierre: el mapa de hoy</h2>
+  <div class="grid3">
+    <div class="card hl"><h3>Fuerza (B es dato)</h3><div class="eq">\(\vec F = I\vec L\times\vec B\)</div><div class="eq">\(\vec\tau=\vec\mu\times\vec B\)</div><p class="muted">Motores, parlantes, galvanómetros.</p></div>
+    <div class="card hl"><h3>Biot–Savart (calcular B)</h3><div class="eq">\(d\vec B=\dfrac{\mu_0}{4\pi}\dfrac{Id\vec l\times\hat r}{r^2}\)</div><p class="muted">Siempre funciona. Hay que integrar.</p></div>
+    <div class="card hl"><h3>Ampère (calcular B con simetría)</h3><div class="eq">\(\oint\vec B\cdot d\vec l=\mu_0I_{enc}\)</div><p class="muted">Hilo, cilindro, solenoide, toroide.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:18px;">
+    <div class="card"><h3><i class="ph ph-ticket"></i> Ticket de salida (individual, 3 min)</h3>
+      <ol><li>¿Por qué la fuerza neta sobre una espira cerrada en un campo uniforme es cero, pero el torque no?</li>
+      <li>Si duplicas la distancia a un hilo infinito, ¿qué pasa con \(B\)? ¿Y si te alejas de una espira sobre su eje, a \(z\gg R\)?</li>
+      <li>Da un ejemplo en el que \(\oint\vec B\cdot d\vec l=0\) pero \(\vec B\neq0\) sobre la curva.</li></ol></div>
+    <div class="card"><h3><i class="ph ph-flask"></i> Para seguir explorando</h3>
+      <p><a class="sim" href="../../simuladores/LorentzLab10easy.html" target="_blank">LorentzLab10: partículas en campos</a></p>
+      <p><a class="sim" href="../../simuladores/Sim_M8_BiotSavart_Hilo.html" target="_blank">Biot–Savart: hilo recto</a> · <a class="sim" href="../../simuladores/Sim_M8_BiotSavart_Anillo.html" target="_blank">espira</a></p>
+      <p><a class="sim" href="../../simuladores/Sim_M9_Solenoide.html" target="_blank">Solenoide</a> · <a class="sim" href="../../talleres/Taller_8_Biot_Savart.html" target="_blank">Taller 8</a> · <a class="sim" href="../../talleres/Taller_9_Ley_de_Ampere.html" target="_blank">Taller 9</a></p>
+      <p class="muted">Próxima clase: Faraday. ¿Qué pasa si el flujo de \(\vec B\) cambia en el tiempo?</p></div>
+  </div>
+</section>
+
+<footer>
+  <button class="navbtn" onclick="go(-1)"><i class="ph ph-caret-left"></i></button>
+  <span id="counter"></span>
+  <button class="navbtn" onclick="go(1)"><i class="ph ph-caret-right"></i></button>
+</footer>
+
+<script>
+// ───────────── Navegación ─────────────
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+try { cur = Math.min(slides.length - 1, parseInt(location.hash.slice(1)) || 0); } catch (_) {}
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+  document.getElementById('counter').textContent = (cur + 1) + ' / ' + slides.length;
+  document.getElementById('secname').textContent = slides[cur].dataset.sec;
+  document.getElementById('progress').style.width = (100 * (cur + 1) / slides.length) + '%';
+  history.replaceState(null, '', '#' + cur);
+  redrawAll();
+}
+function go(d) { show(cur + d); }
+function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+  if (e.key === 'f' || e.key === 'F') toggleFS();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  renderMathInElement(document.body, { delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false });
+  show(cur);
+});
+
+const MU0 = 4 * Math.PI * 1e-7;
+const $ = id => document.getElementById(id);
+const fmt = (x, d = 3) => {
+  if (x === 0) return '0';
+  const a = Math.abs(x);
+  return (a >= 1e-2 && a < 1e4) ? x.toFixed(d) : x.toExponential(d - 1);
+};
+function arrow(ctx, x1, y1, x2, y2, color, w = 3, head = 12) {
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = ctx.fillStyle = color; ctx.lineWidth = w;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  if (Math.hypot(x2 - x1, y2 - y1) < 2) return;
+  ctx.beginPath(); ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - head * Math.cos(ang - 0.4), y2 - head * Math.sin(ang - 0.4));
+  ctx.lineTo(x2 - head * Math.cos(ang + 0.4), y2 - head * Math.sin(ang + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+function dotOut(ctx, x, y, r, color) { // ⊙
+  ctx.strokeStyle = ctx.fillStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill();
+}
+function crossIn(ctx, x, y, r, color) { // ⊗
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
+  const k = r * 0.62;
+  ctx.beginPath(); ctx.moveTo(x - k, y - k); ctx.lineTo(x + k, y + k); ctx.moveTo(x + k, y - k); ctx.lineTo(x - k, y + k); ctx.stroke();
+}
+function label(ctx, txt, x, y, color = '#e2e8f0', size = 18) {
+  ctx.fillStyle = color; ctx.font = `600 ${size}px Segoe UI, sans-serif`; ctx.fillText(txt, x, y);
+}
+function bindInputs(ids, fn) { ids.forEach(id => $(id).addEventListener('input', fn)); }
+
+// ───────────── Lab 1: F = I L × B ─────────────
+function drawForce() {
+  const c = $('cvF'), ctx = c.getContext('2d');
+  const I = +$('fI').value, L = +$('fL').value, B = +$('fB').value, th = +$('fT').value * Math.PI / 180;
+  $('oI').textContent = I + ' A'; $('oL').textContent = L + ' m'; $('oB').textContent = B + ' T'; $('oT').textContent = $('fT').value + '°';
+  ctx.clearRect(0, 0, c.width, c.height);
+  const cx = c.width / 2, cy = c.height / 2;
+  // B uniforme: líneas en dirección θ respecto al eje x (el alambre está sobre x)
+  const bx = Math.cos(th), by = -Math.sin(th);
+  ctx.globalAlpha = 0.35 + 0.5 * B;
+  for (let k = -6; k <= 6; k++) {
+    const ox = -by * k * 60, oy = bx * k * 60;
+    arrow(ctx, cx + ox - bx * 420, cy + oy - by * 420, cx + ox + bx * 420, cy + oy + by * 420, '#38bdf8', 1.5, 0);
+    arrow(ctx, cx + ox - bx * 30, cy + oy - by * 30, cx + ox + bx * 30, cy + oy + by * 30, '#38bdf8', 2, 10);
+  }
+  ctx.globalAlpha = 1;
+  // alambre
+  const half = 120 + 220 * L / 2;
+  ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 10; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx - half, cy); ctx.lineTo(cx + half, cy); ctx.stroke();
+  ctx.lineCap = 'butt';
+  if (I !== 0) {
+    const s = Math.sign(I);
+    for (let k = -2; k <= 2; k++) arrow(ctx, cx + k * half / 2.6 - s * 18, cy, cx + k * half / 2.6 + s * 18, cy, '#f97316', 4, 12);
+  }
+  label(ctx, 'I', cx + half + 14, cy + 6, '#f97316', 22);
+  // F_z = I L B sinθ (L sobre +x, B en el plano a ángulo θ): (x̂ × B̂)_z = sinθ con y hacia arriba
+  const Fz = I * L * B * Math.sin(th);
+  const r = 18 + Math.min(60, Math.abs(Fz) * 40);
+  if (Math.abs(Fz) < 1e-9) label(ctx, 'F = 0', cx - 30, cy - 50, '#facc15', 26);
+  else if (Fz > 0) dotOut(ctx, cx, cy - 80, r, '#facc15'); else crossIn(ctx, cx, cy - 80, r, '#facc15');
+  if (Math.abs(Fz) >= 1e-9) label(ctx, 'F', cx + r + 8, cy - 74, '#facc15', 24);
+  label(ctx, 'B', cx + bx * 300 + 8, cy + by * 300 - 8, '#38bdf8', 22);
+  // arco del ángulo
+  ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 55, -th, 0); ctx.stroke();
+  label(ctx, 'θ', cx + 62 * Math.cos(th / 2), cy - 62 * Math.sin(th / 2) + 6, '#c4b5fd', 20);
+  $('rF').innerHTML = `F = I·L·B·sin θ = ${Math.abs(I)}·${L}·${B}·sin(${$('fT').value}°)<br>` +
+    `<b>F = ${fmt(Math.abs(Fz), 3)} N</b> &nbsp; ${Math.abs(Fz) < 1e-9 ? '' : (Fz > 0 ? '⊙ sale de la pantalla' : '⊗ entra en la pantalla')}<br>` +
+    `F<sub>max</sub> (θ = 90°) = ${fmt(Math.abs(I) * L * B, 3)} N`;
+}
+bindInputs(['fI', 'fL', 'fB', 'fT'], drawForce);
+
+// ───────────── Lab 2: torque sobre espira ─────────────
+let tPlaying = false, tOmega = 0, tLast = 0;
+function torqueParams() {
+  const N = +$('tN').value, I = +$('tI').value, A = +$('tA').value, B = +$('tB').value;
+  return { N, I, A, B, mu: N * I * A };
+}
+function drawTorque() {
+  const { N, I, A, B, mu } = torqueParams();
+  const thDeg = +$('tT').value, th = thDeg * Math.PI / 180;
+  $('otN').textContent = N; $('otI').textContent = I + ' A'; $('otA').textContent = A + ' m²'; $('otB').textContent = B + ' T'; $('otT').textContent = thDeg + '°';
+  let sgn = 1;
+  if ($('tComm').checked && Math.sin(th) < 0) sgn = -1; // el conmutador invierte I cuando τ cambiaría de signo
+  const tau = -sgn * mu * B * Math.sin(th); // τ restaurador hacia θ=0 (signo según giro antihorario)
+  const c = $('cvT'), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  const cx = c.width / 2, cy = c.height / 2;
+  for (let y = 40; y < c.height; y += 55) arrow(ctx, 30, y, c.width - 30, y, 'rgba(56,189,248,0.45)', 1.5, 10);
+  label(ctx, 'B', c.width - 40, 30, '#38bdf8', 22);
+  // vista lateral: la espira es un segmento perpendicular a μ
+  const muAng = -th; // en pantalla y hacia abajo
+  const px = -Math.sin(muAng), py = Math.cos(muAng);
+  const h = 110;
+  ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx - px * h, cy - py * h); ctx.lineTo(cx + px * h, cy + py * h); ctx.stroke(); ctx.lineCap = 'butt';
+  // corriente en los lados: sale por un extremo, entra por el otro
+  // μ = ½∮ r × dl: con μ ∥ +x̂ la corriente entra (⊗) por el extremo A y sale (⊙) por el B
+  const curOut = sgn < 0;
+  (curOut ? dotOut : crossIn)(ctx, cx + px * h, cy + py * h, 13, '#f97316');
+  (curOut ? crossIn : dotOut)(ctx, cx - px * h, cy - py * h, 13, '#f97316');
+  arrow(ctx, cx, cy, cx + Math.cos(muAng) * 90 * sgn, cy + Math.sin(muAng) * 90 * sgn, '#ec4899', 4, 14);
+  label(ctx, 'μ', cx + Math.cos(muAng) * 105 * sgn - 6, cy + Math.sin(muAng) * 105 * sgn + 6, '#ec4899', 22);
+  // fuerzas en los lados (siempre verticales en pantalla, ±y, opuestas)
+  const fLen = Math.min(70, 30 + 40 * B);
+  const fs = (curOut ? -1 : 1);
+  arrow(ctx, cx + px * h, cy + py * h, cx + px * h, cy + py * h + fs * fLen, '#facc15', 3, 10);
+  arrow(ctx, cx - px * h, cy - py * h, cx - px * h, cy - py * h - fs * fLen, '#facc15', 3, 10);
+  $('rT').innerHTML = `μ = N·I·A = ${N}·${I}·${A} = <b>${fmt(mu, 3)} A·m²</b><br>` +
+    `τ = μ·B·sin θ = <b>${fmt(Math.abs(tau), 3)} N·m</b> ${Math.abs(tau) < 1e-9 ? '(equilibrio)' : (tau > 0 ? '↺ antihorario' : '↻ horario')}<br>` +
+    `τ<sub>max</sub> = μB = ${fmt(mu * B, 3)} N·m`;
+  // gráfica τ(θ)
+  const g = $('cvTg'), gx = g.getContext('2d');
+  gx.clearRect(0, 0, g.width, g.height);
+  const m = 30, W = g.width - 2 * m, H = g.height - 2 * 22, y0 = g.height / 2;
+  gx.strokeStyle = 'rgba(255,255,255,0.25)'; gx.lineWidth = 1;
+  gx.beginPath(); gx.moveTo(m, y0); gx.lineTo(m + W, y0); gx.stroke();
+  gx.strokeStyle = '#ec4899'; gx.lineWidth = 2.5; gx.beginPath();
+  for (let i = 0; i <= 360; i++) {
+    const a = i * Math.PI / 180; let s = 1;
+    if ($('tComm').checked && Math.sin(a) < 0) s = -1;
+    const v = -s * Math.sin(a);
+    const X = m + W * i / 360, Y = y0 - v * H / 2;
+    i ? gx.lineTo(X, Y) : gx.moveTo(X, Y);
+  }
+  gx.stroke();
+  const X0 = m + W * thDeg / 360, Y0 = y0 - (mu * B ? tau / (mu * B) : 0) * H / 2;
+  gx.fillStyle = '#facc15'; gx.beginPath(); gx.arc(X0, Y0, 6, 0, 2 * Math.PI); gx.fill();
+  label(gx, 'τ(θ)', 6, 18, '#ec4899', 14);
+  [0, 90, 180, 270, 360].forEach(d => label(gx, d + '°', m + W * d / 360 - 10, g.height - 4, '#94a3b8', 12));
+  return tau;
+}
+bindInputs(['tN', 'tI', 'tA', 'tB', 'tT'], () => { tOmega = 0; drawTorque(); });
+$('tComm').addEventListener('change', drawTorque);
+$('tPlay').addEventListener('click', () => {
+  tPlaying = !tPlaying; tOmega = 0; tLast = performance.now();
+  $('tPlay').innerHTML = tPlaying ? '<i class="ph ph-pause"></i> Pausar' : '<i class="ph ph-play"></i> Girar libremente';
+  if (tPlaying) requestAnimationFrame(stepTorque);
+});
+function stepTorque(t) {
+  if (!tPlaying) return;
+  const dt = Math.min(0.05, (t - tLast) / 1000); tLast = t;
+  const { mu, B } = torqueParams();
+  const Iner = 0.02, damp = 0.15;
+  let th = +$('tT').value * Math.PI / 180;
+  let sgn = ($('tComm').checked && Math.sin(th) < 0) ? -1 : 1;
+  const tau = -sgn * mu * B * Math.sin(th);
+  tOmega += (tau / Iner - damp * tOmega) * dt;
+  th += tOmega * dt;
+  let deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+  $('tT').value = Math.round(deg);
+  drawTorque();
+  requestAnimationFrame(stepTorque);
+}
+
+// ───────────── Lab 3: Biot–Savart numérico ─────────────
+function drawBS() {
+  const I = +$('bI').value, a = +$('bA').value / 100, y1 = +$('bY1').value / 100, y2 = +$('bY2').value / 100, N = +$('bN').value;
+  $('obI').textContent = I + ' A'; $('obA').textContent = $('bA').value + ' cm';
+  $('obY1').textContent = $('bY1').value + ' cm'; $('obY2').textContent = $('bY2').value + ' cm'; $('obN').textContent = N;
+  const c = $('cvB'), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  // escala adaptativa: el hilo y P siempre caben (sc = px por cm)
+  const sc = Math.min(225 / Math.max(-y1 * 100, y2 * 100, 1), 400 / (a * 100));
+  const wx = 230, wy = c.height / 2;
+  const Py = wy, Px = wx + a * 100 * sc;
+  const dy = (y2 - y1) / N;
+  let sum = 0; const contrib = [];
+  for (let k = 0; k < N; k++) {
+    const y = y1 + (k + 0.5) * dy;
+    const dB = MU0 / (4 * Math.PI) * I * a * dy / Math.pow(a * a + y * y, 1.5);
+    contrib.push({ y, dB }); sum += dB;
+  }
+  const exact = MU0 * I / (4 * Math.PI * a) * (y2 / Math.hypot(y2, a) - y1 / Math.hypot(y1, a));
+  const inf = MU0 * I / (2 * Math.PI * a);
+  // hilo y trocitos
+  const maxdB = Math.max(...contrib.map(o => o.dB));
+  contrib.forEach((o, k) => {
+    const yTop = wy - (y1 + k * dy) * 100 * sc, yBot = wy - (y1 + (k + 1) * dy) * 100 * sc;
+    ctx.fillStyle = k % 2 ? '#64748b' : '#94a3b8';
+    ctx.fillRect(wx - 5, Math.min(yTop, yBot), 10, Math.abs(yTop - yBot));
+    const len = 110 * o.dB / maxdB;
+    ctx.fillStyle = 'rgba(249,115,22,0.75)';
+    ctx.fillRect(wx - 12 - len, wy - o.y * 100 * sc - Math.max(1, Math.abs(dy * 100 * sc) * 0.35), len, Math.max(2, Math.abs(dy * 100 * sc) * 0.7));
+    if (N <= 30) {
+      ctx.strokeStyle = 'rgba(56,189,248,' + (0.15 + 0.6 * o.dB / maxdB) + ')'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(wx, wy - o.y * 100 * sc); ctx.lineTo(Px, Py); ctx.stroke();
+    }
+  });
+  arrow(ctx, wx + 25, wy + 40, wx + 25, wy - 40, '#f97316', 3, 10);
+  label(ctx, 'I', wx + 34, wy + 6, '#f97316', 22);
+  label(ctx, 'dB de cada trocito', 10, 24, 'rgba(249,115,22,0.95)', 15);
+  // punto P y B (entra en la pantalla: I hacia +y, P a la derecha → ŷ × x̂ = −ẑ)
+  crossIn(ctx, Px, Py, 16, '#facc15');
+  label(ctx, 'P', Px + 22, Py + 6, '#facc15', 22);
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.setLineDash([6, 6]);
+  ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(Px, Py); ctx.stroke(); ctx.setLineDash([]);
+  label(ctx, 'a', (wx + Px) / 2 - 4, wy + 22, '#c4b5fd', 18);
+  const err = Math.abs(sum - exact) / exact * 100;
+  $('rB').innerHTML = `Σ dB (N = ${N}) = <b>${fmt(sum * 1e6, 4)} μT</b><br>` +
+    `Integral exacta = ${fmt(exact * 1e6, 4)} μT &nbsp; (error ${err < 0.01 ? '< 0.01' : err.toFixed(2)} %)<br>` +
+    `Hilo infinito μ₀I/2πa = ${fmt(inf * 1e6, 4)} μT &nbsp; → este hilo da el ${(100 * exact / inf).toFixed(1)} %<br>` +
+    `Dirección en P: ⊗ (entra en la pantalla)`;
+}
+bindInputs(['bI', 'bA', 'bY1', 'bY2', 'bN'], drawBS);
+
+// ───────────── Lab 4: Ampère ─────────────
+const wires = [
+  { x: 250, y: 220, I: 8 }, { x: 470, y: 300, I: -8 }, { x: 600, y: 140, I: 5 }
+];
+let loop = { x: 260, y: 230 }, showField = true, dragging = false, dragOff = { x: 0, y: 0 };
+const PX2M = 0.001; // 1 px = 1 mm
+function Bat(x, y) {
+  let bx = 0, by = 0;
+  for (const w of wires) {
+    if (!w.I) continue;
+    const dx = (x - w.x) * PX2M, dy = (y - w.y) * PX2M, r2 = dx * dx + dy * dy;
+    if (r2 < 1e-10) continue;
+    // I > 0 sale de la pantalla: B antihorario visto por el observador. Pantalla tiene y hacia abajo → invertir.
+    const k = MU0 * w.I / (2 * Math.PI * r2);
+    bx += k * dy; by += -k * dx;
+  }
+  return [bx, by];
+}
+function loopPoints(n = 720) {
+  const R = +$('aR').value, shape = $('aShape').value, pts = [];
+  for (let i = 0; i <= n; i++) {
+    const t = -2 * Math.PI * i / n; // antihorario en pantalla (y hacia abajo)
+    let r = R;
+    if (shape === 'square') r = R / Math.max(Math.abs(Math.cos(t)), Math.abs(Math.sin(t)));
+    if (shape === 'blob') r = R * (1 + 0.25 * Math.sin(3 * t) + 0.12 * Math.cos(5 * t));
+    pts.push([loop.x + r * Math.cos(t), loop.y + r * Math.sin(t)]);
+  }
+  return pts;
+}
+function inside(pts, x, y) {
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c;
+  }
+  return c;
+}
+function drawAmpere() {
+  $('oaR').textContent = $('aR').value + ' mm';
+  const c = $('cvA'), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  if (showField) {
+    for (let x = 20; x < c.width; x += 38) for (let y = 20; y < c.height; y += 38) {
+      const [bx, by] = Bat(x, y), m = Math.hypot(bx, by);
+      if (m < 1e-9) continue;
+      const len = Math.min(16, 4 + 3 * Math.log10(1 + m * 1e5));
+      ctx.globalAlpha = Math.min(0.85, 0.25 + 0.15 * Math.log10(1 + m * 1e6));
+      arrow(ctx, x - bx / m * len / 2, y - by / m * len / 2, x + bx / m * len / 2, y + by / m * len / 2, '#38bdf8', 1.5, 5);
+    }
+    ctx.globalAlpha = 1;
+  }
+  const pts = loopPoints();
+  // circulación numérica (pantalla y↓; recorrido antihorario visto por el observador)
+  let circ = 0;
+  ctx.lineWidth = 3;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+    const [bx, by] = Bat((x1 + x2) / 2, (y1 + y2) / 2);
+    const dl = [(x2 - x1) * PX2M, (y2 - y1) * PX2M];
+    const d = bx * dl[0] + by * dl[1];
+    circ += d;
+    const loc = d / (Math.hypot(...dl) || 1);
+    ctx.strokeStyle = loc > 0 ? 'rgba(78,204,163,0.9)' : 'rgba(239,68,68,0.9)';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  const mid = pts[Math.floor(pts.length / 8)], mid2 = pts[Math.floor(pts.length / 8) + 6];
+  arrow(ctx, mid[0], mid[1], mid2[0], mid2[1], '#e2e8f0', 2, 12);
+  let Ienc = 0;
+  wires.forEach(w => {
+    const isIn = inside(pts, w.x, w.y);
+    if (isIn) Ienc += w.I;
+    if (w.I > 0) dotOut(ctx, w.x, w.y, 14, '#f97316');
+    else if (w.I < 0) crossIn(ctx, w.x, w.y, 14, '#f97316');
+    else { ctx.strokeStyle = '#475569'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(w.x, w.y, 14, 0, 2 * Math.PI); ctx.stroke(); }
+    label(ctx, (w.I > 0 ? '+' : '') + w.I + ' A', w.x + 18, w.y - 14, isIn ? '#facc15' : '#94a3b8', 15);
+  });
+  label(ctx, 'verde: B·dl > 0   rojo: B·dl < 0', 12, c.height - 12, '#94a3b8', 14);
+  $('rA').innerHTML = `∮ B·dl (numérico) = <b>${fmt(circ, 4)} T·m</b><br>` +
+    `μ₀ I<sub>enc</sub> = μ₀ · (${Ienc} A) = <b>${fmt(MU0 * Ienc, 4)} T·m</b><br>` +
+    `∮ B·dl / μ₀ = <b>${(circ / MU0).toFixed(3)} A</b>`;
+}
+$('aR').addEventListener('input', drawAmpere);
+$('aShape').addEventListener('change', drawAmpere);
+$('aField').addEventListener('click', () => { showField = !showField; drawAmpere(); });
+(function () {
+  const c = $('cvA');
+  const pos = e => { const r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height }; };
+  c.addEventListener('pointerdown', e => {
+    const p = pos(e);
+    const w = wires.find(w => Math.hypot(w.x - p.x, w.y - p.y) < 18);
+    if (w) { w.I = w.I > 0 ? -Math.abs(w.I) : (w.I < 0 ? 0 : [8, 8, 5][wires.indexOf(w)]); drawAmpere(); return; }
+    dragging = true; dragOff = { x: p.x - loop.x, y: p.y - loop.y }; c.setPointerCapture(e.pointerId);
+  });
+  c.addEventListener('pointermove', e => { if (!dragging) return; const p = pos(e); loop.x = p.x - dragOff.x; loop.y = p.y - dragOff.y; drawAmpere(); });
+  c.addEventListener('pointerup', () => dragging = false);
+})();
+
+// ───────────── Cilindro: B(r) ─────────────
+function drawCyl() {
+  const c = $('cvCyl'), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  const m = 40, W = c.width - 2 * m, H = c.height - 50, y0 = c.height - 28, rmax = 4; // r en unidades de R
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(m, y0); ctx.lineTo(m + W, y0); ctx.moveTo(m, y0); ctx.lineTo(m, y0 - H); ctx.stroke();
+  ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 3; ctx.beginPath();
+  for (let i = 0; i <= 400; i++) {
+    const r = rmax * i / 400, b = r < 1 ? r : 1 / r;
+    const X = m + W * r / rmax, Y = y0 - b * (H - 10);
+    i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(250,204,21,0.6)';
+  ctx.beginPath(); ctx.moveTo(m + W / rmax, y0); ctx.lineTo(m + W / rmax, y0 - H); ctx.stroke(); ctx.setLineDash([]);
+  label(ctx, 'r = R', m + W / rmax + 6, y0 - H + 14, '#facc15', 14);
+  label(ctx, 'B ∝ r', m + 8, y0 - 30, '#c4b5fd', 14);
+  label(ctx, 'B ∝ 1/r', m + W * 0.55, y0 - H * 0.35, '#c4b5fd', 14);
+  label(ctx, 'r', m + W - 8, y0 + 20, '#94a3b8', 14);
+  label(ctx, 'B', m - 24, y0 - H + 10, '#94a3b8', 14);
+}
+
+function redrawAll() { drawForce(); drawTorque(); drawBS(); drawAmpere(); drawCyl(); }
+</script>
+</body>
+</html>
