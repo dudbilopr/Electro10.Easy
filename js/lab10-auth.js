@@ -98,7 +98,7 @@ class Lab10Auth {
         const userStats = document.getElementById('user-stats');
 
         if (this.isAuthenticated) {
-            const displayName = this.user?.displayName || 'Estudiante UNAB';
+            const displayName = this.user?.displayName || 'Estudiante';
             if (userInfoBtn) userInfoBtn.innerText = displayName;
             if (logoutBtn && !this.isInIframe) logoutBtn.style.display = 'inline-flex';
             if (userStats) userStats.style.display = 'inline-flex';

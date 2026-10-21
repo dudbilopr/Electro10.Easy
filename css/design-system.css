@@ -1,17 +1,12 @@
 /* ==========================================================================
    Electro10.Easy — Sistema de Diseño Centralizado (Core Design System)
-   Identidad Universitaria UNAB & Estética de Laboratorio Cuántico
+   Marca 10.Easy · los colores de marca vienen de css/tokens.css
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('tokens.css');
 
 :root {
-    /* ── 1. Paleta Institucional & Primaria ────────────────────────────── */
-    --unab-blue: #003865;
-    --unab-blue-dark: #002240;
-    --unab-orange: #E85C0B;
-    --unab-orange-hover: #d04f05;
-    
     /* Acentos Cuánticos y Tecnológicos */
     --primary: #0284c7;
     --primary-hover: #0369a1;
@@ -22,9 +17,9 @@
     --secondary-hover: #0284c7;
     --secondary-light: #f0f9ff;
     
-    --accent: #E85C0B;
-    --accent-hover: #c94e07;
-    --accent-glow: rgba(232, 92, 11, 0.2);
+    --accent: var(--e10-primary);
+    --accent-hover: var(--e10-primary-hover);
+    --accent-glow: rgba(179, 36, 107, 0.2);
 
     /* ── 2. Estados y Semántica ────────────────────────────────────────── */
     --success: #10b981;
@@ -158,11 +153,11 @@ html.dark, body.dark-theme, .theme-dark {
 }
 
 .btn-core-accent {
-    background-color: var(--unab-orange);
+    background-color: var(--e10-primary);
     color: #ffffff;
 }
 .btn-core-accent:hover {
-    background-color: var(--unab-orange-hover);
+    background-color: var(--e10-primary-hover);
     transform: translateY(-1px);
 }
 

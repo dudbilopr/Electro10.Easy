@@ -48,7 +48,7 @@ html, body {
 .sim-module-badge {
     padding: 4px 10px;
     border-radius: var(--radius-xs);
-    background-color: var(--unab-blue);
+    background-color: var(--e10-primary, #b3246b);
     color: #ffffff;
     font-family: var(--font-heading);
     font-size: 0.75rem;

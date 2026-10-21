@@ -177,7 +177,7 @@
 
     <script type="module">
         // =========================================================================
-        // === INTEGRACIÓN FIREBASE (COMPATIBLE CON DASHBOARD UNAB) ===
+        // === INTEGRACIÓN FIREBASE (PROGRESO EN LA PLATAFORMA 10.EASY) ===
         // =========================================================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
@@ -808,7 +808,7 @@
                     'examen_gauss_score': window.lastScore
                 });
                 
-                showToast("¡Progreso sincronizado con tu Plataforma UNAB!", "success");
+                showToast("¡Progreso sincronizado con tu cuenta 10.Easy!", "success");
                 btn.innerHTML = `<i class="ph ph-check-circle text-lg"></i> Guardado en la plataforma`;
                 btn.classList.replace('bg-green-600', 'bg-slate-700');
                 btn.classList.replace('hover:bg-green-700', 'hover:bg-slate-800');
