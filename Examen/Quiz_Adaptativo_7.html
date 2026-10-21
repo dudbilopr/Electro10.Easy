@@ -212,6 +212,16 @@ const QUIZ_CONFIG = {
   ]
 };
 
+// ═══════════════════════════════════════════════════════════
+// MOTOR ADAPTATIVO — No modificar
+// ═══════════════════════════════════════════════════════════
+let currentLevel = 1, questionIndex = 0, correctStreak = 0, wrongStreak = 0;
+let answered = false, currentOption = null, hintsUsed = 0;
+let results = { correct: 0, total: 0, maxLevel: 1, details: [] };
+let shuffledQuestions = [];
+
+const LEVEL_NAMES = { 1: "RECONOCIMIENTO", 2: "COMPRENSIÓN", 3: "APLICACIÓN" };
+const LEVEL_COLORS = { 1: "#10b981", 2: "#f59e0b", 3: "#ef4444" };
 const MAX_QUESTIONS = 10;
 
 function shuffleArray(arr) { return [...arr].sort(() => Math.random() - 0.5); }
