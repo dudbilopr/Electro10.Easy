@@ -836,6 +836,8 @@ const APP_ID = 'coulombLab10';
 let selAvatar='<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>‍<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">biotech</span>', appRating=0, curRoomRef=null, unsubRoom=null, isRecv=!1, chatRef=null;
 let localPoints = 0, localLevel = 1;
 
+// Botón de usuario: icono del avatar + nombre como texto (el nombre lo escribe el usuario: nunca como HTML).
+function setUserInfo(avatar,label){const el=document.getElementById('user-info');if(!el)return;el.textContent='';const names=String(avatar||'person').match(/>([a-z_]+)<\/span>/g);const icons=names?names.map(x=>x.slice(1,-7)):(/^[a-z_]+$/.test(String(avatar||''))?[avatar]:[]);(icons.length?icons:(avatar?[]:['person'])).slice(0,1).forEach(n=>{const i=document.createElement('span');i.className='material-symbols-outlined';i.style.cssText='font-size:1.15em;vertical-align:middle';i.textContent=n;el.appendChild(i);});if(!icons.length&&avatar)el.append(String(avatar)+' ');el.append(' '+label);}
 window.selAvt = (el) => { document.querySelectorAll('.avt').forEach(a=>{a.style.transform='scale(1)';a.style.borderColor='transparent'}); el.style.transform='scale(1.2)'; el.style.borderColor='var(--accent)'; selAvatar=el.innerText; };
 
 // Gamificación: Otorgar Puntos
@@ -844,7 +846,7 @@ window.addPoints = async (pts) => {
     localPoints += pts;
     localLevel = Math.floor(localPoints / 100) + 1;
     
-    document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel ${localLevel} | ${localPoints} pts`;
+    document.getElementById('user-stats').innerHTML = `<i class="ph ph-trophy"></i> Nivel ${localLevel} | ${localPoints} pts`;
     document.getElementById('prof-nivel-disp').innerText = localLevel;
     document.getElementById('prof-puntos-disp').innerText = localPoints;
 
@@ -859,7 +861,7 @@ window.resetLocalState = () => {
     localPoints = 0; localLevel = 1;
     document.getElementById('prof-nivel-disp').innerText = '1';
     document.getElementById('prof-puntos-disp').innerText = '0';
-    document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel 1 | 0 pts`;
+    document.getElementById('user-stats').innerHTML = `<i class="ph ph-trophy"></i> Nivel 1 | 0 pts`;
 };
 
 onAuthStateChanged(auth, async u => {
@@ -873,15 +875,15 @@ onAuthStateChanged(auth, async u => {
             const s = await getDoc(doc(db,`artifacts/${APP_ID}/users/${u.uid}/profile/data`));
             if(!s.exists()) {
                 window.resetLocalState();
-                document.getElementById('user-info').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span> ${u.email.split('@')[0]}`;
+                setUserInfo('person', u.email.split('@')[0]);
                 showModal('profile-setup-modal'); 
             } else {
                 const pd = s.data();
                 localPoints = pd.puntos || 0;
                 localLevel = Math.floor(localPoints / 100) + 1;
                 
-                document.getElementById('user-info').innerText = `${pd.avatar||'<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">person</span>'} ${pd.alias||pd.nombre||u.email.split('@')[0]} (${pd.rol||'estudiante'})`;
-                document.getElementById('user-stats').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">emoji_events</span> Nivel ${localLevel} | ${localPoints} pts`;
+                setUserInfo(pd.avatar, `${pd.alias||pd.nombre||u.email.split('@')[0]} (${pd.rol||'estudiante'})`);
+                document.getElementById('user-stats').innerHTML = `<i class="ph ph-trophy"></i> Nivel ${localLevel} | ${localPoints} pts`;
                 document.getElementById('prof-nivel-disp').innerText = localLevel;
                 document.getElementById('prof-puntos-disp').innerText = localPoints;
                 
@@ -950,7 +952,7 @@ window.saveProfile = async () => {
         await setDoc(doc(db,`artifacts/${APP_ID}/public/data/directory/${u.uid}`), pd, {merge: true});
         
         hideModal('profile-setup-modal'); 
-        document.getElementById('user-info').innerText=`${selAvatar} ${al||n} (${currentRole})`;
+        setUserInfo(selAvatar, `${al||n} (${currentRole})`);
         if(u.email === 'dudbilopr@gmail.com') document.getElementById('btn-admin').style.display='inline-flex';
         
     } catch(e) { alert("Error guardando: "+e.message); }
@@ -975,7 +977,7 @@ window.crearUnirseSala = async () => {
 
 window.joinRoom = (id) => {
     hideModal('rooms-modal');
-    document.getElementById('room-info').innerText = `<span class="material-symbols-outlined" style="font-size:1.1em;vertical-align:middle;">language</span> Sala: ${id}`;
+    document.getElementById('room-info').textContent = `Sala: ${id}`;
     if (unsubRoom) unsubRoom();
     
     curRoomRef = ref(rtdb, `salas/${id}/state`);
