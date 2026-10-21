@@ -9,3 +9,6 @@ package.json
 package-lock.json
 scratch/
 
+
+# Capturas del método de diseño (scripts/capturas.cjs)
+capturas/
