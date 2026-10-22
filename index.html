@@ -175,7 +175,7 @@
 
                         const isSessions = mode === 'dias';
                         const label = isSessions ? 'Día' : 'Semana';
-                        const activeIndex = isSessions ? 2 : 3; // Simular el progreso visual (TODO: enlazar a progreso real)
+                        const activeIndex = Math.max(0, (window.e10SemanaActual || 1) - 1); // semana del curso fijada por el docente (Panel admin)
                         
                         container.innerHTML = Array.from({length: parseInt(length)}, (_, i) => {
                             let statusColor = i < activeIndex ? 'var(--success)' : (i === activeIndex ? 'var(--accent)' : 'var(--border-color)');
@@ -207,14 +207,9 @@
 
                 <div class="bento-grid">
                     
-                    <div class="bento-card hero-card col-8 animate-fade-in">
-                        <div class="bento-label">BIENVENIDO A TU VIAJE ACADÉMICO</div>
-                        <h2>¡Hola, <span id="student-name-hero" style="color: #fff; font-weight: 900;">Estudiante</span>!</h2>
-                        <p>Te damos la bienvenida al maravilloso mundo del electromagnetismo. Prepárate para explorar las fuerzas que rigen el universo a través de simulaciones de vanguardia e IA integrada.</p>
-                        
-                        <div id="next-lesson-container" style="margin-top: auto;">
-                            <!-- Botón dinámico insertado aquí -->
-                        </div>
+                    <div class="bento-card col-8 e10-cont animate-fade-in">
+                        <div class="e10-cont__hola">Hola, <span id="student-name-hero">Estudiante</span></div>
+                        <div id="e10-continuar" aria-live="polite"><p class="e10-sem__vacio">Cargando tu ruta…</p></div>
                     </div>
 
                     <div class="bento-card col-4 animate-slide-up">
@@ -225,6 +220,9 @@
                             <canvas id="studentDonutChart"></canvas>
                         </div>
                     </div>
+
+                    <!-- MI SEMANA: racha, tiempo frente a la meta, quiz y error más repetido (js/seguimiento.js) -->
+                    <div class="bento-card col-12 animate-slide-up" id="e10-mi-semana"></div>
 
                     <!-- PORTADA DEL MAESTRO ULTRA MEJORADA -->
                     <div class="bento-card col-12 teacher-hero animate-slide-up">

@@ -16,7 +16,7 @@ import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconFor
 import { actualizarGraficosEstudiante }         from './charts.js';
 import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, guardarEncuestaSemanal } from './profile.js';
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
-import { registrarIngreso, sumarMinuto }        from './seguimiento.js';
+import { registrarIngreso, sumarMinuto, renderPortada, guardarUltimaLeccion } from './seguimiento.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
 window.firebaseDb = db;
@@ -90,8 +90,10 @@ window.actualizarContenidoDashboard = () => {
         }
     }
 
+    renderPortada({ uid: window.currentUserUid, curriculoData, progressData, evalData });
     const c = document.getElementById('next-lesson-container');
-    if (nextLesson && nextLi) {
+    if (!c) { /* la portada nueva reemplaza la tarjeta de bienvenida */ }
+    else if (nextLesson && nextLi) {
         c.innerHTML = `
         <div class="task-item" onclick="document.getElementById('${nextLi.id}').click()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);padding:20px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
             <div style="display:flex;gap:15px;align-items:center;min-width:0;">
@@ -170,6 +172,7 @@ const esPantallaAngosta = () => window.matchMedia('(max-width: 1024px)').matches
 
 window._loadContent = (leccion, modTitulo) => {
     if (esPantallaAngosta()) document.getElementById('sidebar-menu')?.classList.add('hidden');
+    guardarUltimaLeccion(leccion, modTitulo);
     // ── Lógica de Bloqueo por Pre-Assessment ──
     // Se ha desactivado el bloqueo por solicitud del usuario para que el diagnóstico sea opcional.
     /*
@@ -298,6 +301,7 @@ async function init() {
         progressData, evalData, timeData, globalSettings,
         onLogin:  () => {
             registrarIngreso(window.currentUserUid);
+            window.e10SemanaActual = globalSettings.currentWeek; window.renderTimeline?.();
             injectUIState({ progressData, curriculoData, totalLessons });
             window.actualizarContenidoDashboard(); 
             cargarApuntes(); // Carga las notas de firebase
