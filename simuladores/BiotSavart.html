@@ -1,0 +1,1060 @@
+<!DOCTYPE html><html lang="es"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>BiotSavartLab10.easy · Campo magnético de corrientes</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* BiotSavartLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap}
+header .e10-brand{font-size:1.1rem}
+.scene-tabs{display:flex;gap:2px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);margin-left:12px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:40px;padding:0}
+.btn i{font-size:1.1em}
+.btn .sym{font:italic 600 1.05em/1 'Times New Roman',serif}
+.tog{min-height:34px;padding:0 12px;border-radius:999px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+.seg{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.seg .btn{min-height:34px;border:0;background:transparent;color:var(--e10-muted)}
+.seg .btn.active{background:var(--e10-surface);color:var(--e10-ink);box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:330px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:28px minmax(0,1fr) 78px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+.vnote{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.12em}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55}
+.reto-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reto-actions .btn{min-height:32px;font-size:var(--e10-text-xs)}
+#reto-note{font-size:var(--e10-text-xs);color:var(--e10-warning)}
+#reto-note:empty{display:none}
+.e10-chip--info{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:500 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#check-hint:empty{display:none}
+#explain{line-height:1.5}
+#explain:empty{display:none}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;line-height:1.6}
+#solution .katex-display{margin:.4em 0}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+/* Incrustado en una clase (?embed): solo escenas, herramientas y lienzo; la clase trae sus propias tareas */
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+body.e10-projector{font-size:17px}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  header .e10-brand{font-size:1rem}
+  .module-chip,#btn-projector{display:none}
+  .scene-tabs{order:5;margin:0;width:100%}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .h-menu{order:3;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px;border-top:1px solid var(--e10-line);border-bottom:0;flex-wrap:nowrap;overflow-x:auto}
+  .h-menu .tool-group__label,.h-menu .tool-sep{display:none}
+  .h-menu .btn{min-height:44px;font-size:12px;padding:0 10px}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:150px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px;min-height:44px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:.95em}
+  #values-body{min-width:220px}
+  #coords-indicator{display:none}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+// 10.Easy: tema claro por defecto, salvo que el estudiante haya elegido el oscuro.
+(function(){var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}document.addEventListener('DOMContentLoaded',function(){document.body.classList.toggle('dark-mode',t==='dark');document.body.classList.toggle('light-mode',t!=='dark');if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');});})();
+</script>
+</head>
+<body data-domain="magnetismo" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">BiotSavartLab<span>10.easy</span></a>
+  <span class="e10-chip module-chip">Módulo 9 · Biot–Savart</span>
+  <nav class="scene-tabs" role="tablist" aria-label="Escenas">
+    <button type="button" role="tab" data-scene="oersted" aria-selected="false">1 · Ørsted</button>
+    <button type="button" role="tab" data-scene="segmento" aria-selected="false">2 · Segmento</button>
+    <button type="button" role="tab" data-scene="hilos" aria-selected="false">3 · Hilos</button>
+    <button type="button" role="tab" data-scene="espira" aria-selected="false">4 · Espira y arco</button>
+  </nav>
+  <div class="e10-header__spacer"></div>
+  <div class="header-actions">
+    <button class="btn" id="btn-projector" type="button"><i class="ph ph-projector-screen"></i>Modo proyector</button>
+    <button class="btn btn-icon" id="btn-theme" type="button" aria-label="Cambiar tema claro u oscuro"><i class="ph ph-moon"></i></button>
+    <button class="btn" id="user-info" type="button" style="color:var(--e10-primary);border-color:var(--e10-primary)">Iniciar sesión</button>
+  </div>
+</header>
+<div class="h-menu" id="toolbar" role="toolbar" aria-label="Herramientas de la escena"></div>
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Lienzo de la simulación"></canvas>
+    <details id="values" open><summary>Valores</summary><div id="values-body"></div></details>
+    <div id="coords-indicator"></div>
+    <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><div id="live-tex"></div></div>
+  </div>
+  <aside class="slide-panel" id="right-panel">
+    <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Abrir o cerrar el panel del reto"><span></span></button>
+    <div class="panel-scroll">
+      <section class="e10-step" id="st1" data-s="done">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto</div>
+          <div id="reto-text"></div>
+          <div id="reto-note"></div>
+          <div class="reto-actions"><span class="e10-chip e10-chip--info" id="reto-tag"></span><button class="btn" id="btn-new" type="button"><i class="ph ph-shuffle"></i>Nuevo reto con otros valores</button></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st2" data-s="now">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice</div>
+          <div id="pred-q"></div>
+          <div class="predict-row" id="pred-choices"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprueba</div>
+          <label class="ans"><span id="ans-label">Tu valor</span><input id="ans-val" type="text" inputmode="decimal" autocomplete="off" placeholder="ej. 4,0e-5"></label>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" id="btn-check" type="button">Comprobar mi predicción</button>
+          <div id="check-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Explica</div>
+          <div class="e10-tip" id="explain"></div>
+          <button class="btn" id="btn-sol" type="button"><i class="ph ph-function"></i>Ver la solución paso a paso</button>
+          <div id="solution" hidden></div>
+        </div>
+      </section>
+      <div id="continue-wrap"></div>
+    </div>
+    <div class="panel-progress"><span class="section-title">Progreso</span><div class="e10-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="prog-bar"><span id="prog" style="--e10-p:25%"></span></div><span class="section-title" id="prog-txt">1 de 4</span></div>
+  </aside>
+</div>
+<footer><span>© 2026 BiotSavartLab10.easy · 10.Easy</span><a href="../index.html">Volver a la plataforma</a></footer>
+
+<script type="module">
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+
+// ───────────────────────── utilidades ─────────────────────────
+const $ = s => document.querySelector(s);
+const MU0 = 4e-7 * Math.PI;
+const DEG = 180 / Math.PI;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const cssv = n => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim();
+
+function sciParts(v, d) {
+  if (!isFinite(v) || v === 0) return null;
+  let e = Math.floor(Math.log10(Math.abs(v)));
+  let ms = (v / Math.pow(10, e)).toFixed(d - 1);
+  if (Math.abs(+ms) >= 10) { e += 1; ms = (v / Math.pow(10, e)).toFixed(d - 1); }
+  return [ms, e];
+}
+// LaTeX: 4{,}00\times10^{-5}
+function sx(v, d = 3) { const p = sciParts(v, d); if (!p) return '0'; return p[0].replace('.', '{,}') + (p[1] === 0 ? '' : String.raw`\times10^{${p[1]}}`); }
+// Texto plano: 4,00 × 10⁻⁵
+function sp(v, d = 3) {
+  const p = sciParts(v, d); if (!p) return '0';
+  const sup = String(p[1]).replace('-', '⁻').replace(/\d/g, c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  return p[0].replace('.', ',') + (p[1] === 0 ? '' : ' × 10' + sup);
+}
+const fx = (v, n) => v.toFixed(n).replace('.', '{,}');
+const fp = (v, n) => v.toFixed(n).replace('.', ',');
+function parseNum(s) {
+  s = String(s ?? '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '');
+  s = s.replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1');
+  return s === '' ? NaN : Number(s);
+}
+const near = (a, b, tol = 0.03) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30);
+function K(tex, display = false) { try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); } catch (_) { return tex; } }
+function mixed(el, html) {
+  el.innerHTML = html;
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+const angDiff = (a, b) => { let d = (a - b) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
+
+// ───────────────────────── lienzo ─────────────────────────
+const area = $('#canvas-area'), cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, HU = 0; // HU: alto útil (sin la barra de fórmula)
+function resize() {
+  const r = area.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height; HU = H - (W < 600 ? 76 : 92);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+let COL = {};
+function readColors() {
+  COL = { ink: cssv('ink'), muted: cssv('muted'), line: cssv('line'), surface: cssv('surface'), primary: cssv('primary'), primarySoft: cssv('primary-soft'),
+    accent: cssv('accent'), field: cssv('vec-field'), wire: cssv('d-magnetismo'), ok: cssv('success'), danger: cssv('danger'), warn: cssv('warning'), grid: cssv('grid') };
+}
+const FS = () => document.body.classList.contains('e10-projector') ? 1.25 : 1;
+function arrow(x1, y1, x2, y2, col, w = 2, head = 10, dash = null) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy); if (L < 2) return;
+  head = Math.min(head, L * 0.6);
+  const ux = dx / L, uy = dy / L, hx = x2 - ux * head, hy = y2 - uy * head;
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(hx - uy * head * 0.5, hy + ux * head * 0.5); ctx.lineTo(hx + uy * head * 0.5, hy - ux * head * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function wireSym(x, y, sign, r, col) { // sign > 0: sale (⊙); < 0: entra (⊗)
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  if (sign > 0) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+  else if (sign < 0) { const k = r * 0.52; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - k, y - k); ctx.lineTo(x + k, y + k); ctx.moveTo(x + k, y - k); ctx.lineTo(x - k, y + k); ctx.stroke(); }
+  ctx.restore();
+}
+function text(t, x, y, col = COL.ink, size = 13, align = 'left', weight = 500) {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `${weight} ${size * FS()}px 'IBM Plex Sans', system-ui, sans-serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function sym(t, x, y, col = COL.ink, size = 17, align = 'left') {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `italic ${size * FS()}px 'Times New Roman', serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function panelBox(x, y, w, h) {
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+function needleField(fn, toW, gap, skip) { // brújulas de prueba en una rejilla
+  const pts = [];
+  for (let px = gap / 2; px < W; px += gap) for (let py = gap / 2; py < HU; py += gap) {
+    if (skip(px, py)) continue;
+    const w = toW(px, py), b = fn(w.x, w.y), m = Math.hypot(b[0], b[1]);
+    if (!(m > 0) || !isFinite(m)) continue;
+    pts.push({ px, py, a: Math.atan2(-b[1], b[0]), m });
+  }
+  if (!pts.length) return;
+  const ms = pts.map(p => p.m).sort((a, b) => a - b), ref = ms[Math.floor(ms.length * 0.7)] || ms[0];
+  const L = gap * 0.36;
+  pts.forEach(p => {
+    ctx.globalAlpha = clamp(0.55 * Math.sqrt(p.m / ref), 0.15, 0.9);
+    const c = Math.cos(p.a), s = Math.sin(p.a);
+    arrow(p.px - c * L, p.py - s * L, p.px + c * L, p.py + s * L, COL.field, 1.8, 6);
+  });
+  ctx.globalAlpha = 1;
+}
+
+// ───────────────────────── estado de la app ─────────────────────────
+const app = { scene: 'hilos', checked: false, result: null, showSol: false };
+const pred = { choice: null, angle: null };   // predicción del paso 2
+// Todo cambio de física invalida la comprobación anterior.
+function invalidate() { if (app.checked) { app.checked = false; app.result = null; app.showSol = false; } renderPanel(false); }
+function resetPred() { pred.choice = null; pred.angle = null; $('#ans-val').value = ''; app.checked = false; app.result = null; app.showSol = false; }
+
+// ═════════════════════════ ESCENA 1 · ØRSTED ═════════════════════════
+const O = { I: 5, r: 0.025, BT: 2.0e-5, pos: 'encima', orient: 'NS', dir: 1, on: true, needle: 0, reto: null };
+function oPhys() {
+  const Bh = O.on ? MU0 * O.I / (2 * Math.PI * O.r) : 0;
+  const u = O.orient === 'NS' ? [0, O.dir] : [O.dir, 0];
+  const s = O.pos === 'encima' ? -1 : 1;            // vector del hilo a la aguja: −ẑ si el hilo pasa por encima
+  const bw = [s * u[1], -s * u[0]];                  // û × (0,0,s): campo del hilo en la aguja (horizontal)
+  const net = [Bh * bw[0], O.BT + Bh * bw[1]];
+  const th = Math.atan2(net[0], net[1]);             // desde el norte, positivo hacia el este
+  const deg = th * DEG;
+  let cat = 'este';
+  if (Bh === 0 || Math.abs(deg) < 0.5) cat = 'none';
+  else if (Math.abs(deg) > 179.5) cat = 'flip';
+  else if (deg < 0) cat = 'oeste';
+  return { Bh, bw, net, th, deg, cat };
+}
+const dirName = () => O.orient === 'NS' ? (O.dir > 0 ? 'norte' : 'sur') : (O.dir > 0 ? 'este' : 'oeste');
+const scOersted = {
+  title: 'Ørsted',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Circuito</span>
+      <button class="btn ${O.on ? 'active' : ''}" data-act="switch" type="button"><i class="ph ph-power"></i>${O.on ? 'Interruptor cerrado' : 'Interruptor abierto'}</button>
+      <button class="btn" data-act="invert" type="button"><i class="ph ph-arrows-down-up"></i>Invertir corriente</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Hilo</span>
+      <div class="seg"><button class="btn ${O.pos === 'encima' ? 'active' : ''}" data-act="pos:encima" type="button">Encima de la brújula</button><button class="btn ${O.pos === 'debajo' ? 'active' : ''}" data-act="pos:debajo" type="button">Debajo</button></div>
+      <div class="seg"><button class="btn ${O.orient === 'NS' ? 'active' : ''}" data-act="orient:NS" type="button">Sur ↔ norte</button><button class="btn ${O.orient === 'EO' ? 'active' : ''}" data-act="orient:EO" type="button">Oeste ↔ este</button></div></div>`,
+  act(a) {
+    if (a === 'switch') O.on = !O.on;
+    else if (a === 'invert') O.dir *= -1;
+    else if (a.startsWith('pos:')) O.pos = a.slice(4);
+    else if (a.startsWith('orient:')) O.orient = a.slice(7);
+    invalidate(); buildToolbar();
+  },
+  values: () => [
+    { k: 'I', sym: 'I', min: 0, max: 20, step: 0.5, get: () => O.I, set: v => O.I = v, fmt: v => fp(v, 1) + ' A' },
+    { k: 'r', sym: 'r', min: 1, max: 10, step: 0.5, get: () => O.r * 100, set: v => O.r = v / 100, fmt: v => fp(v, 1) + ' cm' },
+    { k: 'BT', sym: 'B', sub: 'T', min: 0.5, max: 6, step: 0.1, get: () => O.BT * 1e5, set: v => O.BT = v * 1e-5, fmt: v => fp(v, 1) + '×10⁻⁵ T' },
+  ],
+  valuesNote: 'B_T es la componente horizontal del campo terrestre: un dato del enunciado, cambia según el lugar.',
+  newReto() {
+    O.I = pick([2, 3, 4, 5, 6, 8, 10]); O.r = pick([1.5, 2, 2.5, 3, 4, 5]) / 100; O.BT = 2.0e-5;
+    O.pos = pick(['encima', 'debajo']); O.orient = Math.random() < 0.8 ? 'NS' : 'EO'; O.dir = pick([1, -1]); O.on = true;
+    O.reto = { I: O.I, r: O.r, pos: O.pos, orient: O.orient, dir: O.dir };
+  },
+  retoText: () => { const R = O.reto; return `Una brújula apunta al norte (\\(B_T = 2{,}0\\times10^{-5}\\) T, componente horizontal). A ${fp(R.r * 100, 1)} cm ${R.pos === 'encima' ? 'por encima' : 'por debajo'} de su aguja pasa un hilo alineado ${R.orient === 'NS' ? 'de sur a norte' : 'de oeste a este'}. Se cierra el interruptor y circulan ${fp(R.I, 1)} A hacia el ${R.orient === 'NS' ? (R.dir > 0 ? 'norte' : 'sur') : (R.dir > 0 ? 'este' : 'oeste')}. ¿Hacia dónde gira la aguja y cuántos grados?`; },
+  retoTag: 'Reto 7 del taller, ampliado',
+  changed: () => { const R = O.reto; return R && (R.I !== O.I || R.r !== O.r || R.pos !== O.pos || R.orient !== O.orient || R.dir !== O.dir || !O.on || !near(O.BT, 2.0e-5, 1e-6)); },
+  predQ: '¿Hacia dónde gira la aguja al cerrar el interruptor?',
+  choices: [{ id: 'none', label: 'No gira' }, { id: 'oeste', label: 'Al oeste' }, { id: 'este', label: 'Al este' }, { id: 'flip', label: 'Se invierte' }],
+  ansLabel: 'Ángulo que gira la aguja, en grados',
+  ansPh: 'ej. 63',
+  hasPred: () => !!pred.choice,
+  check() {
+    const P = oPhys(), est = parseNum($('#ans-val').value), real = Math.abs(P.deg);
+    const rows = [], names = { none: 'no gira', oeste: 'al oeste', este: 'al este', flip: 'se invierte' };
+    const dirOk = pred.choice === P.cat;
+    rows.push({ t: `Sentido: ${names[pred.choice]}`, ok: dirOk, chip: dirOk ? 'correcto' : 'incorrecto' });
+    let angOk = null;
+    if (isFinite(est)) { const d = Math.abs(est - real); angOk = d <= 2; rows.push({ t: `Ángulo: ${fp(est, 1)}° frente a ${fp(real, 1)}°`, ok: angOk, chip: angOk ? 'correcto' : `${fp(d, 0)}° de diferencia` }); }
+    else rows.push({ t: 'Ángulo: sin respuesta', ok: null, chip: 'escribe un número' });
+    let tip;
+    if (!dirOk && P.cat === 'none' && O.on) tip = `Con el hilo de oeste a este, el campo del hilo ${O.pos === 'encima' ? 'bajo' : 'sobre'} él apunta al norte o al sur: es paralelo a la aguja y no la hace girar. Por eso Ørsted necesitaba el hilo alineado con la aguja.`;
+    else if (!dirOk && pred.choice === 'none') tip = 'El campo del hilo es horizontal y perpendicular al hilo. Con el hilo de sur a norte apunta al este o al oeste: perpendicular a la aguja, así que la hace girar.';
+    else if (!dirOk && P.cat === 'flip') tip = 'El campo del hilo apunta al sur y es mayor que \\(B_T\\): la suma apunta al sur y la aguja da media vuelta.';
+    else if (!dirOk) tip = 'Usa la regla de la mano derecha: el pulgar en el sentido de la corriente y los dedos rodean el hilo. Por debajo del hilo los dedos van en un sentido y por encima en el contrario.';
+    else if (angOk === false && near(est, Math.atan(O.BT / P.Bh) * DEG, 0.03)) tip = 'Calculaste el ángulo medido desde el oeste-este. El giro se mide desde el norte: \\(\\tan\\theta = B_{\\text{hilo}}/B_T\\).';
+    else if (angOk === false && Math.abs(est - 45) < 1) tip = `La aguja gira 45° solo si \\(B_{\\text{hilo}} = B_T\\). Aquí \\(B_{\\text{hilo}}/B_T = ${fx(P.Bh / O.BT, 2)}\\).`;
+    else if (angOk === false) tip = `La aguja sigue la suma vectorial: \\(\\theta = \\arctan(B_{\\text{hilo}}/B_T) = \\arctan(${fx(P.Bh / O.BT, 2)}) = ${fx(real, 1)}^\\circ\\).`;
+    else tip = 'Bien. Pasa el hilo por debajo o invierte la corriente: el giro cambia de lado. Luego prueba «Oeste ↔ este».';
+    return { rows, tip, allOk: dirOk && angOk === true };
+  },
+  solution() {
+    const P = oPhys();
+    return `\\[B_{\\text{hilo}} = \\frac{\\mu_0 I}{2\\pi r} = \\frac{(4\\pi\\times10^{-7})(${fx(O.I, 1)})}{2\\pi(${fx(O.r, 3)})} = ${sx(P.Bh)}\\ \\text{T}\\]` +
+      (O.orient === 'NS' ? `<p>El campo del hilo es horizontal y perpendicular al hilo (${P.deg < 0 ? 'hacia el oeste' : 'hacia el este'}, regla de la mano derecha). La aguja sigue la suma con \\(B_T\\):</p>\\[\\theta = \\arctan\\frac{B_{\\text{hilo}}}{B_T} = \\arctan\\frac{${sx(P.Bh)}}{${sx(O.BT, 2)}} = ${fx(Math.abs(P.deg), 1)}^\\circ\\]`
+        : `<p>Con el hilo de oeste a este, el campo del hilo apunta ${P.bw[1] > 0 ? 'al norte' : 'al sur'}: es paralelo a \\(B_T\\). La aguja ${P.cat === 'flip' ? 'se invierte (180°)' : 'no gira'}.</p>`);
+  },
+  live() {
+    const P = oPhys();
+    const a = String.raw`B_{\text{hilo}}=\dfrac{\mu_0 I}{2\pi r}=\dfrac{(4\pi\times10^{-7})(${fx(O.I, 1)})}{2\pi(${fx(O.r, 3)})}=${sx(P.Bh)}\,\text{T}`;
+    if (!O.on) return String.raw`I = 0:\ B_{\text{hilo}} = 0,\ \text{la aguja apunta al norte}`;
+    return O.orient === 'NS' ? a + String.raw`\qquad \theta=\arctan\dfrac{B_{\text{hilo}}}{B_T}=${fx(Math.abs(P.deg), 1)}^\circ` : a + String.raw`\qquad \vec B_{\text{hilo}}\parallel\vec B_T`;
+  },
+  coords: () => `I = ${fp(O.I, 1)} A · r = ${fp(O.r * 100, 1)} cm`,
+  draw() {
+    const P = oPhys();
+    const wide = W > 760, cx = wide ? W * 0.36 : W * 0.5, cy = HU * 0.5 + (wide ? 50 : 30), R = Math.min(wide ? W * 0.19 : W * 0.34, HU * 0.3);
+    // animación de la aguja
+    const d = angDiff(P.th, O.needle);
+    if (Math.abs(d) > 0.002) { O.needle += d * 0.12; if (!O.anim) { O.anim = true; requestAnimationFrame(() => { O.anim = false; if (app.scene === 'oersted') draw(); }); } } else O.needle = P.th;
+    text('Vista desde arriba · el norte está arriba', 16, wide ? 22 : HU - 12, COL.muted, 12);
+    const drawWire = under => {
+      ctx.save(); ctx.globalAlpha = under ? 0.35 : 0.55; ctx.strokeStyle = COL.primary; ctx.lineWidth = 12; ctx.lineCap = 'round';
+      if (under) ctx.setLineDash([10, 8]);
+      const L = R * 1.35;
+      ctx.beginPath();
+      if (O.orient === 'NS') { ctx.moveTo(cx, cy - L); ctx.lineTo(cx, cy + L); } else { ctx.moveTo(cx - L, cy); ctx.lineTo(cx + L, cy); }
+      ctx.stroke(); ctx.restore();
+      if (O.on && O.I > 0) for (let k = -1; k <= 1; k += 2) {
+        const off = k * R * 1.25, ux = O.orient === 'NS' ? 0 : O.dir, uy = O.orient === 'NS' ? -O.dir : 0;
+        const bx = O.orient === 'NS' ? cx + 22 : cx + off, by = O.orient === 'NS' ? cy + off : cy - 22;
+        arrow(bx - ux * 18, by - uy * 18, bx + ux * 18, by + uy * 18, COL.primary, 2.5, 9);
+      }
+      text(`I = ${fp(O.on ? O.I : 0, 1)} A`, O.orient === 'NS' ? cx + 36 : cx + R * 1.25 - 20, O.orient === 'NS' ? cy + R * 1.25 : cy - 44, COL.primary, 13, 'left', 600);
+    };
+    if (O.pos === 'debajo') drawWire(true);
+    // rosa de la brújula
+    ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    for (let g = 0; g < 360; g += 10) { const a = g / DEG, r1 = g % 90 === 0 ? R * 0.84 : R * 0.91; ctx.beginPath(); ctx.moveTo(cx + r1 * Math.sin(a), cy - r1 * Math.cos(a)); ctx.lineTo(cx + R * 0.97 * Math.sin(a), cy - R * 0.97 * Math.cos(a)); ctx.stroke(); }
+    ctx.restore();
+    [['N', 0, -1], ['S', 0, 1], ['O', -1, 0], ['E', 1, 0]].forEach(([t, x, y]) => text(t, cx + x * (R + 16), cy + y * (R + 16), COL.muted, 15, 'center', 600));
+    // aguja
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(O.needle);
+    ctx.fillStyle = cssv('q-pos'); ctx.beginPath(); ctx.moveTo(0, -R * 0.78); ctx.lineTo(R * 0.07, 0); ctx.lineTo(-R * 0.07, 0); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = COL.muted; ctx.beginPath(); ctx.moveTo(0, R * 0.78); ctx.lineTo(R * 0.07, 0); ctx.lineTo(-R * 0.07, 0); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(cx, cy, 5, 0, 2 * Math.PI); ctx.fill();
+    if (O.pos === 'encima') drawWire(false);
+    // suma de campos
+    if (wide) {
+      const bx = W * 0.62, by = HU * 0.18, bw = Math.min(W * 0.34, 360), bh = Math.min(HU * 0.6, 330);
+      panelBox(bx, by, bw, bh);
+      text('Suma de campos en la aguja', bx + 16, by + 22, COL.ink, 13, 'left', 600);
+      const ox = bx + bw * 0.55, oy = by + bh * 0.62, mx = Math.max(O.BT, P.Bh, Math.hypot(P.net[0], P.net[1])), k = Math.min(bw, bh) * 0.36 / mx;
+      const tx = ox, ty = oy - O.BT * k, hx = ox + P.Bh * P.bw[0] * k, hy = oy - P.Bh * P.bw[1] * k, nx = ox + P.net[0] * k, ny = oy - P.net[1] * k;
+      ctx.save(); ctx.strokeStyle = COL.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(nx, ny); ctx.lineTo(hx, hy); ctx.stroke(); ctx.restore();
+      arrow(ox, oy, tx, ty, COL.ok, 3, 11); sym('B', tx + 6, ty - 6, COL.ok); text('T', tx + 17, ty, COL.ok, 11);
+      if (P.Bh > 0) { arrow(ox, oy, hx, hy, COL.field, 3, 11); sym('B', hx + (P.bw[0] < 0 ? -30 : 8), hy + 14, COL.field); text('hilo', hx + (P.bw[0] < 0 ? -18 : 20), hy + 20, COL.field, 11); }
+      arrow(ox, oy, nx, ny, COL.ink, 3.5, 12);
+      text(`la aguja sigue la suma: ${O.on ? fp(Math.abs(P.deg), 1) + '°' : '0°'} ${P.cat === 'oeste' ? 'hacia el oeste' : P.cat === 'este' ? 'hacia el este' : P.cat === 'flip' ? '(media vuelta)' : ''}`, bx + 16, by + bh - 20, COL.muted, 12);
+    }
+  },
+};
+
+// ═════════════════════════ ESCENA 2 · SEGMENTO ═════════════════════════
+const G = { L: 0.20, I: 5, dir: 1, P: { x: 0.05, y: 0 }, showAng: true, showInf: true, showPlot: true, reto: null, drag: false };
+function segB(P, L = G.L, I = G.I) {
+  const d = Math.abs(P.x);
+  if (d < 1e-4) return { B: (P.y > 0 && P.y < L) ? NaN : 0, s1: 0, s2: 0, d };
+  const s1 = (0 - P.y) / Math.hypot(d, 0 - P.y), s2 = (L - P.y) / Math.hypot(d, L - P.y);
+  return { B: MU0 * I / (4 * Math.PI * d) * (s2 - s1), s1, s2, d };
+}
+const segSign = () => (G.P.x === 0 ? 0 : -G.dir * Math.sign(G.P.x)); // +1 sale (⊙), −1 entra (⊗)
+let gView = { x0: 0, y0: 0, s: 1, plot: null };
+function gLayout() {
+  const wide = W > 760, s = clamp(HU * 0.55 / G.L, 300, 4000);
+  gView = { s, x0: wide ? W * 0.2 : W * 0.32, y0: HU * 0.57 + G.L * s / 2, plot: wide && G.showPlot ? { x: W * 0.52, y: 20, w: W * 0.46 - 10, h: HU - 40 } : null };
+}
+const gS = (x, y) => [gView.x0 + x * gView.s, gView.y0 - y * gView.s];
+const gW = (px, py) => ({ x: (px - gView.x0) / gView.s, y: (gView.y0 - py) / gView.s });
+const scSegmento = {
+  title: 'Segmento',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Física</span>
+      <button class="btn active" type="button" tabindex="-1"><i class="ph ph-hand-grabbing"></i>Arrastra <span class="sym">P</span></button>
+      <button class="btn" data-act="invert" type="button"><i class="ph ph-arrows-down-up"></i>Invertir corriente</button>
+      <button class="btn" data-act="back" type="button"><i class="ph ph-arrow-counter-clockwise"></i>P al punto del reto</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${G.showAng ? 'active' : ''}" data-act="t:showAng" type="button">Ángulos θ₁, θ₂</button>
+      <button class="btn tog ${G.showInf ? 'active' : ''}" data-act="t:showInf" type="button">Hilo infinito</button>
+      <button class="btn tog ${G.showPlot ? 'active' : ''}" data-act="t:showPlot" type="button">Gráfica B(y)</button></div>`,
+  act(a) {
+    if (a === 'invert') { G.dir *= -1; invalidate(); }
+    else if (a === 'back' && G.reto) { G.P = { ...G.reto.P }; invalidate(); }
+    else if (a.startsWith('t:')) G[a.slice(2)] = !G[a.slice(2)];
+    buildToolbar();
+  },
+  values: () => [
+    { k: 'L', sym: 'L', min: 5, max: 40, step: 1, get: () => G.L * 100, set: v => G.L = v / 100, fmt: v => fp(v, 0) + ' cm' },
+    { k: 'I', sym: 'I', min: 0, max: 20, step: 0.5, get: () => G.I, set: v => G.I = v, fmt: v => fp(v, 1) + ' A' },
+  ],
+  valuesNote: 'Arrastra P a cualquier lugar: frente al centro, frente a un extremo o en la prolongación del segmento.',
+  newReto() {
+    const L = pick([10, 15, 20, 25, 30]) / 100, I = pick([2, 4, 5, 6, 8, 10]), a = pick([3, 4, 5, 6]) / 100, t = pick(['mediatriz', 'extremo', 'extremo', 'prolongacion']);
+    G.L = L; G.I = I; G.dir = pick([1, -1]);
+    G.P = t === 'mediatriz' ? { x: a, y: L / 2 } : t === 'extremo' ? { x: a, y: G.dir > 0 ? 0 : L } : { x: 0, y: G.dir > 0 ? -a : L + a };
+    G.reto = { t, L, I, a, dir: G.dir, P: { ...G.P } };
+  },
+  retoText() {
+    const R = G.reto, cur = R.dir > 0 ? 'hacia arriba' : 'hacia abajo';
+    const where = R.t === 'mediatriz' ? `a ${fp(R.a * 100, 1)} cm a la derecha del segmento, sobre su mediatriz` : R.t === 'extremo' ? `a ${fp(R.a * 100, 1)} cm a la derecha de la recta, justo frente al extremo ${R.dir > 0 ? 'inferior' : 'superior'}` : `sobre la prolongación del segmento, a ${fp(R.a * 100, 1)} cm de su extremo`;
+    return `Un segmento recto de ${fp(R.L * 100, 0)} cm lleva ${fp(R.I, 1)} A ${cur}. Calcula el campo magnético en el punto \\(P\\), ${where}. ¿Entra o sale de la página?`;
+  },
+  retoTag: 'Retos 3 y 4 del taller',
+  changed: () => { const R = G.reto; return R && (R.L !== G.L || R.I !== G.I || R.dir !== G.dir || R.P.x !== G.P.x || R.P.y !== G.P.y); },
+  predQ: 'En \\(P\\), el campo del segmento…',
+  choices: [{ id: 'in', label: 'Entra (⊗)' }, { id: 'out', label: 'Sale (⊙)' }, { id: 'zero', label: 'Es cero' }],
+  ansLabel: 'Tu valor de \\(B\\) en P, en tesla',
+  ansPh: 'ej. 9,7e-6',
+  hasPred: () => !!pred.choice,
+  check() {
+    const g = segB(G.P), sg = segSign(), v = parseNum($('#ans-val').value);
+    const zero = !(g.B > 1e-15), real = zero ? 'zero' : (sg > 0 ? 'out' : 'in');
+    const rows = [], names = { in: 'entra', out: 'sale', zero: 'es cero' };
+    const dOk = pred.choice === real;
+    rows.push({ t: `Dirección: ${names[pred.choice]}`, ok: dOk, chip: dOk ? 'correcta' : 'incorrecta' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = zero ? Math.abs(v) < 1e-12 : near(v, g.B, 0.02); rows.push({ t: `Tu \\(B\\): ${sp(v, 2)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const binf = MU0 * G.I / (2 * Math.PI * g.d);
+    let tip;
+    if (zero && !dOk) tip = 'En la prolongación del segmento, \\(d\\vec\\ell\\) y \\(\\hat r\\) son paralelos para todos los elementos: \\(d\\vec\\ell\\times\\hat r = \\vec 0\\). El campo es cero.';
+    else if (!dOk && pred.choice === 'zero') tip = 'P no está sobre la recta del segmento: cada elemento aporta un campo en el mismo sentido y no se cancelan.';
+    else if (!dOk) tip = `Con la corriente ${G.dir > 0 ? 'hacia arriba' : 'hacia abajo'}, a la ${G.P.x > 0 ? 'derecha' : 'izquierda'} del hilo el campo ${sg > 0 ? 'sale (⊙)' : 'entra (⊗)'}: pulgar con la corriente, los dedos dan el sentido.`;
+    else if (vOk === false && !zero && near(v, binf, 0.02)) tip = `Usaste la fórmula del hilo infinito. El segmento solo aporta \\(\\tfrac12(\\sin\\theta_2-\\sin\\theta_1)\\) de ese valor: aquí el ${fp(100 * g.B / binf, 1)} %.`;
+    else if (vOk === false && !zero && near(v, g.B * 2, 0.02)) tip = 'Te sobra un factor 2: el segmento usa \\(\\mu_0 I/(4\\pi a)\\), no \\(\\mu_0 I/(2\\pi a)\\).';
+    else if (vOk === false) tip = 'Mide los ángulos desde la perpendicular trazada de P a la recta del hilo: \\(\\sin\\theta = y/\\sqrt{a^2+y^2}\\), con su signo.';
+    else tip = zero ? 'Bien. Mueve P un poco fuera de la recta: el campo aparece de inmediato.' : `Bien. Este punto recibe el ${fp(100 * g.B / binf, 1)} % del campo de un hilo infinito. Arrastra P frente al centro y compara.`;
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const g = segB(G.P);
+    if (!(g.B > 1e-15)) return '<p>P está sobre la recta del segmento: para cada elemento, \\(d\\vec\\ell \\parallel \\hat r\\), así que \\(d\\vec B = \\vec 0\\) y \\(B = 0\\).</p>';
+    return `<p>Distancia a la recta: \\(a = ${fx(g.d * 100, 1)}\\) cm. Ángulos desde la perpendicular:</p>\\[\\sin\\theta_1 = ${fx(g.s1, 3)},\\qquad \\sin\\theta_2 = ${fx(g.s2, 3)}\\]\\[B = \\frac{\\mu_0 I}{4\\pi a}(\\sin\\theta_2 - \\sin\\theta_1) = \\frac{(10^{-7})(${fx(G.I, 1)})}{${fx(g.d, 3)}}(${fx(g.s2 - g.s1, 3)}) = ${sx(g.B)}\\ \\text{T}\\]<p>Sentido: ${segSign() > 0 ? 'sale de la página (⊙)' : 'entra en la página (⊗)'}.</p>`;
+  },
+  live() {
+    const g = segB(G.P);
+    if (!(g.B > 1e-15)) return String.raw`P\ \text{sobre la recta del segmento:}\ d\vec\ell\times\hat r=\vec 0\ \Rightarrow\ B=0`;
+    const binf = MU0 * G.I / (2 * Math.PI * g.d);
+    return String.raw`B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)=\dfrac{(10^{-7})(${fx(G.I, 1)})}{${fx(g.d, 3)}}(${fx(g.s2, 3)}-(${fx(g.s1, 3)}))=${sx(g.B)}\,\text{T}\quad(${fx(100 * g.B / binf, 1)}\,\%\ \text{del hilo infinito})`;
+  },
+  coords: () => `P = (${fp(G.P.x * 100, 1)} cm; ${fp(G.P.y * 100, 1)} cm)`,
+  down(px, py) { G.drag = true; this.move(px, py); },
+  move(px, py) {
+    if (!G.drag) return;
+    const w = gW(px, py); if (gView.plot && px > gView.plot.x - 10) return;
+    G.P = { x: Math.round(w.x * 200) / 200, y: Math.round(w.y * 200) / 200 }; invalidate();
+  },
+  up() { G.drag = false; },
+  draw() {
+    gLayout();
+    const [ax, ay] = gS(0, 0), [bx, by] = gS(0, G.L), [px, py] = gS(G.P.x, G.P.y), g = segB(G.P);
+    text('Vista lateral · arrastra P', 16, 22, COL.muted, 12);
+    if (G.showInf) { ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.3; ctx.lineWidth = 4; ctx.setLineDash([2, 10]); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ax, 8); ctx.lineTo(ax, HU - 8); ctx.stroke(); ctx.restore(); }
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.restore();
+    if (G.I > 0) { const my = (ay + by) / 2; arrow(ax, my + G.dir * 26, ax, my - G.dir * 26, COL.surface, 2.5, 9); text(`I = ${fp(G.I, 1)} A`, ax - 14, my, COL.primary, 13, 'right', 600); }
+    // geometría de P
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, ay); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, py); ctx.stroke(); ctx.restore();
+    if (Math.abs(G.P.x) > 1e-4) {
+      text(`a = ${fp(Math.abs(G.P.x) * 100, 1)} cm`, (px + ax) / 2, py + 14, COL.muted, 12, 'center');
+      if (G.showAng) {
+        const side = -Math.sign(G.P.x), base = side > 0 ? 0 : Math.PI, r = 46;
+        [[g.s1, 'θ₁', COL.ok], [g.s2, 'θ₂', COL.danger]].forEach(([s, lab, col], i) => {
+          const th = Math.asin(clamp(s, -1, 1)), a2 = side > 0 ? -th : Math.PI + th;
+          ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(px, py, r + i * 14, Math.min(base, a2), Math.max(base, a2)); ctx.stroke(); ctx.restore();
+          const am = (base + a2) / 2; text(`${lab} = ${fp(th * DEG, 1)}°`, px + Math.cos(am) * (r + 30 + i * 14), py + Math.sin(am) * (r + 30 + i * 14), col, 12, 'center', 600);
+        });
+      }
+    }
+    // P y su campo
+    const sg = segSign(), shown = app.checked;
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(px, py, 4, 0, 2 * Math.PI); ctx.fill();
+    sym('P', px + 10, py - 14);
+    if (shown && g.B > 1e-15) { wireSym(px + 34, py - 30, sg, 13, COL.field); text(`B = ${sp(g.B)} T`, px + 54, py - 30, COL.field, 13, 'left', 600); }
+    else if (shown) text('B = 0', px + 14, py - 34, COL.field, 13, 'left', 600);
+    else text('B en P: ?', px + 14, py - 34, COL.muted, 12);
+    // gráfica B(y) a lo largo de la recta x = a
+    const pl = gView.plot; if (!pl || Math.abs(G.P.x) < 1e-4) return;
+    panelBox(pl.x, pl.y, pl.w, pl.h);
+    text(`B a lo largo de la recta de P (a = ${fp(Math.abs(G.P.x) * 100, 1)} cm)`, pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600);
+    const y0 = -0.5 * G.L, y1 = 1.5 * G.L, binf = MU0 * G.I / (2 * Math.PI * Math.abs(G.P.x)), bmax = binf * 1.15 || 1;
+    const X = y => pl.x + 50 + (y - y0) / (y1 - y0) * (pl.w - 70), Y = b => pl.y + pl.h - 50 - b / bmax * (pl.h - 100);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(y0), Y(0)); ctx.lineTo(X(y1), Y(0)); ctx.moveTo(X(y0), Y(0)); ctx.lineTo(X(y0), Y(bmax)); ctx.stroke();
+    ctx.fillStyle = COL.primarySoft; ctx.globalAlpha = 0.6; ctx.fillRect(X(0), Y(bmax), X(G.L) - X(0), Y(0) - Y(bmax)); ctx.restore();
+    text('tramo del segmento', (X(0) + X(G.L)) / 2, Y(bmax) + 12, COL.primary, 11, 'center');
+    if (G.showInf) { ctx.save(); ctx.strokeStyle = COL.primary; ctx.setLineDash([6, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X(y0), Y(binf)); ctx.lineTo(X(y1), Y(binf)); ctx.stroke(); ctx.restore(); text(`hilo infinito ${sp(binf)} T`, X(y0) + 6, Y(binf) - 10, COL.primary, 11); }
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const y = y0 + i * (y1 - y0) / 200, b = segB({ x: G.P.x, y }).B; i ? ctx.lineTo(X(y), Y(b)) : ctx.moveTo(X(y), Y(b)); }
+    ctx.stroke(); ctx.restore();
+    if (G.P.y >= y0 && G.P.y <= y1) { ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(G.P.y), Y(g.B), 6, 0, 2 * Math.PI); ctx.fill(); if (shown) text(`P: ${sp(g.B)} T`, X(G.P.y) + 10, Y(g.B) + 16, COL.primary, 11, 'left', 600); }
+    [y0, 0, G.L / 2, G.L, y1].forEach(y => text(fp(y * 100, 0), X(y), Y(0) + 14, COL.muted, 11, 'center'));
+    text('y (cm)', X((y0 + y1) / 2), Y(0) + 32, COL.muted, 11, 'center');
+  },
+};
+
+// ═════════════════════════ ESCENA 3 · HILOS ═════════════════════════
+const Hs = { wires: [], P: { x: 0, y: 0 }, tool: 'pred', sel: -1, Idef: 5, show: { needles: false, lines: false, forces: false, parts: false }, undo: [], drag: null, reto: null, cacheKey: '', lines: [] };
+function hField(x, y, skip = -1) {
+  let bx = 0, by = 0;
+  Hs.wires.forEach((w, i) => { if (i === skip) return; const rx = x - w.x, ry = y - w.y, r2 = rx * rx + ry * ry; if (r2 < 1e-10) return; const k = MU0 * w.I / (2 * Math.PI * r2); bx += -k * ry; by += k * rx; });
+  return [bx, by];
+}
+const hPart = (w, x, y) => { const rx = x - w.x, ry = y - w.y, r2 = rx * rx + ry * ry, k = MU0 * w.I / (2 * Math.PI * r2); return [-k * ry, k * rx]; };
+let hView = { cx: 0, cy: 0, s: 1 };
+function hLayout() { hView = { cx: W * 0.5, cy: HU * 0.5 + (W < 600 ? 20 : 0), s: Math.min(W, HU) / 0.32 }; }
+const hS = (x, y) => [hView.cx + x * hView.s, hView.cy - y * hView.s];
+const hW = (px, py) => ({ x: (px - hView.cx) / hView.s, y: (hView.cy - py) / hView.s });
+const snap = v => Math.round(v * 200) / 200;
+function hPush() { Hs.undo.push(JSON.stringify({ w: Hs.wires, P: Hs.P })); if (Hs.undo.length > 50) Hs.undo.shift(); }
+function hHit(px, py) { for (let i = Hs.wires.length - 1; i >= 0; i--) { const [x, y] = hS(Hs.wires[i].x, Hs.wires[i].y); if (Math.hypot(px - x, py - y) < 18) return i; } return -1; }
+function hTrace() { // líneas de campo: trazado por pasos desde semillas alrededor de cada hilo
+  const key = JSON.stringify(Hs.wires) + W + 'x' + HU;
+  if (key === Hs.cacheKey) return Hs.lines;
+  Hs.cacheKey = key; Hs.lines = [];
+  const cell = 9, occ = new Set(), ds = 3 / hView.s, mark = (px, py) => occ.add(Math.round(px / cell) + ',' + Math.round(py / cell));
+  const seeds = []; Hs.wires.forEach(w => [0.012, 0.024, 0.04, 0.06, 0.085, 0.12].forEach(r => seeds.push({ x: w.x + r, y: w.y })));
+  seeds.forEach(sd => {
+    const [sx0, sy0] = hS(sd.x, sd.y); if (occ.has(Math.round(sx0 / cell) + ',' + Math.round(sy0 / cell))) return;
+    const run = dir => { // dir = +1 a favor del campo, −1 en contra
+      let x = sd.x, y = sd.y; const pts = [];
+      for (let i = 0; i < 2500; i++) {
+        const b1 = hField(x, y), m1 = Math.hypot(b1[0], b1[1]); if (!(m1 > 0)) break;
+        const xm = x + dir * b1[0] / m1 * ds / 2, ym = y + dir * b1[1] / m1 * ds / 2, b2 = hField(xm, ym), m2 = Math.hypot(b2[0], b2[1]); if (!(m2 > 0)) break;
+        x += dir * b2[0] / m2 * ds; y += dir * b2[1] / m2 * ds;
+        const [px, py] = hS(x, y); pts.push([px, py]);
+        if (px < -40 || px > W + 40 || py < -40 || py > HU + 40) break;
+        if (Hs.wires.some(w => Math.hypot(w.x - x, w.y - y) < 0.004)) break;
+        if (i > 30 && Math.hypot(px - sx0, py - sy0) < 4) { pts.push([sx0, sy0]); return { pts, closed: true }; }
+      }
+      return { pts, closed: false };
+    };
+    const fw = run(1), pts = fw.closed ? [[sx0, sy0], ...fw.pts] : [...run(-1).pts.reverse(), [sx0, sy0], ...fw.pts];
+    pts.forEach(p => mark(p[0], p[1])); Hs.lines.push(pts);
+  });
+  return Hs.lines;
+}
+const scHilos = {
+  title: 'Hilos',
+  tools: () => {
+    const t = (id, inner) => `<button class="btn ${Hs.tool === id ? 'active' : ''}" data-act="tool:${id}" type="button">${inner}</button>`;
+    const v = (k, l) => `<button class="btn tog ${Hs.show[k] ? 'active' : ''}" data-act="show:${k}" type="button">${l}</button>`;
+    return `<div class="tool-group"><span class="tool-group__label">Física</span>
+      ${t('out', '<i class="ph ph-dot-outline"></i>Hilo ⊙')}${t('in', '<i class="ph ph-x-circle"></i>Hilo ⊗')}${t('P', '<i class="ph ph-crosshair"></i>Punto <span class="sym">P</span>')}${t('pred', '<i class="ph ph-arrow-up-right"></i>Predicción')}${t('move', '<i class="ph ph-arrows-out-cardinal"></i>Mover')}${t('del', '<i class="ph ph-eraser"></i>Borrar')}</div>
+      <span class="tool-sep"></span>
+      <div class="tool-group"><span class="tool-group__label">Editar</span><button class="btn btn-icon" data-act="undo" type="button" aria-label="Deshacer"><i class="ph ph-arrow-u-up-left"></i></button><button class="btn btn-icon" data-act="clear" type="button" aria-label="Quitar todos los hilos"><i class="ph ph-trash"></i></button></div>
+      <span class="tool-sep"></span>
+      <div class="tool-group"><span class="tool-group__label">Ver</span>${v('needles', 'Brújulas')}${v('lines', 'Líneas de campo')}${v('forces', 'Fuerzas entre hilos')}${v('parts', 'Aportes por hilo')}</div>`;
+  },
+  act(a) {
+    if (a.startsWith('tool:')) Hs.tool = a.slice(5);
+    else if (a.startsWith('show:')) { const k = a.slice(5); Hs.show[k] = !Hs.show[k]; }
+    else if (a === 'undo' && Hs.undo.length) { const s = JSON.parse(Hs.undo.pop()); Hs.wires = s.w; Hs.P = s.P; Hs.sel = -1; invalidate(); buildValues(); }
+    else if (a === 'clear') { hPush(); Hs.wires = []; Hs.sel = -1; invalidate(); buildValues(); }
+    buildToolbar();
+  },
+  values: () => {
+    const v = [{ k: 'Idef', sym: 'I', min: 0.5, max: 30, step: 0.5, get: () => Hs.Idef, set: x => Hs.Idef = x, fmt: x => fp(x, 1) + ' A', label: 'corriente de los hilos nuevos' }];
+    if (Hs.sel >= 0 && Hs.wires[Hs.sel]) v.push({ k: 'Isel', sym: 'I', sub: String(Hs.sel + 1), min: 0.5, max: 30, step: 0.5, get: () => Math.abs(Hs.wires[Hs.sel].I), set: x => { Hs.wires[Hs.sel].I = Math.sign(Hs.wires[Hs.sel].I) * x; Hs.cacheKey = ''; }, fmt: x => fp(x, 1) + ' A' });
+    return v;
+  },
+  valuesNote: 'Con «Mover» toca un hilo para elegirlo y cambiar su corriente.',
+  newReto() {
+    const t = pick(['cuadrado', 'cuadrado', 'dos', 'punto']); hPush();
+    if (t === 'cuadrado') {
+      const a = pick([8, 10, 12]) / 100, I = pick([3, 4, 5, 6]), alt = Math.random() < 0.5, h = a / 2;
+      const sg = alt ? [1, -1, 1, -1] : [1, 1, -1, -1];
+      Hs.wires = [[-h, -h], [h, -h], [h, h], [-h, h]].map((p, i) => ({ x: p[0], y: p[1], I: sg[i] * I }));
+      Hs.P = { x: 0, y: 0 }; Hs.reto = { t, a, I, alt };
+    } else if (t === 'dos') {
+      const d = pick([6, 8, 10]) / 100, I1 = pick([10, 12, 15, 20]), I2 = pick([5, 8, 12]), same = Math.random() < 0.5;
+      Hs.wires = [{ x: -d / 2, y: 0, I: I1 }, { x: d / 2, y: 0, I: same ? I2 : -I2 }]; Hs.P = { x: 0, y: 0 }; Hs.reto = { t, d, I1, I2, same };
+    } else {
+      const d = pick([6, 8, 10]) / 100, h = pick([3, 4, 5]) / 100, I = pick([5, 8, 10]);
+      Hs.wires = [{ x: -d / 2, y: 0, I }, { x: d / 2, y: 0, I: -I }]; Hs.P = { x: 0, y: h }; Hs.reto = { t, d, h, I };
+    }
+    Hs.sel = -1; Hs.cacheKey = ''; Hs.show = { needles: false, lines: false, forces: false, parts: false };
+    Hs.reto.snap = JSON.stringify({ w: Hs.wires, P: Hs.P });
+  },
+  retoText() {
+    const R = Hs.reto;
+    if (R.t === 'cuadrado') return `Cuatro hilos largos pasan por las esquinas de un cuadrado de ${fp(R.a * 100, 1)} cm de lado, con ${fp(R.I, 1)} A cada uno. ${R.alt ? 'Las corrientes alternan su sentido al recorrer las esquinas (⊙ ⊗ ⊙ ⊗)' : 'Los dos hilos de abajo llevan la corriente hacia fuera (⊙) y los dos de arriba hacia dentro (⊗)'}. Calcula \\(\\vec B\\) en el centro \\(P\\).`;
+    if (R.t === 'dos') return `Dos hilos largos y paralelos, separados ${fp(R.d * 100, 1)} cm, llevan ${fp(R.I1, 1)} A y ${fp(R.I2, 1)} A ${R.same ? 'en el mismo sentido' : 'en sentidos opuestos'}. Calcula \\(\\vec B\\) en el punto medio \\(P\\).`;
+    return `Dos hilos largos separados ${fp(R.d * 100, 1)} cm llevan ${fp(R.I, 1)} A en sentidos opuestos (⊙ a la izquierda, ⊗ a la derecha). Calcula \\(\\vec B\\) en \\(P\\), situado ${fp(R.h * 100, 1)} cm por encima del punto medio.`;
+  },
+  retoTag: 'Retos 5 y 6 del taller',
+  changed: () => Hs.reto && Hs.reto.snap !== JSON.stringify({ w: Hs.wires, P: Hs.P }),
+  predQ: 'Elige si el campo en \\(P\\) es cero. Si no lo es, usa <b>Predicción</b> y arrastra desde \\(P\\) la flecha de \\(\\vec B\\).',
+  choices: [{ id: 'cero', label: 'Es cero' }, { id: 'nocero', label: 'No es cero' }],
+  ansLabel: 'Tu valor de \\(|\\vec B|\\) en P, en tesla',
+  ansPh: 'ej. 4,0e-5',
+  hasPred: () => pred.choice === 'cero' || (pred.choice === 'nocero' && pred.angle !== null),
+  predHint: () => pred.choice === 'nocero' && pred.angle === null ? 'Falta tu flecha: elige «Predicción» y arrastra desde P.' : '',
+  check() {
+    const b = hField(Hs.P.x, Hs.P.y), m = Math.hypot(b[0], b[1]);
+    const parts = Hs.wires.map(w => Math.hypot(...hPart(w, Hs.P.x, Hs.P.y))), sumMag = parts.reduce((a, c) => a + c, 0);
+    const zero = m < 1e-3 * Math.max(sumMag, 1e-30) || Hs.wires.length === 0;
+    const v = parseNum($('#ans-val').value), rows = [];
+    const zOk = (pred.choice === 'cero') === zero;
+    rows.push({ t: `¿Es cero? «${pred.choice === 'cero' ? 'Es cero' : 'No es cero'}»`, ok: zOk, chip: zOk ? 'correcto' : 'incorrecto' });
+    let err = null, aOk = null;
+    if (!zero && pred.angle !== null) { err = Math.abs(angDiff(pred.angle, Math.atan2(b[1], b[0]))) * DEG; aOk = err <= 15; rows.push({ t: 'Dirección de tu flecha', ok: aOk, chip: aOk ? 'correcta' : `${fp(err, 0)}° de error` }); }
+    let vOk = null;
+    if (isFinite(v)) { vOk = zero ? Math.abs(v) < 1e-12 : near(v, m, 0.03); rows.push({ t: `Tu \\(|\\vec B|\\): ${sp(v, 2)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    let tip;
+    if (!zOk && zero) tip = 'Los aportes se cancelan por simetría: activa «Aportes por hilo» y mira cómo se anulan por pares.';
+    else if (!zOk) tip = 'Los aportes no se cancelan. Activa «Aportes por hilo»: cada uno es perpendicular a la recta que une P con su hilo.';
+    else if (aOk === false && err > 150) tip = 'Tu flecha va al revés. Con ⊙ (corriente hacia ti) el campo gira en sentido antihorario; con ⊗, en sentido horario.';
+    else if (aOk === false && err > 60 && err < 120) tip = 'El campo de cada hilo rodea al hilo: en P es perpendicular a la recta que lo une con el hilo, no apunta hacia él. Activa «Aportes por hilo» y súmalos.';
+    else if (aOk === false) tip = 'Casi: suma los aportes como vectores, por componentes. Activa «Aportes por hilo» para ver el paralelogramo.';
+    else if (vOk === false && !zero && near(v, sumMag, 0.03)) tip = 'Sumaste magnitudes. Los campos son vectores: suma sus componentes.';
+    else if (vOk === false && !zero && parts.some(p => near(v, p, 0.03))) tip = 'Ese es el aporte de un solo hilo: falta sumar el de los demás.';
+    else if (vOk === false) tip = 'Revisa cada \\(B_i = \\mu_0 I_i/(2\\pi r_i)\\) con \\(r_i\\) en metros, y luego suma por componentes.';
+    else tip = 'Bien. Activa «Fuerzas entre hilos»: las corrientes en el mismo sentido se atraen y las opuestas se repelen.';
+    return { rows, tip, allOk: zOk && aOk !== false && vOk === true };
+  },
+  solution() {
+    const b = hField(Hs.P.x, Hs.P.y), m = Math.hypot(b[0], b[1]);
+    let s = '<p>Cada hilo aporta \\(B_i = \\dfrac{\\mu_0 |I_i|}{2\\pi r_i}\\), perpendicular a la recta que une P con el hilo:</p>';
+    Hs.wires.forEach((w, i) => { const r = Math.hypot(Hs.P.x - w.x, Hs.P.y - w.y), p = hPart(w, Hs.P.x, Hs.P.y); s += `\\[B_{${i + 1}} = \\frac{(4\\pi\\times10^{-7})(${fx(Math.abs(w.I), 1)})}{2\\pi(${fx(r, 4)})} = ${sx(Math.hypot(p[0], p[1]))}\\ \\text{T}\\quad (${sx(p[0])},\\ ${sx(p[1])})\\]`; });
+    s += `\\[\\vec B_P = (${sx(b[0])},\\ ${sx(b[1])})\\ \\text{T},\\qquad |\\vec B_P| = ${sx(m)}\\ \\text{T}\\]`;
+    return s;
+  },
+  live() {
+    const b = hField(Hs.P.x, Hs.P.y), m = Math.hypot(b[0], b[1]);
+    if (!Hs.wires.length) return String.raw`\text{Coloca hilos con}\ \odot\ \text{o}\ \otimes`;
+    if (Hs.wires.length === 1) { const w = Hs.wires[0], r = Math.hypot(Hs.P.x - w.x, Hs.P.y - w.y); return String.raw`B=\dfrac{\mu_0 I}{2\pi r}=\dfrac{(4\pi\times10^{-7})(${fx(Math.abs(w.I), 1)})}{2\pi(${fx(r, 4)})}=${sx(m)}\,\text{T}`; }
+    const parts = Hs.wires.slice(0, 4).map((w, i) => `B_{${i + 1}}=${sx(Math.hypot(...hPart(w, Hs.P.x, Hs.P.y)), 2)}`).join(',\\ ');
+    return String.raw`\vec B_P=\sum_i\dfrac{\mu_0 I_i}{2\pi r_i}\,\hat z\times\hat r_i\qquad ${parts}${Hs.wires.length > 4 ? ',\ \dots' : ''}\qquad |\vec B_P|=${app.checked ? sx(m) : '\\,?'}\,\text{T}`;
+  },
+  coords: () => `P = (${fp(Hs.P.x * 100, 1)} cm; ${fp(Hs.P.y * 100, 1)} cm) · ${Hs.wires.length} hilo${Hs.wires.length === 1 ? '' : 's'}`,
+  down(px, py) {
+    const w = hW(px, py), [Px, Py] = hS(Hs.P.x, Hs.P.y), t = Hs.tool;
+    if (t === 'out' || t === 'in') { if (hHit(px, py) >= 0) return; hPush(); Hs.wires.push({ x: snap(w.x), y: snap(w.y), I: (t === 'out' ? 1 : -1) * Hs.Idef }); Hs.sel = Hs.wires.length - 1; invalidate(); buildValues(); }
+    else if (t === 'P') { hPush(); Hs.P = { x: snap(w.x), y: snap(w.y) }; Hs.drag = { P: true }; invalidate(); }
+    else if (t === 'pred') { Hs.drag = { pred: true }; this.move(px, py); }
+    else if (t === 'del') { const i = hHit(px, py); if (i >= 0) { hPush(); Hs.wires.splice(i, 1); Hs.sel = -1; invalidate(); buildValues(); } }
+    else if (t === 'move') {
+      const i = hHit(px, py);
+      if (i >= 0) { hPush(); Hs.sel = i; Hs.drag = { w: i }; buildValues(); }
+      else if (Math.hypot(px - Px, py - Py) < 16) { hPush(); Hs.drag = { P: true }; }
+      else { Hs.sel = -1; buildValues(); }
+    }
+  },
+  move(px, py) {
+    const d = Hs.drag; if (!d) return;
+    const w = hW(px, py);
+    if (d.pred) { const [Px, Py] = hS(Hs.P.x, Hs.P.y); if (Math.hypot(px - Px, py - Py) > 12) { pred.angle = Math.atan2(-(py - Py), px - Px); pred.choice = 'nocero'; app.checked = false; app.result = null; renderPanel(); } }
+    else if (d.P) { Hs.P = { x: snap(w.x), y: snap(w.y) }; invalidate(); }
+    else if (d.w !== undefined) { Hs.wires[d.w].x = snap(w.x); Hs.wires[d.w].y = snap(w.y); invalidate(); }
+  },
+  up() { Hs.drag = null; },
+  draw() {
+    hLayout();
+    const show = { ...Hs.show };
+    if (Hs.show.needles) needleField(hField, hW, W < 600 ? 34 : 42, (px, py) => Hs.wires.some(w => { const [x, y] = hS(w.x, w.y); return Math.hypot(px - x, py - y) < 24; }));
+    if (Hs.show.lines && Hs.wires.length) { ctx.save(); ctx.strokeStyle = COL.field; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.4; hTrace().forEach(pts => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); }); ctx.restore(); }
+    // fuerzas por unidad de longitud entre hilos
+    if (show.forces && Hs.wires.length > 1) Hs.wires.forEach((w, i) => {
+      const b = hField(w.x, w.y, i), f = [-w.I * b[1], w.I * b[0]], fm = Math.hypot(f[0], f[1]); if (!(fm > 0)) return;
+      const [x, y] = hS(w.x, w.y), L = clamp(30 + 18 * Math.log10(fm / 1e-5), 24, 110);
+      arrow(x + f[0] / fm * 18, y - f[1] / fm * 18, x + f[0] / fm * (18 + L), y - f[1] / fm * (18 + L), COL.accent, 3, 11);
+      text(`${sp(fm, 2)} N/m`, x + f[0] / fm * (26 + L), y - f[1] / fm * (26 + L) - 10, COL.accent, 11, 'center', 600);
+    });
+    // hilos
+    Hs.wires.forEach((w, i) => {
+      const [x, y] = hS(w.x, w.y);
+      if (i === Hs.sel) { ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y, 20, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+      wireSym(x, y, Math.sign(w.I), 13, COL.wire);
+      text(`I${'₁₂₃₄₅₆₇₈₉'[i] || i + 1} = ${fp(Math.abs(w.I), 1)} A`, x + 18, y - 20, COL.ink, 12);
+    });
+    // P, aportes, suma y predicción
+    const [Px, Py] = hS(Hs.P.x, Hs.P.y), b = hField(Hs.P.x, Hs.P.y), m = Math.hypot(b[0], b[1]);
+    const parts = Hs.wires.map(w => hPart(w, Hs.P.x, Hs.P.y)), big = Math.max(m, ...parts.map(p => Math.hypot(p[0], p[1])), 1e-30), k = (W < 600 ? 80 : 120) / big;
+    if (show.parts) parts.forEach((p, i) => { arrow(Px, Py, Px + p[0] * k, Py - p[1] * k, COL.field, 2, 9, [5, 4]); text(String(i + 1), Px + p[0] * k * 1.08, Py - p[1] * k * 1.08, COL.field, 11, 'center', 600); });
+    if (app.checked && m > 0) { arrow(Px, Py, Px + b[0] * k, Py - b[1] * k, COL.field, 4, 14); sym('B', Px + b[0] * k * 1.1 + 6, Py - b[1] * k * 1.1 - 8, COL.field, 18); }
+    if (pred.angle !== null) {
+      const L = W < 600 ? 70 : 100, ex = Px + Math.cos(pred.angle) * L, ey = Py - Math.sin(pred.angle) * L;
+      arrow(Px, Py, ex, ey, COL.primary, 3, 12, [8, 5]); text('tu predicción', ex + 6, ey - 10, COL.primary, 12);
+      if (app.checked && m > 0) {
+        const a1 = -pred.angle, a2 = -Math.atan2(b[1], b[0]), d = angDiff(a2, a1);
+        ctx.save(); ctx.strokeStyle = COL.danger; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(Px, Py, 38, a1, a1 + d, d < 0); ctx.stroke(); ctx.restore();
+      }
+    }
+    ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Px - 8, Py); ctx.lineTo(Px + 8, Py); ctx.moveTo(Px, Py - 8); ctx.lineTo(Px, Py + 8); ctx.stroke(); ctx.restore();
+    sym('P', Px + 8, Py + 16);
+    // escala
+    const L5 = 0.05 * hView.s, sx0 = 16, sy0 = HU - 18;
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.lineTo(sx0 + L5, sy0); ctx.moveTo(sx0, sy0 - 5); ctx.lineTo(sx0, sy0 + 5); ctx.moveTo(sx0 + L5, sy0 - 5); ctx.lineTo(sx0 + L5, sy0 + 5); ctx.stroke(); ctx.restore();
+    text('5 cm', sx0 + L5 / 2, sy0 - 12, COL.muted, 11, 'center');
+  },
+};
+
+// ═════════════════════════ ESCENA 4 · ESPIRA Y ARCO ═════════════════════════
+const E = { mode: 'espira', R: 0.10, I: 2, N: 1, z: 0.10, arc: 120, ccw: 1, showNeedles: true, showDip: true, reto: null, drag: false };
+const eAxis = z => (E.mode === 'bobina' ? E.N : 1) * MU0 * E.I * E.R * E.R / (2 * Math.pow(E.R * E.R + z * z, 1.5));
+const eArc = () => MU0 * E.I * (E.arc / DEG) / (4 * Math.PI * E.R);
+let eView = { cx: 0, cy: 0, s: 1, plot: null };
+function eLayout() {
+  const wide = W > 760, s = Math.min(HU * 0.3, wide ? W * 0.14 : W * 0.3) / 0.10;
+  eView = { cx: E.mode === 'arco' ? W * 0.55 : wide ? W * 0.26 : W * 0.5, cy: E.mode === 'arco' ? HU * 0.56 : HU * 0.5, s, plot: wide && E.mode !== 'arco' ? { x: W * 0.55, y: 20, w: W * 0.43, h: HU - 40 } : null };
+}
+function eField(z, y) { // corte por un plano que contiene el eje; espira en el plano xy, centro en el origen
+  const n = 72, R = E.R; let By = 0, Bz = 0;
+  for (let i = 0; i < n; i++) {
+    const f = (i + 0.5) * 2 * Math.PI / n, dp = 2 * Math.PI / n, dx = -R * Math.sin(f) * dp, dy = R * Math.cos(f) * dp;
+    const rx = -R * Math.cos(f), ry = y - R * Math.sin(f), rz = z, r3 = Math.pow(rx * rx + ry * ry + rz * rz, 1.5);
+    By += -dx * rz / r3; Bz += (dx * ry - dy * rx) / r3;
+  }
+  const k = E.ccw * (E.mode === 'bobina' ? E.N : 1) * MU0 * E.I / (4 * Math.PI);
+  return [k * Bz, k * By];
+}
+const scEspira = {
+  title: 'Espira y arco',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Forma</span>
+      <div class="seg">${['espira', 'arco', 'bobina'].map(m => `<button class="btn ${E.mode === m ? 'active' : ''}" data-act="mode:${m}" type="button">${{ espira: 'Espira', arco: 'Arco', bobina: 'Bobina plana' }[m]}</button>`).join('')}</div>
+      <button class="btn" data-act="invert" type="button"><i class="ph ph-arrows-clockwise"></i>Invertir corriente</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${E.showNeedles ? 'active' : ''}" data-act="t:showNeedles" type="button">Brújulas</button>
+      <button class="btn tog ${E.showDip ? 'active' : ''}" data-act="t:showDip" type="button">Aprox. dipolo</button></div>`,
+  act(a) {
+    if (a.startsWith('mode:')) { E.mode = a.slice(5); if (E.mode === 'bobina' && E.N === 1) E.N = 20; resetPred(); buildValues(); renderReto(); invalidate(); }
+    else if (a === 'invert') { E.ccw *= -1; invalidate(); }
+    else if (a.startsWith('t:')) E[a.slice(2)] = !E[a.slice(2)];
+    buildToolbar();
+  },
+  values: () => {
+    const v = [{ k: 'R', sym: 'R', min: 2, max: 20, step: 0.5, get: () => E.R * 100, set: x => E.R = x / 100, fmt: x => fp(x, 1) + ' cm' },
+      { k: 'I', sym: 'I', min: 0.1, max: 10, step: 0.1, get: () => E.I, set: x => E.I = x, fmt: x => fp(x, 1) + ' A' }];
+    if (E.mode === 'arco') v.push({ k: 'arc', sym: 'θ', min: 10, max: 360, step: 5, get: () => E.arc, set: x => E.arc = x, fmt: x => fp(x, 0) + '°' });
+    else v.push({ k: 'z', sym: 'z', min: -60, max: 60, step: 0.5, get: () => E.z * 100, set: x => E.z = x / 100, fmt: x => fp(x, 1) + ' cm' });
+    if (E.mode === 'bobina') v.push({ k: 'N', sym: 'N', min: 1, max: 200, step: 1, get: () => E.N, set: x => E.N = x, fmt: x => fp(x, 0) + ' vueltas' });
+    return v;
+  },
+  valuesNote: 'En la espira y la bobina, arrastra P a lo largo del eje.',
+  newReto() {
+    const t = pick(['espira', 'espira', 'bobina', 'arco']); E.mode = t; E.ccw = pick([1, -1]);
+    if (t === 'espira') { E.R = pick([5, 8, 10, 12]) / 100; E.I = pick([1, 2, 3, 5]); E.N = 1; E.z = pick([0, 0.5, 1, 2]) * E.R; }
+    else if (t === 'bobina') { E.R = pick([4, 5, 8]) / 100; E.I = pick([0.2, 0.5, 1]); E.N = pick([20, 50, 100]); E.z = 0; }
+    else { E.R = pick([4, 6, 8, 10]) / 100; E.I = pick([3, 5, 9, 10]); E.arc = pick([60, 90, 120, 180, 270]); E.N = 1; }
+    E.reto = { t, R: E.R, I: E.I, N: E.N, z: E.z, arc: E.arc, ccw: E.ccw };
+  },
+  retoText() {
+    const R = E.reto, sense = R.ccw > 0 ? 'antihorario' : 'horario';
+    if (R.t === 'arco') return `Un arco de ${fp(R.arc, 0)}° y radio ${fp(R.R * 100, 1)} cm lleva ${fp(R.I, 1)} A en sentido ${sense}, visto de frente. Calcula \\(B\\) en su centro \\(C\\). ¿Sale o entra de la página?`;
+    const what = R.t === 'bobina' ? `Una bobina plana de ${R.N} vueltas y radio ${fp(R.R * 100, 1)} cm lleva ${fp(R.I, 1)} A` : `Una espira de radio ${fp(R.R * 100, 1)} cm lleva ${fp(R.I, 1)} A`;
+    return `${what} en sentido ${sense} visto desde la derecha. Calcula \\(B\\) en el eje, en el punto \\(P\\) ${R.z === 0 ? 'del centro' : `a \\(z = ${fx(R.z * 100, 1)}\\) cm del centro`}. ¿Hacia dónde apunta?`;
+  },
+  retoTag: 'Resueltos 6–7 y retos 10–16 del taller',
+  changed: () => { const R = E.reto; return R && (R.t !== E.mode || R.R !== E.R || R.I !== E.I || R.N !== E.N || R.ccw !== E.ccw || (R.t === 'arco' ? R.arc !== E.arc : R.z !== E.z)); },
+  get predQ() { return E.mode === 'arco' ? 'En el centro \\(C\\), el campo…' : 'En \\(P\\), el campo sobre el eje apunta…'; },
+  get choices() { return E.mode === 'arco' ? [{ id: 'out', label: 'Sale (⊙)' }, { id: 'in', label: 'Entra (⊗)' }] : [{ id: 'right', label: 'Hacia la derecha →' }, { id: 'left', label: 'Hacia la izquierda ←' }]; },
+  ansLabel: 'Tu valor de \\(B\\), en tesla',
+  ansPh: 'ej. 4,44e-6',
+  hasPred: () => !!pred.choice,
+  check() {
+    const arc = E.mode === 'arco', B = arc ? eArc() : eAxis(E.z), real = arc ? (E.ccw > 0 ? 'out' : 'in') : (E.ccw > 0 ? 'right' : 'left');
+    const v = parseNum($('#ans-val').value), rows = [];
+    const dOk = pred.choice === real;
+    rows.push({ t: `Sentido: ${this.choices.find(c => c.id === pred.choice)?.label || '—'}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(v, B, 0.02); rows.push({ t: `Tu \\(B\\): ${sp(v, 2)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const B0 = (E.mode === 'bobina' ? E.N : 1) * MU0 * E.I / (2 * E.R);
+    let tip;
+    if (!dOk) tip = arc ? 'Regla de la mano derecha: si la corriente gira en sentido antihorario visto de frente, el campo en el centro sale hacia ti (⊙).' : 'Regla de la mano derecha: los dedos siguen la corriente y el pulgar da el sentido de \\(\\vec B\\) sobre el eje.';
+    else if (vOk === false && arc && near(v, B * DEG, 0.02)) tip = 'El ángulo va en radianes: \\(\\theta = ' + fx(E.arc / DEG, 3) + '\\) rad, no ' + fp(E.arc, 0) + '.';
+    else if (vOk === false && arc && near(v, MU0 * E.I / (2 * E.R), 0.02)) tip = 'Ese es el campo de la espira completa. El arco aporta la fracción \\(\\theta/2\\pi\\).';
+    else if (vOk === false && E.z !== 0 && near(v, B0, 0.02)) tip = 'Usaste el campo del centro. En el eje cae con \\((R^2+z^2)^{3/2}\\).';
+    else if (vOk === false && E.z !== 0 && near(v, B0 / 2, 0.02)) tip = 'En \\(z = R\\) el denominador es \\((2R^2)^{3/2} = 2\\sqrt2\\,R^3\\): el campo vale \\(B_0/(2\\sqrt2)\\), no \\(B_0/2\\).';
+    else if (vOk === false && E.mode === 'bobina' && near(v, B / E.N, 0.02)) tip = `Falta multiplicar por las ${E.N} vueltas: cada una aporta el mismo campo.`;
+    else if (vOk === false) tip = 'Revisa unidades: \\(R\\) y \\(z\\) en metros, y el exponente \\(3/2\\).';
+    else tip = arc ? 'Bien. Lleva el ángulo a 360°: recuperas la espira, \\(\\mu_0 I/(2R)\\).' : 'Bien. Arrastra P lejos (\\(z \\gg R\\)) con «Aprox. dipolo»: el campo cae como \\(1/z^3\\).';
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    if (E.mode === 'arco') return `<p>Todos los elementos están a la distancia \\(R\\) del centro y son perpendiculares a \\(\\hat r\\):</p>\\[B = \\frac{\\mu_0 I \\theta}{4\\pi R} = \\frac{(10^{-7})(${fx(E.I, 1)})(${fx(E.arc / DEG, 3)})}{${fx(E.R, 3)}} = ${sx(eArc())}\\ \\text{T}\\]<p>Sentido: ${E.ccw > 0 ? 'sale (⊙)' : 'entra (⊗)'}.</p>`;
+    const N = E.mode === 'bobina' ? E.N : 1;
+    return `<p>Las componentes perpendiculares al eje se cancelan por simetría; queda la axial:</p>\\[B_z = \\frac{${N > 1 ? 'N' : ''}\\mu_0 I R^2}{2(R^2+z^2)^{3/2}} = \\frac{${N > 1 ? `(${N})` : ''}(4\\pi\\times10^{-7})(${fx(E.I, 1)})(${fx(E.R, 3)})^2}{2(${fx(E.R, 3)}^2 + ${fx(E.z, 3)}^2)^{3/2}} = ${sx(eAxis(E.z))}\\ \\text{T}\\]<p>Sentido: ${E.ccw > 0 ? 'hacia la derecha (+z)' : 'hacia la izquierda (−z)'}.</p>`;
+  },
+  live() {
+    if (E.mode === 'arco') return String.raw`B=\dfrac{\mu_0 I\theta}{4\pi R}=\dfrac{(10^{-7})(${fx(E.I, 1)})(${fx(E.arc / DEG, 3)})}{${fx(E.R, 3)}}=${app.checked ? sx(eArc()) : '\\,?'}\,\text{T}`;
+    const N = E.mode === 'bobina';
+    return String.raw`B_z=\dfrac{${N ? 'N' : ''}\mu_0 I R^2}{2(R^2+z^2)^{3/2}}=\dfrac{${N ? `(${E.N})` : ''}(4\pi\times10^{-7})(${fx(E.I, 1)})(${fx(E.R, 3)})^2}{2(${fx(E.R, 3)}^2+${fx(E.z, 3)}^2)^{3/2}}=${app.checked ? sx(eAxis(E.z)) : '\\,?'}\,\text{T}`;
+  },
+  coords: () => E.mode === 'arco' ? `R = ${fp(E.R * 100, 1)} cm · θ = ${fp(E.arc, 0)}°` : `z = ${fp(E.z * 100, 1)} cm · z/R = ${fp(E.z / E.R, 2)}`,
+  down(px, py) { if (E.mode === 'arco') return; E.drag = true; this.move(px, py); },
+  move(px) { if (!E.drag) return; if (eView.plot && px > eView.plot.x - 10) return; E.z = clamp(Math.round((px - eView.cx) / eView.s * 200) / 200, -0.6, 0.6); invalidate(); buildValues(); },
+  up() { E.drag = false; },
+  draw() {
+    eLayout();
+    const { cx, cy, s } = eView;
+    if (E.mode === 'arco') {
+      const Rp = Math.min(HU * 0.32, W * 0.25); // vista de frente: tamaño fijo; el radio real va en la etiqueta
+      text('Vista de frente', 16, 22, COL.muted, 12);
+      ctx.save(); ctx.strokeStyle = COL.line; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      const a0 = -Math.PI / 2 - (E.arc / DEG) / 2, a1 = a0 + E.arc / DEG;
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(cx, cy, Rp, a0, a1); ctx.stroke(); ctx.restore();
+      // flecha de corriente en la mitad del arco (antihorario visto de frente = ángulo de pantalla decreciente)
+      const am = (a0 + a1) / 2, tdir = -E.ccw, tx = -Math.sin(am) * tdir, ty = Math.cos(am) * tdir, mx = cx + Math.cos(am) * (Rp + 20), my = cy + Math.sin(am) * (Rp + 20);
+      arrow(mx - tx * 16, my - ty * 16, mx + tx * 16, my + ty * 16, COL.primary, 2.5, 9);
+      text(`I = ${fp(E.I, 1)} A`, mx, my - 18, COL.primary, 13, 'center', 600);
+      ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a0) * Rp, cy + Math.sin(a0) * Rp); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a1) * Rp, cy + Math.sin(a1) * Rp); ctx.stroke(); ctx.restore();
+      text(`θ = ${fp(E.arc, 0)}°`, cx, cy + 46, COL.danger, 13, 'center', 600);
+      text(`R = ${fp(E.R * 100, 1)} cm`, cx + Math.cos(a0) * Rp * 0.5 - 10, cy + Math.sin(a0) * Rp * 0.5, COL.muted, 12, 'right');
+      if (app.checked) { wireSym(cx, cy, E.ccw, 13, COL.field); text(`B = ${sp(eArc())} T`, cx + 22, cy + 2, COL.field, 13, 'left', 600); }
+      else { ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, 2 * Math.PI); ctx.fill(); text('B en C: ?', cx + 12, cy - 14, COL.muted, 12); }
+      sym('C', cx - 26, cy + 18);
+      return;
+    }
+    const Rp = E.R * s;
+    text('Corte por un plano que contiene el eje', 16, HU - 12, COL.muted, 12);
+    if (E.showNeedles) needleField((x, y) => eField(x, y), (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s }), W < 600 ? 34 : 40,
+      (px, py) => (eView.plot && px > eView.plot.x - 20) || Math.hypot(px - cx, py - (cy - Rp)) < 22 || Math.hypot(px - cx, py - (cy + Rp)) < 22 || Math.hypot(px - (cx + E.z * s), py - cy) < 26);
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.setLineDash([6, 5]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(8, cy); ctx.lineTo(eView.plot ? eView.plot.x - 16 : W - 8, cy); ctx.stroke(); ctx.restore();
+    sym('z', (eView.plot ? eView.plot.x - 26 : W - 20), cy - 12);
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.3; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(cx, cy, Rp * 0.25, Rp, 0, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    wireSym(cx, cy - Rp, E.ccw, 14, COL.primary); wireSym(cx, cy + Rp, -E.ccw, 14, COL.primary);
+    text(`I = ${fp(E.I, 1)} A${E.mode === 'bobina' ? ` · N = ${E.N}` : ''}`, cx + 22, cy - Rp - 18, COL.primary, 13, 'left', 600);
+    const px = cx + E.z * s, B = eAxis(E.z);
+    ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(px, cy, 5, 0, 2 * Math.PI); ctx.fill(); sym('P', px - 4, cy + 20);
+    if (app.checked) { const L = clamp(30 + 22 * Math.log10(B / 1e-7), 20, 110); arrow(px, cy, px + E.ccw * L, cy, COL.field, 4, 14); sym('B', px + E.ccw * (L + 12) - 4, cy - 14, COL.field, 18); }
+    const pl = eView.plot; if (!pl) return;
+    panelBox(pl.x, pl.y, pl.w, pl.h);
+    text('B en el eje frente a z', pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600);
+    const z0 = -3 * E.R, z1 = 3 * E.R, Bmax = eAxis(0) * 1.12;
+    const X = z => pl.x + 40 + (z - z0) / (z1 - z0) * (pl.w - 60), Y = b => pl.y + pl.h - 50 - b / Bmax * (pl.h - 100);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(z0), Y(0)); ctx.lineTo(X(z1), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(Bmax)); ctx.stroke(); ctx.restore();
+    if (E.showDip) { ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([6, 5]); ctx.lineWidth = 1.5; [[z0, -0.9 * E.R], [0.9 * E.R, z1]].forEach(([a, b]) => { ctx.beginPath(); let st = false; for (let i = 0; i <= 80; i++) { const z = a + i * (b - a) / 80, bd = (E.mode === 'bobina' ? E.N : 1) * MU0 * E.I * E.R * E.R / (2 * Math.pow(Math.abs(z), 3)); if (bd > Bmax) { st = false; continue; } st ? ctx.lineTo(X(z), Y(bd)) : ctx.moveTo(X(z), Y(bd)); st = true; } ctx.stroke(); }); ctx.restore(); text('- - dipolo: μ₀NIR²/(2|z|³)', pl.x + 16, pl.y + pl.h - 16, COL.accent, 11); }
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const z = z0 + i * (z1 - z0) / 200; i ? ctx.lineTo(X(z), Y(eAxis(z))) : ctx.moveTo(X(z), Y(eAxis(z))); } ctx.stroke(); ctx.restore();
+    text(`centro: ${sp(eAxis(0))} T`, X(0) + 8, Y(eAxis(0)) - 10, COL.field, 11);
+    if (E.z >= z0 && E.z <= z1) { ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(E.z), Y(B), 6, 0, 2 * Math.PI); ctx.fill(); if (app.checked) text(`P: ${sp(B)} T`, X(E.z) + 10, Y(B) + 16, COL.primary, 11, 'left', 600); }
+    [z0, -E.R, 0, E.R, z1].forEach(z => text(fp(z * 100, 0), X(z), Y(0) + 14, COL.muted, 11, 'center'));
+    text('z (cm)', X(0), Y(0) + 32, COL.muted, 11, 'center');
+  },
+};
+
+// ───────────────────────── orquestación ─────────────────────────
+const SC = { oersted: scOersted, segmento: scSegmento, hilos: scHilos, espira: scEspira };
+const sc = () => SC[app.scene];
+
+function draw() {
+  if (!W) return;
+  readColors();
+  ctx.clearRect(0, 0, W, H);
+  sc().draw();
+  $('#coords-indicator').textContent = sc().coords();
+  renderLive();
+}
+let liveKey = '';
+function renderLive() { const t = sc().live(); if (t !== liveKey) { liveKey = t; $('#live-tex').innerHTML = K(t); } }
+
+function buildToolbar() { $('#toolbar').innerHTML = sc().tools(); draw(); }
+function buildValues() {
+  const box = $('#values-body'), vals = sc().values();
+  box.innerHTML = vals.map((v, i) => `<label class="vrange" title="${v.label || ''}"><span class="sym">${v.sym}${v.sub ? `<sub style="font-style:normal;font-size:.7em">${v.sub}</sub>` : ''}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.get()}" data-i="${i}" aria-label="${v.label || v.sym}"><output>${v.fmt(v.get())}</output></label>`).join('') + (sc().valuesNote ? `<div class="vnote">${sc().valuesNote}</div>` : '');
+  box.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+    const v = vals[+inp.dataset.i]; v.set(parseFloat(inp.value)); inp.nextElementSibling.textContent = v.fmt(v.get()); invalidate(); draw(); renderPanel(false);
+  }));
+}
+function renderReto() {
+  mixed($('#reto-text'), sc().retoText());
+  $('#reto-tag').textContent = sc().retoTag;
+  const ch = $('#pred-choices'); ch.innerHTML = sc().choices.map(c => `<button class="btn ${pred.choice === c.id ? 'on' : ''}" data-choice="${c.id}" type="button">${c.label}</button>`).join('');
+  mixed($('#pred-q'), sc().predQ);
+  mixed($('#ans-label'), sc().ansLabel);
+  $('#ans-val').placeholder = sc().ansPh;
+}
+function renderPanel(full = true) {
+  const s = sc(), hasP = s.hasPred();
+  $('#reto-note').textContent = s.changed() ? 'Cambiaste el montaje del reto: se comprueba con lo que ves en el lienzo.' : '';
+  if (full) $('#pred-choices').querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('on', b.dataset.choice === pred.choice));
+  $('#pred-hint').textContent = s.predHint ? s.predHint() : '';
+  $('#st2').dataset.s = hasP ? 'done' : 'now';
+  $('#st3').dataset.s = app.checked ? 'done' : hasP ? 'now' : 'todo';
+  $('#st4').dataset.s = app.checked ? (app.result?.allOk ? 'done' : 'now') : 'todo';
+  const box = $('#validation-box');
+  if (app.checked && app.result) {
+    box.innerHTML = app.result.rows.map(r => `<div class="vrow"><span>${r.t}</span><span class="e10-chip ${r.ok === true ? 'e10-chip--ok' : r.ok === false ? 'e10-chip--bad' : 'e10-chip--warn'}">${r.chip}</span></div>`).join('');
+    if (window.renderMathInElement) renderMathInElement(box, { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    mixed($('#explain'), `<div class="e10-tip__title">${app.result.allOk ? 'Muy bien' : 'Recomendación'}</div>${app.result.tip}`);
+  } else { box.innerHTML = ''; $('#explain').innerHTML = ''; }
+  $('#btn-sol').hidden = !app.checked;
+  const sol = $('#solution'); sol.hidden = !(app.checked && app.showSol);
+  if (!sol.hidden) mixed(sol, s.solution());
+  const n = 1 + (hasP ? 1 : 0) + (app.checked ? 1 : 0) + (app.result?.allOk ? 1 : 0);
+  $('#prog').style.setProperty('--e10-p', n * 25 + '%'); $('#prog-bar').setAttribute('aria-valuenow', n * 25); $('#prog-txt').textContent = `${n} de 4`;
+}
+function newReto() { sc().newReto(); resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); draw(); }
+const seen = {};
+function setScene(id, push = true) {
+  if (!SC[id]) id = 'hilos';
+  app.scene = id;
+  document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === id));
+  if (!seen[id]) { seen[id] = true; sc().newReto(); }
+  $('#values').open = window.innerWidth > 900;
+  resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); liveKey = ''; draw();
+  if (push && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  cv.style.cursor = id === 'oersted' ? 'default' : 'crosshair';
+}
+
+// ───────────────────────── eventos ─────────────────────────
+$('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) { sc().act(b.dataset.act); renderPanel(false); } });
+document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
+$('#pred-choices').addEventListener('click', e => {
+  const b = e.target.closest('[data-choice]'); if (!b) return;
+  pred.choice = b.dataset.choice; if (app.scene === 'hilos' && pred.choice === 'cero') pred.angle = null;
+  if (app.scene === 'hilos' && pred.choice === 'nocero' && pred.angle === null) { Hs.tool = 'pred'; buildToolbar(); }
+  app.checked = false; app.result = null; app.showSol = false; renderPanel(); draw();
+});
+$('#btn-check').addEventListener('click', () => {
+  if (!sc().hasPred()) { $('#check-hint').textContent = 'Primero haz tu predicción en el paso 2.'; return; }
+  $('#check-hint').textContent = '';
+  app.result = sc().check(); app.checked = true; app.showSol = false;
+  if (app.scene === 'hilos') { Hs.show.parts = true; Hs.show.needles = true; buildToolbar(); }
+  renderPanel(); liveKey = ''; draw();
+  if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
+});
+$('#ans-val').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-check').click(); });
+$('#btn-sol').addEventListener('click', () => { app.showSol = !app.showSol; renderPanel(false); });
+$('#btn-new').addEventListener('click', newReto);
+$('#sheet-handle').addEventListener('click', () => $('#right-panel').classList.toggle('open'));
+$('#btn-projector').addEventListener('click', () => { document.body.classList.toggle('e10-projector'); $('#btn-projector').classList.toggle('active'); draw(); });
+$('#btn-theme').addEventListener('click', () => { lab10Auth.toggleTheme(); try { localStorage.setItem('electro10_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch (_) {} });
+new MutationObserver(() => { const i = $('#btn-theme i'); if (i) i.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon'; draw(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+$('#user-info').addEventListener('click', () => { if (!lab10Auth.isAuthenticated) lab10Auth.loginGoogle(); });
+lab10Auth.onAuthChange((ok, user) => { $('#user-info').textContent = ok ? (user?.displayName || 'Estudiante') : 'Iniciar sesión'; });
+
+const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { if (!sc().down) return; cv.setPointerCapture(e.pointerId); sc().down(...pos(e)); draw(); });
+cv.addEventListener('pointermove', e => { if (!sc().move) return; sc().move(...pos(e)); if (e.buttons) draw(); });
+cv.addEventListener('pointerup', e => { if (sc().up) sc().up(...pos(e)); draw(); });
+cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
+
+// ───────────────────────── Lab10 Bus ─────────────────────────
+lab10Bus.injectContinueButton($('#continue-wrap'), 'Sim_M9_Solenoide.html', 'Solenoide (capítulo 10)', () => ({
+  source: 'BiotSavartLab10', units: { length: 'm', current: 'A' },
+  entities: { wires: Hs.wires.map((w, i) => ({ id: i + 1, x: w.x, y: w.y, I: w.I })), loop: { R: E.R, I: E.I, N: E.mode === 'bobina' ? E.N : 1 } },
+  metrics: { B_P: Math.hypot(...hField(Hs.P.x, Hs.P.y)) }, timestamp: Date.now(),
+}));
+lab10Bus.checkIncomingScenario(data => {
+  const ws = data?.entities?.wires;
+  if (Array.isArray(ws) && ws.length) { Hs.wires = ws.filter(w => isFinite(w.x) && isFinite(w.y) && isFinite(w.I)).map(w => ({ x: +w.x, y: +w.y, I: +w.I })); Hs.cacheKey = ''; seen.hilos = true; Hs.reto = Hs.reto || { t: 'dos', d: 0.08, I1: 10, I2: 10, same: true }; setScene('hilos'); }
+});
+
+// ───────────────────────── arranque ─────────────────────────
+new ResizeObserver(resize).observe(area);
+setScene((location.hash || '#hilos').slice(1), false);
+window.__bsl = { app, O, G, Hs, E, oPhys, segB, hField, eAxis, eArc, setScene };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body></html>
