@@ -16,6 +16,7 @@ import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconFor
 import { actualizarGraficosEstudiante }         from './charts.js';
 import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, guardarEncuestaSemanal } from './profile.js';
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
+import { registrarIngreso, sumarMinuto }        from './seguimiento.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
 window.firebaseDb = db;
@@ -42,9 +43,7 @@ window.simulatedRole   = 'teacher';
 setInterval(async () => {
     if (!window.currentUserUid || window.isMasterAdmin) return;
     timeData.value++;
-    try {
-        await setDoc(doc(db, 'artifacts', APP_ID, 'users', window.currentUserUid, 'stats', 'data'), { totalTimeMinutes: increment(1) }, { merge: true });
-    } catch (e) { /* sin conexión */ }
+    await sumarMinuto(window.currentUserUid);
 }, 60000);
 
 // ── Listener de mensajes desde iframes hijo ──────────────────
@@ -296,8 +295,9 @@ async function init() {
     // Iniciar observer de autenticación
     inicializarAuthObserver({
         progressData, evalData, timeData, globalSettings,
-        onLogin:  () => { 
-            injectUIState({ progressData, curriculoData, totalLessons }); 
+        onLogin:  () => {
+            registrarIngreso(window.currentUserUid);
+            injectUIState({ progressData, curriculoData, totalLessons });
             window.actualizarContenidoDashboard(); 
             cargarApuntes(); // Carga las notas de firebase
             generarDashboardGamificado(); // Vuelve a calcular consejos

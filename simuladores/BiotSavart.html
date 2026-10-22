@@ -1006,6 +1006,16 @@ function setScene(id, push = true) {
   cv.style.cursor = id === 'oersted' ? 'default' : 'crosshair';
 }
 
+// Clasifica la recomendación en un código estable para las métricas del portal.
+function codigoError(tip) {
+  const R = [[/se cancelan/, 'cancelacion'], [/al revés/, 'sentido_invertido'], [/rodea al hilo/, 'campo_radial'], [/Sumaste magnitudes/, 'suma_magnitudes'],
+    [/un solo hilo/, 'falta_superponer'], [/hilo infinito/, 'hilo_infinito_en_segmento'], [/prolongación|paralelos/, 'prolongacion'], [/2\\sqrt2/, 'b0_medios'],
+    [/radianes/, 'grados'], [/vueltas/, 'faltan_vueltas'], [/arctan|45°|desde el norte/, 'angulo_brujula'], [/mano derecha|perpendicular a la aguja|no la hace girar/, 'regla_mano_derecha'],
+    [/metros|unidades/, 'unidades']];
+  for (const [re, c] of R) if (re.test(tip || '')) return c;
+  return 'otro';
+}
+
 // ───────────────────────── eventos ─────────────────────────
 $('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) { sc().act(b.dataset.act); renderPanel(false); } });
 document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
@@ -1019,6 +1029,8 @@ $('#btn-check').addEventListener('click', () => {
   if (!sc().hasPred()) { $('#check-hint').textContent = 'Primero haz tu predicción en el paso 2.'; return; }
   $('#check-hint').textContent = '';
   app.result = sc().check(); app.checked = true; app.showSol = false;
+  // Seguimiento: el portal guarda acierto o tipo de error (js/seguimiento.js · ERRORES)
+  lab10Bus.emitTelemetry('comprobar', { escena: app.scene, ok: !!app.result.allOk, error: app.result.allOk ? null : codigoError(app.result.tip) });
   if (app.scene === 'hilos') { Hs.show.parts = true; Hs.show.needles = true; buildToolbar(); }
   renderPanel(); liveKey = ''; draw();
   if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
