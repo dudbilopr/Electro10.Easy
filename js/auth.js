@@ -9,6 +9,7 @@ import {
     signOut,
     GoogleAuthProvider,
     signInWithPopup,
+    sendPasswordResetEmail,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -24,7 +25,7 @@ export function iniciarSesion() {
     const pass  = document.getElementById('auth-pass').value;
     if (!email || !pass) return Swal.fire('Acceso', 'Debes ingresar tu correo y contraseña.', 'warning');
     signInWithEmailAndPassword(auth, email, pass)
-        .catch(() => Swal.fire('Error', 'Credenciales inválidas. Verifica tu correo.', 'error'));
+        .catch(() => Swal.fire('No pudimos ingresar', 'Revisa el correo y la contraseña. Si es tu primera vez, crea tu cuenta.', 'error'));
 }
 
 export function registrarUsuario() {
@@ -33,6 +34,14 @@ export function registrarUsuario() {
     if (!email || pass.length < 6) return Swal.fire('Atención', 'Ingresa un correo válido y contraseña mayor a 6 caracteres.', 'warning');
     createUserWithEmailAndPassword(auth, email, pass)
         .catch(e => Swal.fire('Error de Registro', e.message, 'error'));
+}
+
+export function recuperarContrasena() {
+    const email = document.getElementById('auth-email').value.trim();
+    if (!email) return Swal.fire('Recuperar contraseña', 'Escribe tu correo y vuelve a pulsar «¿La olvidaste?».', 'info');
+    sendPasswordResetEmail(auth, email)
+        .then(() => Swal.fire('Revisa tu correo', `Enviamos un enlace para cambiar la contraseña a ${email}.`, 'success'))
+        .catch(() => Swal.fire('No se pudo enviar', 'Verifica que el correo esté bien escrito y registrado.', 'error'));
 }
 
 export function iniciarSesionConGoogle() {
