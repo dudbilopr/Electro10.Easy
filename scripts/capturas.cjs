@@ -58,8 +58,11 @@ function serve() {
             page.on('console', (m) => { if (m.type() === 'error') errs.add('console: ' + m.text().slice(0, 200)); });
             page.on('response', (r) => { if (r.status() >= 400) errs.add(`HTTP ${r.status()}: ${r.url()}`); });
             await page.setViewport(vp);
-            try { await page.goto(base + p, { waitUntil: 'networkidle2', timeout: 45000 }); }
+            // Error solo si la página no llega a «load». Después se espera a que la red se calme, sin fallar:
+            // algunas páginas (p. ej. Taller_5 con MathJax 2) cargan en 2–4 s pero nunca quedan en «networkidle».
+            try { await page.goto(base + p, { waitUntil: 'load', timeout: 45000 }); }
             catch (e) { errs.add('carga: ' + e.message); }
+            await page.waitForNetworkIdle({ idleTime: 500, timeout: 8000 }).catch(() => {});
             if (flag('--dark')) await page.evaluate(() => { document.body.classList.add('dark-mode'); document.body.classList.remove('light-mode'); });
             await new Promise((r) => setTimeout(r, 2000));
             const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
