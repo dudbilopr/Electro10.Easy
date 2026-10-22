@@ -179,3 +179,82 @@ export async function renderPortada({ uid, curriculoData, progressData, evalData
       </div>`;
     sem.querySelector('[data-avance]')?.addEventListener('click', () => window.mostrarMiAvance?.());
 }
+
+// ── «Mi avance» del estudiante ───────────────────────────────
+
+const RAMPA = ['var(--e10-grid)', '#e7b3cc', '#cf6f9e', 'var(--e10-primary)', '#7a1849']; // un solo tono, claro → oscuro
+const nivel = (m) => (!m ? 0 : m < 20 ? 1 : m < 40 ? 2 : m < 60 ? 3 : 4);
+
+function sumaDias(mapa, dias) {
+    const hoy = new Date(); let s = 0;
+    for (let i = 0; i < dias; i++) { const d = new Date(hoy); d.setDate(hoy.getDate() - i); s += (mapa || {})[claveDia(d)] || 0; }
+    return s;
+}
+
+// `datos` ({ stats, comp }) permite dibujar sin leer Firestore (pruebas y vista previa del docente).
+export async function renderMiAvance({ uid, curriculoData, progressData, evalData, datos }) {
+    const box = document.getElementById('e10-avance');
+    if (!box) return;
+    if (!uid && !datos) { box.innerHTML = '<p class="e10-sem__vacio">Ingresa para ver tu avance.</p>'; return; }
+    box.innerHTML = '<p class="e10-sem__vacio">Calculando tu avance…</p>';
+    const [stats, comp] = datos ? [datos.stats || {}, datos.comp || []] : await Promise.all([leerStats(uid), leerComprobaciones(uid, 60)]);
+    const act = actividad(stats), qz = resumenQuiz(evalData, curriculoData), errs = erroresFrecuentes(comp);
+    const ok = comp.filter((c) => c.ok).length;
+
+    // Calendario: 8 semanas, de lunes a domingo, terminando en la semana actual
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const lunes = new Date(hoy); lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7) - 7 * 7);
+    let celdas = '', activos = 0, mejor = { s: 0, m: 0 };
+    for (let w = 0; w < 8; w++) {
+        let mSem = 0;
+        for (let d = 0; d < 7; d++) {
+            const f = new Date(lunes); f.setDate(lunes.getDate() + w * 7 + d);
+            const m = act.porDia[claveDia(f)] || 0, fut = f > hoy;
+            if (m) activos++; mSem += m;
+            celdas += `<span class="e10-cal__d" style="grid-column:${w + 1};grid-row:${d + 1};background:${fut ? 'transparent' : RAMPA[nivel(m)]}" title="${f.toLocaleDateString('es', { day: 'numeric', month: 'short' })}: ${m} min"></span>`;
+        }
+        if (mSem > mejor.m) mejor = { s: w + 1, m: mSem };
+    }
+
+    // Avance por módulo (% de lecciones completadas)
+    const idx = indiceLecciones(curriculoData), porMod = {};
+    Object.entries(idx).forEach(([id, i]) => { const o = (porMod[i.mi] = porMod[i.mi] || { t: 0, h: 0 }); o.t++; if (progressData[id]) o.h++; });
+    const barrasMod = (curriculoData?.modulos || []).map((m, mi) => {
+        const o = porMod[mi] || { t: 0, h: 0 }, p = o.t ? Math.round(o.h / o.t * 100) : 0;
+        return `<div class="e10-mod" title="${esc(m.titulo)}: ${p} %"><span>${p ? p + '%' : ''}</span><i style="height:${Math.max(p, 2)}%;${p ? '' : 'background:var(--e10-line)'}"></i><b>${mi}</b></div>`;
+    }).join('');
+
+    const tile = (k, v, d) => `<section class="bento-card e10-tile"><span class="e10-eyebrow">${k}</span><b>${v}</b><small>${d}</small></section>`;
+    box.innerHTML = `
+      <div class="e10-tiles">
+        ${tile('Racha', `${act.racha} ${act.racha === 1 ? 'día' : 'días'}`, 'seguidos estudiando')}
+        ${tile('Últimos 7 días', fmtMin(act.semana), `en 30 días: ${fmtMin(sumaDias(stats.minutosPorDia, 30))}`)}
+        ${tile('Ingresos', String(sumaDias(stats.ingresosPorDia, 30)), stats.lastLogin ? `en 30 días · último ${new Date(stats.lastLogin).toLocaleDateString('es', { day: 'numeric', month: 'short' })}` : 'en 30 días')}
+        ${tile('Quiz aprobados', qz.total ? `${qz.aprobados} de ${qz.total}` : '—', qz.media !== null ? `dominio medio ${qz.media} %` : 'aún no presentas quiz')}
+        ${tile('Retos de simulador', comp.length ? `${ok} de ${comp.length}` : '—', comp.length ? 'correctos en 60 días' : 'usa «Comprobar» en los simuladores')}
+      </div>
+      <div class="e10-grid2">
+        <section class="bento-card">
+          <div class="bento-header"><h3>Actividad de las últimas 8 semanas</h3></div>
+          <div class="e10-cal"><div class="e10-cal__dias"><span>lun</span><span></span><span>mié</span><span></span><span>vie</span><span></span><span>dom</span></div><div class="e10-cal__g">${celdas}</div>
+            <div class="e10-cal__txt"><span><b>${activos} de 56 días</b> con actividad.${mejor.m ? ` Tu mejor semana fue la ${mejor.s} (${fmtMin(mejor.m)}).` : ''}</span>
+            <span class="e10-cal__ley">0 min ${RAMPA.map((c) => `<i style="background:${c}"></i>`).join('')} 60+ min</span></div></div>
+        </section>
+        <section class="bento-card">
+          <div class="bento-header"><h3>Avance por módulo</h3></div>
+          <div class="e10-mods">${barrasMod}</div>
+          <small class="e10-nota">% de lecciones completadas por módulo (0 = diagnóstico de presaberes).</small>
+        </section>
+        <section class="bento-card">
+          <div class="bento-header"><h3>Dominio en los quiz</h3></div>
+          ${qz.mods.length ? qz.mods.map((m) => `<div class="e10-q"><span>M${m.mi} · ${esc(sinModulo(m.mod))}</span><div class="e10-q__bar"><i style="width:${m.score}%"></i><em></em></div><b>${m.score} %</b><span class="e10-q__st ${m.score >= 65 ? 'ok' : 'rep'}">${m.score >= 65 ? '✓ aprobado' : '! repasar'}</span></div>`).join('') + '<small class="e10-nota">La línea marca el 65 % que aprueba el quiz.</small>'
+              : '<p class="e10-sem__vacio">Cuando presentes un quiz, aquí verás tu dominio por módulo.</p>'}
+        </section>
+        <section class="bento-card">
+          <div class="bento-header"><h3>Tus errores más frecuentes</h3></div>
+          ${errs.length ? errs.slice(0, 5).map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.n / errs[0].n * 100}%"></i></div><b>${e.n}</b></div>`).join('')
+              : `<p class="e10-sem__vacio">${comp.length ? 'Sin errores en tus comprobaciones recientes.' : 'Cuando uses «Comprobar» en BiotSavartLab, aquí verás qué errores repites.'}</p>`}
+          ${errs[0] && practicaDe(errs[0].code) ? `<div class="e10-tip"><span class="e10-tip__title">Siguiente paso recomendado</span>Practica «${esc(errs[0].label)}» en BiotSavartLab. <a href="${practicaDe(errs[0].code)}" target="_blank" rel="noopener">Practicar →</a></div>` : ''}
+        </section>
+      </div>`;
+}

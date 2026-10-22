@@ -87,6 +87,10 @@
                 <span class="material-symbols-outlined">dashboard</span>
                 <span>Dashboard</span>
             </a>
+            <a onclick="window.mostrarMiAvance()" class="nav-item" id="nav-avance">
+                <span class="material-symbols-outlined">insights</span>
+                <span>Mi avance</span>
+            </a>
             <a onclick="window.mostrarCalendario()" class="nav-item" id="nav-calendario">
                 <span class="material-symbols-outlined">hub</span>
                 <span>Universo de Conocimiento</span>
@@ -141,6 +145,12 @@
                     <a id="btn-notebook" class="btn-primary" style="display: none; background: #6366f1;" href="#" target="_blank"><span class="material-symbols-outlined text-[18px]">auto_awesome</span> Asistente IA</a>
                     <a id="btn-new-tab" class="btn-primary" style="background: var(--bg-surface); color: var(--text-high); border: 1px solid var(--border-color);" href="#" target="_blank"><span class="material-symbols-outlined text-[18px]">open_in_new</span> Expandir</a>
                 </div>
+            </div>
+
+            <!-- ================= MI AVANCE (js/seguimiento.js · renderMiAvance) ================= -->
+            <div id="avance-dashboard" class="bento-container" style="display: none;">
+                <h1 class="e10-avance__h">Mi avance</h1>
+                <div id="e10-avance"></div>
             </div>
 
             <!-- ================= DASHBOARD ESTUDIANTE ================= -->

@@ -16,7 +16,7 @@ import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconFor
 import { actualizarGraficosEstudiante }         from './charts.js';
 import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, guardarEncuestaSemanal } from './profile.js';
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
-import { registrarIngreso, sumarMinuto, renderPortada, guardarUltimaLeccion } from './seguimiento.js';
+import { registrarIngreso, sumarMinuto, renderPortada, guardarUltimaLeccion, renderMiAvance } from './seguimiento.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
 window.firebaseDb = db;
@@ -133,6 +133,12 @@ window.abrirPanelAdmin           = () => abrirPanelAdmin(globalSettings);
 window.cerrarSesion              = cerrarSesion;
 window.iniciarSesion             = iniciarSesion;
 window.recuperarContrasena        = recuperarContrasena;
+window.mostrarMiAvance           = () => {
+    resetNav();
+    document.getElementById('nav-avance').classList.add('active');
+    document.getElementById('avance-dashboard').style.display = 'block';
+    renderMiAvance({ uid: window.currentUserUid, curriculoData, progressData, evalData });
+};
 window.registrarUsuario          = registrarUsuario;
 window.iniciarSesionConGoogle    = iniciarSesionConGoogle;
 window.guardarEval               = (nivel) => guardarEval(nivel, evalData);

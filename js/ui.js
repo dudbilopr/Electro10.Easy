@@ -20,7 +20,7 @@ export function injectUIState({ progressData, curriculoData, totalLessons }) {
 
 export function resetNav() {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    ['student-dashboard', 'calendar-dashboard', 'profile-dashboard', 'labs-dashboard', 'brain-dashboard', 'admin-dashboard', 'game-dashboard', 'main-viewer-area', 'content-header']
+    ['student-dashboard', 'avance-dashboard', 'calendar-dashboard', 'profile-dashboard', 'labs-dashboard', 'brain-dashboard', 'admin-dashboard', 'game-dashboard', 'main-viewer-area', 'content-header']
         .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
 }
 
