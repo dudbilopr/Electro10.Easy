@@ -59,11 +59,11 @@
             if (!document.getElementById('katex-css')) {
               const link = document.createElement('link');
               link.id = 'katex-css'; link.rel = 'stylesheet';
-              link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css';
+              link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
               document.head.appendChild(link);
               
               const script = document.createElement('script');
-              script.id = 'katex-js'; script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js';
+              script.id = 'katex-js'; script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
               document.head.appendChild(script);
             }
           }, []);
