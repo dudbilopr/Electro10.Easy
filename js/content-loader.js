@@ -173,8 +173,9 @@ export function loadContent(leccion, modulo, progressData, evalData) {
             if (leccion.tipo === 'notebooklm') {
                 btnNewTab.href = leccion.llmLink || '#';
             } else if (leccion.tipo === 'multivideo' || leccion.tipo === 'multipresentacion') {
-                const recs = leccion.recurso.split('|');
-                btnNewTab.href = leccion.tipo === 'multivideo' ? getYoutubeEmbed(recs[0]) : recs[0];
+                const recs = String(leccion.recurso || '').split('|').filter(r => r.trim());
+                if (!recs.length) btnNewTab.style.display = 'none';
+                else btnNewTab.href = leccion.tipo === 'multivideo' ? getYoutubeEmbed(recs[0]) : recs[0];
             } else if (leccion.tipo === 'video') {
                 btnNewTab.href = getYoutubeEmbed(leccion.recurso);
             } else if (leccion.tipo === 'notebooklm') {
@@ -239,13 +240,19 @@ export function loadContent(leccion, modulo, progressData, evalData) {
         }
         enlacesContainer.innerHTML = html;
 
+    } else if ((leccion.tipo === 'multivideo' || leccion.tipo === 'multipresentacion') && !String(leccion.recurso || '').split('|').some(r => r.trim())) {
+        // Lección sin recursos todavía (p. ej. videos retirados por estar caídos): aviso en lugar de un reproductor vacío
+        iframe.style.display = 'none';
+        enlacesContainer.style.display = 'block';
+        enlacesContainer.innerHTML = '<div style="padding:50px;text-align:center;color:var(--text-medium);"><span class="material-symbols-outlined" style="font-size:40px;opacity:0.5;">video_library</span><br>' + (leccion.tipo === 'multivideo' ? 'Video en preparación.' : 'Material en preparación.') + '<br><span style="font-size:0.85rem;">Mientras tanto, sigue con las diapositivas y el simulador de este módulo.</span></div>';
+
     } else if (leccion.tipo === 'multivideo' || leccion.tipo === 'multipresentacion') {
         // Playlist lateral
         rightSidebar.style.display  = 'flex';
         playlistSidebar.style.display = 'block';
         playlistContent.innerHTML   = '';
 
-        const recursos = leccion.recurso.split('|');
+        const recursos = leccion.recurso.split('|').filter(r => r.trim());
         recursos.forEach((rec, index) => {
             let thumbUrl = `https://ui-avatars.com/api/?name=Part+${index + 1}&background=2563eb&color=fff&size=120`;
             if (leccion.tipo === 'multivideo') {
