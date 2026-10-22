@@ -77,14 +77,6 @@ export const modulo8 = {
             "titulo": "3. Laboratorio Virtual (Simuladores Científicos)",
             "sublecciones": [
                 {
-                    "id": "m8-s0",
-                    "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M8_Oersted.html",
-                    "titulo": "3.0 OerstedLab10.easy — El Experimento de Oersted (1820)",
-                    "descripcion": "Recrea el experimento histórico de Hans Christian Ørsted: circuito de corriente continua, brújula magnética orientable, regla de la mano derecha y cálculo de B = (μ₀ I)/(2π r).",
-                    "xp": 25
-                },
-                {
                     "id": "m8-s1",
                     "tipo": "simulador",
                     "recurso": "simuladores/LorentzLab10easy.html",

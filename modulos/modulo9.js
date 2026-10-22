@@ -37,19 +37,35 @@ export const modulo9 = {
             "titulo": "3. Laboratorio Virtual (Simuladores)",
             "sublecciones": [
                 {
-                    "id": "m9-s1",
+                    "id": "m9-s0",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M8_BiotSavart_Anillo.html",
-                    "titulo": "3.1 Campo Magnético en el Eje de una Espira Circular",
-                    "descripcion": "Análisis en tiempo real de la distribución axial del campo generado por espiras circulares.",
+                    "recurso": "simuladores/BiotSavart.html#oersted",
+                    "titulo": "3.1 BiotSavartLab · Experimento de Ørsted",
+                    "descripcion": "Un hilo sobre una brújula: predice hacia dónde y cuánto gira la aguja al sumar el campo del hilo y el campo terrestre.",
                     "xp": 20
                 },
                 {
                     "id": "m9-s2",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M8_BiotSavart_Hilo.html",
-                    "titulo": "3.2 Campo Magnético de Conductor Rectilíneo",
-                    "descripcion": "Estudio cuantitativo del campo para conductores finitos e infinitos según la distancia radial.",
+                    "recurso": "simuladores/BiotSavart.html#segmento",
+                    "titulo": "3.2 BiotSavartLab · Segmento de corriente",
+                    "descripcion": "Arrastra el punto P frente al centro, frente a un extremo o en la prolongación de un segmento y compara con el hilo infinito.",
+                    "xp": 20
+                },
+                {
+                    "id": "m9-s3",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/BiotSavart.html#hilos",
+                    "titulo": "3.3 BiotSavartLab · Varios hilos y fuerza entre conductores",
+                    "descripcion": "Coloca hilos, dibuja tu predicción del campo en P, suma los aportes como vectores y mira las fuerzas entre conductores.",
+                    "xp": 20
+                },
+                {
+                    "id": "m9-s1",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/BiotSavart.html#espira",
+                    "titulo": "3.4 BiotSavartLab · Espira, arco y bobina",
+                    "descripcion": "Campo en el eje de una espira o una bobina plana y en el centro de un arco, con la gráfica B(z) y la aproximación de dipolo.",
                     "xp": 20
                 }
             ]
