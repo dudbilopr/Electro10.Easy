@@ -165,7 +165,11 @@ window.renderAdminCharts         = (t, s, sc) => renderAdminCharts(t, s, sc);
 
     // window.renderizarQuizDinamico y window.evaluarQuizDinamico han sido movidos al motor avanzado quiz-engine.js
 
+// En tableta y celular el menú lateral tapa el contenido: se abre solo cuando el estudiante lo pide.
+const esPantallaAngosta = () => window.matchMedia('(max-width: 1024px)').matches;
+
 window._loadContent = (leccion, modTitulo) => {
+    if (esPantallaAngosta()) document.getElementById('sidebar-menu')?.classList.add('hidden');
     // ── Lógica de Bloqueo por Pre-Assessment ──
     // Se ha desactivado el bloqueo por solicitud del usuario para que el diagnóstico sea opcional.
     /*
@@ -271,6 +275,7 @@ async function generarDashboardGamificado() {
 // ── Inicialización principal ─────────────────────────────────
 async function init() {
     aplicarTemaGuardado();
+    if (esPantallaAngosta()) document.getElementById('sidebar-menu')?.classList.add('hidden');
 
     // Cargar progreso desde localStorage (datos offline)
     const savedProgress = localStorage.getItem('cursoElectromagnetismoProgreso');

@@ -24,6 +24,7 @@ const pages = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--ou
 const VIEWPORTS = [
     { name: 'escritorio', width: 1440, height: 900 },
     { name: 'movil', width: 390, height: 844, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+    { name: 'tableta', width: 768, height: 1024, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
 ];
 // Ruido externo conocido: Firebase sin localhost autorizado en la clave de API, favicon.
 const IGNORE = /favicon\.ico|requests-from-referer|PERMISSION_DENIED|firebase\.googleapis|firebaseinstallations|Failed to load resource/i;

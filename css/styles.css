@@ -562,6 +562,17 @@ iframe { width: 100%; height: 100%; border: none; display: block; flex: 1; }
     .bento-container { padding: 1.5rem; }
 }
 
+/* Celular: la cabecera cabe en 390 px (sin Pomodoro ni Ayuda; botón de ingreso compacto) */
+@media (max-width: 600px) {
+    header .header-actions { gap: 2px; }
+    header .focus-btn, header .icon-btn[title="Ayuda"] { display: none; }
+    header .btn-auth { padding: 8px 12px; }
+    /* Tarjetas del dashboard: el encabezado (título + selector de ritmo) baja de línea en vez de ensanchar la tarjeta */
+    .bento-container { grid-template-columns: minmax(0, 1fr); padding: 1rem; }
+    .bento-card { min-width: 0; }
+    .bento-header { flex-wrap: wrap; gap: 10px; }
+}
+
 /* ================= CONSTELLATION / KNOWLEDGE UNIVERSE ================= */
 .constellation-wrapper {
     position: relative;
