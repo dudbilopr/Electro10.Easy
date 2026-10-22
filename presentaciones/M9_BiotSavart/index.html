@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 9 · Ley de Biot–Savart — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 9 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:38px;line-height:1.12}
+.row{display:flex;gap:28px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.vote{display:flex;flex-direction:column;gap:10px}
+.vote .btn{text-align:left;font-weight:500;font-size:18px;min-height:52px;padding:0 18px}
+.vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
+.vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.reto{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto .q{font-size:16px}
+.reto .ans{display:flex;gap:8px;align-items:center}
+.reto input{flex:1;min-height:40px;border-radius:10px;border:1px solid var(--e10-line);padding:0 10px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.reto .fb{font-size:15px;min-height:20px}
+.reto .sol{display:none;font-size:15px;background:var(--e10-bg);border-radius:10px;padding:8px 12px}
+.reto .sol.show{display:block}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:18px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.lab-frame{flex:1;border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);width:100%}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.print-only{display:none}
+@media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+@page{size:1280px 720px;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
+  .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+  .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 9</span></div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">MAGNETOSTÁTICA · FUENTES DEL CAMPO</span>
+        <h1 style="font-size:74px;line-height:1.02">Ley de<br>Biot–Savart</h1>
+        <p style="margin:0;font-size:24px;color:var(--e10-muted);max-width:540px">Cómo una corriente crea un campo magnético, elemento por elemento.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Calcular \(\vec B\) de hilos, arcos y espiras.</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Decidir su dirección con la mano derecha.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Comprobar con simetría y casos límite.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover" width="440" height="440" aria-label="Hilo con corriente y líneas de campo circulares animadas"></canvas>
+    </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o los botones de abajo</span></div>
+  </div>
+</section>
+
+<!-- 2 · ØRSTED -->
+<section class="slide" data-n="2">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag p">Predice</span></div>
+  <h2>¿Qué hace la brújula cuando pasa corriente por el cable?</h2>
+  <div class="row">
+    <div class="col" style="width:520px">
+      <canvas class="sim" id="cv-oersted" width="520" height="380" aria-label="Brújula bajo un cable con corriente"></canvas>
+      <div class="ctrl no-print">
+        <label for="oe-i">Corriente</label><input id="oe-i" type="range" min="0" max="10" step="0.1" value="0"><output id="oe-i-o">0,0 A</output>
+        <label for="oe-d">Distancia</label><input id="oe-d" type="range" min="1" max="5" step="0.1" value="2"><output id="oe-d-o">2,0 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <span style="color:var(--e10-muted)">El cable va de sur a norte, justo encima de la aguja. Vota antes de mover la corriente.</span>
+      <div class="vote" id="oe-vote">
+        <button type="button" class="btn" data-v="a"><b style="color:var(--e10-primary)">A</b>&nbsp; Nada: la corriente no es un imán.</button>
+        <button type="button" class="btn" data-v="b"><b style="color:var(--e10-primary)">B</b>&nbsp; La aguja apunta hacia el cable.</button>
+        <button type="button" class="btn" data-v="c"><b style="color:var(--e10-primary)">C</b>&nbsp; La aguja gira hacia la perpendicular al cable.</button>
+      </div>
+      <div class="tipbox" id="oe-fb" style="visibility:hidden"><b>Ørsted, 1820.</b> La aguja gira: la corriente crea un campo \(B_c\) perpendicular al cable que se suma al campo terrestre \(B_T\). El ángulo cumple \(\tan\varphi = B_c/B_T\). Sube la corriente y compruébalo.</div>
+      <div class="read" id="oe-read"><div>Campo del cable<b id="oe-bc">0</b></div><div>Campo terrestre (dato)<b>2,0×10⁻⁵ T</b></div><div>Desviación<b id="oe-phi">0°</b></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>\(B_T\) horizontal de \(2{,}0\times10^{-5}\,\mathrm{T}\) es un valor de ejemplo.</span><span class="mono">2 / 10</span></div>
+</section>
+
+<!-- 3 · LA LEY -->
+<section class="slide" data-n="3">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Concepto</span></div>
+  <h2>Cada trozo de corriente aporta un poco de campo</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1">
+      <div class="soft" style="text-align:center;font-size:30px">\[ d\vec B=\frac{\mu_0}{4\pi}\,\frac{I\,d\vec\ell\times\hat r}{r^{2}} \]</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px">
+        <div class="card"><b style="color:var(--e10-primary)">\(I\,d\vec\ell\)</b> · elemento de corriente: un trozo diminuto del cable.</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">\(\times\,\hat r\)</b> · el producto cruz da la dirección: \(d\vec B\perp d\vec\ell\) y \(d\vec B\perp\hat r\).</div>
+        <div class="card"><b style="color:var(--e10-vec-field)">\(1/r^{2}\)</b> · cada elemento se debilita como en Coulomb.</div>
+        <div class="card">\(|d\vec\ell\times\hat r|=d\ell\,\sin\varphi\): máximo a 90°, <b>cero</b> sobre la línea del cable.</div>
+      </div>
+      <div class="tipbox"><b>Explora.</b> Arrastra el punto \(P\): a la derecha del elemento \(d\vec B\) entra en la página (⊗), a la izquierda sale (⊙).</div>
+    </div>
+    <div class="col" style="width:470px">
+      <canvas class="sim" id="cv-ley" width="470" height="400" aria-label="Elemento de corriente y punto P arrastrable"></canvas>
+      <div class="read"><div>Ángulo φ<b id="ley-phi">—</b></div><div>Distancia r<b id="ley-r">—</b></div><div>|dB| (I=10 A, dℓ=1 mm)<b id="ley-db">—</b></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>Regla de la mano derecha: pulgar en el sentido de \(I\), los dedos indican \(\vec B\).</span><span class="mono">3 / 10</span></div>
+</section>
+
+<!-- 4 · HILO -->
+<section class="slide" data-n="4">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
+  <h2>Del elemento al hilo: cambiar a la variable θ</h2>
+  <div class="row">
+    <div class="col" style="width:420px">
+      <canvas class="sim" id="cv-hilo" width="420" height="380" aria-label="Segmento de hilo entre los ángulos theta 1 y theta 2"></canvas>
+      <div class="ctrl no-print">
+        <label for="hi-t1">θ₁</label><input id="hi-t1" type="range" min="-89" max="89" value="-60"><output id="hi-t1-o">−60°</output>
+        <label for="hi-t2">θ₂</label><input id="hi-t2" type="range" min="-89" max="89" value="60"><output id="hi-t2-o">60°</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="steps">
+        <div><span class="n">1</span><span>\(y=a\tan\theta,\quad r=\dfrac{a}{\cos\theta},\quad dy=a\sec^{2}\theta\,d\theta\)</span></div>
+        <div><span class="n">2</span><span>\(|d\vec\ell\times\hat r|=dy\cos\theta\) · todos los \(d\vec B\) apuntan igual.</span></div>
+        <div><span class="n">3</span><span>\(dB=\dfrac{\mu_0 I}{4\pi}\dfrac{\cos\theta\,dy}{r^{2}}=\dfrac{\mu_0 I}{4\pi a}\cos\theta\,d\theta\)</span></div>
+        <div><span class="n">4</span><span>\(B=\dfrac{\mu_0 I}{4\pi a}\left(\sin\theta_2-\sin\theta_1\right)\)</span></div>
+      </div>
+      <div class="ok" style="display:flex;align-items:center;gap:18px"><span><b>Hilo infinito</b><br>θ de −90° a 90°</span><span style="font-size:30px">\(B=\dfrac{\mu_0 I}{2\pi a}\)</span></div>
+      <div class="read"><div>Segmento / infinito<b id="hi-ratio">—</b></div><div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>Consejo: el hilo infinito decae como \(1/a\), no como \(1/a^2\): es una fuente extendida.</span><span class="mono">4 / 10</span></div>
+</section>
+
+<!-- 5 · SUPERPOSICIÓN -->
+<section class="slide" data-n="5">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Simula</span></div>
+  <h2>Varios hilos: los campos se suman como vectores</h2>
+  <div class="row">
+    <div class="col" style="width:520px">
+      <canvas class="sim" id="cv-sup" width="520" height="360" aria-label="Dos hilos perpendiculares a la página y punto P arrastrable"></canvas>
+      <div class="ctrl no-print">
+        <label for="su-i1">I₁</label><input id="su-i1" type="range" min="1" max="30" value="20"><output id="su-i1-o">20 A</output>
+        <label for="su-i2">I₂</label><input id="su-i2" type="range" min="1" max="30" value="12"><output id="su-i2-o">12 A</output>
+      </div>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="su-s1">I₁ sale ⊙</button><button type="button" class="btn" id="su-s2">I₂ entra ⊗</button><span style="font-size:14px;color:var(--e10-muted);align-self:center">Separación 8 cm · arrastra P</span></div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="read"><div>|B₁|<b id="su-b1">—</b></div><div>|B₂|<b id="su-b2">—</b></div><div>|B total|<b id="su-b">—</b></div></div>
+      <div class="card" style="font-size:16px"><b>Fuerza entre los hilos:</b> \(\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}\) = <b id="su-f" class="mono">—</b> · <span id="su-fd"></span></div>
+      <div class="reto" id="reto-sup">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
+        <span class="q" id="rs-q"></span>
+        <div class="ans"><input id="rs-in" inputmode="decimal" placeholder="|B| en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="rs-ck">Comprobar</button><button type="button" class="btn" id="rs-new">Nuevo</button></div>
+        <span class="fb" id="rs-fb"></span>
+        <button type="button" class="btn" id="rs-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="rs-sol"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Corrientes en el mismo sentido se atraen; en sentidos opuestos se repelen.</span><span class="mono">5 / 10</span></div>
+</section>
+
+<!-- 6 · ESPIRA -->
+<section class="slide" data-n="6">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Ejemplo resuelto</span></div>
+  <h2>Espira circular: el campo sobre su eje</h2>
+  <div class="row">
+    <div class="col" style="width:500px">
+      <canvas class="sim" id="cv-esp" width="500" height="320" aria-label="Gráfica del campo en el eje de la espira en función de z"></canvas>
+      <div class="ctrl no-print">
+        <label for="es-r">R</label><input id="es-r" type="range" min="2" max="20" value="10"><output id="es-r-o">10 cm</output>
+        <label for="es-i">I</label><input id="es-i" type="range" min="0.5" max="10" step="0.5" value="2"><output id="es-i-o">2,0 A</output>
+        <label for="es-z">z</label><input id="es-z" type="range" min="-30" max="30" value="10"><output id="es-z-o">10 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:24px">\[ B_z=\frac{\mu_0 I R^{2}}{2\,(R^{2}+z^{2})^{3/2}},\qquad B_0=\frac{\mu_0 I}{2R} \]</div>
+      <div class="read"><div>B en el centro<b id="es-b0">—</b></div><div>B en z<b id="es-bz">—</b></div><div>B(z)/B₀<b id="es-ratio">—</b></div></div>
+      <div class="reto" id="reto-esp">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">EJERCICIO GENERADO</span>
+        <span class="q" id="re-q"></span>
+        <div class="ans"><input id="re-in" inputmode="decimal" placeholder="B en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="re-ck">Comprobar</button><button type="button" class="btn" id="re-new">Nuevo</button></div>
+        <span class="fb" id="re-fb"></span>
+        <button type="button" class="btn" id="re-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="re-sol"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Lejos (\(z\gg R\)) el campo decae como \(1/z^{3}\): la espira es un dipolo magnético.</span><span class="mono">6 / 10</span></div>
+</section>
+
+<!-- 7 · ARCOS -->
+<section class="slide" data-n="7">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Concepto</span></div>
+  <h2>Arcos: cada grado de arco aporta lo mismo al centro</h2>
+  <div class="row">
+    <div class="col" style="width:430px">
+      <canvas class="sim" id="cv-arco" width="430" height="380" aria-label="Arco de corriente de ángulo theta y su centro"></canvas>
+      <div class="ctrl no-print">
+        <label for="ar-t">θ</label><input id="ar-t" type="range" min="10" max="360" value="120"><output id="ar-t-o">120°</output>
+        <label for="ar-r">R</label><input id="ar-r" type="range" min="2" max="15" value="6"><output id="ar-r-o">6 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:26px">\[ B=\frac{\mu_0 I\,\theta}{4\pi R}\qquad(\theta\ \text{en radianes}) \]</div>
+      <div class="steps" style="font-size:17px">
+        <div><span class="n">1</span><span>Todos los elementos están a la misma distancia \(R\) del centro y \(d\vec\ell\perp\hat r\): \(\sin\varphi=1\).</span></div>
+        <div><span class="n">2</span><span>Todos los \(d\vec B\) apuntan igual: \(B=\dfrac{\mu_0 I}{4\pi R^{2}}\displaystyle\int d\ell=\dfrac{\mu_0 I}{4\pi R^{2}}\,R\theta\).</span></div>
+      </div>
+      <div class="read"><div>B en el centro (I=9 A)<b id="ar-b">—</b></div><div>Fracción de espira<b id="ar-f">—</b></div><div>Espira completa<b id="ar-full">—</b></div></div>
+      <div class="warn"><b>Ojo.</b> Los tramos rectos alineados con el centro no aportan nada (\(d\vec\ell\parallel\hat r\)), pero los tramos rectos <i>no</i> alineados sí: en una horquilla suman \(2\times\dfrac{\mu_0 I}{4\pi R}\).</div>
+    </div>
+  </div>
+  <div class="foot"><span>Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 10</span></div>
+</section>
+
+<!-- 8 · ERRORES -->
+<section class="slide" data-n="8">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag p">Errores comunes</span></div>
+  <h2>Tres errores frecuentes (haz clic para voltear)</h2>
+  <div class="row" style="gap:20px">
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
+      <div class="f"><b style="font:600 22px var(--e10-font-display);color:var(--e10-warning)">«Al doble de distancia del hilo, el campo baja a la cuarta parte.»</b><span>¿Qué está mal?</span></div>
+      <div class="b"><b style="font:600 20px var(--e10-font-display);color:var(--e10-success)">Baja a la mitad.</b><span>Para un hilo infinito \(B=\mu_0 I/2\pi r\): decae como \(1/r\). El \(1/r^{2}\) es de cada elemento, no del hilo completo.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
+      <div class="f"><b style="font:600 22px var(--e10-font-display);color:var(--e10-warning)">«Entre dos hilos, los campos siempre se restan.»</b><span>¿Cuándo se suman?</span></div>
+      <div class="b"><b style="font:600 20px var(--e10-font-display);color:var(--e10-success)">Depende de los sentidos.</b><span>Con corrientes opuestas, entre los hilos los campos apuntan igual y <b>se suman</b>. Con el mismo sentido, se restan y pueden anularse.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
+      <div class="f"><b style="font:600 22px var(--e10-font-display);color:var(--e10-warning)">«\(\vec B\) apunta en el mismo sentido que la corriente.»</b><span>¿Dónde está el error?</span></div>
+      <div class="b"><b style="font:600 20px var(--e10-font-display);color:var(--e10-success)">Es perpendicular.</b><span>\(d\vec B\propto d\vec\ell\times\hat r\): perpendicular a la corriente y a la recta hacia el punto. Las líneas de \(\vec B\) rodean al cable.</span></div>
+    </div></div>
+  </div>
+  <div class="foot"><span>Antes de calcular, dibuja \(d\vec\ell\), \(\hat r\) y \(d\vec B\) para dos elementos simétricos.</span><span class="mono">8 / 10</span></div>
+</section>
+
+<!-- 9 · LABORATORIO -->
+<section class="slide" data-n="9">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Laboratorio</span></div>
+  <h2>Comprueba en el simulador lo que acabas de deducir</h2>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn on" data-lab="../../simuladores/Sim_M8_BiotSavart_Hilo.html">Hilo recto</button><button type="button" class="btn" data-lab="../../simuladores/Sim_M8_BiotSavart_Anillo.html">Espira</button><button type="button" class="btn" data-lab="../../simuladores/Sim_M8_Oersted.html">Ørsted</button></div>
+      <iframe class="lab-frame no-print" id="lab-frame" title="Simulador del laboratorio" loading="lazy"></iframe>
+      <div class="print-only card">Abre los simuladores en la plataforma Electro10.Easy: Biot–Savart (hilo y espira) y OerstedLab.</div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 1 · Hilo.</b> Si a 2 cm vale \(5{,}0\times10^{-5}\,\mathrm T\), predice el valor a 4 cm. Mueve \(P\) y compruébalo.</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 2 · Hilo finito.</b> Acórtalo. ¿Desde qué longitud el resultado se parece al del hilo infinito?</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 3 · Espira.</b> Pon \(z=R\) y verifica \(B=B_0/2\sqrt2\approx0{,}354\,B_0\).</div>
+      <div class="tipbox"><b>Consejo.</b> Anota tu predicción antes de mover el control: así detectas qué idea tenías mal.</div>
+    </div>
+  </div>
+  <div class="foot"><span></span><span class="mono">9 / 10</span></div>
+</section>
+
+<!-- 10 · CIERRE -->
+<section class="slide" data-n="10">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Resumen</span></div>
+  <h2>Lo que debes llevarte</h2>
+  <div class="row">
+    <div class="col" style="flex:1.3">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:17px">
+        <div class="card">Elemento<br>\(d\vec B=\dfrac{\mu_0}{4\pi}\dfrac{I\,d\vec\ell\times\hat r}{r^{2}}\)</div>
+        <div class="card">Segmento<br>\(B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)\)</div>
+        <div class="card">Hilo infinito<br>\(B=\dfrac{\mu_0 I}{2\pi a}\)</div>
+        <div class="card">Fuerza entre hilos<br>\(F/L=\dfrac{\mu_0 I_1 I_2}{2\pi d}\)</div>
+        <div class="card">Arco de ángulo θ<br>\(B=\dfrac{\mu_0 I\theta}{4\pi R}\)</div>
+        <div class="card">Espira (eje)<br>\(B_z=\dfrac{\mu_0 I R^{2}}{2(R^{2}+z^{2})^{3/2}}\)</div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft col" style="gap:10px">
+        <b style="font:600 18px var(--e10-font-display)">Para practicar</b>
+        <a class="btn pri" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap09_Taller_BiotSavart.pdf" download>Taller (PDF)</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap09_Guia_BiotSavart.pdf" download>Guía de estudio (PDF)</a>
+        <button type="button" class="btn no-print" id="btn-print2">Esta clase en PDF</button>
+      </div>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=10" target="_top">Siguiente capítulo: Ley de Ampère →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">10 / 10</span></div>
+</section>
+
+</div></div>
+
+<nav class="deck-ui" aria-label="Navegación de la clase">
+  <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
+  <span class="count" id="nav-count">1 / 10</span>
+  <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
+  <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
+  <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
+</nav>
+
+<script>
+(() => {
+  'use strict';
+  const MU0 = 4e-7 * Math.PI;
+  const $ = (id) => document.getElementById(id);
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  // Notación científica con coma decimal: 1,26×10⁻⁵
+  const sci = (x, d = 2) => {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(x))); const m = x / 10 ** e;
+    const ms = m.toFixed(d).replace('.', ',');
+    return e === 0 ? ms : ms + '×10' + String(e).split('').map((c) => SUP[c]).join('');
+  };
+  const dec = (x, d = 1) => x.toFixed(d).replace('.', ',');
+  const texSci = (x, d = 2) => { const e = Math.floor(Math.log10(Math.abs(x))); const m = (x / 10 ** e).toFixed(d).replace('.', '{,}'); return e === 0 ? m : `${m}\\times10^{${e}}`; };
+  const renderMath = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+
+  // ── Canvas con alta densidad ──
+  function setup(cv) {
+    const dpr = window.devicePixelRatio || 1; const w = cv.width, h = cv.height;
+    if (!cv.dataset.w) { cv.dataset.w = w; cv.dataset.h = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.width = w * dpr; cv.height = h * dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: +cv.dataset.w, h: +cv.dataset.h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const hd = Math.min(14, L * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hd * 0.6 * Math.cos(a), y2 - hd * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function dotSym(ctx, x, y, r, out, color) { // ⊙ sale / ⊗ entra
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
+    if (out) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+    else { const s = r * 0.62; ctx.beginPath(); ctx.moveTo(x - s, y - s); ctx.lineTo(x + s, y + s); ctx.moveTo(x + s, y - s); ctx.lineTo(x - s, y + s); ctx.stroke(); }
+  }
+  const text = (ctx, s, x, y, color, font = "italic 20px 'STIX Two Text', 'Times New Roman', serif") => { ctx.fillStyle = color; ctx.font = font; ctx.fillText(s, x, y); };
+  function draggable(cv, get, set, draw) {
+    let drag = false;
+    const pos = (e) => { const r = cv.getBoundingClientRect(); const p = e.touches ? e.touches[0] : e; return { x: (p.clientX - r.left) * (+cv.dataset.w / r.width), y: (p.clientY - r.top) * (+cv.dataset.h / r.height) }; };
+    const down = (e) => { const p = pos(e), q = get(); if (Math.hypot(p.x - q.x, p.y - q.y) < 30) { drag = true; e.preventDefault(); } };
+    const move = (e) => { if (!drag) return; const p = pos(e); set(Math.max(10, Math.min(+cv.dataset.w - 10, p.x)), Math.max(10, Math.min(+cv.dataset.h - 10, p.y))); draw(); e.preventDefault(); };
+    const up = () => { drag = false; };
+    cv.addEventListener('mousedown', down); cv.addEventListener('touchstart', down, { passive: false });
+    window.addEventListener('mousemove', move); cv.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('mouseup', up); cv.addEventListener('touchend', up);
+  }
+  const bind = (id, fmt, fn) => { const el = $(id), o = $(id + '-o'); const f = () => { if (o) o.textContent = fmt(+el.value); fn(); }; el.addEventListener('input', f); return f; };
+
+  // ── 1 · Portada: líneas de campo animadas ──
+  const sims = {};
+  sims.cover = (() => {
+    const cv = $('cv-cover'); let t0 = performance.now(), raf = null;
+    function frame(t) {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2 + 10; const ph = ((t - t0) / 2400) % 1;
+      [70, 130, 190].forEach((rx, i) => {
+        ctx.strokeStyle = col('vec-field'); ctx.globalAlpha = 0.9 - i * 0.25; ctx.lineWidth = 3 - i * 0.5;
+        ctx.beginPath(); ctx.ellipse(cx, cy, rx, rx * 0.32, 0, 0, 2 * Math.PI); ctx.stroke();
+        const a = 2 * Math.PI * ((ph + i * 0.17) % 1); const px = cx + rx * Math.cos(a), py = cy + rx * 0.32 * Math.sin(a);
+        const tx = -Math.sin(a) * rx, ty = Math.cos(a) * rx * 0.32, L = Math.hypot(tx, ty);
+        arrow(ctx, px - tx / L * 10, py - ty / L * 10, px + tx / L * 10, py + ty / L * 10, col('vec-field'), 3);
+      });
+      ctx.globalAlpha = 1; ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, h - 20); ctx.stroke();
+      arrow(ctx, cx, 150, cx, 100, col('primary'), 6); text(ctx, 'I', cx + 14, 118, col('primary'), "italic 30px 'STIX Two Text', serif");
+      text(ctx, 'B', cx + 196, cy + 40, col('vec-field'), "bold italic 30px 'STIX Two Text', serif");
+      raf = matchMedia('(prefers-reduced-motion: reduce)').matches ? null : requestAnimationFrame(frame);
+    }
+    return { show() { if (!raf) raf = requestAnimationFrame(frame); }, hide() { if (raf) cancelAnimationFrame(raf); raf = null; }, draw() { frame(performance.now()); } };
+  })();
+
+  // ── 2 · Ørsted ──
+  sims.oersted = (() => {
+    const cv = $('cv-oersted'); const BT = 2.0e-5; let voted = false;
+    function draw() {
+      const I = +$('oe-i').value, d = +$('oe-d').value / 100; const Bc = MU0 * I / (2 * Math.PI * d); const phi = Math.atan2(Bc, BT);
+      $('oe-bc').textContent = I ? sci(Bc) + ' T' : '0'; $('oe-phi').textContent = dec(phi * 180 / Math.PI) + '°';
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2 + 10;
+      ctx.fillStyle = col('surface'); ctx.strokeStyle = col('ink'); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, 130, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      text(ctx, 'N', cx - 7, cy - 140, col('muted'), "600 18px 'IBM Plex Sans', sans-serif"); text(ctx, 'S', cx - 6, cy + 156, col('muted'), "600 18px 'IBM Plex Sans', sans-serif");
+      text(ctx, 'O', cx - 156, cy + 6, col('muted'), "600 18px 'IBM Plex Sans', sans-serif"); text(ctx, 'E', cx + 142, cy + 6, col('muted'), "600 18px 'IBM Plex Sans', sans-serif");
+      // aguja: el polo N gira hacia el oeste (corriente hacia el norte, cable encima)
+      const a = -Math.PI / 2 - phi; const ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+      ctx.fillStyle = col('q-pos'); ctx.beginPath(); ctx.moveTo(cx + ux * 110, cy + uy * 110); ctx.lineTo(cx + nx * 12, cy + ny * 12); ctx.lineTo(cx - nx * 12, cy - ny * 12); ctx.fill();
+      ctx.fillStyle = col('q-neg'); ctx.beginPath(); ctx.moveTo(cx - ux * 110, cy - uy * 110); ctx.lineTo(cx + nx * 12, cy + ny * 12); ctx.lineTo(cx - nx * 12, cy - ny * 12); ctx.fill();
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 2 * Math.PI); ctx.fill();
+      ctx.globalAlpha = 0.85; ctx.strokeStyle = col('primary'); ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(cx, 8); ctx.lineTo(cx, h - 8); ctx.stroke(); ctx.globalAlpha = 1;
+      if (I > 0) { arrow(ctx, cx, 80, cx, 34, col('on-primary'), 3); text(ctx, 'I = ' + dec(I) + ' A', cx + 14, 40, col('primary'), "600 16px 'IBM Plex Sans', sans-serif"); }
+      if (I > 0) { arrow(ctx, cx - 40, cy + 100, cx - 40 - Math.min(110, 110 * Bc / BT), cy + 100, col('vec-field'), 3); text(ctx, 'B cable', cx - 96, cy + 92, col('vec-field'), "italic 16px 'STIX Two Text', serif"); }
+    }
+    bind('oe-i', (v) => dec(v) + ' A', draw); bind('oe-d', (v) => dec(v) + ' cm', draw);
+    document.querySelectorAll('#oe-vote .btn').forEach((b) => b.addEventListener('click', () => {
+      if (voted) return; voted = true;
+      document.querySelectorAll('#oe-vote .btn').forEach((x) => { if (x.dataset.v === 'c') x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+      $('oe-fb').style.visibility = 'visible'; $('oe-i').value = 5; $('oe-i').dispatchEvent(new Event('input'));
+    }));
+    return { draw };
+  })();
+
+  // ── 3 · Elemento de corriente ──
+  sims.ley = (() => {
+    const cv = $('cv-ley'); const P = { x: 360, y: 120 }; const PX_CM = 10; // 10 px = 1 cm
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const ex = 150, ey = h / 2;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 2; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(ex, 10); ctx.lineTo(ex, h - 10); ctx.stroke(); ctx.setLineDash([]);
+      arrow(ctx, ex, ey + 26, ex, ey - 26, col('primary'), 6); text(ctx, 'I dℓ', ex - 54, ey - 6, col('primary'));
+      const rx = P.x - ex, ry = -(P.y - ey); const r = Math.hypot(rx, ry) / PX_CM / 100; // m
+      const phi = Math.acos(Math.max(-1, Math.min(1, ry / Math.hypot(rx, ry || 1e-9)))); const dB = 1e-7 * 10 * 1e-3 * Math.sin(phi) / (r * r);
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2.5; ctx.setLineDash([8, 6]); ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(P.x, P.y); ctx.stroke(); ctx.setLineDash([]);
+      text(ctx, 'r', (ex + P.x) / 2 + 6, (ey + P.y) / 2 - 6, col('accent-strong'));
+      const size = Math.max(8, Math.min(30, 8 + 22 * Math.sqrt(dB / 1e-6)));
+      if (Math.abs(rx) > 2 && dB > 1e-12) dotSym(ctx, P.x, P.y, size, rx < 0, col('vec-field'));
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(P.x, P.y, 5, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', P.x + size + 6, P.y + 6, col('ink'));
+      $('ley-phi').textContent = dec(phi * 180 / Math.PI, 0) + '°'; $('ley-r').textContent = dec(r * 100) + ' cm'; $('ley-db').textContent = dB > 1e-14 ? sci(dB) + ' T' : '0 (sobre la línea)';
+    }
+    draggable(cv, () => P, (x, y) => { P.x = x; P.y = y; }, draw);
+    return { draw };
+  })();
+
+  // ── 4 · Hilo: segmento y animación de la integral ──
+  sims.hilo = (() => {
+    const cv = $('cv-hilo'); let animT = null;
+    function draw(sweep) {
+      let t1 = +$('hi-t1').value, t2 = +$('hi-t2').value; if (t2 < t1) [t1, t2] = [t2, t1];
+      const end = sweep == null ? t2 : Math.min(t2, sweep);
+      const ratio = (Math.sin(end * Math.PI / 180) - Math.sin(t1 * Math.PI / 180)) / 2; const Binf = MU0 * 5 / (2 * Math.PI * 0.02);
+      $('hi-ratio').textContent = dec(Math.max(0, ratio) * 100, 0) + ' %'; $('hi-b').textContent = sci(Math.max(0, ratio) * Binf) + ' T';
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const wx = 90, py = h / 2, a = 220, px = wx + a;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(wx, 8); ctx.lineTo(wx, h - 8); ctx.stroke();
+      const yOf = (deg) => py - a * Math.tan(deg * Math.PI / 180);
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(wx, Math.max(8, Math.min(h - 8, yOf(t1)))); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(end)))); ctx.stroke();
+      [t1, end].forEach((deg, i) => { ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 2; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(deg)))); ctx.stroke(); ctx.setLineDash([]); });
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); text(ctx, 'a', wx + a / 2, py + 22, col('muted'));
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', px + 10, py - 8, col('ink'));
+      text(ctx, 'θ₁', px - 70, yOf(t1) > py ? py + 40 : py - 28, col('accent-strong')); text(ctx, 'θ₂', px - 70, yOf(end) < py ? py - 52 : py + 62, col('primary'));
+      const bw = 26, bh = 300; ctx.fillStyle = col('line'); ctx.fillRect(w - 50, 40, bw, bh); ctx.fillStyle = col('success'); const f = Math.max(0, ratio); ctx.fillRect(w - 50, 40 + bh * (1 - f), bw, bh * f);
+      text(ctx, 'B/B∞', w - 66, 30, col('muted'), "500 13px 'IBM Plex Mono', monospace");
+    }
+    const step = () => { draw(); };
+    bind('hi-t1', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step); bind('hi-t2', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step);
+    $('hi-anim').addEventListener('click', () => {
+      cancelAnimationFrame(animT); let t1 = Math.min(+$('hi-t1').value, +$('hi-t2').value); const t2 = Math.max(+$('hi-t1').value, +$('hi-t2').value); const start = performance.now();
+      const run = (t) => { const s = t1 + (t2 - t1) * Math.min(1, (t - start) / 1600); draw(s); if (s < t2) animT = requestAnimationFrame(run); }; animT = requestAnimationFrame(run);
+    });
+    return { draw: () => draw() };
+  })();
+
+  // ── 5 · Superposición de dos hilos + reto aleatorio ──
+  sims.sup = (() => {
+    const cv = $('cv-sup'); const P = { x: 260, y: 90 }; const s = { s1: 1, s2: -1 }; const PX_CM = 15; const D = 8; // cm
+    const field = (I, sgn, wx, wy, px, py) => { const rx = (px - wx) / PX_CM / 100, ry = -(py - wy) / PX_CM / 100; const r2 = rx * rx + ry * ry; const k = MU0 * I * sgn / (2 * Math.PI * r2); return [-ry * k, rx * k]; };
+    function draw() {
+      const I1 = +$('su-i1').value, I2 = +$('su-i2').value; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cy = h / 2, x1 = w / 2 - D / 2 * PX_CM, x2 = w / 2 + D / 2 * PX_CM;
+      const B1 = field(I1, s.s1, x1, cy, P.x, P.y), B2 = field(I2, s.s2, x2, cy, P.x, P.y), B = [B1[0] + B2[0], B1[1] + B2[1]];
+      const sc = 2400000; const tip = (b) => [P.x + Math.max(-140, Math.min(140, b[0] * sc)), P.y - Math.max(-140, Math.min(140, b[1] * sc))];
+      dotSym(ctx, x1, cy, 16, s.s1 > 0, col('primary')); dotSym(ctx, x2, cy, 16, s.s2 > 0, col('primary'));
+      text(ctx, 'I₁', x1 - 34, cy + 6, col('primary')); text(ctx, 'I₂', x2 + 22, cy + 6, col('primary'));
+      ctx.globalAlpha = 0.55; let t = tip(B1); arrow(ctx, P.x, P.y, t[0], t[1], col('accent'), 3); t = tip(B2); arrow(ctx, P.x, P.y, t[0], t[1], col('accent'), 3); ctx.globalAlpha = 1;
+      t = tip(B); arrow(ctx, P.x, P.y, t[0], t[1], col('vec-field'), 4.5);
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(P.x, P.y, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', P.x + 10, P.y - 10, col('ink'));
+      const m = (v) => Math.hypot(v[0], v[1]); $('su-b1').textContent = sci(m(B1)) + ' T'; $('su-b2').textContent = sci(m(B2)) + ' T'; $('su-b').textContent = sci(m(B)) + ' T';
+      $('su-f').textContent = sci(MU0 * I1 * I2 / (2 * Math.PI * D / 100)) + ' N/m'; $('su-fd').textContent = s.s1 === s.s2 ? 'se atraen (mismo sentido)' : 'se repelen (sentidos opuestos)';
+    }
+    const lab = () => { $('su-s1').textContent = s.s1 > 0 ? 'I₁ sale ⊙' : 'I₁ entra ⊗'; $('su-s2').textContent = s.s2 > 0 ? 'I₂ sale ⊙' : 'I₂ entra ⊗'; };
+    $('su-s1').addEventListener('click', () => { s.s1 *= -1; lab(); draw(); }); $('su-s2').addEventListener('click', () => { s.s2 *= -1; lab(); draw(); });
+    bind('su-i1', (v) => v + ' A', draw); bind('su-i2', (v) => v + ' A', draw);
+    draggable(cv, () => P, (x, y) => { P.x = x; P.y = y; }, draw);
+    // Reto: punto medio entre dos hilos, valores aleatorios
+    let R = null;
+    const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+    function nuevo() {
+      R = { I1: ri(2, 20), I2: ri(2, 20), d: ri(4, 12), op: Math.random() < 0.5 };
+      const b1 = MU0 * R.I1 / (2 * Math.PI * R.d / 200), b2 = MU0 * R.I2 / (2 * Math.PI * R.d / 200); R.B = R.op ? b1 + b2 : Math.abs(b1 - b2); R.b1 = b1; R.b2 = b2;
+      $('rs-q').textContent = `Dos hilos paralelos separados ${R.d} cm llevan ${R.I1} A y ${R.I2} A en sentidos ${R.op ? 'opuestos' : 'iguales'}. ¿Cuánto vale |B| en el punto medio?`;
+      $('rs-in').value = ''; $('rs-fb').textContent = ''; $('rs-sol').classList.remove('show');
+      $('rs-sol').innerHTML = `\\(B_1=\\dfrac{\\mu_0 I_1}{2\\pi(d/2)}=${texSci(b1)}\\,\\mathrm T,\\quad B_2=${texSci(b2)}\\,\\mathrm T\\). Entre los hilos los campos ${R.op ? 'apuntan igual y se suman' : 'son opuestos y se restan'}: \\(|B|=${texSci(R.B)}\\,\\mathrm T=${dec(R.B * 1e6, 1).replace(',', '{,}')}\\,\\mu\\mathrm T\\).`;
+      renderMath($('rs-sol'));
+    }
+    $('rs-new').addEventListener('click', nuevo); $('rs-sb').addEventListener('click', () => $('rs-sol').classList.toggle('show'));
+    $('rs-ck').addEventListener('click', () => { const v = parseFloat($('rs-in').value.replace(',', '.')); if (!isFinite(v)) { $('rs-fb').textContent = 'Escribe un número en microteslas.'; return; } const ok = Math.abs(v - R.B * 1e6) <= 0.03 * R.B * 1e6 + 0.05; $('rs-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : '<b style="color:var(--e10-danger)">Aún no.</b> Revisa si los campos se suman o se restan entre los hilos.'; });
+    nuevo();
+    return { draw };
+  })();
+
+  // ── 6 · Espira: gráfica B(z) + ejercicio generado ──
+  sims.esp = (() => {
+    const cv = $('cv-esp');
+    function draw() {
+      const R = +$('es-r').value / 100, I = +$('es-i').value, z = +$('es-z').value / 100; const B = (zz) => MU0 * I * R * R / (2 * Math.pow(R * R + zz * zz, 1.5)); const B0 = B(0);
+      $('es-b0').textContent = sci(B0) + ' T'; $('es-bz').textContent = sci(B(z)) + ' T'; $('es-ratio').textContent = dec(B(z) / B0, 3);
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const L = 40, Rr = w - 20, T = 20, Bt = h - 40; const zmax = 0.30;
+      const X = (zz) => L + (zz + zmax) / (2 * zmax) * (Rr - L), Y = (b) => Bt - b / (MU0 * 10 / (2 * 0.02)) * (Bt - T) * 1.0;
+      const ymax = Math.max(B0 * 1.1, 1e-9); const Y2 = (b) => Bt - b / ymax * (Bt - T);
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(L, Bt); ctx.lineTo(Rr, Bt); ctx.moveTo(X(0), T); ctx.lineTo(X(0), Bt); ctx.stroke();
+      text(ctx, 'z', Rr - 10, Bt - 8, col('muted')); text(ctx, 'B', X(0) + 8, T + 14, col('muted'));
+      [-0.3, -0.2, -0.1, 0.1, 0.2, 0.3].forEach((v) => text(ctx, (v * 100).toFixed(0), X(v) - 10, Bt + 20, col('muted'), "500 12px 'IBM Plex Mono', monospace"));
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const zz = -zmax + 2 * zmax * i / 300; const y = Y2(B(zz)); i ? ctx.lineTo(X(zz), y) : ctx.moveTo(X(zz), y); } ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(X(z), Bt); ctx.lineTo(X(z), Y2(B(z))); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col('vec-field'); ctx.beginPath(); ctx.arc(X(z), Y2(B(z)), 7, 0, 2 * Math.PI); ctx.fill();
+      [R, -R].forEach((rr) => { if (Math.abs(rr) <= zmax) { ctx.strokeStyle = col('line'); ctx.beginPath(); ctx.moveTo(X(rr), Bt - 4); ctx.lineTo(X(rr), Bt + 4); ctx.stroke(); } });
+      text(ctx, 'cm', Rr - 30, Bt + 34, col('muted'), "500 12px 'IBM Plex Mono', monospace");
+    }
+    bind('es-r', (v) => v + ' cm', draw); bind('es-i', (v) => dec(v) + ' A', draw); bind('es-z', (v) => v + ' cm', draw);
+    let E = null; const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+    function nuevo() {
+      const R = ri(5, 15) / 100, I = ri(2, 16) / 2, f = [0, 0.5, 1, 2][ri(0, 3)], z = f * R; const B = MU0 * I * R * R / (2 * Math.pow(R * R + z * z, 1.5)); E = { R, I, z, B };
+      $('re-q').textContent = `Espira de radio ${dec(R * 100, 0)} cm con ${dec(I)} A. ¿Cuánto vale B sobre el eje a z = ${dec(z * 100, 1)} cm?`;
+      $('re-in').value = ''; $('re-fb').textContent = ''; $('re-sol').classList.remove('show');
+      $('re-sol').innerHTML = `\\(B_z=\\dfrac{\\mu_0 I R^2}{2(R^2+z^2)^{3/2}}=\\dfrac{(4\\pi\\times10^{-7})(${dec(I).replace(',', '{,}')})(${dec(R, 2).replace(',', '{,}')})^2}{2\\,[(${dec(R, 2).replace(',', '{,}')})^2+(${dec(z, 3).replace(',', '{,}')})^2]^{3/2}}=${texSci(B)}\\,\\mathrm T\\)`;
+      renderMath($('re-sol'));
+    }
+    $('re-new').addEventListener('click', nuevo); $('re-sb').addEventListener('click', () => $('re-sol').classList.toggle('show'));
+    $('re-ck').addEventListener('click', () => { const v = parseFloat($('re-in').value.replace(',', '.')); if (!isFinite(v)) { $('re-fb').textContent = 'Escribe un número en microteslas.'; return; } const ok = Math.abs(v - E.B * 1e6) <= 0.03 * E.B * 1e6 + 0.01; $('re-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b>' : '<b style="color:var(--e10-danger)">Aún no.</b> Usa metros y revisa el exponente 3/2.'; });
+    nuevo();
+    return { draw };
+  })();
+
+  // ── 7 · Arco ──
+  sims.arco = (() => {
+    const cv = $('cv-arco');
+    function draw() {
+      const th = +$('ar-t').value, R = +$('ar-r').value / 100, I = 9; const B = MU0 * I * (th * Math.PI / 180) / (4 * Math.PI * R), Bf = MU0 * I / (2 * R);
+      $('ar-b').textContent = sci(B) + ' T'; $('ar-f').textContent = dec(th / 360, 2); $('ar-full').textContent = sci(Bf) + ' T';
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2, rp = 70 + R * 100 * 8;
+      const a0 = -Math.PI / 2 - (th * Math.PI / 180) / 2, a1 = a0 + th * Math.PI / 180;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 2; ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.arc(cx, cy, rp, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, rp, a0, a1); ctx.stroke();
+      const am = (a0 + a1) / 2; arrow(ctx, cx + rp * Math.cos(am - 0.12), cy + rp * Math.sin(am - 0.12), cx + rp * Math.cos(am + 0.12), cy + rp * Math.sin(am + 0.12), col('primary'), 4);
+      text(ctx, 'I', cx + (rp + 18) * Math.cos(am), cy + (rp + 18) * Math.sin(am), col('primary'));
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + rp * Math.cos(a0), cy + rp * Math.sin(a0)); ctx.moveTo(cx, cy); ctx.lineTo(cx + rp * Math.cos(a1), cy + rp * Math.sin(a1)); ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 30, a0, a1); ctx.stroke(); text(ctx, 'θ', cx - 6, cy - 38, col('accent-strong'));
+      dotSym(ctx, cx, cy, 10 + 14 * Math.min(1, th / 360), false, col('vec-field')); text(ctx, 'B entra (corriente horaria)', cx - 90, cy + 46, col('vec-field'), "500 15px 'IBM Plex Sans', sans-serif");
+    }
+    bind('ar-t', (v) => v + '°', draw); bind('ar-r', (v) => v + ' cm', draw);
+    return { draw };
+  })();
+
+  // ── Errores: tarjetas ──
+  document.querySelectorAll('.flip').forEach((c) => { const t = () => c.classList.toggle('open'); c.addEventListener('click', t); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); });
+
+  // ── Laboratorio: simulador bajo demanda ──
+  const labBtns = document.querySelectorAll('[data-lab]');
+  labBtns.forEach((b) => b.addEventListener('click', () => { labBtns.forEach((x) => x.classList.toggle('on', x === b)); $('lab-frame').src = b.dataset.lab; }));
+
+  // ── Navegación ──
+  const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
+  const onShow = { 1: () => sims.cover.show(), 2: sims.oersted.draw, 3: sims.ley.draw, 4: sims.hilo.draw, 5: sims.sup.draw, 6: sims.esp.draw, 7: sims.arco.draw, 9: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; } };
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); if (cur === 0) sims.cover.hide();
+    cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`; $('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
+  }
+  $('nav-prev').addEventListener('click', () => go(cur - 1)); $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1); });
+  $('nav-fs').addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {}); else document.exitFullscreen?.(); });
+  const print = () => { Object.values(sims).forEach((s) => s.draw && s.draw()); setTimeout(() => window.print(), 150); };
+  $('nav-print').addEventListener('click', print); $('btn-print2').addEventListener('click', print);
+  window.addEventListener('beforeprint', () => Object.values(sims).forEach((s) => s.draw && s.draw()));
+
+  // ── Escala al tamaño de la ventana ──
+  function fit() { const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720); $('stage').style.transform = `scale(${s})`; }
+  window.addEventListener('resize', fit); fit();
+
+  window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  slides[0].classList.add('on');
+})();
+</script>
+</body>
+</html>
