@@ -18,7 +18,7 @@ export const modulo2 = {
         {
             "id": "m2-l1",
             "tipo": "multivideo",
-            "recurso": "y00efYMfQbg|-c8JxTvP9zs|CBwHsuVcXUI|hqg_89-2Lyo|c1jyhvkPqqk|3p_rM3i9IxY|tF8zfTVUAFY",
+            "recurso": "y00efYMfQbg|-c8JxTvP9zs|CBwHsuVcXUI|hqg_89-2Lyo|c1jyhvkPqqk",
             "titulo": "1. Teoría Vectorial del Campo Eléctrico",
             "descripcion": "Definición formal del vector campo eléctrico, líneas de fuerza, superposición vectorial y análisis de dipolos.",
             "xp": 10

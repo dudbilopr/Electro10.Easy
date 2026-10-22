@@ -26,7 +26,7 @@ export const modulo6 = {
         {
             "id": "m6-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=5",
+            "recurso": "./player.html?clase=6",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Material visual utilizado en la clase magistral. Incluye demostraciones matemáticas de arreglos en serie y paralelo.",
             "xp": 15

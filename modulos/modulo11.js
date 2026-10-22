@@ -18,7 +18,7 @@ export const modulo11 = {
         {
             "id": "m11-l1",
             "tipo": "multivideo",
-            "recurso": "Kq6MkgJQCpI|MzVfz_DdRhA|NeG0T7BKZPM|ZBn-8GOxJHY|kDPi48ynPkM|GUCFk_Py5Ps",
+            "recurso": "",
             "titulo": "1. Teoría y Deducción: Ley de Faraday e Inducción",
             "descripcion": "Fundamentación matemática de la fem inducida, ley de Lenz, energía en inductores y transformadores.",
             "xp": 10
@@ -26,7 +26,7 @@ export const modulo11 = {
         {
             "id": "m11-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=10",
+            "recurso": "./player.html?clase=11",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Visualización vectorial interactiva de espiras en rotación, barras conductoras y flujos variantes en el tiempo.",
             "xp": 15
@@ -66,7 +66,7 @@ export const modulo11 = {
         {
             "id": "m11-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_10_Ley_de_Faraday.html",
+            "recurso": "talleres/Taller_11_Ley_de_Faraday.html",
             "titulo": "5. Taller Práctico No. 10 — Ley de Faraday",
             "descripcion": "Problemas de inductancia mutua, barras deslizantes con fricción y circuitos con inductores acoplados.",
             "xp": 30

@@ -12,3 +12,12 @@ scratch/
 
 # Capturas del método de diseño (scripts/capturas.cjs)
 capturas/
+
+# Archivos de compilación LaTeX
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+missfont.log

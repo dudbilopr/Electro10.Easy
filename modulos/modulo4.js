@@ -18,7 +18,7 @@ export const modulo4 = {
         {
             "id": "m4-l1",
             "tipo": "multivideo",
-            "recurso": "h57Q1fCwZgA|A9DWg5FSTx0|ZmBfYn9APkg|A9DWg5FSTx0|1cpACIOuFFU|k2dXe2AvoYs|k2w8tZeF0ug|IA5-ydK4ni8|8irn1C12G2U|MjhyOf-6VKQ|YisPzZHHvV0|cbePOxHemJQ|0wZ8s6Byghg|uesmpfag3Og|vWWwq63cyY8",
+            "recurso": "h57Q1fCwZgA|A9DWg5FSTx0|ZmBfYn9APkg|1cpACIOuFFU|k2dXe2AvoYs|k2w8tZeF0ug|IA5-ydK4ni8|8irn1C12G2U|MjhyOf-6VKQ|YisPzZHHvV0|cbePOxHemJQ|0wZ8s6Byghg|vWWwq63cyY8",
             "titulo": "1. Teoría: Cálculo Integral de Distribuciones de Carga",
             "descripcion": "Deducción matemática completa de las integrales de campo para varillas, anillos, discos y cilindros.",
             "xp": 10

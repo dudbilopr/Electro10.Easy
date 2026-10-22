@@ -18,7 +18,7 @@ export const modulo9 = {
         {
             "id": "m9-l1",
             "tipo": "multivideo",
-            "recurso": "PPnDdEkH5rI|RiCBQJWz0Hs|J0eZkUQrRHY|V0x_kQovAUA|8kU8YyNOanE",
+            "recurso": "",
             "titulo": "1. Teoría y Deducción: Ley de Biot-Savart",
             "descripcion": "Cálculo analítico del campo magnético producido por hilos, espiras y arreglos espaciales de corriente.",
             "xp": 10
@@ -26,7 +26,7 @@ export const modulo9 = {
         {
             "id": "m9-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=8",
+            "recurso": "./player.html?clase=9",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Visualización tridimensional del campo magnético y análisis diferencial para distintas geometrías.",
             "xp": 15
@@ -66,7 +66,7 @@ export const modulo9 = {
         {
             "id": "m9-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_8_Biot_Savart.html",
+            "recurso": "talleres/Taller_9_Biot_Savart.html",
             "titulo": "5. Taller Práctico No. 8 — Ley de Biot-Savart",
             "descripcion": "Cálculo analítico del campo magnético en hilos, arcos circulares, espiras y bobinas de Helmholtz.",
             "xp": 30

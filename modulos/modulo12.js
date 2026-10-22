@@ -18,7 +18,7 @@ export const modulo12 = {
         {
             "id": "m12-l1",
             "tipo": "multivideo",
-            "recurso": "F3GFTvKu7vM|LKuOc5kqPZw|F4j1N9GepPg|RIUqZ6UiHxs|UeVdq0VFtk8|Y0oN0mTiP3k",
+            "recurso": "",
             "titulo": "1. Teoría y Deducción: Ecuaciones de Maxwell",
             "descripcion": "La unificación fundamental de la electricidad, magnetismo y óptica clásica en 4 postulados.",
             "xp": 10
@@ -26,7 +26,7 @@ export const modulo12 = {
         {
             "id": "m12-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=11",
+            "recurso": "./player.html?clase=12",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Visualización tridimensional de la propagación de ondas EM con campos ortogonales acoplados.",
             "xp": 15
@@ -66,7 +66,7 @@ export const modulo12 = {
         {
             "id": "m12-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_11_Ecuaciones_Maxwell.html",
+            "recurso": "talleres/Taller_12_Ecuaciones_Maxwell.html",
             "titulo": "5. Taller Práctico No. 11 — Ecuaciones de Maxwell",
             "descripcion": "Problemas de corriente de desplazamiento en capacitores, cálculo del vector de Poynting y balance energético.",
             "xp": 30

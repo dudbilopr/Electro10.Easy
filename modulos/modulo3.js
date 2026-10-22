@@ -74,7 +74,7 @@ export const modulo3 = {
         {
             "id": "m3-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_3_Ptencial_Electrico.html",
+            "recurso": "talleres/Taller_3_Potencial_Electrico.html",
             "titulo": "5. Taller Práctico No. 3 — Potencial Eléctrico",
             "descripcion": "Problemas de nivel universitario sobre trabajo de fuerzas eléctricas, potenciales de esferas y gradientes.",
             "xp": 30

@@ -18,7 +18,7 @@ export const modulo10 = {
         {
             "id": "m10-l1",
             "tipo": "multivideo",
-            "recurso": "6mHK7by6WJc|mIPnkZPFAa8|aEFn-JY_h8A|4DYjxBRjYbc|K7-PiHoJ3v0",
+            "recurso": "",
             "titulo": "1. Teoría y Deducción: Ley de Ampere",
             "descripcion": "Circulación magnética, aplicación a solenoides, toroides y la introducción histórica de la corriente de desplazamiento.",
             "xp": 10
@@ -26,7 +26,7 @@ export const modulo10 = {
         {
             "id": "m10-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=9",
+            "recurso": "./player.html?clase=10",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Caminos amperianos en geometrías cilíndricas y toroidales, con demostraciones analíticas completas.",
             "xp": 15
@@ -66,7 +66,7 @@ export const modulo10 = {
         {
             "id": "m10-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_9_Ley_de_Ampere.html",
+            "recurso": "talleres/Taller_10_Ley_de_Ampere.html",
             "titulo": "5. Taller Práctico No. 9 — Ley de Ampere",
             "descripcion": "Problemas de solenoides, toroides, cables coaxiales con densidades volumétricas de corriente.",
             "xp": 30

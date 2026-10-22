@@ -19,7 +19,7 @@ export const modulo7 = {
         {
             "id": "m7-l1",
             "tipo": "multivideo",
-            "recurso": "7634000081997286663|qPm5XVvZIac|245-usgm-pk|Oq7Dfh85-VE|rP65AmXLv_4|vGQWLgpxkWI|1NC9kGDn7Bg|a7-vJK2-4Tc",
+            "recurso": "qPm5XVvZIac|245-usgm-pk|Oq7Dfh85-VE|rP65AmXLv_4|vGQWLgpxkWI|1NC9kGDn7Bg|a7-vJK2-4Tc",
             "titulo": "1. Videos — Circuitos de Corriente Continua (CC)",
             "descripcion": "Corriente, resistencia, reglas de Kirchhoff, mallas, Thévenin y circuitos RC con demostraciones completas.",
             "xp": 10
@@ -29,7 +29,7 @@ export const modulo7 = {
         {
             "id": "m7-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=modulo7",
+            "recurso": "./player.html?clase=7",
             "titulo": "2. Diapositivas Interactivas — Circuitos Resistivos",
             "descripcion": "Análisis de circuitos con métodos de reducción, mallas y nodos visualizados paso a paso.",
             "xp": 15
@@ -99,7 +99,7 @@ export const modulo7 = {
                 {
                     "id": "m7-t1",
                     "tipo": "ejercicio",
-                    "recurso": "talleres/Taller_6_1_Reduccion_Circuitos.html",
+                    "recurso": "talleres/Taller_7_1_Reduccion_Circuitos.html",
                     "titulo": "5.1 Taller — Reducción de Circuitos",
                     "descripcion": "Simplificación sistemática de redes resistivas en serie, paralelo y conversiones delta-estrella.",
                     "xp": 25
@@ -107,7 +107,7 @@ export const modulo7 = {
                 {
                     "id": "m7-t2",
                     "tipo": "ejercicio",
-                    "recurso": "talleres/Taller_6_2_Leyes_K.html",
+                    "recurso": "talleres/Taller_7_2_Leyes_K.html",
                     "titulo": "5.2 Taller — Leyes de Kirchhoff y Mallas",
                     "descripcion": "Análisis sistemático de circuitos mediante sistemas de ecuaciones con LKV y LKC.",
                     "xp": 30

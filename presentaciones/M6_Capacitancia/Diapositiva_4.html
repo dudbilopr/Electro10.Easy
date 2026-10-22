@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M6: Capacitancia - Diapositiva 4</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--e10-bg, #0f172a); color: var(--e10-text, #f8fafc); font-family: var(--e10-font, 'Inter', sans-serif); height: 100vh; padding: 1rem; display: flex; flex-direction: column; overflow: hidden; }
+    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; }
+    header { padding: 1rem 1.5rem; margin-bottom: 0.75rem; flex-none: 0; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.35rem; color: #38bdf8; font-weight: 700; }
+    header p { font-size: 0.85rem; color: #94a3b8; }
+    main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; min-height: 0; }
+    .panel { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+    .panel h2 { font-size: 1.15rem; color: #ffffff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .formula-card { background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: 10px; border-left: 4px solid var(--e10-primary, #0B8CA8); }
+    .formula-card.densidad { border-left-color: var(--e10-accent, #B3246B); }
+    .formula-card p { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.5rem; }
+    ul { font-size: 0.85rem; line-height: 1.5; color: #94a3b8; padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <header class="glass">
+    <div>
+      <h1>4. Energía Almacenada y Densidad Energética</h1>
+      <p>Módulo 6 · El campo eléctrico como reservorio físico de energía potencial</p>
+    </div>
+    <span class="e10-chip e10-chip--primary">10.Easy</span>
+  </header>
+  <main>
+    <section class="panel glass">
+      <h2>Energía en el Capacitor</h2>
+      <p style="font-size:0.85rem; line-height:1.4; color:#cbd5e1;">
+        El trabajo realizado por la fuente para transferir carga infinitesimal $dq$ contra la diferencia de potencial acumulada $v = q/C$ se almacena como energía electrostática $U$.
+      </p>
+      <div class="formula-card">
+        <p><strong>Formas Equivalentes de Energía ($U$ en Joules):</strong></p>
+        <div>$$U = \int_0^Q \frac{q}{C}\,dq = \frac{1}{2}\frac{Q^2}{C} = \frac{1}{2} C (\Delta V)^2 = \frac{1}{2} Q \Delta V$$</div>
+      </div>
+      <ul>
+        <li>Si la batería está conectada ($\Delta V = \text{cte}$): $U \propto C$.</li>
+        <li>Si la batería está desconectada ($Q = \text{cte}$): $U \propto \frac{1}{C}$.</li>
+      </ul>
+    </section>
+
+    <section class="panel glass">
+      <h2>Densidad de Energía Volumétrica</h2>
+      <p style="font-size:0.85rem; line-height:1.4; color:#cbd5e1;">
+        Físicamente, la energía no reside en las placas materiales, sino en el <em>espacio interplacas donde existe el campo eléctrico</em>.
+      </p>
+      <div class="formula-card densidad">
+        <p><strong>Densidad de Energía $u_E$ ($\text{J/m}^3$):</strong></p>
+        <div>$$u_E = \frac{U}{\text{Volumen}} = \frac{U}{A \cdot d} = \frac{1}{2}\varepsilon E^2$$</div>
+      </div>
+      <div class="formula-card densidad">
+        <p><strong>En el Vacío ($\varepsilon = \varepsilon_0$):</strong></p>
+        <div>$$u_E = \frac{1}{2}\varepsilon_0 E^2$$</div>
+      </div>
+      <ul>
+        <li>Este resultado es universal y se aplicará directamente a las ondas electromagnéticas en el Módulo 12 (vector de Poynting).</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

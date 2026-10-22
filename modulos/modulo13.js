@@ -18,7 +18,7 @@ export const modulo13 = {
         {
             "id": "m13-l1",
             "tipo": "multivideo",
-            "recurso": "2HxTt0Kl8KM|NHhK6RHFB4c|L4fTVV7mMBc|8p82v2_KYVQ|j-JK4GVv6BA|mFTfzQFdSJ8|SLFi1M0j2To",
+            "recurso": "",
             "titulo": "1. Teoría y Deducción: Circuitos Transitorios y Corriente Alterna",
             "descripcion": "Ecuaciones diferenciales de segundo orden, analogía mecánica del oscilador y formulación fasorial en régimen senoidal.",
             "xp": 10
@@ -26,7 +26,7 @@ export const modulo13 = {
         {
             "id": "m13-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=12",
+            "recurso": "./player.html?clase=13",
             "titulo": "2. Diapositivas de Apoyo Magistral",
             "descripcion": "Diagramas fasoriales animados, curvas de resonancia en frecuencia y cálculo de impedancias equivalentes.",
             "xp": 15
@@ -74,7 +74,7 @@ export const modulo13 = {
         {
             "id": "m13-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_12_Circuitos_CA.html",
+            "recurso": "talleres/Taller_13_Circuitos_CA.html",
             "titulo": "5. Taller Práctico No. 12 — Circuitos RLC y Corriente Alterna",
             "descripcion": "Problemas de régimen transitorio, análisis de impedancia compleja, factor de potencia y diseño de filtros.",
             "xp": 30

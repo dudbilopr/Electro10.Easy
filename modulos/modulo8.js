@@ -65,7 +65,7 @@ export const modulo8 = {
         {
             "id": "m8-l2",
             "tipo": "presentacion",
-            "recurso": "./player.html?clase=modulo8",
+            "recurso": "./player.html?clase=8",
             "titulo": "2. Diapositivas Pedagógicas — Fuerza de Lorentz y Electrodinámica",
             "descripcion": "Diapositivas detalladas con ejercicios resueltos paso a paso: producto cruz vectorial, frecuencia de ciclotrón, conductores con corriente y motores DC, selector de Wien, espectrómetro y laboratorio 3D con tips de examen.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
@@ -131,7 +131,7 @@ export const modulo8 = {
         {
             "id": "m8-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_7_Ley_de_Lorentz.html",
+            "recurso": "talleres/Taller_8_Ley_de_Lorentz.html",
             "titulo": "5. Taller Práctico No. 8 — Ley de Lorentz y Trayectorias",
             "descripcion": "Resolución analítica de problemas: cálculo de radio de órbita, ciclotrones, espectrómetros de masas y fuerzas sobre conductores rectilíneos.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",

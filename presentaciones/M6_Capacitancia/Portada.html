@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 6: Capacitancia y Dieléctricos — 10.Easy</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--e10-bg, #0f172a);
+      font-family: var(--e10-font, 'Inter', sans-serif);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--e10-text, #f8fafc);
+      overflow: hidden;
+    }
+    .title-wrapper {
+      text-align: center;
+      z-index: 10;
+      padding: 3rem 2.5rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+      max-width: 90%;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: rgba(11, 140, 168, 0.2);
+      border: 1px solid var(--e10-primary, #0B8CA8);
+      color: #38bdf8;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      color: var(--e10-text, #ffffff);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      font-weight: 800;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #0B8CA8, #B3246B);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h2 {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: var(--e10-text-muted, #94a3b8);
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="title-wrapper">
+    <div class="badge">Módulo 6 · Electrostática de Medios</div>
+    <h1>Capacitancia y <span>Dieléctricos</span></h1>
+    <h2>Almacenamiento de energía electrostática, polarización inducida y cálculo de arreglos capacitivos</h2>
+  </div>
+</body>
+</html>

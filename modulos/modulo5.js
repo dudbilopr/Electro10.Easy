@@ -18,7 +18,7 @@ export const modulo5 = {
         {
             "id": "m5-l1",
             "tipo": "multivideo",
-            "recurso": "COGjyZI1PS8|A4qBPrfzZMk|LYmdJmTyFGQ|5XdSmm8VWKQ|38lwnRYEGEc|3aWFJdqM_Rw|jJSq8BFJYt4|z-fv_QDESSc|0iU4RWMHqOg|Sw6vtplA_68|enQ8QuUBYNE|6w51PrhXy04|b_nBNDkJUJE|g2YK35fR7yE|XHAfc4EbH1Q|a7jaxpYtZAQ|DPCcImv1Xko|SizL_9HP6nY|gJasVOhHbao|7ssuVrxocBQ|X27VqqJ6Dwo|-iIUb9Bma0k|dxOxY0et1rE|9HCXZruI0Lk|gJasVOhHbao|TnA2ejc-1es|RmbQiiVV_bc|9t65kr3UVFw|a3VThqncuZQ",
+            "recurso": "COGjyZI1PS8|A4qBPrfzZMk|LYmdJmTyFGQ|5XdSmm8VWKQ|38lwnRYEGEc|3aWFJdqM_Rw|jJSq8BFJYt4|z-fv_QDESSc|0iU4RWMHqOg|Sw6vtplA_68|enQ8QuUBYNE|6w51PrhXy04|b_nBNDkJUJE|g2YK35fR7yE|XHAfc4EbH1Q|a7jaxpYtZAQ|DPCcImv1Xko|SizL_9HP6nY|gJasVOhHbao|7ssuVrxocBQ|X27VqqJ6Dwo|-iIUb9Bma0k|dxOxY0et1rE|9HCXZruI0Lk|TnA2ejc-1es|RmbQiiVV_bc|9t65kr3UVFw|a3VThqncuZQ",
             "titulo": "1. Teoría y Deducción: Ley de Gauss y Flujo Eléctrico",
             "descripcion": "Fundamentación teórica rigurosa del flujo eléctrico, análisis de simetrías ortogonales y formulación integral de Gauss.",
             "xp": 10
@@ -74,7 +74,7 @@ export const modulo5 = {
         {
             "id": "m5-l7",
             "tipo": "ejercicio",
-            "recurso": "talleres/Taller_5_1_Flujo_Electrico.html",
+            "recurso": "talleres/Taller_5_Ley_de_Gauss.html",
             "titulo": "5. Taller Práctico No. 5 — Flujo Eléctrico y Ley de Gauss",
             "descripcion": "Colección de problemas Sears-Zemansky: integración directa de flujo, esferas no uniformes y equilibrio electrostático.",
             "xp": 30
