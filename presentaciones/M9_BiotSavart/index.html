@@ -75,6 +75,51 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
 .progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
 .print-only{display:none}
+/* Árbol de decisión, mapa de conceptos, línea de tiempo y tarjetas (diapositivas 9, 11 y 12) */
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:96px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.55em}#cm-eq .katex{font-size:1.15em}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+/* Luz que viaja por cada conexión, del concepto de origen al de destino */
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.conn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.conn>span{font-size:13px;color:var(--e10-muted);width:70px}.conn .chip{font-size:13px;font-family:var(--e10-font-body)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
 @media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
 @page{size:1280px 720px;margin:0}
 @media print{
@@ -137,7 +182,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="read" id="oe-read"><div>Campo del cable<b id="oe-bc">0</b></div><div>Campo terrestre (dato)<b>2,0×10⁻⁵ T</b></div><div>Desviación<b id="oe-phi">0°</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>\(B_T\) horizontal de \(2{,}0\times10^{-5}\,\mathrm{T}\) es un valor de ejemplo.</span><span class="mono">2 / 10</span></div>
+  <div class="foot"><span>\(B_T\) horizontal de \(2{,}0\times10^{-5}\,\mathrm{T}\) es un valor de ejemplo.</span><span class="mono">2 / 13</span></div>
 </section>
 
 <!-- 3 · LA LEY -->
@@ -160,7 +205,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="read"><div>Ángulo φ<b id="ley-phi">—</b></div><div>Distancia r<b id="ley-r">—</b></div><div>|dB| (I=10 A, dℓ=1 mm)<b id="ley-db">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Regla de la mano derecha: pulgar en el sentido de \(I\), los dedos indican \(\vec B\).</span><span class="mono">3 / 10</span></div>
+  <div class="foot"><span>Regla de la mano derecha: pulgar en el sentido de \(I\), los dedos indican \(\vec B\).</span><span class="mono">3 / 13</span></div>
 </section>
 
 <!-- 4 · HILO -->
@@ -186,7 +231,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="read"><div>Segmento / infinito<b id="hi-ratio">—</b></div><div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div></div>
     </div>
   </div>
-  <div class="foot"><span>Consejo: el hilo infinito decae como \(1/a\), no como \(1/a^2\): es una fuente extendida.</span><span class="mono">4 / 10</span></div>
+  <div class="foot"><span>Consejo: el hilo infinito decae como \(1/a\), no como \(1/a^2\): es una fuente extendida.</span><span class="mono">4 / 13</span></div>
 </section>
 
 <!-- 5 · SUPERPOSICIÓN -->
@@ -215,7 +260,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       </div>
     </div>
   </div>
-  <div class="foot"><span>Corrientes en el mismo sentido se atraen; en sentidos opuestos se repelen.</span><span class="mono">5 / 10</span></div>
+  <div class="foot"><span>Corrientes en el mismo sentido se atraen; en sentidos opuestos se repelen.</span><span class="mono">5 / 13</span></div>
 </section>
 
 <!-- 6 · ESPIRA -->
@@ -244,7 +289,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       </div>
     </div>
   </div>
-  <div class="foot"><span>Lejos (\(z\gg R\)) el campo decae como \(1/z^{3}\): la espira es un dipolo magnético.</span><span class="mono">6 / 10</span></div>
+  <div class="foot"><span>Lejos (\(z\gg R\)) el campo decae como \(1/z^{3}\): la espira es un dipolo magnético.</span><span class="mono">6 / 13</span></div>
 </section>
 
 <!-- 7 · ARCOS -->
@@ -269,7 +314,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="warn"><b>Ojo.</b> Los tramos rectos alineados con el centro no aportan nada (\(d\vec\ell\parallel\hat r\)), pero los tramos rectos <i>no</i> alineados sí: en una horquilla suman \(2\times\dfrac{\mu_0 I}{4\pi R}\).</div>
     </div>
   </div>
-  <div class="foot"><span>Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 10</span></div>
+  <div class="foot"><span>Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 13</span></div>
 </section>
 
 <!-- 8 · ERRORES -->
@@ -290,11 +335,41 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="b"><b style="font:600 20px var(--e10-font-display);color:var(--e10-success)">Es perpendicular.</b><span>\(d\vec B\propto d\vec\ell\times\hat r\): perpendicular a la corriente y a la recta hacia el punto. Las líneas de \(\vec B\) rodean al cable.</span></div>
     </div></div>
   </div>
-  <div class="foot"><span>Antes de calcular, dibuja \(d\vec\ell\), \(\hat r\) y \(d\vec B\) para dos elementos simétricos.</span><span class="mono">8 / 10</span></div>
+  <div class="foot"><span>Antes de calcular, dibuja \(d\vec\ell\), \(\hat r\) y \(d\vec B\) para dos elementos simétricos.</span><span class="mono">8 / 13</span></div>
 </section>
 
-<!-- 9 · LABORATORIO -->
+<!-- 9 · ÁRBOL DE DECISIÓN -->
 <section class="slide" data-n="9">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag p">Árbol de decisión</span></div>
+  <h2>¿Qué fórmula uso? Responde y el árbol te lleva</h2>
+  <div class="row" style="gap:18px">
+    <div class="col" style="width:430px;flex:none;gap:6px">
+      <div class="tq"><div class="tqh"><span class="mono">1</span><b>¿Qué crea el campo?</b></div><div class="tq-opts" id="tq1"></div></div>
+      <span class="tq-down" id="tq-down" aria-hidden="true">↓</span>
+      <div class="tq" id="tq2-box"><div class="tqh"><span class="mono">2</span><b>¿Dónde está el punto P?</b></div><div class="tq-opts" id="tq2"></div></div>
+      <div class="tipbox" id="tq-only" hidden><b>Una sola pregunta basta.</b> Para una carga puntual la fórmula vale en cualquier punto; solo cambia la dirección de \(\hat r\).</div>
+    </div>
+    <div class="leaf col">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b class="leaf-name" id="leaf-name"></b><span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">USA ESTA FÓRMULA</span></div>
+      <div class="leaf-eq" id="leaf-eq"></div>
+      <div style="font-size:15px"><b>Cuándo vale.</b> <span id="leaf-when"></span></div>
+      <div style="font-size:15px"><b>Dirección.</b> <span id="leaf-dir"></span></div>
+      <div class="reto" style="margin-top:auto">
+        <div class="q"><b style="color:var(--e10-primary)">Reto rápido.</b> <span id="leaf-reto"></span></div>
+        <div class="ans no-print"><input id="leaf-in" type="text" inputmode="decimal" aria-label="Tu respuesta en tesla" placeholder="tu respuesta en T, p. ej. 4,4e-6"><button type="button" class="btn pri" id="leaf-check">Comprobar</button><a class="btn" id="leaf-lab" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Abrir en BiotSavartLab</a></div>
+        <div class="fb" id="leaf-fb"></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:14px">
+    <div class="tipbox" style="flex:1"><b>¿Varias fuentes?</b> Recorre el árbol para cada una y suma los campos como vectores.</div>
+    <div class="tipbox" style="flex:1;background:var(--e10-violet-soft)"><b style="color:var(--e10-vec-field)">¿Mucha simetría?</b> Hilo muy largo, solenoide o toroide: la ley de Ampère (cap. 10) es más rápida.</div>
+  </div>
+  <div class="foot"><span>Elige una respuesta en cada pregunta; el camino elegido queda resaltado</span><span class="mono">9 / 13</span></div>
+</section>
+
+<!-- 10 · LABORATORIO -->
+<section class="slide" data-n="10">
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Laboratorio</span></div>
   <h2>Comprueba en el simulador lo que acabas de deducir</h2>
   <div class="row">
@@ -310,11 +385,63 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <div class="tipbox"><b>Consejo.</b> Anota tu predicción antes de mover el control: así detectas qué idea tenías mal.</div>
     </div>
   </div>
-  <div class="foot"><span></span><span class="mono">9 / 10</span></div>
+  <div class="foot"><span></span><span class="mono">10 / 13</span></div>
 </section>
 
-<!-- 10 · CIERRE -->
-<section class="slide" data-n="10">
+<!-- 11 · MAPA DE CONCEPTOS -->
+<section class="slide" data-n="11">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Mapa de conceptos</span></div>
+  <h2>De dónde viene y a dónde lleva este capítulo</h2>
+  <div class="row" style="gap:24px">
+    <div class="cmap" id="cmap">
+      <svg width="780" height="520" viewBox="0 0 780 520" aria-hidden="true" id="cmap-svg"></svg>
+      <div class="cmap-legend"><span class="chip past">viene de</span><span class="chip this">este capítulo</span><span class="chip fut">lleva a</span></div>
+    </div>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="card col" style="gap:10px">
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)" id="cm-kind"></span>
+        <b style="font:600 22px var(--e10-font-display)" id="cm-label"></b>
+        <p style="margin:0;font-size:16px" id="cm-def"></p>
+        <div class="leaf-eq" id="cm-eq" style="min-height:70px"></div>
+        <div style="font-size:14px;color:var(--e10-muted)" id="cm-where"></div>
+        <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap" id="cm-actions"></div>
+      </div>
+      <div class="tipbox"><b>Consejo.</b> Antes de la prueba, tapa el panel y explica en voz alta cada flecha del mapa: si no sabes qué la une, vuelve a esa diapositiva.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Toca un concepto para ver su definición, su fórmula y dónde se estudia</span><span class="mono">11 / 13</span></div>
+</section>
+
+<!-- 12 · HISTORIA, GLOSARIO Y BIBLIOGRAFÍA -->
+<section class="slide" data-n="12">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Repaso</span></div>
+  <h2>Historia, palabras clave y para leer más</h2>
+  <div class="tline" id="tline"><div class="tline-axis"></div><span class="tline-note">escala no proporcional</span></div>
+  <div class="soft" style="font-size:16px;padding:10px 16px" id="tl-text"></div>
+  <div class="row" style="gap:20px">
+    <div class="col" style="width:560px;flex:none;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font:600 18px var(--e10-font-display)">Glosario en tarjetas</b><span class="mono" style="font-size:12px;color:var(--e10-muted)" id="fc-count"></span></div>
+      <button type="button" class="fcard" id="fc-card" aria-live="polite"><span class="mono" id="fc-side"></span><span id="fc-text"></span></button>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fc-flip">Girar</button><button type="button" class="btn" id="fc-again">Repasar pronto</button><button type="button" class="btn pri" id="fc-ok">Ya la sé</button><button type="button" class="btn" id="fc-reset" style="margin-left:auto">Empezar de nuevo</button></div>
+    </div>
+    <div class="col" style="flex:1;min-width:0;gap:10px">
+      <div class="card col" style="gap:8px">
+        <b style="font:600 16px var(--e10-font-display)">Conectores</b>
+        <div class="conn"><span>Viene de</span><a class="chip past" href="../../player.html?clase=8" target="_top">cap. 8 · Lorentz</a><a class="chip past" href="../../player.html?clase=2" target="_top">caps. 1–2 · superposición</a></div>
+        <div class="conn"><span>Lleva a</span><a class="chip fut" href="../../player.html?clase=10" target="_top">cap. 10 · Ampère</a><a class="chip fut" href="../../player.html?clase=11" target="_top">cap. 11 · Faraday</a><a class="chip fut" href="../../player.html?clase=12" target="_top">cap. 12 · Maxwell</a></div>
+      </div>
+      <div class="card col" style="gap:6px;font-size:13px;line-height:1.45">
+        <b style="font:600 16px var(--e10-font-display)">Bibliografía</b>
+        <span>Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson. Cap. 28, «Fuentes de campo magnético», pp. 957–992.</span>
+        <span>Burbano de Ercilla, S., Burbano García, E., y Gracia Muñoz, C. (2005). <i>Problemas de física</i>, tomo 2 (27.ª ed.). Alfaomega. Cap. XXI.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Toca un hito de la línea de tiempo o gira la tarjeta; tu avance en el glosario se guarda en este navegador</span><span class="mono">12 / 13</span></div>
+</section>
+
+<!-- 13 · CIERRE -->
+<section class="slide" data-n="13">
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Resumen</span></div>
   <h2>Lo que debes llevarte</h2>
   <div class="row">
@@ -338,14 +465,14 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
       <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=10" target="_top">Siguiente capítulo: Ley de Ampère →</a>
     </div>
   </div>
-  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">10 / 10</span></div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">13 / 13</span></div>
 </section>
 
 </div></div>
 
 <nav class="deck-ui" aria-label="Navegación de la clase">
   <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
-  <span class="count" id="nav-count">1 / 10</span>
+  <span class="count" id="nav-count">1 / 13</span>
   <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
   <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
   <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
@@ -597,9 +724,164 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
   const labBtns = document.querySelectorAll('[data-lab]');
   labBtns.forEach((b) => b.addEventListener('click', () => { labBtns.forEach((x) => x.classList.toggle('on', x === b)); $('lab-frame').src = b.dataset.lab; }));
 
+  const katexTo = (el, tex) => { if (window.katex) katex.render(tex, el, { throwOnError: false, displayMode: true }); else el.textContent = tex; };
+  const LAB = '../../simuladores/BiotSavart.html#';
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return s === '' ? NaN : Number(s); };
+
+  // ── 9 · Árbol de decisión: ¿qué fórmula uso? ──
+  sims.tree = (() => {
+    const Q2 = {
+      recta: [['prol', 'Sobre la prolongación del hilo'], ['largo', 'Frente a un hilo muy largo (L ≫ distancia)'], ['corto', 'Frente a un tramo corto']],
+      curva: [['centro', 'En el centro de un arco o espira'], ['eje', 'Sobre el eje de una espira'], ['lejos', 'Muy lejos de la espira (z ≫ R)']],
+    };
+    // Las respuestas de los retos se calculan con la misma fórmula que se muestra.
+    const L = {
+      carga: { name: 'Carga en movimiento', tex: String.raw`\vec B=\dfrac{\mu_0}{4\pi}\,\dfrac{q\,\vec v\times\hat r}{r^2}`, when: 'Una sola carga puntual con rapidez mucho menor que la de la luz.', dir: 'Perpendicular a v y a r̂ (regla de la mano derecha; se invierte si q < 0).', reto: 'Un protón a 3,0 × 10⁶ m/s pasa justo debajo de P, a 5,0 cm. ¿Cuánto vale B?', ans: 1e-7 * 1.602e-19 * 3.0e6 / 0.05 ** 2, lab: null },
+      prol: { name: 'Punto alineado con el hilo', tex: String.raw`B=0`, when: 'P está sobre la recta del conductor.', dir: 'No hay campo: dℓ y r̂ son paralelos, así que dℓ × r̂ = 0.', reto: '¿Cuánto vale B a 3 cm del extremo, sobre la prolongación de un segmento de 20 cm con 5,0 A?', ans: 0, lab: 'segmento' },
+      largo: { name: 'Hilo infinito', tex: String.raw`B=\dfrac{\mu_0 I}{2\pi r}`, when: 'El hilo es mucho más largo que la distancia r a P.', dir: 'Tangente a circunferencias alrededor del hilo.', reto: 'Un hilo largo lleva 10 A. ¿Cuánto vale B a 5,0 cm?', ans: 2e-7 * 10 / 0.05, lab: 'hilos' },
+      corto: { name: 'Segmento recto', tex: String.raw`B=\dfrac{\mu_0 I}{4\pi a}\left(\sin\theta_2-\sin\theta_1\right)`, when: 'Tramo finito; ángulos medidos desde la perpendicular trazada de P al hilo.', dir: 'Igual que en el hilo infinito: rodea al conductor.', reto: 'Segmento de 20 cm con 5,0 A; P a 5,0 cm, frente a un extremo. ¿Cuánto vale B?', ans: 1e-7 * 5 / 0.05 * (0.2 / Math.hypot(0.2, 0.05)), lab: 'segmento' },
+      centro: { name: 'Arco o espira, en el centro', tex: String.raw`B=\dfrac{N\mu_0 I\,\theta}{4\pi R}`, when: 'θ en radianes; para la espira completa θ = 2π y B = Nμ₀I / (2R).', dir: 'Perpendicular al plano: dedos con la corriente, el pulgar da B.', reto: 'Arco de 120° y radio 6,0 cm con 9,0 A. ¿Cuánto vale B en el centro?', ans: 1e-7 * 9 * (2 * Math.PI / 3) / 0.06, lab: 'espira' },
+      eje: { name: 'Espira, sobre el eje', tex: String.raw`B=\dfrac{N\mu_0 I R^2}{2\left(R^2+z^2\right)^{3/2}}`, when: 'Cualquier punto del eje; z = 0 da el centro.', dir: 'A lo largo del eje, según la regla de la mano derecha.', reto: 'Espira de 10 cm de radio con 2,0 A. ¿Cuánto vale B en el eje a z = 10 cm?', ans: MU0 * 2 * 0.1 ** 2 / (2 * (0.1 ** 2 + 0.1 ** 2) ** 1.5), lab: 'espira' },
+      lejos: { name: 'Dipolo magnético', tex: String.raw`B\approx\dfrac{\mu_0\,m}{2\pi z^3},\qquad m=NI\pi R^2`, when: 'z mucho mayor que R; error menor al 1 % si z > 12R.', dir: 'A lo largo del eje, como un imán pequeño.', reto: 'Espira de 1,0 cm con 1,0 A. ¿Cuánto vale B a 50 cm sobre su eje?', ans: MU0 * 1 * 0.01 ** 2 / (2 * (0.01 ** 2 + 0.5 ** 2) ** 1.5), lab: 'espira' },
+    };
+    let a = 'curva', b = 'eje', fails = 0;
+    const opts = (box, list, val, pick) => { box.innerHTML = ''; list.forEach(([id, label]) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'opt' + (id === val ? ' on' : ''); el.textContent = label; el.addEventListener('click', () => pick(id)); box.appendChild(el); }); };
+    function draw() {
+      opts($('tq1'), [['carga', 'Una carga en movimiento'], ['recta', 'Una corriente recta'], ['curva', 'Una corriente curva']], a, (id) => { a = id; b = id === 'recta' ? 'largo' : 'eje'; reset(); });
+      const has2 = a !== 'carga';
+      $('tq2-box').hidden = !has2; $('tq-down').hidden = !has2; $('tq-only').hidden = has2;
+      if (has2) opts($('tq2'), Q2[a], b, (id) => { b = id; reset(); });
+      const leaf = L[has2 ? b : 'carga'];
+      $('leaf-name').textContent = leaf.name; katexTo($('leaf-eq'), leaf.tex);
+      $('leaf-when').textContent = leaf.when; $('leaf-dir').textContent = leaf.dir; $('leaf-reto').textContent = leaf.reto;
+      const lab = $('leaf-lab'); lab.hidden = !leaf.lab; if (leaf.lab) lab.href = LAB + leaf.lab;
+    }
+    function reset() { fails = 0; $('leaf-in').value = ''; $('leaf-fb').textContent = ''; draw(); }
+    $('leaf-check').addEventListener('click', () => {
+      const leaf = L[a === 'carga' ? 'carga' : b], v = parseNum($('leaf-in').value), fb = $('leaf-fb');
+      if (!isFinite(v)) { fb.textContent = 'Escribe un número, por ejemplo 4,4e-6.'; fb.style.color = 'var(--e10-muted)'; return; }
+      const ok = leaf.ans === 0 ? Math.abs(v) < 1e-12 : Math.abs(v - leaf.ans) <= 0.02 * leaf.ans;
+      if (ok) { fb.textContent = `Correcto: B = ${sci(leaf.ans, 2)} T.`; fb.style.color = 'var(--e10-success)'; return; }
+      fails++; fb.style.color = 'var(--e10-danger)';
+      fb.textContent = fails < 2 ? 'No coincide. Revisa las unidades (cm → m) y, en los arcos, que θ esté en radianes.' : `No coincide. La respuesta es B = ${sci(leaf.ans, 2)} T: compárala paso a paso con la fórmula.`;
+    });
+    $('leaf-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('leaf-check').click(); });
+    return { draw };
+  })();
+
+  // ── 11 · Mapa de conceptos con conexiones animadas ──
+  sims.cmap = (() => {
+    const K = { past: 'Viene de un capítulo anterior', this: 'Este capítulo', fut: 'Lleva a un capítulo siguiente' };
+    const N = [
+      { id: 'P8', x: 80, y: 60, k: 'past', label: 'Producto vectorial', sub: 'cap. 8', def: 'Da un vector perpendicular a otros dos; su sentido sale de la regla de la mano derecha. Biot–Savart lo usa en cada elemento de corriente.', tex: String.raw`\vec A\times\vec B\perp\vec A,\ \vec B`, where: 'Repaso: capítulo 8, Fuerza de Lorentz', clase: 8 },
+      { id: 'P12', x: 80, y: 230, k: 'past', label: 'Superposición', sub: 'caps. 1–2', def: 'El campo de varias fuentes es la suma vectorial de los campos de cada una.', tex: String.raw`\vec B=\vec B_1+\vec B_2+\cdots`, where: 'Repaso: capítulos 1 y 2', clase: 2 },
+      { id: 'PC', x: 80, y: 420, k: 'past', label: 'Ley de Coulomb', sub: 'analogía', def: 'Campo de una carga puntual. Biot–Savart tiene la misma forma 1/r², pero con un producto vectorial.', tex: String.raw`d\vec E=\dfrac{1}{4\pi\varepsilon_0}\,\dfrac{dq\,\hat r}{r^2}`, where: 'Tabla de analogía en la guía de estudio', clase: 1 },
+      { id: 'E', x: 300, y: 60, k: 'this', label: 'Elemento de corriente', sub: 'I dℓ', def: 'Tramo muy corto de conductor orientado con la corriente: la fuente puntual del campo magnético.', tex: String.raw`I\,d\vec\ell`, where: 'Diapositiva 3', slide: 3 },
+      { id: 'BS', x: 300, y: 230, k: 'this', big: true, label: 'Ley de Biot–Savart', sub: 'idea central', def: 'Da el campo que produce cada elemento de corriente; el campo total es la integral sobre el circuito.', tex: String.raw`d\vec B=\dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec\ell\times\hat r}{r^2}`, where: 'Diapositiva 3', slide: 3 },
+      { id: 'F', x: 300, y: 420, k: 'this', label: 'Fuerza entre conductores', sub: 'F / L', def: 'Cada hilo está en el campo del otro: con el mismo sentido se atraen, con sentidos opuestos se repelen.', tex: String.raw`\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}`, where: 'Diapositiva 5 · escena Hilos', slide: 5, lab: 'hilos' },
+      { id: 'H', x: 500, y: 60, k: 'this', label: 'Hilo infinito', sub: '1/r', def: 'Las líneas de campo son circunferencias alrededor del hilo; el campo decae como 1/r.', tex: String.raw`B=\dfrac{\mu_0 I}{2\pi r}`, where: 'Diapositiva 4 · escena Hilos', slide: 4, lab: 'hilos' },
+      { id: 'S', x: 500, y: 160, k: 'this', label: 'Segmento', sub: 'θ₁, θ₂', def: 'Un tramo finito aporta solo una fracción del hilo infinito; frente a un extremo, menos de la mitad.', tex: String.raw`B=\dfrac{\mu_0 I}{4\pi a}\left(\sin\theta_2-\sin\theta_1\right)`, where: 'Diapositiva 4 · escena Segmento', slide: 4, lab: 'segmento' },
+      { id: 'ES', x: 500, y: 270, k: 'this', label: 'Espira y arco', sub: 'centro y eje', def: 'En el centro todos los elementos aportan en la misma dirección; sobre el eje solo queda la componente axial.', tex: String.raw`B=\dfrac{\mu_0 I\,\theta}{4\pi R}\qquad B_{\text{espira}}=\dfrac{\mu_0 I}{2R}`, where: 'Diapositivas 6 y 7 · escena Espira y arco', slide: 6, lab: 'espira' },
+      { id: 'BO', x: 440, y: 390, k: 'this', label: 'Bobina plana', sub: '× N', def: 'N espiras juntas: el campo en el centro es N veces el de una espira.', tex: String.raw`B=\dfrac{N\mu_0 I}{2R}`, where: 'Taller, reto 10 · escena Espira y arco', slide: 6, lab: 'espira' },
+      { id: 'DI', x: 590, y: 470, k: 'this', label: 'Dipolo magnético', sub: 'z ≫ R', def: 'Lejos de una espira el campo decae como 1/z³, como el de un imán pequeño.', tex: String.raw`B\approx\dfrac{\mu_0\,m}{2\pi z^3},\quad m=NIA`, where: 'Taller, reto 15 · escena Espira y arco', slide: 6, lab: 'espira' },
+      { id: 'A', x: 700, y: 60, k: 'fut', label: 'Ley de Ampère', sub: 'cap. 10', def: 'Con mucha simetría, el campo del hilo sale en una línea sin integrar elemento por elemento.', tex: String.raw`\oint\vec B\cdot d\vec\ell=\mu_0 I_{\text{enc}}`, where: 'Próximo capítulo', clase: 10 },
+      { id: 'FA', x: 700, y: 250, k: 'fut', label: 'Ley de Faraday', sub: 'cap. 11', def: 'Si el flujo del campo de una espira cambia, induce corriente en otra.', tex: String.raw`\varepsilon=-\dfrac{d\Phi_B}{dt}`, where: 'Capítulo 11', clase: 11 },
+      { id: 'MX', x: 700, y: 390, k: 'fut', label: 'Ecuaciones de Maxwell', sub: 'cap. 12', def: 'Reúnen Coulomb, Biot–Savart, Ampère y Faraday en cuatro ecuaciones.', tex: String.raw`\nabla\times\vec B=\mu_0\vec J+\mu_0\varepsilon_0\dfrac{\partial\vec E}{\partial t}`, where: 'Capítulo 12', clase: 12 },
+    ];
+    const E = [['P8', 'E', 'producto ×'], ['P12', 'BS', 'suma'], ['PC', 'BS', 'analogía', 1], ['E', 'BS', 'fuente'], ['BS', 'H', 'integra'], ['BS', 'S', 'integra'], ['BS', 'ES', 'integra'], ['S', 'H', 'L → ∞'],
+      ['ES', 'BO', '× N'], ['ES', 'DI', 'z ≫ R'], ['H', 'F', 'fuerza'], ['H', 'A', 'simetría'], ['ES', 'FA', 'flujo'], ['A', 'MX', ''], ['FA', 'MX', '']];
+    const by = {}; N.forEach((n) => { by[n.id] = n; });
+    let sel = 'ES', hov = null, built = false;
+    const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg', lines = [];
+    function build() {
+      E.forEach((e) => {
+        const p = by[e[0]], q = by[e[1]];
+        const base = document.createElementNS(NS, 'line'), flow = document.createElementNS(NS, 'line');
+        [base, flow].forEach((l) => { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); l.setAttribute('x2', q.x); l.setAttribute('y2', q.y); svg.appendChild(l); });
+        if (e[2]) { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'elab'); t.setAttribute('x', (p.x + q.x) / 2); t.setAttribute('y', (p.y + q.y) / 2 - 4); t.textContent = e[2]; svg.appendChild(t); }
+        lines.push({ e, base, flow });
+      });
+      N.forEach((n) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `cnode ${n.k}${n.big ? ' big' : ''}`; b.style.left = n.x + 'px'; b.style.top = n.y + 'px';
+        b.innerHTML = `${n.label}<small>${n.sub}</small>`; b.dataset.id = n.id;
+        b.addEventListener('click', () => { sel = n.id; paint(); });
+        b.addEventListener('mouseenter', () => { hov = n.id; paint(); }); b.addEventListener('mouseleave', () => { hov = null; paint(); });
+        b.addEventListener('focus', () => { hov = n.id; paint(); }); b.addEventListener('blur', () => { hov = null; paint(); });
+        $('cmap').appendChild(b);
+      });
+      built = true;
+    }
+    function paint() {
+      lines.forEach(({ e, base, flow }) => {
+        const hot = [sel, hov].includes(e[0]) || [sel, hov].includes(e[1]);
+        base.setAttribute('class', 'edge' + (e[3] ? ' dash' : '') + (hot ? ' hot' : '')); flow.setAttribute('class', 'flow' + (hot ? ' hot' : ''));
+      });
+      $('cmap').querySelectorAll('.cnode').forEach((b) => b.classList.toggle('on', b.dataset.id === sel));
+      const n = by[sel];
+      $('cm-kind').textContent = K[n.k]; $('cm-label').textContent = n.label; $('cm-def').textContent = n.def; $('cm-where').textContent = n.where; katexTo($('cm-eq'), n.tex);
+      const act = $('cm-actions'); act.innerHTML = '';
+      const add = (label, pri, fn, href) => { const el = document.createElement(href ? 'a' : 'button'); el.className = 'btn' + (pri ? ' pri' : ''); el.textContent = label; if (href) { el.href = href; el.target = href.startsWith('../../player') ? '_top' : '_blank'; el.style.cssText = 'display:inline-flex;align-items:center;text-decoration:none'; } else { el.type = 'button'; el.addEventListener('click', fn); } act.appendChild(el); };
+      if (n.slide) add(`Ir a la diapositiva ${n.slide}`, true, () => go(n.slide - 1));
+      if (n.clase) add(`Abrir el capítulo ${n.clase}`, true, null, `../../player.html?clase=${n.clase}`);
+      if (n.lab) add('Abrir en BiotSavartLab', false, null, LAB + n.lab);
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
+
+  // ── 12 · Línea de tiempo y glosario en tarjetas ──
+  sims.hist = (() => {
+    // Escala no proporcional: los tres hitos de 1820 necesitan espacio.
+    const X = { 1820: 290, 1831: 660, 1865: 1030 };
+    const EV = [
+      { y: 1820, x: X[1820] - 170, who: 'Ørsted', what: 'Una corriente eléctrica desvía la aguja de una brújula: la electricidad produce magnetismo.', link: 'Diapositiva 2 y escena Ørsted de BiotSavartLab.' },
+      { y: 1820, x: X[1820], who: 'Ampère', what: 'Dos corrientes paralelas se atraen o se repelen según su sentido.', link: 'Diapositiva 5 y escena Hilos.' },
+      { y: 1820, x: X[1820] + 170, who: 'Biot y Savart', what: 'Miden cómo el campo de un hilo largo disminuye con la distancia; de ahí sale la ley de este capítulo.', link: 'Diapositivas 3 y 4.' },
+      { y: 1831, x: X[1831], who: 'Faraday', what: 'Un campo magnético que cambia induce una corriente eléctrica.', link: 'Capítulo 11.' },
+      { y: 1865, x: X[1865], who: 'Maxwell', what: 'Reúne electricidad y magnetismo en un solo conjunto de ecuaciones y predice las ondas electromagnéticas.', link: 'Capítulo 12.' },
+    ];
+    const G = [
+      ['Campo magnético B', 'Campo vectorial que ejerce fuerza sobre cargas en movimiento y corrientes. Unidad: tesla.'],
+      ['Tesla (T)', 'Unidad SI de B: 1 T = 1 N / (A · m).'],
+      ['Permeabilidad del vacío μ₀', 'Constante de la ley de Biot–Savart, μ₀ ≈ 4π × 10⁻⁷ T · m / A.'],
+      ['Elemento de corriente I dℓ', 'Tramo muy corto de conductor orientado con la corriente: la fuente puntual del campo magnético.'],
+      ['Ley de Biot–Savart', 'Da el campo dB de cada elemento de corriente; el campo total es la integral sobre el circuito.'],
+      ['Regla de la mano derecha', 'Pulgar con la corriente: los dedos indican cómo gira B alrededor del hilo.'],
+      ['Principio de superposición', 'El campo de varias fuentes es la suma vectorial de los campos de cada una.'],
+      ['Línea de campo magnético', 'Curva tangente a B en cada punto; siempre es cerrada.'],
+      ['Espira', 'Conductor que forma un circuito cerrado de una vuelta.'],
+      ['Bobina plana', 'N espiras juntas del mismo radio: el campo en el centro es N veces el de una espira.'],
+      ['Momento dipolar magnético', 'm = N I A, en A · m². Describe a una espira vista desde lejos.'],
+      ['Dipolo magnético', 'Fuente cuyo campo lejano decae como 1/r³, como el de una espira o un imán pequeño.'],
+    ];
+    const KEY = 'e10_c9_glosario';
+    let ev = 2, back = false, st = null, built = false;
+    const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.queue)) return s; } catch (_) {} return { queue: G.map((_, i) => i), known: [] }; };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+    function build() {
+      const tl = $('tline');
+      Object.entries(X).forEach(([y, x]) => { const d = document.createElement('span'); d.className = 'tdot'; d.style.left = x + 'px'; tl.appendChild(d); const t = document.createElement('span'); t.className = 'tyear'; t.style.left = x + 'px'; t.textContent = y; tl.appendChild(t); });
+      EV.forEach((e, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tev'; b.style.left = e.x + 'px'; b.innerHTML = `<b>${e.y}</b>${e.who}`; b.addEventListener('click', () => { ev = i; paint(); }); tl.appendChild(b); });
+      st = load();
+      $('fc-card').addEventListener('click', () => { back = !back; paint(); }); $('fc-flip').addEventListener('click', () => { back = !back; paint(); });
+      $('fc-again').addEventListener('click', () => { if (!st.queue.length) return; const c = st.queue.shift(); st.queue.splice(Math.min(3, st.queue.length), 0, c); back = false; save(); paint(); });
+      $('fc-ok').addEventListener('click', () => { if (!st.queue.length) return; st.known.push(st.queue.shift()); back = false; save(); paint(); });
+      $('fc-reset').addEventListener('click', () => { st = { queue: G.map((_, i) => i), known: [] }; back = false; save(); paint(); });
+      built = true;
+    }
+    function paint() {
+      $('tline').querySelectorAll('.tev').forEach((b, i) => b.classList.toggle('on', i === ev));
+      const e = EV[ev]; $('tl-text').innerHTML = `<b style="color:var(--e10-primary)">${e.who}, ${e.y}.</b> ${e.what} <span style="color:var(--e10-muted)">${e.link}</span>`;
+      const card = $('fc-card');
+      if (!st.queue.length) { card.className = 'fcard back'; $('fc-side').textContent = 'GLOSARIO COMPLETO'; $('fc-text').textContent = 'Dominaste las 12 palabras clave. Pulsa «Empezar de nuevo» para repasar.'; }
+      else { const c = G[st.queue[0]]; card.className = 'fcard' + (back ? ' back' : ''); $('fc-side').textContent = back ? 'DEFINICIÓN' : 'TÉRMINO'; $('fc-text').textContent = back ? c[1] : c[0]; }
+      $('fc-count').textContent = `por repasar ${st.queue.length} · dominadas ${st.known.length} de ${G.length}`;
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
+
   // ── Navegación ──
   const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
-  const onShow = { 1: () => sims.cover.show(), 2: sims.oersted.draw, 3: sims.ley.draw, 4: sims.hilo.draw, 5: sims.sup.draw, 6: sims.esp.draw, 7: sims.arco.draw, 9: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; } };
+  const onShow = { 1: () => sims.cover.show(), 2: sims.oersted.draw, 3: sims.ley.draw, 4: sims.hilo.draw, 5: sims.sup.draw, 6: sims.esp.draw, 7: sims.arco.draw, 9: sims.tree.draw, 10: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; }, 11: sims.cmap.draw, 12: sims.hist.draw };
   function go(i) {
     i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); if (cur === 0) sims.cover.hide();
     cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
@@ -618,6 +900,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
   window.addEventListener('resize', fit); fit();
 
   window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  window.addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1)); if (isFinite(n) && n - 1 !== cur) go(n - 1); });
   slides[0].classList.add('on');
 })();
 </script>
