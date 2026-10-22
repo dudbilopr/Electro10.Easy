@@ -16,7 +16,7 @@ import { loadContent, guardarEval, guardarNotas, guardarProgresoNube, getIconFor
 import { actualizarGraficosEstudiante }         from './charts.js';
 import { guardarPerfil, cargarDatosPerfil, cambiarModoVistaAdmin, guardarRitmo, guardarEncuestaSemanal } from './profile.js';
 import { cargarDirectorioAdminFirebase, verDetalleEstudiante, cambiarRolUsuario, guardarAjustesCalendario } from './admin.js';
-import { registrarIngreso, sumarMinuto, renderPortada, guardarUltimaLeccion, renderMiAvance } from './seguimiento.js';
+import { registrarIngreso, sumarMinuto, renderPortada, guardarUltimaLeccion, renderMiAvance, cargarSeguimientoDocente } from './seguimiento.js';
 
 // ── Estado Global Compartido ─────────────────────────────────
 window.firebaseDb = db;
@@ -129,7 +129,7 @@ window.mostrarJuegoSnake         = mostrarJuegoSnake;
 window.mostrarCerebro            = mostrarCerebro;
 window.cambiarTabCerebro         = cambiarTabCerebro;
 window.toggleFocusMode           = toggleFocusMode;
-window.abrirPanelAdmin           = () => abrirPanelAdmin(globalSettings);
+window.abrirPanelAdmin           = () => { abrirPanelAdmin(globalSettings); cargarSeguimientoDocente({ curriculoData, totalLessons }); };
 window.cerrarSesion              = cerrarSesion;
 window.iniciarSesion             = iniciarSesion;
 window.recuperarContrasena        = recuperarContrasena;

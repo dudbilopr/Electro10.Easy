@@ -34,7 +34,7 @@ export async function cargarDirectorioAdminFirebase(curriculoData, totalLessons)
 
                     const evalSnap = await getDoc(doc(db, 'artifacts', APP_ID, 'users', uid, 'evaluations', 'data'));
                     if (evalSnap.exists()) {
-                        const eVals = Object.values(evalSnap.data());
+                        const eVals = Object.values(evalSnap.data()).filter(v => typeof v === 'number'); // autoevaluaciones 1–4 (los quiz son objetos)
                         promGrade = eVals.length > 0 ? (eVals.reduce((a, v) => a + v, 0) / eVals.length / 4) * 100 : 0;
                     }
 
@@ -178,7 +178,7 @@ export async function verDetalleEstudiante(uid, nombre, curriculoData, totalLess
 
         const completadas = Object.keys(pData).length;
         const pct         = totalLessons > 0 ? Math.round((completadas / totalLessons) * 100) : 0;
-        const eVals       = Object.values(eData);
+        const eVals       = Object.values(eData).filter(v => typeof v === 'number');
         const promGrade   = eVals.length > 0 ? Math.round((eVals.reduce((a, v) => a + v, 0) / eVals.length / 4) * 100) : 0;
 
         document.getElementById('modal-u-time').innerText  = tMin + 'm';
@@ -193,7 +193,7 @@ export async function verDetalleEstudiante(uid, nombre, curriculoData, totalLess
                 let mSum = 0, mC = 0;
                 mod.lecciones.forEach(lec => {
                     const items = lec.tipo === 'grupo' ? lec.sublecciones : [lec];
-                    items.forEach(item => { if (eData[item.id]) { mSum += eData[item.id]; mC++; } });
+                    items.forEach(item => { if (typeof eData[item.id] === 'number') { mSum += eData[item.id]; mC++; } });
                 });
                 mData.push(mC > 0 ? Math.round((mSum / mC / 4) * 100) : 0);
             });

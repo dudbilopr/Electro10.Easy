@@ -258,3 +258,137 @@ export async function renderMiAvance({ uid, curriculoData, progressData, evalDat
         </section>
       </div>`;
 }
+
+// ── «Seguimiento del curso» (panel docente) ──────────────────
+
+const DIA = 864e5;
+
+// Lee directorio + datos de cada estudiante. Las lecturas de un estudiante que fallan no detienen el resto.
+async function leerCurso() {
+    const dir = await getDocs(collection(db, 'artifacts', APP_ID, 'public', 'data', 'directory'));
+    const lista = [];
+    dir.forEach((d) => { const x = d.data(); if (x.role !== 'teacher') lista.push({ uid: d.id, name: x.name || '', email: x.email || '', dirLogin: x.lastLogin || null }); });
+    const leer = async (uid, col) => { try { const s = await getDoc(doc(db, 'artifacts', APP_ID, 'users', uid, col, 'data')); return s.exists() ? s.data() : {}; } catch (e) { return {}; } };
+    return Promise.all(lista.map(async (e) => {
+        const [stats, progress, evals, comp] = await Promise.all([leerStats(e.uid), leer(e.uid, 'progress'), leer(e.uid, 'evaluations'), leerComprobaciones(e.uid, 30)]);
+        return { ...e, stats, progress, evals, comp };
+    }));
+}
+
+function filaEstudiante(e, curriculoData, totalLessons, ahora) {
+    const last = e.stats.lastLogin || e.dirLogin || null;
+    const dias = last ? Math.floor((ahora - last) / DIA) : null;
+    const ing = sumaDias(e.stats.ingresosPorDia, 30);
+    const tiene30 = !!e.stats.minutosPorDia;
+    const min = tiene30 ? sumaDias(e.stats.minutosPorDia, 30) : (e.stats.totalTimeMinutes || 0);
+    const hechas = Object.keys(e.progress).filter((k) => e.progress[k]).length;
+    const avance = totalLessons ? Math.round(hechas / totalLessons * 100) : 0;
+    const qz = resumenQuiz(e.evals, curriculoData);
+    let estado = 'ok', motivo = 'Al día';
+    if (dias === null || dias >= 7) { estado = 'riesgo'; motivo = dias === null ? 'Sin ingresos registrados' : `Sin ingresar ${dias} días`; }
+    else if (qz.media !== null && qz.media < 65) { estado = 'atencion'; motivo = `Dominio bajo (${qz.media} %)`; }
+    return { ...e, last, dias, ing, min, tiene30, avance, dominio: qz.media, estado, motivo };
+}
+
+const haceTexto = (d) => (d === null ? '—' : d === 0 ? 'hoy' : d === 1 ? 'ayer' : `hace ${d} días`);
+
+export async function cargarSeguimientoDocente({ curriculoData, totalLessons, datos }) {
+    const box = document.getElementById('e10-seguimiento');
+    if (!box) return;
+    box.innerHTML = '<p class="e10-sem__vacio">Cargando el seguimiento del curso…</p>';
+    let crudo;
+    try { crudo = datos || await leerCurso(); }
+    catch (e) { box.innerHTML = '<p class="e10-sem__vacio">No se pudo leer el directorio (reglas de Firestore o conexión).</p>'; return; }
+    const ahora = Date.now();
+    const filas = crudo.map((e) => filaEstudiante(e, curriculoData, totalLessons, ahora));
+    const n = filas.length;
+    const activos = filas.filter((f) => f.dias !== null && f.dias < 7).length;
+    const ingresos30 = filas.reduce((a, f) => a + f.ing, 0);
+    const minMedio = n ? filas.reduce((a, f) => a + f.min, 0) / n : 0;
+    const avMedio = n ? Math.round(filas.reduce((a, f) => a + f.avance, 0) / n) : 0;
+    const riesgo = filas.filter((f) => f.estado === 'riesgo').length;
+
+    // Ingresos por día (30 días): suma de todos los estudiantes
+    const dias = [];
+    for (let i = 29; i >= 0; i--) { const d = new Date(ahora - i * DIA); const k = claveDia(d); dias.push({ k, d, v: filas.reduce((a, f) => a + ((f.stats.ingresosPorDia || {})[k] || 0), 0) }); }
+    const maxIng = Math.max(1, ...dias.map((x) => x.v));
+
+    // Errores del grupo: % de estudiantes que tuvieron cada error al menos una vez (30 días)
+    const conErr = {};
+    filas.forEach((f) => { new Set(f.comp.filter((c) => !c.ok && c.error).map((c) => c.error)).forEach((c) => { conErr[c] = (conErr[c] || 0) + 1; }); });
+    const errs = Object.entries(conErr).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([c, k]) => ({ c, label: ERRORES[c] || c, pct: n ? Math.round(k / n * 100) : 0 }));
+
+    const mods = curriculoData?.modulos || [];
+    const tile = (k, v, d) => `<section class="bento-card e10-tile"><span class="e10-eyebrow">${k}</span><b>${v}</b><small>${d}</small></section>`;
+    box.innerHTML = `
+      <div class="e10-seg__top"><h2>Seguimiento del curso</h2>
+        <label>Módulo <select id="e10-seg-mod" class="form-input">${mods.map((m, i) => `<option value="${i}">${i} · ${esc(sinModulo(m.titulo))}</option>`).join('')}</select></label>
+        <span class="e10-seg__sp"></span><button type="button" class="e10-btn" id="e10-seg-csv">Exportar CSV</button></div>
+      <div class="e10-tiles">
+        ${tile('Activos (7 días)', n ? `${activos} de ${n}` : '—', n ? `${Math.round(activos / n * 100)} % del grupo` : 'sin estudiantes en el directorio')}
+        ${tile('Ingresos (30 días)', String(ingresos30), n ? `${(ingresos30 / n).toFixed(1).replace('.', ',')} por estudiante` : '')}
+        ${tile('Tiempo medio', fmtMin(minMedio), 'por estudiante en 30 días')}
+        ${tile('Avance medio', `${avMedio} %`, 'de las lecciones del curso')}
+        ${tile('En riesgo', String(riesgo), 'sin ingresar 7+ días o sin registro')}
+      </div>
+      <div class="e10-grid2">
+        <section class="bento-card">
+          <div class="bento-header"><h3>Ingresos por día</h3></div>
+          ${ingresos30 ? `<div class="e10-ing" role="img" aria-label="Ingresos de los últimos 30 días">${dias.map((x) => `<i style="height:${x.v / maxIng * 100}%" title="${x.d.toLocaleDateString('es', { day: 'numeric', month: 'short' })}: ${x.v} ingresos"></i>`).join('')}</div>
+            <div class="e10-ing__ej"><span>hace 30 días</span><span>máx. ${maxIng} en un día</span><span>hoy</span></div>`
+            : '<p class="e10-sem__vacio">Aún no hay ingresos registrados: el registro empezó con esta versión del portal.</p>'}
+        </section>
+        <section class="bento-card">
+          <div class="bento-header"><h3>Ruta del módulo</h3></div>
+          <div id="e10-seg-ruta"></div>
+        </section>
+        <section class="bento-card e10-seg__tabla">
+          <div class="bento-header"><h3>Estudiantes</h3><div class="e10-seg__fil"><button type="button" class="e10-btn on" data-f="todos">Todos · ${n}</button><button type="button" class="e10-btn" data-f="riesgo">En riesgo · ${riesgo}</button></div></div>
+          <div class="e10-seg__scroll"><table><thead><tr><th>Estudiante</th><th>Último ingreso</th><th>Ingresos 30 d</th><th>Avance</th><th>Tiempo 30 d</th><th>Dominio quiz</th><th>Estado</th><th></th></tr></thead><tbody id="e10-seg-tb"></tbody></table></div>
+          ${filas.some((f) => !f.tiene30) ? '<small class="e10-nota">* Tiempo total acumulado: ese estudiante no ha estudiado desde que empezó el registro por día.</small>' : ''}
+        </section>
+        <section class="bento-card">
+          <div class="bento-header"><h3>Errores más frecuentes del grupo</h3></div>
+          ${errs.length ? errs.map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.pct}%"></i></div><b>${e.pct} %</b></div>`).join('')
+            + `<div class="e10-tip"><span class="e10-tip__title">Sugerencia para la próxima clase</span>El ${errs[0].pct} % del grupo comete «${esc(errs[0].label)}» en los simuladores: vale la pena repasarlo en clase.</div>`
+            : '<p class="e10-sem__vacio">Cuando los estudiantes usen «Comprobar» en BiotSavartLab, aquí aparecerán los errores más comunes del grupo.</p>'}
+        </section>
+      </div>`;
+
+    const idx = indiceLecciones(curriculoData);
+    const pintaRuta = (mi) => {
+        const items = Object.keys(idx).filter((k) => idx[k].mi === mi);
+        box.querySelector('#e10-seg-ruta').innerHTML = items.length ? items.map((k) => { const h = filas.filter((f) => f.progress[k]).length; return `<div class="e10-e"><span title="${esc(idx[k].titulo)}">${esc(idx[k].titulo)}</span><div class="e10-q__bar"><i style="width:${n ? h / n * 100 : 0}%"></i></div><b>${h}/${n}</b></div>`; }).join('')
+            + '<small class="e10-nota">Estudiantes que completaron cada lección del módulo, en orden: donde cae la barra se pierden estudiantes.</small>'
+            : '<p class="e10-sem__vacio">Este módulo no tiene lecciones.</p>';
+    };
+    // Módulo por defecto: el que más estudiantes tienen a medias (donde está el grupo ahora).
+    const enCurso = mods.map((_, mi) => { const its = Object.keys(idx).filter((k) => idx[k].mi === mi); return filas.filter((f) => { const h = its.filter((k) => f.progress[k]).length; return h > 0 && h < its.length; }).length; });
+    const sel = box.querySelector('#e10-seg-mod'), modDef = enCurso.indexOf(Math.max(0, ...enCurso));
+    sel.value = String(Math.max(0, modDef)); pintaRuta(+sel.value);
+    sel.addEventListener('change', () => pintaRuta(+sel.value));
+
+    const ORD = { riesgo: 0, atencion: 1, ok: 2 };
+    const pintaTabla = (f) => {
+        const rows = filas.filter((x) => f === 'todos' || x.estado === 'riesgo').sort((a, b) => ORD[a.estado] - ORD[b.estado] || (b.dias ?? 999) - (a.dias ?? 999));
+        box.querySelector('#e10-seg-tb').innerHTML = rows.map((x) => `<tr>
+          <td><b>${esc(x.name || x.email.split('@')[0] || x.uid.slice(0, 6))}</b><small>${esc(x.email)}</small></td>
+          <td>${haceTexto(x.dias)}</td><td class="m">${x.ing}</td>
+          <td><span class="e10-mini"><i style="width:${x.avance}%"></i></span> <span class="m">${x.avance} %</span></td>
+          <td class="m">${fmtMin(x.min)}${x.tiene30 ? '' : '*'}</td><td class="m">${x.dominio === null ? '—' : x.dominio + ' %'}</td>
+          <td><span class="e10-est ${x.estado}">${x.estado === 'ok' ? '✓ ' : '! '}${esc(x.motivo)}</span></td>
+          <td><button type="button" class="e10-btn" data-uid="${esc(x.uid)}" data-n="${esc(x.name || x.email)}">Ver métricas</button></td></tr>`).join('')
+          || '<tr><td colspan="8" class="e10-sem__vacio">No hay estudiantes en este filtro.</td></tr>';
+        box.querySelectorAll('#e10-seg-tb [data-uid]').forEach((b) => b.addEventListener('click', () => window.verDetalleEstudiante?.(b.dataset.uid, b.dataset.n)));
+    };
+    pintaTabla('todos');
+    box.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => { box.querySelectorAll('[data-f]').forEach((x) => x.classList.toggle('on', x === b)); pintaTabla(b.dataset.f); }));
+
+    box.querySelector('#e10-seg-csv').addEventListener('click', () => {
+        const q = (s) => `"${String(s ?? '').replace(/"/g, '""')}"`;
+        const lineas = [['nombre', 'correo', 'ultimo_ingreso', 'ingresos_30d', 'avance_pct', 'minutos_30d', 'dominio_quiz_pct', 'estado'].join(',')]
+            .concat(filas.map((x) => [q(x.name), q(x.email), q(x.last ? new Date(x.last).toISOString() : ''), x.ing, x.avance, x.min, x.dominio ?? '', q(x.motivo)].join(',')));
+        const url = URL.createObjectURL(new Blob(['﻿' + lineas.join('\n')], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = `seguimiento_${claveDia()}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+}

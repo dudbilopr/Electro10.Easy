@@ -232,7 +232,8 @@ h1, h2, h3, .bento-header h3 { font-family: var(--e10-font-display); }
 .e10-mod i { width: 100%; max-height: 100px; border-radius: 4px 4px 0 0; background: var(--e10-primary); }
 .e10-mod b { font: 500 11px var(--e10-font-mono); color: var(--e10-ink); }
 .e10-q, .e10-e { display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr) 44px 92px; align-items: center; gap: 10px; font-size: 13px; }
-.e10-e { grid-template-columns: minmax(0, 1fr) 150px 28px; }
+.e10-e { grid-template-columns: minmax(0, 1fr) 150px 48px; }
+.e10-e b { white-space: nowrap; }
 .e10-q > span:first-child, .e10-e > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .e10-q b, .e10-e b { font: 600 12px var(--e10-font-mono); text-align: right; }
 .e10-q__bar { position: relative; height: 10px; border-radius: 4px; background: var(--e10-grid); }
@@ -245,6 +246,33 @@ h1, h2, h3, .bento-header h3 { font-family: var(--e10-font-display); }
 .e10-tip .e10-tip__title { display: block; margin-bottom: 2px; }
 @media (max-width: 1100px) { .e10-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } .e10-grid2 { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .e10-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .e10-mods { gap: 3px; } .e10-q { grid-template-columns: minmax(0, 1fr) 70px 40px; } .e10-q__st { display: none; } }
+
+/* ===================== SEGUIMIENTO DEL CURSO (docente) ===================== */
+.e10-seg { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+.e10-seg__top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.e10-seg__top h2 { margin: 0 8px 0 0; font: 700 26px var(--e10-font-display); color: var(--e10-ink); }
+.e10-seg__top label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--e10-muted); }
+.e10-seg__top select { width: auto; min-width: 240px; }
+.e10-seg__sp { flex: 1; }
+.e10-ing { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 2px; align-items: end; height: 150px; border-bottom: 1px solid var(--e10-line); background-image: linear-gradient(var(--e10-grid) 1px, transparent 1px); background-size: 100% 50%; }
+.e10-ing i { display: block; min-height: 2px; border-radius: 3px 3px 0 0; background: var(--e10-primary); }
+.e10-ing__ej { display: flex; justify-content: space-between; font: 10px var(--e10-font-mono); color: var(--e10-muted); }
+.e10-seg__tabla { grid-column: span 2; }
+.e10-seg__fil { display: flex; gap: 6px; }
+.e10-seg__fil .e10-btn.on { background: var(--e10-primary-soft); border-color: var(--e10-primary); color: var(--e10-primary); }
+.e10-seg__scroll { overflow-x: auto; }
+.e10-seg table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.e10-seg th { font: 500 11px var(--e10-font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--e10-muted); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--e10-line); white-space: nowrap; }
+.e10-seg td { padding: 8px; border-bottom: 1px solid var(--e10-grid); vertical-align: middle; white-space: nowrap; }
+.e10-seg td small { display: block; color: var(--e10-muted); font-size: 11px; }
+.e10-seg td.m, .e10-seg .m { font-family: var(--e10-font-mono); }
+.e10-mini { display: inline-block; width: 70px; height: 8px; border-radius: 4px; background: var(--e10-grid); vertical-align: middle; }
+.e10-mini i { display: block; height: 8px; border-radius: 4px; background: var(--e10-primary); }
+.e10-est { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 8px; }
+.e10-est.ok { background: var(--e10-success-soft); color: var(--e10-success); }
+.e10-est.atencion { background: var(--e10-warning-soft); color: var(--e10-warning); }
+.e10-est.riesgo { background: var(--e10-danger-soft); color: var(--e10-danger); }
+@media (max-width: 1100px) { .e10-seg__tabla { grid-column: auto; } }
 
 /* Autor: tarjeta compacta (el video ya no ocupa una pantalla) */
 .teacher-hero { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; padding: 24px; }
