@@ -2,49 +2,78 @@
 <html lang="es">
 <head>
     <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 8: Ley de Biot-Savart</title>
+    <title>Taller 9: Ley de Biot-Savart — Electro10.Easy</title>
     <!-- Bibliotecas Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: #fdf2f8;
+            --e10-secondary: #0B8CA8;
+            --e10-secondary-soft: #ecfeff;
+            --e10-ink: #0f172a;
+            --e10-muted: #64748b;
+            --e10-surface: #ffffff;
+            --e10-line: #e2e8f0;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: var(--e10-ink); }
+        .math-tex { font-size: 1.05em; color: #0284c7; }
         .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
         .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
         
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
-        
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #B3246B;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+
+        .camino-tab.active {
+            background-color: #B3246B;
+            color: white;
+            border-color: #B3246B;
+        }
+
+        .camino-tab {
+            transition: all 0.2s ease;
+        }
+
+        .problem-card {
+            border: 1px solid #e2e8f0;
+            transition: box-shadow 0.2s ease;
+        }
+        .problem-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+        }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
             body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
             main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
         }
         .toolbar-btn { transition: all 0.2s; }
         .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
+        .hint-content { display: none; }
         .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -52,7 +81,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-8">
 
     <!-- Capa de Dibujo Global -->
     <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
@@ -60,311 +89,517 @@
     <!-- Toolbar Superior Fija -->
     <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
         <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#B3246B]"></span>
+                Electro<span class="text-[#B3246B]">10.Easy</span> Workshop
+            </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#B3246B] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar PDF</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
             <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
             <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#B3246B] border-l border-slate-300 ml-1">Dibujo OFF</button>
         </div>
     </nav>
 
     <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 8: Ley de Biot-Savart</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Fuentes de Campo Magnético • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 text-[#B3246B] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 9 • Fuentes del Campo Magnético
+        </div>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 9: Ley de Biot-Savart</h2>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            Metodología analítica y pedagógica rigurosa: desde el elemento infinitesimal de corriente hasta la integración por dos caminos (sustitución trigonométrica y tablas).
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M9</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        <!-- METODOLOGÍA MARCO -->
+        <div class="bg-gradient-to-r from-pink-50 via-white to-cyan-50 p-5 rounded-2xl border border-pink-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                📐 El Algoritmo Universal de Resolución (7 Pasos)
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">1. Elemento</b>\(d\vec B\) infinitesimal</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">2. Variables</b>Esquema y regla mano der.</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">3. Cambio</b>Expresar en 1 variable</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">4. Constantes</b>Sacar fuera de \(\int\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">5. 2 Caminos</b>Trigonométrico vs Tablas</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">6. Solución</b>Límites e hilo infinito</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">7. Retos</b>Preguntas de rigor</div>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Calcule el campo magnético en el centro de una espira circular de radio R por la que circula una corriente I.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuentes de Campo Magnético y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Un alambre largo y recto lleva una corriente de 10 A. Halle el campo magnético a 5 cm del alambre.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuentes de Campo Magnético y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Dos alambres rectos paralelos están separados 10 cm y llevan corrientes de 5 A y 8 A en el mismo sentido. ¿Cuál es la fuerza por unidad de longitud entre ellos?
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuentes de Campo Magnético y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> Encuentre la expresión del campo magnético sobre el eje de una espira circular a una distancia x del centro.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuentes de Campo Magnético y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> Una espira cuadrada de lado L lleva una corriente I. Calcule el campo magnético en su centro exacto.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuentes de Campo Magnético y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        </main>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
+        <!-- PROBLEMA 1: DEDUCCIÓN MAESTRA DEL HILO RECTO -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#B3246B] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Maestra: Segmento Finito de Hilo e Hilo Infinito</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Considere un conductor recto y delgado que transporta una corriente estacionaria \(I\) a lo largo del eje \(y\). Se desea calcular el campo magnético \(\vec B\) producido en un punto \(P\) situado sobre el eje \(x\), a una distancia perpendicular \(a\) del conductor. El segmento abarca desde un ángulo \(\theta_1\) hasta \(\theta_2\) medidos desde la perpendicular.
+            </div>
+
+            <!-- Paso a Paso Detallado -->
+            <div class="space-y-4 text-xs md:text-sm">
+                
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">1</span>
+                        <span>Partir de la Ley de Biot-Savart para un elemento infinitesimal:</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ d\vec B = \frac{\mu_0}{4\pi} \frac{I\, d\vec\ell \times \hat r}{r^2} = \frac{\mu_0}{4\pi} \frac{I\, d\vec\ell \times \vec r}{r^3} \]
+                    </div>
+                    <p class="mt-2 text-slate-600">
+                        Donde \(I\, d\vec\ell\) es el elemento fuente de corriente, \(\vec r = \vec r_P - \vec r'\) es el vector de posición relativa desde la fuente hasta el punto de observación \(P\), y \(r = |\vec r|\) es la distancia euclidiana entre ellos.
+                    </p>
+                </div>
+
+                <!-- Paso 2: Esquema SVG y vectores -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">2</span>
+                        <span>Dibujar las variables en el esquema: distancias, vectores, ángulos y dirección:</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <!-- Diagrama SVG Profesional -->
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-center">
+                            <svg viewBox="0 0 320 220" class="w-full max-w-[300px] h-auto">
+                                <!-- Eje Y (Alambre) -->
+                                <line x1="80" y1="10" x2="80" y2="210" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4,4"/>
+                                <line x1="80" y1="35" x2="80" y2="185" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+                                <!-- Flecha corriente I -->
+                                <line x1="80" y1="110" x2="80" y2="90" stroke="#B3246B" stroke-width="4"/>
+                                <polygon points="80,80 75,95 85,95" fill="#B3246B"/>
+                                <text x="60" y="90" font-size="12" font-weight="bold" fill="#B3246B">I</text>
+
+                                <!-- Elemento dy -->
+                                <rect x="76" y="130" width="8" height="18" fill="#ef4444" rx="2"/>
+                                <text x="40" y="142" font-size="11" font-weight="bold" fill="#ef4444">dℓ = dy ĵ</text>
+
+                                <!-- Eje perpendicular a P -->
+                                <line x1="80" y1="100" x2="260" y2="100" stroke="#64748b" stroke-width="2"/>
+                                <text x="165" y="92" font-size="12" font-weight="bold" fill="#64748b">a</text>
+
+                                <!-- Punto P -->
+                                <circle cx="260" cy="100" r="5" fill="#0f172a"/>
+                                <text x="272" y="105" font-size="13" font-weight="bold" fill="#0f172a">P</text>
+                                <!-- Símbolo vector B entrando ⊗ -->
+                                <circle cx="260" cy="130" r="10" fill="#fdf2f8" stroke="#B3246B" stroke-width="2"/>
+                                <line x1="254" y1="124" x2="266" y2="136" stroke="#B3246B" stroke-width="2"/>
+                                <line x1="266" y1="124" x2="254" y2="136" stroke="#B3246B" stroke-width="2"/>
+                                <text x="275" y="134" font-size="11" font-weight="bold" fill="#B3246B">d<tspan font-style="italic">B</tspan> ⊗</text>
+
+                                <!-- Vector relativo r -->
+                                <line x1="80" y1="140" x2="260" y2="100" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
+                                <text x="160" y="132" font-size="12" font-weight="bold" fill="#0284c7">r = √(y² + a²)</text>
+
+                                <!-- Ángulo theta -->
+                                <path d="M 230,100 A 30,30 0 0 1 235,106" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="215" y="118" font-size="11" font-weight="bold" fill="#f59e0b">θ</text>
+                                <text x="92" y="125" font-size="11" fill="#64748b">y</text>
+                            </svg>
+                        </div>
+                        
+                        <!-- Definiciones vectoriales -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Vector elemento fuente:</strong> \(d\vec\ell = dy\,\hat\jmath\)</p>
+                            <p><strong>Posición del punto \(P\):</strong> \(\vec r_P = a\,\hat\imath\)</p>
+                            <p><strong>Vector relativo:</strong> \(\vec r = a\,\hat\imath - y\,\hat\jmath \implies r = \sqrt{a^2 + y^2}\)</p>
+                            <p><strong>Producto Cruz:</strong>
+                                \[ d\vec\ell \times \vec r = (dy\,\hat\jmath) \times (a\,\hat\imath - y\,\hat\jmath) = -a\,dy\,\hat k = a\,dy\,(\otimes) \]
+                            </p>
+                            <p class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
+                                👉 Regla de la mano derecha: pulgar hacia arriba (+y), dedos apuntan a P (+x); la palma empuja <strong>hacia dentro de la página (\(-\hat k\))</strong> para todos los elementos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4: Reemplazar, cambio de variable y factorizar constantes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">3</span>
+                            <span>Reemplazar y cambio de variables:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Relacionamos la posición \(y\) y la distancia \(r\) con el ángulo \(\theta\):</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono space-y-1">
+                            <p>\(y = a \tan\theta\)</p>
+                            <p>\(r = \dfrac{a}{\cos\theta} = a \sec\theta\)</p>
+                            <p>\(\cos\theta = \dfrac{a}{\sqrt{a^2 + y^2}}\)</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">4</span>
+                            <span>Sacar las constantes de la integral:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Tanto \(I\) como la distancia perpendicular \(a\) son constantes fijas:</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-center">
+                            \[ B = \frac{\mu_0 I a}{4\pi} \int_{y_1}^{y_2} \frac{dy}{(y^2 + a^2)^{3/2}} \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-[#B3246B]/30 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#B3246B]">5</span>
+                            <span>Dos Caminos para Resolver la Integral:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-a', 'cam-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Sustitución Trigonométrica</button>
+                            <button onclick="switchCamino('cam-b', 'cam-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Por Tablas Directas</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel Camino A -->
+                    <div id="cam-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-3">
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B3246B]">
+                            <span>Deducción Trigonométrica Analítica Completa</span>
+                        </div>
+                        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-700">
+                            <li>Diferenciamos la sustitución: \(y = a\tan\theta \implies dy = a\sec^2\theta\, d\theta\).</li>
+                            <li>Transformamos el denominador: 
+                                \((y^2 + a^2)^{3/2} = (a^2\tan^2\theta + a^2)^{3/2} = [a^2(1 + \tan^2\theta)]^{3/2} = [a^2\sec^2\theta]^{3/2} = a^3\sec^3\theta\).
+                            </li>
+                            <li>Sustituimos en la integral:
+                                \[ \int \frac{dy}{(y^2 + a^2)^{3/2}} = \int \frac{a\sec^2\theta\, d\theta}{a^3\sec^3\theta} = \frac{1}{a^2} \int \frac{d\theta}{\sec\theta} = \frac{1}{a^2} \int \cos\theta\, d\theta \]
+                            </li>
+                            <li>La integral inmediata es \(\int \cos\theta\, d\theta = \sin\theta\). Reensamblando con las constantes:
+                                \[ B = \frac{\mu_0 I a}{4\pi} \cdot \left[ \frac{\sin\theta}{a^2} \right]_{\theta_1}^{\theta_2} = \frac{\mu_0 I}{4\pi a} (\sin\theta_2 - \sin\theta_1) \]
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Panel Camino B -->
+                    <div id="cam-b" class="hidden bg-white p-4 rounded-xl border border-cyan-200 space-y-3">
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B8CA8]">
+                            <span>Resolución Directa por Tablas de Integración de Física</span>
+                        </div>
+                        <p class="text-xs text-slate-700">
+                            Utilizamos la integral estándar catalogada en manuales (ej. Sears-Zemansky o Gradshteyn):
+                        </p>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                            \[ \int \frac{dy}{(y^2 + a^2)^{3/2}} = \frac{y}{a^2\sqrt{y^2 + a^2}} + C \]
+                        </div>
+                        <p class="text-xs text-slate-700">
+                            Multiplicando por la constante exterior \(\frac{\mu_0 I a}{4\pi}\):
+                        </p>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                            \[ B = \frac{\mu_0 I a}{4\pi} \left[ \frac{y}{a^2\sqrt{y^2 + a^2}} \right]_{y_1}^{y_2} = \frac{\mu_0 I}{4\pi a} \left[ \frac{y}{\sqrt{y^2 + a^2}} \right]_{y_1}^{y_2} \]
+                        </div>
+                        <p class="text-xs text-slate-600 italic">
+                            💡 Observe que geométricamente \(\dfrac{y}{\sqrt{y^2 + a^2}} = \sin\theta\), demostrando la equivalencia perfecta de ambos métodos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 6: Solución y Límites -->
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                        <span class="step-badge bg-emerald-600">6</span>
+                        <span>Dar la Solución y Evaluar Casos Límite:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        <div class="bg-white p-3 rounded-xl border border-emerald-200">
+                            <span class="text-xs font-bold text-slate-400 block mb-1 uppercase tracking-wider">Segmento Finito Arbitrario</span>
+                            <div class="text-center font-mono text-sm text-emerald-800 font-bold my-1">
+                                \[ B = \frac{\mu_0 I}{4\pi a} (\sin\theta_2 - \sin\theta_1) \]
+                            </div>
+                            <span class="text-[11px] text-slate-500 block">Ángulos medidos desde la perpendicular \(a\).</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-200">
+                            <span class="text-xs font-bold text-emerald-600 block mb-1 uppercase tracking-wider">Hilo Infinitamente Largo</span>
+                            <div class="text-center font-mono text-sm text-emerald-800 font-bold my-1">
+                                \[ B = \frac{\mu_0 I}{2\pi a} \]
+                            </div>
+                            <span class="text-[11px] text-slate-500 block">Límite \(y \to \pm\infty \iff \theta_1 = -90^\circ, \theta_2 = +90^\circ\).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 7: Preguntas Adicionales -->
+                <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                        <span class="step-badge bg-amber-500">7</span>
+                        <span>Preguntas Adicionales y Retos de Rigor Físico:</span>
+                    </div>
+                    <div class="space-y-2 mt-2">
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 text-xs">
+                            <p class="font-semibold text-slate-800">Q1: ¿Por qué el campo del hilo infinito decae como \(1/a\) en vez de \(1/a^2\)?</p>
+                            <button onclick="toggleHint(this)" class="text-[#B3246B] font-bold mt-1 text-[11px] hover:underline">Ver Justificación Física</button>
+                            <div class="hint-content mt-1 text-slate-600 bg-slate-50 p-2 rounded">
+                                Cada elemento puntual decae con \(1/r^2\). Sin embargo, al integrar sobre una dimensión infinita, los elementos distantes siguen aportando y el efecto acumulado disminuye la caída en una dimensión, pasando de ley de cuadrado inverso (fuente puntual 0D) a ley inversa simple (fuente lineal 1D).
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-3 rounded-lg border border-amber-200 text-xs">
+                            <p class="font-semibold text-slate-800">Q2: ¿Cuánto vale el campo producido por un hilo semi-infinito que empieza en \(y=0\) y se extiende a \(y \to +\infty\)?</p>
+                            <button onclick="toggleHint(this)" class="text-[#B3246B] font-bold mt-1 text-[11px] hover:underline">Ver Justificación Física</button>
+                            <div class="hint-content mt-1 text-slate-600 bg-slate-50 p-2 rounded">
+                                \(\theta_1 = 0^\circ\) y \(\theta_2 = 90^\circ\). Por lo tanto: \(B = \frac{\mu_0 I}{4\pi a} (\sin 90^\circ - \sin 0^\circ) = \frac{\mu_0 I}{4\pi a}\). Es exactamente la mitad del campo de un hilo infinito.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- PROBLEMA 2: ESPIRA CIRCULAR SOBRE EL EJE -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#0B8CA8] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Espira Circular: Campo sobre el Eje y Dipolo Magnético</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Simetría 3D</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Una espira circular de radio \(R\) transporta una corriente \(I\). Determine la expresión analítica del campo magnético \(\vec B\) en un punto \(P\) situado sobre el eje de simetría perpendicular al plano de la espira (eje \(z\)), a una distancia \(z\) del centro.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <!-- SVG Espira en el eje -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex justify-center">
+                    <svg viewBox="0 0 280 200" class="w-full max-w-[260px] h-auto">
+                        <!-- Eje Z -->
+                        <line x1="20" y1="100" x2="260" y2="100" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="250" y="90" font-size="11" font-weight="bold" fill="#64748b">Eje z</text>
+
+                        <!-- Espira en perspectiva (elipse) -->
+                        <ellipse cx="80" cy="100" rx="20" ry="60" fill="none" stroke="#0f172a" stroke-width="3"/>
+                        <!-- Flecha corriente en espira -->
+                        <polygon points="100,95 100,105 108,100" fill="#B3246B"/>
+                        <text x="105" y="85" font-size="11" font-weight="bold" fill="#B3246B">I</text>
+
+                        <!-- Radio R -->
+                        <line x1="80" y1="100" x2="80" y2="40" stroke="#64748b" stroke-width="2"/>
+                        <text x="86" y="70" font-size="11" font-weight="bold" fill="#64748b">R</text>
+
+                        <!-- Elemento dL en la parte superior -->
+                        <circle cx="80" cy="40" r="4" fill="#ef4444"/>
+                        <text x="70" y="30" font-size="11" font-weight="bold" fill="#ef4444">dℓ</text>
+
+                        <!-- Punto P en el eje -->
+                        <circle cx="210" cy="100" r="4" fill="#0f172a"/>
+                        <text x="208" y="118" font-size="12" font-weight="bold" fill="#0f172a">P</text>
+                        <text x="145" y="115" font-size="11" font-weight="bold" fill="#64748b">z</text>
+
+                        <!-- Vector r desde dL hasta P -->
+                        <line x1="80" y1="40" x2="210" y2="100" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="135" y="60" font-size="11" font-weight="bold" fill="#0284c7">r = √(R² + z²)</text>
+
+                        <!-- Vector dB y componente dBz -->
+                        <line x1="210" y1="100" x2="245" y2="75" stroke="#ef4444" stroke-width="2"/>
+                        <polygon points="245,75 237,78 241,85" fill="#ef4444"/>
+                        <text x="245" y="70" font-size="11" font-weight="bold" fill="#ef4444">d<tspan font-style="italic">B</tspan></text>
+
+                        <!-- Componente dBz -->
+                        <line x1="210" y1="100" x2="245" y2="100" stroke="#0B8CA8" stroke-width="2.5"/>
+                        <polygon points="245,100 238,97 238,103" fill="#0B8CA8"/>
+                        <text x="230" y="116" font-size="11" font-weight="bold" fill="#0B8CA8">d<tspan font-style="italic">B<tspan font-size="8">z</tspan></tspan></text>
+                    </svg>
+                </div>
+
+                <!-- Desglose conceptual -->
+                <div class="space-y-3 text-xs md:text-sm">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <strong class="text-slate-900 block mb-1">1. Cancelación por Simetría:</strong>
+                        <p class="text-slate-600 text-xs">
+                            Para cada elemento \(d\vec\ell\), existe un elemento diametralmente opuesto cuyas componentes perpendiculares al eje se anulan mutuamente:
+                            \[ \oint d\vec B_\perp = 0 \implies \vec B = \left( \oint dB_z \right) \hat k \]
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <strong class="text-slate-900 block mb-1">2. Factorización y Dos Formas de Integrar:</strong>
+                        <p class="text-slate-600 text-xs">
+                            \(dB_z = dB \cos\alpha = \frac{\mu_0 I}{4\pi r^2} d\ell \cdot \frac{R}{r} = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} d\ell\). Como \(R\) y \(z\) son constantes:
+                        </p>
+                        <div class="bg-white p-2 rounded border border-slate-200 mt-2 text-center font-mono text-xs">
+                            \(B_z = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} \oint d\ell = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} (2\pi R)\)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solución final y Límites -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm">
+                <div class="bg-cyan-50/50 p-3.5 rounded-xl border border-cyan-200">
+                    <span class="font-bold text-[#0B8CA8] block mb-1 uppercase tracking-wider text-xs">Centro de la Espira (\(z = 0\))</span>
+                    <div class="text-center font-mono font-bold text-slate-900 my-1 text-sm">
+                        \[ B_{\text{centro}} = \frac{\mu_0 I}{2R} \]
+                    </div>
+                </div>
+                <div class="bg-cyan-50/50 p-3.5 rounded-xl border border-cyan-200">
+                    <span class="font-bold text-[#0B8CA8] block mb-1 uppercase tracking-wider text-xs">Límite Lejano (\(z \gg R\)): Dipolo Magnético</span>
+                    <div class="text-center font-mono font-bold text-slate-900 my-1 text-sm">
+                        \[ B_z \approx \frac{\mu_0 \mu_{\text{mag}}}{2\pi z^3} \quad (\mu_{\text{mag}} = I \pi R^2) \]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PROBLEMA 3: ARCO CIRCULAR Y TRAMOS RECTOS -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-purple-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 03</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Conductor Compuesto: Arco Circular y Tramos Radiales</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Horquilla</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un conductor forma un circuito plano compuesto por dos tramos rectilíneos largos alineados con el centro \(C\) y un arco circular de radio \(R\) que subtiende un ángulo \(\theta\) (en radianes). Demuestre paso a paso el campo magnético en el punto central \(C\).
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <b class="text-slate-800 block mb-1">1. Tramos Rectilíneos Radiales:</b>
+                    <p class="text-slate-600">
+                        Para cualquier punto sobre los cables rectos alineados hacia \(C\), el vector \(d\vec\ell\) es colineal con \(\hat r\) (\(d\vec\ell \parallel \hat r\)). Por definición de producto vectorial:
+                        \[ d\vec\ell \times \hat r = 0 \implies \vec B_{\text{rectos}} = 0 \]
+                    </p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <b class="text-slate-800 block mb-1">2. Arco Circular:</b>
+                    <p class="text-slate-600">
+                        Todos los puntos del arco están a distancia \(R\) y \(d\vec\ell \perp \hat r\). Integrando la longitud de arco \(s = R\theta\):
+                        \[ B_{\text{arco}} = \frac{\mu_0 I}{4\pi R^2} \int_0^{R\theta} d\ell = \frac{\mu_0 I\,\theta}{4\pi R} \]
+                    </p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+                    <b class="text-purple-800 block mb-1">3. Semicircunferencia (\(\theta = \pi\)):</b>
+                    <p class="text-slate-700">
+                        Al sustituir \(\theta = \pi\) radianes:
+                        \[ B = \frac{\mu_0 I \pi}{4\pi R} = \frac{\mu_0 I}{4R} \]
+                        ¡Exactamente la mitad del campo de una espira completa!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PROBLEMA 4: ESPIRA CUADRADA -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 04</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Espira Cuadrada de Lado L en su Centro Exacto</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Superposición</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Una espira cuadrada de lado \(L\) lleva una corriente continua \(I\). Calcule la magnitud y dirección del campo magnético total en el centro exacto de la espira utilizando el resultado del segmento finito de hilo.
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs md:text-sm">
+                <p><strong>1. Parámetros geométricos para un solo lado:</strong></p>
+                <ul class="list-disc list-inside text-slate-600 space-y-1">
+                    <li>Distancia perpendicular desde el centro al lado: \(a = L/2\).</li>
+                    <li>Los extremos del lado forman con el centro ángulos de: \(\theta_1 = -45^\circ\) y \(\theta_2 = +45^\circ\).</li>
+                    <li>Seno de los ángulos: \(\sin(45^\circ) - \sin(-45^\circ) = \frac{\sqrt{2}}{2} - \left(-\frac{\sqrt{2}}{2}\right) = \sqrt{2}\).</li>
+                </ul>
+                <p class="pt-2"><strong>2. Campo debido a 1 solo lado:</strong></p>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                    \[ B_1 = \frac{\mu_0 I}{4\pi (L/2)} \sqrt{2} = \frac{\sqrt{2}\mu_0 I}{2\pi L} \]
+                </div>
+                <p class="pt-2"><strong>3. Campo total por los 4 lados (por la regla de la mano derecha, los 4 lados apuntan en la misma dirección):</strong></p>
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-300 font-mono font-bold text-center text-sm text-amber-900">
+                    \[ B_{\text{total}} = 4 \times B_1 = \frac{2\sqrt{2}\mu_0 I}{\pi L} \approx 0.900 \cdot \frac{\mu_0 I}{L} \]
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PROBLEMA 5: FUERZAS ENTRE HILOS PARALELOS -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-rose-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 05</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Fuerza entre Conductores Paralelos y Definición del Ampère</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Interacción</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Dos alambres rectos, muy largos y paralelos, separados por una distancia \(d = 10.0\text{ cm}\), conducen corrientes \(I_1 = 5.0\text{ A}\) e \(I_2 = 8.0\text{ A}\) en el mismo sentido.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                    <b class="text-slate-900 block">Deducción de la Fuerza por Unidad de Longitud:</b>
+                    <p class="text-slate-600">
+                        El alambre 1 produce un campo \(B_1 = \frac{\mu_0 I_1}{2\pi d}\) sobre la posición del alambre 2. Aplicando la fuerza magnética \(F = I_2 L B_1\):
+                    </p>
+                    <div class="bg-white p-2 rounded border border-slate-200 font-mono text-center text-xs">
+                        \[ \frac{F}{L} = \frac{\mu_0 I_1 I_2}{2\pi d} \]
+                    </div>
+                    <p class="text-slate-600">
+                        Como las corrientes van en el mismo sentido, la fuerza es <strong>atractiva</strong>.
+                    </p>
+                </div>
+
+                <div class="bg-rose-50 p-4 rounded-xl border border-rose-200 space-y-2">
+                    <b class="text-rose-900 block">Cálculo Numérico:</b>
+                    <p class="font-mono text-xs">
+                        \[ \frac{F}{L} = \frac{(4\pi \times 10^{-7})(5.0)(8.0)}{2\pi (0.10)} = 8.0 \times 10^{-5}\text{ N/m} = 80\ \mu\text{N/m} \]
+                    </p>
+                    <div class="text-xs text-rose-800 bg-white p-2 rounded border border-rose-200">
+                        💡 <strong>Definición del Ampère:</strong> Un ampère es la corriente que, circulando por dos conductores paralelos infinitos separados 1 m en el vacío, produce entre ellos una fuerza de \(2\times 10^{-7}\text{ N/m}\).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 mb-6 text-center text-slate-400 text-xs no-print space-y-1">
+        <p>Electro10.Easy Workshop Ecosystem • Autor: Dudbil Olvasada Pabón Riaño</p>
+        <p>Física II: Electromagnetismo Universitario</p>
     </footer>
 
-    <!-- Scripts de Lógica y Visualización -->
+    <!-- Scripts de Interacción y Pizarra -->
     <script>
-        const scenes = {};
-
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
-
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
-
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
-
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
-
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
-
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
-
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(t => {
+                t.classList.remove('active', 'bg-[#B3246B]', 'text-white');
+                t.classList.add('text-slate-600');
             });
+            btn.classList.add('active', 'bg-[#B3246B]', 'text-white');
+            btn.classList.remove('text-slate-600');
         }
 
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
-            }
-            return group;
-        }
-
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
-        }
-
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
-            });
-        }
-
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
-        }
-
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
-        }
-
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
+        // Pizarra de dibujo
         const canvas = document.getElementById('globalDrawingCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -380,11 +615,11 @@
             const btn = document.getElementById('toggleDrawBtn');
             if (canvas.classList.contains('active')) {
                 btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
+                btn.classList.add('text-[#B3246B]', 'font-extrabold');
                 document.body.style.overflow = 'hidden'; 
             } else {
                 btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
+                btn.classList.remove('text-[#B3246B]', 'font-extrabold');
                 document.body.style.overflow = 'auto';
             }
             resizeCanvas();
@@ -398,39 +633,42 @@
 
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
+        canvas.addEventListener('mousedown', (e) => {
             if(!canvas.classList.contains('active')) return;
             isDrawing = true;
             ctx.beginPath();
             ctx.moveTo(e.clientX, e.clientY);
-        }
-
-        function draw(e) {
+        });
+        canvas.addEventListener('mousemove', (e) => {
             if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
+            ctx.lineWidth = drawMode === 'pen' ? 3 : 36;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
+            ctx.strokeStyle = drawMode === 'pen' ? '#ef4444' : '#f8fafc';
             ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
             ctx.lineTo(e.clientX, e.clientY);
             ctx.stroke();
-        }
-
-        function endDraw() { isDrawing = false; }
+        });
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('touchstart', (e) => {
+            if(!canvas.classList.contains('active')) return;
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            ctx.lineWidth = drawMode === 'pen' ? 3 : 36;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = drawMode === 'pen' ? '#ef4444' : '#f8fafc';
+            ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+            ctx.stroke();
+        }, {passive: false});
+        canvas.addEventListener('touchend', () => { isDrawing = false; });
 
         function toggleHint(btn) { 
             const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
+            if (hintElement) hintElement.classList.toggle('show');
         }
         
         function toggleAllHints() { 
@@ -440,8 +678,8 @@
         function exportToPDF() {
             const element = document.body;
             const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
+                margin: [0.3, 0.3, 0.3, 0.3],
+                filename: 'Taller_09_Ley_de_Biot_Savart.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -449,7 +687,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        window.onload = () => { init3D(); resizeCanvas(); };
+        window.onload = () => { resizeCanvas(); };
         window.onresize = () => { resizeCanvas(); };
     </script>
 </body>

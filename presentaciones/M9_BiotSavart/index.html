@@ -211,24 +211,46 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 <!-- 4 · HILO -->
 <section class="slide" data-n="4">
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
-  <h2>Del elemento al hilo: cambiar a la variable θ</h2>
+  <h2>Deducción del hilo: paso a paso y dos caminos</h2>
   <div class="row">
     <div class="col" style="width:420px">
-      <canvas class="sim" id="cv-hilo" width="420" height="380" aria-label="Segmento de hilo entre los ángulos theta 1 y theta 2"></canvas>
+      <canvas class="sim" id="cv-hilo" width="420" height="340" aria-label="Segmento de hilo entre los ángulos theta 1 y theta 2"></canvas>
       <div class="ctrl no-print">
         <label for="hi-t1">θ₁</label><input id="hi-t1" type="range" min="-89" max="89" value="-60"><output id="hi-t1-o">−60°</output>
         <label for="hi-t2">θ₂</label><input id="hi-t2" type="range" min="-89" max="89" value="60"><output id="hi-t2-o">60°</output>
       </div>
-    </div>
-    <div class="col" style="flex:1">
-      <div class="steps">
-        <div><span class="n">1</span><span>\(y=a\tan\theta,\quad r=\dfrac{a}{\cos\theta},\quad dy=a\sec^{2}\theta\,d\theta\)</span></div>
-        <div><span class="n">2</span><span>\(|d\vec\ell\times\hat r|=dy\cos\theta\) · todos los \(d\vec B\) apuntan igual.</span></div>
-        <div><span class="n">3</span><span>\(dB=\dfrac{\mu_0 I}{4\pi}\dfrac{\cos\theta\,dy}{r^{2}}=\dfrac{\mu_0 I}{4\pi a}\cos\theta\,d\theta\)</span></div>
-        <div><span class="n">4</span><span>\(B=\dfrac{\mu_0 I}{4\pi a}\left(\sin\theta_2-\sin\theta_1\right)\)</span></div>
-      </div>
-      <div class="ok" style="display:flex;align-items:center;gap:18px"><span><b>Hilo infinito</b><br>θ de −90° a 90°</span><span style="font-size:30px">\(B=\dfrac{\mu_0 I}{2\pi a}\)</span></div>
       <div class="read"><div>Segmento / infinito<b id="hi-ratio">—</b></div><div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div></div>
+    </div>
+    <div class="col" style="flex:1;overflow-y:auto;gap:8px">
+      <div class="steps" style="font-size:14.5px;gap:5px">
+        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
+        <div><span class="n">2</span><span><b>Variables del esquema:</b> \(|d\vec\ell\times\hat r|=dy\cos\theta\) (\(\otimes\) entrando), distancia \(r=\sqrt{a^2+y^2}\).</span></div>
+        <div><span class="n">3</span><span><b>Cambio y constantes fuera:</b> \(B=\dfrac{\mu_0 I a}{4\pi}\displaystyle\int_{y_1}^{y_2}\dfrac{dy}{(y^2+a^2)^{3/2}}\).</span></div>
+      </div>
+      <div class="card" style="padding:9px 12px;background:var(--e10-surface)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <b style="font-size:13.5px;color:var(--e10-primary)">4 · Dos caminos para resolver la integral:</b>
+          <div class="no-print" style="display:flex;gap:4px">
+            <button type="button" class="btn on" id="btn-camino-a" style="min-height:26px;padding:0 8px;font-size:11.5px">Camino A: Trigonométrico</button>
+            <button type="button" class="btn" id="btn-camino-b" style="min-height:26px;padding:0 8px;font-size:11.5px">Camino B: Por tablas</button>
+          </div>
+        </div>
+        <div id="camino-a-box" style="font-size:13px;line-height:1.4">
+          \(y=a\tan\theta \implies dy=a\sec^2\theta\,d\theta\). La integral se reduce a:<br>
+          \(\displaystyle\int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{1}{a^2}(\sin\theta_2-\sin\theta_1)\)
+        </div>
+        <div id="camino-b-box" style="display:none;font-size:13px;line-height:1.4">
+          Fórmula de tabla directa: \(\displaystyle\int\frac{dy}{(y^2+a^2)^{3/2}}=\left[\frac{y}{a^2\sqrt{y^2+a^2}}\right]_{y_1}^{y_2}\).<br>
+          Como \(\frac{y}{\sqrt{y^2+a^2}}=\sin\theta\), ambos caminos conducen al mismo resultado exacto.
+        </div>
+      </div>
+      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
+        <div><b>5 · Segmento:</b> \(B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)\)</div>
+        <div style="font-size:16.5px;font-weight:600"><b>Hilo infinito:</b> \(B=\dfrac{\mu_0 I}{2\pi a}\)</div>
+      </div>
+      <div class="tipbox" style="font-size:12.5px;padding:6px 10px">
+        <b>6 · Pregunta de rigor:</b> En el eje del hilo (\(a=0\)), ¿cuánto vale \(\vec B\)? <i>\(d\vec\ell\parallel\hat r\implies d\vec\ell\times\hat r=0\), el campo magnético es nulo.</i>
+      </div>
     </div>
   </div>
   <div class="foot"><span>Consejo: el hilo infinito decae como \(1/a\), no como \(1/a^2\): es una fuente extendida.</span><span class="mono">4 / 13</span></div>
@@ -619,9 +641,21 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     }
     const step = () => { draw(); };
     bind('hi-t1', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step); bind('hi-t2', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step);
-    $('hi-anim').addEventListener('click', () => {
+    $('hi-anim')?.addEventListener('click', () => {
       cancelAnimationFrame(animT); let t1 = Math.min(+$('hi-t1').value, +$('hi-t2').value); const t2 = Math.max(+$('hi-t1').value, +$('hi-t2').value); const start = performance.now();
       const run = (t) => { const s = t1 + (t2 - t1) * Math.min(1, (t - start) / 1600); draw(s); if (s < t2) animT = requestAnimationFrame(run); }; animT = requestAnimationFrame(run);
+    });
+    $('btn-camino-a')?.addEventListener('click', () => {
+      $('camino-a-box').style.display = 'block';
+      $('camino-b-box').style.display = 'none';
+      $('btn-camino-a').classList.add('on');
+      $('btn-camino-b').classList.remove('on');
+    });
+    $('btn-camino-b')?.addEventListener('click', () => {
+      $('camino-a-box').style.display = 'none';
+      $('camino-b-box').style.display = 'block';
+      $('btn-camino-b').classList.add('on');
+      $('btn-camino-a').classList.remove('on');
     });
     return { draw: () => draw() };
   })();
