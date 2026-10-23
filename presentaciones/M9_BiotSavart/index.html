@@ -219,6 +219,10 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         <label for="hi-t1">θ₁</label><input id="hi-t1" type="range" min="-89" max="89" value="-60"><output id="hi-t1-o">−60°</output>
         <label for="hi-t2">θ₂</label><input id="hi-t2" type="range" min="-89" max="89" value="60"><output id="hi-t2-o">60°</output>
       </div>
+      <div class="no-print" style="display:flex;gap:6px;margin-top:2px;margin-bottom:4px">
+        <button type="button" class="btn on" id="hi-tog-dl" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Elemento dℓ y r̂</button>
+        <button type="button" class="btn" id="hi-tog-sym" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Par simétrico (±y)</button>
+      </div>
       <div class="read"><div>Segmento / infinito<b id="hi-ratio">—</b></div><div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div></div>
     </div>
     <div class="col" style="flex:1;overflow-y:auto;gap:8px">
@@ -291,7 +295,13 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
   <h2>Espira circular: deducción en el eje y dos caminos</h2>
   <div class="row">
     <div class="col" style="width:440px">
-      <canvas class="sim" id="cv-esp" width="440" height="260" aria-label="Gráfica del campo en el eje de la espira en función de z"></canvas>
+      <canvas class="sim" id="cv-esp" width="440" height="260" aria-label="Geometría 3D de la espira o gráfica de B(z)"></canvas>
+      <div class="no-print" style="display:flex;gap:4px;margin-top:2px;margin-bottom:2px">
+        <button type="button" class="btn on" id="esp-mode-geom" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 3D / Simetría</button>
+        <button type="button" class="btn" id="esp-mode-plot" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Gráfica B(z)</button>
+        <button type="button" class="btn on" id="esp-tog-dl" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">dℓ y r̂</button>
+        <button type="button" class="btn on" id="esp-tog-sym" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Par simétrico</button>
+      </div>
       <div class="ctrl no-print">
         <label for="es-r">R</label><input id="es-r" type="range" min="2" max="20" value="10"><output id="es-r-o">10 cm</output>
         <label for="es-i">I</label><input id="es-i" type="range" min="0.5" max="10" step="0.5" value="2"><output id="es-i-o">2,0 A</output>
@@ -352,6 +362,10 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       <div class="ctrl no-print">
         <label for="ar-t">θ</label><input id="ar-t" type="range" min="10" max="360" value="120"><output id="ar-t-o">120°</output>
         <label for="ar-r">R</label><input id="ar-r" type="range" min="2" max="15" value="6"><output id="ar-r-o">6 cm</output>
+      </div>
+      <div class="no-print" style="display:flex;gap:6px;margin-top:2px;margin-bottom:4px">
+        <button type="button" class="btn on" id="arc-tog-dl" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Elemento dℓ y r̂</button>
+        <button type="button" class="btn" id="arc-tog-sym" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Par simétrico</button>
       </div>
       <div class="read"><div>B en el centro (I=9 A)<b id="ar-b">—</b></div><div>Fracción de espira<b id="ar-f">—</b></div><div>Espira completa<b id="ar-full">—</b></div></div>
     </div>
@@ -673,23 +687,112 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
   })();
 
   // ── 4 · Hilo: segmento y animación de la integral ──
+  // ── 4 · Hilo: segmento, elementos infinitesimales y simetría ──
   sims.hilo = (() => {
     const cv = $('cv-hilo'); let animT = null;
+    let showDl = true, showSym = false;
+
+    $('hi-tog-dl')?.addEventListener('click', () => {
+      showDl = !showDl;
+      $('hi-tog-dl').classList.toggle('on', showDl);
+      draw();
+    });
+    $('hi-tog-sym')?.addEventListener('click', () => {
+      showSym = !showSym;
+      $('hi-tog-sym').classList.toggle('on', showSym);
+      if (showSym && !showDl) {
+        showDl = true;
+        $('hi-tog-dl')?.classList.add('on');
+      }
+      draw();
+    });
+
     function draw(sweep) {
       let t1 = +$('hi-t1').value, t2 = +$('hi-t2').value; if (t2 < t1) [t1, t2] = [t2, t1];
       const end = sweep == null ? t2 : Math.min(t2, sweep);
       const ratio = (Math.sin(end * Math.PI / 180) - Math.sin(t1 * Math.PI / 180)) / 2; const Binf = MU0 * 5 / (2 * Math.PI * 0.02);
       $('hi-ratio').textContent = dec(Math.max(0, ratio) * 100, 0) + ' %'; $('hi-b').textContent = sci(Math.max(0, ratio) * Binf) + ' T';
       const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const wx = 90, py = h / 2, a = 220, px = wx + a;
-      ctx.strokeStyle = col('line'); ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(wx, 8); ctx.lineTo(wx, h - 8); ctx.stroke();
+      
+      // Eje del hilo
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(wx, 8); ctx.lineTo(wx, h - 8); ctx.stroke();
       const yOf = (deg) => py - a * Math.tan(deg * Math.PI / 180);
-      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(wx, Math.max(8, Math.min(h - 8, yOf(t1)))); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(end)))); ctx.stroke();
-      [t1, end].forEach((deg, i) => { ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 2; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(deg)))); ctx.stroke(); ctx.setLineDash([]); });
-      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); text(ctx, 'a', wx + a / 2, py + 22, col('muted'));
-      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', px + 10, py - 8, col('ink'));
-      text(ctx, 'θ₁', px - 70, yOf(t1) > py ? py + 40 : py - 28, col('accent-strong')); text(ctx, 'θ₂', px - 70, yOf(end) < py ? py - 52 : py + 62, col('primary'));
-      const bw = 26, bh = 300; ctx.fillStyle = col('line'); ctx.fillRect(w - 50, 40, bw, bh); ctx.fillStyle = col('success'); const f = Math.max(0, ratio); ctx.fillRect(w - 50, 40 + bh * (1 - f), bw, bh * f);
-      text(ctx, 'B/B∞', w - 66, 30, col('muted'), "500 13px 'IBM Plex Mono', monospace");
+      
+      // Segmento real de hilo
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(wx, Math.max(8, Math.min(h - 8, yOf(t1)))); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(end)))); ctx.stroke();
+      
+      // Líneas de los extremos angulares
+      [t1, end].forEach((deg, i) => { ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 1.8; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(deg)))); ctx.stroke(); ctx.setLineDash([]); });
+      
+      // Distancia perpendicular 'a'
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); text(ctx, 'a', wx + a / 2 - 4, py + 20, col('muted'), "bold italic 15px 'STIX Two Text'");
+      
+      // Punto de observación P
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', px + 10, py - 8, col('ink'), "bold 16px 'IBM Plex Sans'");
+      text(ctx, 'θ₁', px - 70, yOf(t1) > py ? py + 40 : py - 28, col('accent-strong'), "bold 13px 'IBM Plex Sans'"); text(ctx, 'θ₂', px - 70, yOf(end) < py ? py - 52 : py + 62, col('primary'), "bold 13px 'IBM Plex Sans'");
+      
+      // Elementos infinitesimales dℓ y vectores
+      if (showDl) {
+        let ang1 = 30;
+        if (t1 > 10) ang1 = (t1 + end) / 2;
+        else if (end < 10) ang1 = t1 + (end - t1) * 0.7;
+        const ey1 = yOf(ang1);
+        
+        // Vector del elemento I dℓ₁
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(wx, ey1 + 12); ctx.lineTo(wx, ey1 - 12); ctx.stroke();
+        arrow(ctx, wx, ey1 + 12, wx, ey1 - 16, '#ef4444', 4);
+        text(ctx, 'I dℓ₁', wx - 48, ey1 - 4, '#ef4444', "bold 13px 'IBM Plex Sans'");
+        
+        // Línea punteada r₁ hacia P
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(wx, ey1); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
+        text(ctx, 'r₁', (wx + px) / 2 - 10, (ey1 + py) / 2 - 8, '#0284c7', "bold italic 13px 'STIX Two Text'");
+        
+        // Vector unitario r̂₁
+        const L1 = Math.hypot(px - wx, py - ey1); const u1x = (px - wx) / L1, u1y = (py - ey1) / L1;
+        arrow(ctx, wx, ey1, wx + u1x * 38, ey1 + u1y * 38, '#0284c7', 3);
+        text(ctx, 'r̂₁', wx + u1x * 44 + 2, ey1 + u1y * 44, '#0284c7', "bold 12px 'IBM Plex Sans'");
+        
+        // Ángulo con el vector unitario
+        ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.8; ctx.beginPath();
+        const baseAng1 = Math.atan2(py - ey1, px - wx);
+        ctx.arc(wx, ey1, 24, -Math.PI / 2, baseAng1); ctx.stroke();
+        text(ctx, 'φ₁', wx + 16, ey1 - 12, '#f59e0b', "bold 11px 'IBM Plex Sans'");
+        
+        // Campo dB₁ en P entrando
+        dotSym(ctx, px + 26, py - 22, 7, false, '#ef4444');
+        text(ctx, 'dB₁ ⊗', px + 38, py - 18, '#ef4444', "bold 11px 'IBM Plex Sans'");
+
+        // Elemento simétrico 2 a -y
+        if (showSym) {
+          const ey2 = py + (py - ey1);
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(wx, ey2 + 12); ctx.lineTo(wx, ey2 - 12); ctx.stroke();
+          arrow(ctx, wx, ey2 + 12, wx, ey2 - 16, '#10b981', 4);
+          text(ctx, 'I dℓ₂', wx - 48, ey2 + 8, '#10b981', "bold 13px 'IBM Plex Sans'");
+          
+          // Línea punteada r₂ hacia P
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+          ctx.beginPath(); ctx.moveTo(wx, ey2); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
+          text(ctx, 'r₂', (wx + px) / 2 - 10, (ey2 + py) / 2 + 16, '#10b981', "bold italic 13px 'STIX Two Text'");
+          
+          // Vector unitario r̂₂
+          const L2 = Math.hypot(px - wx, py - ey2); const u2x = (px - wx) / L2, u2y = (py - ey2) / L2;
+          arrow(ctx, wx, ey2, wx + u2x * 38, ey2 + u2y * 38, '#10b981', 3);
+          text(ctx, 'r̂₂', wx + u2x * 44 + 2, ey2 + u2y * 44, '#10b981', "bold 12px 'IBM Plex Sans'");
+          
+          // Campo dB₂ en P entrando
+          dotSym(ctx, px + 26, py + 22, 7, false, '#10b981');
+          text(ctx, 'dB₂ ⊗', px + 38, py + 26, '#10b981', "bold 11px 'IBM Plex Sans'");
+          
+          text(ctx, 'Simetría ±y: dB₁ y dB₂ ambos ⊗ (se refuerzan)', 10, h - 14, col('primary'), "bold 11.5px 'IBM Plex Sans'");
+        }
+      }
+
+      // Barra vertical B/B∞
+      const bw = 24, bh = 280; ctx.fillStyle = col('line'); ctx.fillRect(w - 38, 45, bw, bh); ctx.fillStyle = col('success'); const f = Math.max(0, ratio); ctx.fillRect(w - 38, 45 + bh * (1 - f), bw, bh * f);
+      text(ctx, 'B/B∞', w - 46, 34, col('muted'), "500 12px 'IBM Plex Mono', monospace");
     }
     const step = () => { draw(); };
     bind('hi-t1', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step); bind('hi-t2', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step);
@@ -750,23 +853,151 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     return { draw };
   })();
 
-  // ── 6 · Espira: gráfica B(z) + ejercicio generado ──
+  // ── 6 · Espira: vista 3D con simetría / gráfica B(z) ──
   sims.esp = (() => {
     const cv = $('cv-esp');
+    let espMode = 'geom'; // 'geom' o 'plot'
+    let showDl = true, showSym = true;
+
+    $('esp-mode-geom')?.addEventListener('click', () => {
+      espMode = 'geom';
+      $('esp-mode-geom').classList.add('on');
+      $('esp-mode-plot').classList.remove('on');
+      draw();
+    });
+    $('esp-mode-plot')?.addEventListener('click', () => {
+      espMode = 'plot';
+      $('esp-mode-plot').classList.add('on');
+      $('esp-mode-geom').classList.remove('on');
+      draw();
+    });
+    $('esp-tog-dl')?.addEventListener('click', () => {
+      showDl = !showDl;
+      $('esp-tog-dl').classList.toggle('on', showDl);
+      draw();
+    });
+    $('esp-tog-sym')?.addEventListener('click', () => {
+      showSym = !showSym;
+      $('esp-tog-sym').classList.toggle('on', showSym);
+      if (showSym && !showDl) {
+        showDl = true;
+        $('esp-tog-dl')?.classList.add('on');
+      }
+      draw();
+    });
+
     function draw() {
-      const R = +$('es-r').value / 100, I = +$('es-i').value, z = +$('es-z').value / 100; const B = (zz) => MU0 * I * R * R / (2 * Math.pow(R * R + zz * zz, 1.5)); const B0 = B(0);
+      const R = +$('es-r').value / 100, I = +$('es-i').value, z = +$('es-z').value / 100;
+      const B = (zz) => MU0 * I * R * R / (2 * Math.pow(R * R + zz * zz, 1.5));
+      const B0 = B(0);
       $('es-b0').textContent = sci(B0) + ' T'; $('es-bz').textContent = sci(B(z)) + ' T'; $('es-ratio').textContent = dec(B(z) / B0, 3);
-      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const L = 40, Rr = w - 20, T = 20, Bt = h - 40; const zmax = 0.30;
-      const X = (zz) => L + (zz + zmax) / (2 * zmax) * (Rr - L), Y = (b) => Bt - b / (MU0 * 10 / (2 * 0.02)) * (Bt - T) * 1.0;
-      const ymax = Math.max(B0 * 1.1, 1e-9); const Y2 = (b) => Bt - b / ymax * (Bt - T);
-      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(L, Bt); ctx.lineTo(Rr, Bt); ctx.moveTo(X(0), T); ctx.lineTo(X(0), Bt); ctx.stroke();
-      text(ctx, 'z', Rr - 10, Bt - 8, col('muted')); text(ctx, 'B', X(0) + 8, T + 14, col('muted'));
-      [-0.3, -0.2, -0.1, 0.1, 0.2, 0.3].forEach((v) => text(ctx, (v * 100).toFixed(0), X(v) - 10, Bt + 20, col('muted'), "500 12px 'IBM Plex Mono', monospace"));
-      ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const zz = -zmax + 2 * zmax * i / 300; const y = Y2(B(zz)); i ? ctx.lineTo(X(zz), y) : ctx.moveTo(X(zz), y); } ctx.stroke();
-      ctx.strokeStyle = col('accent'); ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(X(z), Bt); ctx.lineTo(X(z), Y2(B(z))); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = col('vec-field'); ctx.beginPath(); ctx.arc(X(z), Y2(B(z)), 7, 0, 2 * Math.PI); ctx.fill();
-      [R, -R].forEach((rr) => { if (Math.abs(rr) <= zmax) { ctx.strokeStyle = col('line'); ctx.beginPath(); ctx.moveTo(X(rr), Bt - 4); ctx.lineTo(X(rr), Bt + 4); ctx.stroke(); } });
-      text(ctx, 'cm', Rr - 30, Bt + 34, col('muted'), "500 12px 'IBM Plex Mono', monospace");
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+
+      if (espMode === 'geom') {
+        // ── VISTA GEOMÉTRICA 3D Y SIMETRÍA AXIAL ──
+        const cx = 95, cy = 125, ry = 72, rx = 20;
+        
+        // Eje de simetría z
+        ctx.strokeStyle = col('line'); ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+        ctx.beginPath(); ctx.moveTo(15, cy); ctx.lineTo(w - 15, cy); ctx.stroke(); ctx.setLineDash([]);
+        text(ctx, 'Eje z', w - 48, cy - 10, col('muted'), "bold 12px 'IBM Plex Mono'");
+        
+        // Espira vista en perspectiva
+        ctx.strokeStyle = col('ink'); ctx.lineWidth = 3.5; ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI); ctx.stroke();
+        
+        // Flecha de corriente en el frente
+        arrow(ctx, cx + rx, cy - 8, cx + rx, cy + 10, col('primary'), 3.5);
+        text(ctx, 'I', cx + rx + 6, cy + 4, col('primary'), "bold 13px 'IBM Plex Sans'");
+        
+        // Punto P en el eje
+        const zp = Math.max(25, Math.min(260, 40 + (z * 100 + 30) * 3.5));
+        const px = cx + zp;
+        ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, cy, 5, 0, 2 * Math.PI); ctx.fill();
+        text(ctx, 'P', px - 4, cy + 18, col('ink'), "bold 15px 'IBM Plex Sans'");
+        
+        // Radio R de referencia
+        ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - ry); ctx.stroke();
+        text(ctx, 'R', cx - 14, cy - ry / 2 + 4, col('muted'), "bold italic 13px 'STIX Two Text'");
+
+        if (showDl) {
+          // Elemento 1 superior en +R
+          const x1 = cx, y1 = cy - ry;
+          ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(x1, y1, 5.5, 0, 2 * Math.PI); ctx.fill();
+          text(ctx, 'dℓ₁', x1 - 28, y1 - 4, '#ef4444', "bold 12px 'IBM Plex Sans'");
+          
+          // Vector relativo r₁ hacia P
+          ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(px, cy); ctx.stroke(); ctx.setLineDash([]);
+          text(ctx, 'r', (x1 + px) / 2 - 8, (y1 + cy) / 2 - 8, '#0284c7', "bold italic 12px 'STIX Two Text'");
+          
+          // Vector unitario r̂₁
+          const L1 = Math.hypot(px - x1, cy - y1); const u1x = (px - x1) / L1, u1y = (cy - y1) / L1;
+          arrow(ctx, x1, y1, x1 + u1x * 32, y1 + u1y * 32, '#0284c7', 2.5);
+          text(ctx, 'r̂₁', x1 + u1x * 38, y1 + u1y * 38, '#0284c7', "bold 11px 'IBM Plex Sans'");
+          
+          // Vector diferencial dB₁ en P (perpendicular a r̂₁)
+          // r̂₁ = (u1x, u1y) con u1y > 0. Perpendicular con componente z positiva: (u1y, -u1x)
+          const bLen = 46;
+          const b1x = px + u1y * bLen, b1y = cy - u1x * bLen;
+          arrow(ctx, px, cy, b1x, b1y, '#ef4444', 3);
+          text(ctx, 'dB₁', b1x + 4, b1y - 3, '#ef4444', "bold 12px 'IBM Plex Sans'");
+          
+          // Componentes de dB₁
+          arrow(ctx, px, cy, px, b1y, '#94a3b8', 1.8);
+          text(ctx, 'dB⊥₁', px - 34, b1y + 12, '#94a3b8', "10px 'IBM Plex Sans'");
+          arrow(ctx, px, cy, b1x, cy, '#0B8CA8', 2.2);
+          text(ctx, 'dB_z1', b1x - 10, cy - 8, '#0B8CA8', "bold 10px 'IBM Plex Sans'");
+          
+          ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+          ctx.beginPath(); ctx.moveTo(px, b1y); ctx.lineTo(b1x, b1y); ctx.lineTo(b1x, cy); ctx.stroke(); ctx.setLineDash([]);
+
+          // Elemento 2 inferior opuesto (-R)
+          if (showSym) {
+            const x2 = cx, y2 = cy + ry;
+            ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(x2, y2, 5.5, 0, 2 * Math.PI); ctx.fill();
+            text(ctx, 'dℓ₂', x2 - 28, y2 + 14, '#10b981', "bold 12px 'IBM Plex Sans'");
+            
+            // Vector relativo r₂
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+            ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(px, cy); ctx.stroke(); ctx.setLineDash([]);
+            
+            // Vector unitario r̂₂
+            const L2 = Math.hypot(px - x2, cy - y2); const u2x = (px - x2) / L2, u2y = (cy - y2) / L2;
+            arrow(ctx, x2, y2, x2 + u2x * 32, y2 + u2y * 32, '#10b981', 2.5);
+            text(ctx, 'r̂₂', x2 + u2x * 38, y2 + u2y * 38, '#10b981', "bold 11px 'IBM Plex Sans'");
+            
+            // Vector diferencial dB₂ en P (perpendicular a r̂₂)
+            // r̂₂ = (u2x, u2y) con u2y < 0. Perpendicular: (-u2y, u2x) -> (-u2y > 0, u2x > 0)
+            const b2x = px - u2y * bLen, b2y = cy + u2x * bLen;
+            arrow(ctx, px, cy, b2x, b2y, '#10b981', 3);
+            text(ctx, 'dB₂', b2x + 4, b2y + 12, '#10b981', "bold 12px 'IBM Plex Sans'");
+            
+            // Componentes de dB₂
+            arrow(ctx, px, cy, px, b2y, '#94a3b8', 1.8);
+            text(ctx, 'dB⊥₂', px - 34, b2y - 2, '#94a3b8', "10px 'IBM Plex Sans'");
+            arrow(ctx, px, cy, b2x, cy, '#0B8CA8', 2.2);
+            
+            ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+            ctx.beginPath(); ctx.moveTo(px, b2y); ctx.lineTo(b2x, b2y); ctx.lineTo(b2x, cy); ctx.stroke(); ctx.setLineDash([]);
+
+            // Conclusión pedagógica visible
+            text(ctx, 'Simetría: dB⊥₁ + dB⊥₂ = 0 (se anulan) | dB_z se suman', 14, h - 12, col('primary'), "bold 11px 'IBM Plex Sans'");
+          }
+        }
+      } else {
+        // ── MODO GRÁFICA B(z) ──
+        const L = 40, Rr = w - 20, T = 20, Bt = h - 40; const zmax = 0.30;
+        const X = (zz) => L + (zz + zmax) / (2 * zmax) * (Rr - L);
+        const ymax = Math.max(B0 * 1.1, 1e-9); const Y2 = (b) => Bt - b / ymax * (Bt - T);
+        ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(L, Bt); ctx.lineTo(Rr, Bt); ctx.moveTo(X(0), T); ctx.lineTo(X(0), Bt); ctx.stroke();
+        text(ctx, 'z', Rr - 10, Bt - 8, col('muted'), "bold 12px 'IBM Plex Sans'"); text(ctx, 'B', X(0) + 8, T + 14, col('muted'), "bold 12px 'IBM Plex Sans'");
+        [-0.3, -0.2, -0.1, 0.1, 0.2, 0.3].forEach((v) => text(ctx, (v * 100).toFixed(0), X(v) - 10, Bt + 20, col('muted'), "500 12px 'IBM Plex Mono', monospace"));
+        ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const zz = -zmax + 2 * zmax * i / 300; const y = Y2(B(zz)); i ? ctx.lineTo(X(zz), y) : ctx.moveTo(X(zz), y); } ctx.stroke();
+        ctx.strokeStyle = col('accent'); ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(X(z), Bt); ctx.lineTo(X(z), Y2(B(z))); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = col('vec-field'); ctx.beginPath(); ctx.arc(X(z), Y2(B(z)), 7, 0, 2 * Math.PI); ctx.fill();
+        [R, -R].forEach((rr) => { if (Math.abs(rr) <= zmax) { ctx.strokeStyle = col('line'); ctx.beginPath(); ctx.moveTo(X(rr), Bt - 4); ctx.lineTo(X(rr), Bt + 4); ctx.stroke(); } });
+        text(ctx, 'cm', Rr - 30, Bt + 34, col('muted'), "500 12px 'IBM Plex Mono', monospace");
+      }
     }
     bind('es-r', (v) => v + ' cm', draw); bind('es-i', (v) => dec(v) + ' A', draw); bind('es-z', (v) => v + ' cm', draw);
     let E = null; const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -795,21 +1026,112 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     return { draw };
   })();
 
-  // ── 7 · Arco ──
+  // ── 7 · Arco: elementos infinitesimales y simetría ──
   sims.arco = (() => {
     const cv = $('cv-arco');
+    let showDl = true, showSym = true;
+
+    $('arc-tog-dl')?.addEventListener('click', () => {
+      showDl = !showDl;
+      $('arc-tog-dl').classList.toggle('on', showDl);
+      draw();
+    });
+    $('arc-tog-sym')?.addEventListener('click', () => {
+      showSym = !showSym;
+      $('arc-tog-sym').classList.toggle('on', showSym);
+      if (showSym && !showDl) {
+        showDl = true;
+        $('arc-tog-dl')?.classList.add('on');
+      }
+      draw();
+    });
+
     function draw() {
       const th = +$('ar-t').value, R = +$('ar-r').value / 100, I = 9; const B = MU0 * I * (th * Math.PI / 180) / (4 * Math.PI * R), Bf = MU0 * I / (2 * R);
       $('ar-b').textContent = sci(B) + ' T'; $('ar-f').textContent = dec(th / 360, 2); $('ar-full').textContent = sci(Bf) + ' T';
       const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2, rp = 70 + R * 100 * 8;
       const a0 = -Math.PI / 2 - (th * Math.PI / 180) / 2, a1 = a0 + th * Math.PI / 180;
-      ctx.strokeStyle = col('line'); ctx.lineWidth = 2; ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.arc(cx, cy, rp, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
-      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, rp, a0, a1); ctx.stroke();
-      const am = (a0 + a1) / 2; arrow(ctx, cx + rp * Math.cos(am - 0.12), cy + rp * Math.sin(am - 0.12), cx + rp * Math.cos(am + 0.12), cy + rp * Math.sin(am + 0.12), col('primary'), 4);
-      text(ctx, 'I', cx + (rp + 18) * Math.cos(am), cy + (rp + 18) * Math.sin(am), col('primary'));
+      
+      // Circunferencia completa de guía
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1.8; ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.arc(cx, cy, rp, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      
+      // Arco real conductor
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(cx, cy, rp, a0, a1); ctx.stroke();
+      
+      // Sentido de la corriente
+      const am = (a0 + a1) / 2;
+      arrow(ctx, cx + rp * Math.cos(am - 0.12), cy + rp * Math.sin(am - 0.12), cx + rp * Math.cos(am + 0.12), cy + rp * Math.sin(am + 0.12), col('primary'), 4);
+      text(ctx, 'I', cx + (rp + 18) * Math.cos(am), cy + (rp + 18) * Math.sin(am), col('primary'), "bold 14px 'IBM Plex Sans'");
+      
+      // Radios frontera y ángulo θ
       ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + rp * Math.cos(a0), cy + rp * Math.sin(a0)); ctx.moveTo(cx, cy); ctx.lineTo(cx + rp * Math.cos(a1), cy + rp * Math.sin(a1)); ctx.stroke();
-      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 30, a0, a1); ctx.stroke(); text(ctx, 'θ', cx - 6, cy - 38, col('accent-strong'));
-      dotSym(ctx, cx, cy, 10 + 14 * Math.min(1, th / 360), false, col('vec-field')); text(ctx, 'B entra (corriente horaria)', cx - 90, cy + 46, col('vec-field'), "500 15px 'IBM Plex Sans', sans-serif");
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 30, a0, a1); ctx.stroke(); text(ctx, 'θ', cx - 6, cy - 38, col('accent-strong'), "bold 13px 'IBM Plex Sans'");
+      
+      // Centro C
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(cx, cy, 4.5, 0, 2 * Math.PI); ctx.fill();
+      text(ctx, 'C', cx - 18, cy + 18, col('ink'), "bold 14px 'IBM Plex Sans'");
+
+      // Elementos infinitesimales
+      if (showDl) {
+        // Elemento 1 en el arco
+        const alpha1 = a0 + (a1 - a0) * 0.25;
+        const x1 = cx + rp * Math.cos(alpha1), y1 = cy + rp * Math.sin(alpha1);
+        const t1x = -Math.sin(alpha1), t1y = Math.cos(alpha1);
+        
+        // Vector tangente I dℓ₁
+        arrow(ctx, x1 - t1x * 16, y1 - t1y * 16, x1 + t1x * 16, y1 + t1y * 16, '#ef4444', 4.5);
+        text(ctx, 'I dℓ₁', x1 + 12 * Math.cos(alpha1), y1 + 12 * Math.sin(alpha1) - 6, '#ef4444', "bold 12px 'IBM Plex Sans'");
+        
+        // Línea punteada r₁ hacia el centro
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(cx, cy); ctx.stroke(); ctx.setLineDash([]);
+        text(ctx, 'r₁ = R', (x1 + cx) / 2 + 8, (y1 + cy) / 2 - 4, '#0284c7', "bold 11px 'IBM Plex Sans'");
+        
+        // Vector unitario r̂₁ hacia el centro C
+        const u1x = -Math.cos(alpha1), u1y = -Math.sin(alpha1);
+        arrow(ctx, x1, y1, x1 + u1x * 32, y1 + u1y * 32, '#0284c7', 2.5);
+        text(ctx, 'r̂₁', x1 + u1x * 38 + 2, y1 + u1y * 38 + 2, '#0284c7', "bold 11px 'IBM Plex Sans'");
+        
+        // Indicador de ángulo perpendicular 90° (dℓ₁ ⊥ r̂₁)
+        text(ctx, '90° (dℓ₁ ⊥ r̂₁)', x1 - 32, y1 + 18, '#ef4444', "bold 10px 'IBM Plex Sans'");
+        
+        // Aporte dB₁ en C entrando
+        dotSym(ctx, cx - 18, cy - 14, 7, false, '#ef4444');
+        text(ctx, 'dB₁ ⊗', cx - 50, cy - 10, '#ef4444', "bold 11px 'IBM Plex Sans'");
+
+        // Elemento simétrico 2
+        if (showSym) {
+          const alpha2 = a1 - (a1 - a0) * 0.25;
+          const x2 = cx + rp * Math.cos(alpha2), y2 = cy + rp * Math.sin(alpha2);
+          const t2x = -Math.sin(alpha2), t2y = Math.cos(alpha2);
+          
+          // Vector tangente I dℓ₂
+          arrow(ctx, x2 - t2x * 16, y2 - t2y * 16, x2 + t2x * 16, y2 + t2y * 16, '#10b981', 4.5);
+          text(ctx, 'I dℓ₂', x2 + 12 * Math.cos(alpha2), y2 + 12 * Math.sin(alpha2) - 6, '#10b981', "bold 12px 'IBM Plex Sans'");
+          
+          // Línea punteada r₂ hacia el centro
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+          ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(cx, cy); ctx.stroke(); ctx.setLineDash([]);
+          text(ctx, 'r₂ = R', (x2 + cx) / 2 + 8, (y2 + cy) / 2 + 12, '#10b981', "bold 11px 'IBM Plex Sans'");
+          
+          // Vector unitario r̂₂ hacia C
+          const u2x = -Math.cos(alpha2), u2y = -Math.sin(alpha2);
+          arrow(ctx, x2, y2, x2 + u2x * 32, y2 + u2y * 32, '#10b981', 2.5);
+          text(ctx, 'r̂₂', x2 + u2x * 38, y2 + u2y * 38, '#10b981', "bold 11px 'IBM Plex Sans'");
+          
+          text(ctx, '90°', x2 - 12, y2 + 18, '#10b981', "bold 10px 'IBM Plex Sans'");
+          
+          // Aporte dB₂ en C entrando
+          dotSym(ctx, cx + 18, cy - 14, 7, false, '#10b981');
+          text(ctx, 'dB₂ ⊗', cx + 30, cy - 10, '#10b981', "bold 11px 'IBM Plex Sans'");
+          
+          text(ctx, 'Simetría: dℓ₁ y dℓ₂ aportan ambos dB ⊗ (se suman directamente)', 14, h - 14, col('primary'), "bold 11.5px 'IBM Plex Sans'");
+        }
+      }
+
+      // Símbolo global B en C
+      dotSym(ctx, cx, cy, 10 + 14 * Math.min(1, th / 360), false, col('vec-field'));
+      text(ctx, 'B total entra ⊗', cx - 44, cy + 34, col('vec-field'), "600 13px 'IBM Plex Sans', sans-serif");
     }
     bind('ar-t', (v) => v + '°', draw); bind('ar-r', (v) => v + ' cm', draw);
     $('btn-arc-a')?.addEventListener('click', () => {

@@ -455,7 +455,7 @@ const scOersted = {
 };
 
 // ═════════════════════════ ESCENA 2 · SEGMENTO ═════════════════════════
-const G = { L: 0.20, I: 5, dir: 1, P: { x: 0.05, y: 0 }, showAng: true, showInf: true, showPlot: true, reto: null, drag: false };
+const G = { L: 0.20, I: 5, dir: 1, P: { x: 0.05, y: 0 }, showAng: true, showDl: true, showSym: false, showInf: true, showPlot: true, reto: null, drag: false };
 function segB(P, L = G.L, I = G.I) {
   const d = Math.abs(P.x);
   if (d < 1e-4) return { B: (P.y > 0 && P.y < L) ? NaN : 0, s1: 0, s2: 0, d };
@@ -479,6 +479,8 @@ const scSegmento = {
       <button class="btn" data-act="back" type="button"><i class="ph ph-arrow-counter-clockwise"></i>P al punto del reto</button></div>
     <span class="tool-sep"></span>
     <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${G.showDl ? 'active' : ''}" data-act="t:showDl" type="button">Elemento dℓ y r̂</button>
+      <button class="btn tog ${G.showSym ? 'active' : ''}" data-act="t:showSym" type="button">Par simétrico</button>
       <button class="btn tog ${G.showAng ? 'active' : ''}" data-act="t:showAng" type="button">Ángulos θ₁, θ₂</button>
       <button class="btn tog ${G.showInf ? 'active' : ''}" data-act="t:showInf" type="button">Hilo infinito</button>
       <button class="btn tog ${G.showPlot ? 'active' : ''}" data-act="t:showPlot" type="button">Gráfica B(y)</button></div>`,
@@ -570,6 +572,48 @@ const scSegmento = {
           ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(px, py, r + i * 14, Math.min(base, a2), Math.max(base, a2)); ctx.stroke(); ctx.restore();
           const am = (base + a2) / 2; text(`${lab} = ${fp(th * DEG, 1)}°`, px + Math.cos(am) * (r + 30 + i * 14), py + Math.sin(am) * (r + 30 + i * 14), col, 12, 'center', 600);
         });
+      }
+    }
+    // Elementos infinitesimales dℓ y vectores unitarios r̂
+    if (G.showDl && Math.abs(G.P.x) > 1e-4) {
+      let y1 = G.P.y + 0.35 * G.L;
+      if (y1 > G.L) y1 = G.L * 0.75;
+      if (y1 < 0) y1 = G.L * 0.25;
+      const [e1x, e1y] = gS(0, y1);
+      
+      // Vector del elemento I dℓ₁
+      arrow(e1x, e1y + G.dir * 14, e1x, e1y - G.dir * 14, COL.danger, 4, 8);
+      text('I dℓ₁', e1x - 36, e1y, COL.danger, 12, 'right', 600);
+      
+      // Línea punteada r₁ hacia P
+      ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(e1x, e1y); ctx.lineTo(px, py); ctx.stroke(); ctx.restore();
+      text('r₁', (e1x + px) / 2 - 8, (e1y + py) / 2 - 8, COL.accent, 12, 'center', 600);
+      
+      // Vector unitario r̂₁
+      const d1x = px - e1x, d1y = py - e1y, L1 = Math.hypot(d1x, d1y);
+      if (L1 > 5) {
+        arrow(e1x, e1y, e1x + (d1x / L1) * 36, e1y + (d1y / L1) * 36, COL.accent, 2.5, 8);
+        text('r̂₁', e1x + (d1x / L1) * 44, e1y + (d1y / L1) * 44, COL.accent, 11, 'center', 600);
+      }
+      
+      // Elemento simétrico 2
+      if (G.showSym) {
+        const y2 = G.P.y - (y1 - G.P.y);
+        const [e2x, e2y] = gS(0, y2);
+        arrow(e2x, e2y + G.dir * 14, e2x, e2y - G.dir * 14, COL.ok, 4, 8);
+        text('I dℓ₂', e2x - 36, e2y, COL.ok, 12, 'right', 600);
+        
+        ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(e2x, e2y); ctx.lineTo(px, py); ctx.stroke(); ctx.restore();
+        text('r₂', (e2x + px) / 2 - 8, (e2y + py) / 2 + 16, COL.ok, 12, 'center', 600);
+        
+        const d2x = px - e2x, d2y = py - e2y, L2 = Math.hypot(d2x, d2y);
+        if (L2 > 5) {
+          arrow(e2x, e2y, e2x + (d2x / L2) * 36, e2y + (d2y / L2) * 36, COL.ok, 2.5, 8);
+          text('r̂₂', e2x + (d2x / L2) * 44, e2y + (d2y / L2) * 44, COL.ok, 11, 'center', 600);
+        }
+        text(`Simetría ±y: dℓ₁ y dℓ₂ aportan al campo en el mismo sentido (${segSign() > 0 ? 'sale ⊙' : 'entra ⊗'})`, 16, HU - 32, COL.primary, 12, 'left', 600);
       }
     }
     // P y su campo
@@ -797,7 +841,7 @@ const scHilos = {
 };
 
 // ═════════════════════════ ESCENA 4 · ESPIRA Y ARCO ═════════════════════════
-const E = { mode: 'espira', R: 0.10, I: 2, N: 1, z: 0.10, arc: 120, ccw: 1, showNeedles: true, showDip: true, reto: null, drag: false };
+const E = { mode: 'espira', R: 0.10, I: 2, N: 1, z: 0.10, arc: 120, ccw: 1, showNeedles: true, showDip: true, showDl: true, showSym: true, reto: null, drag: false };
 const eAxis = z => (E.mode === 'bobina' ? E.N : 1) * MU0 * E.I * E.R * E.R / (2 * Math.pow(E.R * E.R + z * z, 1.5));
 const eArc = () => MU0 * E.I * (E.arc / DEG) / (4 * Math.PI * E.R);
 let eView = { cx: 0, cy: 0, s: 1, plot: null };
@@ -823,6 +867,8 @@ const scEspira = {
       <button class="btn" data-act="invert" type="button"><i class="ph ph-arrows-clockwise"></i>Invertir corriente</button></div>
     <span class="tool-sep"></span>
     <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${E.showDl ? 'active' : ''}" data-act="t:showDl" type="button">Elemento dℓ y r̂</button>
+      <button class="btn tog ${E.showSym ? 'active' : ''}" data-act="t:showSym" type="button">Par simétrico</button>
       <button class="btn tog ${E.showNeedles ? 'active' : ''}" data-act="t:showNeedles" type="button">Brújulas</button>
       <button class="btn tog ${E.showDip ? 'active' : ''}" data-act="t:showDip" type="button">Aprox. dipolo</button></div>`,
   act(a) {
@@ -913,6 +959,29 @@ const scEspira = {
       if (app.checked) { wireSym(cx, cy, E.ccw, 13, COL.field); text(`B = ${sp(eArc())} T`, cx + 22, cy + 2, COL.field, 13, 'left', 600); }
       else { ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, 2 * Math.PI); ctx.fill(); text('B en C: ?', cx + 12, cy - 14, COL.muted, 12); }
       sym('C', cx - 26, cy + 18);
+      if (E.showDl) {
+        const alpha1 = a0 + (E.arc / DEG) * 0.25;
+        const e1x = cx + Math.cos(alpha1) * Rp, e1y = cy + Math.sin(alpha1) * Rp;
+        const t1x = -Math.sin(alpha1) * (-E.ccw), t1y = Math.cos(alpha1) * (-E.ccw);
+        arrow(e1x - t1x * 14, e1y - t1y * 14, e1x + t1x * 14, e1y + t1y * 14, COL.danger, 3.5, 8);
+        text('I dℓ₁', e1x + Math.cos(alpha1) * 22, e1y + Math.sin(alpha1) * 22, COL.danger, 11, 'center', 600);
+        ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(e1x, e1y); ctx.lineTo(cx, cy); ctx.stroke(); ctx.restore();
+        text('r₁ = R', (e1x + cx) / 2 + 6, (e1y + cy) / 2 - 6, COL.accent, 11, 'center', 600);
+        arrow(e1x, e1y, e1x - Math.cos(alpha1) * 32, e1y - Math.sin(alpha1) * 32, COL.accent, 2.5, 8);
+        text('r̂₁', e1x - Math.cos(alpha1) * 40, e1y - Math.sin(alpha1) * 40, COL.accent, 11, 'center', 600);
+        text('90° (dℓ ⊥ r̂)', e1x - 28, e1y + 14, COL.danger, 10, 'center', 600);
+        if (E.showSym) {
+          const alpha2 = a1 - (E.arc / DEG) * 0.25;
+          const e2x = cx + Math.cos(alpha2) * Rp, e2y = cy + Math.sin(alpha2) * Rp;
+          const t2x = -Math.sin(alpha2) * (-E.ccw), t2y = Math.cos(alpha2) * (-E.ccw);
+          arrow(e2x - t2x * 14, e2y - t2y * 14, e2x + t2x * 14, e2y + t2y * 14, COL.ok, 3.5, 8);
+          text('I dℓ₂', e2x + Math.cos(alpha2) * 22, e2y + Math.sin(alpha2) * 22, COL.ok, 11, 'center', 600);
+          ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(e2x, e2y); ctx.lineTo(cx, cy); ctx.stroke(); ctx.restore();
+          arrow(e2x, e2y, e2x - Math.cos(alpha2) * 32, e2y - Math.sin(alpha2) * 32, COL.ok, 2.5, 8);
+          text('r̂₂', e2x - Math.cos(alpha2) * 40, e2y - Math.sin(alpha2) * 40, COL.ok, 11, 'center', 600);
+          text('Simetría: dℓ₁ y dℓ₂ aportan al campo en C en el mismo sentido (' + (E.ccw > 0 ? 'sale ⊙' : 'entra ⊗') + ')', 16, HU - 32, COL.primary, 12, 'left', 600);
+        }
+      }
       return;
     }
     const Rp = E.R * s;
@@ -927,6 +996,34 @@ const scEspira = {
     const px = cx + E.z * s, B = eAxis(E.z);
     ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(px, cy, 5, 0, 2 * Math.PI); ctx.fill(); sym('P', px - 4, cy + 20);
     if (app.checked) { const L = clamp(30 + 22 * Math.log10(B / 1e-7), 20, 110); arrow(px, cy, px + E.ccw * L, cy, COL.field, 4, 14); sym('B', px + E.ccw * (L + 12) - 4, cy - 14, COL.field, 18); }
+    if (E.showDl) {
+      // Elemento 1 en +R
+      ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, cy - Rp); ctx.lineTo(px, cy); ctx.stroke(); ctx.restore();
+      text('r₁', (cx + px) / 2 - 8, (cy - Rp + cy) / 2 - 8, COL.accent, 11, 'center', 600);
+      const d1x = px - cx, d1y = cy - (cy - Rp), L1 = Math.hypot(d1x, d1y);
+      if (L1 > 5) {
+        arrow(cx, cy - Rp, cx + (d1x / L1) * 32, cy - Rp + (d1y / L1) * 32, COL.accent, 2.5, 7);
+        text('r̂₁', cx + (d1x / L1) * 40, cy - Rp + (d1y / L1) * 40, COL.accent, 11, 'center', 600);
+        const bLen = 38; const b1x = px + (d1y / L1) * bLen * E.ccw, b1y = cy - (d1x / L1) * bLen * E.ccw;
+        arrow(px, cy, b1x, b1y, COL.danger, 2.5, 8); text('dB₁', b1x + 6, b1y - 4, COL.danger, 11, 'center', 600);
+        arrow(px, cy, px, b1y, COL.muted, 1.5, 6, [2, 2]); text('dB⊥₁', px - 26, b1y + 10, COL.muted, 10, 'center');
+        arrow(px, cy, b1x, cy, COL.accent, 2, 6);
+      }
+      if (E.showSym) {
+        // Elemento 2 en -R
+        ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, cy + Rp); ctx.lineTo(px, cy); ctx.stroke(); ctx.restore();
+        const d2x = px - cx, d2y = cy - (cy + Rp), L2 = Math.hypot(d2x, d2y);
+        if (L2 > 5) {
+          arrow(cx, cy + Rp, cx + (d2x / L2) * 32, cy + Rp + (d2y / L2) * 32, COL.ok, 2.5, 7);
+          text('r̂₂', cx + (d2x / L2) * 40, cy + Rp + (d2y / L2) * 40, COL.ok, 11, 'center', 600);
+          const bLen = 38; const b2x = px - (d2y / L2) * bLen * E.ccw, b2y = cy + (d2x / L2) * bLen * E.ccw;
+          arrow(px, cy, b2x, b2y, COL.ok, 2.5, 8); text('dB₂', b2x + 6, b2y + 10, COL.ok, 11, 'center', 600);
+          arrow(px, cy, px, b2y, COL.muted, 1.5, 6, [2, 2]); text('dB⊥₂', px - 26, b2y - 4, COL.muted, 10, 'center');
+          arrow(px, cy, b2x, cy, COL.accent, 2, 6);
+        }
+        text('Simetría axial: dB⊥₁ + dB⊥₂ = 0 (se cancelan) | Componentes dB_z se suman', 16, HU - 32, COL.primary, 12, 'left', 600);
+      }
+    }
     const pl = eView.plot; if (!pl) return;
     panelBox(pl.x, pl.y, pl.w, pl.h);
     text('B en el eje frente a z', pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600);
