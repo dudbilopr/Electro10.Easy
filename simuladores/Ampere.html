@@ -1,0 +1,1079 @@
+<!DOCTYPE html><html lang="es"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>AmpèreLab10.easy · Ley de Ampère</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* AmpèreLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap}
+header .e10-brand{font-size:1.1rem}
+.scene-tabs{display:flex;gap:2px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);margin-left:12px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:40px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn i{font-size:1.1em}
+.btn .sym{font:italic 600 1.05em/1 'Times New Roman',serif}
+.tog{min-height:34px;padding:0 12px;border-radius:999px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+.seg{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.seg .btn{min-height:34px;border:0;background:transparent;color:var(--e10-muted)}
+.seg .btn.active{background:var(--e10-surface);color:var(--e10-ink);box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:330px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:28px minmax(0,1fr) 78px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+.vnote{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.12em}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55}
+.reto-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reto-actions .btn{min-height:32px;font-size:var(--e10-text-xs)}
+#reto-note{font-size:var(--e10-text-xs);color:var(--e10-warning)}
+#reto-note:empty{display:none}
+.e10-chip--info{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:500 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#check-hint:empty{display:none}
+#explain{line-height:1.5}
+#explain:empty{display:none}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;line-height:1.6}
+#solution .katex-display{margin:.4em 0}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+/* Incrustado en una clase (?embed): solo escenas, herramientas y lienzo; la clase trae sus propias tareas */
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+body.e10-projector{font-size:17px}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  header .e10-brand{font-size:1rem}
+  .module-chip,#btn-projector{display:none}
+  .scene-tabs{order:5;margin:0;width:100%}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .h-menu{order:3;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px;border-top:1px solid var(--e10-line);border-bottom:0;flex-wrap:nowrap;overflow-x:auto}
+  .h-menu .tool-group__label,.h-menu .tool-sep{display:none}
+  .h-menu .btn{min-height:44px;font-size:12px;padding:0 10px}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:150px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px;min-height:44px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:.95em}
+  #values-body{min-width:220px}
+  #coords-indicator{display:none}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+// 10.Easy: tema claro por defecto, salvo que el estudiante haya elegido el oscuro.
+(function(){var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}document.addEventListener('DOMContentLoaded',function(){document.body.classList.toggle('dark-mode',t==='dark');document.body.classList.toggle('light-mode',t!=='dark');if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');});})();
+</script>
+</head>
+<body data-domain="magnetismo" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">AmpèreLab<span>10.easy</span></a>
+  <span class="e10-chip module-chip">Módulo 10 · Ley de Ampère</span>
+  <nav class="scene-tabs" role="tablist" aria-label="Escenas">
+    <button type="button" role="tab" data-scene="circulacion" aria-selected="false">1 · Circulación</button>
+    <button type="button" role="tab" data-scene="conductor" aria-selected="false">2 · Conductor</button>
+    <button type="button" role="tab" data-scene="solenoide" aria-selected="false">3 · Solenoide</button>
+    <button type="button" role="tab" data-scene="toroide" aria-selected="false">4 · Toroide</button>
+  </nav>
+  <div class="e10-header__spacer"></div>
+  <div class="header-actions">
+    <button class="btn" id="btn-projector" type="button"><i class="ph ph-projector-screen"></i>Modo proyector</button>
+    <button class="btn btn-icon" id="btn-theme" type="button" aria-label="Cambiar tema claro u oscuro"><i class="ph ph-moon"></i></button>
+    <button class="btn" id="user-info" type="button" style="color:var(--e10-primary);border-color:var(--e10-primary)">Iniciar sesión</button>
+  </div>
+</header>
+<div class="h-menu" id="toolbar" role="toolbar" aria-label="Herramientas de la escena"></div>
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Lienzo de la simulación"></canvas>
+    <details id="values" open><summary>Valores</summary><div id="values-body"></div></details>
+    <div id="coords-indicator"></div>
+    <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><div id="live-tex"></div></div>
+  </div>
+  <aside class="slide-panel" id="right-panel">
+    <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Abrir o cerrar el panel del reto"><span></span></button>
+    <div class="panel-scroll">
+      <section class="e10-step" id="st1" data-s="done">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto</div>
+          <div id="reto-text"></div>
+          <div id="reto-note"></div>
+          <div class="reto-actions"><span class="e10-chip e10-chip--info" id="reto-tag"></span><button class="btn" id="btn-new" type="button"><i class="ph ph-shuffle"></i>Nuevo reto con otros valores</button></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st2" data-s="now">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice</div>
+          <div id="pred-q"></div>
+          <div class="predict-row" id="pred-choices"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprueba</div>
+          <label class="ans"><span id="ans-label">Tu valor</span><input id="ans-val" type="text" inputmode="decimal" autocomplete="off" placeholder="ej. 2,51e-6"></label>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" id="btn-check" type="button">Comprobar mi predicción</button>
+          <div id="check-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Explica</div>
+          <div class="e10-tip" id="explain"></div>
+          <button class="btn" id="btn-sol" type="button"><i class="ph ph-function"></i>Ver la solución paso a paso</button>
+          <div id="solution" hidden></div>
+        </div>
+      </section>
+      <div id="continue-wrap"></div>
+    </div>
+    <div class="panel-progress"><span class="section-title">Progreso</span><div class="e10-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="prog-bar"><span id="prog" style="--e10-p:25%"></span></div><span class="section-title" id="prog-txt">1 de 4</span></div>
+  </aside>
+</div>
+<footer><span>© 2026 AmpèreLab10.easy · 10.Easy</span><a href="../index.html">Volver a la plataforma</a></footer>
+
+<script type="module">
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+
+// ───────────────────────── utilidades ─────────────────────────
+const $ = s => document.querySelector(s);
+const MU0 = 4e-7 * Math.PI;
+const DEG = 180 / Math.PI;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const cssv = n => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim();
+
+function sciParts(v, d) {
+  if (!isFinite(v) || v === 0) return null;
+  let e = Math.floor(Math.log10(Math.abs(v)));
+  let ms = (v / Math.pow(10, e)).toFixed(d - 1);
+  if (Math.abs(+ms) >= 10) { e += 1; ms = (v / Math.pow(10, e)).toFixed(d - 1); }
+  return [ms, e];
+}
+// LaTeX: 4{,}00\times10^{-5}
+function sx(v, d = 3) { const p = sciParts(v, d); if (!p) return '0'; return p[0].replace('.', '{,}') + (p[1] === 0 ? '' : String.raw`\times10^{${p[1]}}`); }
+// Texto plano: 4,00 × 10⁻⁵
+function sp(v, d = 3) {
+  const p = sciParts(v, d); if (!p) return '0';
+  const sup = String(p[1]).replace('-', '⁻').replace(/\d/g, c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  return p[0].replace('.', ',') + (p[1] === 0 ? '' : ' × 10' + sup);
+}
+const fx = (v, n) => v.toFixed(n).replace('.', '{,}');
+const fp = (v, n) => v.toFixed(n).replace('.', ',');
+function parseNum(s) {
+  s = String(s ?? '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '');
+  s = s.replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1');
+  return s === '' ? NaN : Number(s);
+}
+const near = (a, b, tol = 0.03) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30);
+function K(tex, display = false) { try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); } catch (_) { return tex; } }
+function mixed(el, html) {
+  el.innerHTML = html;
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+const angDiff = (a, b) => { let d = (a - b) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
+
+// ───────────────────────── lienzo ─────────────────────────
+const area = $('#canvas-area'), cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, HU = 0; // HU: alto útil (sin la barra de fórmula)
+function resize() {
+  const r = area.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height; HU = H - (W < 600 ? 76 : 92);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+let COL = {};
+function readColors() {
+  COL = { ink: cssv('ink'), muted: cssv('muted'), line: cssv('line'), surface: cssv('surface'), primary: cssv('primary'), primarySoft: cssv('primary-soft'),
+    accent: cssv('accent'), field: cssv('vec-field'), wire: cssv('d-magnetismo'), ok: cssv('success'), danger: cssv('danger'), warn: cssv('warning'), grid: cssv('grid') };
+}
+const FS = () => document.body.classList.contains('e10-projector') ? 1.25 : 1;
+function arrow(x1, y1, x2, y2, col, w = 2, head = 10, dash = null) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy); if (L < 2) return;
+  head = Math.min(head, L * 0.6);
+  const ux = dx / L, uy = dy / L, hx = x2 - ux * head, hy = y2 - uy * head;
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(hx - uy * head * 0.5, hy + ux * head * 0.5); ctx.lineTo(hx + uy * head * 0.5, hy - ux * head * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function wireSym(x, y, sign, r, col) { // sign > 0: sale (⊙); < 0: entra (⊗)
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  if (sign > 0) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+  else if (sign < 0) { const k = r * 0.52; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - k, y - k); ctx.lineTo(x + k, y + k); ctx.moveTo(x + k, y - k); ctx.lineTo(x - k, y + k); ctx.stroke(); }
+  ctx.restore();
+}
+function text(t, x, y, col = COL.ink, size = 13, align = 'left', weight = 500) {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `${weight} ${size * FS()}px 'IBM Plex Sans', system-ui, sans-serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function sym(t, x, y, col = COL.ink, size = 17, align = 'left') {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `italic ${size * FS()}px 'Times New Roman', serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function panelBox(x, y, w, h) {
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+function needleField(fn, toW, gap, skip) { // brújulas de prueba en una rejilla
+  const pts = [];
+  for (let px = gap / 2; px < W; px += gap) for (let py = gap / 2; py < HU; py += gap) {
+    if (skip(px, py)) continue;
+    const w = toW(px, py), b = fn(w.x, w.y), m = Math.hypot(b[0], b[1]);
+    if (!(m > 0) || !isFinite(m)) continue;
+    pts.push({ px, py, a: Math.atan2(-b[1], b[0]), m });
+  }
+  if (!pts.length) return;
+  const ms = pts.map(p => p.m).sort((a, b) => a - b), ref = ms[Math.floor(ms.length * 0.7)] || ms[0];
+  const L = gap * 0.36;
+  pts.forEach(p => {
+    ctx.globalAlpha = clamp(0.55 * Math.sqrt(p.m / ref), 0.15, 0.9);
+    const c = Math.cos(p.a), s = Math.sin(p.a);
+    arrow(p.px - c * L, p.py - s * L, p.px + c * L, p.py + s * L, COL.field, 1.8, 6);
+  });
+  ctx.globalAlpha = 1;
+}
+
+// ───────────────────────── estado de la app ─────────────────────────
+const app = { scene: 'circulacion', checked: false, result: null, showSol: false };
+const pred = { choice: null, angle: null };   // predicción del paso 2
+// Todo cambio de física invalida la comprobación anterior.
+function invalidate() { if (app.checked) { app.checked = false; app.result = null; app.showSol = false; } renderPanel(false); }
+function resetPred() { pred.choice = null; pred.angle = null; $('#ans-val').value = ''; app.checked = false; app.result = null; app.showSol = false; }
+
+
+const snap = v => Math.round(v * 200) / 200;           // rejilla de 5 mm
+const mm = v => fp(v * 1e3, 1) + ' mm';
+const LET = 'ABCDEF';
+function plotAxes(pl, title) { panelBox(pl.x, pl.y, pl.w, pl.h); text(title, pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600); }
+function hint(pl, t) { text(t, pl.x + pl.w / 2, pl.y + pl.h / 2, COL.muted, 12, 'center'); }
+// El valor que se pide en el reto solo se muestra después de comprobar, o si el estudiante ya cambió el montaje.
+const reveal = () => app.checked || sc().changed();
+
+// ═════════════════════════ ESCENA 1 · CIRCULACIÓN ═════════════════════════
+const C = { wires: [], shape: { kind: 'circulo', x: 0, y: 0, r: 0.07, ccw: 1 }, path: [], tool: 'mover', sel: -1, Idef: 5,
+  show: { needles: true, color: true }, drag: null, drawing: null, anim: -1, reto: null };
+let cView = { cx: 0, cy: 0, s: 1, plot: null };
+function cLayout() {
+  const wide = W > 760, wv = wide ? W * 0.58 : W;
+  cView = { cx: wv * 0.5, cy: HU * 0.5 + (wide ? 0 : 16), s: Math.min(wv, HU) / 0.30, plot: wide ? { x: W * 0.6, y: 20, w: W * 0.4 - 20, h: Math.min(HU - 40, 360) } : null };
+}
+const cS = (x, y) => [cView.cx + x * cView.s, cView.cy - y * cView.s];
+const cW = (px, py) => ({ x: (px - cView.cx) / cView.s, y: (cView.cy - py) / cView.s });
+function cField(x, y) {
+  let bx = 0, by = 0;
+  for (const w of C.wires) { const rx = x - w.x, ry = y - w.y, r2 = Math.max(rx * rx + ry * ry, 1e-8), k = MU0 * w.I / (2 * Math.PI * r2); bx += -k * ry; by += k * rx; }
+  return [bx, by];
+}
+function circlePath(x, y, r, ccw) { const p = []; for (let i = 0; i < 160; i++) { const t = ccw * i * 2 * Math.PI / 160; p.push([x + r * Math.cos(t), y + r * Math.sin(t)]); } return p; }
+function squarePath(x, y, h, ccw) {
+  const c = [[x - h, y - h], [x + h, y - h], [x + h, y + h], [x - h, y + h]], p = [];
+  for (let k = 0; k < 4; k++) { const [a, b] = c[k], [d, e] = c[(k + 1) % 4]; for (let i = 0; i < 40; i++) p.push([a + (d - a) * i / 40, b + (e - b) * i / 40]); }
+  return ccw > 0 ? p : p.reverse();
+}
+function cRegen() { const s = C.shape; if (s.kind === 'circulo') C.path = circlePath(s.x, s.y, s.r, s.ccw); else if (s.kind === 'cuadrado') C.path = squarePath(s.x, s.y, s.r, s.ccw); }
+const signedArea = p => { let A = 0; for (let i = 0; i < p.length; i++) { const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % p.length]; A += x1 * y2 - x2 * y1; } return A / 2; };
+function winding(p, x, y) { // número de vueltas del camino alrededor de (x, y), con signo
+  let w = 0;
+  for (let i = 0; i < p.length; i++) { const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % p.length]; w += Math.atan2((x1 - x) * (y2 - y) - (y1 - y) * (x2 - x), (x1 - x) * (x2 - x) + (y1 - y) * (y2 - y)); }
+  return Math.round(w / (2 * Math.PI));
+}
+const cIenc = () => C.wires.reduce((s, w) => s + w.I * winding(C.path, w.x, w.y), 0);
+function cCirc() { // Σ B·dl con tramos de 1 mm como máximo; acc: suma acumulada en cada vértice
+  const p = C.path, acc = [0]; let tot = 0;
+  for (let i = 0; i < p.length; i++) {
+    const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % p.length], k = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 0.001));
+    for (let j = 0; j < k; j++) { const t = (j + 0.5) / k, [bx, by] = cField(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t); tot += (bx * (x2 - x1) + by * (y2 - y1)) / k; }
+    acc.push(tot);
+  }
+  return { tot, acc };
+}
+function cHit(px, py) { for (let i = C.wires.length - 1; i >= 0; i--) { const [x, y] = cS(C.wires[i].x, C.wires[i].y); if (Math.hypot(px - x, py - y) < 18) return i; } return -1; }
+const cSnap = () => ({ w: JSON.stringify(C.wires), s: JSON.stringify(C.shape) });
+function cRun() {
+  C.anim = 0;
+  const step = () => { if (app.scene !== 'circulacion' || C.anim < 0) return; C.anim = Math.min(1, C.anim + 0.008); draw(); if (C.anim < 1) requestAnimationFrame(step); else C.anim = -1; };
+  requestAnimationFrame(step);
+}
+const scCirculacion = {
+  title: 'Circulación',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Camino</span>
+      <div class="seg">${[['circulo', 'Círculo'], ['cuadrado', 'Cuadrado'], ['libre', 'A mano']].map(([k, l]) => `<button class="btn ${C.shape.kind === k ? 'active' : ''}" data-act="shape:${k}" type="button">${l}</button>`).join('')}</div>
+      <button class="btn" data-act="invert" type="button"><i class="ph ph-arrows-clockwise"></i>Invertir sentido</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Hilos</span>
+      <div class="seg">${[['mover', '<i class="ph ph-hand-grabbing"></i>Mover'], ['sale', '+ Sale ⊙'], ['entra', '+ Entra ⊗'], ['borrar', '<i class="ph ph-eraser"></i>Borrar']].map(([k, l]) => `<button class="btn ${C.tool === k ? 'active' : ''}" data-act="tool:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${C.show.needles ? 'active' : ''}" data-act="t:needles" type="button">Brújulas</button>
+      <button class="btn tog ${C.show.color ? 'active' : ''}" data-act="t:color" type="button">Colorear B·dl</button>
+      <button class="btn" data-act="run" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-play"></i>Recorrer el camino</button></div>`,
+  act(a) {
+    if (a.startsWith('shape:')) {
+      const k = a.slice(6), s = C.shape;
+      if (k === 'libre') { if (s.kind !== 'libre') C.shape = { kind: 'libre', id: Date.now(), ccw: s.ccw }; }
+      else if (s.kind !== k) {
+        let x = 0, y = 0; if (s.kind === 'libre') { C.path.forEach(p => { x += p[0]; y += p[1]; }); x = snap(x / C.path.length); y = snap(y / C.path.length); } else { x = s.x; y = s.y; }
+        C.shape = { kind: k, x, y, r: s.r || 0.07, ccw: s.ccw }; cRegen();
+      }
+      invalidate();
+    } else if (a === 'invert') { C.shape.ccw *= -1; if (C.shape.kind === 'libre') C.path.reverse(); else cRegen(); invalidate(); }
+    else if (a.startsWith('tool:')) C.tool = a.slice(5);
+    else if (a.startsWith('t:')) C.show[a.slice(2)] = !C.show[a.slice(2)];
+    else if (a === 'run') cRun();
+    buildToolbar();
+  },
+  values() {
+    const v = [];
+    const w = C.wires[C.sel];
+    if (w) v.push({ k: 'I', sym: 'I', sub: LET[C.sel], min: -20, max: 20, step: 0.5, get: () => w.I, set: x => w.I = x, fmt: x => `${fp(Math.abs(x), 1)} A ${x > 0 ? 'sale' : x < 0 ? 'entra' : ''}`, label: 'Corriente del hilo seleccionado' });
+    if (C.shape.kind !== 'libre') v.push({ k: 'r', sym: C.shape.kind === 'circulo' ? 'r' : 'ℓ/2', min: 1, max: 15, step: 0.5, get: () => C.shape.r * 100, set: x => { C.shape.r = x / 100; cRegen(); }, fmt: x => fp(x, 1) + ' cm', label: 'Tamaño del camino' });
+    return v;
+  },
+  valuesNote: 'Arrastra los hilos y el camino (desde dentro lo mueves; desde el borde cambias su tamaño). Toca un hilo para cambiar su corriente. Con «A mano», dibuja cualquier camino cerrado.',
+  newReto() {
+    const t = pick(['dos', 'dos', 'tres', 'cero', 'ninguno']), Iv = () => pick([2, 3, 4, 5, 6, 8]);
+    const s1 = pick([1, -1]);
+    C.wires = [{ x: -0.04, y: 0.01, I: s1 * Iv() }, { x: 0.03, y: -0.025, I: -s1 * Iv() }, { x: 0.095, y: 0.05, I: pick([1, -1]) * Iv() }];
+    if (t === 'cero') C.wires[1].I = -C.wires[0].I;
+    while (t === 'dos' && C.wires[0].I + C.wires[1].I === 0) C.wires[1].I = -s1 * Iv();
+    const ccw = pick([1, 1, -1]);
+    if (t === 'tres') C.shape = { kind: 'circulo', x: 0.025, y: 0.01, r: 0.11, ccw };
+    else if (t === 'ninguno') C.shape = { kind: 'cuadrado', x: -0.08, y: -0.075, r: 0.035, ccw };
+    else C.shape = { kind: pick(['circulo', 'cuadrado']), x: -0.005, y: -0.005, r: 0.065, ccw };
+    cRegen(); C.sel = -1; C.tool = 'mover'; C.anim = -1;
+    C.reto = { t, ...cSnap() };
+  },
+  retoText() {
+    const n = C.wires.length, nw = ['Ningún hilo', 'Un hilo largo atraviesa', 'Dos hilos largos atraviesan', 'Tres hilos largos atraviesan', 'Cuatro hilos largos atraviesan', 'Cinco hilos largos atraviesan', 'Seis hilos largos atraviesan'][n];
+    const ws = C.wires.map((w, i) => `${LET[i]} lleva ${fp(Math.abs(w.I), 1)} A y ${w.I > 0 ? 'sale (⊙)' : 'entra (⊗)'}`).join('; ');
+    const k = { circulo: 'circular', cuadrado: 'cuadrado', libre: 'dibujado a mano' }[C.shape.kind];
+    return `${nw} la página: ${ws}. El camino ${k} se recorre en sentido ${C.shape.ccw > 0 ? 'antihorario' : 'horario'} (mira las flechas). Calcula la circulación \\(\\oint\\vec B\\cdot d\\vec\\ell\\).`;
+  },
+  retoTag: 'Resuelto 1 y retos 1–2 del taller',
+  changed() { const R = C.reto; if (!R) return false; const s = cSnap(); return s.w !== R.w || s.s !== R.s; },
+  predQ: '¿Qué signo tiene la circulación por este camino?',
+  choices: [{ id: 'pos', label: 'Positiva' }, { id: 'neg', label: 'Negativa' }, { id: 'cero', label: 'Cero' }],
+  ansLabel: 'Tu valor de \\(\\oint\\vec B\\cdot d\\vec\\ell\\), en T·m',
+  ansPh: 'ej. 2,51e-6',
+  hasPred: () => !!pred.choice,
+  check() {
+    const Ie = cIenc(), G = MU0 * Ie, real = Math.abs(Ie) < 1e-9 ? 'cero' : Ie > 0 ? 'pos' : 'neg';
+    const v = parseNum($('#ans-val').value), rows = [], names = { pos: 'positiva', neg: 'negativa', cero: 'cero' };
+    const dOk = pred.choice === real;
+    rows.push({ t: `Signo: ${names[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = real === 'cero' ? Math.abs(v) < 1e-9 : near(v, G, 0.03); rows.push({ t: `Tu valor: ${sp(v, 3)} T·m`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const ori = C.shape.ccw > 0 ? 1 : -1, ins = C.wires.filter(w => winding(C.path, w.x, w.y) !== 0), out = C.wires.length - ins.length;
+    const absEnc = MU0 * ins.reduce((s, w) => s + Math.abs(w.I), 0), allEnc = MU0 * ori * C.wires.reduce((s, w) => s + w.I, 0);
+    let tip;
+    if (!dOk && real === 'cero') tip = `${ins.length ? 'Las corrientes encerradas se compensan' : 'El camino no encierra ningún hilo'}: la circulación es nula. Pero el campo sobre el camino no es cero: activa «Brújulas» y «Colorear B·dl»; los tramos positivos y negativos se cancelan.`;
+    else if (!dOk && pred.choice === 'cero') tip = `El camino encierra una corriente neta de ${fp(Math.abs(Ie), 1)} A: la circulación no puede ser cero. Cuenta solo los hilos que quedan dentro.`;
+    else if (!dOk) tip = 'Regla de la mano derecha: con los dedos en el sentido del recorrido, el pulgar señala las corrientes positivas. Con el camino antihorario cuentan positivas las que salen (⊙); con el horario, las que entran (⊗).';
+    else if (vOk === false && near(Math.abs(v), Math.abs(G), 0.03)) tip = 'El valor es correcto pero el signo no: con los dedos en el sentido del recorrido, el pulgar señala las corrientes positivas.';
+    else if (vOk === false && ins.length > 1 && near(Math.abs(v), absEnc, 0.03)) tip = 'Sumaste las corrientes encerradas sin su signo. Una corriente que sale y otra que entra se restan.';
+    else if (vOk === false && out > 0 && near(v, allEnc, 0.03)) tip = 'Contaste un hilo que está fuera del camino. Ese hilo cambia \\(\\vec B\\) en cada punto, pero su aporte a la circulación suma cero.';
+    else if (vOk === false && real !== 'cero' && near(Math.abs(v), Math.abs(Ie), 0.03)) tip = 'Te faltó multiplicar por \\(\\mu_0 = 4\\pi\\times10^{-7}\\) T·m/A.';
+    else if (vOk === false) tip = 'Recuerda: \\(\\oint\\vec B\\cdot d\\vec\\ell = \\mu_0 I_{\\text{enc}}\\), con \\(\\mu_0 = 4\\pi\\times10^{-7}\\) T·m/A.';
+    else tip = 'Bien. Arrastra el camino o dibuja otro «A mano»: mientras encierre los mismos hilos, la circulación no cambia. Pulsa «Recorrer el camino» para ver cómo se acumula la suma.';
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const Ie = cIenc(), num = cCirc().tot, ccw = C.shape.ccw > 0;
+    const list = C.wires.map((w, i) => { const n = winding(C.path, w.x, w.y); return `<b>${LET[i]}</b>: ${n ? `dentro, cuenta \\(${n * w.I > 0 ? '+' : '-'}${fx(Math.abs(w.I), 1)}\\) A` : 'fuera, no cuenta'}`; }).join(' · ');
+    return `<p>Sentido ${ccw ? 'antihorario' : 'horario'}: cuentan positivas las corrientes que ${ccw ? 'salen (⊙)' : 'entran (⊗)'}.</p><p>${list}</p>\\[I_{\\text{enc}} = ${fx(Ie, 1)}\\ \\text{A}\\]\\[\\oint\\vec B\\cdot d\\vec\\ell=\\mu_0 I_{\\text{enc}}=(4\\pi\\times10^{-7})(${fx(Ie, 1)})=${sx(MU0 * Ie)}\\ \\text{T}\\cdot\\text{m}\\]<p>La suma numérica de \\(\\vec B\\cdot d\\vec\\ell\\) sobre el camino del lienzo da ${sp(num)} T·m.</p>`;
+  },
+  live() {
+    const r = reveal(), Ie = cIenc();
+    return String.raw`\oint_C\vec B\cdot d\vec\ell=\mu_0 I_{\text{enc}}=(4\pi\times10^{-7})(${r ? fx(Ie, 1) : '?'})=${r ? sx(MU0 * Ie) : '\\,?'}\,\text{T}\cdot\text{m}`;
+  },
+  coords: () => `camino ${C.shape.ccw > 0 ? 'antihorario' : 'horario'} · ${C.wires.length} hilos`,
+  down(px, py) {
+    const w = cW(px, py), hit = cHit(px, py);
+    if (C.tool === 'sale' || C.tool === 'entra') {
+      if (C.wires.length >= 6) return;
+      C.wires.push({ x: snap(w.x), y: snap(w.y), I: (C.tool === 'sale' ? 1 : -1) * C.Idef }); C.sel = C.wires.length - 1; invalidate(); buildValues(); return;
+    }
+    if (C.tool === 'borrar') { if (hit >= 0) { C.wires.splice(hit, 1); C.sel = -1; invalidate(); buildValues(); } return; }
+    if (hit >= 0) { C.drag = { t: 'wire', i: hit }; if (C.sel !== hit) { C.sel = hit; buildValues(); } return; }
+    if (C.shape.kind === 'libre') { C.drawing = [[w.x, w.y]]; return; }
+    const s = C.shape, dx = w.x - s.x, dy = w.y - s.y, m = s.kind === 'circulo' ? Math.hypot(dx, dy) : Math.max(Math.abs(dx), Math.abs(dy));
+    if (Math.abs(m - s.r) * cView.s < 14) C.drag = { t: 'size' };
+    else if (m < s.r) C.drag = { t: 'move', ox: dx, oy: dy };
+  },
+  move(px, py) {
+    if (!C.drag && !C.drawing) return;
+    const w = cW(px, py);
+    if (C.drawing) { const l = C.drawing[C.drawing.length - 1]; if (Math.hypot(w.x - l[0], w.y - l[1]) * cView.s > 4) C.drawing.push([w.x, w.y]); return; }
+    const s = C.shape;
+    if (C.drag.t === 'wire') { const o = C.wires[C.drag.i]; o.x = snap(w.x); o.y = snap(w.y); }
+    else if (C.drag.t === 'move') { s.x = snap(w.x - C.drag.ox); s.y = snap(w.y - C.drag.oy); cRegen(); }
+    else { const dx = w.x - s.x, dy = w.y - s.y; s.r = clamp(snap(s.kind === 'circulo' ? Math.hypot(dx, dy) : Math.max(Math.abs(dx), Math.abs(dy))), 0.01, 0.15); cRegen(); buildValues(); }
+    invalidate();
+  },
+  up() {
+    if (C.drawing) {
+      const A = signedArea(C.drawing);
+      if (C.drawing.length >= 12 && Math.abs(A) > 2e-4) { C.path = C.drawing; C.shape = { kind: 'libre', id: Date.now(), ccw: A > 0 ? 1 : -1 }; invalidate(); buildToolbar(); }
+      C.drawing = null;
+    }
+    C.drag = null;
+  },
+  draw() {
+    cLayout();
+    const { s } = cView, rv = reveal(), pl = cView.plot;
+    if (C.show.needles) needleField(cField, cW, W < 600 ? 34 : 40, (px, py) => (pl && px > pl.x - 20) || C.wires.some(w => { const [x, y] = cS(w.x, w.y); return Math.hypot(px - x, py - y) < 22; }));
+    // camino: relleno, trazo (coloreado por el signo de B·dl) y flechas de sentido
+    const P = C.drawing || C.path;
+    if (P.length > 1) {
+      ctx.save(); ctx.beginPath(); P.forEach(([x, y], i) => { const [a, b] = cS(x, y); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); }); if (!C.drawing) ctx.closePath();
+      if (!C.drawing) { ctx.globalAlpha = 0.18; ctx.fillStyle = COL.accent; ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = COL.accent; ctx.lineWidth = 2.5; ctx.setLineDash(C.drawing ? [6, 5] : []); ctx.stroke(); ctx.restore();
+    }
+    if (!C.drawing && C.path.length > 2) {
+      const n = C.path.length;
+      if (rv && C.show.color) {
+        const seg = C.path.map((p, i) => { const q = C.path[(i + 1) % n], [bx, by] = cField((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), dl = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1e-9; return (bx * (q[0] - p[0]) + by * (q[1] - p[1])) / dl; });
+        const ref = [...seg].map(Math.abs).sort((a, b) => a - b)[Math.floor(n * 0.8)] || 1e-12;
+        ctx.save(); ctx.lineCap = 'round';
+        seg.forEach((b, i) => { const [a1, b1] = cS(...C.path[i]), [a2, b2] = cS(...C.path[(i + 1) % n]); ctx.strokeStyle = b >= 0 ? COL.ok : COL.danger; ctx.lineWidth = clamp(2 + 5 * Math.abs(b) / ref, 2, 8); ctx.beginPath(); ctx.moveTo(a1, b1); ctx.lineTo(a2, b2); ctx.stroke(); });
+        ctx.restore();
+      }
+      for (let k = 0; k < 4; k++) {
+        const i = Math.floor(k * n / 4 + n / 8) % n, [a1, b1] = cS(...C.path[i]), [a2, b2] = cS(...C.path[(i + 2) % n]), L = Math.hypot(a2 - a1, b2 - b1) || 1;
+        arrow(a1 - (a2 - a1) / L * 9, b1 - (b2 - b1) / L * 9, a1 + (a2 - a1) / L * 9, b1 + (b2 - b1) / L * 9, COL.accent, 3, 12);
+      }
+      if (C.anim >= 0) { const i = Math.floor(C.anim * n) % n, [a, b] = cS(...C.path[i]); ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(a, b, 6, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    // hilos
+    C.wires.forEach((w, i) => {
+      const [x, y] = cS(w.x, w.y), inside = winding(C.path, w.x, w.y) !== 0;
+      if (i === C.sel) { ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.35; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(x, y, 19, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+      wireSym(x, y, Math.sign(w.I), 13, COL.primary);
+      text(`${LET[i]} · ${fp(Math.abs(w.I), 1)} A`, x + 18, y - 14, COL.primary, 12, 'left', 600);
+      if (rv) text(inside ? 'dentro' : 'fuera', x + 18, y + 4, inside ? COL.accent : COL.muted, 11);
+    });
+    text(C.shape.kind === 'libre' ? 'Dibuja un camino cerrado sobre el lienzo' : 'Vista de frente: los hilos atraviesan la página', 16, HU - 12, COL.muted, 12);
+    // gráfica de la suma acumulada
+    if (!pl) return;
+    plotAxes(pl, 'Suma acumulada de B·dl a lo largo del camino');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la suma.'); return; }
+    const { acc } = cCirc(), G = MU0 * cIenc(), lo = Math.min(0, G, ...acc), hi = Math.max(0, G, ...acc), pad = (hi - lo) * 0.12 || 1e-6;
+    const X = f => pl.x + 44 + f * (pl.w - 64), Y = v => pl.y + pl.h - 40 - (v - lo + pad) / (hi - lo + 2 * pad) * (pl.h - 90);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(1), Y(0)); ctx.moveTo(X(0), Y(lo - pad)); ctx.lineTo(X(0), Y(hi + pad)); ctx.stroke();
+    ctx.strokeStyle = COL.accent; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(X(0), Y(G)); ctx.lineTo(X(1), Y(G)); ctx.stroke(); ctx.restore();
+    text(`μ₀ I_enc = ${sp(G)} T·m`, X(1), Y(G) - 10, COL.accent, 11, 'right', 600);
+    const upto = C.anim >= 0 ? C.anim : 1, m = acc.length - 1;
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath();
+    for (let i = 0; i <= m * upto; i++) { const a = X(i / m), b = Y(acc[i]); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); }
+    ctx.stroke(); ctx.restore();
+    text('0', X(0) - 8, Y(0), COL.muted, 11, 'right'); text('inicio', X(0), pl.y + pl.h - 22, COL.muted, 11, 'center'); text('vuelta completa', X(1), pl.y + pl.h - 22, COL.muted, 11, 'right');
+  },
+};
+
+// ═════════════════════════ ESCENA 2 · CONDUCTOR ═════════════════════════
+const D = { mode: 'macizo', a: 2e-3, b: 3e-3, c: 4e-3, I: 10, same: false, r: 1e-3, drag: false, reto: null };
+const dOuter = () => D.mode === 'macizo' ? D.a : D.c;
+function dIenc(r) {
+  const f = (r2, r1) => (r * r - r1 * r1) / (r2 * r2 - r1 * r1);
+  if (D.mode === 'macizo') return r < D.a ? D.I * r * r / (D.a * D.a) : D.I;
+  if (D.mode === 'hueco') return r < D.b ? 0 : r < D.c ? D.I * f(D.c, D.b) : D.I;
+  const Iout = D.same ? D.I : -D.I;
+  return r < D.a ? D.I * r * r / (D.a * D.a) : r < D.b ? D.I : r < D.c ? D.I + Iout * f(D.c, D.b) : D.I + Iout;
+}
+const dB = r => r <= 1e-6 ? 0 : MU0 * dIenc(r) / (2 * Math.PI * r);
+function dRegion(r) {
+  if (D.mode === 'macizo') return r < D.a ? { name: 'dentro del conductor', cat: 'crece', tex: String.raw`I\,\dfrac{r^2}{a^2}` } : { name: 'fuera del conductor', cat: 'decae', tex: 'I' };
+  if (D.mode === 'hueco') return r < D.b ? { name: 'en el hueco', cat: 'cero', tex: '0' } : r < D.c ? { name: 'dentro de la pared', cat: 'otra', tex: String.raw`I\,\dfrac{r^2-b^2}{c^2-b^2}` } : { name: 'fuera del tubo', cat: 'decae', tex: 'I' };
+  if (r < D.a) return { name: 'dentro del conductor interior', cat: 'crece', tex: String.raw`I\,\dfrac{r^2}{a^2}` };
+  if (r < D.b) return { name: 'entre los conductores', cat: 'decae', tex: 'I' };
+  if (r < D.c) return { name: 'dentro del conductor exterior', cat: 'otra', tex: String.raw`I ${D.same ? '+' : '-'} I\,\dfrac{r^2-b^2}{c^2-b^2}` };
+  return D.same ? { name: 'fuera del cable', cat: 'decae', tex: 'I + I' } : { name: 'fuera del cable', cat: 'cero', tex: 'I - I' };
+}
+let dView = { cx: 0, cy: 0, s: 1, plot: null, rmax: 1 };
+function dLayout() {
+  const wide = W > 760, rmax = dOuter() * 1.6, Rp = Math.min(HU * 0.42, wide ? W * 0.21 : W * 0.42);
+  dView = { cx: wide ? W * 0.26 : W * 0.5, cy: HU * 0.5, s: Rp / rmax, rmax, plot: wide ? { x: W * 0.52, y: 20, w: W * 0.46, h: HU - 40 } : null };
+}
+const dSnap = () => JSON.stringify([D.mode, D.a, D.b, D.c, D.I, D.same, D.r]);
+const scConductor = {
+  title: 'Conductor',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Conductor</span>
+      <div class="seg">${[['macizo', 'Macizo'], ['hueco', 'Tubo hueco'], ['coaxial', 'Coaxial']].map(([k, l]) => `<button class="btn ${D.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div>
+      ${D.mode === 'coaxial' ? `<button class="btn tog ${D.same ? 'active' : ''}" data-act="same" type="button">Exterior en el mismo sentido</button>` : ''}</div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Camino</span>
+      <button class="btn active" type="button" tabindex="-1"><i class="ph ph-hand-grabbing"></i>Arrastra el camino amperiano</button></div>`,
+  act(a) {
+    if (a.startsWith('mode:')) { D.mode = a.slice(5); D.r = Math.min(D.r, dOuter() * 1.5); buildValues(); }
+    else if (a === 'same') D.same = !D.same;
+    invalidate(); buildToolbar();
+  },
+  values() {
+    const fix = () => { D.b = Math.max(D.b, D.mode === 'coaxial' ? D.a + 0.5e-3 : 0.5e-3); D.c = Math.max(D.c, D.b + 0.5e-3); };
+    const v = [];
+    if (D.mode !== 'hueco') v.push({ k: 'a', sym: 'a', min: 0.5, max: 8, step: 0.5, get: () => D.a * 1e3, set: x => { D.a = x * 1e-3; fix(); }, fmt: x => fp(x, 1) + ' mm' });
+    if (D.mode !== 'macizo') v.push({ k: 'b', sym: 'b', min: 0.5, max: 9, step: 0.5, get: () => D.b * 1e3, set: x => { D.b = x * 1e-3; fix(); }, fmt: x => fp(x, 1) + ' mm' },
+      { k: 'c', sym: 'c', min: 1, max: 10, step: 0.5, get: () => D.c * 1e3, set: x => { D.c = x * 1e-3; fix(); }, fmt: x => fp(x, 1) + ' mm' });
+    v.push({ k: 'I', sym: 'I', min: 0.5, max: 50, step: 0.5, get: () => D.I, set: x => D.I = x, fmt: x => fp(x, 1) + ' A' },
+      { k: 'r', sym: 'r', min: 0, max: 16, step: 0.1, get: () => D.r * 1e3, set: x => D.r = x * 1e-3, fmt: x => fp(x, 1) + ' mm', label: 'Radio del camino amperiano' });
+    return v;
+  },
+  valuesNote: 'Arrastra el camino amperiano (círculo discontinuo) para cambiar r. Los puntos marcan corriente que sale; las cruces, corriente que entra.',
+  newReto() {
+    const m = pick(['macizo', 'macizo', 'hueco', 'coaxial', 'coaxial']); D.mode = m; D.same = false;
+    if (m === 'macizo') { D.a = pick([2, 3, 4, 5]) * 1e-3; D.I = pick([5, 10, 15, 20]); const g = pick(['in', 'in', 'sup', 'out']); D.r = g === 'in' ? D.a * pick([0.25, 0.5, 0.75]) : g === 'sup' ? D.a : D.a * pick([1.5, 2]); }
+    else if (m === 'hueco') { D.b = pick([1, 2]) * 1e-3; D.c = D.b + pick([1, 2]) * 1e-3; D.I = pick([5, 10, 20]); const g = pick(['hole', 'wall', 'wall', 'out']); D.r = g === 'hole' ? D.b / 2 : g === 'wall' ? (D.b + D.c) / 2 : D.c * 1.5; }
+    else { D.a = pick([1, 1.5]) * 1e-3; D.b = D.a + pick([1.5, 2]) * 1e-3; D.c = D.b + 1e-3; D.I = pick([1, 2, 3, 5]); D.same = Math.random() < 0.25; const g = pick(['in', 'mid', 'wall', 'out']); D.r = g === 'in' ? D.a / 2 : g === 'mid' ? (D.a + D.b) / 2 : g === 'wall' ? (D.b + D.c) / 2 : D.c + 1e-3; }
+    D.r = Math.round(D.r * 1e5) / 1e5;
+    D.reto = dSnap();
+  },
+  retoText() {
+    const r = `Calcula \\(B\\) a \\(r = ${fx(D.r * 1e3, 2).replace(/\{,\}?0+$/, '')}\\) mm del eje.`;
+    if (D.mode === 'macizo') return `Un conductor cilíndrico largo de radio ${mm(D.a)} lleva ${fp(D.I, 1)} A repartidos uniformemente en su sección. ${r}`;
+    if (D.mode === 'hueco') return `Un tubo conductor largo, de radio interior ${mm(D.b)} y exterior ${mm(D.c)}, lleva ${fp(D.I, 1)} A repartidos uniformemente en su pared. ${r}`;
+    return `Un cable coaxial tiene un conductor interior de radio ${mm(D.a)} y uno exterior entre ${mm(D.b)} y ${mm(D.c)}. Lleva ${fp(D.I, 1)} A por el interior y la misma corriente ${D.same ? 'en el mismo sentido' : 'de vuelta'} por el exterior, ambas uniformes. ${r}`;
+  },
+  retoTag: 'Resueltos 2–3 y retos 3–6 del taller',
+  changed() { return !!D.reto && dSnap() !== D.reto; },
+  predQ: 'En ese radio, ¿cómo depende \\(B\\) de \\(r\\)?',
+  choices: [{ id: 'crece', label: 'Crece ∝ r' }, { id: 'decae', label: 'Decae ∝ 1/r' }, { id: 'cero', label: 'Es cero' }, { id: 'otra', label: 'Otra forma' }],
+  ansLabel: 'Tu valor de \\(B\\), en tesla',
+  ansPh: 'ej. 5,0e-4',
+  hasPred: () => !!pred.choice,
+  check() {
+    const r = D.r, B = dB(r), reg = dRegion(r), v = parseNum($('#ans-val').value), rows = [], lab = Object.fromEntries(this.choices.map(c => [c.id, c.label]));
+    const dOk = pred.choice === reg.cat;
+    rows.push({ t: `Forma: ${lab[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = reg.cat === 'cero' ? Math.abs(v) < 1e-9 : near(v, B, 0.03); rows.push({ t: `Tu \\(B\\): ${sp(v, 3)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const Bfull = MU0 * D.I / (2 * Math.PI * r);
+    const why = {
+      crece: 'Dentro de un conductor con corriente uniforme, el camino de radio \\(r\\) encierra la fracción \\(r^2/a^2\\) de la corriente: \\(B=\\mu_0 I r/(2\\pi a^2)\\) crece con \\(r\\).',
+      decae: 'Aquí el camino encierra toda la corriente neta: \\(B=\\mu_0 I_{\\text{enc}}/(2\\pi r)\\) decae como \\(1/r\\), igual que el de un hilo.',
+      cero: D.mode === 'hueco' ? 'En el hueco el camino no encierra corriente: \\(B=0\\). Pasa en cualquier tubo con corriente uniforme.' : 'Fuera del coaxial la corriente encerrada es \\(I-I=0\\): no hay campo. Por eso el coaxial no interfiere con otros cables.',
+      otra: 'Dentro de la pared, el camino encierra solo una parte de esa corriente, proporcional a \\((r^2-b^2)/(c^2-b^2)\\): \\(B\\) no es ni \\(\\propto r\\) ni \\(\\propto 1/r\\).',
+    };
+    let tip;
+    if (!dOk) tip = why[reg.cat];
+    else if (vOk === false && reg.cat !== 'decae' && reg.cat !== 'cero' && near(v, Bfull, 0.03)) tip = `Usaste toda la corriente, pero en esta región el camino solo encierra ${fp(dIenc(r), 2)} A. ` + why[reg.cat];
+    else if (vOk === false && (near(v, B * 1e3, 0.03) || near(v, B / 1e3, 0.03))) tip = 'Revisa unidades: los radios van en metros (1 mm = 10⁻³ m).';
+    else if (vOk === false && reg.cat === 'cero') tip = why.cero;
+    else if (vOk === false) tip = 'Primero halla \\(I_{\\text{enc}}\\) en ese radio y luego despeja \\(B = \\mu_0 I_{\\text{enc}}/(2\\pi r)\\).';
+    else tip = 'Bien. Arrastra el camino amperiano desde el eje hacia fuera y mira la gráfica \\(B(r)\\): el campo es continuo en cada superficie.';
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const r = D.r, reg = dRegion(r), Ie = dIenc(r);
+    return `<p>Región: ${reg.name}. El camino amperiano es una circunferencia de radio \\(r\\), y en ella \\(\\vec B\\) es tangente y de módulo constante: \\(\\oint\\vec B\\cdot d\\vec\\ell = B(2\\pi r)\\).</p>\\[I_{\\text{enc}} = ${reg.tex} = ${fx(Ie, 3)}\\ \\text{A}\\]\\[B=\\frac{\\mu_0 I_{\\text{enc}}}{2\\pi r}=\\frac{(4\\pi\\times10^{-7})(${fx(Ie, 3)})}{2\\pi(${sx(r, 3)})}=${sx(dB(r))}\\ \\text{T}\\]`;
+  },
+  live() {
+    const r = reveal();
+    return String.raw`B(2\pi r)=\mu_0 I_{\text{enc}}\ \Rightarrow\ B=\dfrac{\mu_0 I_{\text{enc}}}{2\pi r}=\dfrac{(4\pi\times10^{-7})(${r ? fx(dIenc(D.r), 3) : '?'})}{2\pi(${sx(D.r, 3)})}=${r ? sx(dB(D.r)) : '\\,?'}\,\text{T}`;
+  },
+  coords: () => `r = ${mm(D.r)} · ${dRegion(D.r).name}`,
+  down(px, py) { D.drag = true; this.move(px, py); },
+  move(px, py) { if (!D.drag) return; if (dView.plot && px > dView.plot.x - 10) return; D.r = clamp(Math.round(Math.hypot(px - dView.cx, py - dView.cy) / dView.s * 1e4) / 1e4, 0, dView.rmax); invalidate(); buildValues(); },
+  up() { D.drag = false; },
+  draw() {
+    dLayout();
+    const { cx, cy, s, rmax } = dView, rv = reveal(), out = !D.same && D.mode === 'coaxial';
+    const ring = (r1, r2, col, alpha) => { ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx, cy, r2 * s, 0, 2 * Math.PI); if (r1 > 0) ctx.arc(cx, cy, r1 * s, 0, 2 * Math.PI, true); ctx.fill('evenodd'); ctx.restore();
+      ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, r2 * s, 0, 2 * Math.PI); ctx.stroke(); if (r1 > 0) { ctx.beginPath(); ctx.arc(cx, cy, r1 * s, 0, 2 * Math.PI); ctx.stroke(); } ctx.restore(); };
+    const parts = D.mode === 'macizo' ? [[0, D.a, 1]] : D.mode === 'hueco' ? [[D.b, D.c, 1]] : [[0, D.a, 1], [D.b, D.c, out ? -1 : 1]];
+    parts.forEach(([r1, r2, sg]) => ring(r1, r2, sg > 0 ? COL.primary : COL.accent, 0.16));
+    // marcas de corriente: punto = sale, cruz = entra
+    const g = 13;
+    for (let x = -rmax; x <= rmax; x += g / s) for (let y = -rmax; y <= rmax; y += g / s) {
+      const r = Math.hypot(x, y), p = parts.find(([r1, r2]) => r >= r1 + 2 / s && r <= r2 - 2 / s); if (!p) continue;
+      const X = cx + x * s, Y = cy - y * s;
+      if (p[2] > 0) { ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X, Y, 1.8, 0, 2 * Math.PI); ctx.fill(); }
+      else { ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(X - 2.5, Y - 2.5); ctx.lineTo(X + 2.5, Y + 2.5); ctx.moveTo(X + 2.5, Y - 2.5); ctx.lineTo(X - 2.5, Y + 2.5); ctx.stroke(); ctx.restore(); }
+    }
+    // camino amperiano
+    const Rr = D.r * s;
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 2.5; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.arc(cx, cy, Math.max(Rr, 1), 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    const B = dB(D.r);
+    if (rv && B > 0) { const L = 40, a = -Math.PI / 2, x0 = cx + Rr * Math.cos(a), y0 = cy + Rr * Math.sin(a); arrow(x0, y0, x0 - L, y0, COL.field, 3.5, 12); sym('B', x0 - L - 14, y0 - 10, COL.field, 18); }
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rr * Math.cos(0.5), cy + Rr * Math.sin(0.5)); ctx.stroke(); ctx.restore();
+    text(`r = ${mm(D.r)}`, cx + Rr * Math.cos(0.5) + 8, cy + Rr * Math.sin(0.5) + 10, COL.accent, 13, 'left', 600);
+    if (rv) text(`I_enc = ${fp(dIenc(D.r), 3)} A`, cx, cy + Math.max(Rr, dOuter() * s) + 24, COL.ink, 13, 'center', 600);
+    text('Corte transversal del conductor', 16, HU - 12, COL.muted, 12);
+    const pl = dView.plot; if (!pl) return;
+    plotAxes(pl, 'B en función de r');
+    const X = r => pl.x + 50 + r / rmax * (pl.w - 70);
+    let Bm = 0; for (let i = 1; i <= 200; i++) Bm = Math.max(Bm, dB(i * rmax / 200)); Bm = (Bm || 1e-6) * 1.15;
+    const Y = b => pl.y + pl.h - 46 - b / Bm * (pl.h - 100);
+    parts.forEach(([r1, r2, sg]) => { ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = sg > 0 ? COL.primary : COL.accent; ctx.fillRect(X(r1), Y(Bm), X(r2) - X(r1), Y(0) - Y(Bm)); ctx.restore(); });
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(rmax), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(Bm)); ctx.stroke(); ctx.restore();
+    const ticks = D.mode === 'macizo' ? [['a', D.a]] : D.mode === 'hueco' ? [['b', D.b], ['c', D.c]] : [['a', D.a], ['b', D.b], ['c', D.c]];
+    ticks.forEach(([n, r]) => { sym(n, X(r) - 4, Y(0) + 16, COL.muted, 15); });
+    text('r', X(rmax) - 4, Y(0) + 16, COL.muted, 12, 'right');
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(D.r), Y(0)); ctx.lineTo(X(D.r), Y(Bm)); ctx.stroke(); ctx.restore();
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const r = i * rmax / 300; i ? ctx.lineTo(X(r), Y(dB(r))) : ctx.moveTo(X(r), Y(dB(r))); } ctx.stroke(); ctx.restore();
+    ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(D.r), Y(B), 6, 0, 2 * Math.PI); ctx.fill();
+    text(`${sp(B)} T`, X(D.r) + 10, Y(B) - 12, COL.primary, 12, 'left', 600);
+  },
+};
+
+// ═════════════════════════ ESCENA 3 · SOLENOIDE ═════════════════════════
+const S = { L: 0.30, N: 600, I: 2, R: 0.02, z: 0, showPath: true, showNeedles: true, reto: null, drag: false, memoKey: '', memo: new Map() };
+const sIdeal = () => MU0 * (S.N / S.L) * S.I;
+function sCos(z) { const h = S.L / 2; return [(h - z) / Math.hypot(h - z, S.R), (h + z) / Math.hypot(h + z, S.R)]; }
+const sAxis = z => { const [c1, c2] = sCos(z); return 0.5 * sIdeal() * (c1 + c2); };
+function sField(z, y) { // fuera del eje: 40 espiras equivalentes, cada una con N/40 vueltas
+  const M = 40, n = 36, R = S.R, k = (S.N / M) * MU0 * S.I / (4 * Math.PI); let Bz = 0, By = 0;
+  for (let m = 0; m < M; m++) {
+    const dz = z - (-S.L / 2 + (m + 0.5) * S.L / M);
+    for (let i = 0; i < n; i++) {
+      const f = (i + 0.5) * 2 * Math.PI / n, dp = 2 * Math.PI / n, dx = -R * Math.sin(f) * dp, dy = R * Math.cos(f) * dp, rx = -R * Math.cos(f), ry = y - R * Math.sin(f), r3 = Math.pow(rx * rx + ry * ry + dz * dz, 1.5);
+      By += -dx * dz / r3; Bz += (dx * ry - dy * rx) / r3;
+    }
+  }
+  return [k * Bz, k * By];
+}
+let sView = { cx: 0, cy: 0, s: 1, plot: null };
+function sLayout() {
+  const wide = W > 760, wv = wide ? W * 0.55 : W;
+  sView = { cx: wv * 0.5, cy: HU * 0.5, s: Math.min(wv * 0.6 / S.L, HU * 0.28 / S.R), plot: wide ? { x: W * 0.57, y: 20, w: W * 0.41, h: HU - 40 } : null };
+}
+const sCat = () => { const q = sAxis(S.z) / sIdeal(); return q >= 0.75 ? 'ideal' : q >= 0.25 ? 'mitad' : 'cero'; };
+const sSnap = () => JSON.stringify([S.L, S.N, S.I, S.R, S.z]);
+const scSolenoide = {
+  title: 'Solenoide',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Punto</span>
+      <button class="btn active" type="button" tabindex="-1"><i class="ph ph-hand-grabbing"></i>Arrastra <span class="sym">P</span> por el eje</button>
+      <button class="btn" data-act="p:0" type="button">Centro</button><button class="btn" data-act="p:end" type="button">Extremo</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${S.showNeedles ? 'active' : ''}" data-act="t:showNeedles" type="button">Brújulas</button>
+      <button class="btn tog ${S.showPath ? 'active' : ''}" data-act="t:showPath" type="button">Camino amperiano</button></div>`,
+  act(a) {
+    if (a === 'p:0') { S.z = 0; invalidate(); buildValues(); }
+    else if (a === 'p:end') { S.z = S.L / 2; invalidate(); buildValues(); }
+    else if (a.startsWith('t:')) S[a.slice(2)] = !S[a.slice(2)];
+    buildToolbar();
+  },
+  values: () => [
+    { k: 'L', sym: 'L', min: 5, max: 60, step: 1, get: () => S.L * 100, set: x => { S.L = x / 100; }, fmt: x => fp(x, 0) + ' cm' },
+    { k: 'R', sym: 'R', min: 0.5, max: 5, step: 0.5, get: () => S.R * 100, set: x => S.R = x / 100, fmt: x => fp(x, 1) + ' cm' },
+    { k: 'N', sym: 'N', min: 10, max: 2000, step: 10, get: () => S.N, set: x => S.N = x, fmt: x => fp(x, 0) + ' vueltas' },
+    { k: 'I', sym: 'I', min: 0.1, max: 5, step: 0.1, get: () => S.I, set: x => S.I = x, fmt: x => fp(x, 1) + ' A' },
+    { k: 'z', sym: 'z', min: -60, max: 60, step: 0.5, get: () => S.z * 100, set: x => S.z = x / 100, fmt: x => fp(x, 1) + ' cm', label: 'Posición de P sobre el eje, desde el centro' },
+  ],
+  valuesNote: 'z es la posición de P sobre el eje, medida desde el centro del solenoide.',
+  newReto() {
+    const t = pick(['centro', 'centro', 'extremo', 'fuera']);
+    S.L = pick([0.2, 0.3, 0.4]); S.N = pick([200, 400, 500, 600, 800, 1000]); S.I = pick([0.5, 1, 1.5, 2, 3]); S.R = pick([0.01, 0.015, 0.02]);
+    S.z = t === 'centro' ? 0 : t === 'extremo' ? S.L / 2 : Math.round((S.L / 2 + pick([2, 3]) * S.R) * 1e4) / 1e4;
+    S.reto = { t, k: sSnap() };
+  },
+  retoText() {
+    const t = S.reto.t, where = t === 'centro' ? 'en su centro' : t === 'extremo' ? 'en el centro de una de sus bocas (un extremo)' : `fuera del solenoide, a ${fp((S.z - S.L / 2) * 100, 1)} cm de una de sus bocas`;
+    return `Un solenoide de ${fp(S.L * 100, 0)} cm de largo y ${fp(S.R * 100, 1)} cm de radio tiene ${S.N} vueltas y lleva ${fp(S.I, 1)} A. Calcula \\(B\\) sobre su eje, ${where}.`;
+  },
+  retoTag: 'Resuelto 4 y retos 7–9 del taller',
+  changed() { return !!S.reto && sSnap() !== S.reto.k; },
+  predQ: 'Comparado con el campo ideal \\(\\mu_0 nI\\), en \\(P\\) el campo es…',
+  choices: [{ id: 'ideal', label: 'Casi igual' }, { id: 'mitad', label: 'Cerca de la mitad' }, { id: 'cero', label: 'Casi cero' }],
+  ansLabel: 'Tu valor de \\(B\\) en \\(P\\), en tesla',
+  ansPh: 'ej. 5,03e-3',
+  hasPred: () => !!pred.choice,
+  check() {
+    const B = sAxis(S.z), ideal = sIdeal(), cat = sCat(), v = parseNum($('#ans-val').value), rows = [], lab = Object.fromEntries(this.choices.map(c => [c.id, c.label]));
+    const dOk = pred.choice === cat;
+    rows.push({ t: `Comparación: ${lab[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(v, B, 0.03) || (cat === 'cero' && Math.abs(v) <= 0.1 * ideal); rows.push({ t: `Tu \\(B\\): ${sp(v, 3)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const why = {
+      ideal: 'Lejos de los extremos, un solenoide largo se comporta como el ideal: \\(B\\approx\\mu_0 nI\\).',
+      mitad: 'En la boca del solenoide solo hay espiras hacia un lado: el campo es cerca de la mitad del ideal.',
+      cero: 'Fuera del solenoide, sobre el eje, el campo cae muy rápido: a pocos radios de la boca es casi cero.',
+    };
+    let tip;
+    if (!dOk) tip = why[cat];
+    else if (vOk === false && near(v, MU0 * S.N * S.I, 0.03)) tip = 'Usaste \\(N\\) en lugar de \\(n=N/L\\), que es el número de vueltas por metro.';
+    else if (vOk === false && near(v, MU0 * S.N / (S.L * 100) * S.I, 0.03)) tip = 'Revisa unidades: \\(L\\) va en metros para que \\(n\\) quede en vueltas por metro.';
+    else if (vOk === false && cat !== 'ideal' && near(v, ideal, 0.03)) tip = 'Ese es el campo ideal. En un extremo, o fuera, usa \\(B=\\tfrac12\\mu_0 nI(\\cos\\alpha_1+\\cos\\alpha_2)\\).';
+    else if (vOk === false) tip = 'Sobre el eje: \\(B=\\tfrac12\\mu_0 nI(\\cos\\alpha_1+\\cos\\alpha_2)\\), con \\(\\alpha_1\\) y \\(\\alpha_2\\) los ángulos con que se ven los dos extremos desde \\(P\\).';
+    else tip = cat === 'cero' && !near(v, B, 0.03) ? `Aceptado: es casi cero. Con el solenoide finito vale ${sp(B)} T.` : 'Bien. Mueve \\(P\\) por el eje y mira la gráfica: el campo es casi uniforme dentro y cae a la mitad en las bocas. Prueba un solenoide corto, con \\(L\\) parecida a \\(R\\).';
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const [c1, c2] = sCos(S.z), B = sAxis(S.z), ideal = sIdeal();
+    return `\\[n=\\frac{N}{L}=\\frac{${S.N}}{${fx(S.L, 2)}}=${fx(S.N / S.L, 0)}\\ \\text{m}^{-1},\\qquad \\mu_0 nI=${sx(ideal)}\\ \\text{T}\\]<p>Sobre el eje se suman las espiras (Biot–Savart, cap. 9):</p>\\[\\cos\\alpha_1=${fx(c1, 3)},\\qquad \\cos\\alpha_2=${fx(c2, 3)}\\]${c1 < 0 ? '<p>El coseno negativo indica que \\(P\\) está fuera: ese extremo queda detrás.</p>' : ''}\\[B=\\tfrac12\\mu_0 nI(\\cos\\alpha_1+\\cos\\alpha_2)=${sx(B)}\\ \\text{T}\\ \\ (${fx(100 * B / ideal, 1)}\\,\\%\\ \\text{del ideal})\\]`;
+  },
+  live() {
+    const r = reveal();
+    return String.raw`B_{\text{ideal}}=\mu_0 nI=${r ? sx(sIdeal()) : '\\,?'}\,\text{T}\qquad B(P)=\tfrac12\mu_0 nI(\cos\alpha_1+\cos\alpha_2)=${r ? sx(sAxis(S.z)) : '\\,?'}\,\text{T}`;
+  },
+  coords: () => `z = ${fp(S.z * 100, 1)} cm · n = ${fp(S.N / S.L, 0)} vueltas/m`,
+  down(px, py) { if (Math.abs(py - sView.cy) > 60) return; S.drag = true; this.move(px, py); },
+  move(px) { if (!S.drag) return; if (sView.plot && px > sView.plot.x - 10) return; S.z = clamp(Math.round((px - sView.cx) / sView.s * 200) / 200, -0.6, 0.6); invalidate(); buildValues(); },
+  up() { S.drag = false; },
+  draw() {
+    sLayout();
+    const { cx, cy, s } = sView, rv = reveal(), pl = sView.plot, hL = S.L / 2 * s, Rp = S.R * s;
+    const key = [S.L, S.N, S.I, S.R, W, HU].join();
+    if (key !== S.memoKey) { S.memoKey = key; S.memo.clear(); }
+    if (S.showNeedles) needleField((z, y) => { const k = z.toFixed(5) + ',' + y.toFixed(5); if (!S.memo.has(k)) S.memo.set(k, sField(z, y)); return S.memo.get(k); },
+      (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s }), W < 600 ? 30 : 36, (px, py) => (pl && px > pl.x - 20) || (Math.abs(Math.abs(py - cy) - Rp) < 12 && Math.abs(px - cx) < hL + 12));
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.setLineDash([6, 5]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(8, cy); ctx.lineTo(pl ? pl.x - 16 : W - 8, cy); ctx.stroke(); ctx.restore();
+    // espiras en corte: arriba salen (⊙), abajo entran (⊗)
+    const nT = Math.max(2, Math.min(S.N, Math.floor(2 * hL / 13))), rs = clamp(Math.min(2 * hL / nT, 14) * 0.42, 2.5, 6);
+    for (let i = 0; i < nT; i++) { const x = cx - hL + (i + 0.5) * 2 * hL / nT; wireSym(x, cy - Rp, 1, rs, COL.primary); wireSym(x, cy + Rp, -1, rs, COL.primary); }
+    text(`N = ${S.N} · I = ${fp(S.I, 1)} A`, cx - hL, cy + Rp + 24, COL.primary, 13, 'left', 600);
+    if (S.showPath) {
+      const x1 = cx - hL * 0.4, x2 = cx + hL * 0.1, y1 = cy - Rp * 0.45, y2 = cy - Rp - Math.max(Rp, 30);
+      ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; ctx.setLineDash([7, 5]); ctx.strokeRect(x1, y2, x2 - x1, y1 - y2); ctx.restore();
+      arrow(x1 + 4, y1, x1 + (x2 - x1) * 0.6, y1, COL.accent, 2.5, 10);
+      text('camino amperiano', x2 + 8, y2 + 10, COL.accent, 12);
+    }
+    const px = cx + S.z * s, B = sAxis(S.z);
+    ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(px, cy, 5, 0, 2 * Math.PI); ctx.fill(); sym('P', px - 4, cy + 20);
+    if (rv) { const L = clamp(60 * B / sIdeal(), 10, 70); arrow(px, cy, px + L, cy, COL.field, 4, 12); sym('B', px + L + 6, cy - 12, COL.field, 18); }
+    text('Corte por un plano que contiene el eje', 16, HU - 12, COL.muted, 12);
+    if (!pl) return;
+    plotAxes(pl, 'B sobre el eje: real e ideal');
+    const z0 = -S.L, z1 = S.L, Bm = sIdeal() * 1.2;
+    const X = z => pl.x + 40 + (z - z0) / (z1 - z0) * (pl.w - 60), Y = b => pl.y + pl.h - 46 - b / Bm * (pl.h - 100);
+    ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = COL.primary; ctx.fillRect(X(-S.L / 2), Y(Bm), X(S.L / 2) - X(-S.L / 2), Y(0) - Y(Bm)); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(z0), Y(0)); ctx.lineTo(X(z1), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(Bm)); ctx.stroke(); ctx.restore();
+    [[-S.L / 2, '−L/2'], [0, '0'], [S.L / 2, 'L/2']].forEach(([z, t]) => text(t, X(z), Y(0) + 14, COL.muted, 11, 'center'));
+    text('z', X(z1), Y(0) + 14, COL.muted, 11, 'right');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver las curvas.'); return; }
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([6, 5]); ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(z0), Y(0)); ctx.lineTo(X(-S.L / 2), Y(0)); ctx.lineTo(X(-S.L / 2), Y(sIdeal())); ctx.lineTo(X(S.L / 2), Y(sIdeal())); ctx.lineTo(X(S.L / 2), Y(0)); ctx.lineTo(X(z1), Y(0)); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const z = z0 + i * (z1 - z0) / 300; i ? ctx.lineTo(X(z), Y(sAxis(z))) : ctx.moveTo(X(z), Y(sAxis(z))); } ctx.stroke(); ctx.restore();
+    text(`- - ideal μ₀nI = ${sp(sIdeal())} T`, pl.x + 16, pl.y + 44, COL.accent, 11);
+    text('— real (suma de espiras)', pl.x + 16, pl.y + 62, COL.field, 11);
+    if (S.z >= z0 && S.z <= z1) { ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(S.z), Y(B), 6, 0, 2 * Math.PI); ctx.fill(); text(`P: ${sp(B)} T (${fp(100 * B / sIdeal(), 0)} %)`, X(S.z) + 10, Y(B) - 14, COL.primary, 11, 'left', 600); }
+  },
+};
+
+// ═════════════════════════ ESCENA 4 · TOROIDE ═════════════════════════
+const T = { N: 400, I: 1.5, a: 0.10, b: 0.14, r: 0.12, drag: false, reto: null };
+const tIenc = r => (r >= T.a && r <= T.b) ? T.N * T.I : 0;
+const tB = r => tIenc(r) ? MU0 * T.N * T.I / (2 * Math.PI * r) : 0;
+const tRegion = r => r < T.a ? 'en el agujero central' : r <= T.b ? 'dentro del núcleo' : 'fuera del toroide';
+let tView = { cx: 0, cy: 0, s: 1, plot: null, rmax: 1 };
+function tLayout() {
+  const wide = W > 760, wv = wide ? W * 0.52 : W, rmax = T.b * 1.5;
+  tView = { cx: wv * 0.5, cy: HU * 0.5, s: Math.min(HU * 0.46, wv * 0.46) / rmax, rmax, plot: wide ? { x: W * 0.54, y: 20, w: W * 0.44, h: HU - 40 } : null };
+}
+const tSnap = () => JSON.stringify([T.N, T.I, T.a, T.b, T.r]);
+const scToroide = {
+  title: 'Toroide',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Camino</span>
+      <button class="btn active" type="button" tabindex="-1"><i class="ph ph-hand-grabbing"></i>Arrastra el camino amperiano</button>
+      <button class="btn" data-act="r:hole" type="button">Agujero</button><button class="btn" data-act="r:core" type="button">Núcleo</button><button class="btn" data-act="r:out" type="button">Fuera</button></div>`,
+  act(a) {
+    if (a === 'r:hole') T.r = T.a / 2; else if (a === 'r:core') T.r = (T.a + T.b) / 2; else if (a === 'r:out') T.r = T.b * 1.25;
+    invalidate(); buildValues(); buildToolbar();
+  },
+  values: () => [
+    { k: 'N', sym: 'N', min: 10, max: 1000, step: 10, get: () => T.N, set: x => T.N = x, fmt: x => fp(x, 0) + ' vueltas' },
+    { k: 'I', sym: 'I', min: 0.1, max: 5, step: 0.1, get: () => T.I, set: x => T.I = x, fmt: x => fp(x, 1) + ' A' },
+    { k: 'a', sym: 'a', min: 2, max: 20, step: 0.5, get: () => T.a * 100, set: x => { T.a = x / 100; T.b = Math.max(T.b, T.a + 0.005); }, fmt: x => fp(x, 1) + ' cm' },
+    { k: 'b', sym: 'b', min: 3, max: 25, step: 0.5, get: () => T.b * 100, set: x => { T.b = Math.max(x / 100, T.a + 0.005); }, fmt: x => fp(x, 1) + ' cm' },
+    { k: 'r', sym: 'r', min: 0, max: 35, step: 0.5, get: () => T.r * 100, set: x => T.r = x / 100, fmt: x => fp(x, 1) + ' cm', label: 'Radio del camino amperiano' },
+  ],
+  valuesNote: 'El núcleo va de a a b. Arrastra el camino amperiano para cambiar r.',
+  newReto() {
+    T.N = pick([200, 300, 400, 500, 800]); T.I = pick([0.5, 1, 1.5, 2, 2.5]); T.a = pick([0.06, 0.08, 0.10]); T.b = T.a + pick([0.02, 0.03, 0.04]);
+    const g = pick(['core', 'core', 'core', 'core', 'hole', 'out']);
+    T.r = Math.round((g === 'core' ? T.a + pick([0, 0.25, 0.5, 0.75, 1]) * (T.b - T.a) : g === 'hole' ? T.a * pick([0.5, 0.7]) : T.b * pick([1.2, 1.4])) * 1e4) / 1e4;
+    T.reto = tSnap();
+  },
+  retoText: () => `Un toroide de ${T.N} vueltas lleva ${fp(T.I, 1)} A. Su núcleo va de ${fp(T.a * 100, 1)} cm a ${fp(T.b * 100, 1)} cm del centro. Calcula \\(B\\) a \\(r = ${fx(T.r * 100, 2).replace(/\{,\}?0+$/, '')}\\) cm del centro.`,
+  retoTag: 'Resuelto 5 y retos 10–11 del taller',
+  changed() { return !!T.reto && tSnap() !== T.reto; },
+  predQ: 'En ese radio, el campo del toroide…',
+  choices: [{ id: 'cero', label: 'Es cero' }, { id: 'nocero', label: 'No es cero' }],
+  ansLabel: 'Tu valor de \\(B\\), en tesla',
+  ansPh: 'ej. 1,0e-3',
+  hasPred: () => !!pred.choice,
+  check() {
+    const r = T.r, B = tB(r), real = B > 0 ? 'nocero' : 'cero', v = parseNum($('#ans-val').value), rows = [];
+    const dOk = pred.choice === real;
+    rows.push({ t: `Campo: ${pred.choice === 'cero' ? 'es cero' : 'no es cero'}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = real === 'cero' ? Math.abs(v) < 1e-9 : near(v, B, 0.03); rows.push({ t: `Tu \\(B\\): ${sp(v, 3)} T`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const NI = T.N * T.I, rm = (T.a + T.b) / 2;
+    const why = r < T.a ? 'Un camino dentro del agujero central no atraviesa ningún alambre: \\(I_{\\text{enc}}=0\\) y \\(B=0\\).'
+      : r > T.b ? 'Fuera del toroide, el camino atraviesa cada vuelta dos veces, una hacia arriba y otra hacia abajo: \\(I_{\\text{enc}}=NI-NI=0\\).'
+      : 'Dentro del núcleo, el camino de radio \\(r\\) atraviesa las \\(N\\) espiras una vez cada una: \\(I_{\\text{enc}}=NI\\) y \\(B=\\mu_0 NI/(2\\pi r)\\).';
+    let tip;
+    if (!dOk) tip = why;
+    else if (vOk === false && real === 'cero') tip = why;
+    else if (vOk === false && Math.abs(r - rm) > 1e-4 && near(v, MU0 * NI / (2 * Math.PI * rm), 0.03)) tip = 'Usaste el radio medio. En un toroide \\(B\\) depende de \\(r\\): usa el radio del punto.';
+    else if (vOk === false && near(v, MU0 * T.I / (2 * Math.PI * r), 0.03)) tip = `Falta multiplicar por las ${T.N} vueltas: el camino las atraviesa todas.`;
+    else if (vOk === false && near(v, B / 100, 0.03)) tip = 'Revisa unidades: \\(r\\) va en metros.';
+    else if (vOk === false) tip = why;
+    else tip = 'Bien. Arrastra el camino del agujero hacia fuera: el campo solo existe dentro del núcleo y cae como \\(1/r\\), así que no es uniforme.';
+    return { rows, tip, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const r = T.r, Ie = tIenc(r);
+    return `<p>Región: ${tRegion(r)}. Por simetría, \\(\\vec B\\) es tangente a la circunferencia de radio \\(r\\) y de módulo constante: \\(\\oint\\vec B\\cdot d\\vec\\ell = B(2\\pi r)\\).</p>\\[I_{\\text{enc}} = ${r < T.a ? '0' : r > T.b ? 'NI - NI = 0' : `NI = (${T.N})(${fx(T.I, 1)}) = ${fx(Ie, 0)}\\ \\text{A}`}\\]` +
+      (Ie ? `\\[B=\\frac{\\mu_0 NI}{2\\pi r}=\\frac{(4\\pi\\times10^{-7})(${fx(Ie, 0)})}{2\\pi(${fx(r, 4)})}=${sx(tB(r))}\\ \\text{T}\\]` : '<p>Por eso \\(B = 0\\).</p>');
+  },
+  live() {
+    const r = reveal();
+    return String.raw`B(2\pi r)=\mu_0 I_{\text{enc}}\ \Rightarrow\ B=\dfrac{\mu_0 I_{\text{enc}}}{2\pi r}=\dfrac{(4\pi\times10^{-7})(${r ? fx(tIenc(T.r), 0) : '?'})}{2\pi(${fx(T.r, 4)})}=${r ? sx(tB(T.r)) : '\\,?'}\,\text{T}`;
+  },
+  coords: () => `r = ${fp(T.r * 100, 1)} cm · ${tRegion(T.r)}`,
+  down(px, py) { T.drag = true; this.move(px, py); },
+  move(px, py) { if (!T.drag) return; if (tView.plot && px > tView.plot.x - 10) return; T.r = clamp(Math.round(Math.hypot(px - tView.cx, py - tView.cy) / tView.s * 400) / 400, 0, tView.rmax); invalidate(); buildValues(); },
+  up() { T.drag = false; },
+  draw() {
+    tLayout();
+    const { cx, cy, s, rmax } = tView, rv = reveal(), A = T.a * s, Bp = T.b * s;
+    ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(cx, cy, Bp, 0, 2 * Math.PI); ctx.arc(cx, cy, A, 0, 2 * Math.PI, true); ctx.fill('evenodd'); ctx.restore();
+    // vueltas: tramo radial por encima, sube por el agujero (⊙) y baja por fuera (⊗)
+    const nW = Math.min(T.N, 36);
+    for (let i = 0; i < nW; i++) {
+      const t = i * 2 * Math.PI / nW, c = Math.cos(t), sn = Math.sin(t);
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx + c * (A - 6), cy + sn * (A - 6)); ctx.lineTo(cx + c * (Bp + 6), cy + sn * (Bp + 6)); ctx.stroke(); ctx.restore();
+      wireSym(cx + c * (A - 9), cy + sn * (A - 9), 1, 4, COL.primary); wireSym(cx + c * (Bp + 9), cy + sn * (Bp + 9), -1, 4, COL.primary);
+    }
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, Bp, 0, 2 * Math.PI); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, A, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    const Rr = T.r * s;
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 2.5; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.arc(cx, cy, Math.max(Rr, 1), 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    if (rv && tB(T.r) > 0) for (let k = 0; k < 4; k++) { const t = k * Math.PI / 2 + Math.PI / 4, x0 = cx + Rr * Math.cos(t), y0 = cy + Rr * Math.sin(t), tx = Math.sin(t), ty = -Math.cos(t); arrow(x0 - tx * 14, y0 - ty * 14, x0 + tx * 14, y0 + ty * 14, COL.field, 3.5, 11); }
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rr * Math.cos(0.6), cy + Rr * Math.sin(0.6)); ctx.stroke(); ctx.restore();
+    text(`r = ${fp(T.r * 100, 1)} cm`, cx + Rr * Math.cos(0.6) + 8, cy + Rr * Math.sin(0.6) + 10, COL.accent, 13, 'left', 600);
+    text(`N = ${T.N} · I = ${fp(T.I, 1)} A`, cx, cy - 24, COL.primary, 13, 'center', 600);
+    if (rv) text(`I_enc = ${fp(tIenc(T.r), 0)} A`, cx, cy - 6, COL.ink, 12, 'center', 600);
+    text('Vista desde arriba: las vueltas suben por el agujero (⊙) y bajan por fuera (⊗)', 16, HU - 12, COL.muted, 12);
+    const pl = tView.plot; if (!pl) return;
+    plotAxes(pl, 'B en función de r');
+    const Bm = MU0 * T.N * T.I / (2 * Math.PI * T.a) * 1.2;
+    const X = r => pl.x + 50 + r / rmax * (pl.w - 70), Y = b => pl.y + pl.h - 46 - b / Bm * (pl.h - 100);
+    ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = COL.primary; ctx.fillRect(X(T.a), Y(Bm), X(T.b) - X(T.a), Y(0) - Y(Bm)); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(rmax), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(Bm)); ctx.stroke(); ctx.restore();
+    sym('a', X(T.a) - 4, Y(0) + 16, COL.muted, 15); sym('b', X(T.b) - 4, Y(0) + 16, COL.muted, 15); text('r', X(rmax) - 4, Y(0) + 16, COL.muted, 12, 'right');
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(T.r), Y(0)); ctx.lineTo(X(T.r), Y(Bm)); ctx.stroke(); ctx.restore();
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(T.a), Y(0));
+    for (let i = 0; i <= 100; i++) { const r = T.a + i * (T.b - T.a) / 100; ctx.lineTo(X(r), Y(tB(r))); }
+    ctx.lineTo(X(T.b), Y(0)); ctx.lineTo(X(rmax), Y(0)); ctx.stroke(); ctx.restore();
+    const B = tB(T.r); ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(T.r), Y(B), 6, 0, 2 * Math.PI); ctx.fill();
+    text(`${sp(B)} T`, X(T.r) + 10, Y(B) - 12, COL.primary, 12, 'left', 600);
+  },
+};
+
+// ───────────────────────── orquestación ─────────────────────────
+const SC = { circulacion: scCirculacion, conductor: scConductor, solenoide: scSolenoide, toroide: scToroide };
+const sc = () => SC[app.scene];
+
+function draw() {
+  if (!W) return;
+  readColors();
+  ctx.clearRect(0, 0, W, H);
+  sc().draw();
+  $('#coords-indicator').textContent = sc().coords();
+  renderLive();
+}
+let liveKey = '';
+function renderLive() { const t = sc().live(); if (t !== liveKey) { liveKey = t; $('#live-tex').innerHTML = K(t); } }
+
+function buildToolbar() { $('#toolbar').innerHTML = sc().tools(); draw(); }
+function buildValues() {
+  const box = $('#values-body'), vals = sc().values();
+  box.innerHTML = vals.map((v, i) => `<label class="vrange" title="${v.label || ''}"><span class="sym">${v.sym}${v.sub ? `<sub style="font-style:normal;font-size:.7em">${v.sub}</sub>` : ''}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.get()}" data-i="${i}" aria-label="${v.label || v.sym}"><output>${v.fmt(v.get())}</output></label>`).join('') + (sc().valuesNote ? `<div class="vnote">${sc().valuesNote}</div>` : '');
+  box.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+    const v = vals[+inp.dataset.i]; v.set(parseFloat(inp.value)); inp.nextElementSibling.textContent = v.fmt(v.get()); invalidate(); draw(); renderPanel(false);
+  }));
+}
+function renderReto() {
+  mixed($('#reto-text'), sc().retoText());
+  $('#reto-tag').textContent = sc().retoTag;
+  const ch = $('#pred-choices'); ch.innerHTML = sc().choices.map(c => `<button class="btn ${pred.choice === c.id ? 'on' : ''}" data-choice="${c.id}" type="button">${c.label}</button>`).join('');
+  mixed($('#pred-q'), sc().predQ);
+  mixed($('#ans-label'), sc().ansLabel);
+  $('#ans-val').placeholder = sc().ansPh;
+}
+function renderPanel(full = true) {
+  const s = sc(), hasP = s.hasPred();
+  $('#reto-note').textContent = s.changed() ? 'Cambiaste el montaje del reto: se comprueba con lo que ves en el lienzo.' : '';
+  if (full) $('#pred-choices').querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('on', b.dataset.choice === pred.choice));
+  $('#st2').dataset.s = hasP ? 'done' : 'now';
+  $('#st3').dataset.s = app.checked ? 'done' : hasP ? 'now' : 'todo';
+  $('#st4').dataset.s = app.checked ? (app.result?.allOk ? 'done' : 'now') : 'todo';
+  const box = $('#validation-box');
+  if (app.checked && app.result) {
+    box.innerHTML = app.result.rows.map(r => `<div class="vrow"><span>${r.t}</span><span class="e10-chip ${r.ok === true ? 'e10-chip--ok' : r.ok === false ? 'e10-chip--bad' : 'e10-chip--warn'}">${r.chip}</span></div>`).join('');
+    if (window.renderMathInElement) renderMathInElement(box, { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    mixed($('#explain'), `<div class="e10-tip__title">${app.result.allOk ? 'Muy bien' : 'Recomendación'}</div>${app.result.tip}`);
+  } else { box.innerHTML = ''; $('#explain').innerHTML = ''; }
+  $('#btn-sol').hidden = !app.checked;
+  const sol = $('#solution'); sol.hidden = !(app.checked && app.showSol);
+  if (!sol.hidden) mixed(sol, s.solution());
+  const n = 1 + (hasP ? 1 : 0) + (app.checked ? 1 : 0) + (app.result?.allOk ? 1 : 0);
+  $('#prog').style.setProperty('--e10-p', n * 25 + '%'); $('#prog-bar').setAttribute('aria-valuenow', n * 25); $('#prog-txt').textContent = `${n} de 4`;
+}
+function newReto() { sc().newReto(); resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); draw(); }
+const seen = {};
+function setScene(id, push = true) {
+  if (!SC[id]) id = 'circulacion';
+  app.scene = id;
+  document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === id));
+  if (!seen[id]) { seen[id] = true; sc().newReto(); }
+  $('#values').open = window.innerWidth > 900;
+  resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); liveKey = ''; draw();
+  if (push && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+
+// Clasifica la recomendación en un código estable para las métricas del portal (js/seguimiento.js · ERRORES).
+function codigoError(tip) {
+  const R = [[/circulación es nula/, 'circulacion_cero'], [/no puede ser cero/, 'corriente_encerrada'], [/el pulgar señala/, 'signo_corriente'], [/sin su signo/, 'suma_sin_signo'],
+    [/fuera del camino/, 'corriente_fuera'], [/multiplicar por \\\(\\mu_0/, 'falta_mu0'], [/Usaste toda la corriente/, 'corriente_total_dentro'], [/I-I=0/, 'coaxial_fuera'],
+    [/en lugar de \\\(n/, 'n_por_N'], [/boca|Ese es el campo ideal/, 'ideal_en_extremo'], [/cae muy rápido/, 'campo_fuera_solenoide'], [/radio medio/, 'toroide_radio_medio'],
+    [/agujero central|dos veces/, 'toroide_fuera'], [/vueltas: el camino/, 'faltan_vueltas'], [/metros|unidades/, 'unidades'],
+    [/encierra la fracción|toda la corriente neta|En el hueco|Dentro de la pared|Dentro del núcleo|Lejos de los extremos/, 'region_equivocada']];
+  for (const [re, c] of R) if (re.test(tip || '')) return c;
+  return 'otro';
+}
+
+// ───────────────────────── eventos ─────────────────────────
+$('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) { sc().act(b.dataset.act); renderPanel(false); } });
+document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
+$('#pred-choices').addEventListener('click', e => {
+  const b = e.target.closest('[data-choice]'); if (!b) return;
+  pred.choice = b.dataset.choice; app.checked = false; app.result = null; app.showSol = false; renderPanel(); draw();
+});
+$('#btn-check').addEventListener('click', () => {
+  if (!sc().hasPred()) { $('#check-hint').textContent = 'Primero haz tu predicción en el paso 2.'; return; }
+  $('#check-hint').textContent = '';
+  app.result = sc().check(); app.checked = true; app.showSol = false;
+  lab10Bus.emitTelemetry('comprobar', { escena: app.scene, ok: !!app.result.allOk, error: app.result.allOk ? null : codigoError(app.result.tip) });
+  renderPanel(); liveKey = ''; buildToolbar();
+  if (app.scene === 'circulacion') cRun();
+  if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
+});
+$('#ans-val').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-check').click(); });
+$('#btn-sol').addEventListener('click', () => { app.showSol = !app.showSol; renderPanel(false); });
+$('#btn-new').addEventListener('click', newReto);
+$('#sheet-handle').addEventListener('click', () => $('#right-panel').classList.toggle('open'));
+$('#btn-projector').addEventListener('click', () => { document.body.classList.toggle('e10-projector'); $('#btn-projector').classList.toggle('active'); draw(); });
+$('#btn-theme').addEventListener('click', () => { lab10Auth.toggleTheme(); try { localStorage.setItem('electro10_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch (_) {} });
+new MutationObserver(() => { const i = $('#btn-theme i'); if (i) i.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon'; draw(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+$('#user-info').addEventListener('click', () => { if (!lab10Auth.isAuthenticated) lab10Auth.loginGoogle(); });
+lab10Auth.onAuthChange((ok, user) => { $('#user-info').textContent = ok ? (user?.displayName || 'Estudiante') : 'Iniciar sesión'; });
+
+const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { if (!sc().down) return; cv.setPointerCapture(e.pointerId); sc().down(...pos(e)); draw(); });
+cv.addEventListener('pointermove', e => { if (!sc().move) return; sc().move(...pos(e)); if (e.buttons) draw(); });
+cv.addEventListener('pointerup', e => { if (sc().up) sc().up(...pos(e)); draw(); });
+cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
+
+// ───────────────────────── Lab10 Bus ─────────────────────────
+lab10Bus.injectContinueButton($('#continue-wrap'), 'Sim_M10_FlujoMagnetico.html', 'Flujo magnético (capítulo 11)', () => ({
+  source: 'AmpereLab10', units: { length: 'm', current: 'A', field: 'T' },
+  entities: { wires: C.wires.map((w, i) => ({ id: i + 1, x: w.x, y: w.y, I: w.I })), solenoid: { L: S.L, N: S.N, I: S.I, R: S.R } },
+  metrics: { B_solenoide_ideal: sIdeal(), B_toroide: tB(T.r) }, timestamp: Date.now(),
+}));
+// Desde BiotSavartLab llegan sus hilos: se cargan en la escena «Circulación».
+lab10Bus.checkIncomingScenario(data => {
+  const ws = data?.entities?.wires;
+  if (!Array.isArray(ws) || !ws.length) return;
+  C.wires = ws.filter(w => isFinite(w.x) && isFinite(w.y) && isFinite(w.I)).slice(0, 6).map(w => ({ x: +w.x, y: +w.y, I: +w.I }));
+  C.shape = { kind: 'circulo', x: 0, y: 0, r: 0.08, ccw: 1 }; cRegen();
+  seen.circulacion = true; C.reto = { t: 'importado', ...cSnap() }; setScene('circulacion');
+});
+
+// ───────────────────────── arranque ─────────────────────────
+new ResizeObserver(resize).observe(area);
+setScene((location.hash || '#circulacion').slice(1), false);
+window.__amp = { app, C, D, S, T, cIenc, cCirc, winding, dB, dIenc, dRegion, sAxis, sIdeal, sField, tB, setScene, codigoError };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body></html>

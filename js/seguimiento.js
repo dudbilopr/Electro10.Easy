@@ -53,6 +53,21 @@ export const ERRORES = {
     angulo_brujula: 'Ángulo de la brújula mal calculado',
     regla_mano_derecha: 'Regla de la mano derecha',
     unidades: 'Unidades (cm → m)',
+    // AmpèreLab (capítulo 10)
+    circulacion_cero: 'Creyó que circulación nula implica B = 0',
+    corriente_encerrada: 'Predijo cero con corriente neta encerrada',
+    signo_corriente: 'Signo de la corriente encerrada',
+    suma_sin_signo: 'Sumó corrientes encerradas sin signo',
+    corriente_fuera: 'Contó un hilo fuera del camino',
+    falta_mu0: 'Olvidó multiplicar por μ₀',
+    corriente_total_dentro: 'Usó toda la corriente dentro del conductor',
+    region_equivocada: 'Forma de B(r) equivocada para la región',
+    coaxial_fuera: 'Campo no nulo fuera del coaxial',
+    n_por_N: 'Usó N en lugar de n = N/L',
+    ideal_en_extremo: 'Campo ideal en el extremo del solenoide',
+    campo_fuera_solenoide: 'Campo fuera del solenoide',
+    toroide_radio_medio: 'Usó el radio medio del toroide',
+    toroide_fuera: 'Campo no nulo fuera del núcleo del toroide',
     otro: 'Otro error',
 };
 
@@ -115,9 +130,13 @@ export function erroresFrecuentes(comprobaciones) {
 }
 
 // Escena del simulador donde se practica cada error (para el botón «Practicar»).
-const PRACTICA = { campo_radial: 'hilos', sentido_invertido: 'hilos', suma_magnitudes: 'hilos', falta_superponer: 'hilos', cancelacion: 'hilos',
-    hilo_infinito_en_segmento: 'segmento', prolongacion: 'segmento', b0_medios: 'espira', grados: 'espira', faltan_vueltas: 'espira', angulo_brujula: 'oersted' };
-export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/BiotSavart.html#${PRACTICA[code]}` : null);
+const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'BiotSavart.html#hilos', suma_magnitudes: 'BiotSavart.html#hilos', falta_superponer: 'BiotSavart.html#hilos', cancelacion: 'BiotSavart.html#hilos',
+    hilo_infinito_en_segmento: 'BiotSavart.html#segmento', prolongacion: 'BiotSavart.html#segmento', b0_medios: 'BiotSavart.html#espira', grados: 'BiotSavart.html#espira', faltan_vueltas: 'BiotSavart.html#espira', angulo_brujula: 'BiotSavart.html#oersted',
+    circulacion_cero: 'Ampere.html#circulacion', corriente_encerrada: 'Ampere.html#circulacion', signo_corriente: 'Ampere.html#circulacion', suma_sin_signo: 'Ampere.html#circulacion', corriente_fuera: 'Ampere.html#circulacion', falta_mu0: 'Ampere.html#circulacion',
+    corriente_total_dentro: 'Ampere.html#conductor', region_equivocada: 'Ampere.html#conductor', coaxial_fuera: 'Ampere.html#conductor',
+    n_por_N: 'Ampere.html#solenoide', ideal_en_extremo: 'Ampere.html#solenoide', campo_fuera_solenoide: 'Ampere.html#solenoide', toroide_radio_medio: 'Ampere.html#toroide', toroide_fuera: 'Ampere.html#toroide' };
+export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
+export const labDe = (code) => (/^Ampere/.test(PRACTICA[code] || '') ? 'AmpèreLab' : 'BiotSavartLab');
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──
 
@@ -175,7 +194,7 @@ export async function renderPortada({ uid, curriculoData, progressData, evalData
         <div><span class="e10-eyebrow">Racha</span><b>${act.racha} ${act.racha === 1 ? 'día' : 'días'}</b><small>${act.racha ? 'seguidos estudiando' : 'estudia hoy para empezarla'}</small></div>
         <div><span class="e10-eyebrow">Tiempo (7 días)</span><b>${fmtMin(act.semana)}</b><div class="e10-progress" role="progressbar" aria-valuenow="${pctMeta}" aria-valuemin="0" aria-valuemax="100" aria-label="Tiempo frente a la meta"><span style="--e10-p:${pctMeta}%"></span></div><small>de tu meta de ${metaH} h</small></div>
         <div><span class="e10-eyebrow">Quiz aprobados</span><b>${qz.total ? `${qz.aprobados} de ${qz.total}` : '—'}</b><small class="${qz.peor ? 'e10-warn' : ''}">${qz.peor ? `! repasa ${esc(sinModulo(qz.peor.mod))} (${qz.peor.score} %)` : qz.total ? 'todos aprobados' : 'aún no presentas quiz'}</small></div>
-        <div><span class="e10-eyebrow">Error más repetido</span><b class="e10-sem__err">${top ? esc(top.label) : 'Ninguno por ahora'}</b>${link ? `<a href="${link}" target="_blank" rel="noopener">Practicar en BiotSavartLab</a>` : `<small>${comp.length ? `${comp.length} comprobaciones sin errores` : 'usa «Comprobar» en los simuladores'}</small>`}</div>
+        <div><span class="e10-eyebrow">Error más repetido</span><b class="e10-sem__err">${top ? esc(top.label) : 'Ninguno por ahora'}</b>${link ? `<a href="${link}" target="_blank" rel="noopener">Practicar en ${labDe(top.code)}</a>` : `<small>${comp.length ? `${comp.length} comprobaciones sin errores` : 'usa «Comprobar» en los simuladores'}</small>`}</div>
       </div>`;
     sem.querySelector('[data-avance]')?.addEventListener('click', () => window.mostrarMiAvance?.());
 }
@@ -253,8 +272,8 @@ export async function renderMiAvance({ uid, curriculoData, progressData, evalDat
         <section class="bento-card">
           <div class="bento-header"><h3>Tus errores más frecuentes</h3></div>
           ${errs.length ? errs.slice(0, 5).map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.n / errs[0].n * 100}%"></i></div><b>${e.n}</b></div>`).join('')
-              : `<p class="e10-sem__vacio">${comp.length ? 'Sin errores en tus comprobaciones recientes.' : 'Cuando uses «Comprobar» en BiotSavartLab, aquí verás qué errores repites.'}</p>`}
-          ${errs[0] && practicaDe(errs[0].code) ? `<div class="e10-tip"><span class="e10-tip__title">Siguiente paso recomendado</span>Practica «${esc(errs[0].label)}» en BiotSavartLab. <a href="${practicaDe(errs[0].code)}" target="_blank" rel="noopener">Practicar →</a></div>` : ''}
+              : `<p class="e10-sem__vacio">${comp.length ? 'Sin errores en tus comprobaciones recientes.' : 'Cuando uses «Comprobar» en BiotSavartLab o AmpèreLab, aquí verás qué errores repites.'}</p>`}
+          ${errs[0] && practicaDe(errs[0].code) ? `<div class="e10-tip"><span class="e10-tip__title">Siguiente paso recomendado</span>Practica «${esc(errs[0].label)}» en ${labDe(errs[0].code)}. <a href="${practicaDe(errs[0].code)}" target="_blank" rel="noopener">Practicar →</a></div>` : ''}
         </section>
       </div>`;
 }
@@ -351,7 +370,7 @@ export async function cargarSeguimientoDocente({ curriculoData, totalLessons, da
           <div class="bento-header"><h3>Errores más frecuentes del grupo</h3></div>
           ${errs.length ? errs.map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.pct}%"></i></div><b>${e.pct} %</b></div>`).join('')
             + `<div class="e10-tip"><span class="e10-tip__title">Sugerencia para la próxima clase</span>El ${errs[0].pct} % del grupo comete «${esc(errs[0].label)}» en los simuladores: vale la pena repasarlo en clase.</div>`
-            : '<p class="e10-sem__vacio">Cuando los estudiantes usen «Comprobar» en BiotSavartLab, aquí aparecerán los errores más comunes del grupo.</p>'}
+            : '<p class="e10-sem__vacio">Cuando los estudiantes usen «Comprobar» en BiotSavartLab o AmpèreLab, aquí aparecerán los errores más comunes del grupo.</p>'}
         </section>
       </div>`;
 

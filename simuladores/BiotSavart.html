@@ -1053,7 +1053,7 @@ cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
 window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
 
 // ───────────────────────── Lab10 Bus ─────────────────────────
-lab10Bus.injectContinueButton($('#continue-wrap'), 'Sim_M9_Solenoide.html', 'Solenoide (capítulo 10)', () => ({
+lab10Bus.injectContinueButton($('#continue-wrap'), 'Ampere.html', 'AmpèreLab (capítulo 10)', () => ({
   source: 'BiotSavartLab10', units: { length: 'm', current: 'A' },
   entities: { wires: Hs.wires.map((w, i) => ({ id: i + 1, x: w.x, y: w.y, I: w.I })), loop: { R: E.R, I: E.I, N: E.mode === 'bobina' ? E.N : 1 } },
   metrics: { B_P: Math.hypot(...hField(Hs.P.x, Hs.P.y)) }, timestamp: Date.now(),
