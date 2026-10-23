@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 10 · Ley de Ampère — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 10 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:38px;line-height:1.12}
+.row{display:flex;gap:28px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.vote{display:flex;flex-direction:column;gap:10px}
+.vote .btn{text-align:left;font-weight:500;font-size:18px;min-height:52px;padding:0 18px}
+.vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
+.vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.reto{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto .q{font-size:16px}
+.reto .ans{display:flex;gap:8px;align-items:center}
+.reto input{flex:1;min-height:40px;border-radius:10px;border:1px solid var(--e10-line);padding:0 10px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.reto .fb{font-size:15px;min-height:20px}
+.reto .sol{display:none;font-size:15px;background:var(--e10-bg);border-radius:10px;padding:8px 12px}
+.reto .sol.show{display:block}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:18px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.lab-frame{flex:1;border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);width:100%}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.print-only{display:none}
+/* Árbol de decisión, mapa de conceptos, línea de tiempo y tarjetas (diapositivas 9, 11 y 12) */
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:96px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.55em}#cm-eq .katex{font-size:1.15em}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+/* Luz que viaja por cada conexión, del concepto de origen al de destino */
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.conn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.conn>span{font-size:13px;color:var(--e10-muted);width:70px}.conn .chip{font-size:13px;font-family:var(--e10-font-body)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+/* Clase 10: la pregunta 1 del árbol tiene 5 opciones; van en dos columnas para que quepa la pregunta 2 */
+#tq1{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:38px;padding:6px 12px;font-size:14px}#tq2{gap:6px}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
+@media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+@page{size:1280px 720px;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
+  .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+  .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 10</span></div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">MAGNETOSTÁTICA · SIMETRÍA</span>
+        <h1 style="font-size:74px;line-height:1.02">Ley de<br>Ampère</h1>
+        <p style="margin:0;font-size:24px;color:var(--e10-muted);max-width:560px">Cuando hay simetría, el campo magnético sale de una circulación.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Calcular \(\oint\vec B\cdot d\vec\ell\) con la corriente encerrada.</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Elegir el camino amperiano según la simetría.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Obtener \(B\) de conductores, solenoides y toroides.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover" width="440" height="440" aria-label="Hilo con corriente, camino amperiano y una luz que lo recorre acumulando la circulación"></canvas>
+    </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o los botones de abajo</span></div>
+  </div>
+</section>
+
+<!-- 2 · PREDICE: LA FORMA NO IMPORTA -->
+<section class="slide" data-n="2">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag p">Predice</span></div>
+  <h2>Si deformas el camino alrededor del hilo, ¿cambia la circulación?</h2>
+  <div class="row">
+    <div class="col" style="width:520px">
+      <canvas class="sim" id="cv-forma" width="520" height="380" aria-label="Hilo con corriente y un camino cerrado deformable"></canvas>
+      <div class="ctrl no-print">
+        <label for="fo-a">Forma</label><input id="fo-a" type="range" min="0" max="0.5" step="0.01" value="0"><output id="fo-a-o">círculo</output>
+        <label for="fo-r">Tamaño</label><input id="fo-r" type="range" min="3" max="8" step="0.1" value="5"><output id="fo-r-o">5,0 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <span style="color:var(--e10-muted)">Un hilo largo con 5,0 A sale de la página. Sumamos \(\vec B\cdot d\vec\ell\) alrededor del camino. Vota antes de mover los controles.</span>
+      <div class="vote" id="fo-vote">
+        <button type="button" class="btn" data-v="a"><b style="color:var(--e10-primary)">A</b>&nbsp; Aumenta: el camino es más largo.</button>
+        <button type="button" class="btn" data-v="b"><b style="color:var(--e10-primary)">B</b>&nbsp; Disminuye: hay tramos más lejos del hilo.</button>
+        <button type="button" class="btn" data-v="c"><b style="color:var(--e10-primary)">C</b>&nbsp; No cambia mientras rodee al hilo.</button>
+      </div>
+      <div class="tipbox" id="fo-fb" style="visibility:hidden"><b>No cambia.</b> Lo que se gana en longitud se pierde en campo: \(B\propto1/r\) y el ángulo barrido alrededor del hilo es siempre \(2\pi\). Por eso \(\oint\vec B\cdot d\vec\ell=\mu_0 I\). Pulsa «Hilo fuera» y mira qué pasa.</div>
+      <div class="read"><div>Longitud del camino<b id="fo-len">—</b></div><div>∮ B·dℓ (numérica)<b id="fo-circ">—</b></div><div>μ₀ I<b id="fo-mu">—</b></div></div>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fo-out">Hilo fuera del camino</button></div>
+    </div>
+  </div>
+  <div class="foot"><span>La suma se hace numéricamente con 720 tramos, como en el programa de Python del taller.</span><span class="mono">2 / 13</span></div>
+</section>
+
+<!-- 3 · LA LEY -->
+<section class="slide" data-n="3">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag c">Concepto</span></div>
+  <h2>Solo cuenta la corriente que atraviesa el camino</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1">
+      <div class="soft" style="text-align:center;font-size:30px">\[ \oint_C\vec B\cdot d\vec\ell=\mu_0\,I_{\text{enc}} \]</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px">
+        <div class="card"><b style="color:var(--e10-accent-strong)">\(\oint_C\)</b> · se recorre un camino cerrado imaginario: el <b>camino amperiano</b>.</div>
+        <div class="card"><b style="color:var(--e10-vec-field)">\(\vec B\cdot d\vec\ell\)</b> · solo cuenta la componente del campo a lo largo del camino.</div>
+        <div class="card"><b style="color:var(--e10-primary)">\(I_{\text{enc}}\)</b> · suma <b>con signo</b> de las corrientes que atraviesan el camino.</div>
+        <div class="card">\(\mu_0=4\pi\times10^{-7}\,\mathrm{T\,m/A}\), la misma constante de Biot–Savart.</div>
+      </div>
+      <div class="tipbox"><b>Signos.</b> Dedos en el sentido del recorrido: el pulgar señala las corrientes positivas. Arrastra los hilos dentro y fuera del camino.</div>
+    </div>
+    <div class="col" style="width:470px">
+      <canvas class="sim" id="cv-ley" width="470" height="400" aria-label="Tres hilos arrastrables y un camino circular"></canvas>
+      <div class="read"><div>Corriente encerrada<b id="ley-ie">—</b></div><div>μ₀ I_enc<b id="ley-g">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn" id="ley-inv">Invertir sentido</button></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>Los hilos de fuera sí cambian \(\vec B\) en cada punto, pero su aporte a la circulación suma cero.</span><span class="mono">3 / 13</span></div>
+</section>
+
+<!-- 4 · CONDUCTOR MACIZO -->
+<section class="slide" data-n="4">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag c">Deducción</span></div>
+  <h2>Cuatro pasos: el conductor cilíndrico</h2>
+  <div class="row">
+    <div class="col" style="width:460px">
+      <canvas class="sim" id="cv-maz" width="460" height="360" aria-label="Corte de un conductor cilíndrico con el camino amperiano y la gráfica de B en función de r"></canvas>
+      <div class="ctrl no-print">
+        <label for="mz-r">r</label><input id="mz-r" type="range" min="0" max="6" step="0.05" value="1"><output id="mz-r-o">1,0 mm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="steps" style="font-size:17px">
+        <div><span class="n">1</span><span><b>Simetría.</b> \(\vec B\) rodea al eje y su módulo solo depende de \(r\).</span></div>
+        <div><span class="n">2</span><span><b>Camino.</b> Circunferencia de radio \(r\): \(\oint\vec B\cdot d\vec\ell=B\,(2\pi r)\).</span></div>
+        <div><span class="n">3</span><span><b>Corriente encerrada.</b> Dentro, la fracción del área: \(I_{\text{enc}}=I\,\dfrac{r^{2}}{a^{2}}\); fuera, toda: \(I\).</span></div>
+        <div><span class="n">4</span><span><b>Despeja.</b> \(B=\dfrac{\mu_0 I\,r}{2\pi a^{2}}\ (r\le a)\qquad B=\dfrac{\mu_0 I}{2\pi r}\ (r\ge a)\)</span></div>
+      </div>
+      <div class="read"><div>Corriente encerrada<b id="mz-ie">—</b></div><div>B (a = 2 mm, I = 10 A)<b id="mz-b">—</b></div><div>Región<b id="mz-reg" style="font-size:15px">—</b></div></div>
+      <div class="ok"><b>Comprueba.</b> En \(r=a\) las dos fórmulas dan lo mismo: el campo es continuo y máximo en la superficie.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Mismo método que con Gauss: simetría → superficie (aquí, camino) → fuente encerrada → despejar.</span><span class="mono">4 / 13</span></div>
+</section>
+
+<!-- 5 · COAXIAL -->
+<section class="slide" data-n="5">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag l">Simula</span></div>
+  <h2>Cable coaxial: cuatro regiones, un mismo método</h2>
+  <div class="row">
+    <div class="col" style="width:520px">
+      <canvas class="sim" id="cv-cx" width="520" height="340" aria-label="Gráfica de B en función de r para un cable coaxial"></canvas>
+      <div class="no-print" style="display:flex;gap:8px;align-items:center"><button type="button" class="btn on" id="cx-same">Corrientes opuestas</button><span style="font-size:14px;color:var(--e10-muted)">a = 1 mm · b = 3 mm · c = 4 mm · I = 2,0 A</span></div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="font-size:17px;padding:10px 16px">Dentro del conductor exterior: \[ I_{\text{enc}}=I-I\,\frac{r^{2}-b^{2}}{c^{2}-b^{2}} \] Fuera del cable: \(I_{\text{enc}}=I-I=0\), así que \(B=0\).</div>
+      <div class="reto" id="reto-cx">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
+        <span class="q" id="cx-q"></span>
+        <div class="ans"><input id="cx-in" inputmode="decimal" placeholder="B en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="cx-ck">Comprobar</button><button type="button" class="btn" id="cx-new">Nuevo</button></div>
+        <span class="fb" id="cx-fb"></span>
+        <button type="button" class="btn" id="cx-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="cx-sol"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Por eso el coaxial «blinda»: con corrientes opuestas no hay campo fuera del cable.</span><span class="mono">5 / 13</span></div>
+</section>
+
+<!-- 6 · SOLENOIDE -->
+<section class="slide" data-n="6">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag e">Ejemplo resuelto</span></div>
+  <h2>Solenoide: campo uniforme por dentro, casi nulo por fuera</h2>
+  <div class="row">
+    <div class="col" style="width:500px">
+      <canvas class="sim" id="cv-sol" width="500" height="320" aria-label="Campo sobre el eje de un solenoide real comparado con el ideal"></canvas>
+      <div class="ctrl no-print">
+        <label for="so-l">L</label><input id="so-l" type="range" min="2" max="60" value="30"><output id="so-l-o">30 cm</output>
+        <label for="so-r">R</label><input id="so-r" type="range" min="0.5" max="10" step="0.5" value="2"><output id="so-r-o">2,0 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:21px">\[ B\,\ell=\mu_0\,(n\ell)\,I\ \Rightarrow\ B=\mu_0\,n\,I,\qquad n=\frac{N}{L} \]</div>
+      <div style="font-size:15px;color:var(--e10-muted)">Camino rectangular de lado \(\ell\): solo aporta el lado de dentro; fuera \(B\approx0\) y en los lados verticales \(\vec B\perp d\vec\ell\).</div>
+      <div class="read"><div>Centro / ideal<b id="so-c">—</b></div><div>Extremo / ideal<b id="so-e">—</b></div><div>L / R<b id="so-lr">—</b></div></div>
+      <div class="reto" id="reto-so">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">EJERCICIO GENERADO</span>
+        <span class="q" id="so-q"></span>
+        <div class="ans"><input id="so-in" inputmode="decimal" placeholder="B en mT" aria-label="Tu respuesta en militeslas"><button type="button" class="btn pri" id="so-ck">Comprobar</button><button type="button" class="btn" id="so-new">Nuevo</button></div>
+        <span class="fb" id="so-fb"></span>
+        <button type="button" class="btn" id="so-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="so-sol"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Real: suma de espiras (Biot–Savart). En las bocas de un solenoide largo el campo cae a la mitad.</span><span class="mono">6 / 13</span></div>
+</section>
+
+<!-- 7 · TOROIDE Y LÁMINA -->
+<section class="slide" data-n="7">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag c">Concepto</span></div>
+  <h2>Toroide y lámina: el campo queda encerrado</h2>
+  <div class="row">
+    <div class="col" style="width:430px">
+      <canvas class="sim" id="cv-tor" width="430" height="380" aria-label="Toroide visto desde arriba con un camino amperiano de radio r"></canvas>
+      <div class="ctrl no-print">
+        <label for="to-r">r</label><input id="to-r" type="range" min="2" max="20" step="0.1" value="12"><output id="to-r-o">12,0 cm</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+        <div class="soft" style="text-align:center;font-size:20px">Toroide (núcleo)<br>\(B=\dfrac{\mu_0 N I}{2\pi r}\)</div>
+        <div class="soft" style="text-align:center;font-size:20px">Lámina infinita<br>\(B=\dfrac{\mu_0 K}{2}\)</div>
+      </div>
+      <div class="read"><div>Corriente encerrada<b id="to-ie">—</b></div><div>B (N = 400, I = 1,5 A)<b id="to-b">—</b></div><div>Región<b id="to-reg" style="font-size:15px">—</b></div></div>
+      <div class="reto" id="reto-to">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
+        <span class="q" id="to-q"></span>
+        <div class="ans"><input id="to-in" inputmode="decimal" placeholder="B en mT" aria-label="Tu respuesta en militeslas"><button type="button" class="btn pri" id="to-ck">Comprobar</button><button type="button" class="btn" id="to-new">Nuevo</button></div>
+        <span class="fb" id="to-fb"></span>
+        <button type="button" class="btn" id="to-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="to-sol"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>El campo del toroide no es uniforme: con núcleo de 10 a 14 cm cae un 29 % de dentro hacia fuera.</span><span class="mono">7 / 13</span></div>
+</section>
+
+<!-- 8 · ERRORES -->
+<section class="slide" data-n="8">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag p">Errores comunes</span></div>
+  <h2>Cuatro errores frecuentes (haz clic para voltear)</h2>
+  <div class="row" style="gap:16px">
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«La circulación es cero, así que el campo es cero en el camino.»</b><span>¿Qué está mal?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Puede no serlo.</b><span>Una circulación nula dice que la suma de \(\vec B\cdot d\vec\ell\) es cero. Un hilo fuera del camino produce campo en él, con tramos positivos y negativos que se cancelan.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Dentro del conductor uso toda la corriente.»</b><span>¿Cuánta encierra el camino?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Solo una fracción.</b><span>Con corriente uniforme, \(I_{\text{enc}}=I\,r^{2}/a^{2}\). Por eso dentro \(B\) crece con \(r\) y en el eje vale cero.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«\(\mu_0 nI\) vale en todo el solenoide.»</b><span>¿Y en las bocas?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Solo lejos de los extremos.</b><span>En la boca de un solenoide largo el campo es la mitad, y fuera cae a casi cero en pocos radios.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 4"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Con Ampère calculo el campo de cualquier circuito.»</b><span>¿Cuándo sirve?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">La ley siempre vale; despejar, no.</b><span>Sin simetría \(B\) no es constante en ningún camino sencillo. Para una espira o un segmento se usa Biot–Savart.</span></div>
+    </div></div>
+  </div>
+  <div class="foot"><span>Antes de calcular: ¿qué simetría tiene la corriente? Si no la ves, no uses Ampère para despejar.</span><span class="mono">8 / 13</span></div>
+</section>
+
+<!-- 9 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="9">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag p">Árbol de decisión</span></div>
+  <h2>¿Ampère o Biot–Savart? Responde y el árbol te lleva</h2>
+  <div class="row" style="gap:18px">
+    <div class="col" style="width:430px;flex:none;gap:6px">
+      <div class="tq"><div class="tqh"><span class="mono">1</span><b>¿Qué simetría tiene la corriente?</b></div><div class="tq-opts" id="tq1"></div></div>
+      <span class="tq-down" id="tq-down" aria-hidden="true">↓</span>
+      <div class="tq" id="tq2-box"><div class="tqh"><span class="mono">2</span><b>¿Dónde está el punto?</b></div><div class="tq-opts" id="tq2"></div></div>
+      <div class="tipbox" id="tq-only" hidden><b>Sin simetría, Ampère no despeja.</b> Vuelve a Biot–Savart: suma el aporte de cada elemento de corriente.</div>
+    </div>
+    <div class="leaf col">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b class="leaf-name" id="leaf-name"></b><span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">USA ESTA FÓRMULA</span></div>
+      <div class="leaf-eq" id="leaf-eq"></div>
+      <div style="font-size:15px"><b>Camino amperiano.</b> <span id="leaf-when"></span></div>
+      <div style="font-size:15px"><b>Dirección.</b> <span id="leaf-dir"></span></div>
+      <div class="reto" style="margin-top:auto">
+        <div class="q"><b style="color:var(--e10-primary)">Reto rápido.</b> <span id="leaf-reto"></span></div>
+        <div class="ans no-print"><input id="leaf-in" type="text" inputmode="decimal" aria-label="Tu respuesta en tesla" placeholder="tu respuesta en T, p. ej. 1,5e-4"><button type="button" class="btn pri" id="leaf-check">Comprobar</button><a class="btn" id="leaf-lab" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Abrir en el simulador</a></div>
+        <div class="fb" id="leaf-fb"></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:14px">
+    <div class="tipbox" style="flex:1"><b>¿Varias fuentes con simetría?</b> Usa la corriente encerrada neta: el coaxial es un hilo de ida y otro de vuelta.</div>
+    <div class="tipbox" style="flex:1;background:var(--e10-violet-soft)"><b style="color:var(--e10-vec-field)">¿Campos que cambian?</b> Hay que añadir la corriente de desplazamiento de Maxwell (cap. 12).</div>
+  </div>
+  <div class="foot"><span>Elige una respuesta en cada pregunta; el camino elegido queda resaltado</span><span class="mono">9 / 13</span></div>
+</section>
+
+<!-- 10 · LABORATORIO -->
+<section class="slide" data-n="10">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag l">Laboratorio</span></div>
+  <h2>Comprueba en AmpèreLab lo que acabas de deducir</h2>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn on" data-lab="../../simuladores/Ampere.html?embed#circulacion">Circulación</button><button type="button" class="btn" data-lab="../../simuladores/Ampere.html?embed#conductor">Conductor</button><button type="button" class="btn" data-lab="../../simuladores/Ampere.html?embed#solenoide">Solenoide</button><button type="button" class="btn" data-lab="../../simuladores/Ampere.html?embed#toroide">Toroide</button></div>
+      <iframe class="lab-frame no-print" id="lab-frame" title="Simulador del laboratorio" loading="lazy"></iframe>
+      <div class="print-only card">Abre AmpèreLab en la plataforma Electro10.Easy: escenas Circulación, Conductor, Solenoide y Toroide.</div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 1 · Circulación.</b> Elige «A mano» y dibuja un camino raro que encierre los mismos hilos. Pulsa «Recorrer el camino»: ¿la suma final cambia?</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 2 · Conductor.</b> En el coaxial, arrastra el camino desde el eje hasta fuera. ¿En qué radio es máximo \(B\)? Activa «Exterior en el mismo sentido».</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 3 · Solenoide.</b> Baja \(L\) hasta que sea parecida a \(R\). ¿Cuánto se aleja el centro del valor ideal?</div>
+      <div class="tipbox"><b>Consejo.</b> Anota tu predicción antes de mover el control: así detectas qué idea tenías mal.</div>
+    </div>
+  </div>
+  <div class="foot"><span></span><span class="mono">10 / 13</span></div>
+</section>
+
+<!-- 11 · MAPA DE CONCEPTOS -->
+<section class="slide" data-n="11">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag l">Mapa de conceptos</span></div>
+  <h2>De dónde viene y a dónde lleva este capítulo</h2>
+  <div class="row" style="gap:24px">
+    <div class="cmap" id="cmap">
+      <svg width="780" height="520" viewBox="0 0 780 520" aria-hidden="true" id="cmap-svg"></svg>
+      <div class="cmap-legend"><span class="chip past">viene de</span><span class="chip this">este capítulo</span><span class="chip fut">lleva a</span></div>
+    </div>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="card col" style="gap:10px">
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)" id="cm-kind"></span>
+        <b style="font:600 22px var(--e10-font-display)" id="cm-label"></b>
+        <p style="margin:0;font-size:16px" id="cm-def"></p>
+        <div class="leaf-eq" id="cm-eq" style="min-height:70px"></div>
+        <div style="font-size:14px;color:var(--e10-muted)" id="cm-where"></div>
+        <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap" id="cm-actions"></div>
+      </div>
+      <div class="tipbox"><b>Analogía.</b> Gauss mide el <i>flujo</i> de \(\vec E\) por una superficie cerrada; Ampère, la <i>circulación</i> de \(\vec B\) por un camino cerrado. Las dos solo despejan el campo con simetría.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Toca un concepto para ver su definición, su fórmula y dónde se estudia</span><span class="mono">11 / 13</span></div>
+</section>
+
+<!-- 12 · HISTORIA, GLOSARIO Y BIBLIOGRAFÍA -->
+<section class="slide" data-n="12">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag e">Repaso</span></div>
+  <h2>Historia, palabras clave y para leer más</h2>
+  <div class="tline" id="tline"><div class="tline-axis"></div><span class="tline-note">escala no proporcional</span></div>
+  <div class="soft" style="font-size:16px;padding:10px 16px" id="tl-text"></div>
+  <div class="row" style="gap:20px">
+    <div class="col" style="width:560px;flex:none;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font:600 18px var(--e10-font-display)">Glosario en tarjetas</b><span class="mono" style="font-size:12px;color:var(--e10-muted)" id="fc-count"></span></div>
+      <button type="button" class="fcard" id="fc-card" aria-live="polite"><span class="mono" id="fc-side"></span><span id="fc-text"></span></button>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fc-flip">Girar</button><button type="button" class="btn" id="fc-again">Repasar pronto</button><button type="button" class="btn pri" id="fc-ok">Ya la sé</button><button type="button" class="btn" id="fc-reset" style="margin-left:auto">Empezar de nuevo</button></div>
+    </div>
+    <div class="col" style="flex:1;min-width:0;gap:10px">
+      <div class="card col" style="gap:8px">
+        <b style="font:600 16px var(--e10-font-display)">Conectores</b>
+        <div class="conn"><span>Viene de</span><a class="chip past" href="../../player.html?clase=9" target="_top">cap. 9 · Biot–Savart</a><a class="chip past" href="../../player.html?clase=5" target="_top">cap. 5 · Gauss</a></div>
+        <div class="conn"><span>Lleva a</span><a class="chip fut" href="../../player.html?clase=11" target="_top">cap. 11 · Faraday</a><a class="chip fut" href="../../player.html?clase=12" target="_top">cap. 12 · Maxwell</a><a class="chip fut" href="../../player.html?clase=13" target="_top">cap. 13 · CA</a></div>
+      </div>
+      <div class="card col" style="gap:6px;font-size:13px;line-height:1.45">
+        <b style="font:600 16px var(--e10-font-display)">Bibliografía</b>
+        <span>Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson. Secciones 28.6 «Ley de Ampère» y 28.7 «Aplicaciones de la ley de Ampère», pp. 969–975.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Toca un hito de la línea de tiempo o gira la tarjeta; tu avance en el glosario se guarda en este navegador</span><span class="mono">12 / 13</span></div>
+</section>
+
+<!-- 13 · CIERRE -->
+<section class="slide" data-n="13">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 10 · Ampère</span><span class="tag e">Resumen</span></div>
+  <h2>Lo que debes llevarte</h2>
+  <div class="row">
+    <div class="col" style="flex:1.3">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:17px">
+        <div class="card">Ley de Ampère<br>\(\oint\vec B\cdot d\vec\ell=\mu_0 I_{\text{enc}}\)</div>
+        <div class="card">Hilo o fuera de un conductor<br>\(B=\dfrac{\mu_0 I_{\text{enc}}}{2\pi r}\)</div>
+        <div class="card">Dentro de un conductor macizo<br>\(B=\dfrac{\mu_0 I\,r}{2\pi a^{2}}\)</div>
+        <div class="card">Solenoide largo<br>\(B=\mu_0 nI,\ \ n=N/L\)</div>
+        <div class="card">Toroide (núcleo)<br>\(B=\dfrac{\mu_0 NI}{2\pi r}\)</div>
+        <div class="card">Lámina infinita<br>\(B=\dfrac{\mu_0 K}{2}\)</div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft col" style="gap:10px">
+        <b style="font:600 18px var(--e10-font-display)">Para practicar</b>
+        <a class="btn pri" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap10_Taller_Ampere.pdf" download>Taller (PDF)</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap10_Guia_Ampere.pdf" download>Guía de estudio (PDF)</a>
+        <button type="button" class="btn no-print" id="btn-print2">Esta clase en PDF</button>
+      </div>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../simuladores/Ampere.html" target="_blank" rel="noopener">Abrir AmpèreLab</a>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=11" target="_top">Siguiente capítulo: Ley de Faraday →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">13 / 13</span></div>
+</section>
+
+</div></div>
+
+<nav class="deck-ui" aria-label="Navegación de la clase">
+  <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
+  <span class="count" id="nav-count">1 / 13</span>
+  <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
+  <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
+  <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
+</nav>
+
+<script>
+(() => {
+  'use strict';
+  const MU0 = 4e-7 * Math.PI;
+  const $ = (id) => document.getElementById(id);
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  // Notación científica con coma decimal: 1,26×10⁻⁵
+  const sci = (x, d = 2) => {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(x))); const m = x / 10 ** e;
+    const ms = m.toFixed(d).replace('.', ',');
+    return e === 0 ? ms : ms + '×10' + String(e).split('').map((c) => SUP[c]).join('');
+  };
+  const dec = (x, d = 1) => x.toFixed(d).replace('.', ',');
+  const tdec = (x, d = 1) => dec(x, d).replace(',', '{,}');
+  const texSci = (x, d = 2) => { if (x === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(x))); const m = (x / 10 ** e).toFixed(d).replace('.', '{,}'); return e === 0 ? m : `${m}\\times10^{${e}}`; };
+  const renderMath = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return s === '' ? NaN : Number(s); };
+  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+  // ── Canvas con alta densidad ──
+  function setup(cv) {
+    const dpr = window.devicePixelRatio || 1; const w = cv.width, h = cv.height;
+    if (!cv.dataset.w) { cv.dataset.w = w; cv.dataset.h = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.width = w * dpr; cv.height = h * dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: +cv.dataset.w, h: +cv.dataset.h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const hd = Math.min(14, L * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hd * 0.6 * Math.cos(a), y2 - hd * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function dotSym(ctx, x, y, r, out, color) { // ⊙ sale / ⊗ entra
+    ctx.fillStyle = col('surface'); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
+    if (out) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+    else { const s = r * 0.62; ctx.beginPath(); ctx.moveTo(x - s, y - s); ctx.lineTo(x + s, y + s); ctx.moveTo(x + s, y - s); ctx.lineTo(x - s, y + s); ctx.stroke(); }
+  }
+  const text = (ctx, s, x, y, color, font = "italic 20px 'STIX Two Text', 'Times New Roman', serif") => { ctx.fillStyle = color; ctx.font = font; ctx.fillText(s, x, y); };
+  const SANS = (n, w = 500) => `${w} ${n}px 'IBM Plex Sans', sans-serif`;
+  function cpos(cv, e) { const r = cv.getBoundingClientRect(); const p = e.touches ? e.touches[0] : e; return { x: (p.clientX - r.left) * (+cv.dataset.w / r.width), y: (p.clientY - r.top) * (+cv.dataset.h / r.height) }; }
+  const bind = (id, fmt, fn) => { const el = $(id), o = $(id + '-o'); const f = () => { if (o) o.textContent = fmt(+el.value); fn(); }; el.addEventListener('input', f); return f; };
+  // Reto con valores nuevos: gen() devuelve { q, ans, tol, unit, sol, hint }
+  function reto(p, gen) {
+    let R = null;
+    function nuevo() { R = gen(); $(p + '-q').textContent = R.q; $(p + '-in').value = ''; $(p + '-fb').textContent = ''; $(p + '-sol').classList.remove('show'); $(p + '-sol').innerHTML = R.sol; renderMath($(p + '-sol')); }
+    $(p + '-new').addEventListener('click', nuevo); $(p + '-sb').addEventListener('click', () => $(p + '-sol').classList.toggle('show'));
+    $(p + '-ck').addEventListener('click', () => {
+      const v = parseNum($(p + '-in').value); if (!isFinite(v)) { $(p + '-fb').textContent = `Escribe un número en ${R.unit}.`; return; }
+      const ok = R.ans === 0 ? Math.abs(v) < 1e-9 : Math.abs(v - R.ans) <= 0.03 * Math.abs(R.ans);
+      $(p + '-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : `<b style="color:var(--e10-danger)">Aún no.</b> ${R.hint}`;
+    });
+    $(p + '-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $(p + '-ck').click(); });
+    nuevo();
+    (window.__retos = window.__retos || {})[p] = () => R;
+    return { get: () => R, nuevo };
+  }
+
+  const sims = {};
+  // ── 1 · Portada: una luz recorre el camino amperiano y acumula la circulación ──
+  sims.cover = (() => {
+    const cv = $('cv-cover'); let t0 = performance.now(), raf = null;
+    function frame(t) {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2; const ph = ((t - t0) / 3200) % 1;
+      [80, 150].forEach((r, i) => { ctx.strokeStyle = col('vec-field'); ctx.globalAlpha = 0.35 - i * 0.12; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke(); });
+      ctx.globalAlpha = 1; const R = 180;
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 3; ctx.setLineDash([9, 7]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, -2 * Math.PI * ph, true); ctx.stroke();
+      const a = -2 * Math.PI * ph, px = cx + R * Math.cos(a), py = cy + R * Math.sin(a);
+      ctx.save(); ctx.shadowColor = col('primary'); ctx.shadowBlur = 18; ctx.fillStyle = col('primary'); ctx.beginPath(); ctx.arc(px, py, 9, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      arrow(ctx, px, py, px + 34 * Math.sin(a), py - 34 * Math.cos(a), col('vec-field'), 3);
+      dotSym(ctx, cx, cy, 24, true, col('primary')); text(ctx, 'I', cx + 30, cy - 14, col('primary'), "italic 30px 'STIX Two Text', serif");
+      text(ctx, `∮ B·dℓ = ${dec(ph * 100, 0)} % de μ₀I`, cx - 105, cy + 80, col('muted'), SANS(17, 600));
+      raf = matchMedia('(prefers-reduced-motion: reduce)').matches ? null : requestAnimationFrame(frame);
+    }
+    return { show() { if (!raf) raf = requestAnimationFrame(frame); }, hide() { if (raf) cancelAnimationFrame(raf); raf = null; }, draw() { frame(t0 + 3200 * 0.62); } };
+  })();
+
+  // ── 2 · La forma del camino no importa ──
+  sims.forma = (() => {
+    const cv = $('cv-forma'), I = 5, PX = 2600; let voted = false, out = false; // PX: píxeles por metro
+    function draw() {
+      const A = +$('fo-a').value, R0 = +$('fo-r').value / 100; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2;
+      const wire = out ? { x: R0 * (1 + A) + 0.03, y: 0 } : { x: 0, y: 0 };
+      const pt = (t) => { const r = R0 * (1 + A * Math.sin(5 * t)); return [r * Math.cos(t), r * Math.sin(t)]; };
+      const n = 720; let circ = 0, len = 0;
+      for (let i = 0; i < n; i++) {
+        const [x1, y1] = pt(2 * Math.PI * i / n), [x2, y2] = pt(2 * Math.PI * (i + 1) / n), mx = (x1 + x2) / 2 - wire.x, my = (y1 + y2) / 2 - wire.y, r2 = mx * mx + my * my, k = MU0 * I / (2 * Math.PI * r2);
+        circ += -k * my * (x2 - x1) + k * mx * (y2 - y1); len += Math.hypot(x2 - x1, y2 - y1);
+      }
+      ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = col('accent'); ctx.beginPath(); for (let i = 0; i <= 360; i++) { const [x, y] = pt(2 * Math.PI * i / 360); i ? ctx.lineTo(cx + x * PX, cy - y * PX) : ctx.moveTo(cx + x * PX, cy - y * PX); } ctx.fill(); ctx.restore();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 360; i++) { const [x, y] = pt(2 * Math.PI * i / 360); i ? ctx.lineTo(cx + x * PX, cy - y * PX) : ctx.moveTo(cx + x * PX, cy - y * PX); } ctx.stroke();
+      // vectores B sobre el camino
+      for (let i = 0; i < 24; i++) {
+        const [x, y] = pt(2 * Math.PI * i / 24), rx = x - wire.x, ry = y - wire.y, r2 = rx * rx + ry * ry, k = MU0 * I / (2 * Math.PI * r2), bx = -k * ry, by = k * rx, s = 2.6e6;
+        arrow(ctx, cx + x * PX, cy - y * PX, cx + x * PX + bx * s, cy - y * PX - by * s, col('vec-field'), 2.2);
+      }
+      dotSym(ctx, cx + wire.x * PX, cy - wire.y * PX, 14, true, col('primary')); text(ctx, 'I = 5,0 A', cx + wire.x * PX + 18, cy - wire.y * PX - 16, col('primary'), SANS(15, 600));
+      $('fo-len').textContent = dec(len * 100, 1) + ' cm'; $('fo-circ').textContent = sci(Math.abs(circ) < 1e-12 ? 0 : circ, 3) + ' T·m'; $('fo-mu').textContent = out ? '0 (no encierra)' : sci(MU0 * I, 3) + ' T·m';
+    }
+    bind('fo-a', (v) => (v ? 'deformado ' + dec(v * 100, 0) + ' %' : 'círculo'), draw); bind('fo-r', (v) => dec(v) + ' cm', draw);
+    $('fo-out').addEventListener('click', () => { out = !out; $('fo-out').textContent = out ? 'Hilo dentro del camino' : 'Hilo fuera del camino'; draw(); });
+    document.querySelectorAll('#fo-vote .btn').forEach((b) => b.addEventListener('click', () => {
+      if (voted) return; voted = true;
+      document.querySelectorAll('#fo-vote .btn').forEach((x) => { if (x.dataset.v === 'c') x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+      $('fo-fb').style.visibility = 'visible'; $('fo-a').value = 0.35; $('fo-a').dispatchEvent(new Event('input'));
+    }));
+    return { draw };
+  })();
+
+  // ── 3 · La ley: hilos arrastrables y corriente encerrada ──
+  sims.ley = (() => {
+    const cv = $('cv-ley'); const W = [{ x: 190, y: 170, I: 5, n: 'A' }, { x: 270, y: 240, I: -3, n: 'B' }, { x: 400, y: 90, I: 2, n: 'C' }]; const C = { x: 225, y: 200, r: 120 }; let ccw = 1, drag = -1;
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = col('accent'); ctx.beginPath(); ctx.arc(C.x, C.y, C.r, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(C.x, C.y, C.r, 0, 2 * Math.PI); ctx.stroke();
+      for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4, x = C.x + C.r * Math.cos(a), y = C.y + C.r * Math.sin(a), tx = Math.sin(a) * ccw, ty = -Math.cos(a) * ccw; arrow(ctx, x - tx * 12, y - ty * 12, x + tx * 12, y + ty * 12, col('accent'), 3); }
+      let Ie = 0; const parts = [];
+      W.forEach((o) => {
+        const inside = Math.hypot(o.x - C.x, o.y - C.y) < C.r, s = inside ? o.I * ccw : 0; Ie += s;
+        dotSym(ctx, o.x, o.y, 15, o.I > 0, col('primary'));
+        text(ctx, `${o.n} · ${dec(Math.abs(o.I), 0)} A`, o.x + 20, o.y - 12, col('primary'), SANS(14, 600));
+        text(ctx, inside ? (s > 0 ? 'cuenta +' : 'cuenta −') : 'fuera', o.x + 20, o.y + 8, inside ? col('accent-strong') : col('muted'), SANS(13));
+      });
+      text(ctx, ccw > 0 ? 'recorrido antihorario' : 'recorrido horario', 14, h - 14, col('muted'), SANS(13));
+      $('ley-ie').textContent = (Ie > 0 ? '+' : Ie < 0 ? '−' : '') + dec(Math.abs(Ie), 1) + ' A'; $('ley-g').textContent = sci(MU0 * Ie, 2) + ' T·m';
+    }
+    const down = (e) => { const p = cpos(cv, e); drag = W.findIndex((o) => Math.hypot(o.x - p.x, o.y - p.y) < 22); if (drag >= 0) e.preventDefault(); };
+    const move = (e) => { if (drag < 0) return; const p = cpos(cv, e); W[drag].x = Math.max(16, Math.min(+cv.dataset.w - 16, p.x)); W[drag].y = Math.max(16, Math.min(+cv.dataset.h - 16, p.y)); draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); cv.addEventListener('touchstart', down, { passive: false });
+    window.addEventListener('mousemove', move); cv.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('mouseup', () => { drag = -1; }); cv.addEventListener('touchend', () => { drag = -1; });
+    $('ley-inv').addEventListener('click', () => { ccw *= -1; draw(); });
+    return { draw };
+  })();
+
+  // ── 4 · Conductor macizo: corte y gráfica B(r) ──
+  sims.maz = (() => {
+    const cv = $('cv-maz'), a = 2e-3, I = 10, rmax = 6e-3;
+    const B = (r) => r <= 0 ? 0 : r < a ? MU0 * I * r / (2 * Math.PI * a * a) : MU0 * I / (2 * Math.PI * r);
+    function draw() {
+      const r = +$('mz-r').value / 1000; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cx = 105, cy = h / 2, s = 98 / rmax; // 98 px = 6 mm
+      ctx.fillStyle = col('primary-soft'); ctx.beginPath(); ctx.arc(cx, cy, a * s, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = col('primary'); ctx.lineWidth = 2; ctx.stroke();
+      for (let x = -a; x <= a; x += 0.5e-3) for (let y = -a; y <= a; y += 0.5e-3) if (Math.hypot(x, y) < a - 0.2e-3) { ctx.fillStyle = col('primary'); ctx.beginPath(); ctx.arc(cx + x * s, cy + y * s, 1.8, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = col('accent'); ctx.beginPath(); ctx.arc(cx, cy, Math.max(r * s, 0.5), 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2.5; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.arc(cx, cy, Math.max(r * s, 0.5), 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      text(ctx, 'a', cx - 4, cy + a * s + 20, col('muted'));
+      // gráfica
+      const X0 = 220, X1 = w - 16, Y0 = h - 40, Y1 = 26, Bm = B(a) * 1.15; const X = (rr) => X0 + rr / rmax * (X1 - X0), Y = (b) => Y0 - b / Bm * (Y0 - Y1);
+      ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = col('primary'); ctx.fillRect(X(0), Y1, X(a) - X(0), Y0 - Y1); ctx.restore();
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.moveTo(X0, Y0); ctx.lineTo(X0, Y1); ctx.stroke();
+      ctx.strokeStyle = col('vec-field'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const rr = rmax * i / 200; i ? ctx.lineTo(X(rr), Y(B(rr))) : ctx.moveTo(X(rr), Y(B(rr))); } ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(r), Y0); ctx.lineTo(X(r), Y(B(r))); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col('primary'); ctx.beginPath(); ctx.arc(X(r), Y(B(r)), 6, 0, 2 * Math.PI); ctx.fill();
+      text(ctx, 'a', X(a) - 4, Y0 + 20, col('muted')); text(ctx, 'r', X1 - 10, Y0 + 20, col('muted')); text(ctx, 'B', X0 + 6, Y1 + 4, col('muted'));
+      text(ctx, '∝ r', X(a * 0.45) - 30, Y(B(a * 0.45)) - 10, col('vec-field'), SANS(13, 600)); text(ctx, '∝ 1/r', X(3.6e-3), Y(B(3.6e-3)) - 12, col('vec-field'), SANS(13, 600));
+      const Ie = r < a ? I * r * r / (a * a) : I;
+      $('mz-ie').textContent = dec(Ie, 2) + ' A'; $('mz-b').textContent = sci(B(r)) + ' T'; $('mz-reg').textContent = r < a ? 'dentro' : r === a ? 'superficie' : 'fuera';
+    }
+    bind('mz-r', (v) => dec(v, 1) + ' mm', draw);
+    return { draw };
+  })();
+
+  // ── 5 · Coaxial: B(r) y reto ──
+  sims.cx = (() => {
+    const cv = $('cv-cx'); let same = false;
+    const Bc = (r, a, b, c, I, sm) => { const Iout = sm ? I : -I; const Ie = r < a ? I * r * r / (a * a) : r < b ? I : r < c ? I + Iout * (r * r - b * b) / (c * c - b * b) : I + Iout; return r <= 0 ? 0 : MU0 * Ie / (2 * Math.PI * r); };
+    function draw() {
+      const a = 1e-3, b = 3e-3, c = 4e-3, I = 2, rmax = 6e-3; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const X0 = 54, X1 = w - 20, Y0 = h - 42, Y1 = 24, Bm = Bc(a, a, b, c, I, true) * 1.12;
+      const X = (r) => X0 + r / rmax * (X1 - X0), Y = (v) => Y0 - v / Bm * (Y0 - Y1);
+      [[0, a, 'primary'], [b, c, same ? 'primary' : 'accent']].forEach(([r1, r2, k]) => { ctx.save(); ctx.globalAlpha = 0.14; ctx.fillStyle = col(k); ctx.fillRect(X(r1), Y1, X(r2) - X(r1), Y0 - Y1); ctx.restore(); });
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.moveTo(X0, Y0); ctx.lineTo(X0, Y1); ctx.stroke();
+      ctx.strokeStyle = col('vec-field'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const r = rmax * i / 300; i ? ctx.lineTo(X(r), Y(Bc(r, a, b, c, I, same))) : ctx.moveTo(X(r), Y(0)); } ctx.stroke();
+      [['a', a], ['b', b], ['c', c]].forEach(([n, r]) => text(ctx, n, X(r) - 4, Y0 + 20, col('muted')));
+      text(ctx, 'r', X1 - 10, Y0 + 20, col('muted')); text(ctx, 'B', X0 + 6, Y1 + 6, col('muted'));
+      text(ctx, 'interior', X(a / 2) - 26, Y1 + 18, col('primary'), SANS(12, 600)); text(ctx, 'exterior', X((b + c) / 2) - 26, Y1 + 18, col(same ? 'primary' : 'accent-strong'), SANS(12, 600));
+      text(ctx, same ? 'fuera: B = μ₀(2I)/2πr' : 'fuera: B = 0', X(4.3e-3), Y(Bc(5e-3, a, b, c, I, same)) - 12, col('vec-field'), SANS(13, 600));
+      text(ctx, '1 mm', X(1e-3) - 14, h - 6, col('muted'), "500 11px 'IBM Plex Mono', monospace");
+    }
+    $('cx-same').addEventListener('click', () => { same = !same; $('cx-same').textContent = same ? 'Corrientes en el mismo sentido' : 'Corrientes opuestas'; $('cx-same').classList.toggle('on', !same); draw(); });
+    reto('cx', () => {
+      const a = pick([1, 1.5, 2]) * 1e-3, b = a + pick([1.5, 2]) * 1e-3, c = b + pick([1, 1.5]) * 1e-3, I = pick([1, 2, 3, 4, 5]), g = pick(['in', 'mid', 'wall', 'out']);
+      const r = g === 'in' ? a / 2 : g === 'mid' ? (a + b) / 2 : g === 'wall' ? (b + c) / 2 : c + 1e-3, B = Bc(r, a, b, c, I, false);
+      const mm = (x) => dec(x * 1e3, 2).replace(/,?0+$/, '');
+      const Ie = r < a ? I * r * r / (a * a) : r < b ? I : r < c ? I - I * (r * r - b * b) / (c * c - b * b) : 0;
+      const ieTex = r < a ? `I\\,\\dfrac{r^2}{a^2}` : r < b ? 'I' : r < c ? `I-I\\,\\dfrac{r^2-b^2}{c^2-b^2}` : 'I-I';
+      return { q: `Coaxial: interior de radio ${mm(a)} mm, exterior entre ${mm(b)} y ${mm(c)} mm, con ${I} A de ida y vuelta. ¿Cuánto vale B a r = ${mm(r)} mm?`, ans: B * 1e6, unit: 'microteslas', hint: '¿En qué región está r? Halla primero la corriente encerrada.',
+        sol: `\\(I_{\\text{enc}}=${ieTex}=${tdec(Ie, 3)}\\,\\mathrm A\\), así que \\(B=\\dfrac{\\mu_0 I_{\\text{enc}}}{2\\pi r}=${texSci(B)}\\,\\mathrm T=${tdec(B * 1e6, 1)}\\,\\mu\\mathrm T\\).` };
+    });
+    return { draw };
+  })();
+
+  // ── 6 · Solenoide: real frente a ideal + ejercicio generado ──
+  sims.sol = (() => {
+    const cv = $('cv-sol');
+    const ratio = (z, L, R) => 0.5 * ((L / 2 - z) / Math.hypot(L / 2 - z, R) + (L / 2 + z) / Math.hypot(L / 2 + z, R)); // B/(μ0 n I)
+    function draw() {
+      const L = +$('so-l').value / 100, R = +$('so-r').value / 100; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const X0 = 40, X1 = w - 16, Y0 = h - 40, Y1 = 24, z0 = -L, z1 = L; const X = (z) => X0 + (z - z0) / (z1 - z0) * (X1 - X0), Y = (q) => Y0 - q / 1.2 * (Y0 - Y1);
+      ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = col('primary'); ctx.fillRect(X(-L / 2), Y1, X(L / 2) - X(-L / 2), Y0 - Y1); ctx.restore();
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.moveTo(X(0), Y0); ctx.lineTo(X(0), Y1); ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(X0, Y(0)); ctx.lineTo(X(-L / 2), Y(0)); ctx.lineTo(X(-L / 2), Y(1)); ctx.lineTo(X(L / 2), Y(1)); ctx.lineTo(X(L / 2), Y(0)); ctx.lineTo(X1, Y(0)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = col('vec-field'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const z = z0 + (z1 - z0) * i / 300; i ? ctx.lineTo(X(z), Y(ratio(z, L, R))) : ctx.moveTo(X(z), Y(ratio(z, L, R))); } ctx.stroke();
+      text(ctx, '−L/2', X(-L / 2) - 18, Y0 + 20, col('muted'), SANS(12)); text(ctx, 'L/2', X(L / 2) - 10, Y0 + 20, col('muted'), SANS(12)); text(ctx, 'z', X1 - 10, Y0 + 20, col('muted'));
+      text(ctx, '- - ideal μ₀nI', X0 + 6, Y1 + 4, col('accent-strong'), SANS(12, 600)); text(ctx, '— real', X0 + 120, Y1 + 4, col('vec-field'), SANS(12, 600)); text(ctx, 'B / μ₀nI', X(0) + 8, Y1 + 24, col('muted'), SANS(12));
+      text(ctx, '1', X(0) - 16, Y(1) + 4, col('muted'), SANS(12));
+      $('so-c').textContent = dec(ratio(0, L, R) * 100, 1) + ' %'; $('so-e').textContent = dec(ratio(L / 2, L, R) * 100, 1) + ' %'; $('so-lr').textContent = dec(L / R, 1);
+    }
+    bind('so-l', (v) => v + ' cm', draw); bind('so-r', (v) => dec(v) + ' cm', draw);
+    reto('so', () => {
+      const N = pick([300, 400, 500, 600, 800, 1000, 1200]), L = pick([20, 25, 30, 40, 50]) / 100, I = pick([0.5, 1, 1.5, 2, 2.5, 3]), n = N / L, B = MU0 * n * I;
+      return { q: `Un solenoide largo de ${dec(L * 100, 0)} cm tiene ${N} vueltas y lleva ${dec(I)} A. ¿Cuánto vale B en su interior, lejos de los extremos?`, ans: B * 1e3, unit: 'militeslas', hint: 'Usa n = N/L en vueltas por metro, no N.',
+        sol: `\\(n=\\dfrac{N}{L}=\\dfrac{${N}}{${tdec(L, 2)}}=${tdec(n, 0)}\\,\\mathrm m^{-1}\\), \\(B=\\mu_0 nI=(4\\pi\\times10^{-7})(${tdec(n, 0)})(${tdec(I)})=${texSci(B)}\\,\\mathrm T=${tdec(B * 1e3, 2)}\\,\\mathrm{mT}\\).` };
+    });
+    return { draw };
+  })();
+
+  // ── 7 · Toroide: vista superior + reto ──
+  sims.tor = (() => {
+    const cv = $('cv-tor'), N = 400, I = 1.5, a = 0.10, b = 0.14;
+    const B = (r) => (r >= a && r <= b) ? MU0 * N * I / (2 * Math.PI * r) : 0;
+    function draw() {
+      const r = +$('to-r').value / 100; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const cx = w / 2, cy = h / 2, s = 165 / 0.20;
+      ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = col('primary'); ctx.beginPath(); ctx.arc(cx, cy, b * s, 0, 2 * Math.PI); ctx.arc(cx, cy, a * s, 0, 2 * Math.PI, true); ctx.fill('evenodd'); ctx.restore();
+      for (let i = 0; i < 32; i++) {
+        const t = i * 2 * Math.PI / 32, c = Math.cos(t), sn = Math.sin(t);
+        ctx.strokeStyle = col('primary'); ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx + c * (a * s - 5), cy + sn * (a * s - 5)); ctx.lineTo(cx + c * (b * s + 5), cy + sn * (b * s + 5)); ctx.stroke(); ctx.globalAlpha = 1;
+        dotSym(ctx, cx + c * (a * s - 9), cy + sn * (a * s - 9), 4, true, col('primary')); dotSym(ctx, cx + c * (b * s + 9), cy + sn * (b * s + 9), 4, false, col('primary'));
+      }
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 2.5; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.arc(cx, cy, r * s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      if (B(r) > 0) for (let k = 0; k < 4; k++) { const t = k * Math.PI / 2 + Math.PI / 4, x = cx + r * s * Math.cos(t), y = cy + r * s * Math.sin(t), tx = Math.sin(t), ty = -Math.cos(t); arrow(ctx, x - tx * 13, y - ty * 13, x + tx * 13, y + ty * 13, col('vec-field'), 3.5); }
+      text(ctx, 'r', cx + r * s * 0.7 + 6, cy - 6, col('accent-strong')); ctx.strokeStyle = col('muted'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r * s, cy); ctx.stroke();
+      const reg = r < a ? 'agujero' : r <= b ? 'núcleo' : 'fuera';
+      $('to-ie').textContent = reg === 'núcleo' ? 'NI = 600 A' : reg === 'agujero' ? '0' : 'NI − NI = 0'; $('to-b').textContent = sci(B(r)) + ' T'; $('to-reg').textContent = reg;
+    }
+    bind('to-r', (v) => dec(v) + ' cm', draw);
+    reto('to', () => {
+      const Nn = pick([200, 300, 500, 600, 800]), Ii = pick([0.5, 1, 2, 2.5]), aa = pick([6, 8, 10]), bb = aa + pick([2, 3, 4]), g = pick(['in', 'in', 'in', 'hole', 'out']);
+      const r = g === 'in' ? aa + pick([0, 0.5, 1]) * (bb - aa) : g === 'hole' ? aa / 2 : bb + 2, Bv = (r >= aa && r <= bb) ? MU0 * Nn * Ii / (2 * Math.PI * r / 100) : 0;
+      return { q: `Toroide de ${Nn} vueltas con ${dec(Ii)} A; núcleo de ${aa} a ${bb} cm del centro. ¿Cuánto vale B a ${dec(r, 1)} cm del centro?`, ans: Bv * 1e3, unit: 'militeslas', hint: '¿El camino de radio r atraviesa las vueltas? Fuera del núcleo la corriente encerrada es cero.',
+        sol: Bv ? `\\(B=\\dfrac{\\mu_0 NI}{2\\pi r}=\\dfrac{(4\\pi\\times10^{-7})(${Nn})(${tdec(Ii)})}{2\\pi(${tdec(r / 100, 3)})}=${texSci(Bv)}\\,\\mathrm T=${tdec(Bv * 1e3, 3)}\\,\\mathrm{mT}\\).` : `El camino ${g === 'hole' ? 'del agujero no atraviesa ninguna vuelta' : 'exterior atraviesa cada vuelta dos veces, en sentidos opuestos'}: \\(I_{\\text{enc}}=0\\) y \\(B=0\\).` };
+    });
+    return { draw };
+  })();
+
+  // ── Errores: tarjetas ──
+  document.querySelectorAll('.flip').forEach((c) => { const t = () => c.classList.toggle('open'); c.addEventListener('click', t); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); });
+
+  // ── Laboratorio: simulador bajo demanda ──
+  const labBtns = document.querySelectorAll('[data-lab]');
+  labBtns.forEach((b) => b.addEventListener('click', () => { labBtns.forEach((x) => x.classList.toggle('on', x === b)); $('lab-frame').src = b.dataset.lab; }));
+
+  const katexTo = (el, tex) => { if (window.katex) katex.render(tex, el, { throwOnError: false, displayMode: true }); else el.textContent = tex; };
+  const LAB = '../../simuladores/Ampere.html#';
+
+  // ── 9 · Árbol de decisión: ¿Ampère o Biot–Savart? ──
+  sims.tree = (() => {
+    const Q2 = {
+      cil: [['cin', 'Dentro de un conductor macizo'], ['cout', 'Fuera de un hilo o conductor'], ['cx', 'Fuera de un coaxial (ida y vuelta)']],
+      sol: [['sin', 'Dentro, lejos de los extremos'], ['send', 'En una boca (extremo)'], ['sout', 'Fuera, lejos de las bocas']],
+      tor: [['tin', 'Dentro del núcleo'], ['tout', 'En el agujero o fuera']],
+      pla: [['p1', 'Una lámina'], ['p2', 'Entre dos láminas con corrientes opuestas']],
+    };
+    // Las respuestas de los retos se calculan con la misma fórmula que se muestra.
+    const L = {
+      none: { name: 'Biot–Savart (cap. 9)', tex: String.raw`d\vec B=\dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec\ell\times\hat r}{r^2}`, when: 'No sirve: sin simetría, B no es constante sobre ningún camino sencillo.', dir: 'Suma vectorial de los aportes de cada elemento.', reto: 'Espira de 5,0 cm de radio con 3,0 A. ¿Cuánto vale B en su centro?', ans: MU0 * 3 / (2 * 0.05), lab: '../../simuladores/BiotSavart.html#espira' },
+      cin: { name: 'Dentro de un conductor', tex: String.raw`B=\dfrac{\mu_0 I\,r}{2\pi a^2}`, when: 'Circunferencia de radio r < a; encierra la fracción r²/a² de la corriente.', dir: 'Circunferencias alrededor del eje (mano derecha).', reto: 'Conductor de 4,0 mm de radio con 12 A uniformes. ¿B a 1,0 mm del eje?', ans: MU0 * 12 * 1e-3 / (2 * Math.PI * 16e-6), lab: LAB + 'conductor' },
+      cout: { name: 'Hilo o fuera del conductor', tex: String.raw`B=\dfrac{\mu_0 I_{\text{enc}}}{2\pi r}`, when: 'Circunferencia de radio r que encierra toda la corriente.', dir: 'Circunferencias alrededor del eje (mano derecha).', reto: 'Un cable lleva 8,0 A. ¿Cuánto vale B a 2,0 cm de su eje?', ans: MU0 * 8 / (2 * Math.PI * 0.02), lab: LAB + 'conductor' },
+      cx: { name: 'Fuera del coaxial', tex: String.raw`I_{\text{enc}}=I-I=0\ \Rightarrow\ B=0`, when: 'Circunferencia que encierra la ida y la vuelta.', dir: 'No hay campo.', reto: 'Coaxial con 3,0 A de ida y vuelta. ¿Cuánto vale B a 1,0 cm fuera del cable?', ans: 0, lab: LAB + 'conductor' },
+      sin: { name: 'Solenoide largo', tex: String.raw`B=\mu_0 nI,\qquad n=\dfrac{N}{L}`, when: 'Rectángulo con un lado dentro, paralelo al eje.', dir: 'A lo largo del eje; dedos con la corriente, el pulgar da B.', reto: 'Solenoide largo de 1500 vueltas por metro con 2,0 A. ¿Cuánto vale B dentro?', ans: MU0 * 1500 * 2, lab: LAB + 'solenoide' },
+      send: { name: 'Boca de un solenoide largo', tex: String.raw`B\approx\tfrac12\,\mu_0 nI`, when: 'Ampère no lo da: sale de sumar espiras (Biot–Savart). Vale si L ≫ R.', dir: 'A lo largo del eje.', reto: 'El mismo solenoide (1500 vueltas/m, 2,0 A). ¿Cuánto vale B en el centro de una boca?', ans: MU0 * 1500 * 2 / 2, lab: LAB + 'solenoide' },
+      sout: { name: 'Fuera del solenoide', tex: String.raw`B\approx0`, when: 'Rectángulo totalmente fuera: no encierra corriente.', dir: 'El campo queda dentro.', reto: '¿Cuánto vale B fuera de un solenoide ideal muy largo, lejos de las bocas?', ans: 0, lab: LAB + 'solenoide' },
+      tin: { name: 'Toroide', tex: String.raw`B=\dfrac{\mu_0 NI}{2\pi r}`, when: 'Circunferencia de radio r dentro del núcleo: encierra N vueltas.', dir: 'Tangente a circunferencias dentro del núcleo.', reto: 'Toroide de 500 vueltas con 0,80 A. ¿Cuánto vale B a 9,0 cm del centro, dentro del núcleo?', ans: MU0 * 500 * 0.8 / (2 * Math.PI * 0.09), lab: LAB + 'toroide' },
+      tout: { name: 'Agujero o exterior del toroide', tex: String.raw`I_{\text{enc}}=0\ \Rightarrow\ B=0`, when: 'En el agujero no se cruza ningún alambre; fuera, cada vuelta se cruza dos veces.', dir: 'No hay campo.', reto: '¿Cuánto vale B en el agujero central de un toroide de 500 vueltas con 0,80 A?', ans: 0, lab: LAB + 'toroide' },
+      p1: { name: 'Lámina infinita', tex: String.raw`B=\dfrac{\mu_0 K}{2}`, when: 'Rectángulo que atraviesa la lámina; K es la corriente por unidad de ancho.', dir: 'Paralelo a la lámina, opuesto a cada lado.', reto: 'Una lámina lleva K = 200 A/m. ¿Cuánto vale B a cualquier lado?', ans: MU0 * 200 / 2, lab: null },
+      p2: { name: 'Dos láminas opuestas', tex: String.raw`B=\mu_0 K\ \text{entre ellas},\quad 0\ \text{fuera}`, when: 'Superposición de los campos de las dos láminas.', dir: 'Entre ellas los campos se suman; fuera se cancelan.', reto: 'Dos láminas con K = 200 A/m en sentidos opuestos. ¿Cuánto vale B entre ellas?', ans: MU0 * 200, lab: null },
+    };
+    let a = 'cil', b = 'cin', fails = 0;
+    const opts = (box, list, val, pickF) => { box.innerHTML = ''; list.forEach(([id, label]) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'opt' + (id === val ? ' on' : ''); el.textContent = label; el.addEventListener('click', () => pickF(id)); box.appendChild(el); }); };
+    function draw() {
+      opts($('tq1'), [['cil', 'Cilíndrica: hilo, conductor, coaxial'], ['sol', 'Solenoide'], ['tor', 'Toroide'], ['pla', 'Plana: lámina'], ['none', 'Ninguna: espira, segmento, hilo en L']], a, (id) => { a = id; b = Q2[id] ? Q2[id][0][0] : null; reset(); });
+      const has2 = a !== 'none';
+      $('tq2-box').hidden = !has2; $('tq-down').hidden = !has2; $('tq-only').hidden = has2;
+      if (has2) opts($('tq2'), Q2[a], b, (id) => { b = id; reset(); });
+      const leaf = L[has2 ? b : 'none'];
+      $('leaf-name').textContent = leaf.name; katexTo($('leaf-eq'), leaf.tex);
+      $('leaf-when').textContent = leaf.when; $('leaf-dir').textContent = leaf.dir; $('leaf-reto').textContent = leaf.reto;
+      const lab = $('leaf-lab'); lab.hidden = !leaf.lab; if (leaf.lab) { lab.href = leaf.lab; lab.textContent = leaf.lab.includes('BiotSavart') ? 'Abrir en BiotSavartLab' : 'Abrir en AmpèreLab'; }
+    }
+    function reset() { fails = 0; $('leaf-in').value = ''; $('leaf-fb').textContent = ''; draw(); }
+    $('leaf-check').addEventListener('click', () => {
+      const leaf = L[a === 'none' ? 'none' : b], v = parseNum($('leaf-in').value), fb = $('leaf-fb');
+      if (!isFinite(v)) { fb.textContent = 'Escribe un número, por ejemplo 1,5e-4.'; fb.style.color = 'var(--e10-muted)'; return; }
+      const ok = leaf.ans === 0 ? Math.abs(v) < 1e-12 : Math.abs(v - leaf.ans) <= 0.02 * leaf.ans;
+      if (ok) { fb.textContent = `Correcto: B = ${sci(leaf.ans, 2)} T.`; fb.style.color = 'var(--e10-success)'; return; }
+      fails++; fb.style.color = 'var(--e10-danger)';
+      fb.textContent = fails < 2 ? 'No coincide. Revisa las unidades (cm o mm → m) y qué corriente encierra el camino.' : `No coincide. La respuesta es B = ${sci(leaf.ans, 2)} T: compárala paso a paso con la fórmula.`;
+    });
+    $('leaf-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('leaf-check').click(); });
+    return { draw };
+  })();
+
+  // ── 11 · Mapa de conceptos con conexiones animadas ──
+  sims.cmap = (() => {
+    const K = { past: 'Viene de un capítulo anterior', this: 'Este capítulo', fut: 'Lleva a un capítulo siguiente' };
+    const N = [
+      { id: 'BS', x: 80, y: 60, k: 'past', label: 'Ley de Biot–Savart', sub: 'cap. 9', def: 'Da el campo de cada elemento de corriente. Siempre funciona, pero exige integrar.', tex: String.raw`d\vec B=\dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec\ell\times\hat r}{r^2}`, where: 'Repaso: capítulo 9', clase: 9 },
+      { id: 'HI', x: 80, y: 230, k: 'past', label: 'Hilo infinito', sub: 'cap. 9', def: 'Su campo rodea al hilo y decae como 1/r. Es el caso más simple de la ley de Ampère.', tex: String.raw`B=\dfrac{\mu_0 I}{2\pi r}`, where: 'Repaso: capítulo 9, diapositiva 4', clase: 9 },
+      { id: 'GA', x: 80, y: 420, k: 'past', label: 'Ley de Gauss', sub: 'analogía', def: 'El flujo de E por una superficie cerrada depende solo de la carga encerrada. Ampère hace lo mismo con la circulación de B y la corriente.', tex: String.raw`\oint\vec E\cdot d\vec A=\dfrac{q_{\text{enc}}}{\varepsilon_0}`, where: 'Repaso: capítulo 5', clase: 5 },
+      { id: 'CI', x: 290, y: 70, k: 'this', label: 'Circulación', sub: '∮ B·dℓ', def: 'Suma de la componente de B a lo largo de un camino cerrado. No depende de la forma del camino.', tex: String.raw`\oint_C\vec B\cdot d\vec\ell`, where: 'Diapositiva 2 · escena Circulación', slide: 2, lab: 'circulacion' },
+      { id: 'AM', x: 290, y: 240, k: 'this', big: true, label: 'Ley de Ampère', sub: 'idea central', def: 'La circulación de B por un camino cerrado es μ₀ por la corriente neta que lo atraviesa.', tex: String.raw`\oint_C\vec B\cdot d\vec\ell=\mu_0 I_{\text{enc}}`, where: 'Diapositiva 3', slide: 3, lab: 'circulacion' },
+      { id: 'IE', x: 290, y: 420, k: 'this', label: 'Corriente encerrada', sub: 'I_enc, J, K', def: 'Suma con signo de las corrientes que atraviesan el camino. Dentro de un conductor es una fracción de la total.', tex: String.raw`I_{\text{enc}}=\int\vec J\cdot d\vec A`, where: 'Diapositivas 3 y 4', slide: 3 },
+      { id: 'CO', x: 500, y: 60, k: 'this', label: 'Conductores', sub: 'macizo, coaxial', def: 'Simetría cilíndrica: dentro B crece con r; fuera decae como 1/r; fuera del coaxial es cero.', tex: String.raw`B=\dfrac{\mu_0 I\,r}{2\pi a^2}\quad B=\dfrac{\mu_0 I}{2\pi r}`, where: 'Diapositivas 4 y 5 · escena Conductor', slide: 4, lab: 'conductor' },
+      { id: 'SO', x: 500, y: 180, k: 'this', label: 'Solenoide', sub: 'μ₀ n I', def: 'Campo casi uniforme dentro y casi nulo fuera; en las bocas cae a la mitad.', tex: String.raw`B=\mu_0 nI`, where: 'Diapositiva 6 · escena Solenoide', slide: 6, lab: 'solenoide' },
+      { id: 'TO', x: 500, y: 300, k: 'this', label: 'Toroide', sub: '1/r en el núcleo', def: 'Un solenoide cerrado: el campo queda dentro del núcleo y no es uniforme.', tex: String.raw`B=\dfrac{\mu_0 NI}{2\pi r}`, where: 'Diapositiva 7 · escena Toroide', slide: 7, lab: 'toroide' },
+      { id: 'LA', x: 500, y: 420, k: 'this', label: 'Lámina de corriente', sub: 'μ₀K/2', def: 'Campo uniforme a cada lado, independiente de la distancia.', tex: String.raw`B=\dfrac{\mu_0 K}{2}`, where: 'Diapositiva 7 · taller, resuelto 6', slide: 7 },
+      { id: 'FA', x: 700, y: 110, k: 'fut', label: 'Ley de Faraday', sub: 'cap. 11', def: 'Si cambia el flujo del campo de un solenoide, se induce una fem.', tex: String.raw`\varepsilon=-\dfrac{d\Phi_B}{dt}`, where: 'Capítulo 11', clase: 11 },
+      { id: 'IN', x: 700, y: 260, k: 'fut', label: 'Inductancia', sub: 'cap. 11', def: 'Relaciona el flujo que produce una bobina con su propia corriente.', tex: String.raw`L=\dfrac{N\Phi_B}{I}`, where: 'Capítulo 11', clase: 11 },
+      { id: 'MX', x: 700, y: 455, k: 'fut', label: 'Ecuaciones de Maxwell', sub: 'cap. 12', def: 'Maxwell completa la ley de Ampère con la corriente de desplazamiento.', tex: String.raw`\oint\vec B\cdot d\vec\ell=\mu_0\!\left(I_{\text{enc}}+\varepsilon_0\dfrac{d\Phi_E}{dt}\right)`, where: 'Capítulo 12', clase: 12 },
+    ];
+    const E = [['BS', 'AM', 'con simetría'], ['HI', 'AM', 'caso simple'], ['GA', 'AM', 'analogía', 1], ['CI', 'AM', 'mide'], ['IE', 'AM', 'fuente'], ['AM', 'CO', ''], ['AM', 'SO', 'aplica'], ['AM', 'TO', ''], ['AM', 'LA', ''],
+      ['SO', 'TO', 'se cierra'], ['SO', 'FA', 'flujo'], ['SO', 'IN', 'L = NΦ/I'], ['AM', 'MX', 'desplazamiento'], ['FA', 'MX', '']];
+    const by = {}; N.forEach((n) => { by[n.id] = n; });
+    let sel = 'AM', hov = null, built = false;
+    const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg', lines = [];
+    function build() {
+      E.forEach((e) => {
+        const p = by[e[0]], q = by[e[1]];
+        const base = document.createElementNS(NS, 'line'), flow = document.createElementNS(NS, 'line');
+        [base, flow].forEach((l) => { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); l.setAttribute('x2', q.x); l.setAttribute('y2', q.y); svg.appendChild(l); });
+        if (e[2]) { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'elab'); t.setAttribute('x', (p.x + q.x) / 2); t.setAttribute('y', (p.y + q.y) / 2 - 4); t.textContent = e[2]; svg.appendChild(t); }
+        lines.push({ e, base, flow });
+      });
+      N.forEach((n) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `cnode ${n.k}${n.big ? ' big' : ''}`; b.style.left = n.x + 'px'; b.style.top = n.y + 'px';
+        b.innerHTML = `${n.label}<small>${n.sub}</small>`; b.dataset.id = n.id;
+        b.addEventListener('click', () => { sel = n.id; paint(); });
+        b.addEventListener('mouseenter', () => { hov = n.id; paint(); }); b.addEventListener('mouseleave', () => { hov = null; paint(); });
+        b.addEventListener('focus', () => { hov = n.id; paint(); }); b.addEventListener('blur', () => { hov = null; paint(); });
+        $('cmap').appendChild(b);
+      });
+      built = true;
+    }
+    function paint() {
+      lines.forEach(({ e, base, flow }) => {
+        const hot = [sel, hov].includes(e[0]) || [sel, hov].includes(e[1]);
+        base.setAttribute('class', 'edge' + (e[3] ? ' dash' : '') + (hot ? ' hot' : '')); flow.setAttribute('class', 'flow' + (hot ? ' hot' : ''));
+      });
+      $('cmap').querySelectorAll('.cnode').forEach((b) => b.classList.toggle('on', b.dataset.id === sel));
+      const n = by[sel];
+      $('cm-kind').textContent = K[n.k]; $('cm-label').textContent = n.label; $('cm-def').textContent = n.def; $('cm-where').textContent = n.where; katexTo($('cm-eq'), n.tex);
+      const act = $('cm-actions'); act.innerHTML = '';
+      const add = (label, pri, fn, href) => { const el = document.createElement(href ? 'a' : 'button'); el.className = 'btn' + (pri ? ' pri' : ''); el.textContent = label; if (href) { el.href = href; el.target = href.startsWith('../../player') ? '_top' : '_blank'; el.style.cssText = 'display:inline-flex;align-items:center;text-decoration:none'; } else { el.type = 'button'; el.addEventListener('click', fn); } act.appendChild(el); };
+      if (n.slide) add(`Ir a la diapositiva ${n.slide}`, true, () => go(n.slide - 1));
+      if (n.clase) add(`Abrir el capítulo ${n.clase}`, true, null, `../../player.html?clase=${n.clase}`);
+      if (n.lab) add('Abrir en AmpèreLab', false, null, LAB + n.lab);
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
+
+  // ── 12 · Línea de tiempo y glosario en tarjetas ──
+  sims.hist = (() => {
+    const X = { 1820: 250, 1831: 560, 1861: 820, 1865: 1060 };
+    const EV = [
+      { y: 1820, x: X[1820] - 90, who: 'Ørsted', what: 'Una corriente eléctrica desvía la aguja de una brújula: la electricidad produce magnetismo.', link: 'Capítulo 9.' },
+      { y: 1820, x: X[1820] + 90, who: 'Ampère', what: 'Dos corrientes paralelas se atraen o se repelen según su sentido. La ley de este capítulo lleva su nombre.', link: 'Diapositiva 3.' },
+      { y: 1831, x: X[1831], who: 'Faraday', what: 'Un campo magnético que cambia induce una corriente eléctrica.', link: 'Capítulo 11.' },
+      { y: '1861–62', x: X[1861], who: 'Maxwell', what: 'En «On Physical Lines of Force» añade a la ley de Ampère la corriente de desplazamiento.', link: 'Reto 14 del taller y capítulo 12.' },
+      { y: 1865, x: X[1865], who: 'Maxwell', what: 'Con la ley de Ampère corregida deduce la ecuación de las ondas electromagnéticas.', link: 'Capítulo 12.' },
+    ];
+    const G = [
+      ['Ley de Ampère', 'La circulación de B por un camino cerrado es μ₀ por la corriente neta que lo atraviesa.'],
+      ['Circulación', 'Integral ∮ B · dℓ alrededor de un camino cerrado; unidad T · m.'],
+      ['Camino amperiano', 'Camino cerrado imaginario elegido para aplicar la ley; no tiene que coincidir con ningún conductor.'],
+      ['Corriente encerrada', 'Suma, con signo, de las corrientes que atraviesan el camino.'],
+      ['Densidad de corriente J', 'Corriente por unidad de área de la sección, en A/m².'],
+      ['Densidad superficial K', 'Corriente por unidad de ancho de una lámina, en A/m.'],
+      ['Cable coaxial', 'Conductor interior rodeado por otro exterior, con corrientes opuestas; fuera no hay campo.'],
+      ['Solenoide', 'Bobina helicoidal larga; dentro produce un campo casi uniforme μ₀ n I.'],
+      ['Densidad de vueltas n', 'Vueltas por unidad de longitud de un solenoide, n = N / L.'],
+      ['Toroide', 'Solenoide cerrado en forma de anillo; su campo queda en el núcleo.'],
+      ['Efecto de borde', 'Diferencia con el modelo ideal cerca de los extremos de un solenoide finito.'],
+      ['Corriente de desplazamiento', 'Término ε₀ dΦ_E/dt que Maxwell añadió a la ley de Ampère para campos que cambian.'],
+    ];
+    const KEY = 'e10_c10_glosario';
+    let ev = 1, back = false, st = null, built = false;
+    const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.queue)) return s; } catch (_) {} return { queue: G.map((_, i) => i), known: [] }; };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+    function build() {
+      const tl = $('tline');
+      Object.entries(X).forEach(([y, x]) => { const d = document.createElement('span'); d.className = 'tdot'; d.style.left = x + 'px'; tl.appendChild(d); const t = document.createElement('span'); t.className = 'tyear'; t.style.left = x + 'px'; t.textContent = y === '1861' ? '1861–62' : y; tl.appendChild(t); });
+      EV.forEach((e, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tev'; b.style.left = e.x + 'px'; b.innerHTML = `<b>${e.y}</b>${e.who}`; b.addEventListener('click', () => { ev = i; paint(); }); tl.appendChild(b); });
+      st = load();
+      $('fc-card').addEventListener('click', () => { back = !back; paint(); }); $('fc-flip').addEventListener('click', () => { back = !back; paint(); });
+      $('fc-again').addEventListener('click', () => { if (!st.queue.length) return; const c = st.queue.shift(); st.queue.splice(Math.min(3, st.queue.length), 0, c); back = false; save(); paint(); });
+      $('fc-ok').addEventListener('click', () => { if (!st.queue.length) return; st.known.push(st.queue.shift()); back = false; save(); paint(); });
+      $('fc-reset').addEventListener('click', () => { st = { queue: G.map((_, i) => i), known: [] }; back = false; save(); paint(); });
+      built = true;
+    }
+    function paint() {
+      $('tline').querySelectorAll('.tev').forEach((b, i) => b.classList.toggle('on', i === ev));
+      const e = EV[ev]; $('tl-text').innerHTML = `<b style="color:var(--e10-primary)">${e.who}, ${e.y}.</b> ${e.what} <span style="color:var(--e10-muted)">${e.link}</span>`;
+      const card = $('fc-card');
+      if (!st.queue.length) { card.className = 'fcard back'; $('fc-side').textContent = 'GLOSARIO COMPLETO'; $('fc-text').textContent = 'Dominaste las 12 palabras clave. Pulsa «Empezar de nuevo» para repasar.'; }
+      else { const c = G[st.queue[0]]; card.className = 'fcard' + (back ? ' back' : ''); $('fc-side').textContent = back ? 'DEFINICIÓN' : 'TÉRMINO'; $('fc-text').textContent = back ? c[1] : c[0]; }
+      $('fc-count').textContent = `por repasar ${st.queue.length} · dominadas ${st.known.length} de ${G.length}`;
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
+
+  // ── Navegación ──
+  const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
+  const onShow = { 1: () => sims.cover.show(), 2: sims.forma.draw, 3: sims.ley.draw, 4: sims.maz.draw, 5: sims.cx.draw, 6: sims.sol.draw, 7: sims.tor.draw, 9: sims.tree.draw, 10: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; }, 11: sims.cmap.draw, 12: sims.hist.draw };
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); if (cur === 0) sims.cover.hide();
+    cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`; $('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
+  }
+  $('nav-prev').addEventListener('click', () => go(cur - 1)); $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1); });
+  $('nav-fs').addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {}); else document.exitFullscreen?.(); });
+  const print = () => { Object.values(sims).forEach((s) => s.draw && s.draw()); setTimeout(() => window.print(), 150); };
+  $('nav-print').addEventListener('click', print); $('btn-print2').addEventListener('click', print);
+  window.addEventListener('beforeprint', () => Object.values(sims).forEach((s) => s.draw && s.draw()));
+
+  // ── Escala al tamaño de la ventana ──
+  function fit() { const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720); $('stage').style.transform = `scale(${s})`; }
+  window.addEventListener('resize', fit); fit();
+
+  window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  window.addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1)); if (isFinite(n) && n - 1 !== cur) go(n - 1); });
+  slides[0].classList.add('on');
+  window.__c10 = { sims, go };
+})();
+</script>
+</body>
+</html>
