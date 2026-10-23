@@ -287,27 +287,55 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 
 <!-- 6 · ESPIRA -->
 <section class="slide" data-n="6">
-  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Ejemplo resuelto</span></div>
-  <h2>Espira circular: el campo sobre su eje</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Deducción y Reto</span></div>
+  <h2>Espira circular: deducción en el eje y dos caminos</h2>
   <div class="row">
-    <div class="col" style="width:500px">
-      <canvas class="sim" id="cv-esp" width="500" height="320" aria-label="Gráfica del campo en el eje de la espira en función de z"></canvas>
+    <div class="col" style="width:440px">
+      <canvas class="sim" id="cv-esp" width="440" height="260" aria-label="Gráfica del campo en el eje de la espira en función de z"></canvas>
       <div class="ctrl no-print">
         <label for="es-r">R</label><input id="es-r" type="range" min="2" max="20" value="10"><output id="es-r-o">10 cm</output>
         <label for="es-i">I</label><input id="es-i" type="range" min="0.5" max="10" step="0.5" value="2"><output id="es-i-o">2,0 A</output>
         <label for="es-z">z</label><input id="es-z" type="range" min="-30" max="30" value="10"><output id="es-z-o">10 cm</output>
       </div>
-    </div>
-    <div class="col" style="flex:1">
-      <div class="soft" style="text-align:center;font-size:24px">\[ B_z=\frac{\mu_0 I R^{2}}{2\,(R^{2}+z^{2})^{3/2}},\qquad B_0=\frac{\mu_0 I}{2R} \]</div>
       <div class="read"><div>B en el centro<b id="es-b0">—</b></div><div>B en z<b id="es-bz">—</b></div><div>B(z)/B₀<b id="es-ratio">—</b></div></div>
-      <div class="reto" id="reto-esp">
-        <span class="mono" style="font-size:12px;color:var(--e10-muted)">EJERCICIO GENERADO</span>
-        <span class="q" id="re-q"></span>
-        <div class="ans"><input id="re-in" inputmode="decimal" placeholder="B en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="re-ck">Comprobar</button><button type="button" class="btn" id="re-new">Nuevo</button></div>
-        <span class="fb" id="re-fb"></span>
-        <button type="button" class="btn" id="re-sb" style="align-self:flex-start">Ver solución</button>
-        <div class="sol" id="re-sol"></div>
+      <div class="reto" id="reto-esp" style="padding:8px 10px;gap:6px">
+        <span class="q" id="re-q" style="font-size:13.5px"></span>
+        <div class="ans"><input id="re-in" inputmode="decimal" placeholder="µT" style="min-height:32px;font-size:14px" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="re-ck" style="min-height:32px;padding:0 8px">OK</button><button type="button" class="btn" id="re-new" style="min-height:32px;padding:0 8px">Nuevo</button></div>
+        <span class="fb" id="re-fb" style="font-size:13px;min-height:16px"></span>
+        <button type="button" class="btn" id="re-sb" style="align-self:flex-start;min-height:28px;padding:2px 8px;font-size:12px">Ver solución</button>
+        <div class="sol" id="re-sol" style="font-size:12.5px;padding:6px 10px"></div>
+      </div>
+    </div>
+    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
+      <div class="steps" style="font-size:14px;gap:4px">
+        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell\perp\hat r \implies |d\vec\ell\times\hat r|=d\ell\).</span></div>
+        <div><span class="n">2</span><span><b>Variables y simetría 3D:</b> \(r=\sqrt{R^2+z^2}\). Por simetría circular \(\oint d\vec B_\perp=\vec 0\): solo sobrevive \(dB_z=dB\cos\alpha\).</span></div>
+        <div><span class="n">3</span><span><b>Cambio de variable:</b> \(\cos\alpha=\dfrac{R}{r} \implies dB_z=\dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}d\ell\).</span></div>
+        <div><span class="n">4</span><span><b>Constantes fuera:</b> \(B_z=\dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}\displaystyle\oint d\ell\).</span></div>
+      </div>
+      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <b style="font-size:13px;color:var(--e10-primary)">5 · Dos caminos para resolver:</b>
+          <div class="no-print" style="display:flex;gap:4px">
+            <button type="button" class="btn on" id="btn-esp-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Perímetro 2πR</button>
+            <button type="button" class="btn" id="btn-esp-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Angular dφ</button>
+          </div>
+        </div>
+        <div id="esp-a-box" style="font-size:12.5px;line-height:1.35">
+          Por longitud de circunferencia completa: \(\displaystyle\oint d\ell = 2\pi R\).<br>
+          \(B_z = \dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}(2\pi R) = \dfrac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}}\)
+        </div>
+        <div id="esp-b-box" style="display:none;font-size:12.5px;line-height:1.35">
+          Por parametrización azimutal: \(d\ell=R\,d\phi\) con \(\phi\in[0, 2\pi]\):<br>
+          \(\displaystyle\int_0^{2\pi} R\,d\phi = R[\phi]_0^{2\pi} = 2\pi R\). Resultado idéntico garantizado.
+        </div>
+      </div>
+      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
+        <div><b>6 · Centro (\(z=0\)):</b> \(B_0=\dfrac{\mu_0 I}{2R}\)</div>
+        <div style="font-size:14.5px;font-weight:600">Dipolo (\(z\gg R\)): \(B_z\approx\dfrac{\mu_0 \mu_{\text{mag}}}{2\pi z^3}\)</div>
+      </div>
+      <div class="tipbox" style="font-size:12px;padding:6px 10px">
+        <b>7 · Pregunta de rigor:</b> Si \(R\) se duplica con \(I\) constante, ¿qué le ocurre a \(B_0\) en el centro? <i>Se reduce exactamente a la mitad (\(B\propto 1/R\)).</i>
       </div>
     </div>
   </div>
@@ -316,24 +344,48 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 
 <!-- 7 · ARCOS -->
 <section class="slide" data-n="7">
-  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Concepto</span></div>
-  <h2>Arcos: cada grado de arco aporta lo mismo al centro</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
+  <h2>Arcos de corriente: paso a paso y dos caminos</h2>
   <div class="row">
-    <div class="col" style="width:430px">
-      <canvas class="sim" id="cv-arco" width="430" height="380" aria-label="Arco de corriente de ángulo theta y su centro"></canvas>
+    <div class="col" style="width:420px">
+      <canvas class="sim" id="cv-arco" width="420" height="340" aria-label="Arco de corriente de ángulo theta y su centro"></canvas>
       <div class="ctrl no-print">
         <label for="ar-t">θ</label><input id="ar-t" type="range" min="10" max="360" value="120"><output id="ar-t-o">120°</output>
         <label for="ar-r">R</label><input id="ar-r" type="range" min="2" max="15" value="6"><output id="ar-r-o">6 cm</output>
       </div>
-    </div>
-    <div class="col" style="flex:1">
-      <div class="soft" style="text-align:center;font-size:26px">\[ B=\frac{\mu_0 I\,\theta}{4\pi R}\qquad(\theta\ \text{en radianes}) \]</div>
-      <div class="steps" style="font-size:17px">
-        <div><span class="n">1</span><span>Todos los elementos están a la misma distancia \(R\) del centro y \(d\vec\ell\perp\hat r\): \(\sin\varphi=1\).</span></div>
-        <div><span class="n">2</span><span>Todos los \(d\vec B\) apuntan igual: \(B=\dfrac{\mu_0 I}{4\pi R^{2}}\displaystyle\int d\ell=\dfrac{\mu_0 I}{4\pi R^{2}}\,R\theta\).</span></div>
-      </div>
       <div class="read"><div>B en el centro (I=9 A)<b id="ar-b">—</b></div><div>Fracción de espira<b id="ar-f">—</b></div><div>Espira completa<b id="ar-full">—</b></div></div>
-      <div class="warn"><b>Ojo.</b> Los tramos rectos alineados con el centro no aportan nada (\(d\vec\ell\parallel\hat r\)), pero los tramos rectos <i>no</i> alineados sí: en una horquilla suman \(2\times\dfrac{\mu_0 I}{4\pi R}\).</div>
+    </div>
+    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
+      <div class="steps" style="font-size:14px;gap:4px">
+        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\).</span></div>
+        <div><span class="n">2</span><span><b>Variables en el plano:</b> Radio constante \(r=R\). El vector tangente cumple \(d\vec\ell\perp\hat r\) (\(\sin 90^\circ=1\)); por regla de la mano derecha todos los \(d\vec B\) apuntan hacia dentro (\(\otimes\)).</span></div>
+        <div><span class="n">3</span><span><b>Reemplazo de magnitudes:</b> \(dB=\dfrac{\mu_0 I}{4\pi R^2} d\ell\).</span></div>
+        <div><span class="n">4</span><span><b>Constantes fuera:</b> \(B=\dfrac{\mu_0 I}{4\pi R^2}\displaystyle\int_{\text{arco}} d\ell\).</span></div>
+      </div>
+      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <b style="font-size:13px;color:var(--e10-primary)">5 · Dos caminos para resolver:</b>
+          <div class="no-print" style="display:flex;gap:4px">
+            <button type="button" class="btn on" id="btn-arc-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Longitud s = Rθ</button>
+            <button type="button" class="btn" id="btn-arc-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Variable angular</button>
+          </div>
+        </div>
+        <div id="arc-a-box" style="font-size:12.5px;line-height:1.35">
+          Por longitud de arco circular: \(s = R\theta\) (con \(\theta\) en radianes).<br>
+          \(B = \dfrac{\mu_0 I}{4\pi R^2} (R\theta) = \dfrac{\mu_0 I\,\theta}{4\pi R}\)
+        </div>
+        <div id="arc-b-box" style="display:none;font-size:12.5px;line-height:1.35">
+          Por diferencial angular \(d\ell = R\,d\theta'\), integrando de \(0\) a \(\theta\):<br>
+          \(\displaystyle\int_0^\theta R\,d\theta' = R[\theta']_0^\theta = R\theta \implies B = \dfrac{\mu_0 I\,\theta}{4\pi R}\).
+        </div>
+      </div>
+      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
+        <div><b>6 · Semicírculo (\(\theta=\pi\)):</b> \(B=\dfrac{\mu_0 I}{4R}\)</div>
+        <div style="font-size:14.5px;font-weight:600">Espira (\(\theta=2\pi\)): \(B=\dfrac{\mu_0 I}{2R}\)</div>
+      </div>
+      <div class="warn" style="font-size:12px;padding:6px 10px">
+        <b>7 · Pregunta de rigor:</b> ¿Por qué los cables rectos alineados hacia el centro no aportan al campo? <i>Porque \(d\vec\ell\parallel\hat r \implies d\vec\ell\times\hat r=\vec 0\).</i>
+      </div>
     </div>
   </div>
   <div class="foot"><span>Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 13</span></div>
@@ -726,8 +778,20 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       renderMath($('re-sol'));
     }
     $('re-new').addEventListener('click', nuevo); $('re-sb').addEventListener('click', () => $('re-sol').classList.toggle('show'));
-    $('re-ck').addEventListener('click', () => { const v = parseFloat($('re-in').value.replace(',', '.')); if (!isFinite(v)) { $('re-fb').textContent = 'Escribe un número en microteslas.'; return; } const ok = Math.abs(v - E.B * 1e6) <= 0.03 * E.B * 1e6 + 0.01; $('re-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b>' : '<b style="color:var(--e10-danger)">Aún no.</b> Usa metros y revisa el exponente 3/2.'; });
+    $('re-ck')?.addEventListener('click', () => { const v = parseFloat($('re-in').value.replace(',', '.')); if (!isFinite(v)) { $('re-fb').textContent = 'Escribe un número en microteslas.'; return; } const ok = Math.abs(v - E.B * 1e6) <= 0.03 * E.B * 1e6 + 0.01; $('re-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b>' : '<b style="color:var(--e10-danger)">Aún no.</b> Usa metros y revisa el exponente 3/2.'; });
     nuevo();
+    $('btn-esp-a')?.addEventListener('click', () => {
+      $('esp-a-box').style.display = 'block';
+      $('esp-b-box').style.display = 'none';
+      $('btn-esp-a').classList.add('on');
+      $('btn-esp-b').classList.remove('on');
+    });
+    $('btn-esp-b')?.addEventListener('click', () => {
+      $('esp-a-box').style.display = 'none';
+      $('esp-b-box').style.display = 'block';
+      $('btn-esp-b').classList.add('on');
+      $('btn-esp-a').classList.remove('on');
+    });
     return { draw };
   })();
 
@@ -748,6 +812,18 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       dotSym(ctx, cx, cy, 10 + 14 * Math.min(1, th / 360), false, col('vec-field')); text(ctx, 'B entra (corriente horaria)', cx - 90, cy + 46, col('vec-field'), "500 15px 'IBM Plex Sans', sans-serif");
     }
     bind('ar-t', (v) => v + '°', draw); bind('ar-r', (v) => v + ' cm', draw);
+    $('btn-arc-a')?.addEventListener('click', () => {
+      $('arc-a-box').style.display = 'block';
+      $('arc-b-box').style.display = 'none';
+      $('btn-arc-a').classList.add('on');
+      $('btn-arc-b').classList.remove('on');
+    });
+    $('btn-arc-b')?.addEventListener('click', () => {
+      $('arc-a-box').style.display = 'none';
+      $('arc-b-box').style.display = 'block';
+      $('btn-arc-b').classList.add('on');
+      $('btn-arc-a').classList.remove('on');
+    });
     return { draw };
   })();
 

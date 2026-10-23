@@ -63,6 +63,21 @@
             box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
         }
 
+        .student-input {
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .student-input:focus {
+            outline: none;
+            border-color: #B3246B;
+            background-color: #fff;
+        }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
@@ -94,7 +109,8 @@
                 Electro<span class="text-[#B3246B]">10.Easy</span> Workshop
             </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-[#B3246B] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar PDF</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#B3246B] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar PDF Taller</button>
+            <button onclick="exportEntregaPDF()" class="toolbar-btn bg-[#0B8CA8] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#08758C]">Exportar Solo Entrega</button>
             <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
@@ -112,7 +128,7 @@
         </div>
         <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 9: Ley de Biot-Savart</h2>
         <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
-            Metodología analítica y pedagógica rigurosa: desde el elemento infinitesimal de corriente hasta la integración por dos caminos (sustitución trigonométrica y tablas).
+            Metodología analítica y pedagógica rigurosa: deducciones completas paso a paso (hilo recto, espira circular y arcos), resolución por dos caminos y actividad práctica de clase para entregar.
         </p>
         <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
             <span>Guía Oficial: 10E-M9</span>
@@ -123,7 +139,7 @@
 
     <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <!-- METODOLOGÍA MARCO -->
+        <!-- METODOLOGÍA MARCO UNIVERSAL -->
         <div class="bg-gradient-to-r from-pink-50 via-white to-cyan-50 p-5 rounded-2xl border border-pink-100 shadow-sm">
             <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
                 📐 El Algoritmo Universal de Resolución (7 Pasos)
@@ -134,19 +150,21 @@
                 <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">3. Cambio</b>Expresar en 1 variable</div>
                 <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">4. Constantes</b>Sacar fuera de \(\int\)</div>
                 <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">5. 2 Caminos</b>Trigonométrico vs Tablas</div>
-                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">6. Solución</b>Límites e hilo infinito</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">6. Solución</b>Límites y dirección</div>
                 <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#B3246B] block mb-1">7. Retos</b>Preguntas de rigor</div>
             </div>
         </div>
 
-        <!-- PROBLEMA 1: DEDUCCIÓN MAESTRA DEL HILO RECTO -->
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1: SEGMENTO FINITO E HILO INFINITO -->
+        <!-- ========================================== -->
         <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
             <div class="flex justify-between items-start border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-3">
                     <span class="bg-[#B3246B] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
-                    <h3 class="font-bold text-slate-900 text-lg">Deducción Maestra: Segmento Finito de Hilo e Hilo Infinito</h3>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Segmento Finito de Hilo e Hilo Infinito</h3>
                 </div>
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía</span>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
             </div>
 
             <div class="text-slate-700 text-sm leading-relaxed">
@@ -155,7 +173,6 @@
 
             <!-- Paso a Paso Detallado -->
             <div class="space-y-4 text-xs md:text-sm">
-                
                 <!-- Paso 1 -->
                 <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
                     <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
@@ -166,7 +183,7 @@
                         \[ d\vec B = \frac{\mu_0}{4\pi} \frac{I\, d\vec\ell \times \hat r}{r^2} = \frac{\mu_0}{4\pi} \frac{I\, d\vec\ell \times \vec r}{r^3} \]
                     </div>
                     <p class="mt-2 text-slate-600">
-                        Donde \(I\, d\vec\ell\) es el elemento fuente de corriente, \(\vec r = \vec r_P - \vec r'\) es el vector de posición relativa desde la fuente hasta el punto de observación \(P\), y \(r = |\vec r|\) es la distancia euclidiana entre ellos.
+                        Donde \(I\, d\vec\ell\) es el elemento diferencial de corriente, \(\vec r = \vec r_P - \vec r'\) es el vector de posición relativa desde la fuente hasta el punto de observación \(P\), y \(r = |\vec r|\) es la distancia entre ambos.
                     </p>
                 </div>
 
@@ -176,48 +193,31 @@
                         <span class="step-badge">2</span>
                         <span>Dibujar las variables en el esquema: distancias, vectores, ángulos y dirección:</span>
                     </div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                        <!-- Diagrama SVG Profesional -->
                         <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-center">
                             <svg viewBox="0 0 320 220" class="w-full max-w-[300px] h-auto">
-                                <!-- Eje Y (Alambre) -->
                                 <line x1="80" y1="10" x2="80" y2="210" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4,4"/>
                                 <line x1="80" y1="35" x2="80" y2="185" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
-                                <!-- Flecha corriente I -->
                                 <line x1="80" y1="110" x2="80" y2="90" stroke="#B3246B" stroke-width="4"/>
                                 <polygon points="80,80 75,95 85,95" fill="#B3246B"/>
                                 <text x="60" y="90" font-size="12" font-weight="bold" fill="#B3246B">I</text>
-
-                                <!-- Elemento dy -->
                                 <rect x="76" y="130" width="8" height="18" fill="#ef4444" rx="2"/>
-                                <text x="40" y="142" font-size="11" font-weight="bold" fill="#ef4444">dℓ = dy ĵ</text>
-
-                                <!-- Eje perpendicular a P -->
+                                <text x="35" y="142" font-size="11" font-weight="bold" fill="#ef4444">dℓ = dy ĵ</text>
                                 <line x1="80" y1="100" x2="260" y2="100" stroke="#64748b" stroke-width="2"/>
                                 <text x="165" y="92" font-size="12" font-weight="bold" fill="#64748b">a</text>
-
-                                <!-- Punto P -->
                                 <circle cx="260" cy="100" r="5" fill="#0f172a"/>
                                 <text x="272" y="105" font-size="13" font-weight="bold" fill="#0f172a">P</text>
-                                <!-- Símbolo vector B entrando ⊗ -->
                                 <circle cx="260" cy="130" r="10" fill="#fdf2f8" stroke="#B3246B" stroke-width="2"/>
                                 <line x1="254" y1="124" x2="266" y2="136" stroke="#B3246B" stroke-width="2"/>
                                 <line x1="266" y1="124" x2="254" y2="136" stroke="#B3246B" stroke-width="2"/>
                                 <text x="275" y="134" font-size="11" font-weight="bold" fill="#B3246B">d<tspan font-style="italic">B</tspan> ⊗</text>
-
-                                <!-- Vector relativo r -->
                                 <line x1="80" y1="140" x2="260" y2="100" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
                                 <text x="160" y="132" font-size="12" font-weight="bold" fill="#0284c7">r = √(y² + a²)</text>
-
-                                <!-- Ángulo theta -->
                                 <path d="M 230,100 A 30,30 0 0 1 235,106" fill="none" stroke="#f59e0b" stroke-width="2"/>
                                 <text x="215" y="118" font-size="11" font-weight="bold" fill="#f59e0b">θ</text>
                                 <text x="92" y="125" font-size="11" fill="#64748b">y</text>
                             </svg>
                         </div>
-                        
-                        <!-- Definiciones vectoriales -->
                         <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
                             <p><strong>Vector elemento fuente:</strong> \(d\vec\ell = dy\,\hat\jmath\)</p>
                             <p><strong>Posición del punto \(P\):</strong> \(\vec r_P = a\,\hat\imath\)</p>
@@ -232,14 +232,13 @@
                     </div>
                 </div>
 
-                <!-- Paso 3 y 4: Reemplazar, cambio de variable y factorizar constantes -->
+                <!-- Paso 3 y 4 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
                         <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
                             <span class="step-badge">3</span>
                             <span>Reemplazar y cambio de variables:</span>
                         </div>
-                        <p class="text-xs text-slate-600 mb-2">Relacionamos la posición \(y\) y la distancia \(r\) con el ángulo \(\theta\):</p>
                         <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono space-y-1">
                             <p>\(y = a \tan\theta\)</p>
                             <p>\(r = \dfrac{a}{\cos\theta} = a \sec\theta\)</p>
@@ -252,7 +251,6 @@
                             <span class="step-badge">4</span>
                             <span>Sacar las constantes de la integral:</span>
                         </div>
-                        <p class="text-xs text-slate-600 mb-2">Tanto \(I\) como la distancia perpendicular \(a\) son constantes fijas:</p>
                         <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-center">
                             \[ B = \frac{\mu_0 I a}{4\pi} \int_{y_1}^{y_2} \frac{dy}{(y^2 + a^2)^{3/2}} \]
                         </div>
@@ -272,244 +270,592 @@
                         </div>
                     </div>
 
-                    <!-- Panel Camino A -->
-                    <div id="cam-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-3">
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B3246B]">
-                            <span>Deducción Trigonométrica Analítica Completa</span>
-                        </div>
-                        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-700">
-                            <li>Diferenciamos la sustitución: \(y = a\tan\theta \implies dy = a\sec^2\theta\, d\theta\).</li>
-                            <li>Transformamos el denominador: 
-                                \((y^2 + a^2)^{3/2} = (a^2\tan^2\theta + a^2)^{3/2} = [a^2(1 + \tan^2\theta)]^{3/2} = [a^2\sec^2\theta]^{3/2} = a^3\sec^3\theta\).
-                            </li>
-                            <li>Sustituimos en la integral:
-                                \[ \int \frac{dy}{(y^2 + a^2)^{3/2}} = \int \frac{a\sec^2\theta\, d\theta}{a^3\sec^3\theta} = \frac{1}{a^2} \int \frac{d\theta}{\sec\theta} = \frac{1}{a^2} \int \cos\theta\, d\theta \]
-                            </li>
-                            <li>La integral inmediata es \(\int \cos\theta\, d\theta = \sin\theta\). Reensamblando con las constantes:
-                                \[ B = \frac{\mu_0 I a}{4\pi} \cdot \left[ \frac{\sin\theta}{a^2} \right]_{\theta_1}^{\theta_2} = \frac{\mu_0 I}{4\pi a} (\sin\theta_2 - \sin\theta_1) \]
-                            </li>
-                        </ol>
+                    <div id="cam-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Diferencial: \(dy = a\sec^2\theta\, d\theta\).</p>
+                        <p>2. Denominador: \((y^2+a^2)^{3/2} = [a^2(\tan^2\theta+1)]^{3/2} = a^3\sec^3\theta\).</p>
+                        <p>3. Integral simplificada: \(\int \frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta} = \frac{1}{a^2} \int \cos\theta\, d\theta = \frac{1}{a^2}\sin\theta\).</p>
+                        <p>4. Reensamblado con constantes: \(B = \frac{\mu_0 I a}{4\pi}\left[\frac{\sin\theta}{a^2}\right]_{\theta_1}^{\theta_2} = \frac{\mu_0 I}{4\pi a}(\sin\theta_2 - \sin\theta_1)\).</p>
                     </div>
 
-                    <!-- Panel Camino B -->
-                    <div id="cam-b" class="hidden bg-white p-4 rounded-xl border border-cyan-200 space-y-3">
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B8CA8]">
-                            <span>Resolución Directa por Tablas de Integración de Física</span>
-                        </div>
-                        <p class="text-xs text-slate-700">
-                            Utilizamos la integral estándar catalogada en manuales (ej. Sears-Zemansky o Gradshteyn):
-                        </p>
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
-                            \[ \int \frac{dy}{(y^2 + a^2)^{3/2}} = \frac{y}{a^2\sqrt{y^2 + a^2}} + C \]
-                        </div>
-                        <p class="text-xs text-slate-700">
-                            Multiplicando por la constante exterior \(\frac{\mu_0 I a}{4\pi}\):
-                        </p>
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
-                            \[ B = \frac{\mu_0 I a}{4\pi} \left[ \frac{y}{a^2\sqrt{y^2 + a^2}} \right]_{y_1}^{y_2} = \frac{\mu_0 I}{4\pi a} \left[ \frac{y}{\sqrt{y^2 + a^2}} \right]_{y_1}^{y_2} \]
-                        </div>
-                        <p class="text-xs text-slate-600 italic">
-                            💡 Observe que geométricamente \(\dfrac{y}{\sqrt{y^2 + a^2}} = \sin\theta\), demostrando la equivalencia perfecta de ambos métodos.
-                        </p>
+                    <div id="cam-b" class="hidden bg-white p-4 rounded-xl border border-cyan-200 space-y-2 text-xs text-slate-700">
+                        <p>Fórmula estándar de tabla de cálculo: \(\int \frac{dy}{(y^2+a^2)^{3/2}} = \frac{y}{a^2\sqrt{y^2+a^2}} + C\).</p>
+                        <p>Evaluando en los límites: \(B = \frac{\mu_0 I a}{4\pi} \left[ \frac{y}{a^2\sqrt{y^2+a^2}} \right]_{y_1}^{y_2} = \frac{\mu_0 I}{4\pi a} \left[ \frac{y}{\sqrt{y^2+a^2}} \right]_{y_1}^{y_2}\).</p>
+                        <p class="text-slate-500 italic">Como \(\frac{y}{\sqrt{y^2+a^2}} = \sin\theta\), ambos caminos coinciden con exactitud matemática total.</p>
                     </div>
                 </div>
 
-                <!-- Paso 6: Solución y Límites -->
-                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
-                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
-                        <span class="step-badge bg-emerald-600">6</span>
-                        <span>Dar la Solución y Evaluar Casos Límite:</span>
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Solución y Límite de Hilo Infinito:</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-200 text-center font-mono font-bold text-emerald-900 my-1">
+                            \[ B_{\text{infinito}} = \frac{\mu_0 I}{2\pi a} \quad (\theta_1 = -90^\circ, \theta_2 = 90^\circ) \]
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                        <div class="bg-white p-3 rounded-xl border border-emerald-200">
-                            <span class="text-xs font-bold text-slate-400 block mb-1 uppercase tracking-wider">Segmento Finito Arbitrario</span>
-                            <div class="text-center font-mono text-sm text-emerald-800 font-bold my-1">
-                                \[ B = \frac{\mu_0 I}{4\pi a} (\sin\theta_2 - \sin\theta_1) \]
-                            </div>
-                            <span class="text-[11px] text-slate-500 block">Ángulos medidos desde la perpendicular \(a\).</span>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor:</span>
                         </div>
-                        <div class="bg-white p-3 rounded-xl border border-emerald-200">
-                            <span class="text-xs font-bold text-emerald-600 block mb-1 uppercase tracking-wider">Hilo Infinitamente Largo</span>
-                            <div class="text-center font-mono text-sm text-emerald-800 font-bold my-1">
-                                \[ B = \frac{\mu_0 I}{2\pi a} \]
-                            </div>
-                            <span class="text-[11px] text-slate-500 block">Límite \(y \to \pm\infty \iff \theta_1 = -90^\circ, \theta_2 = +90^\circ\).</span>
-                        </div>
+                        <p class="text-xs text-slate-700">¿Qué pasa si el punto \(P\) se sitúa exactamente sobre la prolongación del hilo (\(a = 0\))?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            El campo es idénticamente cero porque \(d\vec\ell \parallel \hat r \implies d\vec\ell \times \hat r = \vec 0\).
+                        </p>
                     </div>
                 </div>
-
-                <!-- Paso 7: Preguntas Adicionales -->
-                <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
-                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
-                        <span class="step-badge bg-amber-500">7</span>
-                        <span>Preguntas Adicionales y Retos de Rigor Físico:</span>
-                    </div>
-                    <div class="space-y-2 mt-2">
-                        <div class="bg-white p-3 rounded-lg border border-amber-200 text-xs">
-                            <p class="font-semibold text-slate-800">Q1: ¿Por qué el campo del hilo infinito decae como \(1/a\) en vez de \(1/a^2\)?</p>
-                            <button onclick="toggleHint(this)" class="text-[#B3246B] font-bold mt-1 text-[11px] hover:underline">Ver Justificación Física</button>
-                            <div class="hint-content mt-1 text-slate-600 bg-slate-50 p-2 rounded">
-                                Cada elemento puntual decae con \(1/r^2\). Sin embargo, al integrar sobre una dimensión infinita, los elementos distantes siguen aportando y el efecto acumulado disminuye la caída en una dimensión, pasando de ley de cuadrado inverso (fuente puntual 0D) a ley inversa simple (fuente lineal 1D).
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-3 rounded-lg border border-amber-200 text-xs">
-                            <p class="font-semibold text-slate-800">Q2: ¿Cuánto vale el campo producido por un hilo semi-infinito que empieza en \(y=0\) y se extiende a \(y \to +\infty\)?</p>
-                            <button onclick="toggleHint(this)" class="text-[#B3246B] font-bold mt-1 text-[11px] hover:underline">Ver Justificación Física</button>
-                            <div class="hint-content mt-1 text-slate-600 bg-slate-50 p-2 rounded">
-                                \(\theta_1 = 0^\circ\) y \(\theta_2 = 90^\circ\). Por lo tanto: \(B = \frac{\mu_0 I}{4\pi a} (\sin 90^\circ - \sin 0^\circ) = \frac{\mu_0 I}{4\pi a}\). Es exactamente la mitad del campo de un hilo infinito.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
 
-        <!-- PROBLEMA 2: ESPIRA CIRCULAR SOBRE EL EJE -->
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2: ESPIRA CIRCULAR PASO A PASO    -->
+        <!-- ========================================== -->
         <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
             <div class="flex justify-between items-start border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-3">
                     <span class="bg-[#0B8CA8] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
-                    <h3 class="font-bold text-slate-900 text-lg">Espira Circular: Campo sobre el Eje y Dipolo Magnético</h3>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Espira Circular sobre el Eje y en el Centro</h3>
                 </div>
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Simetría 3D</span>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
             </div>
 
             <div class="text-slate-700 text-sm leading-relaxed">
-                <strong>Enunciado:</strong> Una espira circular de radio \(R\) transporta una corriente \(I\). Determine la expresión analítica del campo magnético \(\vec B\) en un punto \(P\) situado sobre el eje de simetría perpendicular al plano de la espira (eje \(z\)), a una distancia \(z\) del centro.
+                <strong>Enunciado:</strong> Una espira circular de radio \(R\) ubicada en el plano \(xy\) transporta una corriente estacionaria \(I\). Obtenga mediante el algoritmo de 7 pasos el campo magnético \(\vec B\) en un punto arbitrario \(P = (0, 0, z)\) sobre su eje de simetría axial, y demuestre los casos límites para el centro (\(z=0\)) y para grandes distancias (\(z \gg R\)).
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <!-- SVG Espira en el eje -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex justify-center">
-                    <svg viewBox="0 0 280 200" class="w-full max-w-[260px] h-auto">
-                        <!-- Eje Z -->
-                        <line x1="20" y1="100" x2="260" y2="100" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,3"/>
-                        <text x="250" y="90" font-size="11" font-weight="bold" fill="#64748b">Eje z</text>
-
-                        <!-- Espira en perspectiva (elipse) -->
-                        <ellipse cx="80" cy="100" rx="20" ry="60" fill="none" stroke="#0f172a" stroke-width="3"/>
-                        <!-- Flecha corriente en espira -->
-                        <polygon points="100,95 100,105 108,100" fill="#B3246B"/>
-                        <text x="105" y="85" font-size="11" font-weight="bold" fill="#B3246B">I</text>
-
-                        <!-- Radio R -->
-                        <line x1="80" y1="100" x2="80" y2="40" stroke="#64748b" stroke-width="2"/>
-                        <text x="86" y="70" font-size="11" font-weight="bold" fill="#64748b">R</text>
-
-                        <!-- Elemento dL en la parte superior -->
-                        <circle cx="80" cy="40" r="4" fill="#ef4444"/>
-                        <text x="70" y="30" font-size="11" font-weight="bold" fill="#ef4444">dℓ</text>
-
-                        <!-- Punto P en el eje -->
-                        <circle cx="210" cy="100" r="4" fill="#0f172a"/>
-                        <text x="208" y="118" font-size="12" font-weight="bold" fill="#0f172a">P</text>
-                        <text x="145" y="115" font-size="11" font-weight="bold" fill="#64748b">z</text>
-
-                        <!-- Vector r desde dL hasta P -->
-                        <line x1="80" y1="40" x2="210" y2="100" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
-                        <text x="135" y="60" font-size="11" font-weight="bold" fill="#0284c7">r = √(R² + z²)</text>
-
-                        <!-- Vector dB y componente dBz -->
-                        <line x1="210" y1="100" x2="245" y2="75" stroke="#ef4444" stroke-width="2"/>
-                        <polygon points="245,75 237,78 241,85" fill="#ef4444"/>
-                        <text x="245" y="70" font-size="11" font-weight="bold" fill="#ef4444">d<tspan font-style="italic">B</tspan></text>
-
-                        <!-- Componente dBz -->
-                        <line x1="210" y1="100" x2="245" y2="100" stroke="#0B8CA8" stroke-width="2.5"/>
-                        <polygon points="245,100 238,97 238,103" fill="#0B8CA8"/>
-                        <text x="230" y="116" font-size="11" font-weight="bold" fill="#0B8CA8">d<tspan font-style="italic">B<tspan font-size="8">z</tspan></tspan></text>
-                    </svg>
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge bg-[#0B8CA8]">1</span>
+                        <span>Partir de la Ley de Biot-Savart para un elemento infinitesimal de la espira:</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ d\vec B = \frac{\mu_0 I}{4\pi} \frac{d\vec\ell \times \hat r}{r^2} \]
+                    </div>
+                    <p class="mt-2 text-slate-600">
+                        Nótese que para cualquier elemento \(d\vec\ell\) en la circunferencia, el vector tangente es rigurosamente perpendicular al vector relativo \(\hat r\) que une el elemento con el punto sobre el eje: \(d\vec\ell \perp \hat r \implies |d\vec\ell \times \hat r| = d\ell \sin(90^\circ) = d\ell\).
+                    </p>
                 </div>
 
-                <!-- Desglose conceptual -->
-                <div class="space-y-3 text-xs md:text-sm">
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <strong class="text-slate-900 block mb-1">1. Cancelación por Simetría:</strong>
-                        <p class="text-slate-600 text-xs">
-                            Para cada elemento \(d\vec\ell\), existe un elemento diametralmente opuesto cuyas componentes perpendiculares al eje se anulan mutuamente:
-                            \[ \oint d\vec B_\perp = 0 \implies \vec B = \left( \oint dB_z \right) \hat k \]
-                        </p>
+                <!-- Paso 2: Esquema vectorial y simetría 3D -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge bg-[#0B8CA8]">2</span>
+                        <span>Dibujar variables en el esquema y analizar la simetría 3D:</span>
                     </div>
-
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <strong class="text-slate-900 block mb-1">2. Factorización y Dos Formas de Integrar:</strong>
-                        <p class="text-slate-600 text-xs">
-                            \(dB_z = dB \cos\alpha = \frac{\mu_0 I}{4\pi r^2} d\ell \cdot \frac{R}{r} = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} d\ell\). Como \(R\) y \(z\) son constantes:
-                        </p>
-                        <div class="bg-white p-2 rounded border border-slate-200 mt-2 text-center font-mono text-xs">
-                            \(B_z = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} \oint d\ell = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} (2\pi R)\)
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-center">
+                            <svg viewBox="0 0 300 210" class="w-full max-w-[280px] h-auto">
+                                <line x1="20" y1="110" x2="280" y2="110" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,3"/>
+                                <text x="270" y="100" font-size="11" font-weight="bold" fill="#64748b">Eje z</text>
+                                <!-- Espira en perspectiva -->
+                                <ellipse cx="80" cy="110" rx="22" ry="65" fill="none" stroke="#0f172a" stroke-width="3"/>
+                                <polygon points="102,105 102,115 110,110" fill="#B3246B"/>
+                                <text x="108" y="95" font-size="11" font-weight="bold" fill="#B3246B">I</text>
+                                <!-- Radio R -->
+                                <line x1="80" y1="110" x2="80" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <text x="86" y="80" font-size="11" font-weight="bold" fill="#64748b">R</text>
+                                <!-- Elemento dL superior -->
+                                <circle cx="80" cy="45" r="4.5" fill="#ef4444"/>
+                                <text x="68" y="36" font-size="11" font-weight="bold" fill="#ef4444">dℓ</text>
+                                <!-- Elemento opuesto inferior -->
+                                <circle cx="80" cy="175" r="4.5" fill="#94a3b8"/>
+                                <text x="68" y="195" font-size="10" fill="#94a3b8">dℓ' (opuesto)</text>
+                                <!-- Punto P -->
+                                <circle cx="210" cy="110" r="4" fill="#0f172a"/>
+                                <text x="208" y="128" font-size="12" font-weight="bold" fill="#0f172a">P</text>
+                                <text x="145" y="125" font-size="11" font-weight="bold" fill="#64748b">z</text>
+                                <!-- Distancia r -->
+                                <line x1="80" y1="45" x2="210" y2="110" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
+                                <text x="135" y="70" font-size="11" font-weight="bold" fill="#0284c7">r = √(R² + z²)</text>
+                                <!-- Vector dB y componentes -->
+                                <line x1="210" y1="110" x2="250" y2="80" stroke="#ef4444" stroke-width="2"/>
+                                <polygon points="250,80 242,83 246,90" fill="#ef4444"/>
+                                <text x="250" y="75" font-size="11" font-weight="bold" fill="#ef4444">d<tspan font-style="italic">B</tspan></text>
+                                <!-- dBz axial -->
+                                <line x1="210" y1="110" x2="250" y2="110" stroke="#0B8CA8" stroke-width="2.5"/>
+                                <polygon points="250,110 243,107 243,113" fill="#0B8CA8"/>
+                                <text x="235" y="125" font-size="11" font-weight="bold" fill="#0B8CA8">d<tspan font-style="italic">B<tspan font-size="8">z</tspan></tspan></text>
+                                <!-- dB perp cancelada -->
+                                <line x1="210" y1="110" x2="210" y2="70" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+                                <text x="180" y="85" font-size="10" fill="#94a3b8">d<tspan font-style="italic">B</tspan>⊥ (se anula)</text>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Distancia fija a todos los elementos:</strong> \(r = \sqrt{R^2 + z^2}\)</p>
+                            <p><strong>Descomposición Vectorial:</strong> \(d\vec B = dB_z\,\hat k + d\vec B_\perp\)</p>
+                            <p><strong>Cancelación Simétrica:</strong>
+                                Por cada diferencial \(d\vec\ell\), existe otro diametralmente opuesto cuyas componentes radiales \(d\vec B_\perp\) apuntan en sentido contrario y se anulan exactamente al integrar:
+                                \[ \oint d\vec B_\perp = \vec 0 \implies \vec B = \left( \oint dB_z \right)\hat k \]
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Solución final y Límites -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm">
-                <div class="bg-cyan-50/50 p-3.5 rounded-xl border border-cyan-200">
-                    <span class="font-bold text-[#0B8CA8] block mb-1 uppercase tracking-wider text-xs">Centro de la Espira (\(z = 0\))</span>
-                    <div class="text-center font-mono font-bold text-slate-900 my-1 text-sm">
-                        \[ B_{\text{centro}} = \frac{\mu_0 I}{2R} \]
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#0B8CA8]">3</span>
+                            <span>Proyección axial y cambio de variable:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">El coseno del ángulo respecto al eje \(z\) es geométricamente \(\cos\alpha = \frac{R}{r}\):</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 font-mono text-xs">
+                            \[ dB_z = dB \cos\alpha = \frac{\mu_0 I d\ell}{4\pi r^2} \frac{R}{r} = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} d\ell \]
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#0B8CA8]">4</span>
+                            <span>Factorizar constantes fuera de la integral:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Como \(R\), \(z\) y \(I\) son constantes idénticas en toda la trayectoria:</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 font-mono text-xs text-center">
+                            \[ B_z = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} \oint d\ell \]
+                        </div>
                     </div>
                 </div>
-                <div class="bg-cyan-50/50 p-3.5 rounded-xl border border-cyan-200">
-                    <span class="font-bold text-[#0B8CA8] block mb-1 uppercase tracking-wider text-xs">Límite Lejano (\(z \gg R\)): Dipolo Magnético</span>
-                    <div class="text-center font-mono font-bold text-slate-900 my-1 text-sm">
-                        \[ B_z \approx \frac{\mu_0 \mu_{\text{mag}}}{2\pi z^3} \quad (\mu_{\text{mag}} = I \pi R^2) \]
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-cyan-200 rounded-xl p-4 bg-cyan-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#0B8CA8]">5</span>
+                            <span>Dos Caminos para Resolver la Integral:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-esp-a', 'cam-esp-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Integración de Longitud Directa</button>
+                            <button onclick="switchCamino('cam-esp-b', 'cam-esp-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Parametrización Angular Azimutal</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-esp-a" class="bg-white p-4 rounded-xl border border-cyan-200 space-y-2 text-xs text-slate-700">
+                        <p>1. La integral de línea cerrada representa la longitud total del perímetro circular: \(\oint d\ell = 2\pi R\).</p>
+                        <p>2. Multiplicando directamente por el factor constante:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono">
+                            \[ B_z = \frac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}} (2\pi R) = \frac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}} \]
+                        </div>
+                    </div>
+
+                    <div id="cam-esp-b" class="hidden bg-white p-4 rounded-xl border border-cyan-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Parametrizamos en coordenadas cilíndricas: el elemento diferencial de arco es \(d\ell = R\,d\phi\), donde el ángulo azimutal \(\phi\) recorre \([0, 2\pi]\).</p>
+                        <p>2. Evaluamos la integral definida:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono">
+                            \[ \oint d\ell = \int_0^{2\pi} R\,d\phi = R \left[ \phi \right]_0^{2\pi} = 2\pi R \]
+                        </div>
+                        <p>3. Conduce con absoluto rigor al mismo resultado algebraico.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Casos Límite: Centro y Dipolo Lejano:</span>
+                        </div>
+                        <div class="space-y-1 text-xs">
+                            <p><strong>En el centro (\(z=0\)):</strong> \(B_0 = \dfrac{\mu_0 I R^2}{2(R^2)^{3/2}} = \dfrac{\mu_0 I}{2R}\).</p>
+                            <p><strong>Lejos (\(z \gg R\)):</strong> \((R^2+z^2)^{3/2} \approx z^3 \implies B_z \approx \dfrac{\mu_0 I \pi R^2}{2\pi z^3} = \dfrac{\mu_0 \mu_{\text{mag}}}{2\pi z^3}\).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor:</span>
+                        </div>
+                        <p class="text-xs text-slate-700">¿Por qué el campo decae con \(1/z^3\) a gran distancia en vez de \(1/z^2\)?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            Porque la corriente forma un circuito cerrado sin polos magnéticos aislados (monopolos); la estructura básica de radiación estática es dipolar, y los campos dipolares caen con el cubo de la distancia.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
 
-        <!-- PROBLEMA 3: ARCO CIRCULAR Y TRAMOS RECTOS -->
+        <!-- ========================================== -->
+        <!-- PROBLEMA 3: ARCO CIRCULAR PASO A PASO      -->
+        <!-- ========================================== -->
         <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
             <div class="flex justify-between items-start border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-3">
                     <span class="bg-purple-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 03</span>
-                    <h3 class="font-bold text-slate-900 text-lg">Conductor Compuesto: Arco Circular y Tramos Radiales</h3>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Arco de Circunferencia en su Centro</h3>
                 </div>
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Horquilla</span>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 3</span>
             </div>
 
             <div class="text-slate-700 text-sm leading-relaxed">
-                <strong>Enunciado:</strong> Un conductor forma un circuito plano compuesto por dos tramos rectilíneos largos alineados con el centro \(C\) y un arco circular de radio \(R\) que subtiende un ángulo \(\theta\) (en radianes). Demuestre paso a paso el campo magnético en el punto central \(C\).
+                <strong>Enunciado:</strong> Deduzca la expresión analítica del campo magnético producido en el centro de curvatura \(C\) por un arco circular de radio \(R\) que subtiende un ángulo \(\theta\) (en radianes) y conduce una corriente \(I\).
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <b class="text-slate-800 block mb-1">1. Tramos Rectilíneos Radiales:</b>
-                    <p class="text-slate-600">
-                        Para cualquier punto sobre los cables rectos alineados hacia \(C\), el vector \(d\vec\ell\) es colineal con \(\hat r\) (\(d\vec\ell \parallel \hat r\)). Por definición de producto vectorial:
-                        \[ d\vec\ell \times \hat r = 0 \implies \vec B_{\text{rectos}} = 0 \]
-                    </p>
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge bg-purple-600">1</span>
+                        <span>Partir de la Ley de Biot-Savart para un elemento diferencial del arco:</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ d\vec B = \frac{\mu_0 I}{4\pi} \frac{d\vec\ell \times \hat r}{r^2} \]
+                    </div>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <b class="text-slate-800 block mb-1">2. Arco Circular:</b>
-                    <p class="text-slate-600">
-                        Todos los puntos del arco están a distancia \(R\) y \(d\vec\ell \perp \hat r\). Integrando la longitud de arco \(s = R\theta\):
-                        \[ B_{\text{arco}} = \frac{\mu_0 I}{4\pi R^2} \int_0^{R\theta} d\ell = \frac{\mu_0 I\,\theta}{4\pi R} \]
-                    </p>
+
+                <!-- Paso 2: Esquema vectorial -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge bg-purple-600">2</span>
+                        <span>Dibujar variables en el esquema y determinar la dirección:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-center">
+                            <svg viewBox="0 0 260 180" class="w-full max-w-[240px] h-auto">
+                                <circle cx="130" cy="110" r="4" fill="#0f172a"/>
+                                <text x="125" y="128" font-size="12" font-weight="bold" fill="#0f172a">C</text>
+                                <!-- Radio R de referencia -->
+                                <line x1="130" y1="110" x2="200" y2="60" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3"/>
+                                <text x="175" y="90" font-size="11" font-weight="bold" fill="#64748b">R</text>
+                                <!-- Arco circular -->
+                                <path d="M 60,110 A 70,70 0 0 1 200,60" fill="none" stroke="#B3246B" stroke-width="4"/>
+                                <polygon points="195,57 205,60 198,68" fill="#B3246B"/>
+                                <text x="210" y="55" font-size="11" font-weight="bold" fill="#B3246B">I</text>
+                                <!-- Elemento dL -->
+                                <rect x="125" y="38" width="16" height="5" fill="#ef4444" rx="2"/>
+                                <text x="122" y="30" font-size="10" font-weight="bold" fill="#ef4444">dℓ</text>
+                                <!-- Vector r hacia C -->
+                                <line x1="133" y1="40" x2="130" y2="110" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,3"/>
+                                <text x="138" y="75" font-size="10" font-weight="bold" fill="#0284c7">r = R</text>
+                                <!-- Angulo 90 grados -->
+                                <rect x="125" y="44" width="7" height="7" fill="none" stroke="#ef4444"/>
+                                <!-- Vector B en C -->
+                                <circle cx="130" cy="145" r="9" fill="#fdf2f8" stroke="#purple" stroke-width="2"/>
+                                <line x1="124" y1="139" x2="136" y2="151" stroke="#purple" stroke-width="2"/>
+                                <line x1="136" y1="139" x2="124" y2="151" stroke="#purple" stroke-width="2"/>
+                                <text x="145" y="149" font-size="11" font-weight="bold" fill="#purple">B ⊗</text>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Distancia fija:</strong> Cada elemento está a la distancia idéntica \(r = R\).</p>
+                            <p><strong>Ángulo perpendicular:</strong> Como \(d\vec\ell\) es tangente y \(\hat r\) es radial, el ángulo es siempre \(\varphi = 90^\circ \implies \sin(90^\circ) = 1\).</p>
+                            <p><strong>Dirección:</strong> Con la regla de la mano derecha, todos los \(d\vec B\) apuntan hacia dentro de la página (\(\otimes\)).</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
-                    <b class="text-purple-800 block mb-1">3. Semicircunferencia (\(\theta = \pi\)):</b>
-                    <p class="text-slate-700">
-                        Al sustituir \(\theta = \pi\) radianes:
-                        \[ B = \frac{\mu_0 I \pi}{4\pi R} = \frac{\mu_0 I}{4R} \]
-                        ¡Exactamente la mitad del campo de una espira completa!
-                    </p>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-purple-600">3</span>
+                            <span>Magnitud diferencial del campo:</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 font-mono text-xs">
+                            \[ dB = \frac{\mu_0 I}{4\pi} \frac{d\ell \sin(90^\circ)}{R^2} = \frac{\mu_0 I}{4\pi R^2} d\ell \]
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-purple-600">4</span>
+                            <span>Factorizar constantes fuera de la integral:</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 font-mono text-xs text-center">
+                            \[ B = \frac{\mu_0 I}{4\pi R^2} \int_{\text{arco}} d\ell \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-purple-200 rounded-xl p-4 bg-purple-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-purple-600">5</span>
+                            <span>Dos Caminos para Resolver la Integral:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-arc-a', 'cam-arc-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Por Longitud de Arco s = Rθ</button>
+                            <button onclick="switchCamino('cam-arc-b', 'cam-arc-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Por Integral Angular Polar</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-arc-a" class="bg-white p-4 rounded-xl border border-purple-200 space-y-2 text-xs text-slate-700">
+                        <p>1. La longitud de una curva circular de ángulo \(\theta\) (en radianes) es \(s = R\theta\).</p>
+                        <p>2. Evaluamos la integral de longitud directa: \(\int_{\text{arco}} d\ell = s = R\theta\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono">
+                            \[ B = \frac{\mu_0 I}{4\pi R^2} (R\theta) = \frac{\mu_0 I\,\theta}{4\pi R} \]
+                        </div>
+                    </div>
+
+                    <div id="cam-arc-b" class="hidden bg-white p-4 rounded-xl border border-purple-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Parametrizamos el arco mediante el diferencial angular: \(d\ell = R\,d\theta'\), integrando de \(0\) a \(\theta\):</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono">
+                            \[ \int_{\text{arco}} d\ell = \int_0^\theta R\,d\theta' = R \left[ \theta' \right]_0^\theta = R\theta \]
+                        </div>
+                        <p>2. Al multiplicar por la constante: \(B = \frac{\mu_0 I}{4\pi R^2} (R\theta) = \frac{\mu_0 I \theta}{4\pi R}\).</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Casos Notables:</span>
+                        </div>
+                        <div class="space-y-1 text-xs">
+                            <p><strong>Semicírculo (\(\theta = \pi\)):</strong> \(B = \dfrac{\mu_0 I \pi}{4\pi R} = \dfrac{\mu_0 I}{4R}\) (la mitad de la espira).</p>
+                            <p><strong>Espira completa (\(\theta = 2\pi\)):</strong> \(B = \dfrac{\mu_0 I (2\pi)}{4\pi R} = \dfrac{\mu_0 I}{2R}\).</p>
+                            <p><strong>Cuarto de espira (\(\theta = \pi/2\)):</strong> \(B = \dfrac{\mu_0 I}{8R}\).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor:</span>
+                        </div>
+                        <p class="text-xs text-slate-700">¿Por qué un tramo recto de alambre colineal con el punto \(C\) no aporta al campo?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            Porque el vector tangente \(d\vec\ell\) y el vector unitario \(\hat r\) forman un ángulo de \(0^\circ\) o \(180^\circ\). Como \(\sin(0^\circ) = \sin(180^\circ) = 0\), el producto cruz \(d\vec\ell \times \hat r = \vec 0\).
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
 
-        <!-- PROBLEMA 4: ESPIRA CUADRADA -->
+        <!-- ========================================================================= -->
+        <!-- PROBLEMA 4: ACTIVIDAD PRÁCTICA DE CLASE PARA ENTREGAR (HOJA DE TRABAJO)   -->
+        <!-- ========================================================================= -->
+        <section class="problem-card bg-gradient-to-b from-white to-pink-50/20 p-6 md:p-8 rounded-2xl shadow-md border-2 border-[#B3246B] flex flex-col gap-6" id="seccion-entrega">
+            
+            <div class="flex flex-wrap justify-between items-center border-b border-pink-200 pb-4 gap-3">
+                <div>
+                    <span class="bg-[#B3246B] text-white px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase">
+                        ⭐ ACTIVIDAD EVALUATIVA PARA ENTREGA EN CLASE
+                    </span>
+                    <h3 class="font-extrabold text-slate-900 text-xl md:text-2xl mt-1">
+                        Taller Práctico: Conductor en Horquilla (3 Tramos)
+                    </h3>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-mono font-bold text-[#B3246B] block">Valor: 100 Puntos</span>
+                    <span class="text-[11px] text-slate-500">Evaluación individual en aula</span>
+                </div>
+            </div>
+
+            <!-- Ficha de Datos del Estudiante -->
+            <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Nombre del Estudiante:</label>
+                    <input type="text" id="est-nombre" class="student-input" placeholder="Tu nombre completo">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Código Estudiantil:</label>
+                    <input type="text" id="est-codigo" class="student-input" placeholder="Ej: 2210892">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Grupo / Sección:</label>
+                    <input type="text" id="est-grupo" class="student-input" value="10E-FIS2">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Fecha de Entrega:</label>
+                    <input type="date" id="est-fecha" class="student-input">
+                </div>
+            </div>
+
+            <!-- Enunciado del Reto de Clase -->
+            <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-200 text-xs md:text-sm text-slate-800 leading-relaxed">
+                <strong>Situación Problema:</strong> Un circuito plano transporta una corriente continua \(I = 10.0\text{ A}\). El conductor consta de:
+                <ol class="list-decimal list-inside mt-2 space-y-1 text-slate-700">
+                    <li><strong>Tramo 1 (Alambre Recto Semi-infinito):</strong> Viene desde \(x = -\infty\) a lo largo de la recta \(y = +R\) hasta \(x = 0\).</li>
+                    <li><strong>Tramo 2 (Semicírculo):</strong> Un arco semicircular de radio \(R = 8.0\text{ cm}\) centrado en el origen \(O(0,0)\), que conecta \((0, R)\) con \((0, -R)\) por el lado derecho (\(x \ge 0\)).</li>
+                    <li><strong>Tramo 3 (Alambre Recto Semi-infinito):</strong> Sale desde \((0, -R)\) y se extiende hacia \(x = -\infty\) a lo largo de la recta \(y = -R\).</li>
+                </ol>
+                <p class="mt-2 font-semibold text-[#B3246B]">
+                    Objetivo: Desarrollar el paso a paso riguroso para hallar el campo magnético total \(\vec B_{\text{total}}\) en el origen \(O(0,0)\) y responder las preguntas conceptuales de entrega.
+                </p>
+            </div>
+
+            <!-- Formulario Guiado Paso a Paso -->
+            <div class="space-y-5 text-xs md:text-sm">
+                
+                <!-- Paso 1 de Entrega -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center gap-2 font-bold text-slate-800 mb-2">
+                        <span class="step-badge">1</span>
+                        <span>Paso 1: Identificación y Ley para el diferencial infinitesimal de cada tramo:</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mb-2">Escribe la expresión vectorial de Biot-Savart que aplicarás al sistema:</p>
+                    <div class="bg-slate-50 p-2.5 rounded font-mono text-center text-xs">
+                        \[ d\vec B = \frac{\mu_0 I}{4\pi} \frac{d\vec\ell \times \hat r}{r^2} \]
+                    </div>
+                </div>
+
+                <!-- Paso 2 de Entrega: Esquema y Regla Mano Derecha -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center gap-2 font-bold text-slate-800 mb-2">
+                        <span class="step-badge">2</span>
+                        <span>Paso 2: Análisis de Dirección con la Regla de la Mano Derecha:</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mb-3">Indica el sentido del campo magnético que genera cada tramo en el origen \(O(0,0)\):</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <span class="font-bold block mb-1">Tramo 1 (Recto superior):</span>
+                            <select id="dir-t1" class="student-input">
+                                <option value="">Selecciona sentido...</option>
+                                <option value="in">Entrando a la página (⊗)</option>
+                                <option value="out">Saliendo de la página (⊙)</option>
+                                <option value="zero">Campo Nulo (0)</option>
+                            </select>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <span class="font-bold block mb-1">Tramo 2 (Semicírculo):</span>
+                            <select id="dir-t2" class="student-input">
+                                <option value="">Selecciona sentido...</option>
+                                <option value="in">Entrando a la página (⊗)</option>
+                                <option value="out">Saliendo de la página (⊙)</option>
+                                <option value="zero">Campo Nulo (0)</option>
+                            </select>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <span class="font-bold block mb-1">Tramo 3 (Recto inferior):</span>
+                            <select id="dir-t3" class="student-input">
+                                <option value="">Selecciona sentido...</option>
+                                <option value="in">Entrando a la página (⊗)</option>
+                                <option value="out">Saliendo de la página (⊙)</option>
+                                <option value="zero">Campo Nulo (0)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 de Entrega: Formulación Analítica -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center gap-2 font-bold text-slate-800 mb-2">
+                        <span class="step-badge">3-4</span>
+                        <span>Pasos 3 y 4: Planteamiento de las Integrales y Constantes:</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-700">
+                        <p><strong>Tramos rectos semi-infinitos 1 y 3:</strong> La distancia perpendicular al origen es \(a = R\). Los ángulos desde la perpendicular son \(\theta_1 = -90^\circ\) y \(\theta_2 = 0^\circ\).</p>
+                        <p><strong>Tramo semicircular 2:</strong> Radio constante \(R\), ángulo subtendido \(\theta = \pi\) radianes.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 5 de Entrega: Dos Caminos -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center gap-2 font-bold text-slate-800 mb-2">
+                        <span class="step-badge">5</span>
+                        <span>Paso 5: Comprobación por los Dos Caminos:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-bold text-[#B3246B] block mb-1">Camino A (Trigonométrico / Longitud):</span>
+                            <p>\(B_1 = B_3 = \frac{\mu_0 I}{4\pi R} [\sin 0^\circ - \sin(-90^\circ)] = \frac{\mu_0 I}{4\pi R}\)</p>
+                            <p>\(B_2 = \frac{\mu_0 I}{4\pi R^2}(R\pi) = \frac{\mu_0 I}{4R}\)</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-bold text-[#0B8CA8] block mb-1">Camino B (Tablas / Diferencial Angular):</span>
+                            <p>\(B_1 = B_3 = \frac{\mu_0 I R}{4\pi} \int_{-\infty}^0 \frac{dx}{(x^2+R^2)^{3/2}} = \frac{\mu_0 I}{4\pi R}\)</p>
+                            <p>\(B_2 = \frac{\mu_0 I}{4\pi R^2} \int_0^\pi R\,d\theta' = \frac{\mu_0 I}{4R}\)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 6 de Entrega: Cálculo Numérico del Estudiante -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+                    <div class="flex items-center gap-2 font-bold text-slate-800">
+                        <span class="step-badge bg-emerald-600">6</span>
+                        <span>Paso 6: Cálculo Numérico de Entrega (\(I = 10.0\text{ A}\), \(R = 0.08\text{ m}\)):</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="font-semibold block mb-1">Tu cálculo \(B_{\text{rectos}} = B_1 + B_3\) (en µT):</label>
+                            <input type="number" step="0.01" id="calc-rectos" class="student-input" placeholder="Ej: 25.0">
+                        </div>
+                        <div>
+                            <label class="font-semibold block mb-1">Tu cálculo \(B_{\text{arco}}\) (en µT):</label>
+                            <input type="number" step="0.01" id="calc-arco" class="student-input" placeholder="Ej: 39.27">
+                        </div>
+                        <div>
+                            <label class="font-semibold block mb-1">Tu cálculo \(B_{\text{total}}\) (en µT):</label>
+                            <input type="number" step="0.01" id="calc-total" class="student-input" placeholder="Ej: 64.27">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2">
+                        <button onclick="validarCalculosClase()" class="bg-[#B3246B] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#921c56] shadow">
+                            ✓ Comprobar Mis Cálculos
+                        </button>
+                        <span id="feedback-calculos" class="text-xs font-semibold"></span>
+                    </div>
+                </div>
+
+                <!-- Paso 7 de Entrega: Cuestionario Conceptual para Calificar -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-4">
+                    <div class="flex items-center gap-2 font-bold text-slate-800">
+                        <span class="step-badge bg-amber-500">7</span>
+                        <span>Paso 7: Preguntas Conceptuales de Entrega (Responde para la Calificación):</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="font-bold text-slate-800 block mb-1">
+                                1. Justifica detalladamente por qué los campos producidos por el alambre superior (Tramo 1) y el inferior (Tramo 3) se suman en lugar de cancelarse en el origen:
+                            </label>
+                            <textarea id="resp-q1" rows="2" class="student-input font-sans" placeholder="Escribe tu justificación física basada en la regla de la mano derecha..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-slate-800 block mb-1">
+                                2. ¿Qué porcentaje del campo magnético total en el origen representa la contribución del semicírculo frente a los dos alambres rectos juntos? Muestra tu operación:
+                            </label>
+                            <textarea id="resp-q2" rows="2" class="student-input font-sans" placeholder="Porcentaje del arco = (B_arco / B_total) * 100% = ..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-slate-800 block mb-1">
+                                3. Si se invierte el sentido de la corriente únicamente en el Tramo 3 (de forma que vaya de izquierda a derecha), ¿cuál sería el nuevo valor de B_total en el origen?
+                            </label>
+                            <textarea id="resp-q3" rows="2" class="student-input font-sans" placeholder="Explica cómo se modificaría la suma vectorial..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-slate-800 block mb-1">
+                                4. Demuestre mediante análisis dimensional que las unidades de la constante \(\frac{\mu_0 I}{R}\) corresponden exactamente a Teslas (\(\text{T} = \frac{\text{N}}{\text{A}\cdot\text{m}}\)):
+                            </label>
+                            <textarea id="resp-q4" rows="2" class="student-input font-sans" placeholder="Muestra el desglose dimensional [mu0] * [I] / [R]..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Entrega -->
+                    <div class="border-t border-slate-200 pt-4 flex flex-wrap justify-between items-center gap-3">
+                        <span class="text-xs text-slate-500">Una vez completada la hoja, genera el archivo PDF para entregarlo en clase.</span>
+                        <button onclick="exportEntregaPDF()" class="bg-[#0B8CA8] text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-[#08758C] shadow-md flex items-center gap-2">
+                            📥 Generar Hoja de Entrega (PDF)
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 5: ESPIRA CUADRADA                -->
+        <!-- ========================================== -->
         <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
             <div class="flex justify-between items-start border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-3">
-                    <span class="bg-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 04</span>
+                    <span class="bg-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 05</span>
                     <h3 class="font-bold text-slate-900 text-lg">Espira Cuadrada de Lado L en su Centro Exacto</h3>
                 </div>
                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Superposición</span>
@@ -537,55 +883,14 @@
             </div>
         </section>
 
-
-        <!-- PROBLEMA 5: FUERZAS ENTRE HILOS PARALELOS -->
-        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
-            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-3">
-                    <span class="bg-rose-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 05</span>
-                    <h3 class="font-bold text-slate-900 text-lg">Fuerza entre Conductores Paralelos y Definición del Ampère</h3>
-                </div>
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Interacción</span>
-            </div>
-
-            <div class="text-slate-700 text-sm leading-relaxed">
-                <strong>Enunciado:</strong> Dos alambres rectos, muy largos y paralelos, separados por una distancia \(d = 10.0\text{ cm}\), conducen corrientes \(I_1 = 5.0\text{ A}\) e \(I_2 = 8.0\text{ A}\) en el mismo sentido.
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm">
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                    <b class="text-slate-900 block">Deducción de la Fuerza por Unidad de Longitud:</b>
-                    <p class="text-slate-600">
-                        El alambre 1 produce un campo \(B_1 = \frac{\mu_0 I_1}{2\pi d}\) sobre la posición del alambre 2. Aplicando la fuerza magnética \(F = I_2 L B_1\):
-                    </p>
-                    <div class="bg-white p-2 rounded border border-slate-200 font-mono text-center text-xs">
-                        \[ \frac{F}{L} = \frac{\mu_0 I_1 I_2}{2\pi d} \]
-                    </div>
-                    <p class="text-slate-600">
-                        Como las corrientes van en el mismo sentido, la fuerza es <strong>atractiva</strong>.
-                    </p>
-                </div>
-
-                <div class="bg-rose-50 p-4 rounded-xl border border-rose-200 space-y-2">
-                    <b class="text-rose-900 block">Cálculo Numérico:</b>
-                    <p class="font-mono text-xs">
-                        \[ \frac{F}{L} = \frac{(4\pi \times 10^{-7})(5.0)(8.0)}{2\pi (0.10)} = 8.0 \times 10^{-5}\text{ N/m} = 80\ \mu\text{N/m} \]
-                    </p>
-                    <div class="text-xs text-rose-800 bg-white p-2 rounded border border-rose-200">
-                        💡 <strong>Definición del Ampère:</strong> Un ampère es la corriente que, circulando por dos conductores paralelos infinitos separados 1 m en el vacío, produce entre ellos una fuerza de \(2\times 10^{-7}\text{ N/m}\).
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <footer class="mt-12 mb-6 text-center text-slate-400 text-xs no-print space-y-1">
         <p>Electro10.Easy Workshop Ecosystem • Autor: Dudbil Olvasada Pabón Riaño</p>
-        <p>Física II: Electromagnetismo Universitario</p>
+        <p>Física II: Electromagnetismo Universitario • Módulo 9: Ley de Biot-Savart</p>
     </footer>
 
-    <!-- Scripts de Interacción y Pizarra -->
+    <!-- Scripts de Interacción, Validación y Pizarra -->
     <script>
         function switchCamino(showId, hideId, btn) {
             document.getElementById(showId).classList.remove('hidden');
@@ -597,6 +902,51 @@
             });
             btn.classList.add('active', 'bg-[#B3246B]', 'text-white');
             btn.classList.remove('text-slate-600');
+        }
+
+        // Validación interactiva de cálculos del estudiante en clase
+        function validarCalculosClase() {
+            const I = 10.0;
+            const R = 0.08;
+            const mu0 = 4 * Math.PI * 1e-7;
+
+            // B_rectos = 2 * (mu0 * I / (4 * pi * R)) = mu0 * I / (2 * pi * R)
+            const B_rectos_uT = (mu0 * I / (2 * Math.PI * R)) * 1e6; // ~25.0 uT
+            // B_arco = mu0 * I / (4 * R)
+            const B_arco_uT = (mu0 * I / (4 * R)) * 1e6; // ~39.27 uT
+            // B_total = B_rectos + B_arco
+            const B_total_uT = B_rectos_uT + B_arco_uT; // ~64.27 uT
+
+            const inRectos = parseFloat(document.getElementById('calc-rectos').value);
+            const inArco = parseFloat(document.getElementById('calc-arco').value);
+            const inTotal = parseFloat(document.getElementById('calc-total').value);
+
+            const fb = document.getElementById('feedback-calculos');
+
+            const dir1 = document.getElementById('dir-t1').value;
+            const dir2 = document.getElementById('dir-t2').value;
+            const dir3 = document.getElementById('dir-t3').value;
+
+            if (dir1 !== 'in' || dir2 !== 'in' || dir3 !== 'in') {
+                fb.innerHTML = '<span class="text-red-600 font-bold">⚠️ Revisa las direcciones en el Paso 2: los 3 tramos empujan hacia adentro (⊗).</span>';
+                return;
+            }
+
+            if (isNaN(inRectos) || isNaN(inArco) || isNaN(inTotal)) {
+                fb.innerHTML = '<span class="text-amber-600 font-bold">⚠️ Ingresa tus valores numéricos para verificar.</span>';
+                return;
+            }
+
+            const tol = 1.5; // tolerancia en uT
+            const okRectos = Math.abs(inRectos - B_rectos_uT) < tol;
+            const okArco = Math.abs(inArco - B_arco_uT) < tol;
+            const okTotal = Math.abs(inTotal - B_total_uT) < tol;
+
+            if (okRectos && okArco && okTotal) {
+                fb.innerHTML = `<span class="text-emerald-600 font-bold">🎉 ¡Excelente! Cálculos correctos: B_rectos = ${B_rectos_uT.toFixed(2)} µT, B_arco = ${B_arco_uT.toFixed(2)} µT, B_total = ${B_total_uT.toFixed(2)} µT. Procede a responder las preguntas de entrega.</span>`;
+            } else {
+                fb.innerHTML = `<span class="text-red-600 font-bold">❌ Hay discrepancias numéricas. Pista: B_rectos ≈ 25.0 µT, B_arco ≈ 39.27 µT, B_total ≈ 64.27 µT.</span>`;
+            }
         }
 
         // Pizarra de dibujo
@@ -675,11 +1025,12 @@
             document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
         }
 
+        // Exportar taller completo
         function exportToPDF() {
-            const element = document.body;
+            const element = document.getElementById('taller-content');
             const opt = {
                 margin: [0.3, 0.3, 0.3, 0.3],
-                filename: 'Taller_09_Ley_de_Biot_Savart.pdf',
+                filename: 'Taller_09_Ley_de_Biot_Savart_Completo.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -687,7 +1038,28 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        window.onload = () => { resizeCanvas(); };
+        // Exportar solo la hoja de entrega evaluativa de clase
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const nombre = document.getElementById('est-nombre').value.trim() || 'Estudiante';
+            const opt = {
+                margin: [0.4, 0.4, 0.4, 0.4],
+                filename: `Entrega_Clase_BiotSavart_${nombre.replace(/\s+/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        window.onload = () => {
+            resizeCanvas();
+            const fechaInput = document.getElementById('est-fecha');
+            if (fechaInput) {
+                const hoy = new Date().toISOString().split('T')[0];
+                fechaInput.value = hoy;
+            }
+        };
         window.onresize = () => { resizeCanvas(); };
     </script>
 </body>
