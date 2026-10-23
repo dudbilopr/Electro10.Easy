@@ -1,0 +1,1059 @@
+<!DOCTYPE html><html lang="es"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>LorentzLab10.easy · Fuerza de Lorentz</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* LorentzLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap}
+header .e10-brand{font-size:1.1rem}
+.scene-tabs{display:flex;gap:2px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);margin-left:12px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:40px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn i{font-size:1.1em}
+.btn .sym{font:italic 600 1.05em/1 'Times New Roman',serif}
+.tog{min-height:34px;padding:0 12px;border-radius:999px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+.seg{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.seg .btn{min-height:34px;border:0;background:transparent;color:var(--e10-muted)}
+.seg .btn.active{background:var(--e10-surface);color:var(--e10-ink);box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:330px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:28px minmax(0,1fr) 78px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+.vnote{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.12em}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55}
+.reto-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reto-actions .btn{min-height:32px;font-size:var(--e10-text-xs)}
+#reto-note{font-size:var(--e10-text-xs);color:var(--e10-warning)}
+#reto-note:empty{display:none}
+.e10-chip--info{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:500 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#check-hint:empty{display:none}
+#explain{line-height:1.5}
+#explain:empty{display:none}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;line-height:1.6}
+#solution .katex-display{margin:.4em 0}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+/* Incrustado en una clase (?embed): solo escenas, herramientas y lienzo; la clase trae sus propias tareas */
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+body.e10-projector{font-size:17px}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  header .e10-brand{font-size:1rem}
+  .module-chip,#btn-projector{display:none}
+  .scene-tabs{order:5;margin:0;width:100%}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .h-menu{order:3;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px;border-top:1px solid var(--e10-line);border-bottom:0;flex-wrap:nowrap;overflow-x:auto}
+  .h-menu .tool-group__label,.h-menu .tool-sep{display:none}
+  .h-menu .btn{min-height:44px;font-size:12px;padding:0 10px}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:150px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px;min-height:44px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:.95em}
+  #values-body{min-width:220px}
+  #coords-indicator{display:none}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+// 10.Easy: tema claro por defecto, salvo que el estudiante haya elegido el oscuro.
+(function(){var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}document.addEventListener('DOMContentLoaded',function(){document.body.classList.toggle('dark-mode',t==='dark');document.body.classList.toggle('light-mode',t!=='dark');if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');});})();
+</script>
+</head>
+<body data-domain="magnetismo" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">LorentzLab<span>10.easy</span></a>
+  <span class="e10-chip module-chip">Módulo 8 · Fuerza de Lorentz</span>
+  <nav class="scene-tabs" role="tablist" aria-label="Escenas">
+    <button type="button" role="tab" data-scene="fuerza" aria-selected="false">1 · Fuerza</button>
+    <button type="button" role="tab" data-scene="orbita" aria-selected="false">2 · Órbita</button>
+    <button type="button" role="tab" data-scene="selector" aria-selected="false">3 · Selector y espectrómetro</button>
+    <button type="button" role="tab" data-scene="conductor" aria-selected="false">4 · Conductor y espira</button>
+  </nav>
+  <div class="e10-header__spacer"></div>
+  <div class="header-actions">
+    <button class="btn" id="btn-projector" type="button"><i class="ph ph-projector-screen"></i>Modo proyector</button>
+    <button class="btn btn-icon" id="btn-theme" type="button" aria-label="Cambiar tema claro u oscuro"><i class="ph ph-moon"></i></button>
+    <button class="btn" id="user-info" type="button" style="color:var(--e10-primary);border-color:var(--e10-primary)">Iniciar sesión</button>
+  </div>
+</header>
+<div class="h-menu" id="toolbar" role="toolbar" aria-label="Herramientas de la escena"></div>
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Lienzo de la simulación"></canvas>
+    <details id="values" open><summary>Valores</summary><div id="values-body"></div></details>
+    <div id="coords-indicator"></div>
+    <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><div id="live-tex"></div></div>
+  </div>
+  <aside class="slide-panel" id="right-panel">
+    <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Abrir o cerrar el panel del reto"><span></span></button>
+    <div class="panel-scroll">
+      <section class="e10-step" id="st1" data-s="done">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto</div>
+          <div id="reto-text"></div>
+          <div id="reto-note"></div>
+          <div class="reto-actions"><span class="e10-chip e10-chip--info" id="reto-tag"></span><button class="btn" id="btn-new" type="button"><i class="ph ph-shuffle"></i>Nuevo reto con otros valores</button></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st2" data-s="now">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice</div>
+          <div id="pred-q"></div>
+          <div class="predict-row" id="pred-choices"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprueba</div>
+          <label class="ans"><span id="ans-label">Tu valor</span><input id="ans-val" type="text" inputmode="decimal" autocomplete="off" placeholder="ej. 6,4e-15"></label>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" id="btn-check" type="button">Comprobar mi predicción</button>
+          <div id="check-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Explica</div>
+          <div class="e10-tip" id="explain"></div>
+          <button class="btn" id="btn-sol" type="button"><i class="ph ph-function"></i>Ver la solución paso a paso</button>
+          <div id="solution" hidden></div>
+        </div>
+      </section>
+      <div id="continue-wrap"></div>
+    </div>
+    <div class="panel-progress"><span class="section-title">Progreso</span><div class="e10-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="prog-bar"><span id="prog" style="--e10-p:25%"></span></div><span class="section-title" id="prog-txt">1 de 4</span></div>
+  </aside>
+</div>
+<footer><span>© 2026 LorentzLab10.easy · 10.Easy</span><a href="../index.html">Volver a la plataforma</a></footer>
+
+<script type="module">
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+
+// ───────────────────────── utilidades ─────────────────────────
+const $ = s => document.querySelector(s);
+const MU0 = 4e-7 * Math.PI;
+// Constantes de Young y Freedman (2009), apéndice F, a 4 cifras.
+const QE = 1.602e-19, MP = 1.673e-27, ME = 9.109e-31, UMA = 1.661e-27;
+const DEG = 180 / Math.PI;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const cssv = n => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim();
+
+function sciParts(v, d) {
+  if (!isFinite(v) || v === 0) return null;
+  let e = Math.floor(Math.log10(Math.abs(v)));
+  let ms = (v / Math.pow(10, e)).toFixed(d - 1);
+  if (Math.abs(+ms) >= 10) { e += 1; ms = (v / Math.pow(10, e)).toFixed(d - 1); }
+  return [ms, e];
+}
+// LaTeX: 4{,}00\times10^{-5}
+function sx(v, d = 3) { const p = sciParts(v, d); if (!p) return '0'; return p[0].replace('.', '{,}') + (p[1] === 0 ? '' : String.raw`\times10^{${p[1]}}`); }
+// Texto plano: 4,00 × 10⁻⁵
+function sp(v, d = 3) {
+  const p = sciParts(v, d); if (!p) return '0';
+  const sup = String(p[1]).replace('-', '⁻').replace(/\d/g, c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  return p[0].replace('.', ',') + (p[1] === 0 ? '' : ' × 10' + sup);
+}
+const fx = (v, n) => v.toFixed(n).replace('.', '{,}');
+const fp = (v, n) => v.toFixed(n).replace('.', ',');
+function parseNum(s) {
+  s = String(s ?? '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '');
+  s = s.replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1');
+  return s === '' ? NaN : Number(s);
+}
+const near = (a, b, tol = 0.03) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30);
+function K(tex, display = false) { try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); } catch (_) { return tex; } }
+function mixed(el, html) {
+  el.innerHTML = html;
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+const angDiff = (a, b) => { let d = (a - b) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
+
+// ───────────────────────── lienzo ─────────────────────────
+const area = $('#canvas-area'), cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, HU = 0; // HU: alto útil (sin la barra de fórmula)
+function resize() {
+  const r = area.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height; HU = H - (W < 600 ? 76 : 92);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+let COL = {};
+function readColors() {
+  COL = { ink: cssv('ink'), muted: cssv('muted'), line: cssv('line'), surface: cssv('surface'), primary: cssv('primary'), primarySoft: cssv('primary-soft'),
+    accent: cssv('accent'), accentStrong: cssv('accent-strong'), field: cssv('vec-field'), force: cssv('vec-force'), qpos: cssv('q-pos'), qneg: cssv('q-neg'), ok: cssv('success'), danger: cssv('danger'), warn: cssv('warning'), grid: cssv('grid') };
+}
+const FS = () => document.body.classList.contains('e10-projector') ? 1.25 : 1;
+function arrow(x1, y1, x2, y2, col, w = 2, head = 10, dash = null) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy); if (L < 2) return;
+  head = Math.min(head, L * 0.6);
+  const ux = dx / L, uy = dy / L, hx = x2 - ux * head, hy = y2 - uy * head;
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(hx - uy * head * 0.5, hy + ux * head * 0.5); ctx.lineTo(hx + uy * head * 0.5, hy - ux * head * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function wireSym(x, y, sign, r, col) { // sign > 0: sale (⊙); < 0: entra (⊗)
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  if (sign > 0) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+  else if (sign < 0) { const k = r * 0.52; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - k, y - k); ctx.lineTo(x + k, y + k); ctx.moveTo(x + k, y - k); ctx.lineTo(x - k, y + k); ctx.stroke(); }
+  ctx.restore();
+}
+function text(t, x, y, col = COL.ink, size = 13, align = 'left', weight = 500) {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `${weight} ${size * FS()}px 'IBM Plex Sans', system-ui, sans-serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function sym(t, x, y, col = COL.ink, size = 17, align = 'left') {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `italic ${size * FS()}px 'Times New Roman', serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function panelBox(x, y, w, h) {
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+// ───────────────────────── ayudas de dibujo ─────────────────────────
+const adiff = (a, b) => ((a - b) % 360 + 540) % 360 - 180;    // diferencia de ángulos en grados, en [−180, 180)
+const n360 = a => ((a % 360) + 360) % 360;
+const snapA = (a, k = 15) => n360(Math.round(a / k) * k);
+const rad = d => d / DEG;
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const scrA = (cx, cy, px, py) => n360(Math.atan2(cy - py, px - cx) * DEG); // ángulo matemático (antihorario) de un punto de la pantalla
+function charge(x, y, q, r = 13) {
+  ctx.save(); ctx.fillStyle = q > 0 ? COL.qpos : COL.qneg; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+  ctx.strokeStyle = COL.surface; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y);
+  if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke(); ctx.restore();
+}
+function bPerp(sign, x0, y0, x1, y1, gap) { // campo perpendicular a la página: ⊙ sale, ⊗ entra
+  ctx.save(); ctx.globalAlpha = 0.32;
+  for (let x = x0 + gap / 2; x < x1; x += gap) for (let y = y0 + gap / 2; y < y1; y += gap) wireSym(x, y, sign, 5, COL.field);
+  ctx.restore();
+}
+function bPlane(a, x0, y0, x1, y1, gap) { // campo en el plano de la página, en la dirección a (grados)
+  const c = Math.cos(rad(a)), s = -Math.sin(rad(a)), L = gap * 0.28;
+  ctx.save(); ctx.globalAlpha = 0.3;
+  for (let x = x0 + gap / 2; x < x1; x += gap) for (let y = y0 + gap / 2; y < y1; y += gap) arrow(x - c * L, y - s * L, x + c * L, y + s * L, COL.field, 1.6, 6);
+  ctx.restore();
+}
+function bigSym(x, y, sign, col, label) { wireSym(x, y, sign, 15, col); if (label) text(label, x + 22, y, col, 13, 'left', 600); }
+function arc(cx, cy, r, a1, a2, col) { // arco del ángulo a1 → a2 (grados, antihorario)
+  let d = adiff(a2, a1); ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r, -rad(a1), -rad(a1 + d), d > 0); ctx.stroke(); ctx.restore();
+}
+function plotCurve(pl, f, x0, x1, xv, yMax, xLabel, tickEvery, signed = false) {
+  const X = x => pl.x + 50 + (x - x0) / (x1 - x0) * (pl.w - 70);
+  const Y = signed ? (y => pl.y + 46 + (pl.h - 92) / 2 - y / yMax * (pl.h - 110) / 2) : (y => pl.y + pl.h - 46 - y / yMax * (pl.h - 100));
+  ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(x0), Y(0)); ctx.lineTo(X(x1), Y(0)); ctx.moveTo(X(x0), Y(signed ? -yMax : 0)); ctx.lineTo(X(x0), Y(yMax)); ctx.stroke(); ctx.restore();
+  for (let t = x0; t <= x1 + 1e-9; t += tickEvery) text(t + '°', X(t), pl.y + pl.h - 22, COL.muted, 11, 'center');
+  text(xLabel, X(x1), Y(0) - 12, COL.muted, 11, 'right');
+  ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath();
+  for (let i = 0; i <= 240; i++) { const x = x0 + (x1 - x0) * i / 240; i ? ctx.lineTo(X(x), Y(f(x))) : ctx.moveTo(X(x), Y(f(x))); }
+  ctx.stroke(); ctx.restore();
+  ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(xv), Y(f(xv)), 6, 0, 2 * Math.PI); ctx.fill();
+  return { X, Y };
+}
+const PART = {
+  proton: { n: 'protón', q: 1, m: MP, sym: 'p⁺' },
+  electron: { n: 'electrón', q: -1, m: ME, sym: 'e⁻' },
+  c12: { n: 'ion de carbono-12 (¹²C⁺)', q: 1, m: 12 * UMA, sym: '¹²C⁺' },
+};
+const DIRW = { 0: 'hacia la derecha', 90: 'hacia arriba', 180: 'hacia la izquierda', 270: 'hacia abajo' };
+const dirWord = a => DIRW[n360(Math.round(a))] || `a ${Math.round(n360(a))}° de la horizontal (medido en sentido antihorario)`;
+
+// ───────────────────────── estado de la app ─────────────────────────
+const app = { scene: 'fuerza', checked: false, result: null, showSol: false };
+const pred = { choice: null, angle: null };   // predicción del paso 2
+// Todo cambio de física invalida la comprobación anterior.
+function invalidate() { if (app.checked) { app.checked = false; app.result = null; app.showSol = false; } renderPanel(false); }
+function resetPred() { pred.choice = null; pred.angle = null; $('#ans-val').value = ''; app.checked = false; app.result = null; app.showSol = false; }
+function plotAxes(pl, title) { panelBox(pl.x, pl.y, pl.w, pl.h); text(title, pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600); }
+function hint(pl, t) { text(t, pl.x + pl.w / 2, pl.y + pl.h / 2, COL.muted, 12, 'center'); }
+// El valor que se pide en el reto solo se muestra después de comprobar, o si el estudiante ya cambió el montaje.
+const reveal = () => app.checked || sc().changed();
+
+// ═════════════════════════ ESCENA 1 · FUERZA SOBRE UNA CARGA ═════════════════════════
+const F1 = { part: 'proton', v: 4e5, av: 0, mode: 'entra', B: 0.2, ab: 30, drag: null, reto: null };
+let fView = { cx: 0, cy: 0, R: 100, plot: null };
+function f1Layout() {
+  const wide = W > 760, wv = wide ? W * 0.58 : W;
+  // centro corrido a la derecha y abajo para no quedar bajo el panel «Valores»
+  fView = { cx: wide ? wv * 0.55 + 30 : wv * 0.5, cy: HU * (wide ? 0.56 : 0.5), R: Math.min(wv, HU) * 0.27, wv, plot: wide ? { x: W * 0.6, y: 20, w: W * 0.4 - 20, h: Math.min(HU - 40, 340) } : null };
+}
+const f1Theta = () => F1.mode === 'plano' ? Math.abs(adiff(F1.ab, F1.av)) : 90;
+function f1F() {
+  const q = PART[F1.part].q * QE, v = [F1.v * Math.cos(rad(F1.av)), F1.v * Math.sin(rad(F1.av)), 0];
+  const B = F1.mode === 'plano' ? [F1.B * Math.cos(rad(F1.ab)), F1.B * Math.sin(rad(F1.ab)), 0] : [0, 0, F1.mode === 'sale' ? F1.B : -F1.B];
+  return cross(v, B).map(c => c * q);
+}
+function f1Cat() {
+  const F = f1F(), m = Math.hypot(...F), ref = Math.abs(PART[F1.part].q) * QE * F1.v * F1.B;
+  if (m < 1e-6 * ref) return { cat: 'cero', m: 0, a: null };
+  if (Math.abs(F[2]) > 0.98 * m) return { cat: F[2] > 0 ? 'sale' : 'entra', m, a: null };
+  return { cat: 'plano', m, a: n360(Math.atan2(F[1], F[0]) * DEG) };
+}
+const f1Snap = () => JSON.stringify([F1.part, F1.v, F1.av, F1.mode, F1.B, F1.ab]);
+const tip = (x, y, a, L) => [x + L * Math.cos(rad(a)), y - L * Math.sin(rad(a))];
+const scFuerza = {
+  title: 'Fuerza',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Partícula</span>
+      <div class="seg">${[['proton', 'Protón'], ['electron', 'Electrón'], ['c12', '¹²C⁺']].map(([k, l]) => `<button class="btn ${F1.part === k ? 'active' : ''}" data-act="part:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Campo B</span>
+      <div class="seg">${[['entra', 'Entra ⊗'], ['sale', 'Sale ⊙'], ['plano', 'En el plano']].map(([k, l]) => `<button class="btn ${F1.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div></div>`,
+  act(a) {
+    if (a.startsWith('part:')) F1.part = a.slice(5);
+    else if (a.startsWith('mode:')) F1.mode = a.slice(5);
+    invalidate(); buildToolbar();
+  },
+  values: () => [
+    { k: 'v', sym: 'v', min: 1, max: 100, step: 1, get: () => F1.v / 1e5, set: x => F1.v = x * 1e5, fmt: x => sp(x * 1e5, 2) + ' m/s', label: 'Rapidez' },
+    { k: 'B', sym: 'B', min: 0.05, max: 1, step: 0.05, get: () => F1.B, set: x => F1.B = x, fmt: x => fp(x, 2) + ' T', label: 'Módulo del campo' },
+  ],
+  valuesNote: 'Arrastra la punta de la flecha v (y la de B si el campo está en el plano). Los ángulos van de 15° en 15°.',
+  newReto() {
+    F1.part = pick(['proton', 'proton', 'electron', 'c12']); F1.v = pick([1, 2, 3, 4, 5, 6, 8]) * pick([1e5, 1e6]); F1.av = pick([0, 90, 180, 270]);
+    F1.mode = pick(['entra', 'sale', 'plano', 'plano']); F1.B = pick([0.1, 0.2, 0.25, 0.4, 0.5, 0.8]);
+    F1.ab = n360(F1.av + pick([30, 45, 60, 90, 90, 120, 150, 210, 270, 0])); F1.drag = null;
+    F1.reto = f1Snap();
+  },
+  retoText() {
+    const P = PART[F1.part], th = f1Theta();
+    const campo = F1.mode === 'entra' ? 'entra en la página (⊗)' : F1.mode === 'sale' ? 'sale de la página (⊙)' : `está en el plano de la página y forma ${th}° con la velocidad (mira el lienzo)`;
+    return `Un ${P.n} se mueve a ${sp(F1.v, 2)} m/s ${dirWord(F1.av)}. Un campo magnético de ${fp(F1.B, 2)} T ${campo}. ¿Hacia dónde apunta la fuerza magnética y cuánto vale?`;
+  },
+  retoTag: 'Resuelto 1 y retos 1–3 del taller',
+  changed() { return !!F1.reto && f1Snap() !== F1.reto; },
+  predQ: '¿Hacia dónde apunta \\(\\vec F\\)? Si está en el plano, elige «En el plano» y toca el lienzo para dibujarla.',
+  choices: [{ id: 'plano', label: 'En el plano (dibújala)' }, { id: 'sale', label: 'Sale ⊙' }, { id: 'entra', label: 'Entra ⊗' }, { id: 'cero', label: 'No hay fuerza' }],
+  predHint: () => pred.choice === 'plano' && pred.angle === null ? 'Toca el lienzo alrededor de la partícula para dibujar la dirección de la fuerza.' : '',
+  ansLabel: 'Tu valor de \\(|\\vec F|\\), en newtons',
+  ansPh: 'ej. 6,4e-15',
+  hasPred: () => !!pred.choice && (pred.choice !== 'plano' || pred.angle !== null),
+  check() {
+    const c = f1Cat(), P = PART[F1.part], th = f1Theta(), v = parseNum($('#ans-val').value), rows = [];
+    const names = { sale: 'sale ⊙', entra: 'entra ⊗', cero: 'no hay fuerza', plano: `en el plano, a ${Math.round(pred.angle ?? 0)}°` };
+    const dOk = pred.choice === c.cat && (c.cat !== 'plano' || Math.abs(adiff(pred.angle, c.a)) <= 20);
+    rows.push({ t: `Dirección: ${names[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = c.cat === 'cero' ? Math.abs(v) < 1e-30 : near(Math.abs(v), c.m, 0.03); rows.push({ t: `Tu \\(F\\): ${sp(v, 3)} N`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const qq = Math.abs(P.q) * QE, qvB = qq * F1.v * F1.B;
+    let t;
+    if (!dOk) {
+      if (c.cat === 'cero') t = '\\(\\vec v\\) y \\(\\vec B\\) son paralelos (θ = 0° o 180°): sen θ = 0 y no hay fuerza magnética. Gira \\(\\vec B\\) y mira cómo aparece la fuerza.';
+      else if (pred.choice === 'cero') t = `\\(\\vec v\\) y \\(\\vec B\\) forman ${th}°: sen θ ≠ 0, así que sí hay fuerza.`;
+      else if (c.cat === 'plano' && pred.choice !== 'plano') t = 'Con \\(\\vec B\\) perpendicular a la página, la fuerza queda en el plano de la página y es perpendicular a \\(\\vec v\\).';
+      else if (c.cat !== 'plano' && pred.choice === 'plano') t = 'Con \\(\\vec v\\) y \\(\\vec B\\) en el plano de la página, \\(\\vec v\\times\\vec B\\) es perpendicular a los dos: sale o entra de la página.';
+      else if (pred.choice === 'plano' && (Math.abs(adiff(pred.angle, F1.av)) < 25 || Math.abs(adiff(pred.angle, F1.av)) > 155)) t = 'La fuerza magnética siempre es perpendicular a \\(\\vec v\\): no acelera ni frena la partícula, solo la desvía.';
+      else if (P.q < 0 && (c.cat !== 'plano' || Math.abs(adiff(pred.angle, c.a)) > 155)) t = 'Para una carga negativa, \\(\\vec F=q\\,\\vec v\\times\\vec B\\) apunta al revés de \\(\\vec v\\times\\vec B\\): aplica la mano derecha y luego invierte.';
+      else t = 'Regla de la mano derecha: dedos en \\(\\vec v\\), dóblalos hacia \\(\\vec B\\); el pulgar da \\(\\vec v\\times\\vec B\\). Para una carga positiva esa es la fuerza.';
+    }
+    else if (vOk === false && th % 180 !== 90 && near(Math.abs(v), qvB, 0.03)) t = 'Te faltó el factor \\(\\sin\\theta\\): solo cuenta la componente de \\(\\vec v\\) perpendicular a \\(\\vec B\\).';
+    else if (vOk === false && th % 180 !== 90 && near(Math.abs(v), qvB * Math.abs(Math.cos(rad(th))), 0.03)) t = 'Usaste \\(\\cos\\theta\\). La fuerza es máxima cuando \\(\\vec v\\perp\\vec B\\): va con \\(\\sin\\theta\\).';
+    else if (vOk === false && c.m > 0 && near(Math.abs(v), c.m / qq, 0.03)) t = `Te faltó multiplicar por la carga: \\(|q| = ${sx(qq, 4)}\\) C.`;
+    else if (vOk === false) t = '\\(F=|q|\\,vB\\sin\\theta\\), con la carga en coulombs, \\(v\\) en m/s y \\(B\\) en teslas.';
+    else t = 'Bien. Arrastra la punta de \\(\\vec v\\) o de \\(\\vec B\\): la fuerza es máxima con θ = 90° y nula cuando \\(\\vec v\\) es paralela a \\(\\vec B\\).';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const c = f1Cat(), P = PART[F1.part], th = f1Theta(), qq = Math.abs(P.q) * QE;
+    const dir = c.cat === 'cero' ? 'no hay fuerza, porque \\(\\vec v\\parallel\\vec B\\).' : c.cat === 'plano' ? `en el plano, ${dirWord(c.a)}${P.q < 0 ? ' (opuesta a \\(\\vec v\\times\\vec B\\), porque la carga es negativa)' : ''}.` : `${c.cat === 'sale' ? 'sale de la página (⊙)' : 'entra en la página (⊗)'}${P.q < 0 ? ', opuesta a \\(\\vec v\\times\\vec B\\) porque la carga es negativa' : ''}.`;
+    return `<p>${P.n[0].toUpperCase() + P.n.slice(1)}: \\(|q| = ${sx(qq, 4)}\\) C. El ángulo entre \\(\\vec v\\) y \\(\\vec B\\) es \\(\\theta = ${th}^\\circ\\).</p>\\[F=|q|\\,vB\\sin\\theta=(${sx(qq, 4)})(${sx(F1.v)})(${fx(F1.B, 2)})\\sin ${th}^\\circ=${sx(c.m)}\\ \\text{N}\\]<p>Dirección: ${dir}</p>`;
+  },
+  live() {
+    const r = reveal(), c = f1Cat(), qq = Math.abs(PART[F1.part].q) * QE;
+    return String.raw`F=|q|\,vB\sin\theta=(${sx(qq, 4)})(${sx(F1.v)})(${fx(F1.B, 2)})\sin ${f1Theta()}^\circ=${r ? sx(c.m) : '\\,?'}\,\text{N}`;
+  },
+  coords: () => `θ = ${f1Theta()}° · ${PART[F1.part].sym}`,
+  down(px, py) {
+    const { cx, cy, R } = fView, [vx, vy] = tip(cx, cy, F1.av, R), [bx, by] = tip(cx, cy, F1.ab, R * 0.85);
+    if (Math.hypot(px - vx, py - vy) < 22) F1.drag = 'v';
+    else if (F1.mode === 'plano' && Math.hypot(px - bx, py - by) < 22) F1.drag = 'b';
+    else if (pred.choice === 'plano' && Math.hypot(px - cx, py - cy) > 20 && px < fView.wv) { F1.drag = 'pred'; this.move(px, py); }
+  },
+  move(px, py) {
+    if (!F1.drag) return;
+    const a = snapA(scrA(fView.cx, fView.cy, px, py));
+    if (F1.drag === 'pred') { pred.angle = a; app.checked = false; app.result = null; renderPanel(); return; }
+    if (F1.drag === 'v') F1.av = a; else F1.ab = a;
+    invalidate();
+  },
+  up() { F1.drag = null; },
+  draw() {
+    f1Layout();
+    const { cx, cy, R, wv } = fView, rv = reveal(), P = PART[F1.part], c = f1Cat(), gap = W < 600 ? 40 : 48;
+    if (F1.mode === 'plano') bPlane(F1.ab, 0, 0, wv, HU, gap); else bPerp(F1.mode === 'sale' ? 1 : -1, 0, 0, wv, HU, gap);
+    if (F1.mode === 'plano') {
+      const [bx, by] = tip(cx, cy, F1.ab, R * 0.85);
+      arrow(cx, cy, bx, by, COL.field, 4, 14); sym('B', bx + 10, by - 12, COL.field, 20);
+      ctx.save(); ctx.fillStyle = COL.field; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(bx, by, 9, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      arc(cx, cy, R * 0.32, F1.av, F1.ab, COL.muted); const am = F1.av + adiff(F1.ab, F1.av) / 2, [tx, ty] = tip(cx, cy, am, R * 0.42);
+      text(`θ = ${f1Theta()}°`, tx, ty, COL.muted, 12, 'center', 600);
+    } else text(`B ${F1.mode === 'sale' ? 'sale de la página ⊙' : 'entra en la página ⊗'} · θ = 90°`, 16, 24, COL.field, 13, 'left', 600);
+    const [vx, vy] = tip(cx, cy, F1.av, R);
+    arrow(cx, cy, vx, vy, COL.accent, 4, 14); sym('v', vx + 10, vy - 12, COL.accentStrong, 20);
+    ctx.save(); ctx.fillStyle = COL.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(vx, vy, 9, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    if (pred.choice === 'plano' && pred.angle !== null) { const [px, py] = tip(cx, cy, pred.angle, R * 0.8); arrow(cx, cy, px, py, COL.ink, 2.5, 12, [7, 6]); text('tu predicción', px + 8, py + 14, COL.muted, 11); }
+    charge(cx, cy, P.q, 14); text(P.sym, cx - 16, cy + 26, COL.muted, 12, 'center');
+    if (rv) {
+      if (c.cat === 'plano') { const [fx2, fy2] = tip(cx, cy, c.a, R * 0.8); arrow(cx, cy, fx2, fy2, COL.force, 4.5, 15); sym('F', fx2 + 10, fy2 + 14, COL.force, 20); }
+      else if (c.cat !== 'cero') bigSym(cx + R * 0.55 * Math.cos(rad(F1.av + 90)), cy - R * 0.55 * Math.sin(rad(F1.av + 90)), c.cat === 'sale' ? 1 : -1, COL.force, c.cat === 'sale' ? 'F sale' : 'F entra');
+      else text('F = 0', cx + 22, cy - 22, COL.force, 14, 'left', 600);
+      text(`F = ${sp(c.m)} N`, 16, HU - 34, COL.force, 13, 'left', 600);
+    }
+    text('Vista de frente: los vectores v y B parten de la partícula', 16, HU - 12, COL.muted, 12);
+    const pl = fView.plot; if (!pl) return;
+    plotAxes(pl, 'Módulo de la fuerza según el ángulo entre v y B');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+    const qvB = Math.abs(P.q) * QE * F1.v * F1.B, th = f1Theta();
+    const { X, Y } = plotCurve(pl, x => qvB * Math.sin(rad(x)), 0, 180, th, qvB * 1.15, 'θ', 45);
+    text(`${sp(c.m)} N`, X(th) + 10, Y(c.m) - 12, COL.primary, 12, 'left', 600);
+    text(`máximo |q|vB = ${sp(qvB)} N`, pl.x + 16, pl.y + 44, COL.muted, 11);
+  },
+};
+
+// ═════════════════════════ ESCENA 2 · ÓRBITA Y HÉLICE ═════════════════════════
+const O = { part: 'proton', v: 2e6, B: 0.5, sense: 'entra', alpha: 90, s: 0, ph: 0, t0: 0, reto: null };
+const oP = () => PART[O.part];
+const oR = () => oP().m * O.v * Math.sin(rad(O.alpha)) / (Math.abs(oP().q) * QE * O.B);
+const oT = () => 2 * Math.PI * oP().m / (Math.abs(oP().q) * QE * O.B);
+const oPitch = () => O.v * Math.cos(rad(O.alpha)) * oT();
+const oCCW = () => (oP().q > 0) === (O.sense === 'entra');
+let oView = { cx: 0, cy: 0, want: 100, wv: 0, plot: null };
+function oLayout() {
+  const wide = W > 760, wv = wide ? W * 0.6 : W;
+  oView = { cx: wide ? wv * 0.55 : wv * 0.5, cy: HU * 0.55, want: Math.min(HU * 0.21, wv * 0.3), wv, plot: wide ? { x: W * 0.62, y: 20, w: W * 0.38 - 20, h: Math.min(HU - 40, 300) } : null };
+  const Rpx = oR() * O.s;
+  if (!O.s || !isFinite(Rpx) || Rpx > oView.want * 1.4 || Rpx < oView.want * 0.3) O.s = oView.want / oR();
+}
+const oSnap = () => JSON.stringify([O.part, O.v, O.B, O.sense, O.alpha]);
+function scaleBar(x, y, s) { // barra de escala de 1, 2, 5, 10… unidades
+  const cand = [1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2, 0.5, 1, 2, 5], L = cand.find(c => c * s > 50) || 5;
+  ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + L * s, y); ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 4); ctx.moveTo(x + L * s, y - 4); ctx.lineTo(x + L * s, y + 4); ctx.stroke(); ctx.restore();
+  text(L >= 1 ? `${L} m` : L >= 0.01 ? `${fp(L * 100, 0)} cm` : `${fp(L * 1000, 0)} mm`, x + L * s / 2, y - 12, COL.muted, 11, 'center');
+}
+const scOrbita = {
+  title: 'Órbita',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Partícula</span>
+      <div class="seg">${[['proton', 'Protón'], ['electron', 'Electrón'], ['c12', '¹²C⁺']].map(([k, l]) => `<button class="btn ${O.part === k ? 'active' : ''}" data-act="part:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Campo B</span>
+      <div class="seg">${[['entra', 'Entra ⊗'], ['sale', 'Sale ⊙']].map(([k, l]) => `<button class="btn ${O.sense === k ? 'active' : ''}" data-act="sense:${k}" type="button">${l}</button>`).join('')}</div></div>`,
+  act(a) {
+    if (a.startsWith('part:')) { O.part = a.slice(5); O.s = 0; }
+    else if (a.startsWith('sense:')) O.sense = a.slice(6);
+    invalidate(); buildToolbar();
+  },
+  values: () => [
+    { k: 'v', sym: 'v', min: 1, max: 100, step: 1, get: () => O.v / 1e5, set: x => O.v = x * 1e5, fmt: x => sp(x * 1e5, 2) + ' m/s', label: 'Rapidez' },
+    { k: 'B', sym: 'B', min: 0.5, max: 1000, step: 0.5, get: () => O.B * 1e3, set: x => O.B = x / 1e3, fmt: x => x >= 100 ? fp(x / 1e3, 2) + ' T' : fp(x, 1) + ' mT', label: 'Campo magnético' },
+    { k: 'alpha', sym: 'α', min: 15, max: 90, step: 5, get: () => O.alpha, set: x => O.alpha = x, fmt: x => x + '°', label: 'Ángulo entre v y B' },
+  ],
+  valuesNote: 'α = 90°: la velocidad es perpendicular a B y la trayectoria es una circunferencia. Con α < 90° la partícula avanza a lo largo de B y describe una hélice (vista lateral).',
+  newReto() {
+    O.part = pick(['proton', 'proton', 'electron', 'c12']); O.sense = pick(['entra', 'sale']); O.alpha = pick([90, 90, 90, 30, 45, 60]);
+    if (O.part === 'proton') { O.v = pick([1, 2, 3, 5]) * 1e6; O.B = pick([0.2, 0.4, 0.5, 0.8, 1.0]); }
+    else if (O.part === 'electron') { O.v = pick([2, 4, 6, 8]) * 1e6; O.B = pick([0.5, 1, 2]) * 1e-3; }
+    else { O.v = pick([1, 2, 4]) * 1e5; O.B = pick([0.2, 0.5, 1.0]); }
+    O.s = 0; O.ph = 0; O.reto = oSnap();
+  },
+  retoText() {
+    const P = oP(), Bt = O.B >= 0.1 ? `${fp(O.B, 2)} T` : `${fp(O.B * 1e3, 1)} mT`;
+    return `Un ${P.n} entra con rapidez ${sp(O.v, 2)} m/s ${O.alpha === 90 ? 'perpendicular a' : `formando ${O.alpha}° con`} un campo uniforme de ${Bt} que ${O.sense === 'entra' ? 'entra en' : 'sale de'} la página. Visto desde aquí, ¿en qué sentido gira y cuál es el radio de su trayectoria?`;
+  },
+  retoTag: 'Resueltos 2–3 y retos 4–6 del taller',
+  changed() { return !!O.reto && oSnap() !== O.reto; },
+  predQ: 'Visto desde aquí, ¿en qué sentido gira la partícula?',
+  choices: [{ id: 'ccw', label: 'Antihorario ↺' }, { id: 'cw', label: 'Horario ↻' }],
+  ansLabel: 'Tu radio \\(R\\), en centímetros',
+  ansPh: 'ej. 4,18',
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = oCCW() ? 'ccw' : 'cw', R = oR(), v = parseNum($('#ans-val').value), rows = [], P = oP();
+    const dOk = pred.choice === real;
+    rows.push({ t: `Sentido: ${pred.choice === 'ccw' ? 'antihorario' : 'horario'}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(v, R * 100, 0.03); rows.push({ t: `Tu \\(R\\): ${sp(v, 3)} cm`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const Rfull = P.m * O.v / (Math.abs(P.q) * QE * O.B);
+    let t;
+    if (!dOk && P.q < 0) t = 'El electrón tiene carga negativa: en el mismo campo gira al revés que un protón. En el punto de partida \\(\\vec F=q\\,\\vec v\\times\\vec B\\) apunta hacia el centro de la circunferencia.';
+    else if (!dOk) t = 'En el punto de partida, \\(\\vec F=q\\,\\vec v\\times\\vec B\\) apunta hacia el centro de la circunferencia. Halla con la mano derecha hacia dónde apunta y sabrás hacia dónde se curva.';
+    else if (vOk === false && O.alpha < 90 && near(v, Rfull * 100, 0.03)) t = 'Usaste toda la rapidez. Solo la componente perpendicular a \\(\\vec B\\), \\(v_\\perp=v\\sin\\alpha\\), produce el giro; la paralela da el avance de la hélice.';
+    else if (vOk === false && (near(v, R, 0.03) || near(v, R * 1000, 0.03))) t = 'Revisa unidades: el reto pide el radio en centímetros (1 m = 100 cm).';
+    else if (vOk === false) t = '\\(R=\\dfrac{m\\,v_\\perp}{|q|\\,B}\\): masa en kg, carga en C, \\(v\\) en m/s y \\(B\\) en T; al final pasa a centímetros.';
+    else t = 'Bien. Cambia la rapidez: el radio crece, pero el período \\(T=2\\pi m/(|q|B)\\) no cambia. En eso se basa el ciclotrón.';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const P = oP(), qq = Math.abs(P.q) * QE, vp = O.v * Math.sin(rad(O.alpha));
+    let h = `<p>Sentido: en el punto de partida \\(\\vec F=q\\,\\vec v\\times\\vec B\\) apunta hacia el centro; para una ${P.q > 0 ? 'carga positiva' : 'carga negativa'} con \\(\\vec B\\) ${O.sense === 'entra' ? 'entrando' : 'saliendo'}, el giro es <b>${oCCW() ? 'antihorario' : 'horario'}</b>.</p>`;
+    if (O.alpha < 90) h += `\\[v_\\perp=v\\sin\\alpha=(${sx(O.v)})\\sin ${O.alpha}^\\circ=${sx(vp)}\\ \\text{m/s}\\]`;
+    h += `\\[R=\\frac{m\\,v_\\perp}{|q|\\,B}=\\frac{(${sx(P.m, 4)})(${sx(vp)})}{(${sx(qq, 4)})(${sx(O.B)})}=${sx(oR())}\\ \\text{m}=${fx(oR() * 100, 2)}\\ \\text{cm}\\]`;
+    h += `\\[T=\\frac{2\\pi m}{|q|B}=${sx(oT())}\\ \\text{s}\\qquad f=\\frac1T=${sx(1 / oT())}\\ \\text{Hz}\\]`;
+    if (O.alpha < 90) h += `\\[\\text{paso}=v_\\parallel T=(${sx(O.v * Math.cos(rad(O.alpha)))})(${sx(oT())})=${sx(oPitch())}\\ \\text{m}\\]`;
+    return h;
+  },
+  live() {
+    const r = reveal(), P = oP(), qq = Math.abs(P.q) * QE;
+    return String.raw`R=\dfrac{m\,v\sin\alpha}{|q|\,B}=\dfrac{(${sx(P.m, 4)})(${sx(O.v)})\sin ${O.alpha}^\circ}{(${sx(qq, 4)})(${sx(O.B)})}=${r ? fx(oR() * 100, 2) : '\\,?'}\,\text{cm}`;
+  },
+  coords: () => `${oP().sym} · α = ${O.alpha}°`,
+  animating: () => reveal(),
+  draw() {
+    oLayout();
+    const { cx, cy, wv } = oView, rv = reveal(), P = oP(), Rpx = oR() * O.s, ccw = oCCW(), gap = W < 600 ? 40 : 48;
+    bPerp(O.sense === 'sale' ? 1 : -1, 0, 0, wv, HU, gap);
+    const ccy = ccw ? cy - Rpx : cy + Rpx; // centro de la circunferencia
+    const pos = ph => [cx + Rpx * Math.sin(ph), ccw ? ccy + Rpx * Math.cos(ph) : ccy - Rpx * Math.cos(ph)];
+    if (rv) {
+      const now = performance.now(); if (!O.t0) O.t0 = now; O.ph = ((now - O.t0) / 3200) * 2 * Math.PI;
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.35; ctx.lineWidth = 2; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.arc(cx, ccy, Rpx, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      const upto = Math.min(O.ph, 2 * Math.PI);
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 120; i++) { const [x, y] = pos(upto * i / 120); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); ctx.restore();
+      const [px, py] = pos(O.ph), tx = Math.cos(O.ph), ty = ccw ? -Math.sin(O.ph) : Math.sin(O.ph);
+      arrow(px, py, px + tx * 52, py + ty * 52, COL.accent, 3.5, 12);
+      arrow(px, py, px + (cx - px) * 0.42, py + (ccy - py) * 0.42, COL.force, 3.5, 12);
+      charge(px, py, P.q, 12);
+      ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(cx, ccy); ctx.lineTo(cx + Rpx, ccy); ctx.stroke(); ctx.restore();
+      text(`R = ${fp(oR() * 100, 2)} cm`, cx + Rpx / 2, ccy - 12, COL.primary, 13, 'center', 600);
+      text('v', px + tx * 52 + 8, py + ty * 52, COL.accentStrong, 13, 'left', 600);
+    } else {
+      O.t0 = 0;
+      arrow(cx, cy, cx + 60, cy, COL.accent, 4, 14); sym('v⊥', cx + 66, cy - 12, COL.accentStrong, 18);
+      charge(cx, cy, P.q, 13);
+    }
+    text(`${P.sym} · B ${O.sense === 'sale' ? 'sale ⊙' : 'entra ⊗'} · vista de frente`, 16, 24, COL.field, 13, 'left', 600);
+    scaleBar(16, HU - 40, O.s);
+    text('La partícula parte del centro de la escena hacia la derecha', 16, HU - 12, COL.muted, 12);
+    const pl = oView.plot; if (!pl) return;
+    plotAxes(pl, 'Vista lateral: a lo largo de B');
+    const ax0 = pl.x + 26, ax1 = pl.x + pl.w - 26, ay = pl.y + pl.h / 2 + 10;
+    arrow(ax0, ay, ax1, ay, COL.field, 2, 10); sym('B', ax1 - 10, ay - 14, COL.field, 17);
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la trayectoria.'); return; }
+    if (O.alpha === 90) {
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo((ax0 + ax1) / 2, ay - 60); ctx.lineTo((ax0 + ax1) / 2, ay + 60); ctx.stroke(); ctx.restore();
+      text('v ⊥ B: no avanza a lo largo de B (paso = 0)', (ax0 + ax1) / 2, ay + 82, COL.muted, 12, 'center');
+    } else {
+      const amp = 60, turns = 2.5, pitchPx = (ax1 - ax0 - 30) / turns, k = 2 * Math.PI / pitchPx;
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let x = 0; x <= pitchPx * turns; x += 2) { const y = ay - amp * Math.sin(k * x); x ? ctx.lineTo(ax0 + 10 + x, y) : ctx.moveTo(ax0 + 10, y); } ctx.stroke(); ctx.restore();
+      const xA = ax0 + 10 + pitchPx * 0.25, xB = xA + pitchPx;
+      ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(xA, ay - amp - 10); ctx.lineTo(xB, ay - amp - 10); ctx.stroke(); ctx.restore();
+      text(`paso = ${sp(oPitch())} m`, (xA + xB) / 2, ay - amp - 22, COL.ink, 12, 'center', 600);
+      text('Proyección de la hélice (escala horizontal no proporcional)', pl.x + pl.w / 2, ay + amp + 24, COL.muted, 11, 'center');
+    }
+    text(`T = ${sp(oT())} s · f = ${sp(1 / oT())} Hz`, pl.x + 16, pl.y + pl.h - 18, COL.ink, 12, 'left', 600);
+  },
+};
+
+// ═════════════════════════ ESCENA 3 · SELECTOR DE VELOCIDADES Y ESPECTRÓMETRO ═════════════════════════
+const IONS = { c12: { n: 'carbono-12', sym: '¹²C⁺', A: 12 }, c13: { n: 'carbono-13', sym: '¹³C⁺', A: 13 }, c14: { n: 'carbono-14', sym: '¹⁴C⁺', A: 14 },
+  o16: { n: 'oxígeno-16', sym: '¹⁶O⁺', A: 16 }, ne20: { n: 'neón-20', sym: '²⁰Ne⁺', A: 20 }, ne22: { n: 'neón-22', sym: '²²Ne⁺', A: 22 } };
+const Se = { E: 1.2e5, B1: 0.3, B2: 0.3, ion: 'c12', vb: 4e5, reto: null };
+const LSEL = 0.10, GAP = 0.02, SLIT = 0.002;     // m: largo del selector, separación de las placas y ancho de la rendija
+const seM = () => IONS[Se.ion].A * UMA;
+const seV0 = () => Se.E / Se.B1;
+function sePath() { // integra F = q(E + v × B) dentro del selector: E hacia abajo, B entra en la página
+  const m = seM(), k = QE / m, dt = LSEL / Se.vb / 600; let x = 0, y = 0, vx = Se.vb, vy = 0; const pts = [[0, 0]];
+  for (let i = 0; i < 4000; i++) {
+    const ax = k * (-vy * Se.B1), ay = k * (-Se.E + vx * Se.B1);
+    vx += ax * dt; vy += ay * dt; x += vx * dt; y += vy * dt; pts.push([x, y]);
+    if (Math.abs(y) >= GAP / 2) return { pts, hit: true, y, v: Math.hypot(vx, vy) };
+    if (x >= LSEL) break;
+  }
+  return { pts, hit: false, y, v: Math.hypot(vx, vy), pass: Math.abs(y) <= SLIT / 2 };
+}
+const seCat = () => Math.abs(Se.vb - seV0()) <= 0.005 * seV0() ? 'recto' : Se.vb > seV0() ? 'sube' : 'baja';
+const seR = (A = IONS[Se.ion].A, v = Se.vb) => A * UMA * v / (QE * Se.B2);
+function seTarget() { const p = sePath(); return p.pass ? { pass: true, val: 2 * seR(IONS[Se.ion].A, p.v) * 100, unit: 'cm' } : { pass: false, val: seV0(), unit: 'm/s' }; }
+const seSnap = () => JSON.stringify([Se.E, Se.B1, Se.B2, Se.ion, Se.vb]);
+let seView = {};
+const scSelector = {
+  title: 'Selector',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Ion</span>
+      <div class="seg">${Object.entries(IONS).map(([k, o]) => `<button class="btn ${Se.ion === k ? 'active' : ''}" data-act="ion:${k}" type="button">${o.sym}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Haz</span>
+      <button class="btn" data-act="v0" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-crosshair"></i>Ajustar v = E/B</button></div>`,
+  act(a) {
+    if (a.startsWith('ion:')) Se.ion = a.slice(4);
+    else if (a === 'v0') Se.vb = seV0();
+    invalidate(); buildToolbar(); buildValues();
+  },
+  values: () => [
+    { k: 'E', sym: 'E', min: 1, max: 30, step: 0.5, get: () => Se.E / 1e4, set: x => Se.E = x * 1e4, fmt: x => sp(x * 1e4, 2) + ' V/m', label: 'Campo eléctrico del selector' },
+    { k: 'B', sym: 'B', min: 0.05, max: 1, step: 0.05, get: () => Se.B1, set: x => Se.B1 = x, fmt: x => fp(x, 2) + ' T', label: 'Campo magnético del selector' },
+    { k: 'v', sym: 'v', min: 0.5, max: 20, step: 0.1, get: () => Se.vb / 1e5, set: x => Se.vb = x * 1e5, fmt: x => sp(x * 1e5, 3) + ' m/s', label: 'Rapidez del haz' },
+    { k: "B'", sym: "B′", min: 0.05, max: 1, step: 0.05, get: () => Se.B2, set: x => Se.B2 = x, fmt: x => fp(x, 2) + ' T', label: 'Campo de la cámara del espectrómetro' },
+  ],
+  valuesNote: 'Masa de cada ion: A · u, con u = 1,661 × 10⁻²⁷ kg (se desprecia la masa del electrón que falta). Placa superior positiva: E apunta hacia abajo.',
+  newReto() {
+    Se.ion = pick(Object.keys(IONS)); Se.E = pick([0.8, 1.0, 1.2, 1.5, 2.0]) * 1e5; Se.B1 = pick([0.2, 0.25, 0.3, 0.4, 0.5]); Se.B2 = pick([0.2, 0.3, 0.4, 0.5]);
+    const g = pick(['recto', 'recto', 'sube', 'baja']);
+    Se.vb = g === 'recto' ? seV0() : seV0() * (g === 'sube' ? pick([1.15, 1.25, 1.4]) : pick([0.6, 0.75, 0.85]));
+    Se.reto = seSnap();
+  },
+  retoText() {
+    const o = IONS[Se.ion];
+    return `Un haz de iones de ${o.n} (${o.sym}, masa ≈ ${o.A} u) entra con rapidez ${sp(Se.vb, 3)} m/s en un selector con \\(E = ${sx(Se.E, 2)}\\) V/m y \\(B = ${fx(Se.B1, 2)}\\) T. Los que salen por la rendija entran en una cámara con \\(B' = ${fx(Se.B2, 2)}\\) T. ¿El haz pasa sin desviarse? Si pasa, ¿a qué distancia de la rendija impacta? Si no, ¿qué rapidez tendría que llevar?`;
+  },
+  retoTag: 'Resuelto 4 y retos 7–8 del taller',
+  changed() { return !!Se.reto && seSnap() !== Se.reto; },
+  predQ: '¿Qué hace el haz dentro del selector?',
+  choices: [{ id: 'recto', label: 'Pasa recto' }, { id: 'sube', label: 'Se desvía hacia arriba' }, { id: 'baja', label: 'Se desvía hacia abajo' }],
+  get ansLabel() { return seTarget().pass ? 'Distancia del impacto a la rendija, en cm' : 'Rapidez que pasaría sin desviarse, en m/s'; },
+  ansPh: 'ej. 33,2',
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = seCat(), T = seTarget(), v = parseNum($('#ans-val').value), rows = [], names = { recto: 'pasa recto', sube: 'se desvía hacia arriba', baja: 'se desvía hacia abajo' };
+    const dOk = pred.choice === real;
+    rows.push({ t: `Selector: ${names[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(v, T.val, 0.03); rows.push({ t: `Tu valor: ${sp(v, 3)} ${T.unit}`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    let t;
+    if (!dOk && real === 'recto') t = 'Con \\(v=E/B\\) la fuerza eléctrica \\(qE\\) (hacia abajo) y la magnética \\(qvB\\) (hacia arriba) se anulan: el ion pasa recto.';
+    else if (!dOk) t = `El ion va más ${real === 'sube' ? 'rápido' : 'lento'} que \\(E/B\\): gana la fuerza ${real === 'sube' ? 'magnética \\(qvB\\), que apunta hacia arriba' : 'eléctrica \\(qE\\), que apunta hacia abajo'}. La eléctrica no depende de \\(v\\); la magnética sí.`;
+    else if (vOk === false && T.pass && near(v, T.val / 2, 0.03)) t = 'Ese es el radio. El ion recorre media circunferencia: impacta a \\(2R\\) de la rendija.';
+    else if (vOk === false && !T.pass && near(v, Se.B1 / Se.E, 0.03)) t = 'Invertiste el cociente: \\(v = E/B\\) (V/m entre T da m/s).';
+    else if (vOk === false && T.pass && (near(v, T.val / 100, 0.03) || near(v, T.val / 200, 0.03))) t = 'Revisa unidades: el reto pide la distancia en centímetros.';
+    else if (vOk === false && T.pass) t = '\\(R = mv/(qB\')\\) con \\(m\\approx A\\,u\\) y \\(u = 1{,}661\\times10^{-27}\\) kg; el impacto está a \\(2R\\) de la rendija.';
+    else if (vOk === false) t = 'Solo pasan sin desviarse los iones con \\(qE = qvB\\), es decir, con \\(v=E/B\\).';
+    else t = T.pass ? 'Bien. Cambia de isótopo: con la misma rapidez, el más pesado impacta más lejos, porque \\(R\\propto m\\). Así se separan isótopos.' : 'Bien. Pulsa «Ajustar v = E/B» y mira cómo el haz pasa por la rendija.';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const o = IONS[Se.ion], T = seTarget(), v0 = seV0();
+    let h = `\\[v_0=\\frac{E}{B}=\\frac{${sx(Se.E, 3)}}{${fx(Se.B1, 2)}}=${sx(v0)}\\ \\text{m/s}\\]<p>El haz lleva ${sp(Se.vb, 3)} m/s: ${seCat() === 'recto' ? 'igual a \\(v_0\\), así que pasa recto' : Se.vb > v0 ? 'más que \\(v_0\\): gana \\(qvB\\) y se desvía hacia arriba' : 'menos que \\(v_0\\): gana \\(qE\\) y se desvía hacia abajo'}.</p>`;
+    if (T.pass) h += `\\[R=\\frac{mv}{qB'}=\\frac{(${o.A})(1{,}661\\times10^{-27})(${sx(Se.vb)})}{(1{,}602\\times10^{-19})(${fx(Se.B2, 2)})}=${fx(T.val / 200, 2)}\\ \\text{cm}\\]<p>Media circunferencia: impacta a \\(2R = ${fx(T.val, 2)}\\) cm de la rendija.</p>`;
+    else h += '<p>No sale por la rendija. Para pasar debería llevar \\(v_0\\).</p>';
+    return h;
+  },
+  live() {
+    const r = reveal(), T = seTarget();
+    return T.pass ? String.raw`v=\dfrac{E}{B}=${sx(seV0())}\,\text{m/s}\quad 2R=\dfrac{2mv}{qB'}=${r ? fx(T.val, 2) : '\\,?'}\,\text{cm}` : String.raw`qE=qvB\ \Rightarrow\ v=\dfrac{E}{B}=\dfrac{${sx(Se.E, 3)}}{${fx(Se.B1, 2)}}=${r ? sx(seV0()) : '\\,?'}\,\text{m/s}`;
+  },
+  coords: () => `${IONS[Se.ion].sym} · v₀ = E/B = ${sp(seV0(), 3)} m/s`,
+  draw() {
+    const wide = W > 760, x0 = 24, Lpx = wide ? W * 0.32 : W * 0.4, s1 = Lpx / LSEL, by = HU * 0.8, xs = x0 + Lpx + 8, rv = reveal(), p = sePath(), cat = seCat();
+    const gp = GAP / 2 * s1;
+    // cámara del espectrómetro
+    const ch = { x: xs, y: 14, w: W - xs - 14, h: by + 30 - 14 };
+    ctx.save(); ctx.fillStyle = COL.primarySoft; ctx.globalAlpha = 0.45; ctx.fillRect(ch.x, ch.y, ch.w, ch.h); ctx.restore();
+    bPerp(-1, ch.x, ch.y, ch.x + ch.w, ch.y + ch.h, W < 600 ? 34 : 44);
+    text("Cámara: B′ entra ⊗", ch.x + ch.w - 10, ch.y + 16, COL.field, 12, 'right', 600);
+    const vmax = Math.max(Se.vb, seV0()), Rmax = seR(22, vmax), s2 = Math.min((by - 40) / (2 * Rmax), (ch.w - 30) / (Rmax * 1.05));
+    // placa detectora con marcas cada 5 o 10 cm
+    ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(xs, by - 6); ctx.lineTo(xs, 16); ctx.stroke(); ctx.restore();
+    const stp = 0.05 * s2 < 26 ? 0.1 : 0.05;
+    for (let d = stp; d * s2 < by - 20; d += stp) { ctx.save(); ctx.strokeStyle = COL.muted; ctx.beginPath(); ctx.moveTo(xs, by - d * s2); ctx.lineTo(xs + 7, by - d * s2); ctx.stroke(); ctx.restore(); text(`${fp(d * 100, 0)} cm`, xs + 10, by - d * s2, COL.muted, 10); }
+    // selector: placas, E y B
+    ctx.save(); ctx.fillStyle = COL.qpos; ctx.fillRect(x0, by - gp - 7, Lpx, 7); ctx.fillStyle = COL.qneg; ctx.fillRect(x0, by + gp, Lpx, 7); ctx.restore();
+    text('+ + + + + +', x0 + Lpx / 2, by - gp - 16, COL.qpos, 12, 'center', 600); text('− − − − − −', x0 + Lpx / 2, by + gp + 18, COL.qneg, 12, 'center', 600);
+    for (let k = 1; k < 5; k++) arrow(x0 + Lpx * k / 5, by - gp + 4, x0 + Lpx * k / 5, by + gp - 4, COL.accent, 1.5, 7);
+    bPerp(-1, x0, by - gp, x0 + Lpx, by + gp, Math.max(18, gp));
+    text('Selector: E ↓ y B ⊗', x0, by + gp + 40, COL.ink, 12, 'left', 600);
+    // rendija
+    const sh = Math.max(3, SLIT / 2 * s1);
+    ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(xs, by - gp - 7); ctx.lineTo(xs, by - sh); ctx.moveTo(xs, by + sh); ctx.lineTo(xs, by + gp + 7); ctx.stroke(); ctx.restore();
+    // haz de entrada
+    arrow(x0 - 18, by, x0 + 4, by, COL.accent, 3, 10);
+    if (!rv) { charge(x0 + 14, by, 1, 8); text('Comprueba para lanzar el haz', xs + 14, by - 18, COL.muted, 12); }
+    else {
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); p.pts.forEach(([x, y], i) => { const X = x0 + x * s1, Y = by - y * s1; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke(); ctx.restore();
+      const end = p.pts[p.pts.length - 1];
+      if (p.hit || !p.pass) text(p.hit ? 'El haz choca con una placa del selector.' : 'El haz no sale por la rendija.', x0, by + gp + 60, COL.danger, 12, 'left', 600);
+      // fuerzas a mitad del selector
+      const xm = x0 + Lpx * 0.5, FE = QE * Se.E, FB = QE * Se.vb * Se.B1, Fm = Math.max(FE, FB), L = gp * 0.85;
+      arrow(xm, by, xm, by + L * FE / Fm, COL.accentStrong, 3, 10); arrow(xm, by, xm, by - L * FB / Fm, COL.force, 3, 10);
+      text('qE', xm + 8, by + L * FE / Fm - 4, COL.accentStrong, 12, 'left', 600); text('qvB', xm + 8, by - L * FB / Fm + 4, COL.force, 12, 'left', 600);
+      // impactos posibles de todos los isótopos a esta rapidez (marcas tenues)
+      Object.entries(IONS).forEach(([k, o]) => { const d = 2 * seR(o.A, p.v) * s2; if (d < by - 16) { ctx.save(); ctx.globalAlpha = k === Se.ion ? 1 : 0.35; ctx.fillStyle = COL.field; ctx.fillRect(xs, by - d - 1.5, 12, 3); ctx.restore(); if (k !== Se.ion) text(o.sym, xs + 56, by - d, COL.muted, 10, 'left'); } });
+      if (p.pass) {
+        const R = seR(IONS[Se.ion].A, p.v) * s2, cyc = by - R;
+        ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(xs, cyc, R, Math.PI / 2, -Math.PI / 2, true); ctx.stroke(); ctx.restore();
+        charge(xs, by - 2 * R, 1, 7);
+        text(`${IONS[Se.ion].sym} impacta a ${fp(2 * R / s2 * 100, 2)} cm`, xs + 56, by - 2 * R, COL.primary, 12, 'left', 600);
+      }
+    }
+    text('Vista de frente · escala del selector distinta de la de la cámara', 16, HU - 12, COL.muted, 12);
+  },
+};
+
+// ═════════════════════════ ESCENA 4 · CONDUCTOR Y ESPIRA ═════════════════════════
+const Co = { mode: 'hilo', I: 8, L: 0.5, B: 0.4, aw: 60, inv: false, N: 50, a: 0.05, b: 0.08, phi: 30, w: 0, run: false, t: 0, drag: false, reto: null };
+const coIs = () => Co.inv ? -Co.I : Co.I;
+const coTheta = () => Co.inv ? 180 - Co.aw : Co.aw;   // ángulo entre la corriente y B (aw en [0°, 180°))
+const coFz = () => -coIs() * Co.L * Co.B * Math.sin(rad(Co.aw));       // (I L × B)_z con B hacia la derecha
+const coMu = () => Co.N * Co.I * Co.a * Co.b;
+const coTau = () => -coMu() * Co.B * Math.sin(rad(Co.phi));             // τ_z = (μ × B)_z
+function coCat() {
+  if (Co.mode === 'hilo') { const F = coFz(); return Math.abs(F) < 1e-9 * Co.I * Co.L * Co.B ? 'cero' : F > 0 ? 'sale' : 'entra'; }
+  const t = coTau(); return Math.abs(t) < 1e-9 * coMu() * Co.B ? 'nogira' : t < 0 ? 'cw' : 'ccw';
+}
+const coSnap = () => JSON.stringify(Co.mode === 'hilo' ? ['h', Co.I, Co.L, Co.B, Co.aw, Co.inv] : ['e', Co.N, Co.I, Co.a, Co.b, Co.B, Math.round(Co.phi)]);
+let coView = {};
+function coLayout() {
+  const wide = W > 760, wv = wide ? W * 0.58 : W;
+  coView = { cx: wide ? wv * 0.55 + 30 : wv * 0.5, cy: HU * (wide ? 0.56 : 0.5), R: Math.min(wv, HU) * 0.27, wv, plot: wide ? { x: W * 0.6, y: 20, w: W * 0.4 - 20, h: Math.min(HU - 40, 340) } : null };
+}
+const scConductor = {
+  title: 'Conductor',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Montaje</span>
+      <div class="seg">${[['hilo', 'Hilo recto'], ['espira', 'Espira (par)']].map(([k, l]) => `<button class="btn ${Co.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div>
+      ${Co.mode === 'hilo' ? '<button class="btn" data-act="inv" type="button"><i class="ph ph-arrows-left-right"></i>Invertir corriente</button>'
+        : `<button class="btn ${Co.run ? 'active' : ''}" data-act="run" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-${Co.run ? 'pause' : 'play'}"></i>${Co.run ? 'Detener' : 'Soltar la espira'}</button>`}</div>`,
+  act(a) {
+    if (a.startsWith('mode:')) { const m = a.slice(5); if (m !== Co.mode) { Co.mode = m; Co.run = false; seenCo[m] ? null : (seenCo[m] = true, this.newReto()); resetPred(); renderReto(); buildValues(); } }
+    else if (a === 'inv') { Co.inv = !Co.inv; invalidate(); }
+    else if (a === 'run') { Co.run = !Co.run; Co.w = 0; Co.t = performance.now(); }
+    renderPanel(); buildToolbar();
+  },
+  values() {
+    if (Co.mode === 'hilo') return [
+      { k: 'I', sym: 'I', min: 0.5, max: 20, step: 0.5, get: () => Co.I, set: x => Co.I = x, fmt: x => fp(x, 1) + ' A' },
+      { k: 'L', sym: 'L', min: 5, max: 100, step: 1, get: () => Co.L * 100, set: x => Co.L = x / 100, fmt: x => fp(x, 0) + ' cm', label: 'Largo del tramo dentro del campo' },
+      { k: 'B', sym: 'B', min: 0.05, max: 1, step: 0.05, get: () => Co.B, set: x => Co.B = x, fmt: x => fp(x, 2) + ' T' }];
+    return [
+      { k: 'N', sym: 'N', min: 1, max: 200, step: 1, get: () => Co.N, set: x => Co.N = x, fmt: x => x + ' vueltas' },
+      { k: 'I', sym: 'I', min: 0.1, max: 5, step: 0.1, get: () => Co.I, set: x => Co.I = x, fmt: x => fp(x, 1) + ' A' },
+      { k: 'a', sym: 'a', min: 1, max: 20, step: 0.5, get: () => Co.a * 100, set: x => Co.a = x / 100, fmt: x => fp(x, 1) + ' cm', label: 'Lado visible de la bobina' },
+      { k: 'b', sym: 'b', min: 1, max: 20, step: 0.5, get: () => Co.b * 100, set: x => Co.b = x / 100, fmt: x => fp(x, 1) + ' cm', label: 'Lado perpendicular a la página' },
+      { k: 'B', sym: 'B', min: 0.05, max: 1, step: 0.05, get: () => Co.B, set: x => Co.B = x, fmt: x => fp(x, 2) + ' T' }];
+  },
+  get valuesNote() { return Co.mode === 'hilo' ? 'Arrastra un extremo del hilo para girarlo. B apunta hacia la derecha, en el plano de la página.' : 'Vista de canto: la bobina se ve como una línea; sus lados de largo b atraviesan la página (⊙ y ⊗). Arrastra la punta de μ para girarla.'; },
+  newReto() {
+    if (Co.mode === 'hilo') { Co.I = pick([2, 4, 5, 8, 10]); Co.L = pick([0.2, 0.3, 0.5, 0.8]); Co.B = pick([0.2, 0.3, 0.4, 0.5]); Co.aw = pick([30, 45, 60, 90, 90, 120, 150, 0]); Co.inv = Math.random() < 0.4; }
+    else { Co.N = pick([10, 20, 50, 100]); Co.I = pick([0.5, 1, 2, 3]); Co.a = pick([4, 5, 6, 8, 10]) / 100; Co.b = pick([4, 5, 6, 8, 10]) / 100; Co.B = pick([0.1, 0.2, 0.3, 0.5]); Co.phi = pick([30, 45, 60, 90, 120, 150, 210, 240, 300, 330, 0]); Co.run = false; Co.w = 0; }
+    Co.reto = coSnap();
+  },
+  retoText() {
+    if (Co.mode === 'hilo') return `Un tramo recto de alambre de ${fp(Co.L * 100, 0)} cm lleva ${fp(Co.I, 1)} A en el sentido de la flecha. Forma ${coTheta()}° con un campo uniforme de ${fp(Co.B, 2)} T que apunta hacia la derecha. ¿Hacia dónde apunta la fuerza sobre el alambre y cuánto vale?`;
+    return `Una bobina rectangular de ${Co.N} vueltas, de ${fp(Co.a * 100, 1)} cm × ${fp(Co.b * 100, 1)} cm, lleva ${fp(Co.I, 1)} A. Su momento magnético \\(\\vec\\mu\\) forma ${Math.round(Co.phi)}° (medidos en sentido antihorario) con un campo uniforme de ${fp(Co.B, 2)} T que apunta hacia la derecha. ¿Hacia dónde empieza a girar y cuánto vale el par?`;
+  },
+  get retoTag() { return Co.mode === 'hilo' ? 'Resuelto 5 y retos 9–10 del taller' : 'Resuelto 6 y retos 11–12 del taller'; },
+  changed() { return !!Co.reto && coSnap() !== Co.reto; },
+  get predQ() { return Co.mode === 'hilo' ? '¿Hacia dónde apunta la fuerza sobre el alambre?' : '¿Hacia dónde empieza a girar la bobina?'; },
+  get choices() { return Co.mode === 'hilo' ? [{ id: 'sale', label: 'Sale ⊙' }, { id: 'entra', label: 'Entra ⊗' }, { id: 'cero', label: 'No hay fuerza' }] : [{ id: 'cw', label: 'Horario ↻' }, { id: 'ccw', label: 'Antihorario ↺' }, { id: 'nogira', label: 'No gira' }]; },
+  get ansLabel() { return Co.mode === 'hilo' ? 'Tu valor de \\(F\\), en newtons' : 'Tu valor del par \\(\\tau\\), en N·m'; },
+  get ansPh() { return Co.mode === 'hilo' ? 'ej. 1,39' : 'ej. 0,060'; },
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = coCat(), v = parseNum($('#ans-val').value), rows = [], lab = Object.fromEntries(this.choices.map(c => [c.id, c.label]));
+    const dOk = pred.choice === real, hilo = Co.mode === 'hilo';
+    const val = hilo ? Math.abs(coFz()) : Math.abs(coTau()), unit = hilo ? 'N' : 'N·m';
+    rows.push({ t: `${hilo ? 'Fuerza' : 'Giro'}: ${lab[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = val === 0 || real === 'cero' || real === 'nogira' ? Math.abs(v) < 1e-9 : near(Math.abs(v), val, 0.03); rows.push({ t: `Tu valor: ${sp(v, 3)} ${unit}`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    let t;
+    if (hilo) {
+      const th = coTheta(), ILB = Co.I * Co.L * Co.B;
+      if (!dOk && real === 'cero') t = 'El hilo es paralelo a \\(\\vec B\\): \\(\\vec L\\times\\vec B = 0\\) y no hay fuerza.';
+      else if (!dOk && pred.choice === 'cero') t = `El hilo forma ${th}° con \\(\\vec B\\): sen θ ≠ 0, así que sí hay fuerza.`;
+      else if (!dOk) t = 'Mano derecha con \\(\\vec F=I\\,\\vec L\\times\\vec B\\): dedos en el sentido de la corriente, dóblalos hacia \\(\\vec B\\); el pulgar da la fuerza.';
+      else if (vOk === false && th % 180 !== 90 && near(Math.abs(v), ILB, 0.03)) t = 'Te faltó el factor \\(\\sin\\theta\\): solo cuenta la parte del hilo perpendicular a \\(\\vec B\\).';
+      else if (vOk === false && (near(Math.abs(v), val * 100, 0.03) || near(Math.abs(v), val / 100, 0.03))) t = 'Revisa unidades: el largo del hilo va en metros.';
+      else if (vOk === false) t = '\\(F = I\\,L\\,B\\sin\\theta\\), con \\(L\\) en metros.';
+      else t = 'Bien. Gira el hilo: la fuerza es máxima cuando es perpendicular a \\(\\vec B\\) y nula si es paralelo. Invierte la corriente y la fuerza cambia de sentido.';
+    } else {
+      const mu = coMu();
+      if (!dOk && real === 'nogira') t = 'Con \\(\\vec\\mu\\) paralelo o antiparalelo a \\(\\vec B\\), el par es cero: \\(\\vec\\tau=\\vec\\mu\\times\\vec B=0\\).';
+      else if (!dOk && pred.choice === 'nogira') t = '\\(\\vec\\mu\\) y \\(\\vec B\\) no son paralelos: hay par.';
+      else if (!dOk) t = 'El par gira \\(\\vec\\mu\\) hacia \\(\\vec B\\) por el camino más corto. Mira las fuerzas en los dos lados que atraviesan la página: una sube y la otra baja.';
+      else if (vOk === false && near(Math.abs(v), mu * Co.B * Math.abs(Math.cos(rad(Co.phi))), 0.03) && Math.abs(Math.sin(rad(Co.phi))) < 0.999) t = 'Usaste \\(\\cos\\phi\\). El par es máximo cuando \\(\\vec\\mu\\perp\\vec B\\) (plano de la bobina paralelo a B): va con \\(\\sin\\phi\\).';
+      else if (vOk === false && near(Math.abs(v), val / Co.N, 0.03)) t = `Te faltó multiplicar por las ${Co.N} vueltas: \\(\\mu = NIA\\).`;
+      else if (vOk === false && (near(Math.abs(v), val * 1e4, 0.03) || near(Math.abs(v), val * 100, 0.03))) t = 'Revisa unidades: el área va en m² (1 cm² = 10⁻⁴ m²).';
+      else if (vOk === false) t = '\\(\\tau = \\mu B\\sin\\phi\\), con \\(\\mu = NIA\\) y el área en m².';
+      else t = 'Bien. Pulsa «Soltar la espira»: oscila alrededor de \\(\\vec\\mu\\) paralelo a \\(\\vec B\\), la posición de mínima energía \\(U=-\\mu B\\).';
+    }
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    if (Co.mode === 'hilo') {
+      const c = coCat();
+      return `<p>El ángulo entre el hilo (en el sentido de la corriente) y \\(\\vec B\\) es \\(\\theta=${coTheta()}^\\circ\\).</p>\\[F=I\\,L\\,B\\sin\\theta=(${fx(Co.I, 1)})(${fx(Co.L, 2)})(${fx(Co.B, 2)})\\sin ${coTheta()}^\\circ=${sx(Math.abs(coFz()))}\\ \\text{N}\\]<p>Dirección: ${c === 'cero' ? 'no hay fuerza.' : c === 'sale' ? 'sale de la página (⊙).' : 'entra en la página (⊗).'}</p>`;
+    }
+    const c = coCat();
+    return `\\[\\mu=NIA=(${Co.N})(${fx(Co.I, 1)})(${fx(Co.a, 2)})(${fx(Co.b, 2)})=${sx(coMu())}\\ \\text{A}\\cdot\\text{m}^2\\]\\[\\tau=\\mu B\\sin\\phi=(${sx(coMu())})(${fx(Co.B, 2)})\\sin ${Math.round(Co.phi)}^\\circ=${sx(Math.abs(coTau()))}\\ \\text{N}\\cdot\\text{m}\\]<p>${c === 'nogira' ? 'No gira: \\(\\vec\\mu\\parallel\\vec B\\).' : `Gira en sentido <b>${c === 'cw' ? 'horario' : 'antihorario'}</b>, llevando \\(\\vec\\mu\\) hacia \\(\\vec B\\).`} Energía: \\(U=-\\mu B\\cos\\phi=${sx(-coMu() * Co.B * Math.cos(rad(Co.phi)))}\\) J.</p>`;
+  },
+  live() {
+    const r = reveal();
+    if (Co.mode === 'hilo') return String.raw`F=I\,L\,B\sin\theta=(${fx(Co.I, 1)})(${fx(Co.L, 2)})(${fx(Co.B, 2)})\sin ${coTheta()}^\circ=${r ? sx(Math.abs(coFz())) : '\\,?'}\,\text{N}`;
+    return String.raw`\tau=N I A\,B\sin\phi=(${Co.N})(${fx(Co.I, 1)})(${fx(Co.a * Co.b * 1e4, 1)}\times10^{-4})(${fx(Co.B, 2)})\sin ${Math.round(Co.phi)}^\circ=${r ? sx(Math.abs(coTau())) : '\\,?'}\,\text{N}\cdot\text{m}`;
+  },
+  coords: () => Co.mode === 'hilo' ? `θ = ${coTheta()}°` : `φ = ${Math.round(Co.phi)}°`,
+  animating: () => Co.mode === 'espira' && Co.run,
+  step() { // dinámica de la bobina soltada: período de pequeñas oscilaciones de unos 2 s, con amortiguamiento
+    const now = performance.now(), dt = Math.min(0.05, (now - Co.t) / 1000); Co.t = now;
+    const k = (Math.PI) ** 2, ang = rad(Co.phi);
+    Co.w += (-k * Math.sin(ang) - 0.9 * Co.w) * dt; Co.phi = n360((ang + Co.w * dt) * DEG);
+  },
+  down(px, py) {
+    const { cx, cy, R } = coView;
+    if (Co.mode === 'hilo') { const [x1, y1] = tip(cx, cy, Co.aw, R), [x2, y2] = tip(cx, cy, Co.aw + 180, R); if (Math.hypot(px - x1, py - y1) < 26 || Math.hypot(px - x2, py - y2) < 26) Co.drag = Math.hypot(px - x1, py - y1) < 26 ? 1 : -1; }
+    else { const [mx, my] = tip(cx, cy, Co.phi, R * 0.75); if (Math.hypot(px - mx, py - my) < 26) { Co.drag = 1; Co.run = false; buildToolbar(); } }
+  },
+  move(px, py) {
+    if (!Co.drag) return;
+    let a = scrA(coView.cx, coView.cy, px, py); if (Co.drag < 0) a += 180;
+    if (Co.mode === 'hilo') { a = snapA(a); if (a >= 180) a -= 180; Co.aw = a; } else Co.phi = snapA(a, 5);
+    invalidate();
+  },
+  up() { Co.drag = false; },
+  draw() {
+    coLayout();
+    const { cx, cy, R, wv } = coView, rv = reveal(), gap = W < 600 ? 40 : 48;
+    bPlane(0, 0, 0, wv, HU, gap);
+    text('B → (uniforme, hacia la derecha)', 16, 24, COL.field, 13, 'left', 600);
+    const pl = coView.plot;
+    if (Co.mode === 'hilo') {
+      const [x1, y1] = tip(cx, cy, Co.aw, R), [x2, y2] = tip(cx, cy, Co.aw + 180, R), s = Co.inv ? -1 : 1;
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+      const [a1, b1] = tip(cx, cy, Co.aw + (s > 0 ? 180 : 0), R * 0.25), [a2, b2] = tip(cx, cy, Co.aw + (s > 0 ? 0 : 180), R * 0.25);
+      arrow(a1, b1, a2, b2, COL.surface, 3, 12); text(`I = ${fp(Co.I, 1)} A`, x1 + 10, y1 - 14, COL.primary, 13, 'left', 600);
+      [[x1, y1], [x2, y2]].forEach(([x, y]) => { ctx.save(); ctx.fillStyle = COL.primary; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(x, y, 11, 0, 2 * Math.PI); ctx.fill(); ctx.restore(); });
+      const aCur = Co.inv ? Co.aw + 180 : Co.aw, [tx0, ty0] = tip(cx, cy, adiff(aCur, 0) / 2, R * 0.46);
+      arc(cx, cy, R * 0.32, 0, aCur, COL.muted); text(`θ = ${coTheta()}°`, tx0, ty0, COL.muted, 12, 'center', 600);
+      if (rv) { const c = coCat(); if (c === 'cero') text('F = 0', cx, cy + 34, COL.force, 14, 'center', 600); else bigSym(...tip(cx, cy, Co.aw - 90, R * 0.5), c === 'sale' ? 1 : -1, COL.force, `F ${c === 'sale' ? 'sale' : 'entra'} · ${sp(Math.abs(coFz()))} N`); }
+      text('Arrastra un extremo para girar el hilo', 16, HU - 12, COL.muted, 12);
+      if (!pl) return;
+      plotAxes(pl, 'Fuerza según el ángulo entre el hilo y B');
+      if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+      const ILB = Co.I * Co.L * Co.B; const { X, Y } = plotCurve(pl, x => ILB * Math.sin(rad(x)), 0, 180, coTheta(), ILB * 1.15, 'θ', 45);
+      text(`${sp(Math.abs(coFz()))} N`, X(coTheta()) + 10, Y(Math.abs(coFz())) - 12, COL.primary, 12, 'left', 600);
+      return;
+    }
+    // espira de canto: la línea es perpendicular a μ; el extremo a +90° de μ lleva corriente que sale (⊙)
+    if (Co.run) this.step();
+    const half = R * 0.9, [ux, uy] = tip(cx, cy, Co.phi + 90, half), [dx, dy] = tip(cx, cy, Co.phi - 90, half);
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ux, uy); ctx.lineTo(dx, dy); ctx.stroke(); ctx.restore();
+    wireSym(ux, uy, 1, 12, COL.primary); wireSym(dx, dy, -1, 12, COL.primary);
+    const [mx, my] = tip(cx, cy, Co.phi, R * 0.75);
+    arrow(cx, cy, mx, my, COL.accent, 4, 14); sym('μ', mx + 10, my - 12, COL.accentStrong, 20);
+    ctx.save(); ctx.fillStyle = COL.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(mx, my, 10, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    arc(cx, cy, R * 0.3, 0, Co.phi, COL.muted); text(`φ = ${Math.round(Co.phi)}°`, cx + R * 0.36, cy + 16, COL.muted, 12, 'left', 600);
+    if (rv) {
+      const Fl = 50; arrow(ux, uy, ux, uy - Fl, COL.force, 3.5, 12); arrow(dx, dy, dx, dy + Fl, COL.force, 3.5, 12);
+      text('F', ux + 10, uy - Fl + 6, COL.force, 13, 'left', 600); text('F', dx + 10, dy + Fl - 6, COL.force, 13, 'left', 600);
+      const c = coCat(); text(c === 'nogira' ? 'τ = 0' : `τ = ${sp(Math.abs(coTau()))} N·m · ${c === 'cw' ? 'horario ↻' : 'antihorario ↺'}`, 16, HU - 34, COL.force, 13, 'left', 600);
+    }
+    text(`N = ${Co.N} · ${fp(Co.a * 100, 1)} × ${fp(Co.b * 100, 1)} cm · vista de canto`, 16, HU - 12, COL.muted, 12);
+    if (!pl) return;
+    plotAxes(pl, 'Par según el ángulo φ entre μ y B');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+    const mB = coMu() * Co.B, { X, Y } = plotCurve(pl, x => -mB * Math.sin(rad(x)), 0, 360, n360(Co.phi), mB * 1.2, 'φ', 90, true);
+    text('τz > 0: antihorario', pl.x + 56, pl.y + 46, COL.muted, 11); text('τz < 0: horario', pl.x + 56, pl.y + pl.h - 58, COL.muted, 11);
+  },
+};
+const seenCo = { hilo: true };
+
+// ───────────────────────── orquestación ─────────────────────────
+const SC = { fuerza: scFuerza, orbita: scOrbita, selector: scSelector, conductor: scConductor };
+const sc = () => SC[app.scene];
+
+function draw() {
+  if (!W) return;
+  readColors();
+  ctx.clearRect(0, 0, W, H);
+  sc().draw();
+  $('#coords-indicator').textContent = sc().coords();
+  renderLive();
+}
+let liveKey = '';
+function renderLive() { const t = sc().live(); if (t !== liveKey) { liveKey = t; $('#live-tex').innerHTML = K(t); } }
+// Escenas animadas (órbita y espira soltada): se redibujan en cada cuadro.
+(function tick() { if (W && sc().animating && sc().animating() && !matchMedia('(prefers-reduced-motion: reduce)').matches) draw(); requestAnimationFrame(tick); })();
+
+function buildToolbar() { $('#toolbar').innerHTML = sc().tools(); draw(); }
+function buildValues() {
+  const box = $('#values-body'), vals = sc().values();
+  box.innerHTML = vals.map((v, i) => `<label class="vrange" title="${v.label || ''}"><span class="sym">${v.sym}${v.sub ? `<sub style="font-style:normal;font-size:.7em">${v.sub}</sub>` : ''}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.get()}" data-i="${i}" aria-label="${v.label || v.sym}"><output>${v.fmt(v.get())}</output></label>`).join('') + (sc().valuesNote ? `<div class="vnote">${sc().valuesNote}</div>` : '');
+  box.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+    const v = vals[+inp.dataset.i]; v.set(parseFloat(inp.value)); inp.nextElementSibling.textContent = v.fmt(v.get()); invalidate(); draw(); renderPanel(false);
+  }));
+}
+function renderReto() {
+  mixed($('#reto-text'), sc().retoText());
+  $('#reto-tag').textContent = sc().retoTag;
+  const ch = $('#pred-choices'); ch.innerHTML = sc().choices.map(c => `<button class="btn ${pred.choice === c.id ? 'on' : ''}" data-choice="${c.id}" type="button">${c.label}</button>`).join('');
+  mixed($('#pred-q'), sc().predQ);
+  $('#ans-val').placeholder = sc().ansPh;
+}
+let ansKey = '';
+function renderPanel(full = true) {
+  const s = sc(), hasP = s.hasPred();
+  const al = s.ansLabel; if (al !== ansKey) { ansKey = al; mixed($('#ans-label'), al); }
+  $('#pred-hint').textContent = s.predHint ? s.predHint() : '';
+  $('#reto-note').textContent = s.changed() ? 'Cambiaste el montaje del reto: se comprueba con lo que ves en el lienzo.' : '';
+  if (full) $('#pred-choices').querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('on', b.dataset.choice === pred.choice));
+  $('#st2').dataset.s = hasP ? 'done' : 'now';
+  $('#st3').dataset.s = app.checked ? 'done' : hasP ? 'now' : 'todo';
+  $('#st4').dataset.s = app.checked ? (app.result?.allOk ? 'done' : 'now') : 'todo';
+  const box = $('#validation-box');
+  if (app.checked && app.result) {
+    box.innerHTML = app.result.rows.map(r => `<div class="vrow"><span>${r.t}</span><span class="e10-chip ${r.ok === true ? 'e10-chip--ok' : r.ok === false ? 'e10-chip--bad' : 'e10-chip--warn'}">${r.chip}</span></div>`).join('');
+    if (window.renderMathInElement) renderMathInElement(box, { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    mixed($('#explain'), `<div class="e10-tip__title">${app.result.allOk ? 'Muy bien' : 'Recomendación'}</div>${app.result.tip}`);
+  } else { box.innerHTML = ''; $('#explain').innerHTML = ''; }
+  $('#btn-sol').hidden = !app.checked;
+  const sol = $('#solution'); sol.hidden = !(app.checked && app.showSol);
+  if (!sol.hidden) mixed(sol, s.solution());
+  const n = 1 + (hasP ? 1 : 0) + (app.checked ? 1 : 0) + (app.result?.allOk ? 1 : 0);
+  $('#prog').style.setProperty('--e10-p', n * 25 + '%'); $('#prog-bar').setAttribute('aria-valuenow', n * 25); $('#prog-txt').textContent = `${n} de 4`;
+}
+function newReto() { sc().newReto(); resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); draw(); }
+const seen = {};
+function setScene(id, push = true) {
+  if (!SC[id]) id = 'fuerza';
+  app.scene = id;
+  document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === id));
+  if (!seen[id]) { seen[id] = true; sc().newReto(); }
+  $('#values').open = window.innerWidth > 900;
+  resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); liveKey = ''; draw();
+  if (push && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+
+// Clasifica la recomendación en un código estable para las métricas del portal (js/seguimiento.js · ERRORES).
+function codigoError(tip) {
+  const R = [[/sen θ = 0 y no hay|paralelo a \\\(\\vec B\\\): \\\(\\vec L/, 'lorentz_paralelo'], [/sí hay fuerza/, 'lorentz_fuerza_nula'], [/queda en el plano|perpendicular a los dos/, 'lorentz_perpendicular'],
+    [/no acelera ni frena/, 'lorentz_paralela_v'], [/carga negativa/, 'signo_carga'], [/Regla de la mano derecha: dedos en|Mano derecha con/, 'mano_derecha_lorentz'], [/apunta hacia el centro/, 'sentido_giro'],
+    [/factor \\\(\\sin|Usaste \\\(\\cos\\theta/, 'falta_seno'], [/multiplicar por la carga/, 'falta_carga'], [/Usaste toda la rapidez/, 'v_perp'], [/Ese es el radio/, 'radio_por_diametro'],
+    [/Invertiste el cociente/, 'b_sobre_e'], [/se anulan: el ion|gana la fuerza|Solo pasan sin desviarse/, 'selector_equilibrio'], [/el par es cero|hay par\./, 'par_nulo'], [/El par gira/, 'sentido_par'],
+    [/Usaste \\\(\\cos\\phi/, 'cos_en_par'], [/vueltas: \\\(\\mu/, 'faltan_vueltas'], [/unidades/, 'unidades']];
+  for (const [re, c] of R) if (re.test(tip || '')) return c;
+  return 'otro';
+}
+
+// ───────────────────────── eventos ─────────────────────────
+$('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) { sc().act(b.dataset.act); renderPanel(false); } });
+document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
+$('#pred-choices').addEventListener('click', e => {
+  const b = e.target.closest('[data-choice]'); if (!b) return;
+  pred.choice = b.dataset.choice; if (pred.choice !== 'plano') pred.angle = null; app.checked = false; app.result = null; app.showSol = false; renderPanel(); draw();
+});
+$('#btn-check').addEventListener('click', () => {
+  if (!sc().hasPred()) { $('#check-hint').textContent = pred.choice === 'plano' ? 'Dibuja la dirección de la fuerza tocando el lienzo.' : 'Primero haz tu predicción en el paso 2.'; return; }
+  $('#check-hint').textContent = '';
+  app.result = sc().check(); app.checked = true; app.showSol = false;
+  lab10Bus.emitTelemetry('comprobar', { escena: app.scene === 'conductor' ? 'conductor_' + Co.mode : app.scene, ok: !!app.result.allOk, error: app.result.allOk ? null : codigoError(app.result.tip) });
+  renderPanel(); liveKey = ''; buildToolbar();
+  if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
+});
+$('#ans-val').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-check').click(); });
+$('#btn-sol').addEventListener('click', () => { app.showSol = !app.showSol; renderPanel(false); });
+$('#btn-new').addEventListener('click', newReto);
+$('#sheet-handle').addEventListener('click', () => $('#right-panel').classList.toggle('open'));
+$('#btn-projector').addEventListener('click', () => { document.body.classList.toggle('e10-projector'); $('#btn-projector').classList.toggle('active'); draw(); });
+$('#btn-theme').addEventListener('click', () => { lab10Auth.toggleTheme(); try { localStorage.setItem('electro10_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch (_) {} });
+new MutationObserver(() => { const i = $('#btn-theme i'); if (i) i.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon'; draw(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+$('#user-info').addEventListener('click', () => { if (!lab10Auth.isAuthenticated) lab10Auth.loginGoogle(); });
+lab10Auth.onAuthChange((ok, user) => { $('#user-info').textContent = ok ? (user?.displayName || 'Estudiante') : 'Iniciar sesión'; });
+
+const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { if (!sc().down) return; cv.setPointerCapture(e.pointerId); sc().down(...pos(e)); draw(); });
+cv.addEventListener('pointermove', e => { if (!sc().move) return; sc().move(...pos(e)); if (e.buttons) draw(); });
+cv.addEventListener('pointerup', e => { if (sc().up) sc().up(...pos(e)); draw(); });
+cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
+
+// ───────────────────────── Lab10 Bus ─────────────────────────
+lab10Bus.injectContinueButton($('#continue-wrap'), 'BiotSavart.html', 'BiotSavartLab (capítulo 9)', () => ({
+  source: 'LorentzLab10', units: { length: 'm', current: 'A', field: 'T' },
+  entities: {}, metrics: { F_carga: f1Cat().m, R_orbita: oR(), v_selector: seV0() }, timestamp: Date.now(),
+}));
+
+// ───────────────────────── arranque ─────────────────────────
+new ResizeObserver(resize).observe(area);
+setScene((location.hash || '#fuerza').slice(1), false);
+window.__lor = { app, pred, F1, O, Se, Co, f1F, f1Cat, f1Theta, oR, oT, oPitch, oCCW, sePath, seCat, seTarget, seR, coFz, coTau, coCat, coMu, setScene, codigoError };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body></html>

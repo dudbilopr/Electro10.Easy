@@ -18,10 +18,20 @@ export const modulo13 = {
         {
             "id": "m13-l1",
             "tipo": "multivideo",
-            "recurso": "",
-            "titulo": "1. Teoría y Deducción: Circuitos Transitorios y Corriente Alterna",
-            "descripcion": "Ecuaciones diferenciales de segundo orden, analogía mecánica del oscilador y formulación fasorial en régimen senoidal.",
-            "xp": 10
+            "recurso": "6tHV9hhVebQ|tdn4Fzh710k|uEOne31bw5w|P8M6BG9Wne4|rnWW6b-Bi2A|M74jJyEoA1I|PRqAipvSH8I|hYTduwzKn4o",
+            "titulo": "1. Videos: Corriente Alterna, Fasores y Circuitos RLC",
+            "descripcion": "Colección de 8 clases universitarias verificadas: análisis fasorial en régimen senoidal, impedancias complejas Z, resonancia serie y paralelo, y factor de potencia.",
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "Circuitos RLC en Alterna: Análisis Fasorial Paso a Paso", "canal": "Gerardo Leal"},
+                {"titulo": "Diagrama Fasorial V/I en Circuitos RLC Serie", "canal": "Gerardo Leal"},
+                {"titulo": "Diagrama Fasorial en Circuitos RL y RC en Alterna", "canal": "Gerardo Leal"},
+                {"titulo": "Circuitos RLC: Análisis Fasorial y Respuesta en AC", "canal": "Editronikx"},
+                {"titulo": "Circuitos RLC Serie: Metodología Práctica y Desfasaje", "canal": "seletube"},
+                {"titulo": "Circuitos RLC Paralelo: Impedancia y Admitancia", "canal": "seletube"},
+                {"titulo": "Circuito RLC Serie: Formulación y Comprobación", "canal": "Electrónica FP"},
+                {"titulo": "Circuitos Eléctricos en AC con Fasores y Números Complejos", "canal": "Ingie_Mates"}
+            ]
         },
         {
             "id": "m13-l2",

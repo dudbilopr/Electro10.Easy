@@ -18,10 +18,20 @@ export const modulo12 = {
         {
             "id": "m12-l1",
             "tipo": "multivideo",
-            "recurso": "",
-            "titulo": "1. Teoría y Deducción: Ecuaciones de Maxwell",
-            "descripcion": "La unificación fundamental de la electricidad, magnetismo y óptica clásica en 4 postulados.",
-            "xp": 10
+            "recurso": "kx20kG6m-JA|9klvWBDhyp4|Y-XbsWEjyp0|s3QrikFLhSA|rzoV06-g2H8|Pyug_ODio3M|enQ8QuUBYNE|mBquIhKZntw",
+            "titulo": "1. Videos: Ecuaciones de Maxwell y Ondas Electromagnéticas",
+            "descripcion": "Colección de clases y análisis teóricos verificados: corriente de desplazamiento de Maxwell, formulación diferencial e integral, unificación y velocidad de la luz.",
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "Las Ecuaciones de Maxwell en 5 Minutos", "canal": "QuantumFracture"},
+                {"titulo": "Ecuaciones de Maxwell y Unificación", "canal": "Date un Vlog"},
+                {"titulo": "Física Fundamental: Leyes de Maxwell Explicadas", "canal": "Date un Vlog"},
+                {"titulo": "Las 4 ecuaciones de Maxwell (Fundamentos)", "canal": "PíxelCuántico"},
+                {"titulo": "Las 4 Ecuaciones de Maxwell para Entender el Universo", "canal": "Inspenet"},
+                {"titulo": "Comprendiendo las Ecuaciones de Maxwell y Ondas EM", "canal": "Cientificamente Hablando"},
+                {"titulo": "Deducción y Análisis de las Ecuaciones de Maxwell", "canal": "Armónicos Esféricos"},
+                {"titulo": "Maxwell y la Unificación del Electromagnetismo", "canal": "Universable · Divulgación en Español"}
+            ]
         },
         {
             "id": "m12-l2",

@@ -18,10 +18,20 @@ export const modulo9 = {
         {
             "id": "m9-l1",
             "tipo": "multivideo",
-            "recurso": "",
-            "titulo": "1. Teoría y Deducción: Ley de Biot-Savart",
-            "descripcion": "Cálculo analítico del campo magnético producido por hilos, espiras y arreglos espaciales de corriente.",
-            "xp": 10
+            "recurso": "WSDVvHvIEk4|2K2CaMUI4ts|aCPDlyQBzRg|1Fm6JrEQLXo|Sv1e2frHeeA|l56NWh-96Qc|etGr1dHQs-Q|HgOmWO05vhY",
+            "titulo": "1. Videos: Ley de Biot-Savart",
+            "descripcion": "Colección de clases universitarias verificadas: deducción diferencial, regla de la mano derecha, hilos finitos e infinitos, y campo en el eje de espiras.",
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "Clase 10: Ley de Biot-Savart - Explicación", "canal": "espiral ciencias"},
+                {"titulo": "Campo magnético creado por corrientes: Biot-Savart y Oersted", "canal": "Física Explicada"},
+                {"titulo": "Explicación Ley Biot-Savart y Ejemplo de Aplicación", "canal": "Mayken Espinoza"},
+                {"titulo": "Ley de Biot y Savart: Deducción y Cálculo", "canal": "Problemas de Física e Ingeniería Resueltos"},
+                {"titulo": "Fuentes de Campo Magnético y Regla de la Mano Derecha", "canal": "espiral ciencias"},
+                {"titulo": "La Ley de Biot-Savart en 5 minutos", "canal": "You Tec"},
+                {"titulo": "Ley de Biot-Savart: Fundamentos Físicos", "canal": "INGENIARED"},
+                {"titulo": "Ley de Biot & Savart paso a paso", "canal": "PEPE REPARA"}
+            ]
         },
         {
             "id": "m9-l2",

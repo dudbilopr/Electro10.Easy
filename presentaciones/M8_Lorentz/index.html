@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 8 · Fuerza de Lorentz y Acción Magnética — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 8 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:36px;line-height:1.12}
+.row{display:flex;gap:26px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.vote{display:flex;flex-direction:column;gap:9px}
+.vote .btn{text-align:left;font-weight:500;font-size:17px;min-height:48px;padding:0 16px}
+.vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
+.vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:17px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.print-only{display:none}
+
+/* Árbol, Mapa, Timeline, Tarjetas */
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:86px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.45em}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+#tq1{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:38px;padding:6px 12px;font-size:14px}#tq2{gap:6px}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
+@media (prefers-reduced-motion:reduce){.slide,.btn{transition:none}}
+@page{size:1280px 720px;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
+  .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center">
+      <img src="../../img/logo_electro10.svg" alt="Electro10.Easy Emblem" style="height:42px;width:auto">
+      <b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b>
+      <span class="tag c">Capítulo 8</span>
+    </div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">MAGNETISMO CLÁSICO · ACCIÓN Y FUERZA</span>
+        <h1 style="font-size:68px;line-height:1.04">Fuerza de<br>Lorentz</h1>
+        <p style="margin:0;font-size:23px;color:var(--e10-muted);max-width:560px">Interacción de cargas en movimiento y corrientes eléctricas sumergidas en campos magnéticos.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Dominar el producto vectorial \(\vec F = q(\vec v \times \vec B)\) y la regla de la mano derecha.</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Analizar trayectorias circulares, selector de Wien y espectrómetro de Bainbridge.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Integrar la fuerza sobre conductores rectilíneos y curvos con rigor vectorial.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover" width="440" height="440" aria-label="Partícula cargada describiendo una trayectoria circular bajo la fuerza centrípeta de Lorentz"></canvas>
+    </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o la barra inferior</span></div>
+  </div>
+</section>
+
+<!-- 2 · EL EXPERIMENTO DE OERSTED -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Fundamento Histórico</span></div>
+  <h2>El Experimento de Ørsted (1820)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:14px">
+      <p style="margin:0;font-size:19px;line-height:1.4">En la primavera de 1820, Hans Christian Ørsted demostró que una corriente eléctrica desvía una aguja magnética próxima, revelando por primera vez que el magnetismo y la electricidad no son fenómenos aislados.</p>
+      <div class="card" style="gap:10px">
+        <b style="color:var(--e10-primary);font-size:17px">Evidencias Experimentales Rigurosas:</b>
+        <div class="steps">
+          <div><span class="n">1</span><span>Sin corriente (\(I = 0\)): La brújula apunta fielmente al norte magnético terrestre \(\vec B_{\text{t}}\).</span></div>
+          <div><span class="n">2</span><span>Con corriente (\(I > 0\)): La aguja experimenta un torque magnético neto y se orienta perpendicular al hilo conductor.</span></div>
+          <div><span class="n">3</span><span>Inversión de polaridad: Al invertir el sentido de \(I\), la aguja rota \(180^\circ\) en sentido opuesto.</span></div>
+        </div>
+      </div>
+      <div class="tipbox">
+        <b>Regla de la Mano Derecha:</b> Si el pulgar derecho apunta en el sentido de la corriente convencional \(I\), los cuatro dedos flexionados indican la circulación concéntrica del campo \(\vec B\).
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-oersted" class="sim" width="460" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Corriente \(I\):</span>
+        <input type="range" id="rng-oersted-i" min="-10" max="10" step="1" value="5">
+        <output id="out-oersted-i">+5.0 A</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fuente: Sears–Zemansky Cap. 27.1</span><span class="mono">Diapositiva 2 / 15</span></div>
+</section>
+
+<!-- 3 · LA FUERZA FUNDAMENTAL DE LORENTZ -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Formulación Fundamental</span></div>
+  <h2>La Ley General de Lorentz y Trabajo Nulo</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="soft">
+        <p style="margin:0 0 6px;font-size:15px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.05em">Ecuación Fundamental de Movimiento</p>
+        <div style="font-size:24px;text-align:center">\[\vec F = q \left(\vec E + \vec v \times \vec B\right)\]</div>
+      </div>
+      <div class="card" style="gap:10px">
+        <b style="color:var(--e10-primary)">Propiedades del Producto Vectorial Magnético:</b>
+        <div class="steps" style="font-size:16px">
+          <div><span class="n">A</span><span>Magnitud: \(F_B = |q| v B \sin\theta\), donde \(\theta = \angle(\vec v, \vec B)\).</span></div>
+          <div><span class="n">B</span><span>Ortogonalidad estricta: \(\vec F_B \perp \vec v\) y \(\vec F_B \perp \vec B\) simultáneamente.</span></div>
+          <div><span class="n">C</span><span>Si la carga está en reposo (\(v = 0\)) o se mueve paralela al campo (\(\theta = 0^\circ, 180^\circ\)), \(\vec F_B = \vec 0\).</span></div>
+        </div>
+      </div>
+      <div class="warn">
+        <b>Teorema del Trabajo Nulo:</b> La potencia mecánica instantánea transmitida por el campo magnético es:
+        \[P = \vec F_B \cdot \vec v = q (\vec v \times \vec B) \cdot \vec v \equiv 0 \implies W = \int \vec F_B \cdot d\vec r = 0\]
+        ¡Un campo magnético estático <b>nunca altera la energía cinética</b> ni la rapidez de una partícula; solo modifica la dirección de su velocidad!
+      </div>
+    </div>
+    <div class="col" style="flex:0.8">
+      <div class="card" style="flex:1;justify-content:center;gap:14px">
+        <b style="font-size:17px;color:var(--e10-ink)">Comprobación Rápida de Signos:</b>
+        <p style="font-size:15px;color:var(--e10-muted);margin:0">Un electrón (\(q = -e\)) viaja hacia el este (\(+\hat i\)) en un campo magnético entrante al plano (\(-\hat k\)). ¿Hacia dónde apunta \(\vec F_B\)?</p>
+        <div class="vote" id="vote-q1">
+          <button class="btn" data-r="w">A)&nbsp; Hacia el norte (\(+\hat j\))</button>
+          <button class="btn" data-r="c">B)&nbsp; Hacia el sur (\(-\hat j\))</button>
+          <button class="btn" data-r="w">C)&nbsp; Hacia el este (\(+\hat i\))</button>
+        </div>
+        <div id="fb-q1" class="ok" style="display:none;font-size:14px">
+          <b>¡Correcto!</b> Regla: \(\hat i \times (-\hat k) = +\hat j\). Pero al multiplicar por la carga negativa \(q = -e\), la fuerza se invierte a \(-\hat j\) (sur).
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.2 · Griffiths 5.1</span><span class="mono">Diapositiva 3 / 15</span></div>
+</section>
+
+<!-- 4 · CINEMÁTICA Y FRECUENCIA CICLOTRÓN -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Dinámica Circular</span></div>
+  <h2>Movimiento Circular Uniforme y Frecuencia Ciclotrón</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <p style="margin:0;font-size:18px">Cuando una partícula entra perpendicularmente (\(\vec v \perp \vec B\)) a un campo magnético homogéneo, la fuerza de Lorentz actúa exclusivamente como <b>fuerza centrípeta</b>:</p>
+      <div class="soft" style="text-align:center">
+        \[F_B = F_c \implies |q| v B = m \frac{v^2}{R} \implies R = \frac{m v}{|q| B}\]
+      </div>
+      <div class="read">
+        <div>Radio de giro<b>\(R = \frac{p}{|q|B}\)</b></div>
+        <div>Rapidez angular<b>\(\omega = \frac{|q|B}{m}\)</b></div>
+        <div>Período orbital<b>\(T = \frac{2\pi m}{|q|B}\)</b></div>
+      </div>
+      <div class="tipbox">
+        <b>Propiedad Isoctónica Fundamental:</b> Ni la frecuencia ciclotrón \(\omega\) ni el período \(T\) dependen de la velocidad \(v\) ni del radio \(R\). Las partículas más rápidas recorren órbitas mayores en exactamente el mismo tiempo.
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <canvas id="cv-cyclotron" class="sim" width="520" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Campo \(B\):</span>
+        <input type="range" id="rng-cyc-b" min="0.5" max="3.0" step="0.1" value="1.5">
+        <output id="out-cyc-b">1.5 T</output>
+        <span>Velocidad \(v\):</span>
+        <input type="range" id="rng-cyc-v" min="1.0" max="5.0" step="0.2" value="2.6">
+        <output id="out-cyc-v">2.6 Mm/s</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.4</span><span class="mono">Diapositiva 4 / 15</span></div>
+</section>
+
+<!-- 5 · SELECTOR DE VELOCIDADES DE WIEN -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Campos Cruzados</span></div>
+  <h2>Selector de Velocidades de Wien</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:14px">
+      <p style="margin:0;font-size:18px">Mediante campos ortogonales \(\vec E \perp \vec B\), es posible filtrar partículas de un haz de acuerdo con su rapidez lineal, independientemente de su masa o carga eléctrica.</p>
+      <div class="card" style="gap:10px">
+        <b style="color:var(--e10-primary)">Deducción del Balance de Fuerzas:</b>
+        <div>Para una trayectoria rectilínea no desviada a lo largo del eje:</div>
+        \[\vec F_{\text{neta}} = \vec F_E + \vec F_B = q \vec E + q (\vec v \times \vec B) = \vec 0\]
+        \[q E = q v B \implies v = \frac{E}{B}\]
+      </div>
+      <div class="steps" style="font-size:16px">
+        <div><span class="n">1</span><span>Si \(v = E/B\): Fuerza electrostática compensa con exactitud la fuerza magnética. Pasa por el colimador.</span></div>
+        <div><span class="n">2</span><span>Si \(v > E/B\): Predomina la fuerza magnética \(F_B \propto v\); la partícula se desvía hacia el polo magnético.</span></div>
+        <div><span class="n">3</span><span>Si \(v < E/B\): Predomina la fuerza eléctrica \(F_E\); la partícula choca con las placas selectoras.</span></div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-wien" class="sim" width="460" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Campo \(E\) (\(\text{kV/m}\)):</span>
+        <input type="range" id="rng-wien-e" min="10" max="100" step="5" value="50">
+        <output id="out-wien-e">50 kV/m</output>
+        <span>Campo \(B\) (\(\text{T}\)):</span>
+        <input type="range" id="rng-wien-b" min="0.1" max="1.0" step="0.05" value="0.5">
+        <output id="out-wien-b">0.50 T</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.5</span><span class="mono">Diapositiva 5 / 15</span></div>
+</section>
+
+<!-- 6 · ESPECTRÓMETRO DE MASAS DE BAINBRIDGE -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Separación Isotópica</span></div>
+  <h2>Espectrómetro de Masas de Bainbridge</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <p style="margin:0;font-size:18px">Acoplando un selector de velocidades de Wien a una cámara de deflexión magnética semicircular con campo \(B_0\), se mide con precisión la masa atómica o isotópica de cualquier ion.</p>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">Deducción de la Relación Masa–Carga:</b>
+        <div style="font-size:16px">La partícula ingresa a la cámara con velocidad seleccionada \(v = E/B\) y describe media circunferencia de radio \(R\):</div>
+        \[R = \frac{m v}{q B_0} = \frac{m}{q B_0} \left(\frac{E}{B}\right) \implies m = \frac{q B B_0 R}{E}\]
+        <div>La distancia de impacto en la placa fotográfica o detector es el diámetro \(D = 2R\).</div>
+      </div>
+      <div class="ok">
+        <b>Aplicación: Separación de Uranio (\(^{235}\text{U}\) vs \(^{238}\text{U}\)):</b>
+        Iones idénticamente ionizados con igual carga \(q = +e\) impactan en posiciones espaciales separadas:
+        \[\Delta D = 2(R_{238} - R_{235}) = \frac{2 v}{q B_0} \Delta m\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-mass" class="sim" width="460" height="340"></canvas>
+      <div class="card" style="font-size:14px;color:var(--e10-muted)">
+        <b style="color:var(--e10-ink)">Lectura del Detector:</b> Los iones de mayor masa atómica tienen mayor inercia y describen trayectorias de curvatura más amplia (\(R \propto m\)).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.5</span><span class="mono">Diapositiva 6 / 15</span></div>
+</section>
+
+<!-- 7 · FUERZA SOBRE CONDUCTORES CON CORRIENTE -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Conducción Macroscópica</span></div>
+  <h2>Fuerza Magnética sobre un Conductor con Corriente</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <p style="margin:0;font-size:18px">Una corriente macroscópica \(I\) es el flujo ordenado de \(n\) portadores libres por unidad de volumen moviéndose con velocidad de deriva \(\vec v_d\).</p>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">Deducción Microscópica Paso a Paso:</b>
+        <div class="steps" style="font-size:16px">
+          <div><span class="n">1</span><span>Fuerza sobre un elemento diferencial con volumen \(dV = A d\ell\): \(d\vec F = (n A d\ell) \left(q \vec v_d \times \vec B\right)\).</span></div>
+          <div><span class="n">2</span><span>Reconocemos la corriente eléctrica: \(I = n q A v_d\), asociando la dirección al vector tangente \(d\vec\ell\):</span></div>
+          <div><span class="n">3</span><span>Ecuación diferencial de Laplace: \[d\vec F = I \, d\vec\ell \times \vec B\]</span></div>
+          <div><span class="n">4</span><span>Para un alambre rectilíneo uniforme de longitud \(L\) en un campo \(\vec B\) constante: \[\vec F = I \vec L \times \vec B \implies F = I L B \sin\theta\]</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-wire" class="sim" width="460" height="320"></canvas>
+      <div class="ctrl card">
+        <span>Ángulo \(\theta\) (\(^\circ\)):</span>
+        <input type="range" id="rng-wire-ang" min="0" max="180" step="5" value="90">
+        <output id="out-wire-ang">90°</output>
+      </div>
+      <div class="tipbox"><b>Fuerza Máxima:</b> Se alcanza cuando el alambre es estrictamente perpendicular a las líneas de inducción (\(\theta = 90^\circ\)).</div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.6</span><span class="mono">Diapositiva 7 / 15</span></div>
+</section>
+
+<!-- 8 · CONDUCTOR CURVO: DOS CAMINOS -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Deducción Rigurosa</span></div>
+  <h2>Conductor Semicircular: Dos Caminos de Integración</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border-right:1px solid var(--e10-line);padding-right:12px">
+          <b style="color:var(--e10-primary)">Camino A: Integral Directa</b>
+          <div style="font-size:15px;color:var(--e10-muted);margin:4px 0 8px">Coordenadas polares en el plano \(xy\) con \(\vec B = B\hat k\):</div>
+          <div style="font-size:14px">
+            \[d\vec\ell = R d\theta (-\sin\theta \hat i + \cos\theta \hat j)\]
+            \[d\vec F = I d\vec\ell \times \vec B = I R B d\theta (\cos\theta \hat i + \sin\theta \hat j)\]
+            \[F_x = I R B \int_0^\pi \cos\theta d\theta = 0\]
+            \[F_y = I R B \int_0^\pi \sin\theta d\theta = 2 I B R\]
+            \[\vec F = 2 I B R \, \hat j\]
+          </div>
+        </div>
+        <div>
+          <b style="color:var(--e10-accent-strong)">Camino B: Vector Desplazamiento</b>
+          <div style="font-size:15px;color:var(--e10-muted);margin:4px 0 8px">Teorema del contorno equivalente en campo homogéneo:</div>
+          <div style="font-size:14px">
+            \[\vec F = \int_a^b I d\vec\ell \times \vec B = I \left(\int_a^b d\vec\ell\right) \times \vec B\]
+            Definiendo el vector directo de extremos \(\vec L' = \int_a^b d\vec\ell = 2R \hat i\):
+            \[\vec F = I \vec L' \times \vec B = I (2R \hat i) \times (B \hat k)\]
+            \[\vec F = 2 I B R \, \hat j\]
+          </div>
+        </div>
+      </div>
+      <div class="warn">
+        <b>Teorema Fundamental de Circuitos Cerrados:</b> Para cualquier espira o lazo cerrado de forma arbitraria en un campo magnético homogéneo:
+        \[\vec F_{\text{cerrada}} = I \left(\oint d\vec\ell\right) \times \vec B = I (\vec 0) \times \vec B \equiv \vec 0\]
+        ¡La fuerza magnética neta traslacional sobre una espira cerrada en campo uniforme es idénticamente cero!
+      </div>
+    </div>
+    <div class="col" style="flex:0.8">
+      <canvas id="cv-semicircle" class="sim" width="420" height="340"></canvas>
+      <div class="card" style="font-size:14px;color:var(--e10-muted)">
+        Ambos métodos convergen con exactitud: el semicírculo experimenta la misma fuerza magnética total que una barra recta conectada entre sus extremos de longitud \(2R\).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Burbano Cap. 21 · Sears–Zemansky 27.6</span><span class="mono">Diapositiva 8 / 15</span></div>
+</section>
+
+<!-- 9 · MOMENTO DE TORSIÓN Y DIPOLO MAGNÉTICO -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Rotación y Energía</span></div>
+  <h2>Torque Magnético y Momento Dipolar</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <p style="margin:0;font-size:18px">Aunque la fuerza neta sobre una espira cerrada es cero, las fuerzas sobre lados opuestos forman un <b>par de torsión</b> que tiende a alinear la espira con el campo.</p>
+      <div class="soft" style="gap:8px">
+        <b style="color:var(--e10-primary);font-size:16px">Momento Dipolar Magnético:</b>
+        <div>Para una bobina plana de \(N\) espiras, corriente \(I\) y área superficial \(A\):</div>
+        \[\vec\mu = N I \vec A \quad [\text{A}\cdot\text{m}^2]\]
+        <div style="font-size:15px;color:var(--e10-muted)">La dirección del vector área \(\vec A\) se rige por la regla de la mano derecha recorriendo la corriente.</div>
+      </div>
+      <div class="read">
+        <div>Torque magnético<b>\(\vec\tau = \vec\mu \times \vec B\)</b></div>
+        <div>Módulo del torque<b>\(\tau = \mu B \sin\theta\)</b></div>
+        <div>Energía potencial<b>\(U = -\vec\mu \cdot \vec B\)</b></div>
+      </div>
+      <div class="tipbox">
+        <b>Estados de Equilibrio:</b>
+        <ul>
+          <li>\(\theta = 0^\circ\) (\(\vec\mu \parallel \vec B\)): Equilibrio estable, energía mínima \(U = -\mu B\), \(\tau = 0\).</li>
+          <li>\(\theta = 180^\circ\) (\(\vec\mu\) antiparalelo a \(\vec B\)): Equilibrio inestable, energía máxima \(U = +\mu B\).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-loop-torque" class="sim" width="460" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Ángulo \(\theta\) (\(^\circ\)):</span>
+        <input type="range" id="rng-loop-ang" min="0" max="180" step="5" value="45">
+        <output id="out-loop-ang">45°</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.7</span><span class="mono">Diapositiva 9 / 15</span></div>
+</section>
+
+<!-- 10 · EFECTO HALL -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Física del Estado Sólido</span></div>
+  <h2>El Efecto Hall (1879)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:14px">
+      <p style="margin:0;font-size:18px">Descubierto por Edwin Hall, demuestra de forma concluyente el signo de los portadores de carga móviles en un conductor mediante la acumulación transversal de cargas.</p>
+      <div class="card" style="gap:10px">
+        <b style="color:var(--e10-primary)">Deducción del Voltaje de Hall \(V_H\):</b>
+        <div style="font-size:16px">La fuerza magnética desvía los portadores hacia un borde, creando un campo electrostático transversal \(\vec E_H\) que frena desviaciones posteriores:</div>
+        \[q E_H = q v_d B \implies E_H = v_d B\]
+        \[V_H = E_H w = v_d B w = \left(\frac{J}{n q}\right) B w = \left(\frac{I}{n q w t}\right) B w \implies V_H = \frac{I B}{n q t}\]
+      </div>
+      <div class="ok">
+        <b>Determinación de Signo:</b> En los metales (\(q = -e\)), los electrones se acumulan en la cara superior tornando su potencial más bajo que la inferior. En semiconductores tipo p (huecos, \(q = +e\)), la polaridad del voltaje de Hall se invierte.
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-hall" class="sim" width="460" height="340"></canvas>
+      <div class="tipbox">
+        <b>Densidad de portadores \(n\):</b> Mide directamente el número de electrones libres por \(\text{m}^3\) en el material conductor o semiconductor.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 27.9</span><span class="mono">Diapositiva 10 / 15</span></div>
+</section>
+
+<!-- 11 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Metodología Didáctica</span></div>
+  <h2>Árbol de Decisión: ¿Qué Fórmula de Lorentz Aplicar?</h2>
+  <div class="row">
+    <div class="col" style="width:380px;gap:10px">
+      <div class="tq">
+        <div class="tqh"><span>Paso 1 · ¿Cuál es la entidad física?</span></div>
+        <div class="tq-opts" id="tq1">
+          <button class="opt on" data-q="c">Carga libre puntual</button>
+          <button class="opt" data-q="w">Selector / Haz</button>
+          <button class="opt" data-q="w">Conductor de corriente</button>
+          <button class="opt" data-q="w">Espira o lazo cerrado</button>
+        </div>
+      </div>
+      <span class="tq-down">↓</span>
+      <div class="tq">
+        <div class="tqh"><span>Paso 2 · ¿Qué variable se busca calcular?</span></div>
+        <div class="tq-opts" id="tq2">
+          <button class="opt on" data-a="f">Fuerza vectorial instantánea</button>
+          <button class="opt" data-a="r">Radio orbital / Período ciclotrón</button>
+          <button class="opt" data-a="w">Trabajo mecánico o aceleración</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf">
+      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em">Fórmula seleccionada y procedimiento</div>
+      <div class="leaf-name" id="leaf-title">Fuerza de Lorentz sobre Carga Puntual</div>
+      <div class="leaf-eq" id="leaf-formula">\[\vec F = q(\vec v \times \vec B) \implies F = |q| v B \sin\theta\]</div>
+      <div class="col" style="gap:6px;font-size:16px">
+        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
+        <span id="leaf-p1">1. Traza los vectores \(\vec v\) y \(\vec B\) y halla el ángulo \(\theta\) entre ellos.</span>
+        <span id="leaf-p2">2. Aplica la regla de la mano derecha con el pulgar en \(\vec v\) y los cuatro dedos en \(\vec B\).</span>
+        <span id="leaf-p3">3. Si la carga es negativa (\(q < 0\)), invierte \(180^\circ\) el vector resultante.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Algoritmo de decisión para talleres y exámenes</span><span class="mono">Diapositiva 11 / 15</span></div>
+</section>
+
+<!-- 12 · SIMULADOR LORENTZLAB INCRUSTADO -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Laboratorio Virtual</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>LorentzLab · Exploración Tridimensional</h2>
+    <div style="display:flex;gap:8px" id="lab-scenes">
+      <button class="btn on" data-lab="../../simuladores/LorentzLab10easy.html">Carga en Campo B</button>
+      <button class="btn" data-lab="../../simuladores/Lorentz.html">Selector de Velocidades</button>
+    </div>
+  </div>
+  <div class="row" style="margin-top:4px">
+    <iframe id="lab-frame" class="lab-frame" src="../../simuladores/LorentzLab10easy.html" title="Simulador LorentzLab 3D"></iframe>
+  </div>
+  <div class="foot"><span>Simulador interactivo con renderizado Three.js</span><span class="mono">Diapositiva 12 / 15</span></div>
+</section>
+
+<!-- 13 · MAPA CONCEPTUAL -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Red de Conocimiento</span></div>
+  <h2>Mapa Conceptual: Fuerza de Lorentz y Electromagnetismo</h2>
+  <div class="row">
+    <div class="cmap" id="cmap">
+      <svg id="cmap-svg" width="780" height="520"></svg>
+      <div class="cmap-legend">
+        <span class="chip past">Electrostática</span>
+        <span class="chip this">Capítulo 8 (Lorentz)</span>
+        <span class="chip fut">Fuentes e Inducción</span>
+      </div>
+    </div>
+    <div class="col card" style="flex:1;gap:10px">
+      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
+      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Fuerza de Lorentz</b>
+      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[\vec F = q(\vec E + \vec v \times \vec B)\]</div>
+      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Fuerza total experimentada por una carga eléctrica en presencia de campos eléctricos y magnéticos combinados.</p>
+      <div class="tipbox" id="cm-where">Conecta la electrostática con la dinámica magnética y los aceleradores de partículas.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 13 / 15</span></div>
+</section>
+
+<!-- 14 · LÍNEA DE TIEMPO Y GLOSARIO -->
+<section class="slide" data-n="14">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Historia y Terminología</span></div>
+  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
+  <div class="row" style="flex-direction:column;gap:16px">
+    <div class="tline" id="tline">
+      <div class="tline-axis"></div>
+      <div class="tline-note" id="tl-text"><b style="color:var(--e10-primary)">Ørsted, 1820.</b> Descubre que la corriente eléctrica desvía una brújula.</div>
+    </div>
+    <div class="row" style="gap:20px;flex:1">
+      <button type="button" class="fcard" id="fc-card">
+        <span class="mono" id="fc-side">TÉRMINO</span>
+        <span id="fc-text">Fuerza de Lorentz</span>
+      </button>
+      <div class="col" style="width:260px;justify-content:center;gap:10px">
+        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
+        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
+        <button class="btn" id="fc-next">Siguiente término</button>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 14 / 15</span></div>
+</section>
+
+<!-- 15 · RESUMEN Y EXPORTACIÓN -->
+<section class="slide" data-n="15">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 8</b><span class="tag c">Cierre y Evaluación</span></div>
+  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="soft">
+          <b>Partícula Libre:</b>
+          \[\vec F = q(\vec v \times \vec B)\]
+          \[R = \frac{mv}{qB}, \quad \omega = \frac{qB}{m}\]
+        </div>
+        <div class="soft">
+          <b>Campos Cruzados:</b>
+          \[v = \frac{E}{B}\]
+          \[m = \frac{q B B_0 R}{E}\]
+        </div>
+        <div class="soft">
+          <b>Conductor con Corriente:</b>
+          \[d\vec F = I d\vec\ell \times \vec B\]
+          \[\vec F = I \vec L \times \vec B\]
+        </div>
+        <div class="soft">
+          <b>Espiras y Efecto Hall:</b>
+          \[\vec\tau = \vec\mu \times \vec B, \quad U = -\vec\mu \cdot \vec B\]
+          \[V_H = \frac{I B}{n q t}\]
+        </div>
+      </div>
+      <div class="ok">
+        <b>Regla de Oro:</b> El campo magnético <b>solo desvía</b> cargas móviles ortogonalmente; jamás realiza trabajo sobre ellas ni modifica su energía cinética.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
+      <div class="card" style="text-align:center;padding:24px;gap:14px">
+        <b style="font-size:20px;color:var(--e10-ink)">¿Listo para imprimir o estudiar sin conexión?</b>
+        <p style="font-size:15px;color:var(--e10-muted);margin:0">Exporta este deck completo de 15 diapositivas en alta resolución en formato PDF 16:9.</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap08_Taller_Lorentz.pdf" download>Taller (PDF)</a>
+          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap08_Guia_Lorentz.pdf" download>Guía de estudio (PDF)</a>
+        </div>
+        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
+        <a href="../../talleres/Taller_8_Ley_de_Lorentz.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 8</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 15 / 15</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra inferior de navegación del deck -->
+<nav class="deck-ui" aria-label="Navegación del deck">
+  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
+  <span class="count" id="nav-count">1 / 15</span>
+  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
+  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
+  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+</nav>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const renderMath = (el) => {
+    if (window.renderMathInElement) {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  };
+
+  const sims = {};
+
+  // 1 · Portada: Trayectoria circular animada de ciclotrón
+  sims.cover = (() => {
+    const cv = $('cv-cover'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    let t = 0, req = null;
+    function frame() {
+      ctx.clearRect(0, 0, 440, 440);
+      const cx = 220, cy = 220, R = 140;
+      
+      // Cruces de campo B entrante
+      ctx.strokeStyle = 'rgba(11, 140, 168, 0.25)';
+      ctx.lineWidth = 1.5;
+      for (let x = 40; x <= 400; x += 45) {
+        for (let y = 40; y <= 400; y += 45) {
+          ctx.beginPath();
+          ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5);
+          ctx.moveTo(x + 5, y - 5); ctx.lineTo(x - 5, y + 5);
+          ctx.stroke();
+        }
+      }
+
+      // Órbita circular punteada
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(179, 36, 107, 0.4)';
+      ctx.setLineDash([6, 6]);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Posición de la partícula
+      const ang = t * 1.8;
+      const px = cx + R * Math.cos(ang);
+      const py = cy + R * Math.sin(ang);
+
+      // Vector velocidad v (tangente)
+      const vx = -Math.sin(ang) * 45;
+      const vy = Math.cos(ang) * 45;
+      ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + vx, py + vy);
+      ctx.strokeStyle = '#0B8CA8'; ctx.lineWidth = 3; ctx.stroke();
+
+      // Vector fuerza centrípeta F_B (radial hacia el centro)
+      const fx = -Math.cos(ang) * 55;
+      const fy = -Math.sin(ang) * 55;
+      ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + fx, py + fy);
+      ctx.strokeStyle = '#B3246B'; ctx.lineWidth = 3.5; ctx.stroke();
+
+      // Partícula positiva q
+      ctx.beginPath();
+      ctx.arc(px, py, 10, 0, Math.PI * 2);
+      ctx.fillStyle = '#B3246B'; ctx.fill();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+      t += 0.02;
+      req = requestAnimationFrame(frame);
+    }
+    return {
+      show() { if (!req) req = requestAnimationFrame(frame); },
+      hide() { if (req) { cancelAnimationFrame(req); req = null; } }
+    };
+  })();
+
+  // 2 · Experimento de Oersted
+  sims.oersted = (() => {
+    const cv = $('cv-oersted'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const I = parseFloat($('rng-oersted-i').value);
+      $('out-oersted-i').textContent = (I >= 0 ? '+' : '') + I.toFixed(1) + ' A';
+      ctx.clearRect(0, 0, 460, 340);
+
+      // Hilo conductor vertical
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 14; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(230, 40); ctx.lineTo(230, 300); ctx.stroke();
+
+      // Flecha de corriente
+      if (Math.abs(I) > 0.5) {
+        ctx.strokeStyle = '#0B8CA8'; ctx.lineWidth = 4;
+        const dir = I > 0 ? -1 : 1;
+        ctx.beginPath();
+        ctx.moveTo(230, 170 - dir * 40); ctx.lineTo(230, 170 + dir * 40);
+        ctx.stroke();
+      }
+
+      // Brújula centrada
+      const ang = Math.atan2(I * 0.15, 1.0); // deflexión frente a B terrestre
+      ctx.save();
+      ctx.translate(230, 170);
+      ctx.rotate(ang);
+
+      // Aguja norte (roja/magenta)
+      ctx.beginPath();
+      ctx.moveTo(0, 0); ctx.lineTo(-12, 10); ctx.lineTo(0, -60); ctx.lineTo(12, 10);
+      ctx.closePath();
+      ctx.fillStyle = '#B3246B'; ctx.fill();
+
+      // Aguja sur (azul/cian)
+      ctx.beginPath();
+      ctx.moveTo(0, 0); ctx.lineTo(-12, -10); ctx.lineTo(0, 60); ctx.lineTo(12, -10);
+      ctx.closePath();
+      ctx.fillStyle = '#0B8CA8'; ctx.fill();
+
+      // Pivote
+      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff'; ctx.fill(); ctx.stroke();
+      ctx.restore();
+    }
+    $('rng-oersted-i').addEventListener('input', draw);
+    return { draw };
+  })();
+
+  // 4 · Ciclotrón interactivo
+  sims.cyc = (() => {
+    const cv = $('cv-cyclotron'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const B = parseFloat($('rng-cyc-b').value);
+      const v = parseFloat($('rng-cyc-v').value);
+      $('out-cyc-b').textContent = B.toFixed(1) + ' T';
+      $('out-cyc-v').textContent = v.toFixed(1) + ' Mm/s';
+      ctx.clearRect(0, 0, 520, 340);
+
+      const R = (v / B) * 45; // escala de píxeles
+      const cx = 260, cy = 170;
+
+      // Campo magnético entrante
+      ctx.strokeStyle = 'rgba(11, 140, 168, 0.2)';
+      ctx.lineWidth = 1.2;
+      for (let x = 30; x <= 490; x += 35) {
+        for (let y = 30; y <= 310; y += 35) {
+          ctx.beginPath();
+          ctx.moveTo(x - 4, y - 4); ctx.lineTo(x + 4, y + 4);
+          ctx.moveTo(x + 4, y - 4); ctx.lineTo(x - 4, y + 4);
+          ctx.stroke();
+        }
+      }
+
+      // Órbita
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = '#B3246B'; ctx.lineWidth = 2.5; ctx.stroke();
+
+      // Radio indicado
+      ctx.beginPath();
+      ctx.moveTo(cx, cy); ctx.lineTo(cx + R, cy);
+      ctx.strokeStyle = '#0B8CA8'; ctx.setLineDash([4, 4]); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#08758C'; ctx.font = '14px monospace';
+      ctx.fillText(`R = ${(R / 45).toFixed(2)} m`, cx + R / 2 - 20, cy - 8);
+    }
+    $('rng-cyc-b').addEventListener('input', draw);
+    $('rng-cyc-v').addEventListener('input', draw);
+    return { draw };
+  })();
+
+  // 5 · Selector de Wien
+  sims.wien = (() => {
+    const cv = $('cv-wien'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const E = parseFloat($('rng-wien-e').value);
+      const B = parseFloat($('rng-wien-b').value);
+      $('out-wien-e').textContent = E + ' kV/m';
+      $('out-wien-b').textContent = B.toFixed(2) + ' T';
+      ctx.clearRect(0, 0, 460, 340);
+
+      // Placas paralelas horizontal
+      ctx.fillStyle = 'rgba(179, 36, 107, 0.15)';
+      ctx.fillRect(50, 60, 360, 20); // placa superior (+)
+      ctx.fillRect(50, 260, 360, 20); // placa inferior (-)
+      ctx.fillStyle = '#B3246B'; ctx.font = 'bold 16px sans-serif';
+      ctx.fillText('+ + + + + + + + + + + + + + + +', 70, 76);
+      ctx.fillText('- - - - - - - - - - - - - - - -', 70, 276);
+
+      // Trayectoria de partícula con v = E/B
+      const v_sel = (E / B) * 1000;
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(30, 170); ctx.lineTo(430, 170); ctx.stroke();
+
+      // Trayectoria rápida (desviada hacia arriba)
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)'; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(30, 170); ctx.quadraticCurveTo(240, 170, 420, 95); ctx.stroke();
+
+      // Trayectoria lenta (desviada hacia abajo)
+      ctx.beginPath(); ctx.moveTo(30, 170); ctx.quadraticCurveTo(240, 170, 420, 245); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#10b981'; ctx.font = '14px monospace';
+      ctx.fillText(`v_sel = ${(E / B).toFixed(1)} km/s`, 180, 160);
+    }
+    $('rng-wien-e').addEventListener('input', draw);
+    $('rng-wien-b').addEventListener('input', draw);
+    return { draw };
+  })();
+
+  // 11 · Árbol de Decisión Didáctico
+  sims.tree = (() => {
+    const data = {
+      'c-f': {
+        title: 'Fuerza de Lorentz sobre Carga Puntual',
+        formula: '\\[\\vec F = q(\\vec v \\times \\vec B) \\implies F = |q| v B \\sin\\theta\\]',
+        p1: '1. Traza los vectores \\(\\vec v\\) y \\(\\vec B\\) y halla el ángulo \\(\\theta\\) entre ellos.',
+        p2: '2. Aplica la regla de la mano derecha (pulgar en \\(\\vec v\\), dedos en \\(\\vec B\\)).',
+        p3: '3. Si \\(q < 0\\), invierte \\(180^\\circ\\) el sentido del vector fuerza resultante.'
+      },
+      'c-r': {
+        title: 'Radio y Período Ciclotrón',
+        formula: '\\[R = \\frac{m v}{|q| B}, \\quad T = \\frac{2\\pi m}{|q| B}, \\quad \\omega = \\frac{|q| B}{m}\\]',
+        p1: '1. Aplica equilibrio centrípeto con fuerza magnética pura (\\(\\vec v \\perp \\vec B\\)).',
+        p2: '2. Observa que el período \\(T\\) no depende de la velocidad de la partícula.',
+        p3: '3. Si existe componente de velocidad paralela \\(v_\\parallel\\), la trayectoria es una hélice.'
+      },
+      'c-w': {
+        title: 'Trabajo Nulo de la Fuerza Magnética',
+        formula: '\\[W = \\int \\vec F_B \\cdot d\\vec r = 0, \\quad P = \\vec F_B \\cdot \\vec v \\equiv 0\\]',
+        p1: '1. La fuerza es siempre estrictamente ortogonal a la trayectoria instantánea.',
+        p2: '2. La rapidez escalar permanece constante; la aceleración es puramente centrípeta.',
+        p3: '3. Para cambiar la energía cinética de una carga, se requiere un campo eléctrico \\(\\vec E\\).'
+      }
+    };
+
+    let q1 = 'c', q2 = 'f';
+    function update() {
+      const key = `${q1}-${q2}`;
+      const item = data[key] || data['c-f'];
+      $('leaf-title').textContent = item.title;
+      $('leaf-formula').innerHTML = item.formula;
+      $('leaf-p1').textContent = item.p1;
+      $('leaf-p2').textContent = item.p2;
+      $('leaf-p3').textContent = item.p3;
+      renderMath($('leaf-formula'));
+    }
+
+    $('tq1').querySelectorAll('.opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $('tq1').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        q1 = btn.dataset.q;
+        update();
+      });
+    });
+
+    $('tq2').querySelectorAll('.opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $('tq2').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        q2 = btn.dataset.a;
+        update();
+      });
+    });
+    return { draw: update };
+  })();
+
+  // 13 · Mapa Conceptual de Lorentz
+  sims.cmap = (() => {
+    const nodes = [
+      { id: 'FL', label: 'Fuerza de Lorentz', k: 'this', x: 390, y: 140, big: true, def: 'Ley fundamental que rige la interacción electromagnética completa sobre cargas.', eq: '\\[\\vec F = q(\\vec E + \\vec v \\times \\vec B)\\]' },
+      { id: 'CY', label: 'Ciclotrón / R', k: 'this', x: 210, y: 260, def: 'Trayectoria circular provocada por la fuerza centrípeta de Lorentz.', eq: '\\[R = \\frac{mv}{qB}\\]' },
+      { id: 'WI', label: 'Selector de Wien', k: 'this', x: 390, y: 270, def: 'Equilibrio de fuerzas cruzadas E y B para filtrado de velocidades.', eq: '\\[v = \\frac{E}{B}\\]' },
+      { id: 'HA', label: 'Efecto Hall', k: 'this', x: 570, y: 260, def: 'Separación transversal de portadores y signo de las cargas móviles.', eq: '\\[V_H = \\frac{IB}{nqt}\\]' },
+      { id: 'LA', label: 'Fuerza de Laplace', k: 'this', x: 210, y: 400, def: 'Fuerza macroscópica sobre conductores que transportan corriente.', eq: '\\[d\\vec F = I d\\vec\\ell \\times \\vec B\\]' },
+      { id: 'DI', label: 'Dipolo Magnético', k: 'this', x: 410, y: 410, def: 'Torque de alineación sobre espiras y bobinas con corriente.', eq: '\\[\\vec\\tau = \\vec\\mu \\times \\vec B\\]' },
+      { id: 'BS', label: 'Ley Biot-Savart', k: 'fut', x: 600, y: 400, def: 'Capítulo 9: Cómo las corrientes son las fuentes que originan el campo B.', eq: '\\[d\\vec B = \\frac{\\mu_0 I}{4\\pi} \\frac{d\\vec\\ell \\times \\hat r}{r^2}\\]' },
+    ];
+
+    const edges = [
+      ['FL', 'CY', 'v ⟂ B'], ['FL', 'WI', 'E ⟂ B'], ['FL', 'HA', 'portadores'],
+      ['FL', 'LA', 'sumatoria q'], ['LA', 'DI', 'par de fuerzas'], ['LA', 'BS', 'fuente-acción']
+    ];
+
+    let built = false;
+    function build() {
+      const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg';
+      const by = {}; nodes.forEach(n => by[n.id] = n);
+      edges.forEach(([u, v, label]) => {
+        const p = by[u], q = by[v];
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', p.x); line.setAttribute('y1', p.y);
+        line.setAttribute('x2', q.x); line.setAttribute('y2', q.y);
+        line.setAttribute('class', 'edge');
+        svg.appendChild(line);
+
+        const flow = document.createElementNS(NS, 'line');
+        flow.setAttribute('x1', p.x); flow.setAttribute('y1', p.y);
+        flow.setAttribute('x2', q.x); flow.setAttribute('y2', q.y);
+        flow.setAttribute('class', 'flow');
+        svg.appendChild(flow);
+      });
+
+      nodes.forEach(n => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `cnode ${n.k}${n.big ? ' big' : ''}`;
+        btn.style.left = n.x + 'px'; btn.style.top = n.y + 'px';
+        btn.textContent = n.label;
+        btn.addEventListener('click', () => {
+          $('cmap').querySelectorAll('.cnode').forEach(b => b.classList.remove('on'));
+          btn.classList.add('on');
+          $('cm-label').textContent = n.label;
+          $('cm-def').textContent = n.def;
+          $('cm-eq').innerHTML = n.eq;
+          renderMath($('cm-eq'));
+        });
+        $('cmap').appendChild(btn);
+      });
+      built = true;
+    }
+    return { draw() { if (!built) build(); } };
+  })();
+
+  // 14 · Glosario en Tarjetas
+  sims.glossary = (() => {
+    const terms = [
+      ['Fuerza de Lorentz', 'Fuerza electromagnética total ejercida sobre una partícula cargada: F = q(E + v × B).'],
+      ['Tesla (T)', 'Unidad SI de inducción magnética: 1 T = 1 N / (A · m) = 10,000 Gauss.'],
+      ['Frecuencia Ciclotrón', 'Rapidez angular de giro w = qB/m, independiente de la velocidad de la partícula.'],
+      ['Selector de Wien', 'Dispositivo de campos cruzados que permite el paso rectilíneo de partículas con v = E/B.'],
+      ['Momento Dipolar', 'Vector mu = N I A que cuantifica la intensidad y orientación magnética de una espira.'],
+      ['Efecto Hall', 'Generación de una diferencia de potencial transversal en un conductor atravesado por B.'],
+      ['Trabajo Magnético Nulo', 'Principio por el cual F_B no realiza trabajo mecánico por ser ortogonal a la velocidad.'],
+      ['Regla de la Mano Derecha', 'Convención vectorial para determinar la dirección de un producto cruz v × B.']
+    ];
+    let idx = 0, isBack = false;
+    function update() {
+      const card = $('fc-card');
+      card.className = 'fcard' + (isBack ? ' back' : '');
+      $('fc-side').textContent = isBack ? 'DEFINICIÓN RIGUROSA' : 'TÉRMINO';
+      $('fc-text').textContent = isBack ? terms[idx][1] : terms[idx][0];
+      $('fc-count').textContent = `Tarjeta ${idx + 1} de ${terms.length}`;
+    }
+    $('fc-card').addEventListener('click', () => { isBack = !isBack; update(); });
+    $('fc-flip').addEventListener('click', () => { isBack = !isBack; update(); });
+    $('fc-next').addEventListener('click', () => { idx = (idx + 1) % terms.length; isBack = false; update(); });
+    return { draw: update };
+  })();
+
+  // Pregunta interactiva Diapositiva 3
+  const voteBtns = document.querySelectorAll('#vote-q1 .btn');
+  voteBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      voteBtns.forEach(b => b.classList.remove('right', 'wrong'));
+      if (btn.dataset.r === 'c') {
+        btn.classList.add('right');
+        $('fb-q1').style.display = 'block';
+      } else {
+        btn.classList.add('wrong');
+      }
+    });
+  });
+
+  // Switcher de escenas del laboratorio
+  const labBtns = document.querySelectorAll('#lab-scenes .btn');
+  labBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      labBtns.forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      $('lab-frame').src = btn.dataset.lab;
+    });
+  });
+
+  // Navegación
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = 0;
+  const onShow = {
+    1: () => sims.cover.show(),
+    2: sims.oersted.draw,
+    4: sims.cyc.draw,
+    5: sims.wien.draw,
+    11: sims.tree.draw,
+    13: sims.cmap.draw,
+    14: sims.glossary.draw,
+  };
+
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[cur].classList.remove('on');
+    if (cur === 0) sims.cover.hide();
+    cur = i;
+    slides[cur].classList.add('on');
+    (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`;
+    $('progress').style.width = `${((cur + 1) / slides.length) * 100}%`;
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
+  }
+
+  $('nav-prev').addEventListener('click', () => go(cur - 1));
+  $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
+  });
+
+  $('nav-fs').addEventListener('click', () => {
+    const d = document.documentElement;
+    if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {});
+    else document.exitFullscreen?.();
+  });
+
+  const print = () => {
+    Object.values(sims).forEach(s => s.draw && s.draw());
+    setTimeout(() => window.print(), 150);
+  };
+  $('nav-print').addEventListener('click', print);
+  $('btn-print2').addEventListener('click', print);
+
+  function fit() {
+    const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720);
+    $('stage').style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  window.addEventListener('load', () => {
+    renderMath(document.body);
+    const n = parseInt(location.hash.slice(1));
+    go(isFinite(n) ? n - 1 : 0);
+  });
+})();
+</script>
+</body>
+</html>

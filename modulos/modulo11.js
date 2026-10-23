@@ -18,10 +18,22 @@ export const modulo11 = {
         {
             "id": "m11-l1",
             "tipo": "multivideo",
-            "recurso": "",
-            "titulo": "1. Teoría y Deducción: Ley de Faraday e Inducción",
-            "descripcion": "Fundamentación matemática de la fem inducida, ley de Lenz, energía en inductores y transformadores.",
-            "xp": 10
+            "recurso": "nZjNWgRmIdY|DfJCQZOyR4w|3XdeuEFV4QQ|zVzWm1f9JD4|BO8IdReQeDw|0xZv6_HwFVU|xBPwx9dBtl8|Clnp9-Wk9_Y|UcJPlOnrYnk|SwaEw6zjqJg",
+            "titulo": "1. Videos: Ley de Faraday, Inductancia y Circuitos RL",
+            "descripcion": "Colección de 10 clases universitarias verificadas: flujo magnético, fem inducida de Faraday-Lenz, autoinductancia, balance energético y análisis transitorio en circuitos RL.",
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "Inducción Electromagnética, Ley de Faraday y Ley de Lenz", "canal": "Es Ciencia"},
+                {"titulo": "Inducción electromagnética: Ley de Faraday - Lenz", "canal": "JUANMA FÍSICA"},
+                {"titulo": "Ley de Faraday-Lenz: Experiencia de Laboratorio", "canal": "Profesor Física y Química"},
+                {"titulo": "Inducción: FEM inducida, Espira y Flujo Magnético", "canal": "FísicaPRO"},
+                {"titulo": "Ley de Faraday y Ley de Lenz (Explicación Teórica)", "canal": "Les Ingenieurs"},
+                {"titulo": "Circuitos RL: Explicación y Deducción Analítica", "canal": "espiral ciencias"},
+                {"titulo": "Inducción: Circuito RL y Crecimiento de Corriente", "canal": "Aritz Leonardo - Física General"},
+                {"titulo": "El Inductor: Comportamiento Físico y Autoinductancia", "canal": "Les Ingenieurs"},
+                {"titulo": "Ecuación Diferencial Circuito RL: Análisis Transitorio", "canal": "EngiTube"},
+                {"titulo": "Respuesta Natural y Descarga del Circuito RL", "canal": "EngiTube"}
+            ]
         },
         {
             "id": "m11-l2",

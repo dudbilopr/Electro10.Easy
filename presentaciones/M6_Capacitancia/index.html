@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 6 · Capacitancia y Dieléctricos — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 6 · deck 16:9 de 10.Easy. Colores desde css/tokens.css. */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:36px;line-height:1.12}
+.row{display:flex;gap:26px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:17px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.print-only{display:none}
+
+/* Árbol, Mapa, Timeline, Tarjetas */
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:86px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.45em}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+#tq1{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:38px;padding:6px 12px;font-size:14px}#tq2{gap:6px}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
+@media (prefers-reduced-motion:reduce){.slide,.btn{transition:none}}
+@page{size:1280px 720px;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
+  .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center">
+      <img src="../../img/logo_electro10.svg" alt="Electro10.Easy Emblem" style="height:42px;width:auto">
+      <b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b>
+      <span class="tag c">Capítulo 6</span>
+    </div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">ELECTROSTÁTICA · ALMACENAMIENTO DE ENERGÍA</span>
+        <h1 style="font-size:68px;line-height:1.04">Capacitancia<br>& Dieléctricos</h1>
+        <p style="margin:0;font-size:23px;color:var(--e10-muted);max-width:560px">Fundamentos electrostáticos de almacenamiento de carga, geometrías canónicas, polarización y energía del campo.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Definición \(C = Q/\Delta V\) y deducción de placas paralelas, cilindros y esferas.</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Dos caminos para la energía: trabajo circuital vs integral volumétrica de campo.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Polarización atómica con dieléctricos \(\kappa\) y constantes de tiempo RC.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover-cap" width="440" height="440" aria-label="Placas plano-paralelas cargadas con campo eléctrico uniforme animado"></canvas>
+    </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o la barra inferior</span></div>
+  </div>
+</section>
+
+<!-- 2 · DEFINICIÓN FUNDAMENTAL -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Concepto Base</span></div>
+  <h2>Definición Fundamental de Capacitancia</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:14px">
+      <p style="margin:0;font-size:18px;line-height:1.45">Un capacitor o condensador es un dispositivo formado por dos conductores separados por el vacío o un material aislante (dieléctrico) que almacenan cargas de igual magnitud y signos opuestos (\(+Q\) y \(-Q\)).</p>
+      <div class="soft" style="text-align:center">
+        \[C = \frac{Q}{\Delta V}\]
+      </div>
+      <div class="card" style="gap:10px">
+        <b style="color:var(--e10-primary);font-size:17px">Propiedades Clave:</b>
+        <div class="steps" style="font-size:16px">
+          <div><span class="n">1</span><span><b>Independencia de \(Q\) y \(\Delta V\):</b> La capacitancia \(C\) es un parámetro puramente geométrico y del medio aislante; al duplicar la carga \(Q\), la diferencia de potencial \(\Delta V\) se duplica automáticamente manteniendo \(C\) constante.</span></div>
+          <div><span class="n">2</span><span><b>Unidad SI: El Faradio (F):</b> \(1\text{ F} = 1\text{ C/V}\). Dado que \(1\text{ F}\) es una cantidad gigantesca de capacitancia, en ingeniería se emplean submúltiplos: \(\mu\text{F} (10^{-6}\text{F})\), \(\text{nF} (10^{-9}\text{F})\) y \(\text{pF} (10^{-12}\text{F})\).</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-cap-def" class="sim" width="460" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Carga \(Q\) (\(\mu\text{C}\)):</span>
+        <input type="range" id="rng-cap-q" min="1" max="10" step="1" value="4">
+        <output id="out-cap-q">4 μC</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky Cap. 24.1</span><span class="mono">Diapositiva 2 / 13</span></div>
+</section>
+
+<!-- 3 · PLACAS PLANO-PARALELAS -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Deducción Canónica</span></div>
+  <h2>Capacitor de Placas Plano-Paralelas</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <p style="margin:0;font-size:18px">Dos placas metálicas planas paralelas de área \(A\) separadas una distancia \(d \ll \sqrt{A}\) para poder despreciar los efectos de borde:</p>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">Deducción Rigurosa Paso a Paso:</b>
+        <div class="steps" style="font-size:15px">
+          <div><span class="n">1</span><span><b>Campo por Ley de Gauss:</b> Con una caja cilíndrica gaussiana apoyada en el conductor: \[\oint \vec E \cdot d\vec A = E A = \frac{Q}{\epsilon_0} \implies E = \frac{\sigma}{\epsilon_0} = \frac{Q}{\epsilon_0 A}\]</span></div>
+          <div><span class="n">2</span><span><b>Diferencia de potencial:</b> La integral de línea a lo largo del campo uniforme da: \[\Delta V = \int_0^d E dx = E d = \frac{Q d}{\epsilon_0 A}\]</span></div>
+          <div><span class="n">3</span><span><b>Capacitancia en el vacío:</b> \[C_0 = \frac{Q}{\Delta V} = \frac{Q}{\frac{Q d}{\epsilon_0 A}} \implies C_0 = \frac{\epsilon_0 A}{d}\]</span></div>
+        </div>
+      </div>
+      <div class="tipbox">
+        <b>Constante fundamental:</b> \(\epsilon_0 \approx 8.854 \times 10^{-12}\text{ F/m}\). Para aumentar la capacitancia se debe aumentar el área \(A\) o reducir la separación \(d\).
+      </div>
+    </div>
+    <div class="col" style="flex:0.8">
+      <canvas id="cv-plates" class="sim" width="440" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Separación \(d\) (mm):</span>
+        <input type="range" id="rng-plates-d" min="1" max="8" step="0.5" value="3">
+        <output id="out-plates-d">3.0 mm</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 24.1</span><span class="mono">Diapositiva 3 / 13</span></div>
+</section>
+
+<!-- 4 · GEOMETRÍAS CILÍNDRICA Y ESFÉRICA -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Geometrías Canónicas</span></div>
+  <h2>Capacitores Cilíndrico y Esférico</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">1. Capacitor Cilíndrico (Cable Coaxial):</b>
+        <div style="font-size:14px;color:var(--e10-muted)">Cilindros concéntricos de radios \(a < b\) y longitud \(L \gg b\):</div>
+        <div style="font-size:15px">
+          \[E(r) = \frac{\lambda}{2\pi\epsilon_0 r} = \frac{Q}{2\pi\epsilon_0 L r}\]
+          \[\Delta V = \int_a^b E(r) dr = \frac{Q}{2\pi\epsilon_0 L} \ln\left(\frac{b}{a}\right)\]
+          \[\frac{C}{L} = \frac{2\pi\epsilon_0}{\ln(b/a)} \quad [\text{F/m}]\]
+        </div>
+      </div>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-accent-strong)">2. Capacitor Esférico Concéntrico:</b>
+        <div style="font-size:14px;color:var(--e10-muted)">Cáscaras esféricas conductoras concéntricas de radios \(a < b\):</div>
+        <div style="font-size:15px">
+          \[\Delta V = \frac{Q}{4\pi\epsilon_0}\left(\frac{1}{a} - \frac{1}{b}\right) = \frac{Q(b - a)}{4\pi\epsilon_0 a b}\]
+          \[C = 4\pi\epsilon_0 \frac{a b}{b - a} \xrightarrow{b \to \infty} C_{\text{esfera aislada}} = 4\pi\epsilon_0 a\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <canvas id="cv-geom" class="sim" width="520" height="340"></canvas>
+      <div class="ok" style="font-size:14px">
+        <b>Capacitancia del Planeta Tierra:</b> Considerando a la Tierra como una esfera conductora aislada en el espacio de radio \(R_T \approx 6.37 \times 10^6\text{ m}\):
+        \[C_T = 4\pi\epsilon_0 R_T \approx 708\ \mu\text{F} \quad (\text{¡menos de un milifaradio!})\]
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 24.2</span><span class="mono">Diapositiva 4 / 13</span></div>
+</section>
+
+<!-- 5 · DIELÉCTRICOS Y POLARIZACIÓN -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Materiales Aislantes</span></div>
+  <h2>Dieléctricos y Polarización Microscópica</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <p style="margin:0;font-size:18px">Al introducir un aislante entre las placas de un capacitor, los dipolos moleculares se orientan generando un campo interno opuesto que reduce el campo neto y eleva la capacitancia por un factor \(\kappa \ge 1\).</p>
+      <div class="read">
+        <div>Constante dieléctrica<b>\(\kappa = \epsilon / \epsilon_0\)</b></div>
+        <div>Capacitancia con dieléctrico<b>\(C = \kappa C_0\)</b></div>
+        <div>Campo reducido (Q cte)<b>\(E = E_0 / \kappa\)</b></div>
+      </div>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">Cargas Ligadas Inducidas:</b>
+        <div style="font-size:15px">La polarización genera densidades de carga ligada \(\pm\sigma_b\) en las caras externas del dieléctrico:</div>
+        \[E = \frac{\sigma - \sigma_b}{\epsilon_0} = \frac{\sigma}{\kappa \epsilon_0} \implies \sigma_b = \sigma\left(1 - \frac{1}{\kappa}\right)\]
+      </div>
+      <div class="warn">
+        <b>Rigidez Dieléctrica:</b> Campo eléctrico máximo que el aislante tolera antes de ionizarse y volverse conductor (ruptura por arco eléctrico, e.g. en el aire \(E_{\text{máx}} \approx 3\text{ MV/m}\)).
+      </div>
+    </div>
+    <div class="col" style="flex:0.9">
+      <canvas id="cv-dielectric" class="sim" width="460" height="340"></canvas>
+      <div class="ctrl card">
+        <span>Dieléctrico \(\kappa\):</span>
+        <input type="range" id="rng-kappa" min="1.0" max="6.0" step="0.5" value="3.0">
+        <output id="out-kappa">κ = 3.0</output>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 24.4 & 24.5</span><span class="mono">Diapositiva 5 / 13</span></div>
+</section>
+
+<!-- 6 · DOS CAMINOS PARA LA ENERGÍA -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Deducción Rigurosa</span></div>
+  <h2>Energía Electrostática Almacenada: Dos Caminos</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border-right:1px solid var(--e10-line);padding-right:12px">
+          <b style="color:var(--e10-primary)">Camino A: Trabajo del Circuito</b>
+          <div style="font-size:14px;color:var(--e10-muted);margin:4px 0 8px">Trabajo infinitesimal para transferir \(dq\) con potencial \(v = q/C\):</div>
+          <div style="font-size:15px">
+            \[dW = v dq = \frac{q}{C} dq\]
+            \[U = \int_0^Q \frac{q}{C} dq = \frac{Q^2}{2C}\]
+            Sustituyendo \(Q = C \Delta V\):
+            \[U = \frac{1}{2} C (\Delta V)^2 = \frac{1}{2} Q \Delta V\]
+          </div>
+        </div>
+        <div>
+          <b style="color:var(--e10-accent-strong)">Camino B: Integral de Campo</b>
+          <div style="font-size:14px;color:var(--e10-muted);margin:4px 0 8px">Energía almacenada en el campo eléctrico espacial:</div>
+          <div style="font-size:15px">
+            Densidad volumétrica: \(u_E = \frac{1}{2}\epsilon E^2\)
+            \[U = \iiint_{\text{vol}} u_E dV = \frac{1}{2}\epsilon E^2 (A d)\]
+            Sustituyendo \(E = \Delta V / d\):
+            \[U = \frac{1}{2}\left(\frac{\epsilon A}{d}\right) (\Delta V)^2 = \frac{1}{2} C (\Delta V)^2\]
+          </div>
+        </div>
+      </div>
+      <div class="ok">
+        <b>Conclusión Física Profunda:</b> Ambos caminos son físicamente equivalentes: la energía suministrada por la fuente al trasladar cargas queda <b>almacenada directamente en el campo eléctrico</b> distribuido en el espacio entre los conductores.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8">
+      <canvas id="cv-energy" class="sim" width="440" height="340"></canvas>
+      <div class="tipbox">
+        <b>Densidad de energía electrostática:</b> \(u_E = \frac{1}{2}\epsilon E^2\). Es válida para cualquier configuración de campo electrostático, no solo en capacitores.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 24.3</span><span class="mono">Diapositiva 6 / 13</span></div>
+</section>
+
+<!-- 7 · ASOCIACIÓN DE CAPACITORES -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Topología Circuital</span></div>
+  <h2>Asociación de Capacitores: Serie y Paralelo</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-primary)">1. Conexión en Serie: Carga Idéntica</b>
+        <div style="font-size:14px;color:var(--e10-muted)">La carga \(Q\) es la misma en todas las placas; los voltajes se suman:</div>
+        <div style="font-size:15px">
+          \[\Delta V = \Delta V_1 + \Delta V_2 = \frac{Q}{C_1} + \frac{Q}{C_2} = Q\left(\frac{1}{C_1} + \frac{1}{C_2}\right)\]
+          \[\frac{1}{C_{\text{eq}}} = \frac{1}{C_1} + \frac{1}{C_2} + \dots + \frac{1}{C_n} \implies C_{\text{eq}} < \min(C_i)\]
+        </div>
+      </div>
+      <div class="card" style="gap:8px">
+        <b style="color:var(--e10-accent-strong)">2. Conexión en Paralelo: Voltaje Idéntico</b>
+        <div style="font-size:14px;color:var(--e10-muted)">El potencial \(\Delta V\) es común; las cargas individuales se suman:</div>
+        <div style="font-size:15px">
+          \[Q_{\text{total}} = Q_1 + Q_2 = C_1 \Delta V + C_2 \Delta V = (C_1 + C_2)\Delta V\]
+          \[C_{\text{eq}} = C_1 + C_2 + \dots + C_n \implies C_{\text{eq}} > \max(C_i)\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <canvas id="cv-assoc" class="sim" width="520" height="340"></canvas>
+      <div class="tipbox">
+        <b>Regla Mnemotécnica:</b> Las fórmulas de asociación de capacitores son exactamente <b>opuestas</b> a las de los resistores (\(R_{\text{serie}} = \sum R_i\), \(1/R_{\text{paralelo}} = \sum 1/R_i\)).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 24.2</span><span class="mono">Diapositiva 7 / 13</span></div>
+</section>
+
+<!-- 8 · CIRCUITOS TRANSITORIOS RC -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Dinámica Temporal</span></div>
+  <h2>Circuitos RC Transitorios: Carga y Descarga</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <p style="margin:0;font-size:18px">Al conectar un capacitor descargado a una fuente \(\mathcal{E}_0\) en serie con un resistor \(R\), la carga aumenta exponencialmente:</p>
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <b style="color:var(--e10-primary)">Proceso de Carga:</b>
+          <div style="font-size:15px">
+            \[q(t) = Q_{\text{máx}}\left(1 - e^{-t/\tau_C}\right)\]
+            \[i(t) = \frac{\mathcal{E}_0}{R} e^{-t/\tau_C}\]
+            \[Q_{\text{máx}} = C \mathcal{E}_0\]
+          </div>
+        </div>
+        <div>
+          <b style="color:var(--e10-accent-strong)">Proceso de Descarga:</b>
+          <div style="font-size:15px">
+            \[q(t) = Q_0 \, e^{-t/\tau_C}\]
+            \[i(t) = -\frac{Q_0}{RC} e^{-t/\tau_C}\]
+          </div>
+        </div>
+      </div>
+      <div class="read">
+        <div>Constante de tiempo<b>\(\tau_C = R C\)</b></div>
+        <div>En \(t = \tau_C\) (Carga)<b>\(q = 0.632 \, Q_{\text{máx}}\)</b></div>
+        <div>En \(t = 5\tau_C\)<b>\(q \approx 0.993 \, Q_{\text{máx}}\) (99.3%)</b></div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8">
+      <canvas id="cv-rc" class="sim" width="440" height="340"></canvas>
+      <div class="tipbox">
+        <b>Unidades:</b> \(1\ \Omega \times 1\text{ F} = 1\text{ segundo (s)}\). La constante \(\tau_C\) fija la escala de tiempo de marcapasos, temporizadores y filtros de señal.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears–Zemansky 26.4</span><span class="mono">Diapositiva 8 / 13</span></div>
+</section>
+
+<!-- 9 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Metodología Didáctica</span></div>
+  <h2>Árbol de Decisión: ¿Qué Fórmula de Capacitancia Usar?</h2>
+  <div class="row">
+    <div class="col" style="width:380px;gap:10px">
+      <div class="tq">
+        <div class="tqh"><span>Paso 1 · ¿Cuál es la geometría del sistema?</span></div>
+        <div class="tq-opts" id="tq1">
+          <button class="opt on" data-q="p">Placas plano-paralelas</button>
+          <button class="opt" data-q="c">Cilindro / Coaxial</button>
+          <button class="opt" data-q="s">Esferas concéntricas</button>
+          <button class="opt" data-q="r">Circuito RC transitorio</button>
+        </div>
+      </div>
+      <span class="tq-down">↓</span>
+      <div class="tq">
+        <div class="tqh"><span>Paso 2 · ¿Qué variable se busca calcular?</span></div>
+        <div class="tq-opts" id="tq2">
+          <button class="opt on" data-a="c">Capacitancia geométrica \(C\)</button>
+          <button class="opt" data-a="u">Energía electrostática \(U\)</button>
+          <button class="opt" data-a="e">Campo o carga dieléctrica</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf">
+      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em">Fórmula seleccionada y procedimiento</div>
+      <div class="leaf-name" id="leaf-title">Capacitor de Placas Paralelas</div>
+      <div class="leaf-eq" id="leaf-formula">\[C = \frac{\kappa \epsilon_0 A}{d}\]</div>
+      <div class="col" style="gap:6px;font-size:16px">
+        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
+        <span id="leaf-p1">1. Verifica que el área \(A\) esté en metros cuadrados (\(\text{m}^2\)) y la separación \(d\) en metros.</span>
+        <span id="leaf-p2">2. Si hay dieléctrico, multiplica por la constante relativa \(\kappa\); en el vacío \(\kappa = 1\).</span>
+        <span id="leaf-p3">3. Usa \(\epsilon_0 \approx 8.854 \times 10^{-12}\text{ F/m}\) para el cálculo final.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Algoritmo de decisión para talleres y exámenes</span><span class="mono">Diapositiva 9 / 13</span></div>
+</section>
+
+<!-- 10 · SIMULADOR CAPACITANCE INCRUSTADO -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Laboratorio Virtual</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>CapacitanceLab · Exploración Interactiva</h2>
+    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Placas, Dieléctrico y Energía en Tiempo Real</span>
+  </div>
+  <div class="row" style="margin-top:4px">
+    <iframe id="lab-frame" class="lab-frame" src="../../simuladores/Capacitance.html" title="Simulador CapacitanceLab"></iframe>
+  </div>
+  <div class="foot"><span>Simulador interactivo con telemetría de campo</span><span class="mono">Diapositiva 10 / 13</span></div>
+</section>
+
+<!-- 11 · MAPA CONCEPTUAL -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Red de Conocimiento</span></div>
+  <h2>Mapa Conceptual: Capacitancia y Energía Electrostática</h2>
+  <div class="row">
+    <div class="cmap" id="cmap">
+      <svg id="cmap-svg" width="780" height="520"></svg>
+      <div class="cmap-legend">
+        <span class="chip past">Ley de Gauss</span>
+        <span class="chip this">Capítulo 6 (Capacitancia)</span>
+        <span class="chip fut">Circuitos CC</span>
+      </div>
+    </div>
+    <div class="col card" style="flex:1;gap:10px">
+      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
+      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Capacitancia</b>
+      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[C = \frac{Q}{\Delta V} = \frac{\kappa \epsilon_0 A}{d}\]</div>
+      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Relación entre la carga almacenada en los conductores y la diferencia de potencial electrostático entre ellos.</p>
+      <div class="tipbox" id="cm-where">Pilar fundamental para el almacenamiento temporal de energía y filtrado de señales.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 11 / 13</span></div>
+</section>
+
+<!-- 12 · LÍNEA DE TIEMPO Y GLOSARIO -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Historia y Terminología</span></div>
+  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
+  <div class="row" style="flex-direction:column;gap:16px">
+    <div class="tline" id="tline">
+      <div class="tline-axis"></div>
+      <div class="tline-note" id="tl-text"><b style="color:var(--e10-primary)">Von Kleist & Musschenbroek, 1745.</b> Invención de la Botella de Leyden, el primer capacitor de la historia.</div>
+    </div>
+    <div class="row" style="gap:20px;flex:1">
+      <button type="button" class="fcard" id="fc-card">
+        <span class="mono" id="fc-side">TÉRMINO</span>
+        <span id="fc-text">Capacitancia</span>
+      </button>
+      <div class="col" style="width:260px;justify-content:center;gap:10px">
+        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
+        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
+        <button class="btn" id="fc-next">Siguiente término</button>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 12 / 13</span></div>
+</section>
+
+<!-- 13 · RESUMEN Y EXPORTACIÓN -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 6</b><span class="tag c">Cierre y Evaluación</span></div>
+  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="soft">
+          <b>Placas Paralelas:</b>
+          \[C_0 = \frac{\epsilon_0 A}{d}\]
+          \[C = \kappa C_0 = \frac{\epsilon A}{d}\]
+        </div>
+        <div class="soft">
+          <b>Geometrías Especiales:</b>
+          \[\frac{C}{L} = \frac{2\pi\epsilon_0}{\ln(b/a)}\]
+          \[C_{\text{esf}} = 4\pi\epsilon_0 \frac{ab}{b-a}\]
+        </div>
+        <div class="soft">
+          <b>Energía Almacenada:</b>
+          \[U = \frac{1}{2} C (\Delta V)^2 = \frac{Q^2}{2C}\]
+          \[u_E = \frac{1}{2}\epsilon E^2\]
+        </div>
+        <div class="soft">
+          <b>Asociaciones y RC:</b>
+          \[C_{\text{par}} = \sum C_i, \quad \frac{1}{C_{\text{ser}}} = \sum \frac{1}{C_i}\]
+          \[\tau_C = R C\]
+        </div>
+      </div>
+      <div class="ok">
+        <b>Regla de Oro:</b> El dieléctrico <b>aumenta</b> la capacitancia en un factor \(\kappa\) reduciendo el campo eléctrico y permitiendo almacenar más carga al mismo potencial.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
+      <div class="card" style="text-align:center;padding:24px;gap:14px">
+        <b style="font-size:20px;color:var(--e10-ink)">¿Listo para imprimir o estudiar sin conexión?</b>
+        <p style="font-size:15px;color:var(--e10-muted);margin:0">Exporta este deck completo de 13 diapositivas en alta resolución en formato PDF 16:9.</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap06_Taller_Capacitancia.pdf" download>Taller (PDF)</a>
+          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap06_Guia_Capacitancia.pdf" download>Guía de estudio (PDF)</a>
+        </div>
+        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
+        <a href="../../talleres/Taller_6_Capacitancia.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 6</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 13 / 13</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra inferior de navegación del deck -->
+<nav class="deck-ui" aria-label="Navegación del deck">
+  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
+  <span class="count" id="nav-count">1 / 13</span>
+  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
+  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
+  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+</nav>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const renderMath = (el) => {
+    if (window.renderMathInElement) {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  };
+
+  const sims = {};
+
+  // 1 · Portada: Placas cargadas con campo animado
+  sims.cover = (() => {
+    const cv = $('cv-cover-cap'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    let t = 0, req = null;
+    function frame() {
+      ctx.clearRect(0, 0, 440, 440);
+      const cx = 220, cy = 220;
+
+      // Placa superior (+Q)
+      ctx.fillStyle = '#B3246B';
+      ctx.fillRect(70, cy - 80, 300, 16);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px monospace';
+      ctx.fillText('+ + + + + + + + + + + + + + + + + + + +', 85, cy - 68);
+
+      // Placa inferior (-Q)
+      ctx.fillStyle = '#08758C';
+      ctx.fillRect(70, cy + 64, 300, 16);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('- - - - - - - - - - - - - - - - - - - -', 85, cy + 76);
+
+      // Líneas de campo E hacia abajo con flujo animado
+      ctx.strokeStyle = '#0B8CA8'; ctx.lineWidth = 2.5;
+      const offset = (t * 30) % 24;
+      ctx.setLineDash([8, 8]);
+      ctx.lineDashOffset = -offset;
+      for (let x = 100; x <= 340; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, cy - 64); ctx.lineTo(x, cy + 64); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      t += 0.03;
+      req = requestAnimationFrame(frame);
+    }
+    return {
+      show() { if (!req) req = requestAnimationFrame(frame); },
+      hide() { if (req) { cancelAnimationFrame(req); req = null; } }
+    };
+  })();
+
+  // 3 · Placas plano-paralelas
+  sims.plates = (() => {
+    const cv = $('cv-plates'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const d = parseFloat($('rng-plates-d').value);
+      $('out-plates-d').textContent = d.toFixed(1) + ' mm';
+      ctx.clearRect(0, 0, 440, 340);
+      const cx = 220, cy = 170;
+      const gap = d * 18;
+
+      // Placa superior
+      ctx.fillStyle = '#B3246B'; ctx.fillRect(60, cy - gap / 2 - 12, 320, 12);
+      // Placa inferior
+      ctx.fillStyle = '#08758C'; ctx.fillRect(60, cy + gap / 2, 320, 12);
+
+      // Líneas de campo E
+      ctx.strokeStyle = 'rgba(11, 140, 168, 0.5)'; ctx.lineWidth = 2;
+      for (let x = 80; x <= 360; x += 35) {
+        ctx.beginPath(); ctx.moveTo(x, cy - gap / 2); ctx.lineTo(x, cy + gap / 2); ctx.stroke();
+      }
+
+      // Cotas de separación
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(40, cy - gap / 2); ctx.lineTo(40, cy + gap / 2); ctx.stroke();
+      ctx.fillStyle = '#ffffff'; ctx.font = '14px monospace';
+      ctx.fillText(`d = ${d.toFixed(1)} mm`, 48, cy + 5);
+
+      // Valor numérico C0 proporcional a 1/d
+      const c_val = (8.85 * 0.04 / (d * 0.001)).toFixed(1);
+      ctx.fillStyle = '#0B8CA8'; ctx.font = '16px monospace';
+      ctx.fillText(`C_0 ≈ ${c_val} pF  (A = 400 cm²)`, 100, 310);
+    }
+    $('rng-plates-d').addEventListener('input', draw);
+    return { draw };
+  })();
+
+  // 5 · Dieléctrico interactivo
+  sims.dielectric = (() => {
+    const cv = $('cv-dielectric'); if (!cv) return {};
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const kappa = parseFloat($('rng-kappa').value);
+      $('out-kappa').textContent = `κ = ${kappa.toFixed(1)}`;
+      ctx.clearRect(0, 0, 460, 340);
+      const cx = 230, cy = 170;
+
+      // Placas metálicas
+      ctx.fillStyle = '#B3246B'; ctx.fillRect(60, 80, 340, 16);
+      ctx.fillStyle = '#08758C'; ctx.fillRect(60, 240, 340, 16);
+
+      // Bloque dieléctrico entre placas
+      ctx.fillStyle = `rgba(16, 185, 129, ${0.15 + (kappa - 1) * 0.1})`;
+      ctx.fillRect(70, 96, 320, 144);
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+      ctx.strokeRect(70, 96, 320, 144);
+
+      // Cargas ligadas
+      ctx.fillStyle = '#08758C'; ctx.font = '13px monospace';
+      ctx.fillText('- - - - - - - - - - - - - - - - - - -', 80, 114);
+      ctx.fillStyle = '#B3246B';
+      ctx.fillText('+ + + + + + + + + + + + + + + + + + +', 80, 230);
+
+      // Texto de campo reducido
+      ctx.fillStyle = '#ffffff'; ctx.font = '16px sans-serif';
+      ctx.fillText(`E_neto = E_0 / ${kappa.toFixed(1)}`, 160, 175);
+    }
+    $('rng-kappa').addEventListener('input', draw);
+    return { draw };
+  })();
+
+  // 9 · Árbol de Decisión Didáctico
+  sims.tree = (() => {
+    const data = {
+      'p-c': {
+        title: 'Capacitor de Placas Paralelas',
+        formula: '\\[C = \\frac{\\kappa \\epsilon_0 A}{d}\\]',
+        p1: '1. Verifica que el área \\(A\\) esté en \\(\\text{m}^2\\) y la distancia \\(d\\) en metros.',
+        p2: '2. En el vacío usa \\(\\kappa = 1\\); con aislante multiplica por \\(\\kappa\\).',
+        p3: '3. Aplica \\(\\epsilon_0 \\approx 8.854 \\times 10^{-12}\\text{ F/m}\\).'
+      },
+      'c-c': {
+        title: 'Capacitor Cilíndrico Coaxial',
+        formula: '\\[\\frac{C}{L} = \\frac{2\\pi \\kappa \\epsilon_0}{\\ln(b/a)}\\]',
+        p1: '1. Identifica los radios del conductor interno \\(a\\) y externo \\(b\\).',
+        p2: '2. El cociente \\(b/a\\) es adimensional.',
+        p3: '3. Si te piden la capacitancia total, multiplica por la longitud \\(L\\).'
+      },
+      's-c': {
+        title: 'Capacitor Esférico Concéntrico',
+        formula: '\\[C = 4\\pi \\kappa \\epsilon_0 \\frac{a b}{b - a}\\]',
+        p1: '1. Identifica el radio interno \\(a\\) y externo \\(b\\).',
+        p2: '2. Para una esfera conductora solitaria en el vacío, haz el límite \\(b \\to \\infty \\implies C = 4\\pi\\epsilon_0 a\\).',
+        p3: '3. La capacitancia es siempre positiva ya que \\(b > a\\).'
+      },
+      'r-c': {
+        title: 'Circuito Transitorio RC',
+        formula: '\\[q(t) = Q_{\\text{máx}}(1 - e^{-t/\\tau_C}), \\quad \\tau_C = R C\\]',
+        p1: '1. Calcula la constante de tiempo \\(\\tau_C = R C\\) en segundos.',
+        p2: '2. Halla la carga máxima final \\(Q_{\\text{máx}} = C \\mathcal{E}_0\\).',
+        p3: '3. En \\(t = \\tau_C\\), la carga alcanza el 63.2% de su cota asintótica.'
+      }
+    };
+
+    let q1 = 'p', q2 = 'c';
+    function update() {
+      const key = `${q1}-${q2}`;
+      const item = data[key] || data['p-c'];
+      $('leaf-title').textContent = item.title;
+      $('leaf-formula').innerHTML = item.formula;
+      $('leaf-p1').textContent = item.p1;
+      $('leaf-p2').textContent = item.p2;
+      $('leaf-p3').textContent = item.p3;
+      renderMath($('leaf-formula'));
+    }
+
+    $('tq1').querySelectorAll('.opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $('tq1').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        q1 = btn.dataset.q;
+        update();
+      });
+    });
+
+    $('tq2').querySelectorAll('.opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $('tq2').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        q2 = btn.dataset.a;
+        update();
+      });
+    });
+    return { draw: update };
+  })();
+
+  // 11 · Mapa Conceptual de Capacitancia
+  sims.cmap = (() => {
+    const nodes = [
+      { id: 'CP', label: 'Capacitancia', k: 'this', x: 390, y: 140, big: true, def: 'Capacidad de un sistema de conductores para retener carga por voltio.', eq: '\\[C = \\frac{Q}{\\Delta V}\\]' },
+      { id: 'PL', label: 'Placas Paralelas', k: 'this', x: 210, y: 260, def: 'Campo homogéneo E = sigma/epsilon0 y potencial V = Ed.', eq: '\\[C_0 = \\frac{\\epsilon_0 A}{d}\\]' },
+      { id: 'DL', label: 'Dieléctricos', k: 'this', x: 390, y: 270, def: 'Polarización atómica que amplifica la capacitancia por kappa.', eq: '\\[C = \\kappa C_0\\]' },
+      { id: 'EN', label: 'Energía del Campo', k: 'this', x: 570, y: 260, def: 'Energía almacenada en el campo electrostático: trabajo o volumen.', eq: '\\[U = \\frac{1}{2} C (\\Delta V)^2\\]' },
+      { id: 'AS', label: 'Asociaciones', k: 'this', x: 230, y: 400, def: 'Topologías serie y paralelo de circuitos.', eq: '\\[C_{\\text{par}} = \\sum C_i, \\quad \\frac{1}{C_{\\text{ser}}} = \\sum \\frac{1}{C_i}\\]' },
+      { id: 'RC', label: 'Circuitos RC', k: 'fut', x: 450, y: 410, def: 'Capítulo 7: Dinámica transitoria con constante tau = RC.', eq: '\\[\\tau_C = R C\\]' },
+    ];
+
+    const edges = [
+      ['CP', 'PL', 'geometría'], ['CP', 'DL', 'aislante'], ['CP', 'EN', 'almacena'],
+      ['CP', 'AS', 'redes'], ['CP', 'RC', 'transitorios']
+    ];
+
+    let built = false;
+    function build() {
+      const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg';
+      const by = {}; nodes.forEach(n => by[n.id] = n);
+      edges.forEach(([u, v]) => {
+        const p = by[u], q = by[v];
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', p.x); line.setAttribute('y1', p.y);
+        line.setAttribute('x2', q.x); line.setAttribute('y2', q.y);
+        line.setAttribute('class', 'edge');
+        svg.appendChild(line);
+
+        const flow = document.createElementNS(NS, 'line');
+        flow.setAttribute('x1', p.x); flow.setAttribute('y1', p.y);
+        flow.setAttribute('x2', q.x); flow.setAttribute('y2', q.y);
+        flow.setAttribute('class', 'flow');
+        svg.appendChild(flow);
+      });
+
+      nodes.forEach(n => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `cnode ${n.k}${n.big ? ' big' : ''}`;
+        btn.style.left = n.x + 'px'; btn.style.top = n.y + 'px';
+        btn.textContent = n.label;
+        btn.addEventListener('click', () => {
+          $('cmap').querySelectorAll('.cnode').forEach(b => b.classList.remove('on'));
+          btn.classList.add('on');
+          $('cm-label').textContent = n.label;
+          $('cm-def').textContent = n.def;
+          $('cm-eq').innerHTML = n.eq;
+          renderMath($('cm-eq'));
+        });
+        $('cmap').appendChild(btn);
+      });
+      built = true;
+    }
+    return { draw() { if (!built) build(); } };
+  })();
+
+  // 12 · Glosario en Tarjetas
+  sims.glossary = (() => {
+    const terms = [
+      ['Capacitancia', 'Relación constante entre la carga de un conductor y su potencial: C = Q/V.'],
+      ['Faradio (F)', 'Unidad SI de capacitancia: 1 Faradio = 1 Coulomb / 1 Voltio.'],
+      ['Constante Dieléctrica (κ)', 'Factor adimensional por el cual un aislante incrementa la capacitancia.'],
+      ['Rigidez Dieléctrica', 'Intensidad máxima del campo eléctrico antes de que el aislante sufra ruptura.'],
+      ['Densidad de Energía u_E', 'Energía por unidad de volumen del campo eléctrico: u_E = (1/2) epsilon E^2.'],
+      ['Constante de Tiempo RC', 'Tiempo característico tau = RC en que un capacitor se carga al 63.2%.'],
+      ['Carga Ligada', 'Carga aparente inducida en la superficie de un dieléctrico por polarización.'],
+      ['Botella de Leyden', 'Dispositivo electrostático histórico de 1745 precursor del capacitor moderno.']
+    ];
+    let idx = 0, isBack = false;
+    function update() {
+      const card = $('fc-card');
+      card.className = 'fcard' + (isBack ? ' back' : '');
+      $('fc-side').textContent = isBack ? 'DEFINICIÓN RIGUROSA' : 'TÉRMINO';
+      $('fc-text').textContent = isBack ? terms[idx][1] : terms[idx][0];
+      $('fc-count').textContent = `Tarjeta ${idx + 1} de ${terms.length}`;
+    }
+    $('fc-card').addEventListener('click', () => { isBack = !isBack; update(); });
+    $('fc-flip').addEventListener('click', () => { isBack = !isBack; update(); });
+    $('fc-next').addEventListener('click', () => { idx = (idx + 1) % terms.length; isBack = false; update(); });
+    return { draw: update };
+  })();
+
+  // Navegación
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = 0;
+  const onShow = {
+    1: () => sims.cover.show(),
+    3: sims.plates.draw,
+    5: sims.dielectric.draw,
+    9: sims.tree.draw,
+    11: sims.cmap.draw,
+    12: sims.glossary.draw,
+  };
+
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[cur].classList.remove('on');
+    if (cur === 0) sims.cover.hide();
+    cur = i;
+    slides[cur].classList.add('on');
+    (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`;
+    $('progress').style.width = `${((cur + 1) / slides.length) * 100}%`;
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
+  }
+
+  $('nav-prev').addEventListener('click', () => go(cur - 1));
+  $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
+  });
+
+  $('nav-fs').addEventListener('click', () => {
+    const d = document.documentElement;
+    if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {});
+    else document.exitFullscreen?.();
+  });
+
+  const print = () => {
+    Object.values(sims).forEach(s => s.draw && s.draw());
+    setTimeout(() => window.print(), 150);
+  };
+  $('nav-print').addEventListener('click', print);
+  $('btn-print2').addEventListener('click', print);
+
+  function fit() {
+    const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720);
+    $('stage').style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  window.addEventListener('load', () => {
+    renderMath(document.body);
+    const n = parseInt(location.hash.slice(1));
+    go(isFinite(n) ? n - 1 : 0);
+  });
+})();
+</script>
+</body>
+</html>

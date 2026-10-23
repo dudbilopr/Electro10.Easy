@@ -68,6 +68,23 @@ export const ERRORES = {
     campo_fuera_solenoide: 'Campo fuera del solenoide',
     toroide_radio_medio: 'Usó el radio medio del toroide',
     toroide_fuera: 'Campo no nulo fuera del núcleo del toroide',
+    // LorentzLab (capítulo 8)
+    lorentz_paralelo: 'Fuerza no nula con v (o el hilo) paralelo a B',
+    lorentz_fuerza_nula: 'Creyó que no había fuerza magnética',
+    lorentz_perpendicular: 'Fuerza no perpendicular a v y a B',
+    lorentz_paralela_v: 'Dibujó la fuerza a lo largo de v',
+    signo_carga: 'Ignoró el signo negativo de la carga',
+    mano_derecha_lorentz: 'Regla de la mano derecha en F = q v × B',
+    sentido_giro: 'Sentido de giro de la partícula',
+    falta_seno: 'Olvidó el factor sen θ',
+    falta_carga: 'Olvidó multiplicar por la carga',
+    v_perp: 'Usó v en lugar de v⊥ en la hélice',
+    radio_por_diametro: 'Dio R en lugar de 2R en el espectrómetro',
+    b_sobre_e: 'Invirtió el cociente v = E/B',
+    selector_equilibrio: 'Equilibrio de fuerzas en el selector',
+    par_nulo: 'Par nulo con μ paralelo a B',
+    sentido_par: 'Sentido de giro de la espira',
+    cos_en_par: 'Usó cos φ en el par de la espira',
     otro: 'Otro error',
 };
 
@@ -134,9 +151,13 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     hilo_infinito_en_segmento: 'BiotSavart.html#segmento', prolongacion: 'BiotSavart.html#segmento', b0_medios: 'BiotSavart.html#espira', grados: 'BiotSavart.html#espira', faltan_vueltas: 'BiotSavart.html#espira', angulo_brujula: 'BiotSavart.html#oersted',
     circulacion_cero: 'Ampere.html#circulacion', corriente_encerrada: 'Ampere.html#circulacion', signo_corriente: 'Ampere.html#circulacion', suma_sin_signo: 'Ampere.html#circulacion', corriente_fuera: 'Ampere.html#circulacion', falta_mu0: 'Ampere.html#circulacion',
     corriente_total_dentro: 'Ampere.html#conductor', region_equivocada: 'Ampere.html#conductor', coaxial_fuera: 'Ampere.html#conductor',
-    n_por_N: 'Ampere.html#solenoide', ideal_en_extremo: 'Ampere.html#solenoide', campo_fuera_solenoide: 'Ampere.html#solenoide', toroide_radio_medio: 'Ampere.html#toroide', toroide_fuera: 'Ampere.html#toroide' };
+    n_por_N: 'Ampere.html#solenoide', ideal_en_extremo: 'Ampere.html#solenoide', campo_fuera_solenoide: 'Ampere.html#solenoide', toroide_radio_medio: 'Ampere.html#toroide', toroide_fuera: 'Ampere.html#toroide',
+    lorentz_paralelo: 'Lorentz.html#fuerza', lorentz_fuerza_nula: 'Lorentz.html#fuerza', lorentz_perpendicular: 'Lorentz.html#fuerza', lorentz_paralela_v: 'Lorentz.html#fuerza', signo_carga: 'Lorentz.html#fuerza',
+    mano_derecha_lorentz: 'Lorentz.html#fuerza', falta_seno: 'Lorentz.html#fuerza', falta_carga: 'Lorentz.html#fuerza', sentido_giro: 'Lorentz.html#orbita', v_perp: 'Lorentz.html#orbita',
+    radio_por_diametro: 'Lorentz.html#selector', b_sobre_e: 'Lorentz.html#selector', selector_equilibrio: 'Lorentz.html#selector', par_nulo: 'Lorentz.html#conductor', sentido_par: 'Lorentz.html#conductor', cos_en_par: 'Lorentz.html#conductor' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
-export const labDe = (code) => (/^Ampere/.test(PRACTICA[code] || '') ? 'AmpèreLab' : 'BiotSavartLab');
+const LABS = { Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
+export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──
 
@@ -272,7 +293,7 @@ export async function renderMiAvance({ uid, curriculoData, progressData, evalDat
         <section class="bento-card">
           <div class="bento-header"><h3>Tus errores más frecuentes</h3></div>
           ${errs.length ? errs.slice(0, 5).map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.n / errs[0].n * 100}%"></i></div><b>${e.n}</b></div>`).join('')
-              : `<p class="e10-sem__vacio">${comp.length ? 'Sin errores en tus comprobaciones recientes.' : 'Cuando uses «Comprobar» en BiotSavartLab o AmpèreLab, aquí verás qué errores repites.'}</p>`}
+              : `<p class="e10-sem__vacio">${comp.length ? 'Sin errores en tus comprobaciones recientes.' : 'Cuando uses «Comprobar» en los laboratorios (LorentzLab, BiotSavartLab, AmpèreLab…), aquí verás qué errores repites.'}</p>`}
           ${errs[0] && practicaDe(errs[0].code) ? `<div class="e10-tip"><span class="e10-tip__title">Siguiente paso recomendado</span>Practica «${esc(errs[0].label)}» en ${labDe(errs[0].code)}. <a href="${practicaDe(errs[0].code)}" target="_blank" rel="noopener">Practicar →</a></div>` : ''}
         </section>
       </div>`;
@@ -370,7 +391,7 @@ export async function cargarSeguimientoDocente({ curriculoData, totalLessons, da
           <div class="bento-header"><h3>Errores más frecuentes del grupo</h3></div>
           ${errs.length ? errs.map((e) => `<div class="e10-e"><span>${esc(e.label)}</span><div class="e10-q__bar"><i style="width:${e.pct}%"></i></div><b>${e.pct} %</b></div>`).join('')
             + `<div class="e10-tip"><span class="e10-tip__title">Sugerencia para la próxima clase</span>El ${errs[0].pct} % del grupo comete «${esc(errs[0].label)}» en los simuladores: vale la pena repasarlo en clase.</div>`
-            : '<p class="e10-sem__vacio">Cuando los estudiantes usen «Comprobar» en BiotSavartLab o AmpèreLab, aquí aparecerán los errores más comunes del grupo.</p>'}
+            : '<p class="e10-sem__vacio">Cuando los estudiantes usen «Comprobar» en los laboratorios (LorentzLab, BiotSavartLab, AmpèreLab…), aquí aparecerán los errores más comunes del grupo.</p>'}
         </section>
       </div>`;
 
