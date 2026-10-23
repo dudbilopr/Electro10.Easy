@@ -1,7 +1,7 @@
 // modulos/modulo10.js — Ley de Ampere
 // Asistente IA para circulación magnética, caminos amperianos y corriente de desplazamiento
 export const modulo10 = {
-    "titulo": "Módulo 10: Ley de Ampere",
+    "titulo": "Módulo 10: Ley de Ampère",
     "color": "#0d9488",
     "icono": "loop",
     "descripcionCorta": "Circulación del campo magnético, simetrías amperianas y la corriente de desplazamiento de Maxwell",
@@ -18,17 +18,30 @@ export const modulo10 = {
         {
             "id": "m10-l1",
             "tipo": "multivideo",
-            "recurso": "",
-            "titulo": "1. Teoría y Deducción: Ley de Ampere",
-            "descripcion": "Circulación magnética, aplicación a solenoides, toroides y la introducción histórica de la corriente de desplazamiento.",
-            "xp": 10
+            "recurso": "xdvfJ57NjJU|BK1NBJWo6kk|Nat546C-4DQ|cd7ctZkropg|-6V1cGWhZYI|4c_h8tEVeVA|rPWQSPng6cw|nbB1QnbruVA|Z_7YJFfT7pE|BSLYSE1rDB4|FqUfRYC_TmI",
+            "titulo": "1. Videos: Ley de Ampère",
+            "descripcion": "Once videos verificados: la ley y la regla de la mano derecha, conductor grueso, cable coaxial, solenoide y toroide, con ejercicios resueltos.",
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "LEY DE AMPERE y REGLA DE LA MANO DERECHA", "canal": "La Constante Universal"},
+                {"titulo": "Ley de Ampere - explicación", "canal": "Mayken Espinoza"},
+                {"titulo": "Clase N°17 Física II Ley de Ampere POSTA", "canal": "Física II - UTN FRBA"},
+                {"titulo": "Aplicación de la ley de Ampère a un cable grueso", "canal": "ceroentropia"},
+                {"titulo": "414 Aplicaciones de la Ley de Ampère (cable coaxial y demostración de campo de un conductor recto)", "canal": "JOSE GABRIEL BONOMI CASAS"},
+                {"titulo": "Ley de AMPERE CAMPO MAGNETICO de CABLE COAXIAL", "canal": "Ingeniosos"},
+                {"titulo": "5.9 Ley de Ampere - Campo creado por un solenoide", "canal": "FísicaLab EPN"},
+                {"titulo": "LEY DE AMPÈRE - Campo magnético al interior de un solenoide y en un cable con densidad de corriente", "canal": "Física Clara University"},
+                {"titulo": "Ejercicio Electromagnetismo. Ley de Ampere 6 ( Caso: solenoide)", "canal": "Clases de Física de Jonh Bucanero"},
+                {"titulo": "5.10 Ley de Ampere - Campo creado por un solenoide toroidal", "canal": "FísicaLab EPN"},
+                {"titulo": "24. Ley de Ampere. Campo en un Toroide. Ejercicios Resueltos - TinTutor.", "canal": "Tin Tutor (Martin)"}
+            ]
         },
         {
             "id": "m10-l2",
             "tipo": "presentacion",
             "recurso": "./player.html?clase=10",
-            "titulo": "2. Diapositivas de Apoyo Magistral",
-            "descripcion": "Caminos amperianos en geometrías cilíndricas y toroidales, con demostraciones analíticas completas.",
+            "titulo": "2. Clase interactiva: Ley de Ampère",
+            "descripcion": "13 diapositivas con simulaciones, retos con valores nuevos, árbol de decisión Ampère o Biot–Savart, mapa de conceptos, glosario y PDF descargable.",
             "xp": 15
         },
         {
@@ -39,17 +52,33 @@ export const modulo10 = {
                 {
                     "id": "m10-s1",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M9_Solenoide.html",
-                    "titulo": "3.1 Solenoide Interactivo",
-                    "descripcion": "Análisis cuantitativo del campo en el interior y exterior de solenoides según densidad de espiras.",
+                    "recurso": "simuladores/Ampere.html#circulacion",
+                    "titulo": "3.1 AmpèreLab · Circulación",
+                    "descripcion": "Mueve hilos y deforma el camino (incluso a mano): la circulación solo depende de la corriente encerrada. Mira cómo se acumula la suma de B·dℓ.",
                     "xp": 20
                 },
                 {
                     "id": "m10-s2",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M9_Tabla_Ampere.html",
-                    "titulo": "3.2 Tabla Ampere Interactiva",
-                    "descripcion": "Calculadora geométrica para evaluar la circulación y corriente encerrada en múltiples configuraciones.",
+                    "recurso": "simuladores/Ampere.html#conductor",
+                    "titulo": "3.2 AmpèreLab · Conductor macizo, hueco y coaxial",
+                    "descripcion": "Arrastra el camino amperiano desde el eje hacia fuera y predice cómo cambia B(r) en cada región.",
+                    "xp": 20
+                },
+                {
+                    "id": "m10-s3",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Ampere.html#solenoide",
+                    "titulo": "3.3 AmpèreLab · Solenoide real e ideal",
+                    "descripcion": "Compara el campo de un solenoide finito con μ₀nI en el centro, en las bocas y fuera.",
+                    "xp": 20
+                },
+                {
+                    "id": "m10-s4",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Ampere.html#toroide",
+                    "titulo": "3.4 AmpèreLab · Toroide",
+                    "descripcion": "Campo en el agujero, en el núcleo y fuera del toroide, con la gráfica B(r).",
                     "xp": 20
                 }
             ]
@@ -64,12 +93,35 @@ export const modulo10 = {
             "logro": { "id": "logro_m10", "nombre": "Maestro Amperiano", "icono": "loop" }
         },
         {
-            "id": "m10-l7",
-            "tipo": "ejercicio",
-            "recurso": "talleres/Taller_10_Ley_de_Ampere.html",
-            "titulo": "5. Taller Práctico No. 9 — Ley de Ampere",
-            "descripcion": "Problemas de solenoides, toroides, cables coaxiales con densidades volumétricas de corriente.",
-            "xp": 30
+            "id": "m10-g2",
+            "tipo": "grupo",
+            "titulo": "5. Taller No. 10 — Ley de Ampère",
+            "sublecciones": [
+                {
+                    "id": "m10-l7",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M10_Ampere/recursos/Cap10_Taller_Ampere.pdf",
+                    "titulo": "5.1 Taller (PDF)",
+                    "descripcion": "7 ejercicios resueltos, 14 retos por niveles, preguntas de teoría, dos programas de Python y códigos QR al simulador.",
+                    "xp": 30
+                },
+                {
+                    "id": "m10-l8",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M10_Ampere/recursos/Cap10_Guia_Ampere.pdf",
+                    "titulo": "5.2 Guía de estudio (PDF)",
+                    "descripcion": "Ideas clave, fórmulas, errores comunes, autoevaluación con respuestas, conectores de conceptos, glosario y bibliografía.",
+                    "xp": 15
+                },
+                {
+                    "id": "m10-l9",
+                    "tipo": "ejercicio",
+                    "recurso": "talleres/Taller_10_Ley_de_Ampere.html",
+                    "titulo": "5.3 Taller de práctica (versión web)",
+                    "descripcion": "Problemas de solenoides, toroides y cables coaxiales con densidades volumétricas de corriente.",
+                    "xp": 20
+                }
+            ]
         },
         {
             "id": "m10-q1",

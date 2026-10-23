@@ -254,7 +254,10 @@ export function loadContent(leccion, modulo, progressData, evalData) {
 
             const card = document.createElement('div');
             card.className = `thumbnail-card ${index === 0 ? 'active' : ''}`;
-            card.innerHTML = `<img src="${thumbUrl}" class="thumb-img" alt="Thumbnail"><div class="thumb-info"><h4 class="thumb-title">Recurso ${index + 1}</h4><span style="font-size:0.7rem;color:var(--text-medium);">${leccion.tipo === 'multivideo' ? 'Video Magistral' : 'Diapositiva'}</span></div>`;
+            // Título y canal opcionales por recurso (leccion.titulosRecursos[i] = { titulo, canal })
+            const meta = (leccion.titulosRecursos || [])[index] || {};
+            const escH = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            card.innerHTML = `<img src="${thumbUrl}" class="thumb-img" alt="Thumbnail"><div class="thumb-info"><h4 class="thumb-title">${meta.titulo ? escH(meta.titulo) : `Recurso ${index + 1}`}</h4><span style="font-size:0.7rem;color:var(--text-medium);">${meta.canal ? escH(meta.canal) : leccion.tipo === 'multivideo' ? 'Video Magistral' : 'Diapositiva'}</span></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.thumbnail-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
