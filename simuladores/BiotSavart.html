@@ -136,7 +136,7 @@ body.e10-projector #e10-live .katex{font-size:1.5em}
 </head>
 <body data-domain="magnetismo" class="light-mode">
 <header class="e10-header">
-  <a class="e10-brand" href="../index.html">BiotSavartLab<span>10.easy</span></a>
+  <a class="e10-brand" href="../index.html" style="display:inline-flex;align-items:center;gap:6px"><img src="../img/logo_electro10_nanobanana.svg" alt="Nano Banana Emblem" style="height:26px;width:auto">BiotSavartLab<span>10.easy</span></a>
   <span class="e10-chip module-chip">Módulo 9 · Biot–Savart</span>
   <nav class="scene-tabs" role="tablist" aria-label="Escenas">
     <button type="button" role="tab" data-scene="oersted" aria-selected="false">1 · Ørsted</button>
@@ -544,27 +544,46 @@ const scSegmento = {
     const binf = MU0 * G.I / (2 * Math.PI * g.d);
     return String.raw`B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)=\dfrac{(10^{-7})(${fx(G.I, 1)})}{${fx(g.d, 3)}}(${fx(g.s2, 3)}-(${fx(g.s1, 3)}))=${sx(g.B)}\,\text{T}\quad(${fx(100 * g.B / binf, 1)}\,\%\ \text{del hilo infinito})`;
   },
-  coords: () => `P = (${fp(G.P.x * 100, 1)} cm; ${fp(G.P.y * 100, 1)} cm)`,
-  down(px, py) { G.drag = true; this.move(px, py); },
+  down(px, py) {
+    const curY = G.dl_y != null ? G.dl_y : G.L * 0.65;
+    const [e1x, e1y] = gS(0, curY);
+    if (Math.hypot(px - e1x, py - e1y) < 28 || Math.abs(px - e1x) < 24) {
+      G.dragTarget = 'dl';
+    } else {
+      G.dragTarget = 'P';
+    }
+    G.drag = true;
+    this.move(px, py);
+  },
   move(px, py) {
     if (!G.drag) return;
-    const w = gW(px, py); if (gView.plot && px > gView.plot.x - 10) return;
-    G.P = { x: Math.round(w.x * 200) / 200, y: Math.round(w.y * 200) / 200 }; invalidate();
+    const w = gW(px, py);
+    if (G.dragTarget === 'dl') {
+      G.dl_y = clamp(w.y, -0.2 * G.L, 1.2 * G.L);
+    } else {
+      if (gView.plot && px > gView.plot.x - 10) return;
+      G.P = { x: Math.round(w.x * 200) / 200, y: Math.round(w.y * 200) / 200 };
+    }
+    invalidate();
   },
-  up() { G.drag = false; },
+  up() { G.drag = false; G.dragTarget = 'P'; },
   draw() {
     gLayout();
     const [ax, ay] = gS(0, 0), [bx, by] = gS(0, G.L), [px, py] = gS(G.P.x, G.P.y), g = segB(G.P);
-    text('Vista lateral · arrastra P', 16, 22, COL.muted, 12);
+    text('Vista lateral · Arrastra P o el elemento dℓ sobre el hilo', 16, 22, COL.muted, 12);
     if (G.showInf) { ctx.save(); ctx.strokeStyle = COL.primary; ctx.globalAlpha = 0.3; ctx.lineWidth = 4; ctx.setLineDash([2, 10]); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ax, 8); ctx.lineTo(ax, HU - 8); ctx.stroke(); ctx.restore(); }
     ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.restore();
     if (G.I > 0) { const my = (ay + by) / 2; arrow(ax, my + G.dir * 26, ax, my - G.dir * 26, COL.surface, 2.5, 9); text(`I = ${fp(G.I, 1)} A`, ax - 14, my, COL.primary, 13, 'right', 600); }
-    // geometría de P
+    
+    // Geometría y eje de referencia perpendicular desde P
     ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
     ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, ay); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
-    ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, py); ctx.stroke(); ctx.restore();
+    // Línea perpendicular (theta = 0)
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.6; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, py); ctx.stroke(); ctx.restore();
+    
     if (Math.abs(G.P.x) > 1e-4) {
-      text(`a = ${fp(Math.abs(G.P.x) * 100, 1)} cm`, (px + ax) / 2, py + 14, COL.muted, 12, 'center');
+      text(`Ref: θ = 0° (a = ${fp(Math.abs(G.P.x) * 100, 1)} cm)`, (px + ax) / 2, py - 8, '#64748b', 11, 'center', 600);
       if (G.showAng) {
         const side = -Math.sign(G.P.x), base = side > 0 ? 0 : Math.PI, r = 46;
         [[g.s1, 'θ₁', COL.ok], [g.s2, 'θ₂', COL.danger]].forEach(([s, lab, col], i) => {
@@ -576,14 +595,17 @@ const scSegmento = {
     }
     // Elementos infinitesimales dℓ y vectores unitarios r̂
     if (G.showDl && Math.abs(G.P.x) > 1e-4) {
-      let y1 = G.P.y + 0.35 * G.L;
-      if (y1 > G.L) y1 = G.L * 0.75;
-      if (y1 < 0) y1 = G.L * 0.25;
+      const y1 = G.dl_y != null ? G.dl_y : G.L * 0.65;
       const [e1x, e1y] = gS(0, y1);
+      
+      // Handle de arrastre
+      ctx.fillStyle = COL.danger; ctx.beginPath(); ctx.arc(e1x, e1y, 5, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = COL.danger; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e1x, e1y, 10, 0, 2 * Math.PI); ctx.stroke();
       
       // Vector del elemento I dℓ₁
       arrow(e1x, e1y + G.dir * 14, e1x, e1y - G.dir * 14, COL.danger, 4, 8);
-      text('I dℓ₁', e1x - 36, e1y, COL.danger, 12, 'right', 600);
+      const th_cur = Math.atan2(y1 - G.P.y, Math.abs(G.P.x)) * DEG;
+      text(`I dℓ₁ (θ=${fp(th_cur, 0)}°)`, e1x - 38, e1y - 6, COL.danger, 11, 'right', 600);
       
       // Línea punteada r₁ hacia P
       ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
@@ -601,8 +623,10 @@ const scSegmento = {
       if (G.showSym) {
         const y2 = G.P.y - (y1 - G.P.y);
         const [e2x, e2y] = gS(0, y2);
+        
+        ctx.fillStyle = COL.ok; ctx.beginPath(); ctx.arc(e2x, e2y, 5, 0, 2 * Math.PI); ctx.fill();
         arrow(e2x, e2y + G.dir * 14, e2x, e2y - G.dir * 14, COL.ok, 4, 8);
-        text('I dℓ₂', e2x - 36, e2y, COL.ok, 12, 'right', 600);
+        text(`I dℓ₂ (−θ)`, e2x - 38, e2y + 8, COL.ok, 11, 'right', 600);
         
         ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
         ctx.beginPath(); ctx.moveTo(e2x, e2y); ctx.lineTo(px, py); ctx.stroke(); ctx.restore();

@@ -141,7 +141,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 <section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
   <div style="width:14px;background:var(--e10-primary)"></div>
   <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
-    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 9</span></div>
+    <div style="display:flex;gap:12px;align-items:center"><img src="../../img/logo_electro10_nanobanana.svg" alt="Nano Banana Emblem" style="height:38px;width:auto"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 9</span></div>
     <div style="display:flex;gap:40px;align-items:center">
       <div class="col" style="flex:1;gap:16px">
         <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">MAGNETOSTÁTICA · FUENTES DEL CAMPO</span>
@@ -213,8 +213,8 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
   <h2>Deducción del hilo: paso a paso y dos caminos</h2>
   <div class="row">
-    <div class="col" style="width:420px">
-      <canvas class="sim" id="cv-hilo" width="420" height="340" aria-label="Segmento de hilo entre los ángulos theta 1 y theta 2"></canvas>
+    <div class="col" style="width:430px">
+      <canvas class="sim" id="cv-hilo" width="430" height="340" aria-label="Segmento de hilo, elemento diferencial arrastrable y punto P"></canvas>
       <div class="ctrl no-print">
         <label for="hi-t1">θ₁</label><input id="hi-t1" type="range" min="-89" max="89" value="-60"><output id="hi-t1-o">−60°</output>
         <label for="hi-t2">θ₂</label><input id="hi-t2" type="range" min="-89" max="89" value="60"><output id="hi-t2-o">60°</output>
@@ -223,70 +223,112 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         <button type="button" class="btn on" id="hi-tog-dl" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Elemento dℓ y r̂</button>
         <button type="button" class="btn" id="hi-tog-sym" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Par simétrico (±y)</button>
       </div>
-      <div class="read"><div>Segmento / infinito<b id="hi-ratio">—</b></div><div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div><div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div></div>
+      <div class="read">
+        <div>Segmento / infinito<b id="hi-ratio">—</b></div>
+        <div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div>
+        <div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div>
+      </div>
+      <div class="no-print" style="font-size:11px;color:var(--e10-muted);text-align:center;margin-top:2px">
+        💡 <b>Arrastra el elemento \(d\vec\ell\)</b> verticalmente sobre el hilo para explorar la variación de \(\theta\) y \(\hat r\).
+      </div>
     </div>
     <div class="col" style="flex:1;overflow-y:auto;gap:8px">
-      <div class="steps" style="font-size:14.5px;gap:5px">
-        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
-        <div><span class="n">2</span><span><b>Variables del esquema:</b> \(|d\vec\ell\times\hat r|=dy\cos\theta\) (\(\otimes\) entrando), distancia \(r=\sqrt{a^2+y^2}\).</span></div>
-        <div><span class="n">3</span><span><b>Cambio y constantes fuera:</b> \(B=\dfrac{\mu_0 I a}{4\pi}\displaystyle\int_{y_1}^{y_2}\dfrac{dy}{(y^2+a^2)^{3/2}}\).</span></div>
+      <div class="steps" style="font-size:14px;gap:5px">
+        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y vector relativo \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
+        <div><span class="n">2</span><span><b>Variables y referencia angular:</b> Los ángulos \(\theta_1, \theta_2\) y \(\theta\) se miden <b>respecto a la perpendicular del hilo al punto \(P\) (\(\theta=0^\circ\))</b>. Geometría: \(y=a\tan\theta\), \(r=\sqrt{a^2+y^2}=a\sec\theta\). El ángulo entre \(d\vec\ell\) y \(\hat r\) es \(\varphi = 90^\circ + \theta \implies |d\vec\ell\times\hat r|=dy\sin\varphi=dy\cos\theta\) (entrando \(\otimes\)).</span></div>
+        <div><span class="n">3</span><span><b>Cambio de variable:</b> \(B=\dfrac{\mu_0 I a}{4\pi}\displaystyle\int_{y_1}^{y_2}\dfrac{dy}{(y^2+a^2)^{3/2}}\).</span></div>
       </div>
-      <div class="card" style="padding:9px 12px;background:var(--e10-surface)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-          <b style="font-size:13.5px;color:var(--e10-primary)">4 · Dos caminos para resolver la integral:</b>
+      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <b style="font-size:13px;color:var(--e10-primary)">4 · Dos caminos para resolver la integral:</b>
           <div class="no-print" style="display:flex;gap:4px">
-            <button type="button" class="btn on" id="btn-camino-a" style="min-height:26px;padding:0 8px;font-size:11.5px">Camino A: Trigonométrico</button>
-            <button type="button" class="btn" id="btn-camino-b" style="min-height:26px;padding:0 8px;font-size:11.5px">Camino B: Por tablas</button>
+            <button type="button" class="btn on" id="btn-camino-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Trigonométrico</button>
+            <button type="button" class="btn" id="btn-camino-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Por tablas</button>
           </div>
         </div>
-        <div id="camino-a-box" style="font-size:13px;line-height:1.4">
-          \(y=a\tan\theta \implies dy=a\sec^2\theta\,d\theta\). La integral se reduce a:<br>
+        <div id="camino-a-box" style="font-size:12.5px;line-height:1.35">
+          Sustitución \(y=a\tan\theta \implies dy=a\sec^2\theta\,d\theta\):<br>
           \(\displaystyle\int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{1}{a^2}(\sin\theta_2-\sin\theta_1)\)
         </div>
-        <div id="camino-b-box" style="display:none;font-size:13px;line-height:1.4">
-          Fórmula de tabla directa: \(\displaystyle\int\frac{dy}{(y^2+a^2)^{3/2}}=\left[\frac{y}{a^2\sqrt{y^2+a^2}}\right]_{y_1}^{y_2}\).<br>
-          Como \(\frac{y}{\sqrt{y^2+a^2}}=\sin\theta\), ambos caminos conducen al mismo resultado exacto.
+        <div id="camino-b-box" style="display:none;font-size:12.5px;line-height:1.35">
+          Fórmula de tabla: \(\displaystyle\int\frac{dy}{(y^2+a^2)^{3/2}}=\left[\frac{y}{a^2\sqrt{y^2+a^2}}\right]_{y_1}^{y_2}\).<br>
+          Como \(\frac{y}{\sqrt{y^2+a^2}}=\sin\theta\), ambos métodos llegan exactamente a la misma solución.
         </div>
       </div>
       <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
         <div><b>5 · Segmento:</b> \(B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)\)</div>
-        <div style="font-size:16.5px;font-weight:600"><b>Hilo infinito:</b> \(B=\dfrac{\mu_0 I}{2\pi a}\)</div>
+        <div style="font-size:15px;font-weight:600"><b>Hilo infinito (\(\pm 90^\circ\)):</b> \(B=\dfrac{\mu_0 I}{2\pi a}\)</div>
       </div>
-      <div class="tipbox" style="font-size:12.5px;padding:6px 10px">
-        <b>6 · Pregunta de rigor:</b> En el eje del hilo (\(a=0\)), ¿cuánto vale \(\vec B\)? <i>\(d\vec\ell\parallel\hat r\implies d\vec\ell\times\hat r=0\), el campo magnético es nulo.</i>
+      <div class="tipbox" style="font-size:12px;padding:6px 10px">
+        <b>6 · Pregunta de rigor:</b> En el eje del hilo (\(a=0\)), ¿cuánto vale \(\vec B\)? <i>Como \(d\vec\ell\parallel\hat r\), el producto cruz produce estrictamente el <b>vector cero</b>: \(d\vec\ell\times\hat r=\vec 0 \implies d\vec B=\vec 0\), por lo que \(\vec B=\vec 0\) en todo punto colineal al hilo.</i>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Consejo: el hilo infinito decae como \(1/a\), no como \(1/a^2\): es una fuente extendida.</span><span class="mono">4 / 13</span></div>
+  <div class="foot"><span>Los ángulos \(\theta\) se miden desde la perpendicular trazada de \(P\) al hilo (\(\theta_1 < 0\) abajo, \(\theta_2 > 0\) arriba).</span><span class="mono">4 / 13</span></div>
 </section>
 
 <!-- 5 · SUPERPOSICIÓN -->
 <section class="slide" data-n="5">
-  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Simula</span></div>
-  <h2>Varios hilos: los campos se suman como vectores</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Deducción y Simulación</span></div>
+  <h2>Superposición de campos magnéticos: paso a paso (Vistas 2D y 3D)</h2>
   <div class="row">
-    <div class="col" style="width:520px">
-      <canvas class="sim" id="cv-sup" width="520" height="360" aria-label="Dos hilos perpendiculares a la página y punto P arrastrable"></canvas>
-      <div class="ctrl no-print">
+    <div class="col" style="width:440px">
+      <canvas class="sim" id="cv-sup" width="440" height="280" aria-label="Superposición de dos hilos en 2D o 3D con punto P arrastrable"></canvas>
+      <div class="no-print" style="display:flex;gap:4px;margin-top:2px;margin-bottom:2px">
+        <button type="button" class="btn on" id="su-mode-2d" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 2D (Corte transversal)</button>
+        <button type="button" class="btn" id="su-mode-3d" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 3D (Perspectiva espacial)</button>
+      </div>
+      <div class="ctrl no-print" style="grid-template-columns:auto 1fr auto auto 1fr auto;gap:4px">
         <label for="su-i1">I₁</label><input id="su-i1" type="range" min="1" max="30" value="20"><output id="su-i1-o">20 A</output>
         <label for="su-i2">I₂</label><input id="su-i2" type="range" min="1" max="30" value="12"><output id="su-i2-o">12 A</output>
       </div>
-      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="su-s1">I₁ sale ⊙</button><button type="button" class="btn" id="su-s2">I₂ entra ⊗</button><span style="font-size:14px;color:var(--e10-muted);align-self:center">Separación 8 cm · arrastra P</span></div>
+      <div class="no-print" style="display:flex;gap:6px;margin-top:2px">
+        <button type="button" class="btn" id="su-s1" style="flex:1;min-height:26px;font-size:11px">I₁ sale ⊙</button>
+        <button type="button" class="btn" id="su-s2" style="flex:1;min-height:26px;font-size:11px">I₂ entra ⊗</button>
+        <span style="font-size:11.5px;color:var(--e10-muted);align-self:center">Arrastra P libremente</span>
+      </div>
+      <div class="read" style="margin-top:4px">
+        <div>|B₁|<b id="su-b1">—</b></div>
+        <div>|B₂|<b id="su-b2">—</b></div>
+        <div>|B total|<b id="su-b">—</b></div>
+      </div>
+      <div class="card" style="font-size:12.5px;padding:5px 8px;margin-top:2px">
+        <b>Fuerza entre los hilos:</b> \(\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}\) = <b id="su-f" class="mono">—</b> · <span id="su-fd"></span>
+      </div>
     </div>
-    <div class="col" style="flex:1">
-      <div class="read"><div>|B₁|<b id="su-b1">—</b></div><div>|B₂|<b id="su-b2">—</b></div><div>|B total|<b id="su-b">—</b></div></div>
-      <div class="card" style="font-size:16px"><b>Fuerza entre los hilos:</b> \(\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}\) = <b id="su-f" class="mono">—</b> · <span id="su-fd"></span></div>
-      <div class="reto" id="reto-sup">
-        <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
-        <span class="q" id="rs-q"></span>
-        <div class="ans"><input id="rs-in" inputmode="decimal" placeholder="|B| en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="rs-ck">Comprobar</button><button type="button" class="btn" id="rs-new">Nuevo</button></div>
-        <span class="fb" id="rs-fb"></span>
-        <button type="button" class="btn" id="rs-sb" style="align-self:flex-start">Ver solución</button>
-        <div class="sol" id="rs-sol"></div>
+    <div class="col" style="flex:1;overflow-y:auto;gap:6px">
+      <div class="steps" style="font-size:13.5px;gap:4px">
+        <div><span class="n">1</span><span><b>Principio de Superposición Vectorial:</b> \(\vec B_{\text{total}}=\sum \vec B_i = \vec B_1 + \vec B_2\). Los módulos <u>no</u> se suman escalarmente; se deben componer como vectores ortogonales en el espacio.</span></div>
+        <div><span class="n">2</span><span><b>Variables del esquema (2D/3D):</b> Distancias radiales \(r_1, r_2\) desde cada conductor a \(P\). Por regla de la mano derecha, cada vector \(\vec B_i\) es perpendicular al vector posición correspondiente (\(\vec B_i \perp \vec r_i\)).</span></div>
+        <div><span class="n">3</span><span><b>Magnitudes individuales de Biot-Savart:</b> \(B_1=\dfrac{\mu_0 I_1}{2\pi r_1}\quad\text{y}\quad B_2=\dfrac{\mu_0 I_2}{2\pi r_2}\).</span></div>
+        <div><span class="n">4</span><span><b>Descomposición por componentes:</b> En el plano cartesiano, \(\vec B_1 = B_{1x}\hat\imath + B_{1y}\hat\jmath\) y \(\vec B_2 = B_{2x}\hat\imath + B_{2y}\hat\jmath\).</span></div>
+      </div>
+      <div class="card" style="padding:6px 10px;background:var(--e10-surface)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <b style="font-size:12.5px;color:var(--e10-primary)">5 · Dos caminos para calcular el campo total:</b>
+          <div class="no-print" style="display:flex;gap:4px">
+            <button type="button" class="btn on" id="btn-sup-a" style="min-height:22px;padding:0 6px;font-size:10.5px">Camino A: Componentes</button>
+            <button type="button" class="btn" id="btn-sup-b" style="min-height:22px;padding:0 6px;font-size:10.5px">Camino B: Ley del Coseno</button>
+          </div>
+        </div>
+        <div id="sup-a-box" style="font-size:12px;line-height:1.3">
+          Suma de componentes cartesianas independientes:<br>
+          \(B_x = B_{1x} + B_{2x},\quad B_y = B_{1y} + B_{2y} \implies |\vec B| = \sqrt{B_x^2 + B_y^2}\).
+        </div>
+        <div id="sup-b-box" style="display:none;font-size:12px;line-height:1.3">
+          Ley del coseno con el ángulo \(\gamma\) entre \(\vec B_1\) y \(\vec B_2\):<br>
+          \(|\vec B|^2 = B_1^2 + B_2^2 + 2 B_1 B_2 \cos\gamma\).
+        </div>
+      </div>
+      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;font-size:12.5px">
+        <div><b>6 · Punto medio (\(d/2\)):</b> Opuestas: \(B=\frac{2\mu_0 I}{\pi d}\) | Iguales: \(\vec B=\vec 0\)</div>
+      </div>
+      <div class="warn" style="font-size:11.5px;padding:5px 8px">
+        <b>7 · Pregunta de rigor:</b> ¿Dónde se anula el campo magnético (\(\vec B=\vec 0\)) si las corrientes son opuestas y desiguales (\(I_1 > I_2\))? <i>Sobre la recta que une los hilos, <b>por fuera del segmento</b>, más cerca del conductor de menor corriente \(I_2\).</i>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Corrientes en el mismo sentido se atraen; en sentidos opuestos se repelen.</span><span class="mono">5 / 13</span></div>
+  <div class="foot"><span>Suma vectorial estricta: \(\vec B_{\text{total}}=\vec B_1+\vec B_2\). Los campos magnéticos obedecen superposición lineal.</span><span class="mono">5 / 13</span></div>
 </section>
 
 <!-- 6 · ESPIRA -->
@@ -686,11 +728,12 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     return { draw };
   })();
 
-  // ── 4 · Hilo: segmento y animación de la integral ──
-  // ── 4 · Hilo: segmento, elementos infinitesimales y simetría ──
+  // ── 4 · Hilo: segmento, elementos infinitesimales arrastrables y simetría ──
   sims.hilo = (() => {
     const cv = $('cv-hilo'); let animT = null;
     let showDl = true, showSym = false;
+    let dragDl = false;
+    let dlAng = 30; // Ángulo del elemento dℓ respecto a la perpendicular (en grados)
 
     $('hi-tog-dl')?.addEventListener('click', () => {
       showDl = !showDl;
@@ -706,6 +749,45 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       }
       draw();
     });
+
+    const getPos = (e) => {
+      const r = cv.getBoundingClientRect();
+      const p = e.touches ? e.touches[0] : e;
+      return {
+        x: (p.clientX - r.left) * (+cv.dataset.w / r.width),
+        y: (p.clientY - r.top) * (+cv.dataset.h / r.height)
+      };
+    };
+
+    const onDown = (e) => {
+      if (!showDl) return;
+      const p = getPos(e);
+      const wx = 90, py = (+cv.dataset.h || 340) / 2, a = 220;
+      const ey1 = py - a * Math.tan(dlAng * Math.PI / 180);
+      if (Math.hypot(p.x - wx, p.y - ey1) < 38 || (Math.abs(p.x - wx) < 32 && p.y >= 10 && p.y <= (+cv.dataset.h || 340) - 10)) {
+        dragDl = true;
+        const curDeg = Math.atan2(py - p.y, a) * 180 / Math.PI;
+        dlAng = Math.max(-84, Math.min(84, curDeg));
+        draw();
+        e.preventDefault();
+      }
+    };
+    const onMove = (e) => {
+      if (!dragDl) return;
+      const p = getPos(e);
+      const py = (+cv.dataset.h || 340) / 2, a = 220;
+      const curDeg = Math.atan2(py - p.y, a) * 180 / Math.PI;
+      dlAng = Math.max(-84, Math.min(84, curDeg));
+      draw();
+      e.preventDefault();
+    };
+    const onUp = () => { dragDl = false; };
+    cv.addEventListener('mousedown', onDown);
+    cv.addEventListener('touchstart', onDown, { passive: false });
+    window.addEventListener('mousemove', onMove);
+    cv.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('mouseup', onUp);
+    cv.addEventListener('touchend', onUp);
 
     function draw(sweep) {
       let t1 = +$('hi-t1').value, t2 = +$('hi-t2').value; if (t2 < t1) [t1, t2] = [t2, t1];
@@ -724,41 +806,62 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       // Líneas de los extremos angulares
       [t1, end].forEach((deg, i) => { ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 1.8; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(deg)))); ctx.stroke(); ctx.setLineDash([]); });
       
-      // Distancia perpendicular 'a'
-      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); text(ctx, 'a', wx + a / 2 - 4, py + 20, col('muted'), "bold italic 15px 'STIX Two Text'");
+      // Línea perpendicular de referencia theta = 0
+      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
+      text(ctx, 'Ref: θ = 0° (perpendicular al hilo)', wx + 12, py - 6, '#64748b', "bold 10.5px 'IBM Plex Sans'");
+      text(ctx, 'a = 2 cm', wx + a / 2 - 14, py + 18, col('muted'), "bold italic 13px 'STIX Two Text'");
       
       // Punto de observación P
       ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', px + 10, py - 8, col('ink'), "bold 16px 'IBM Plex Sans'");
-      text(ctx, 'θ₁', px - 70, yOf(t1) > py ? py + 40 : py - 28, col('accent-strong'), "bold 13px 'IBM Plex Sans'"); text(ctx, 'θ₂', px - 70, yOf(end) < py ? py - 52 : py + 62, col('primary'), "bold 13px 'IBM Plex Sans'");
+      
+      // Arcos angulares en P
+      // theta 1
+      ctx.strokeStyle = col('accent-strong'); ctx.lineWidth = 1.6; ctx.beginPath();
+      const a1_rad = -t1 * Math.PI / 180;
+      ctx.arc(px, py, 42, Math.PI, Math.PI + a1_rad, t1 < 0); ctx.stroke();
+      text(ctx, `θ₁=${t1}°`, px - 78, yOf(t1) > py ? py + 38 : py - 28, col('accent-strong'), "bold 12px 'IBM Plex Sans'");
+      // theta 2
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 1.6; ctx.beginPath();
+      const a2_rad = -end * Math.PI / 180;
+      ctx.arc(px, py, 58, Math.PI, Math.PI + a2_rad, end < 0); ctx.stroke();
+      text(ctx, `θ₂=${end}°`, px - 78, yOf(end) < py ? py - 48 : py + 56, col('primary'), "bold 12px 'IBM Plex Sans'");
       
       // Elementos infinitesimales dℓ y vectores
       if (showDl) {
-        let ang1 = 30;
-        if (t1 > 10) ang1 = (t1 + end) / 2;
-        else if (end < 10) ang1 = t1 + (end - t1) * 0.7;
-        const ey1 = yOf(ang1);
+        const ey1 = yOf(dlAng);
+        
+        // Handle interactivo arrastrable de dℓ
+        ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(wx, ey1, 5, 0, 2 * Math.PI); ctx.fill();
+        ctx.strokeStyle = dragDl ? '#f59e0b' : '#ef4444'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(wx, ey1, 10, 0, 2 * Math.PI); ctx.stroke();
         
         // Vector del elemento I dℓ₁
         ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 7; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(wx, ey1 + 12); ctx.lineTo(wx, ey1 - 12); ctx.stroke();
-        arrow(ctx, wx, ey1 + 12, wx, ey1 - 16, '#ef4444', 4);
-        text(ctx, 'I dℓ₁', wx - 48, ey1 - 4, '#ef4444', "bold 13px 'IBM Plex Sans'");
+        ctx.beginPath(); ctx.moveTo(wx, ey1 + 14); ctx.lineTo(wx, ey1 - 14); ctx.stroke();
+        arrow(ctx, wx, ey1 + 14, wx, ey1 - 18, '#ef4444', 4);
+        text(ctx, `I dℓ₁ (θ=${dlAng >= 0 ? '+' : ''}${dec(dlAng, 0)}°)`, wx - 86, ey1 - 4, '#ef4444', "bold 11px 'IBM Plex Sans'");
         
         // Línea punteada r₁ hacia P
         ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
         ctx.beginPath(); ctx.moveTo(wx, ey1); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
-        text(ctx, 'r₁', (wx + px) / 2 - 10, (ey1 + py) / 2 - 8, '#0284c7', "bold italic 13px 'STIX Two Text'");
+        text(ctx, 'r₁ = a·sec θ', (wx + px) / 2 - 18, (ey1 + py) / 2 - 8, '#0284c7', "bold italic 12.5px 'STIX Two Text'");
         
         // Vector unitario r̂₁
         const L1 = Math.hypot(px - wx, py - ey1); const u1x = (px - wx) / L1, u1y = (py - ey1) / L1;
         arrow(ctx, wx, ey1, wx + u1x * 38, ey1 + u1y * 38, '#0284c7', 3);
         text(ctx, 'r̂₁', wx + u1x * 44 + 2, ey1 + u1y * 44, '#0284c7', "bold 12px 'IBM Plex Sans'");
         
-        // Ángulo con el vector unitario
+        // Arco del ángulo θ en P hacia el elemento
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.8; ctx.beginPath();
+        const curRad = -dlAng * Math.PI / 180;
+        ctx.arc(px, py, 26, Math.PI, Math.PI + curRad, dlAng < 0); ctx.stroke();
+        text(ctx, 'θ', px - 35, dlAng >= 0 ? py - 8 : py + 14, '#ef4444', "bold 11px 'IBM Plex Sans'");
+        
+        // Ángulo φ en el elemento (entre dℓ y r̂)
         ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.8; ctx.beginPath();
         const baseAng1 = Math.atan2(py - ey1, px - wx);
-        ctx.arc(wx, ey1, 24, -Math.PI / 2, baseAng1); ctx.stroke();
-        text(ctx, 'φ₁', wx + 16, ey1 - 12, '#f59e0b', "bold 11px 'IBM Plex Sans'");
+        ctx.arc(wx, ey1, 22, -Math.PI / 2, baseAng1); ctx.stroke();
+        text(ctx, 'φ = 90°+θ', wx + 14, ey1 - 12, '#f59e0b', "bold 10.5px 'IBM Plex Sans'");
         
         // Campo dB₁ en P entrando
         dotSym(ctx, px + 26, py - 22, 7, false, '#ef4444');
@@ -768,9 +871,9 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         if (showSym) {
           const ey2 = py + (py - ey1);
           ctx.strokeStyle = '#10b981'; ctx.lineWidth = 7; ctx.lineCap = 'round';
-          ctx.beginPath(); ctx.moveTo(wx, ey2 + 12); ctx.lineTo(wx, ey2 - 12); ctx.stroke();
-          arrow(ctx, wx, ey2 + 12, wx, ey2 - 16, '#10b981', 4);
-          text(ctx, 'I dℓ₂', wx - 48, ey2 + 8, '#10b981', "bold 13px 'IBM Plex Sans'");
+          ctx.beginPath(); ctx.moveTo(wx, ey2 + 14); ctx.lineTo(wx, ey2 - 14); ctx.stroke();
+          arrow(ctx, wx, ey2 + 14, wx, ey2 - 18, '#10b981', 4);
+          text(ctx, `I dℓ₂ (−θ)`, wx - 78, ey2 + 8, '#10b981', "bold 11px 'IBM Plex Sans'");
           
           // Línea punteada r₂ hacia P
           ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
@@ -786,7 +889,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
           dotSym(ctx, px + 26, py + 22, 7, false, '#10b981');
           text(ctx, 'dB₂ ⊗', px + 38, py + 26, '#10b981', "bold 11px 'IBM Plex Sans'");
           
-          text(ctx, 'Simetría ±y: dB₁ y dB₂ ambos ⊗ (se refuerzan)', 10, h - 14, col('primary'), "bold 11.5px 'IBM Plex Sans'");
+          text(ctx, 'Simetría ±y: dB₁ y dB₂ ambos ⊗ hacia adentro (se refuerzan)', 10, h - 14, col('primary'), "bold 11px 'IBM Plex Sans'");
         }
       }
 
@@ -815,41 +918,194 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     return { draw: () => draw() };
   })();
 
-  // ── 5 · Superposición de dos hilos + reto aleatorio ──
+  // ── 5 · Superposición de dos hilos (Vistas 2D y 3D) ──
   sims.sup = (() => {
-    const cv = $('cv-sup'); const P = { x: 260, y: 90 }; const s = { s1: 1, s2: -1 }; const PX_CM = 15; const D = 8; // cm
-    const field = (I, sgn, wx, wy, px, py) => { const rx = (px - wx) / PX_CM / 100, ry = -(py - wy) / PX_CM / 100; const r2 = rx * rx + ry * ry; const k = MU0 * I * sgn / (2 * Math.PI * r2); return [-ry * k, rx * k]; };
+    const cv = $('cv-sup'); const P = { x: 220, y: 70 }; const s = { s1: 1, s2: -1 }; const PX_CM = 15; const D = 8; // cm
+    let suMode = '2d'; // '2d' o '3d'
+
+    $('su-mode-2d')?.addEventListener('click', () => {
+      suMode = '2d';
+      $('su-mode-2d').classList.add('on');
+      $('su-mode-3d').classList.remove('on');
+      draw();
+    });
+    $('su-mode-3d')?.addEventListener('click', () => {
+      suMode = '3d';
+      $('su-mode-3d').classList.add('on');
+      $('su-mode-2d').classList.remove('on');
+      draw();
+    });
+    $('btn-sup-a')?.addEventListener('click', () => {
+      $('sup-a-box').style.display = 'block';
+      $('sup-b-box').style.display = 'none';
+      $('btn-sup-a').classList.add('on');
+      $('btn-sup-b').classList.remove('on');
+    });
+    $('btn-sup-b')?.addEventListener('click', () => {
+      $('sup-a-box').style.display = 'none';
+      $('sup-b-box').style.display = 'block';
+      $('btn-sup-b').classList.add('on');
+      $('btn-sup-a').classList.remove('on');
+    });
+
+    const field = (I, sgn, wx, wy, px, py) => {
+      const rx = (px - wx) / PX_CM / 100, ry = -(py - wy) / PX_CM / 100;
+      const r2 = rx * rx + ry * ry;
+      if (r2 < 1e-6) return [0, 0];
+      const k = MU0 * I * sgn / (2 * Math.PI * r2);
+      return [-ry * k, rx * k];
+    };
+
     function draw() {
-      const I1 = +$('su-i1').value, I2 = +$('su-i2').value; const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
-      const cy = h / 2, x1 = w / 2 - D / 2 * PX_CM, x2 = w / 2 + D / 2 * PX_CM;
-      const B1 = field(I1, s.s1, x1, cy, P.x, P.y), B2 = field(I2, s.s2, x2, cy, P.x, P.y), B = [B1[0] + B2[0], B1[1] + B2[1]];
-      const sc = 2400000; const tip = (b) => [P.x + Math.max(-140, Math.min(140, b[0] * sc)), P.y - Math.max(-140, Math.min(140, b[1] * sc))];
-      dotSym(ctx, x1, cy, 16, s.s1 > 0, col('primary')); dotSym(ctx, x2, cy, 16, s.s2 > 0, col('primary'));
-      text(ctx, 'I₁', x1 - 34, cy + 6, col('primary')); text(ctx, 'I₂', x2 + 22, cy + 6, col('primary'));
-      ctx.globalAlpha = 0.55; let t = tip(B1); arrow(ctx, P.x, P.y, t[0], t[1], col('accent'), 3); t = tip(B2); arrow(ctx, P.x, P.y, t[0], t[1], col('accent'), 3); ctx.globalAlpha = 1;
-      t = tip(B); arrow(ctx, P.x, P.y, t[0], t[1], col('vec-field'), 4.5);
-      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(P.x, P.y, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', P.x + 10, P.y - 10, col('ink'));
-      const m = (v) => Math.hypot(v[0], v[1]); $('su-b1').textContent = sci(m(B1)) + ' T'; $('su-b2').textContent = sci(m(B2)) + ' T'; $('su-b').textContent = sci(m(B)) + ' T';
-      $('su-f').textContent = sci(MU0 * I1 * I2 / (2 * Math.PI * D / 100)) + ' N/m'; $('su-fd').textContent = s.s1 === s.s2 ? 'se atraen (mismo sentido)' : 'se repelen (sentidos opuestos)';
+      const I1 = +$('su-i1').value, I2 = +$('su-i2').value;
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cy = h / 2, x1 = w / 2 - (D / 2) * PX_CM, x2 = w / 2 + (D / 2) * PX_CM;
+      const B1 = field(I1, s.s1, x1, cy, P.x, P.y), B2 = field(I2, s.s2, x2, cy, P.x, P.y);
+      const B = [B1[0] + B2[0], B1[1] + B2[1]];
+      const m = (v) => Math.hypot(v[0], v[1]);
+
+      $('su-b1').textContent = sci(m(B1)) + ' T';
+      $('su-b2').textContent = sci(m(B2)) + ' T';
+      $('su-b').textContent = sci(m(B)) + ' T';
+      $('su-f').textContent = sci(MU0 * I1 * I2 / (2 * Math.PI * (D / 100))) + ' N/m';
+      $('su-fd').textContent = s.s1 === s.s2 ? 'se atraen (mismo sentido)' : 'se repelen (sentidos opuestos)';
+
+      if (suMode === '2d') {
+        // ── VISTA 2D (Corte Transversal) ──
+        // Líneas de campo circulares concéntricas
+        const r1 = Math.hypot(P.x - x1, P.y - cy);
+        const r2 = Math.hypot(P.x - x2, P.y - cy);
+
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.4; ctx.setLineDash([4, 4]); ctx.globalAlpha = 0.45;
+        ctx.beginPath(); ctx.arc(x1, cy, r1, 0, 2 * Math.PI); ctx.stroke();
+        ctx.strokeStyle = '#10b981';
+        ctx.beginPath(); ctx.arc(x2, cy, r2, 0, 2 * Math.PI); ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+        // Líneas radiales punteadas
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(x1, cy); ctx.lineTo(P.x, P.y); ctx.moveTo(x2, cy); ctx.lineTo(P.x, P.y); ctx.stroke();
+        ctx.setLineDash([]);
+        text(ctx, 'r₁', (x1 + P.x) / 2 - 12, (cy + P.y) / 2, '#0284c7', "bold italic 11.5px 'STIX Two Text'");
+        text(ctx, 'r₂', (x2 + P.x) / 2 + 6, (cy + P.y) / 2, '#10b981', "bold italic 11.5px 'STIX Two Text'");
+
+        // Conductores
+        dotSym(ctx, x1, cy, 15, s.s1 > 0, '#0284c7');
+        dotSym(ctx, x2, cy, 15, s.s2 > 0, '#10b981');
+        text(ctx, 'I₁', x1 - 32, cy + 5, '#0284c7', "bold 13px 'IBM Plex Sans'");
+        text(ctx, 'I₂', x2 + 20, cy + 5, '#10b981', "bold 13px 'IBM Plex Sans'");
+
+        // Escala de vectores B
+        const sc = 2000000;
+        const tip1 = [P.x + Math.max(-120, Math.min(120, B1[0] * sc)), P.y - Math.max(-120, Math.min(120, B1[1] * sc))];
+        const tip2 = [P.x + Math.max(-120, Math.min(120, B2[0] * sc)), P.y - Math.max(-120, Math.min(120, B2[1] * sc))];
+        const tipT = [P.x + Math.max(-140, Math.min(140, B[0] * sc)), P.y - Math.max(-140, Math.min(140, B[1] * sc))];
+
+        // Paralelogramo de superposición
+        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.2; ctx.setLineDash([2, 2]);
+        ctx.beginPath(); ctx.moveTo(tip1[0], tip1[1]); ctx.lineTo(tipT[0], tipT[1]); ctx.lineTo(tip2[0], tip2[1]); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Flechas vectoriales
+        arrow(ctx, P.x, P.y, tip1[0], tip1[1], '#0284c7', 2.8);
+        text(ctx, 'B₁', tip1[0] + 6, tip1[1] - 4, '#0284c7', "bold 12px 'IBM Plex Sans'");
+        arrow(ctx, P.x, P.y, tip2[0], tip2[1], '#10b981', 2.8);
+        text(ctx, 'B₂', tip2[0] + 6, tip2[1] - 4, '#10b981', "bold 12px 'IBM Plex Sans'");
+        arrow(ctx, P.x, P.y, tipT[0], tipT[1], col('primary'), 4.2);
+        text(ctx, 'B_total', tipT[0] + 8, tipT[1] - 4, col('primary'), "bold 13px 'IBM Plex Sans'");
+
+        // Punto P
+        ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(P.x, P.y, 6, 0, 2 * Math.PI); ctx.fill();
+        text(ctx, 'P', P.x - 14, P.y - 8, col('ink'), "bold 14px 'IBM Plex Sans'");
+        text(ctx, 'Corte transversal 2D · Regla de la mano derecha en cada hilo', 12, h - 10, col('muted'), "11px 'IBM Plex Sans'");
+      } else {
+        // ── VISTA 3D (Perspectiva espacial isométrica) ──
+        const ox = w / 2, oy = h / 2 + 10;
+        // Transformación isométrica 3D: (x, y, z) donde z es a lo largo de los conductores
+        const prj = (x, y, z) => {
+          const cosA = Math.cos(28 * Math.PI / 180), sinA = Math.sin(28 * Math.PI / 180);
+          return [ox + (x - z) * cosA * 0.85, oy + y * 0.9 + (x + z) * sinA * 0.5];
+        };
+
+        // Ejes coordenados 3D en la esquina
+        const [ax0, ay0] = [36, 45];
+        arrow(ctx, ax0, ay0, ax0 + 30, ay0 + 14, '#94a3b8', 1.5); text(ctx, 'x', ax0 + 34, ay0 + 16, '#94a3b8', "10px 'IBM Plex Sans'");
+        arrow(ctx, ax0, ay0, ax0, ay0 - 28, '#94a3b8', 1.5); text(ctx, 'y', ax0 + 4, ay0 - 24, '#94a3b8', "10px 'IBM Plex Sans'");
+        arrow(ctx, ax0, ay0, ax0 - 24, ay0 + 14, '#94a3b8', 1.5); text(ctx, 'z', ax0 - 28, ay0 + 20, '#94a3b8', "10px 'IBM Plex Sans'");
+
+        const xd1 = -D * 6, xd2 = D * 6; // Posiciones x de los hilos en el espacio
+        // Conductor 1 en 3D
+        const [w1a_x, w1a_y] = prj(xd1, 0, -110), [w1b_x, w1b_y] = prj(xd1, 0, 110);
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(w1a_x, w1a_y); ctx.lineTo(w1b_x, w1b_y); ctx.stroke();
+        if (s.s1 > 0) arrow(ctx, w1a_x, w1a_y, (w1a_x + w1b_x) / 2 + 8, (w1a_y + w1b_y) / 2 + 4, '#ffffff', 2.5);
+        else arrow(ctx, w1b_x, w1b_y, (w1a_x + w1b_x) / 2 - 8, (w1a_y + w1b_y) / 2 - 4, '#ffffff', 2.5);
+        text(ctx, `Hilo 1 (I₁=${I1}A)`, w1b_x - 30, w1b_y + 16, '#0284c7', "bold 11px 'IBM Plex Sans'");
+
+        // Conductor 2 en 3D
+        const [w2a_x, w2a_y] = prj(xd2, 0, -110), [w2b_x, w2b_y] = prj(xd2, 0, 110);
+        ctx.strokeStyle = '#10b981'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(w2a_x, w2a_y); ctx.lineTo(w2b_x, w2b_y); ctx.stroke();
+        if (s.s2 > 0) arrow(ctx, w2a_x, w2a_y, (w2a_x + w2b_x) / 2 + 8, (w2a_y + w2b_y) / 2 + 4, '#ffffff', 2.5);
+        else arrow(ctx, w2b_x, w2b_y, (w2a_x + w2b_x) / 2 - 8, (w2a_y + w2b_y) / 2 - 4, '#ffffff', 2.5);
+        text(ctx, `Hilo 2 (I₂=${I2}A)`, w2b_x - 20, w2b_y + 16, '#10b981', "bold 11px 'IBM Plex Sans'");
+
+        // Punto P en 3D en el plano z = 0
+        const px_3d = (P.x - w / 2) * 0.9, py_3d = (P.y - cy) * 0.9;
+        const [p3x, p3y] = prj(px_3d, py_3d, 0);
+
+        // Líneas punteadas hacia los hilos
+        const [c1x, c1y] = prj(xd1, 0, 0), [c2x, c2y] = prj(xd2, 0, 0);
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.4; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(c1x, c1y); ctx.lineTo(p3x, p3y); ctx.moveTo(c2x, c2y); ctx.lineTo(p3x, p3y); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Anillos circulares de campo magnético en el plano xy
+        const rx1 = Math.hypot(px_3d - xd1, py_3d), rx2 = Math.hypot(px_3d - xd2, py_3d);
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.3; ctx.globalAlpha = 0.35;
+        ctx.beginPath();
+        for (let th = 0; th <= 360; th += 15) {
+          const pt = prj(xd1 + rx1 * Math.cos(th * Math.PI / 180), rx1 * Math.sin(th * Math.PI / 180), 0);
+          if (th === 0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]);
+        }
+        ctx.stroke();
+
+        ctx.strokeStyle = '#10b981'; ctx.beginPath();
+        for (let th = 0; th <= 360; th += 15) {
+          const pt = prj(xd2 + rx2 * Math.cos(th * Math.PI / 180), rx2 * Math.sin(th * Math.PI / 180), 0);
+          if (th === 0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]);
+        }
+        ctx.stroke(); ctx.globalAlpha = 1;
+
+        // Vectores en 3D
+        const sc3d = 1800000;
+        const [v1x, v1y] = prj(px_3d + B1[0] * sc3d, py_3d - B1[1] * sc3d, 0);
+        const [v2x, v2y] = prj(px_3d + B2[0] * sc3d, py_3d - B2[1] * sc3d, 0);
+        const [vTx, vTy] = prj(px_3d + B[0] * sc3d, py_3d - B[1] * sc3d, 0);
+
+        // Paralelogramo 3D
+        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.2; ctx.setLineDash([2, 2]);
+        ctx.beginPath(); ctx.moveTo(v1x, v1y); ctx.lineTo(vTx, vTy); ctx.lineTo(v2x, v2y); ctx.stroke(); ctx.setLineDash([]);
+
+        arrow(ctx, p3x, p3y, v1x, v1y, '#0284c7', 2.8); text(ctx, 'B₁', v1x + 6, v1y, '#0284c7', "bold 11.5px 'IBM Plex Sans'");
+        arrow(ctx, p3x, p3y, v2x, v2y, '#10b981', 2.8); text(ctx, 'B₂', v2x + 6, v2y, '#10b981', "bold 11.5px 'IBM Plex Sans'");
+        arrow(ctx, p3x, p3y, vTx, vTy, col('primary'), 4.2); text(ctx, 'B_total', vTx + 8, vTx < p3x ? vTy - 8 : vTy + 8, col('primary'), "bold 12.5px 'IBM Plex Sans'");
+
+        // Punto P
+        ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(p3x, p3y, 5.5, 0, 2 * Math.PI); ctx.fill();
+        text(ctx, 'P', p3x - 14, p3y - 6, col('ink'), "bold 13.5px 'IBM Plex Sans'");
+        text(ctx, 'Perspectiva 3D: Cilindros paralelos en el eje z y anillos de campo', 12, h - 10, col('muted'), "11px 'IBM Plex Sans'");
+      }
     }
-    const lab = () => { $('su-s1').textContent = s.s1 > 0 ? 'I₁ sale ⊙' : 'I₁ entra ⊗'; $('su-s2').textContent = s.s2 > 0 ? 'I₂ sale ⊙' : 'I₂ entra ⊗'; };
-    $('su-s1').addEventListener('click', () => { s.s1 *= -1; lab(); draw(); }); $('su-s2').addEventListener('click', () => { s.s2 *= -1; lab(); draw(); });
+
+    const lab = () => {
+      $('su-s1').textContent = s.s1 > 0 ? 'I₁ sale ⊙' : 'I₁ entra ⊗';
+      $('su-s2').textContent = s.s2 > 0 ? 'I₂ sale ⊙' : 'I₂ entra ⊗';
+    };
+    $('su-s1').addEventListener('click', () => { s.s1 *= -1; lab(); draw(); });
+    $('su-s2').addEventListener('click', () => { s.s2 *= -1; lab(); draw(); });
     bind('su-i1', (v) => v + ' A', draw); bind('su-i2', (v) => v + ' A', draw);
     draggable(cv, () => P, (x, y) => { P.x = x; P.y = y; }, draw);
-    // Reto: punto medio entre dos hilos, valores aleatorios
-    let R = null;
-    const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
-    function nuevo() {
-      R = { I1: ri(2, 20), I2: ri(2, 20), d: ri(4, 12), op: Math.random() < 0.5 };
-      const b1 = MU0 * R.I1 / (2 * Math.PI * R.d / 200), b2 = MU0 * R.I2 / (2 * Math.PI * R.d / 200); R.B = R.op ? b1 + b2 : Math.abs(b1 - b2); R.b1 = b1; R.b2 = b2;
-      $('rs-q').textContent = `Dos hilos paralelos separados ${R.d} cm llevan ${R.I1} A y ${R.I2} A en sentidos ${R.op ? 'opuestos' : 'iguales'}. ¿Cuánto vale |B| en el punto medio?`;
-      $('rs-in').value = ''; $('rs-fb').textContent = ''; $('rs-sol').classList.remove('show');
-      $('rs-sol').innerHTML = `\\(B_1=\\dfrac{\\mu_0 I_1}{2\\pi(d/2)}=${texSci(b1)}\\,\\mathrm T,\\quad B_2=${texSci(b2)}\\,\\mathrm T\\). Entre los hilos los campos ${R.op ? 'apuntan igual y se suman' : 'son opuestos y se restan'}: \\(|B|=${texSci(R.B)}\\,\\mathrm T=${dec(R.B * 1e6, 1).replace(',', '{,}')}\\,\\mu\\mathrm T\\).`;
-      renderMath($('rs-sol'));
-    }
-    $('rs-new').addEventListener('click', nuevo); $('rs-sb').addEventListener('click', () => $('rs-sol').classList.toggle('show'));
-    $('rs-ck').addEventListener('click', () => { const v = parseFloat($('rs-in').value.replace(',', '.')); if (!isFinite(v)) { $('rs-fb').textContent = 'Escribe un número en microteslas.'; return; } const ok = Math.abs(v - R.B * 1e6) <= 0.03 * R.B * 1e6 + 0.05; $('rs-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : '<b style="color:var(--e10-danger)">Aún no.</b> Revisa si los campos se suman o se restan entre los hilos.'; });
-    nuevo();
     return { draw };
   })();
 
