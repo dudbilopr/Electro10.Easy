@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 7: Fuerza Magnética (Ley de Lorentz)</title>
-    <!-- Bibliotecas Externas -->
+    <title>Taller 8: Fuerza Magnética y Ley de Lorentz · Electro10.Easy</title>
+
+    <!-- Tailwind CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     
+    <!-- KaTeX para renderizado matemático -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <!-- html2pdf para exportar entregas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 50; width: 100vw; height: 100vh; }
         .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
         
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
+        .step-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 9999px;
+            background: #b3246b; color: white; font-weight: 700; font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace; flex-shrink: 0;
+        }
         
+        .camino-tab { transition: all 0.2s ease; cursor: pointer; }
+        .camino-tab.active { background: #b3246b; color: white; }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
             body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
             main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
         }
         .toolbar-btn { transition: all 0.2s; }
         .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
+        .hint-content { display: none; }
         .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -52,7 +58,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-8">
 
     <!-- Capa de Dibujo Global -->
     <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
@@ -60,397 +66,549 @@
     <!-- Toolbar Superior Fija -->
     <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
         <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <img src="../img/logo_electro10.svg" alt="Electro10.Easy Logo" class="w-7 h-7 inline-block object-contain">
+                Electro<span class="text-[#b3246b]">10.Easy</span> Workshop
+            </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#b3246b] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar PDF Taller</button>
+            <button onclick="exportEntregaPDF()" class="toolbar-btn bg-[#0284c7] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#0369a1]">Exportar Solo Entrega</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
             <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
             <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#b3246b] border-l border-slate-300 ml-1">Dibujo OFF</button>
         </div>
     </nav>
 
     <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 7: Fuerza Magnética (Ley de Lorentz)</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Fuerzas Magnéticas sobre Cargas y Corrientes • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 text-[#b3246b] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 8 • Interacción Magnética
+        </div>
+        <div class="flex items-center justify-center gap-3">
+            <img src="../img/logo_electro10.svg" alt="Electro10.Easy Emblem" class="w-11 h-11 object-contain drop-shadow">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 8: Fuerza Magnética y Ley de Lorentz</h2>
+        </div>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            Metodología analítica y pedagógica rigurosa: dinámica de cargas puntuales, movimiento helicoidal, fuerzas sobre conductores curvilíneos, torque dipolar y actividad práctica de clase para entregar.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M8</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        <!-- METODOLOGÍA MARCO UNIVERSAL -->
+        <div class="bg-gradient-to-r from-pink-50 via-white to-cyan-50 p-5 rounded-2xl border border-pink-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                📐 El Algoritmo Universal de Resolución para Fuerza Magnética (7 Pasos)
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">1. Vectores</b>\(\vec v\), \(\vec B\), \(\vec E\) o \(I\,d\vec\ell\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">2. Producto Cruz</b>Mano derecha y \(\vec F_B\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">3. Dinámica</b>\(\sum \vec F = m\vec a\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">4. Trayectoria</b>Radio \(R\) y período \(T\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">5. 2 Caminos</b>Trabajo magnético \(W = 0\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">6. Conductores</b>\(\vec F = \int I\,d\vec\ell \times \vec B\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">7. Retos</b>Preguntas conceptuales</div>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Un electrón se mueve a 5.0 x 10^6 m/s perpendicular a un campo magnético uniforme de 0.2 T. Calcule la magnitud de la fuerza magnética.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuerzas Magnéticas sobre Cargas y Corrientes y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Determine el radio de la órbita circular descrita por el electrón del problema anterior.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuerzas Magnéticas sobre Cargas y Corrientes y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Un alambre recto de 2.5 m lleva una corriente de 4.0 A en un campo magnético de 0.5 T. Si el ángulo es de 30°, halle la fuerza sobre el alambre.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuerzas Magnéticas sobre Cargas y Corrientes y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> Un protón entra en una región con E = 3000 V/m y B = 0.5 T perpendiculares entre sí. ¿A qué velocidad no se desvía el protón?
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuerzas Magnéticas sobre Cargas y Corrientes y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> Un espectrómetro de masas acelera iones a través de una diferencia de potencial antes de entrar a un campo magnético. Derive la ecuación para la masa.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Fuerzas Magnéticas sobre Cargas y Corrientes y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        </main>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1: SELECTOR DE VELOCIDADES Y CICLOTRÓN -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Selector de Velocidades de Wien y Espectrómetro de Masas</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un haz de iones de carga positiva \(q\) y masa \(m\) entra a una región donde coexisten un campo eléctrico uniforme \(\vec E = -E\,\hat\jmath\) y un campo magnético uniforme \(\vec B = -B\,\hat k\) (campos cruzados). Aquellos iones que no experimentan desviación ingresan posteriormente a una cámara de deflexión con campo magnético uniforme \(\vec B_0 = -B_0\,\hat k\). Deduzca analíticamente la velocidad seleccionada \(v\), el radio de curvatura orbital \(R\) y la relación carga-masa \(q/m\).
+            </div>
+
+            <!-- Paso a Paso Detallado -->
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">1</span>
+                        <span>Plantear la Fuerza Total de Lorentz vectorial:</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ \vec F = q(\vec E + \vec v \times \vec B) = q\vec E + q(\vec v \times \vec B) \]
+                    </div>
+                    <p class="mt-2 text-slate-600">
+                        Para un ion que ingresa con velocidad \(\vec v = v\,\hat\imath\), la fuerza eléctrica actúa en \(-\hat\jmath\) (\(\vec F_E = -qE\,\hat\jmath\)), mientras que la fuerza magnética se evalúa mediante el producto vectorial.
+                    </p>
+                </div>
+
+                <!-- Paso 2: Esquema SVG Interactivo -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">2</span>
+                        <span>Dibujar variables en el esquema: vectores \(\vec v\), \(\vec E\), \(\vec B\) y equilibrio de fuerzas:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <div class="flex gap-2 mb-2 no-print self-start">
+                                <button type="button" onclick="toggleSvgLayer('p1-forces', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#b3246b] bg-pink-50 text-[#b3246b]">Fuerzas \(\vec F_E\) y \(\vec F_B\)</button>
+                                <button type="button" onclick="toggleSvgLayer('p1-orbit', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#0284c7] bg-sky-50 text-sky-700">Órbita semicircular (\(R\))</button>
+                            </div>
+                            <svg viewBox="0 0 320 220" class="w-full max-w-[300px] h-auto">
+                                <!-- Región 1: Selector de velocidades -->
+                                <rect x="20" y="30" width="130" height="90" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+                                <text x="85" y="22" font-size="10" font-weight="bold" fill="#64748b" text-anchor="middle">Selector de Wien (\(\vec E \perp \vec B\))</text>
+                                
+                                <!-- Símbolos de B entrando (cruces) -->
+                                <text x="35" y="55" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗</text>
+                                <text x="35" y="85" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗</text>
+                                <text x="35" y="115" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗</text>
+                                <text x="110" y="50" font-size="11" font-weight="bold" fill="#0284c7">\(\vec B \otimes\)</text>
+
+                                <!-- Carga positiva q -->
+                                <circle cx="65" cy="75" r="7" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+                                <text x="62" y="79" font-size="9" font-weight="bold" fill="#ffffff">+</text>
+                                <!-- Vector velocidad v -->
+                                <line x1="72" y1="75" x2="105" y2="75" stroke="#0f172a" stroke-width="2.2"/>
+                                <polygon points="105,75 97,71 97,79" fill="#0f172a"/>
+                                <text x="88" y="68" font-size="11" font-weight="bold" fill="#0f172a">\(\vec v\)</text>
+
+                                <!-- Capa de fuerzas -->
+                                <g id="p1-forces">
+                                    <!-- Fuerza electrica hacia abajo -->
+                                    <line x1="65" y1="82" x2="65" y2="108" stroke="#f59e0b" stroke-width="2"/>
+                                    <polygon points="65,108 61,100 69,100" fill="#f59e0b"/>
+                                    <text x="70" y="105" font-size="10" font-weight="bold" fill="#f59e0b">\(\vec F_E\)</text>
+                                    
+                                    <!-- Fuerza magnetica hacia arriba -->
+                                    <line x1="65" y1="68" x2="65" y2="42" stroke="#b3246b" stroke-width="2"/>
+                                    <polygon points="65,42 61,50 69,50" fill="#b3246b"/>
+                                    <text x="70" y="48" font-size="10" font-weight="bold" fill="#b3246b">\(\vec F_B\)</text>
+                                </g>
+
+                                <!-- Diafragma / Rendija -->
+                                <line x1="150" y1="20" x2="150" y2="70" stroke="#0f172a" stroke-width="3"/>
+                                <line x1="150" y1="80" x2="150" y2="210" stroke="#0f172a" stroke-width="3"/>
+
+                                <!-- Región 2: Cámara de deflexión -->
+                                <text x="235" y="22" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">Cámara (\(\vec B_0 \otimes\))</text>
+                                <text x="175" y="55" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗</text>
+                                <text x="175" y="95" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗</text>
+                                <text x="175" y="135" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗</text>
+
+                                <!-- Órbita circular semicircular -->
+                                <g id="p1-orbit">
+                                    <path d="M 150,75 A 55,55 0 0 1 150,185" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,4"/>
+                                    <circle cx="150" cy="185" r="4" fill="#0284c7"/>
+                                    <text x="160" y="190" font-size="10" font-weight="bold" fill="#0284c7">Impacto (2R)</text>
+                                    <!-- Cota de radio R -->
+                                    <line x1="150" y1="130" x2="205" y2="130" stroke="#64748b" stroke-width="1.5"/>
+                                    <text x="175" y="124" font-size="11" font-weight="bold" fill="#64748b">R</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Producto cruz de la fuerza magnética:</strong></p>
+                            <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                                \[ \vec F_B = q(\vec v \times \vec B) = q(v\,\hat\imath \times (-B\,\hat k)) = +q v B\,\hat\jmath \]
+                            </div>
+                            <p><strong>Condición de trayectoria rectilínea sin desviación:</strong></p>
+                            <div class="bg-slate-50 p-2 rounded font-mono text-center text-xs font-bold text-[#b3246b]">
+                                \[ \sum \vec F = \vec F_E + \vec F_B = \vec 0 \implies -q E\,\hat\jmath + q v B\,\hat\jmath = \vec 0 \implies v = \frac{E}{B} \]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">3</span>
+                            <span>Segunda Ley de Newton en la cámara de deflexión:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Como \(\vec v \perp \vec B_0\), la fuerza magnética actúa como fuerza centrípeta pura:</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                            \[ F_B = q v B_0 = m a_c = m \frac{v^2}{R} \implies R = \frac{m v}{q B_0} \]
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">4</span>
+                            <span>Relación analítica carga-masa \(q/m\):</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Sustituyendo la velocidad seleccionada \(v = E/B\):</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center font-bold text-[#b3246b]">
+                            \[ R = \frac{m}{q B_0}\left(\frac{E}{B}\right) \implies \frac{q}{m} = \frac{E}{R B B_0} \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos para el Trabajo Magnético -->
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#b3246b]">5</span>
+                            <span>Dos Caminos para Demostrar que la Fuerza Magnética no realiza Trabajo:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-lor-a', 'cam-lor-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Potencia Mecánica Instantánea</button>
+                            <button onclick="switchCamino('cam-lor-b', 'cam-lor-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Integral de Línea de Trabajo</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-lor-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. La potencia instantánea transmitida a la partícula cargada es \(P = \vec F_B \cdot \vec v\).</p>
+                        <p>2. Sustituyendo la ley de Lorentz:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ P = [q(\vec v \times \vec B)] \cdot \vec v \equiv 0 \]
+                        </div>
+                        <p>Por propiedad geométrica del producto cruz, el vector \((\vec v \times \vec B)\) es estrictamente perpendicular a \(\vec v\). Al hacer el producto escalar con \(\vec v\), el resultado es idénticamente cero en todo instante de tiempo. Por tanto, la energía cinética \(K = \frac{1}{2}mv^2\) y la rapidez \(v\) se mantienen constantes.</p>
+                    </div>
+
+                    <div id="cam-lor-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Expresamos el trabajo a lo largo de cualquier trayectoria arbitraria entre puntos 1 y 2:</p>
+                        <p class="font-mono text-center">\[ W = \int_1^2 \vec F_B \cdot d\vec r = \int_{t_1}^{t_2} \vec F_B \cdot \left(\frac{d\vec r}{dt}\,dt\right) = \int_{t_1}^{t_2} (\vec F_B \cdot \vec v)\,dt \]</p>
+                        <p>2. Como \(\vec F_B \perp \vec v\) en cada punto diferencial:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ W = \int_{t_1}^{t_2} 0\,dt = 0 \implies \Delta K = K_2 - K_1 = 0 \]
+                        </div>
+                        <p class="text-slate-500 italic">La fuerza magnética pura curva las trayectorias pero jamás puede aumentar o disminuir la energía cinética de una carga puntual aislada.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Movimiento Helicoidal (Velocidad Inclinada):</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p>Si la velocidad forma un ángulo \(\alpha\) con el campo \(\vec B\):</p>
+                            <p>• Componente paralela constante: \(v_\parallel = v \cos\alpha\).</p>
+                            <p>• Radio orbital: \(R = \dfrac{m v_\perp}{q B} = \dfrac{m v \sin\alpha}{q B}\).</p>
+                            <p>• Paso helicoidal (avance por vuelta): \(p = v_\parallel T = v\cos\alpha \left(\dfrac{2\pi m}{q B}\right)\).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor (Paradoja del Motor):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">Si \(\vec F_B\) no realiza trabajo sobre cargas puntuales libres, ¿cómo es posible que un motor eléctrico magnético mueva cargas pesadas y entregue potencia mecánica útil?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            Dentro de un conductor con corriente, la fuerza magnética desvía a los electrones hacia un costado de la red metálica. Esto genera un campo eléctrico interno de Hall transversal. La fuerza eléctrica interna del retículo cristalino es la que transmite el trabajo mecánico neto sobre los núcleos del alambre, impulsada por la fuente de energía eléctrica (fem externa).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2: CONDUCTOR CURVILÍNEO Y ESPIRA  -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#0284c7] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Fuerza sobre un Semicírculo Conductor y Espiras Cerradas</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un conductor delgado conduce una corriente \(I\) a lo largo de un semicírculo de radio \(R\) en el plano \(xy\) (desde \((-R, 0)\) hasta \((+R, 0)\)), inmerso en un campo magnético uniforme \(\vec B = B\,\hat k\). Deduzca la fuerza magnética neta integrando elemento por elemento y demuestre el teorema del vector de desplazamiento equivalente.
+            </div>
+
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 y 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                        <svg viewBox="0 0 280 180" class="w-full max-w-[260px] h-auto">
+                            <!-- Ejes coordenados -->
+                            <line x1="20" y1="140" x2="260" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+                            <line x1="140" y1="160" x2="140" y2="20" stroke="#cbd5e1" stroke-width="1.5"/>
+                            <text x="250" y="155" font-size="11" fill="#64748b">x</text>
+                            <text x="145" y="30" font-size="11" fill="#64748b">y</text>
+
+                            <!-- Símbolos de B saliendo (puntos) -->
+                            <circle cx="50" cy="50" r="3" fill="#0284c7"/>
+                            <circle cx="90" cy="50" r="3" fill="#0284c7"/>
+                            <circle cx="190" cy="50" r="3" fill="#0284c7"/>
+                            <circle cx="230" cy="50" r="3" fill="#0284c7"/>
+                            <text x="240" y="45" font-size="11" font-weight="bold" fill="#0284c7">\(\vec B \odot\)</text>
+
+                            <!-- Semicírculo conductor -->
+                            <path d="M 50,140 A 90,90 0 0 1 230,140" fill="none" stroke="#b3246b" stroke-width="3.5"/>
+                            <polygon points="135,46 145,50 135,54" fill="#b3246b"/>
+                            <text x="140" y="38" font-size="11" font-weight="bold" fill="#b3246b">I</text>
+
+                            <!-- Puntos extremos -->
+                            <circle cx="50" cy="140" r="4" fill="#0f172a"/>
+                            <text x="35" y="156" font-size="10" font-weight="bold" fill="#0f172a">-R</text>
+                            <circle cx="230" cy="140" r="4" fill="#0f172a"/>
+                            <text x="232" y="156" font-size="10" font-weight="bold" fill="#0f172a">+R</text>
+
+                            <!-- Vector dF radial hacia afuera -->
+                            <line x1="90" y1="76" x2="65" y2="44" stroke="#f59e0b" stroke-width="2.5"/>
+                            <polygon points="65,44 72,50 68,54" fill="#f59e0b"/>
+                            <text x="48" y="40" font-size="11" font-weight="bold" fill="#f59e0b">d\(\vec F\)</text>
+
+                            <!-- Vector resultante total hacia abajo (-y) -->
+                            <line x1="140" y1="140" x2="140" y2="105" stroke="#0284c7" stroke-width="3"/>
+                            <polygon points="140,105 135,115 145,115" fill="#0284c7"/>
+                            <text x="148" y="118" font-size="12" font-weight="bold" fill="#0284c7">\(\vec F_{\text{total}}\)</text>
+                        </svg>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                        <p><strong>Paso 1: Elemento diferencial en polares:</strong></p>
+                        <p class="font-mono text-xs">\(d\vec\ell = R\,d\theta(-\sin\theta\,\hat\imath + \cos\theta\,\hat\jmath)\), con \(\theta \in [0, \pi]\).</p>
+                        <p><strong>Paso 2: Fuerza diferencial:</strong></p>
+                        <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                            \[ d\vec F = I\,d\vec\ell \times \vec B = I R\,d\theta (-\sin\theta\,\hat\imath + \cos\theta\,\hat\jmath) \times (B\,\hat k) \]
+                            \[ = I B R\,d\theta (\sin\theta\,\hat\jmath + \cos\theta\,\hat\imath) \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#0284c7]">3</span>
+                            <span>Integración de las componentes:</span>
+                        </div>
+                        <div class="space-y-2 text-xs font-mono">
+                            <p>\(F_x = I B R \int_0^\pi \cos\theta\,d\theta = I B R [\sin\theta]_0^\pi = 0\)</p>
+                            <p>\(F_y = I B R \int_0^\pi \sin\theta\,d\theta = I B R [-\cos\theta]_0^\pi = 2 I B R\)</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#0284c7]">4</span>
+                            <span>Teorema del Vector de Desplazamiento Directo:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Para cualquier campo magnético uniforme \(\vec B\):</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center font-bold text-[#0284c7]">
+                            \[ \vec F = \int_a^b I\,d\vec\ell \times \vec B = I \left(\int_a^b d\vec\ell\right) \times \vec B = I \vec L' \times \vec B \]
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1">Donde \(\vec L' = 2R\,\hat\imath\) es el vector que une directamente el inicio con el final.</p>
+                    </div>
+                </div>
+
+                <!-- Caso Espira Cerrada -->
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs">
+                    <b class="text-emerald-900 block font-bold mb-1">Corolario Fundamental para Circuitos Cerrados:</b>
+                    <p>En cualquier circuito cerrado de forma arbitraria inmerso en un campo magnético uniforme, la integral del diferencial de desplazamiento es idénticamente cero (\(\oint d\vec\ell = \vec 0\)). Por tanto, la <b>fuerza magnética neta sobre toda espira cerrada uniforme es siempre CERO</b>: \(\vec F_{\text{neta}} = \vec 0\). Sin embargo, el <b>torque magnético neto</b> \(\vec\tau = \vec\mu \times \vec B\) es en general no nulo.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- ACTIVIDAD PRÁCTICA PARA ENTREGAR           -->
+        <!-- ========================================== -->
+        <section id="seccion-entrega" class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#b3246b] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">ENTREGA DE CLASE</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Actividad Evaluativa Autónoma: Espectrometría y Efecto Hall</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Diligencie en parejas o de forma individual para calificar en plataforma.</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 font-mono">
+                    <div>Puntaje Total: 100 pts</div>
+                    <div class="text-emerald-600 font-bold">Tiempo estimado: 40 min</div>
+                </div>
+            </div>
+
+            <!-- Datos del Estudiante -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nombre Completo:</label>
+                    <input type="text" placeholder="Ej. Ana Gómez" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Código Estudiantil:</label>
+                    <input type="text" placeholder="Ej. 20261011" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Fecha / Grupo:</label>
+                    <input type="text" value="Grupo 10E" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 font-mono">
+                </div>
+            </div>
+
+            <!-- Ejercicio de Entrega -->
+            <div class="border border-slate-200 rounded-xl p-4 space-y-4 text-xs md:text-sm">
+                <div class="bg-pink-50/60 p-3 rounded-lg border border-pink-100 text-slate-800">
+                    <strong>Problema de Aplicación:</strong> Se utiliza un espectrómetro de masas para separar iones de uranio simplemente ionizados (\(q = +1{,}602 \times 10^{-19}\,\text{C}\)): Uranio-235 (\(m_1 = 3{,}903 \times 10^{-25}\,\text{kg}\)) y Uranio-238 (\(m_2 = 3{,}953 \times 10^{-25}\,\text{kg}\)). El selector de velocidades opera con \(E = 2{,}40 \times 10^5\,\text{V/m}\) y \(B = 0{,}600\,\text{T}\). En la cámara de deflexión el campo es \(B_0 = 0{,}800\,\text{T}\).
+                </div>
+
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">a) Calcule la rapidez \(v\) de los iones que logran atravesar el selector de velocidades sin desviarse:</label>
+                        <textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Escriba aquí la fórmula y el valor numérico con unidades..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">b) Calcule los radios de curvatura \(R_1\) y \(R_2\) en la cámara de deflexión para cada isótopo:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Detalle los cálculos para U-235 y U-238..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">c) Calcule la distancia de separación física \(\Delta x = 2R_2 - 2R_1\) en la placa detectora de impacto. ¿Es suficiente para aislar físicamente ambos isótopos?</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Calcule el diámetro de impacto y justifique la resolución requerida del detector..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Rúbrica de Evaluación -->
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <b class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Criterios de Evaluación Rigurosa (Rúbrica):</b>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#b3246b] block">Selector de Wien (30%)</span>
+                            Aplica correctamente \(v = E/B\) reconociendo la independencia de la masa y carga.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#b3246b] block">Radios Ciclotrónicos (40%)</span>
+                            Calcula con precisión métrica \(R = m v / (q B_0)\) para ambos isótopos.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#b3246b] block">Separación \(\Delta x\) (30%)</span>
+                            Determina la diferencia de diámetros \(\Delta x = 2(R_2 - R_1)\) y emite un juicio técnico sustentado.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-5xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400 no-print">
+        <p>© 2026 Electro10.Easy · Creado para la Universidad Autónoma de Bucaramanga por el Prof. Dudbil Olvasada Pabón Riaño.</p>
+        <p class="mt-1 font-mono">Physics.10easy Workshop Engine v3.0 · Rigor Sears-Zemansky / Burbano</p>
     </footer>
 
-    <!-- Scripts de Lógica y Visualización -->
+    <!-- Scripts Operativos del Taller -->
     <script>
-        const scenes = {};
-
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
-
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
-
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
-
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
-
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
-
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
-
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
-
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "\\[", right: "\\]", display: true},
+                        {left: "\\(", right: "\\)", display: false}
+                    ],
+                    throwOnError: false
+                });
             }
-            return group;
         }
 
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
+        function toggleSvgLayer(layerId, btn) {
+            const el = document.getElementById(layerId);
+            if (!el) return;
+            const isHidden = el.style.display === 'none';
+            el.style.display = isHidden ? '' : 'none';
+            btn.classList.toggle('opacity-50', !isHidden);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
+        function toggleAllHints() {
+            document.querySelectorAll('.hint-content').forEach(h => {
+                h.classList.toggle('show');
             });
         }
 
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
+        function exportToPDF() {
+            window.print();
         }
 
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const opt = {
+                margin:       10,
+                filename:     'Entrega_Taller8_Lorentz_Electro10.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
+        // Capa de Dibujo y Pizarra Digital
+        let drawingMode = false;
+        let isDrawing = false;
+        let tool = 'pen';
         const canvas = document.getElementById('globalDrawingCanvas');
         const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         function toggleDrawing() {
-            canvas.classList.toggle('active');
+            drawingMode = !drawingMode;
+            canvas.classList.toggle('active', drawingMode);
             const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
+            btn.textContent = drawingMode ? 'Dibujo ON' : 'Dibujo OFF';
+            btn.classList.toggle('text-[#b3246b]', drawingMode);
         }
 
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
+        function setDrawingMode(newTool) {
+            tool = newTool;
+            if (!drawingMode) toggleDrawing();
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawingMode) return;
             isDrawing = true;
             ctx.beginPath();
             ctx.moveTo(e.clientX, e.clientY);
-        }
+        });
 
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            ctx.lineWidth = tool === 'eraser' ? 18 : 2.5;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
+            if (tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#b3246b';
+            }
             ctx.lineTo(e.clientX, e.clientY);
             ctx.stroke();
-        }
+        });
 
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
     </script>
 </body>
 </html>

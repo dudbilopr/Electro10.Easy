@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 5: Capacitancia y Dieléctricos</title>
-    <!-- Bibliotecas Externas -->
+    <title>Taller 6: Capacitancia y Dieléctricos · Electro10.Easy</title>
+
+    <!-- Tailwind CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     
+    <!-- KaTeX para renderizado matemático -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <!-- html2pdf para exportar entregas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 50; width: 100vw; height: 100vh; }
         .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
         
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
+        .step-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 9999px;
+            background: #0284c7; color: white; font-weight: 700; font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace; flex-shrink: 0;
+        }
         
+        .camino-tab { transition: all 0.2s ease; cursor: pointer; }
+        .camino-tab.active { background: #0284c7; color: white; }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
             body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
             main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
         }
         .toolbar-btn { transition: all 0.2s; }
         .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
+        .hint-content { display: none; }
         .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -52,7 +58,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-8">
 
     <!-- Capa de Dibujo Global -->
     <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
@@ -60,397 +66,577 @@
     <!-- Toolbar Superior Fija -->
     <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
         <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <img src="../img/logo_electro10.svg" alt="Electro10.Easy Logo" class="w-7 h-7 inline-block object-contain">
+                Electro<span class="text-[#0284c7]">10.Easy</span> Workshop
+            </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#0284c7] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#0369a1]">Exportar PDF Taller</button>
+            <button onclick="exportEntregaPDF()" class="toolbar-btn bg-[#b3246b] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar Solo Entrega</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
             <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
             <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#0284c7] border-l border-slate-300 ml-1">Dibujo OFF</button>
         </div>
     </nav>
 
     <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 5: Capacitancia y Dieléctricos</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Capacitancia y Energía Almacenada • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#0284c7] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 6 • Electrostática y Almacenamiento de Energía
+        </div>
+        <div class="flex items-center justify-center gap-3">
+            <img src="../img/logo_electro10.svg" alt="Electro10.Easy Emblem" class="w-11 h-11 object-contain drop-shadow">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 6: Capacitancia y Dieléctricos</h2>
+        </div>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            Metodología analítica y pedagógica rigurosa: derivaciones completas paso a paso para geometrías plano-paralelas, cilíndricas y esféricas, cálculo de energía por dos caminos y actividad práctica de clase para entregar.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M6</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        <!-- METODOLOGÍA MARCO UNIVERSAL -->
+        <div class="bg-gradient-to-r from-sky-50 via-white to-pink-50 p-5 rounded-2xl border border-sky-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                📐 El Algoritmo Universal de Resolución para Capacitancia (7 Pasos)
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">1. Carga \(\pm Q\)</b>Fijar cargas supuestas</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">2. Gauss \(\vec E\)</b>Campo por simetría</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">3. Potencial \(V\)</b>Integral \(-\int \vec E \cdot d\vec\ell\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">4. Relación \(C\)</b>Cociente \(C = Q/V\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">5. 2 Caminos</b>Energía \(Q^2/2C\) vs \(\int u\,dV\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">6. Dieléctrico</b>Efecto \(\kappa\) y polarización</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0284c7] block mb-1">7. Retos</b>Rigor y ruptura dieléctrica</div>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Un capacitor de placas paralelas tiene un área de 2.0 cm² y una separación de 1.0 mm. Calcule su capacitancia en el vacío.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Capacitancia y Energía Almacenada y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Si se inserta un dieléctrico con constante k=3.5 entre las placas del capacitor anterior, ¿cuál es la nueva capacitancia?
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Capacitancia y Energía Almacenada y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Tres capacitores de 2µF, 3µF y 6µF se conectan en serie a una batería de 12V. Encuentre la capacitancia equivalente.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Capacitancia y Energía Almacenada y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> Para el circuito anterior, calcule la carga y el voltaje en cada capacitor.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Capacitancia y Energía Almacenada y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> ¿Cuánta energía potencial eléctrica se almacena en el sistema total?
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Capacitancia y Energía Almacenada y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        </main>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1: CAPACITOR PLANO-PARALELO       -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#0284c7] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Capacitor de Placas Paralelas y Dieléctricos</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Considere dos placas conductoras planas y paralelas de área superficial \(A\), separadas por una distancia pequeña \(d\) (\(d \ll \sqrt{A}\)). Se transfieren cargas \(+Q\) y \(-Q\) a cada placa respectivamente. Deduzca analíticamente la capacitancia en el vacío \(C_0\), el efecto al insertar un dieléctrico de constante \(\kappa\), y la densidad de energía electrostática almacenada.
+            </div>
+
+            <!-- Paso a Paso Detallado -->
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">1</span>
+                        <span>Fijar las cargas supuestas y densidades superficiales:</span>
+                    </div>
+                    <p class="text-slate-600">
+                        Asumimos placas infinitamente grandes en comparación con la separación \(d\) para despreciar los efectos de borde (aproximación de campo uniforme). La densidad superficial de carga en cada placa es:
+                    </p>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm mt-2">
+                        \[ \sigma = \frac{Q}{A} \quad \implies \quad \text{Placa superior } (+Q), \quad \text{Placa inferior } (-Q) \]
+                    </div>
+                </div>
+
+                <!-- Paso 2: Esquema SVG Interactivo -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">2</span>
+                        <span>Dibujar variables en el esquema: líneas de campo \(\vec E\), vector normal y dieléctrico:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <div class="flex gap-2 mb-2 no-print self-start">
+                                <button type="button" onclick="toggleSvgLayer('p1-field-lines', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#0284c7] bg-sky-50 text-sky-700">Líneas de Campo \(\vec E\)</button>
+                                <button type="button" onclick="toggleSvgLayer('p1-diel-grp', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#b3246b] bg-pink-50 text-[#b3246b]">Dieléctrico \(\kappa\)</button>
+                            </div>
+                            <svg viewBox="0 0 320 200" class="w-full max-w-[300px] h-auto">
+                                <!-- Placa Superior Positiva -->
+                                <rect x="50" y="30" width="220" height="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2" rx="3"/>
+                                <text x="60" y="42" font-size="12" font-weight="bold" fill="#ef4444">+ + + + + + + + + + + + + + + +</text>
+                                <text x="280" y="42" font-size="12" font-weight="bold" fill="#ef4444">+Q</text>
+                                
+                                <!-- Placa Inferior Negativa -->
+                                <rect x="50" y="145" width="220" height="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="3"/>
+                                <text x="60" y="157" font-size="12" font-weight="bold" fill="#3b82f6">- - - - - - - - - - - - - - - -</text>
+                                <text x="280" y="157" font-size="12" font-weight="bold" fill="#3b82f6">-Q</text>
+                                
+                                <!-- Cota de separación d -->
+                                <line x1="35" y1="44" x2="35" y2="145" stroke="#64748b" stroke-width="1.8"/>
+                                <polygon points="35,44 32,52 38,52" fill="#64748b"/>
+                                <polygon points="35,145 32,137 38,137" fill="#64748b"/>
+                                <text x="20" y="98" font-size="12" font-weight="bold" fill="#64748b">d</text>
+
+                                <!-- Dieléctrico intermedio -->
+                                <g id="p1-diel-grp" style="display:none">
+                                    <rect x="52" y="46" width="216" height="97" fill="#fdf2f8" stroke="#b3246b" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.9"/>
+                                    <text x="160" y="98" font-size="13" font-weight="bold" fill="#b3246b" text-anchor="middle">Dieléctrico (\(\kappa\))</text>
+                                    <!-- Cargas ligadas inducidas -->
+                                    <text x="60" y="60" font-size="10" font-weight="bold" fill="#b3246b">- - - - - - - - - - - - - - - (\(-\sigma_b\))</text>
+                                    <text x="60" y="137" font-size="10" font-weight="bold" fill="#b3246b">+ + + + + + + + + + + + + + + (\(+\sigma_b\))</text>
+                                </g>
+
+                                <!-- Líneas de Campo E -->
+                                <g id="p1-field-lines">
+                                    <line x1="80" y1="45" x2="80" y2="144" stroke="#0284c7" stroke-width="2"/>
+                                    <polygon points="80,144 76,132 84,132" fill="#0284c7"/>
+                                    <line x1="130" y1="45" x2="130" y2="144" stroke="#0284c7" stroke-width="2"/>
+                                    <polygon points="130,144 126,132 134,132" fill="#0284c7"/>
+                                    <line x1="180" y1="45" x2="180" y2="144" stroke="#0284c7" stroke-width="2"/>
+                                    <polygon points="180,144 176,132 184,132" fill="#0284c7"/>
+                                    <line x1="230" y1="45" x2="230" y2="144" stroke="#0284c7" stroke-width="2"/>
+                                    <polygon points="230,144 226,132 234,132" fill="#0284c7"/>
+                                    <text x="188" y="98" font-size="14" font-weight="bold" fill="#0284c7">\(\vec E\)</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Ley de Gauss entre placas:</strong> Aplicando una superficie cilíndrica de Gauss con una base dentro del conductor superior:</p>
+                            <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                                \[ \Phi_E = \oint \vec E \cdot d\vec A = E A_{\text{gauss}} = \frac{Q_{\text{enc}}}{\epsilon_0} = \frac{\sigma A_{\text{gauss}}}{\epsilon_0} \]
+                            </div>
+                            <p><strong>Magnitud del Campo Uniforme:</strong></p>
+                            <div class="bg-slate-50 p-2 rounded font-mono text-center text-xs font-bold text-[#0284c7]">
+                                \[ E_0 = \frac{\sigma}{\epsilon_0} = \frac{Q}{\epsilon_0 A} \]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">3</span>
+                            <span>Calcular la diferencia de potencial \(V\):</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Integrando a lo largo de una línea de campo desde la placa negativa a la positiva:</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                            \[ V = V_+ - V_- = -\int_-^+ \vec E \cdot d\vec\ell = \int_0^d E_0\,dy = E_0 d = \frac{Q d}{\epsilon_0 A} \]
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">4</span>
+                            <span>Obtener la capacitancia en el vacío \(C_0 = Q/V\):</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Por definición formal, el cociente entre carga y voltaje es puramente geométrico:</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center font-bold text-[#0284c7]">
+                            \[ C_0 = \frac{Q}{V} = \frac{Q}{\frac{Q d}{\epsilon_0 A}} = \frac{\epsilon_0 A}{d} \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-sky-200 rounded-xl p-4 bg-sky-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#0284c7]">5</span>
+                            <span>Dos Caminos para Calcular la Energía Almacenada \(U\):</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-p1-a', 'cam-p1-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Trabajo de Carga de Placas</button>
+                            <button onclick="switchCamino('cam-p1-b', 'cam-p1-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Integral de Densidad de Energía</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-p1-a" class="bg-white p-4 rounded-xl border border-sky-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Consideramos el trabajo infinitesimal para transferir un diferencial de carga \(dq\) bajo un voltaje instantáneo \(v(q) = q/C\):</p>
+                        <p class="font-mono text-center">\[ dW = v(q)\,dq = \frac{q}{C}\,dq \]</p>
+                        <p>2. Integrando desde carga cero hasta la carga final \(Q\):</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ U = \int_0^Q \frac{q}{C}\,dq = \frac{Q^2}{2C} = \frac{1}{2} C V^2 = \frac{1}{2} Q V \]
+                        </div>
+                    </div>
+
+                    <div id="cam-p1-b" class="hidden bg-white p-4 rounded-xl border border-sky-200 space-y-2 text-xs text-slate-700">
+                        <p>1. La teoría de Maxwell-Poynting establece que la energía reside en el campo eléctrico con densidad volumétrica \(u = \frac{1}{2}\epsilon_0 E^2\).</p>
+                        <p>2. Como el campo es uniforme en todo el volumen \(V_{\text{vol}} = A \cdot d\):</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ U = \int_{\text{vol}} u\,dV = \left(\frac{1}{2}\epsilon_0 E^2\right)(A d) = \frac{1}{2}\epsilon_0 \left(\frac{V}{d}\right)^2 (A d) = \frac{1}{2}\left(\frac{\epsilon_0 A}{d}\right)V^2 = \frac{1}{2} C V^2 \]
+                        </div>
+                        <p class="text-slate-500 italic">Ambos caminos convergen idénticamente demostrando la equivalencia fundamental entre la visión circuital y la teoría de campos.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Efecto del Material Dieléctrico (\(\kappa\)):</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p>Al llenar el espacio con un dieléctrico de constante \(\kappa = \epsilon/\epsilon_0 > 1\):</p>
+                            <p>• <strong>Campo reducido:</strong> \(E = E_0/\kappa\) debido al campo opuesto de polarización \(\vec E_{\text{ind}}\).</p>
+                            <p>• <strong>Capacitancia aumentada:</strong> \(C = \kappa C_0 = \dfrac{\epsilon A}{d}\).</p>
+                            <p>• <strong>Carga ligada inducida:</strong> \(Q_b = Q\left(1 - \dfrac{1}{\kappa}\right)\).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor (Batería vs Aislado):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">Si un capacitor cargado se desconecta de la batería y se duplica la separación \(d\), ¿qué pasa con la energía \(U\)? ¿Quién realiza el trabajo?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            Como está aislado, la carga \(Q\) es constante. Como \(C = \epsilon_0 A/d\) se reduce a la mitad, la energía \(U = Q^2/(2C)\) se <b>duplica</b>. El incremento de energía proviene del trabajo mecánico externo que debe realizar una fuerza externa para separar las placas que se atraen mutuamente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2: CAPACITOR CILÍNDRICO COAXIAL   -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Capacitor Cilíndrico Coaxial (Cables de Telecomunicaciones)</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un cable coaxial de longitud \(L\) consiste en un cilindro conductor interno macizo de radio \(a\) y un cascarón cilíndrico coaxial externo de radio interno \(b\). Suponga que \(L \gg b\) y que los conductores portan cargas \(+Q\) y \(-Q\) respectivamente. Deduzca la capacitancia por unidad de longitud y la densidad de energía electrostática en función del radio \(r\).
+            </div>
+
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 y 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                        <svg viewBox="0 0 260 200" class="w-full max-w-[240px] h-auto">
+                            <!-- Sección transversal cilíndrica -->
+                            <!-- Cilindro exterior radio b -->
+                            <circle cx="130" cy="100" r="75" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+                            <circle cx="130" cy="100" r="82" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="130" y="24" font-size="11" font-weight="bold" fill="#3b82f6" text-anchor="middle">Cascarón externo (-Q, r = b)</text>
+                            
+                            <!-- Cilindro interior radio a -->
+                            <circle cx="130" cy="100" r="30" fill="#fee2e2" stroke="#ef4444" stroke-width="2.5"/>
+                            <text x="130" y="104" font-size="10" font-weight="bold" fill="#ef4444" text-anchor="middle">+Q (a)</text>
+                            
+                            <!-- Superficie Gaussiana punteada -->
+                            <circle cx="130" cy="100" r="52" fill="none" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4"/>
+                            <text x="160" y="80" font-size="10" font-weight="bold" fill="#10b981">Gauss (r)</text>
+                            
+                            <!-- Flechas de campo radial -->
+                            <line x1="130" y1="70" x2="130" y2="40" stroke="#0284c7" stroke-width="1.8"/>
+                            <polygon points="130,38 127,46 133,46" fill="#0284c7"/>
+                            <line x1="130" y1="130" x2="130" y2="160" stroke="#0284c7" stroke-width="1.8"/>
+                            <polygon points="130,162 127,154 133,154" fill="#0284c7"/>
+                            <line x1="100" y1="100" x2="70" y2="100" stroke="#0284c7" stroke-width="1.8"/>
+                            <polygon points="68,100 76,97 76,103" fill="#0284c7"/>
+                            <line x1="160" y1="100" x2="190" y2="100" stroke="#0284c7" stroke-width="1.8"/>
+                            <polygon points="192,100 184,97 184,103" fill="#0284c7"/>
+                            <text x="194" y="95" font-size="11" font-weight="bold" fill="#0284c7">\(\vec E\)</text>
+                        </svg>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                        <p><strong>Paso 1: Densidad lineal de carga:</strong> \(\lambda = Q/L\).</p>
+                        <p><strong>Paso 2: Campo por Gauss en \(a < r < b\):</strong></p>
+                        <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                            \[ \oint \vec E \cdot d\vec A = E(r)(2\pi r L) = \frac{\lambda L}{\epsilon_0} \implies E(r) = \frac{\lambda}{2\pi\epsilon_0 r} \]
+                        </div>
+                        <p class="text-xs text-slate-500 italic">El campo apunta puramente en dirección radial outward \(\hat r\).</p>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#b3246b]">3</span>
+                            <span>Integrar la diferencia de potencial \(V\):</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                            \[ V = -\int_b^a E(r)\,dr = \int_a^b \frac{\lambda}{2\pi\epsilon_0 r}\,dr = \frac{\lambda}{2\pi\epsilon_0} \ln\left(\frac{b}{a}\right) \]
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#b3246b]">4</span>
+                            <span>Capacitancia y capacitancia por unidad de longitud:</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center font-bold text-[#b3246b]">
+                            \[ C = \frac{Q}{V} = \frac{2\pi\epsilon_0 L}{\ln(b/a)} \implies \frac{C}{L} = \frac{2\pi\epsilon_0}{\ln(b/a)} \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos de Energía en el Cable Coaxial -->
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#b3246b]">5</span>
+                            <span>Dos Caminos para la Energía Almacenada en el Cable Coaxial:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-coax-a', 'cam-coax-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Fórmula Global \(Q^2/(2C)\)</button>
+                            <button onclick="switchCamino('cam-coax-b', 'cam-coax-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Integral Radial de Densidad \(u(r)\)</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-coax-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Usamos la capacitancia total obtenida: \(C = \frac{2\pi\epsilon_0 L}{\ln(b/a)}\).</p>
+                        <p>2. Aplicando la fórmula de energía:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ U = \frac{Q^2}{2C} = \frac{Q^2 \ln(b/a)}{4\pi\epsilon_0 L} = \frac{\lambda^2 L}{4\pi\epsilon_0}\ln\left(\frac{b}{a}\right) \]
+                        </div>
+                    </div>
+
+                    <div id="cam-coax-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Densidad volumétrica local: \(u(r) = \frac{1}{2}\epsilon_0 E(r)^2 = \frac{1}{2}\epsilon_0 \left(\frac{\lambda}{2\pi\epsilon_0 r}\right)^2 = \frac{\lambda^2}{8\pi^2\epsilon_0 r^2}\).</p>
+                        <p>2. Elemento diferencial de volumen cilíndrico: \(dV = (2\pi r L)\,dr\).</p>
+                        <p>3. Integrando en todo el espacio dieléctrico entre cilindros:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ U = \int_a^b u(r)\,dV = \int_a^b \left(\frac{\lambda^2}{8\pi^2\epsilon_0 r^2}\right)(2\pi r L\,dr) = \frac{\lambda^2 L}{4\pi\epsilon_0}\int_a^b \frac{dr}{r} = \frac{\lambda^2 L}{4\pi\epsilon_0}\ln\left(\frac{b}{a}\right) \]
+                        </div>
+                        <p class="text-slate-500 italic">Total coincidencia analítica que confirma la localización espacial de la energía en el campo radial.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Capacitor Esférico Concéntrico (Caso Análogo):</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p>Para esferas concéntricas de radios \(a\) y \(b\):</p>
+                            <p>• \(V = \dfrac{Q}{4\pi\epsilon_0}\left(\dfrac{1}{a} - \dfrac{1}{b}\right) = \dfrac{Q(b-a)}{4\pi\epsilon_0 a b}\).</p>
+                            <p>• \(C = 4\pi\epsilon_0 \dfrac{a b}{b - a}\).</p>
+                            <p>• <strong>Conductor aislado (\(b \to \infty\)):</strong> \(C = 4\pi\epsilon_0 a\).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor (Diseño Óptimo):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">Para un radio exterior \(b\) fijo, ¿qué radio interior \(a\) minimiza el campo eléctrico máximo en la superficie \(r=a\) (para evitar la ruptura dieléctrica)?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            El campo en la superficie es \(E(a) = \frac{V}{a \ln(b/a)}\). Al derivar respecto a \(a\) e igualar a cero: \(\frac{d}{da}[a\ln(b/a)] = \ln(b/a) - 1 = 0 \implies \ln(b/a) = 1 \implies b/a = e \approx 2{,}718\). Este es el estándar exacto utilizado en cables coaxiales de alta tensión.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- ACTIVIDAD PRÁCTICA PARA ENTREGAR           -->
+        <!-- ========================================== -->
+        <section id="seccion-entrega" class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#0284c7] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#0284c7] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">ENTREGA DE CLASE</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Actividad Evaluativa Autónoma: Redes Mixtas y Almacenamiento Energético</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Diligencie en parejas o de forma individual para calificar en plataforma.</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 font-mono">
+                    <div>Puntaje Total: 100 pts</div>
+                    <div class="text-emerald-600 font-bold">Tiempo estimado: 40 min</div>
+                </div>
+            </div>
+
+            <!-- Datos del Estudiante -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nombre Completo:</label>
+                    <input type="text" placeholder="Ej. Juan Pérez" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Código Estudiantil:</label>
+                    <input type="text" placeholder="Ej. 20261010" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Fecha / Grupo:</label>
+                    <input type="text" value="Grupo 10E" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 font-mono">
+                </div>
+            </div>
+
+            <!-- Ejercicio de Entrega -->
+            <div class="border border-slate-200 rounded-xl p-4 space-y-4 text-xs md:text-sm">
+                <div class="bg-sky-50/60 p-3 rounded-lg border border-sky-100 text-slate-800">
+                    <strong>Problema de Aplicación:</strong> Se conectan en paralelo dos capacitores, \(C_1 = 4{,}0\,\mu\text{F}\) y \(C_2 = 6{,}0\,\mu\text{F}\), a una fuente de alimentación de \(V_0 = 100\,\text{V}\). Una vez cargados por completo, se desconectan de la fuente. Posteriormente, se introduce un bloque de teflón (\(\kappa = 2{,}1\)) que llena completamente el espacio entre placas de \(C_1\).
+                </div>
+
+                <div class="space-y-3">
+                    <p class="font-semibold text-slate-900">Desarrolle los siguientes literales paso a paso justificando con ecuaciones:</p>
+                    
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">a) Calcule la carga total inicial del sistema \(Q_0\) y la energía electrostática total inicial \(U_0\):</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Escriba aquí su desarrollo algebraico y numérico..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">b) Calcule el nuevo voltaje común \(V_f\) y la carga final en cada capacitor tras introducir el dieléctrico:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Justifique por qué la carga total se conserva mientras el voltaje cambia..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">c) Calcule el cambio de energía \(\Delta U = U_f - U_0\). ¿Aumentó o disminuyó? Explique el origen físico de esta variación:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Explique si el campo realiza trabajo para succionar el dieléctrico o si se disipa energía..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Rúbrica de Evaluación -->
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <b class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Criterios de Evaluación Rigurosa (Rúbrica):</b>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0284c7] block">Conservación de Carga (35%)</span>
+                            Aplica correctamente \(Q_{\text{total}} = Q_1 + Q_2 = \text{cte}\) al estar el sistema desconectado.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0284c7] block">Efecto del Dieléctrico (35%)</span>
+                            Aplica \(C_1' = \kappa C_1\) y calcula el nuevo potencial común de nodo \(V_f = Q_{\text{total}} / C_{\text{eq}}'\).
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0284c7] block">Balance Energético (30%)</span>
+                            Determina \(\Delta U < 0\) y explica físicamente que el campo ejerce una fuerza neta que introduce el dieléctrico.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-5xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400 no-print">
+        <p>© 2026 Electro10.Easy · Creado para la Universidad Autónoma de Bucaramanga por el Prof. Dudbil Olvasada Pabón Riaño.</p>
+        <p class="mt-1 font-mono">Physics.10easy Workshop Engine v3.0 · Rigor Sears-Zemansky / Burbano</p>
     </footer>
 
-    <!-- Scripts de Lógica y Visualización -->
+    <!-- Scripts Operativos del Taller -->
     <script>
-        const scenes = {};
-
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
-
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
-
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
-
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
-
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
-
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
-
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
-
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "\\[", right: "\\]", display: true},
+                        {left: "\\(", right: "\\)", display: false}
+                    ],
+                    throwOnError: false
+                });
             }
-            return group;
         }
 
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
+        function toggleSvgLayer(layerId, btn) {
+            const el = document.getElementById(layerId);
+            if (!el) return;
+            const isHidden = el.style.display === 'none';
+            el.style.display = isHidden ? '' : 'none';
+            btn.classList.toggle('opacity-50', !isHidden);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
+        function toggleAllHints() {
+            document.querySelectorAll('.hint-content').forEach(h => {
+                h.classList.toggle('show');
             });
         }
 
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
+        function exportToPDF() {
+            window.print();
         }
 
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const opt = {
+                margin:       10,
+                filename:     'Entrega_Taller6_Capacitancia_Electro10.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
+        // Capa de Dibujo y Pizarra Digital
+        let drawingMode = false;
+        let isDrawing = false;
+        let tool = 'pen';
         const canvas = document.getElementById('globalDrawingCanvas');
         const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         function toggleDrawing() {
-            canvas.classList.toggle('active');
+            drawingMode = !drawingMode;
+            canvas.classList.toggle('active', drawingMode);
             const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
+            btn.textContent = drawingMode ? 'Dibujo ON' : 'Dibujo OFF';
+            btn.classList.toggle('text-[#0284c7]', drawingMode);
         }
 
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
+        function setDrawingMode(newTool) {
+            tool = newTool;
+            if (!drawingMode) toggleDrawing();
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawingMode) return;
             isDrawing = true;
             ctx.beginPath();
             ctx.moveTo(e.clientX, e.clientY);
-        }
+        });
 
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            ctx.lineWidth = tool === 'eraser' ? 18 : 2.5;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
+            if (tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#0284c7';
+            }
             ctx.lineTo(e.clientX, e.clientY);
             ctx.stroke();
-        }
+        });
 
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
     </script>
 </body>
 </html>

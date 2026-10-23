@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 9: Ley de Ampere</title>
-    <!-- Bibliotecas Externas -->
+    <title>Taller 10: Ley de Ampère · Electro10.Easy</title>
+
+    <!-- Tailwind CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     
+    <!-- KaTeX para renderizado matemático -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <!-- html2pdf para exportar entregas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 50; width: 100vw; height: 100vh; }
         .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
         
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
+        .step-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 9999px;
+            background: #0d9488; color: white; font-weight: 700; font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace; flex-shrink: 0;
+        }
         
+        .camino-tab { transition: all 0.2s ease; cursor: pointer; }
+        .camino-tab.active { background: #0d9488; color: white; }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
             body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
             main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
         }
         .toolbar-btn { transition: all 0.2s; }
         .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
+        .hint-content { display: none; }
         .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -52,7 +58,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-8">
 
     <!-- Capa de Dibujo Global -->
     <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
@@ -60,397 +66,469 @@
     <!-- Toolbar Superior Fija -->
     <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
         <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <img src="../img/logo_electro10.svg" alt="Electro10.Easy Logo" class="w-7 h-7 inline-block object-contain">
+                Electro<span class="text-[#0d9488]">10.Easy</span> Workshop
+            </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#0d9488] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#0f766e]">Exportar PDF Taller</button>
+            <button onclick="exportEntregaPDF()" class="toolbar-btn bg-[#b3246b] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Exportar Solo Entrega</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
             <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
             <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#0d9488] border-l border-slate-300 ml-1">Dibujo OFF</button>
         </div>
     </nav>
 
     <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 9: Ley de Ampere</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Simetría en Campos Magnéticos • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-[#0d9488] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 10 • Magnetostática y Simetría
+        </div>
+        <div class="flex items-center justify-center gap-3">
+            <img src="../img/logo_electro10.svg" alt="Electro10.Easy Emblem" class="w-11 h-11 object-contain drop-shadow">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 10: Ley de Ampère</h2>
+        </div>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            Metodología analítica y pedagógica rigurosa: circulación magnética, conductores cilíndricos gruesos, solenoides, toroides, cables coaxiales y actividad práctica de clase para entregar.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M10</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        <!-- METODOLOGÍA MARCO UNIVERSAL -->
+        <div class="bg-gradient-to-r from-teal-50 via-white to-pink-50 p-5 rounded-2xl border border-teal-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                📐 El Algoritmo Universal de Resolución para la Ley de Ampère (7 Pasos)
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">1. Simetría</b>Cilíndrica, axial o toroidal</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">2. Lazo \(C\)</b>Curva amperiana tangente</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">3. Circulación</b>\(\oint \vec B \cdot d\vec\ell = B L_C\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">4. \(I_{\text{enc}}\)</b>Integral \(\int \vec J \cdot d\vec A\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">5. 2 Caminos</b>Ampère vs Biot-Savart</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">6. Perfil \(B(r)\)</b>Curvas interior y exterior</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#0d9488] block mb-1">7. Retos</b>Maxwell y desplazamiento</div>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Use la Ley de Ampere para derivar el campo magnético a una distancia r de un conductor cilíndrico largo (r > R).
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Simetría en Campos Magnéticos y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Un solenoide ideal tiene 500 vueltas por metro y lleva una corriente de 2.0 A. Calcule el campo magnético en su interior.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Simetría en Campos Magnéticos y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Un toroide tiene un radio interior de 10 cm y radio exterior de 15 cm con 1000 vueltas. Si I = 3A, calcule B en r = 12 cm.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Simetría en Campos Magnéticos y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> Un cable coaxial consta de un cilindro interior sólido y una corteza exterior hueca. Derivar B en la región intermedia.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Simetría en Campos Magnéticos y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> Calcular la circulación del campo magnético alrededor de una trayectoria cerrada que no encierra corriente.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Simetría en Campos Magnéticos y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        </main>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1: CILINDRO GRUESO CON CORRIENTE  -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#0d9488] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Conductor Cilíndrico Macizo con Corriente Uniforme</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un conductor cilíndrico largo y recto de radio \(R\) transporta una corriente total \(I\) distribuida uniformemente en toda su sección transversal. Deduzca analíticamente la magnitud y dirección del campo magnético \(\vec B\) en: (a) puntos interiores (\(r < R\)), y (b) puntos exteriores (\(r \ge R\)). Trace el gráfico continuo de \(B(r)\).
+            </div>
+
+            <!-- Paso a Paso Detallado -->
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">1</span>
+                        <span>Enunciar la Ley de Ampère y simetría cilíndrica:</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ \oint_C \vec B \cdot d\vec\ell = \mu_0 I_{\text{enc}} \]
+                    </div>
+                    <p class="mt-2 text-slate-600">
+                        Por simetría cilíndrica alrededor del eje del alambre, las líneas de \(\vec B\) son círculos concéntricos perpendiculares al alambre. La magnitud \(B(r)\) solo depende de la distancia radial \(r\) y es constante sobre un círculo de radio \(r\).
+                    </p>
+                </div>
+
+                <!-- Paso 2: Esquema SVG Interactivo -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">2</span>
+                        <span>Dibujar variables en el esquema: trayectorias amperianas interior y exterior:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <div class="flex gap-2 mb-2 no-print self-start">
+                                <button type="button" onclick="toggleSvgLayer('p1-amp-in', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#0d9488] bg-teal-50 text-teal-700">Lazo Interior (\(r < R\))</button>
+                                <button type="button" onclick="toggleSvgLayer('p1-amp-out', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#b3246b] bg-pink-50 text-[#b3246b]">Lazo Exterior (\(r > R\))</button>
+                            </div>
+                            <svg viewBox="0 0 280 200" class="w-full max-w-[260px] h-auto">
+                                <!-- Sección transversal del cilindro de radio R -->
+                                <circle cx="140" cy="100" r="50" fill="#f1f5f9" stroke="#0f172a" stroke-width="2.5"/>
+                                <text x="140" y="104" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">J = I/(πR²)</text>
+                                
+                                <!-- Corriente saliendo (puntos) -->
+                                <circle cx="120" cy="85" r="2.5" fill="#0284c7"/>
+                                <circle cx="160" cy="85" r="2.5" fill="#0284c7"/>
+                                <circle cx="140" cy="120" r="2.5" fill="#0284c7"/>
+                                <text x="140" y="42" font-size="10" font-weight="bold" fill="#64748b" text-anchor="middle">Radio físico R</text>
+
+                                <!-- Lazo Amperiano Interior r < R -->
+                                <g id="p1-amp-in">
+                                    <circle cx="140" cy="100" r="30" fill="none" stroke="#0d9488" stroke-width="2" stroke-dasharray="4,3"/>
+                                    <polygon points="170,100 167,93 173,93" fill="#0d9488"/>
+                                    <text x="175" y="95" font-size="10" font-weight="bold" fill="#0d9488">C₁ (r &lt; R)</text>
+                                    <line x1="140" y1="100" x2="162" y2="80" stroke="#0d9488" stroke-width="1.5"/>
+                                    <text x="148" y="85" font-size="10" font-weight="bold" fill="#0d9488">r</text>
+                                </g>
+
+                                <!-- Lazo Amperiano Exterior r > R -->
+                                <g id="p1-amp-out" style="display:none">
+                                    <circle cx="140" cy="100" r="80" fill="none" stroke="#b3246b" stroke-width="2" stroke-dasharray="5,4"/>
+                                    <polygon points="220,100 217,93 223,93" fill="#b3246b"/>
+                                    <text x="225" y="95" font-size="10" font-weight="bold" fill="#b3246b">C₂ (r &gt; R)</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Circulación sobre un círculo de radio \(r\):</strong></p>
+                            <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                                \[ \oint \vec B \cdot d\vec\ell = \oint B\,d\ell = B \oint d\ell = B(2\pi r) \]
+                            </div>
+                            <p class="text-xs text-slate-500">Como \(\vec B\) y \(d\vec\ell\) son paralelos en cada punto del contorno circular.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4: Cálculo por Regiones -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-teal-200 rounded-xl p-4 bg-teal-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">3</span>
+                            <span>Región Interior (\(r < R\)):</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">La corriente encerrada es una fracción del área total:</p>
+                        <div class="bg-white p-2.5 rounded border border-teal-200 font-mono text-xs">
+                            \[ I_{\text{enc}} = J(\pi r^2) = \frac{I}{\pi R^2}(\pi r^2) = I \frac{r^2}{R^2} \]
+                        </div>
+                        <p class="text-xs text-slate-600 my-1">Igualando por Ampère:</p>
+                        <div class="bg-white p-2 rounded border border-teal-200 font-mono text-xs font-bold text-[#0d9488] text-center">
+                            \[ B(2\pi r) = \mu_0 I \frac{r^2}{R^2} \implies B(r) = \frac{\mu_0 I r}{2\pi R^2} \]
+                        </div>
+                    </div>
+
+                    <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge bg-[#b3246b]">4</span>
+                            <span>Región Exterior (\(r \ge R\)):</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Toda la corriente del conductor queda encerrada:</p>
+                        <div class="bg-white p-2.5 rounded border border-pink-200 font-mono text-xs text-center">
+                            \[ I_{\text{enc}} = I \]
+                        </div>
+                        <p class="text-xs text-slate-600 my-1">Igualando por Ampère:</p>
+                        <div class="bg-white p-2 rounded border border-pink-200 font-mono text-xs font-bold text-[#b3246b] text-center">
+                            \[ B(2\pi r) = \mu_0 I \implies B(r) = \frac{\mu_0 I}{2\pi r} \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-teal-200 rounded-xl p-4 bg-teal-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge">5</span>
+                            <span>Dos Caminos para Resolver el Campo Interior:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-amp-a', 'cam-amp-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Ley Integral de Ampère</button>
+                            <button onclick="switchCamino('cam-amp-b', 'cam-amp-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Forma Diferencial de Maxwell (\(\nabla \times \vec B\))</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-amp-a" class="bg-white p-4 rounded-xl border border-teal-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Se aplica la integral amperiana circular \(\oint \vec B \cdot d\vec\ell = B(2\pi r)\).</p>
+                        <p>2. Se despeja directamente \(B(r) = \frac{\mu_0 I_{\text{enc}}}{2\pi r} = \frac{\mu_0 I r}{2\pi R^2}\).</p>
+                    </div>
+
+                    <div id="cam-amp-b" class="hidden bg-white p-4 rounded-xl border border-teal-200 space-y-2 text-xs text-slate-700">
+                        <p>1. En coordenadas cilíndricas con corriente en \(\hat k\) y campo en \(\hat\phi\):</p>
+                        <p class="font-mono text-center">\[ (\nabla \times \vec B)_z = \frac{1}{r}\frac{d}{dr}(r B_\phi) = \mu_0 J_z \]</p>
+                        <p>2. Integrando directamente con \(J_z = \frac{I}{\pi R^2}\):</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ \frac{d}{dr}(r B_\phi) = \mu_0 \left(\frac{I}{\pi R^2}\right)r \implies r B_\phi = \frac{\mu_0 I r^2}{2\pi R^2} \implies B_\phi(r) = \frac{\mu_0 I r}{2\pi R^2} \]
+                        </div>
+                        <p class="text-slate-500 italic">Ambos formalismos coinciden con rigor axiomático pleno.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Continuidad en la Superficie (\(r = R\)):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">
+                            Evaluando tanto desde el interior como desde el exterior en \(r = R\):
+                        </p>
+                        <div class="bg-white p-2 rounded border border-emerald-200 font-mono text-xs font-bold text-center my-1">
+                            \[ B_{\text{máx}} = B(R) = \frac{\mu_0 I}{2\pi R} \]
+                        </div>
+                        <p class="text-xs text-slate-600">El campo es estrictamente continuo y alcanza su valor pico en la superficie.</p>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor (Densidad Variable):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">Si la densidad no es uniforme sino cuadrática \(J(r) = c r^2\), ¿cómo varía \(B\) en el interior?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            \(I_{\text{enc}} = \int_0^r (c r'^2)(2\pi r' dr') = \frac{\pi c r^4}{2}\). Por Ampère: \(B(2\pi r) = \mu_0 \frac{\pi c r^4}{2} \implies B(r) = \frac{\mu_0 c r^3}{4}\). Crece con el cubo del radio \(r^3\).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2: SOLENOIDE Y TOROIDE            -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Solenoide Ideal y Toroide Confinado</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> (a) Deduzca el campo magnético en el interior de un solenoide ideal de longitud \(L\) con \(N\) espiras muy apretadas. (b) Deduzca el campo magnético en el interior de un toroide de radio medio \(r\) con \(N\) vueltas y demuestre que el campo exterior es nulo.
+            </div>
+
+            <div class="space-y-4 text-xs md:text-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Solenoide -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                        <b class="text-[#0d9488] font-bold block">1. Solenoide Ideal (\(L \gg R\)):</b>
+                        <p>Se elige un lazo amperiano rectangular \(abcd\) de largo \(h\):</p>
+                        <p>• Lado \(ab\) (interior, paralelo a \(\vec B\)): \(\int_a^b \vec B \cdot d\vec\ell = B h\).</p>
+                        <p>• Lados \(bc\) y \(da\) (perpendiculares a \(\vec B\)): \(\int \vec B \cdot d\vec\ell = 0\).</p>
+                        <p>• Lado \(cd\) (exterior, donde \(B \approx 0\)): \(\int_c^d \vec B \cdot d\vec\ell = 0\).</p>
+                        <p class="font-mono bg-slate-50 p-2 rounded text-center font-bold">
+                            \[ \oint \vec B \cdot d\vec\ell = B h = \mu_0 (n h I) \implies B = \mu_0 n I = \mu_0 \frac{N}{L} I \]
+                        </p>
+                    </div>
+
+                    <!-- Toroide -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                        <b class="text-[#b3246b] font-bold block">2. Toroide Circular:</b>
+                        <p>Por simetría azimutal, lazo circular amperiano de radio \(r\):</p>
+                        <p>• <strong>Interior del devanado (\(r_1 < r < r_2\)):</strong> Encierra las \(N\) vueltas con corriente \(I\):</p>
+                        <p class="font-mono bg-slate-50 p-2 rounded text-center font-bold">
+                            \[ B(2\pi r) = \mu_0 N I \implies B(r) = \frac{\mu_0 N I}{2\pi r} \]
+                        </p>
+                        <p>• <strong>Exterior y hueco central:</strong> \(I_{\text{enc}} = 0 \implies B = 0\). El campo queda 100% confinado dentro del núcleo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- ACTIVIDAD PRÁCTICA PARA ENTREGAR           -->
+        <!-- ========================================== -->
+        <section id="seccion-entrega" class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#0d9488] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#0d9488] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">ENTREGA DE CLASE</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Actividad Evaluativa Autónoma: Confinamiento en Cable Coaxial Blindado</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Diligencie en parejas o de forma individual para calificar en plataforma.</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 font-mono">
+                    <div>Puntaje Total: 100 pts</div>
+                    <div class="text-emerald-600 font-bold">Tiempo estimado: 40 min</div>
+                </div>
+            </div>
+
+            <!-- Datos del Estudiante -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nombre Completo:</label>
+                    <input type="text" placeholder="Ej. Carlos Mendoza" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Código Estudiantil:</label>
+                    <input type="text" placeholder="Ej. 20261012" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Fecha / Grupo:</label>
+                    <input type="text" value="Grupo 10E" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 font-mono">
+                </div>
+            </div>
+
+            <!-- Ejercicio de Entrega -->
+            <div class="border border-slate-200 rounded-xl p-4 space-y-4 text-xs md:text-sm">
+                <div class="bg-teal-50/60 p-3 rounded-lg border border-teal-100 text-slate-800">
+                    <strong>Problema de Aplicación:</strong> Un cable coaxial RG-59 consta de un alambre macizo interior de radio \(a = 0{,}80\,\text{mm}\) que transporta una corriente \(I = 3{,}0\,\text{A}\) hacia fuera (\(\odot\)), y un blindaje cilíndrico conductor exterior de radio interior \(b = 2{,}0\,\text{mm}\) y radio exterior \(c = 2{,}5\,\text{mm}\) que conduce la misma corriente \(I = 3{,}0\,\text{A}\) en sentido opuesto (\(\otimes\)).
+                </div>
+
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">a) Deduzca la expresión analítica y calcule el valor numérico de \(B\) en el espacio entre conductores (\(a < r < b\)) en \(r = 1{,}5\,\text{mm}\):</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Desarrolle la integral amperiana y exprese el resultado en Tesla o Gauss..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">b) Deduzca la expresión analítica del campo dentro del conductor exterior (\(b < r < c\)) evaluando \(I_{\text{enc}}(r)\):</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Calcule la fracción de corriente de retorno encerrada..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">c) Demuestre analíticamente que para todo punto exterior \(r > c\), \(B = 0\). Explique la importancia de este resultado para el blindaje de señales electromagnéticas:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Explique por qué no hay radiación parásita hacia el exterior..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Rúbrica de Evaluación -->
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <b class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Criterios de Evaluación Rigurosa (Rúbrica):</b>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0d9488] block">Espacio Interconductor (30%)</span>
+                            Aplica correctamente \(B = \mu_0 I / (2\pi r)\) identificando que solo encierra el alambre interior.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0d9488] block">Blindaje Interior (40%)</span>
+                            Calcula con exactitud \(I_{\text{enc}} = I - I \frac{r^2-b^2}{c^2-b^2}\) y la circulación correspondiente.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#0d9488] block">Cancelación Exterior (30%)</span>
+                            Demuestra \(I_{\text{enc}} = 0 \implies B = 0\) y sustenta el principio de blindaje coaxial.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-5xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400 no-print">
+        <p>© 2026 Electro10.Easy · Creado para la Universidad Autónoma de Bucaramanga por el Prof. Dudbil Olvasada Pabón Riaño.</p>
+        <p class="mt-1 font-mono">Physics.10easy Workshop Engine v3.0 · Rigor Sears-Zemansky / Burbano</p>
     </footer>
 
-    <!-- Scripts de Lógica y Visualización -->
+    <!-- Scripts Operativos del Taller -->
     <script>
-        const scenes = {};
-
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
-
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
-
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
-
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
-
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
-
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
-
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
-
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "\\[", right: "\\]", display: true},
+                        {left: "\\(", right: "\\)", display: false}
+                    ],
+                    throwOnError: false
+                });
             }
-            return group;
         }
 
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
+        function toggleSvgLayer(layerId, btn) {
+            const el = document.getElementById(layerId);
+            if (!el) return;
+            const isHidden = el.style.display === 'none';
+            el.style.display = isHidden ? '' : 'none';
+            btn.classList.toggle('opacity-50', !isHidden);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
+        function toggleAllHints() {
+            document.querySelectorAll('.hint-content').forEach(h => {
+                h.classList.toggle('show');
             });
         }
 
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
+        function exportToPDF() {
+            window.print();
         }
 
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const opt = {
+                margin:       10,
+                filename:     'Entrega_Taller10_Ampere_Electro10.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
+        // Capa de Dibujo y Pizarra Digital
+        let drawingMode = false;
+        let isDrawing = false;
+        let tool = 'pen';
         const canvas = document.getElementById('globalDrawingCanvas');
         const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         function toggleDrawing() {
-            canvas.classList.toggle('active');
+            drawingMode = !drawingMode;
+            canvas.classList.toggle('active', drawingMode);
             const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
+            btn.textContent = drawingMode ? 'Dibujo ON' : 'Dibujo OFF';
+            btn.classList.toggle('text-[#0d9488]', drawingMode);
         }
 
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
+        function setDrawingMode(newTool) {
+            tool = newTool;
+            if (!drawingMode) toggleDrawing();
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawingMode) return;
             isDrawing = true;
             ctx.beginPath();
             ctx.moveTo(e.clientX, e.clientY);
-        }
+        });
 
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            ctx.lineWidth = tool === 'eraser' ? 18 : 2.5;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
+            if (tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#0d9488';
+            }
             ctx.lineTo(e.clientX, e.clientY);
             ctx.stroke();
-        }
+        });
 
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
     </script>
 </body>
 </html>

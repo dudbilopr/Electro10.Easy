@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 10: Ley de Faraday y Lenz</title>
-    <!-- Bibliotecas Externas -->
+    <title>Taller 11: Ley de Faraday, Autoinductancia y Circuitos RL · Electro10.Easy</title>
+
+    <!-- Tailwind CSS y Fuentes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     
+    <!-- KaTeX para renderizado matemático -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <!-- html2pdf para exportar entregas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 50; width: 100vw; height: 100vh; }
         .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
         
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
+        .step-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 9999px;
+            background: #e11d48; color: white; font-weight: 700; font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace; flex-shrink: 0;
+        }
         
+        .camino-tab { transition: all 0.2s ease; cursor: pointer; }
+        .camino-tab.active { background: #e11d48; color: white; }
+
         @media print {
             .no-print { display: none !important; }
             .page-break { page-break-after: always; }
             body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
             main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
         }
         .toolbar-btn { transition: all 0.2s; }
         .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
+        .hint-content { display: none; }
         .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -52,7 +58,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-8">
 
     <!-- Capa de Dibujo Global -->
     <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
@@ -60,397 +66,504 @@
     <!-- Toolbar Superior Fija -->
     <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
         <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <img src="../img/logo_electro10.svg" alt="Electro10.Easy Logo" class="w-7 h-7 inline-block object-contain">
+                Electro<span class="text-[#e11d48]">10.Easy</span> Workshop
+            </h1>
             <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-[#e11d48] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#be123c]">Exportar PDF Taller</button>
+            <button onclick="exportEntregaPDF()" class="toolbar-btn bg-[#0284c7] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#0369a1]">Exportar Solo Entrega</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
             <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
             <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#e11d48] border-l border-slate-300 ml-1">Dibujo OFF</button>
         </div>
     </nav>
 
     <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 10: Ley de Faraday y Lenz</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Inducción Electromagnética • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 text-[#e11d48] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 11 • Inducción Electromagnética y Circuitos RL
+        </div>
+        <div class="flex items-center justify-center gap-3">
+            <img src="../img/logo_electro10.svg" alt="Electro10.Easy Emblem" class="w-11 h-11 object-contain drop-shadow">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 11: Ley de Faraday e Inductancia (Circuitos RL)</h2>
+        </div>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            Metodología analítica y pedagógica rigurosa: flujo magnético variable, fem de movimiento, autoinductancia, balance de potencia, transitorios de carga/descarga en circuitos RL y actividad de clase para entregar.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M11</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
 
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        <!-- METODOLOGÍA MARCO UNIVERSAL -->
+        <div class="bg-gradient-to-r from-rose-50 via-white to-sky-50 p-5 rounded-2xl border border-rose-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                📐 El Algoritmo Universal de Resolución para Inducción y Circuitos RL (7 Pasos)
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">1. Flujo \(\Phi_B\)</b>\(\int \vec B \cdot d\vec A\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">2. Faraday</b>\(\mathcal{E} = -d\Phi_B/dt\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">3. Lenz</b>Sentido de oposición</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">4. Dinámica</b>Fuerza retardadora \(\vec F_B\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">5. 2 Caminos</b>Kirchhoff vs Potencia \(P(t)\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">6. Transitorio RL</b>\(i(t)\) y constante \(\tau_L = L/R\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#e11d48] block mb-1">7. Retos</b>Picos inductivos y diodos</div>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Una espira circular de 5 cm de radio está en un campo magnético que aumenta a razón de 0.2 T/s. ¿Cuál es la fem inducida?
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Inducción Electromagnética y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Un generador de CA consiste en una bobina de 100 espiras cuadradas de 10 cm de lado girando a 60 Hz en un campo de 0.5 T. Halle la fem máxima.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Inducción Electromagnética y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Explique conceptualmente el signo negativo en la Ley de Faraday utilizando la Ley de Lenz para una espira que se acerca a un imán.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Inducción Electromagnética y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> Una barra conductora de longitud L se mueve con velocidad v perpendicular a un campo B constante. Derive la fem de movimiento (BLv).
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Inducción Electromagnética y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
-            </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> Un anillo de cobre y uno de madera caen a través del mismo campo magnético. Compare sus aceleraciones y justifique.
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
-            </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Inducción Electromagnética y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
-            </div>
-        </section>
-        </main>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1: BARRA CONDUCTORA SOBRE RIELES  -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#e11d48] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Barra Conductora Deslizante (FEM de Movimiento)</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Una barra conductora de longitud \(L\) y masa \(m\) desliza sin fricción hacia la derecha con velocidad \(\vec v = v\,\hat\imath\) sobre rieles horizontales paralelos separados una distancia \(L\). Los rieles están conectados en un extremo por un resistor de resistencia \(R\). Un campo magnético uniforme \(\vec B = -B\,\hat k\) apunta perpendicular hacia dentro de la página. Deduzca: (a) la fem inducida \(\mathcal{E}\), (b) la corriente inducida \(I\) y su sentido por Lenz, (c) la fuerza magnética retardadora \(\vec F_{\text{ret}}\), y (d) el balance exacto entre potencia mecánica suministrada y disipación por efecto Joule.
+            </div>
+
+            <!-- Paso a Paso Detallado -->
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Paso 1 -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">1</span>
+                        <span>Definir el flujo magnético en función de la posición \(x(t)\):</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-sm">
+                        \[ \Phi_B(t) = \int \vec B \cdot d\vec A = B \cdot A(t) = B (L \cdot x(t)) \]
+                    </div>
+                    <p class="mt-2 text-slate-600">
+                        A medida que la barra se desplaza hacia la derecha con velocidad \(v = dx/dt\), el área encerrada por el lazo aumenta continuamente a razón de \(dA/dt = L v\).
+                    </p>
+                </div>
+
+                <!-- Paso 2: Esquema SVG Interactivo -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                        <span class="step-badge">2</span>
+                        <span>Dibujar variables en el esquema: lazo, corriente inducida y fuerza retardadora:</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <div class="flex gap-2 mb-2 no-print self-start">
+                                <button type="button" onclick="toggleSvgLayer('p1-ind-curr', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#e11d48] bg-rose-50 text-[#e11d48]">Corriente \(I_{\text{ind}}\)</button>
+                                <button type="button" onclick="toggleSvgLayer('p1-ret-force', this)" class="text-[11px] font-semibold px-2 py-0.5 rounded border border-[#0284c7] bg-sky-50 text-sky-700">Fuerza \(\vec F_{\text{ret}}\)</button>
+                            </div>
+                            <svg viewBox="0 0 320 200" class="w-full max-w-[300px] h-auto">
+                                <!-- Campo B uniforme entrando (cruces azules) -->
+                                <text x="35" y="45" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗ ⊗ ⊗ ⊗</text>
+                                <text x="35" y="85" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗ ⊗ ⊗ ⊗</text>
+                                <text x="35" y="125" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗ ⊗ ⊗ ⊗</text>
+                                <text x="35" y="165" font-size="11" fill="#0284c7" font-weight="bold">⊗ ⊗ ⊗ ⊗ ⊗ ⊗ ⊗</text>
+                                <text x="260" y="40" font-size="11" font-weight="bold" fill="#0284c7">\(\vec B \otimes\)</text>
+
+                                <!-- Rieles conductores -->
+                                <line x1="30" y1="60" x2="280" y2="60" stroke="#0f172a" stroke-width="3"/>
+                                <line x1="30" y1="150" x2="280" y2="150" stroke="#0f172a" stroke-width="3"/>
+
+                                <!-- Resistor R a la izquierda -->
+                                <line x1="30" y1="60" x2="30" y2="85" stroke="#0f172a" stroke-width="3"/>
+                                <rect x="23" y="85" width="14" height="40" fill="#f8fafc" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="14" y="110" font-size="11" font-weight="bold" fill="#f59e0b">R</text>
+                                <line x1="30" y1="125" x2="30" y2="150" stroke="#0f172a" stroke-width="3"/>
+
+                                <!-- Barra conductora móvil (x) -->
+                                <rect x="180" y="48" width="10" height="114" fill="#cbd5e1" stroke="#0f172a" stroke-width="2" rx="2"/>
+                                <text x="175" y="40" font-size="10" font-weight="bold" fill="#0f172a">Barra</text>
+
+                                <!-- Vector velocidad v -->
+                                <line x1="195" y1="105" x2="245" y2="105" stroke="#10b981" stroke-width="2.5"/>
+                                <polygon points="245,105 237,101 237,109" fill="#10b981"/>
+                                <text x="215" y="98" font-size="11" font-weight="bold" fill="#10b981">\(\vec v\)</text>
+
+                                <!-- Cota L -->
+                                <line x1="165" y1="60" x2="165" y2="150" stroke="#64748b" stroke-width="1.5"/>
+                                <text x="150" y="110" font-size="11" font-weight="bold" fill="#64748b">L</text>
+
+                                <!-- Corriente Inducida por Lenz (antihoraria) -->
+                                <g id="p1-ind-curr">
+                                    <polygon points="185,90 181,98 189,98" fill="#e11d48"/>
+                                    <text x="195" y="85" font-size="11" font-weight="bold" fill="#e11d48">I</text>
+                                    <polygon points="110,60 102,56 102,64" fill="#e11d48"/>
+                                    <polygon points="110,150 118,146 118,154" fill="#e11d48"/>
+                                    <text x="75" y="185" font-size="9.5" font-weight="bold" fill="#e11d48">Lenz: Flujo \(\otimes\) aumenta \(\implies B_{\text{ind}} \odot\) (Antihorario)</text>
+                                </g>
+
+                                <!-- Fuerza magnética retardadora F_B -->
+                                <g id="p1-ret-force">
+                                    <line x1="180" y1="105" x2="130" y2="105" stroke="#e11d48" stroke-width="2.5"/>
+                                    <polygon points="130,105 138,101 138,109" fill="#e11d48"/>
+                                    <text x="135" y="98" font-size="11" font-weight="bold" fill="#e11d48">\(\vec F_{\text{ret}}\)</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                            <p><strong>Deducción de la FEM por Faraday:</strong></p>
+                            <div class="bg-slate-50 p-2.5 rounded font-mono text-xs">
+                                \[ \mathcal{E} = -\frac{d\Phi_B}{dt} = -\frac{d}{dt}(B L x) = -B L \frac{dx}{dt} = -B L v \]
+                            </div>
+                            <p><strong>Corriente inducida en el lazo cerrado:</strong></p>
+                            <div class="bg-slate-50 p-2 rounded font-mono text-center text-xs font-bold text-[#e11d48]">
+                                \[ I = \frac{|\mathcal{E}|}{R} = \frac{B L v}{R} \]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3 y 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">3</span>
+                            <span>Fuerza magnética sobre la barra:</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">Como la corriente sube por la barra (\(+y\)) y el campo entra (\(-\hat k\)):</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center font-bold text-[#e11d48]">
+                            \[ \vec F_{\text{mag}} = I(L\,\hat\jmath) \times (-B\,\hat k) = -I L B\,\hat\imath = -\left(\frac{B^2 L^2 v}{R}\right)\hat\imath \]
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1">Se opone exactamente al movimiento, cumpliendo la conservación de la energía.</p>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800">
+                            <span class="step-badge">4</span>
+                            <span>Balance exacto de Potencia Mecánica vs Joule:</span>
+                        </div>
+                        <div class="space-y-2 text-xs font-mono">
+                            <p>• <strong>Potencia mecánica externa requerida:</strong> \(P_{\text{mec}} = F_{\text{ext}} \cdot v = \left(\dfrac{B^2 L^2 v}{R}\right)v = \dfrac{B^2 L^2 v^2}{R}\)</p>
+                            <p>• <strong>Potencia disipada en el resistor:</strong> \(P_{\text{Joule}} = I^2 R = \left(\dfrac{B L v}{R}\right)^2 R = \dfrac{B^2 L^2 v^2}{R}\)</p>
+                            <p class="text-emerald-700 font-bold text-center">\[ P_{\text{mecánica}} \equiv P_{\text{Joule}} \]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Dos Caminos -->
+                <div class="border border-rose-200 rounded-xl p-4 bg-rose-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-[#e11d48]">5</span>
+                            <span>Dos Caminos para la FEM de Movimiento:</span>
+                        </div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('cam-far-a', 'cam-far-b', this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A: Derivada Temporal del Flujo (Faraday)</button>
+                            <button onclick="switchCamino('cam-far-b', 'cam-far-a', this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600 hover:text-slate-900">Camino B: Integral de la Fuerza de Lorentz sobre Portadores</button>
+                        </div>
+                    </div>
+
+                    <div id="cam-far-a" class="bg-white p-4 rounded-xl border border-rose-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Se toma el circuito global y se aplica \(\mathcal{E} = -\frac{d\Phi_B}{dt}\).</p>
+                        <p>2. Como el campo es estacionario y el lazo se deforma: \(\frac{d\Phi_B}{dt} = B \frac{dA}{dt} = B L \frac{dx}{dt} = B L v \implies |\mathcal{E}| = B L v\).</p>
+                    </div>
+
+                    <div id="cam-far-b" class="hidden bg-white p-4 rounded-xl border border-rose-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Cada electrón libre dentro de la barra en movimiento experimenta una fuerza magnética de Lorentz \(\vec F_B = q(\vec v \times \vec B)\).</p>
+                        <p>2. El campo no electrostático efectivo por unidad de carga es \(\vec E_{\text{ef}} = \vec F_B / q = \vec v \times \vec B\).</p>
+                        <p>3. La integral de línea de este campo efectivo a lo largo de la barra de largo \(L\) define la fem de movimiento:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">
+                            \[ \mathcal{E} = \int_0^L (\vec v \times \vec B) \cdot d\vec\ell = \int_0^L (v\,\hat\imath \times (-B\,\hat k)) \cdot (dy\,\hat\jmath) = \int_0^L (v B\,\hat\jmath) \cdot (dy\,\hat\jmath) = B v L \]
+                        </div>
+                        <p class="text-slate-500 italic">Demostración microscopicamente exacta que unifica la fuerza de Lorentz con la Ley de Faraday.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 6 y 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-emerald-600">6</span>
+                            <span>Frenado Magnético Autónomo (Sin Fuerza Externa):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">Si se suelta la barra con velocidad inicial \(v_0\) sin empuje externo:</p>
+                        <div class="bg-white p-2 rounded border border-emerald-200 font-mono text-xs text-center my-1">
+                            \[ m \frac{dv}{dt} = -\frac{B^2 L^2}{R} v \implies v(t) = v_0 e^{-t/\tau_m}, \quad \tau_m = \frac{m R}{B^2 L^2} \]
+                        </div>
+                        <p class="text-xs text-slate-600">Freno regenerativo puro donde toda la energía cinética inicial se convierte en calor en \(R\).</p>
+                    </div>
+
+                    <div class="border border-amber-200 rounded-xl p-4 bg-amber-50/40">
+                        <div class="flex items-center gap-2 mb-2 font-semibold text-slate-900">
+                            <span class="step-badge bg-amber-500">7</span>
+                            <span>Pregunta Conceptual de Rigor (Ley de Lenz):</span>
+                        </div>
+                        <p class="text-xs text-slate-700">¿Qué pasaría con la ley de conservación de la energía si la ley de Faraday tuviera signo positivo (\(\mathcal{E} = +d\Phi_B/dt\))?</p>
+                        <p class="text-xs text-amber-900 bg-white p-2 rounded border border-amber-200 mt-1 font-semibold">
+                            Si el signo fuera positivo, la fuerza magnética empujaría la barra en el mismo sentido del movimiento (\(+\hat\imath\)), acelerándola gratis; la corriente aumentaría, la fuerza aumentaría aún más, creando una máquina de movimiento perpetuo que violaría la Primera y Segunda Ley de la Termodinámica. El signo negativo de Lenz es imperativo para la estabilidad del universo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2: INDUCTANCIA Y CIRCUITOS RL     -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#0284c7] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción Paso a Paso: Autoinductancia y Transitorios en Circuitos RL</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
+            </div>
+
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> (a) Deduzca la autoinductancia \(L\) de un solenoide largo de longitud \(l\), área de sección transversal \(A\) y \(N\) vueltas. (b) Considere un circuito serie formado por una fem continua \(\mathcal{E}_0\), una resistencia \(R\) y la inductancia \(L\). Se cierra el interruptor en \(t=0\). Deduzca la ecuación diferencial, la expresión analítica de la corriente \(i(t)\) durante el encendido y durante la descarga posterior.
+            </div>
+
+            <div class="space-y-4 text-xs md:text-sm">
+                <!-- Parte A: Autoinductancia -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <b class="text-[#0284c7] font-bold block mb-1">1. Autoinductancia del Solenoide y Energía Magnética:</b>
+                    <div class="space-y-1.5 text-xs text-slate-700">
+                        <p>• Campo magnético interior: \(B = \mu_0 \dfrac{N}{l} I\).</p>
+                        <p>• Flujo magnético por cada espira: \(\Phi_B = B A = \mu_0 \dfrac{N}{l} I A\).</p>
+                        <p>• Definición de Autoinductancia (\(N\) espiras enlazadas):</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-center font-mono font-bold text-[#0284c7]">
+                            \[ L = \frac{N \Phi_B}{I} = \frac{N \left(\mu_0 \frac{N}{l} I A\right)}{I} = \mu_0 \frac{N^2 A}{l} = \mu_0 n^2 A l \]
+                        </div>
+                        <p>• <strong>Energía electrodinámica almacenada:</strong> \(U_B = \frac{1}{2} L I^2\). En términos de campo: \(u_B = \frac{B^2}{2\mu_0}\).</p>
+                    </div>
+                </div>
+
+                <!-- Parte B: Dinámica Transitoria de Circuito RL -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <b class="text-[#e11d48] font-bold block mb-1">2. Ecuación Diferencial del Circuito RL y Solución Analítica:</b>
+                    <p class="text-xs text-slate-600 mb-2">Por la Ley de Voltajes de Kirchhoff (LVK) en el lazo cerrado:</p>
+                    <div class="bg-white p-2.5 rounded border border-slate-200 font-mono text-xs text-center">
+                        \[ \mathcal{E}_0 - i R - L \frac{di}{dt} = 0 \implies L \frac{di}{dt} + R i = \mathcal{E}_0 \]
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <div class="bg-white p-3 rounded-lg border border-rose-200 space-y-1 text-xs">
+                            <span class="font-bold text-[#e11d48] block">Fase 1: Conexión / Crecimiento de Corriente</span>
+                            <p>Condición inicial: \(i(0) = 0\) (el inductor se opone al cambio brusco de corriente comportándose como circuito abierto instantáneo).</p>
+                            <p>Separando variables: \(\int_0^i \frac{di}{\frac{\mathcal{E}_0}{R} - i} = \frac{R}{L}\int_0^t dt\):</p>
+                            <div class="bg-slate-50 p-2 rounded font-mono text-center font-bold text-[#e11d48]">
+                                \[ i(t) = \frac{\mathcal{E}_0}{R}\left(1 - e^{-t/\tau_L}\right), \quad \tau_L = \frac{L}{R} \]
+                            </div>
+                            <p class="text-[11px] text-slate-500">Voltaje en el inductor: \(v_L(t) = L \frac{di}{dt} = \mathcal{E}_0 e^{-t/\tau_L}\).</p>
+                        </div>
+
+                        <div class="bg-white p-3 rounded-lg border border-sky-200 space-y-1 text-xs">
+                            <span class="font-bold text-[#0284c7] block">Fase 2: Desconexión / Descarga Inductiva</span>
+                            <p>Se retira la fuente con corriente inicial estacionaria \(I_0 = \mathcal{E}_0/R\):</p>
+                            <p>Ecuación: \(L \frac{di}{dt} + R i = 0 \implies \frac{di}{i} = -\frac{R}{L}dt\):</p>
+                            <div class="bg-slate-50 p-2 rounded font-mono text-center font-bold text-[#0284c7]">
+                                \[ i(t) = I_0 e^{-t/\tau_L} = \frac{\mathcal{E}_0}{R} e^{-t/\tau_L} \]
+                            </div>
+                            <p class="text-[11px] text-slate-500">Toda la energía magnética \(\frac{1}{2}L I_0^2\) se disipa térmicamente en \(R\).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- ACTIVIDAD PRÁCTICA PARA ENTREGAR           -->
+        <!-- ========================================== -->
+        <section id="seccion-entrega" class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#e11d48] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#e11d48] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">ENTREGA DE CLASE</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Actividad Evaluativa Autónoma: Bobina de Inducción y Pico Inverso de Tensión</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Diligencie en parejas o de forma individual para calificar en plataforma.</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 font-mono">
+                    <div>Puntaje Total: 100 pts</div>
+                    <div class="text-emerald-600 font-bold">Tiempo estimado: 40 min</div>
+                </div>
+            </div>
+
+            <!-- Datos del Estudiante -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nombre Completo:</label>
+                    <input type="text" placeholder="Ej. Diana Morales" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Código Estudiantil:</label>
+                    <input type="text" placeholder="Ej. 20261013" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Fecha / Grupo:</label>
+                    <input type="text" value="Grupo 10E" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 font-mono">
+                </div>
+            </div>
+
+            <!-- Ejercicio de Entrega -->
+            <div class="border border-slate-200 rounded-xl p-4 space-y-4 text-xs md:text-sm">
+                <div class="bg-rose-50/60 p-3 rounded-lg border border-rose-100 text-slate-800">
+                    <strong>Problema de Aplicación:</strong> Una bobina de relé electromecánico tiene una inductancia \(L = 2{,}50\,\text{H}\) y una resistencia interna \(R = 50{,}0\,\Omega\). Se conecta a una fuente de alimentación de corriente continua de \(\mathcal{E}_0 = 24{,}0\,\text{V}\).
+                </div>
+
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">a) Calcule la constante de tiempo inductiva \(\tau_L\), la corriente máxima en régimen estacionario \(I_{\text{máx}}\) y la energía almacenada en el campo magnético del inductor:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Desarrolle las fórmulas y calcule los valores numéricos..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">b) Calcule el tiempo necesario para que la corriente alcance el \(95\,\%\) de su valor máximo:</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Despeje el tiempo t a partir de la ecuación exponencial..."></textarea>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2">
+                        <label class="font-semibold text-slate-800 block">c) Si el circuito se abre bruscamente mediante un interruptor en un tiempo de conmutación de \(\Delta t = 0{,}50\,\text{ms}\), ¿cuál es la magnitud media de la fem autoinducida \(|\mathcal{E}_{\text{ind}}| = L |\Delta I / \Delta t|\)? Explique por qué se produce una chispa o arco eléctrico y cómo se protege el circuito con un diodo de retorno (flyback):</label>
+                        <textarea rows="3" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Analice la sobretensión peligrosa y el papel del diodo en antiparalelo..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Rúbrica de Evaluación -->
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <b class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Criterios de Evaluación Rigurosa (Rúbrica):</b>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#e11d48] block">Parámetros RL (30%)</span>
+                            Determina \(\tau_L = L/R\), \(I_{\text{máx}} = \mathcal{E}/R\) y \(U_B = \frac{1}{2}L I^2\) con precisión de unidades SI.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#e11d48] block">Tiempo al 95% (35%)</span>
+                            Aplica \(1 - e^{-t/\tau} = 0{,}95 \implies t = -\tau \ln(0{,}05) \approx 3{,}0\,\tau_L\).
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="font-bold text-[#e11d48] block">Pico Inductivo y Flyback (35%)</span>
+                            Calcula la sobretensión kilovoltáica y explica con solidez el arco eléctrico y la protección con diodo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-5xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400 no-print">
+        <p>© 2026 Electro10.Easy · Creado para la Universidad Autónoma de Bucaramanga por el Prof. Dudbil Olvasada Pabón Riaño.</p>
+        <p class="mt-1 font-mono">Physics.10easy Workshop Engine v3.0 · Rigor Sears-Zemansky / Burbano</p>
     </footer>
 
-    <!-- Scripts de Lógica y Visualización -->
+    <!-- Scripts Operativos del Taller -->
     <script>
-        const scenes = {};
-
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
-
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
-
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
-
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
-
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
-
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
-
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
-
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "\\[", right: "\\]", display: true},
+                        {left: "\\(", right: "\\)", display: false}
+                    ],
+                    throwOnError: false
+                });
             }
-            return group;
         }
 
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
+        function toggleSvgLayer(layerId, btn) {
+            const el = document.getElementById(layerId);
+            if (!el) return;
+            const isHidden = el.style.display === 'none';
+            el.style.display = isHidden ? '' : 'none';
+            btn.classList.toggle('opacity-50', !isHidden);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
+        function toggleAllHints() {
+            document.querySelectorAll('.hint-content').forEach(h => {
+                h.classList.toggle('show');
             });
         }
 
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
+        function exportToPDF() {
+            window.print();
         }
 
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const opt = {
+                margin:       10,
+                filename:     'Entrega_Taller11_Faraday_RL_Electro10.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
+        // Capa de Dibujo y Pizarra Digital
+        let drawingMode = false;
+        let isDrawing = false;
+        let tool = 'pen';
         const canvas = document.getElementById('globalDrawingCanvas');
         const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         function toggleDrawing() {
-            canvas.classList.toggle('active');
+            drawingMode = !drawingMode;
+            canvas.classList.toggle('active', drawingMode);
             const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
+            btn.textContent = drawingMode ? 'Dibujo ON' : 'Dibujo OFF';
+            btn.classList.toggle('text-[#e11d48]', drawingMode);
         }
 
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
+        function setDrawingMode(newTool) {
+            tool = newTool;
+            if (!drawingMode) toggleDrawing();
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawingMode) return;
             isDrawing = true;
             ctx.beginPath();
             ctx.moveTo(e.clientX, e.clientY);
-        }
+        });
 
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            ctx.lineWidth = tool === 'eraser' ? 18 : 2.5;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
+            if (tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#e11d48';
+            }
             ctx.lineTo(e.clientX, e.clientY);
             ctx.stroke();
-        }
+        });
 
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
     </script>
 </body>
 </html>
