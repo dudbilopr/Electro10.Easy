@@ -218,16 +218,18 @@ Para enriquecer la enseñanza del electromagnetismo y conectar la teoría abstra
 
 Para que el avance sea fluido, sin duplicaciones ni interpretaciones ambiguas, a continuación se listan las tareas inmediatas y los criterios de validación:
 
-### 3.1. Prioridades Técnicas en Código
-1. **Migración de Presentaciones Restantes:**
-   - Estandarizar bajo el modelo de deck individual de alta resolución (`presentaciones/M{XX}/index.html`) los módulos pendientes que aún usan formatos fragmentados o esqueletos (M1, M2, M3, M4, M5, M7, M12, M13).
-   - **Regla inquebrantable:** No omitir pasos en las deducciones; usar KaTeX riguroso, incorporar el árbol de decisión y el mapa conceptual con nodos reactivos.
-2. **Generación de Archivos CAD/3D:**
-   - Crear la carpeta `.design/modelos_3d/` y programar los scripts generadores paramétricos en OpenSCAD (`.scad`) o Three.js para que los estudiantes puedan previsualizar y descargar los archivos STL de cada pieza didáctica desde la web.
-3. **Fase 4 (Layout Multiplataforma y Limpieza):**
+### 3.1. Estado de Módulos y Prioridades Técnicas
+1. **Presentaciones Magistrales (13/13 Completadas — 100%):**
+   - **M1 a M13 ESTANDARIZADOS AL 100%**: Todos los 13 módulos del currículo oficial disponen de su respectivo Master Deck autónomo 16:9 (`presentaciones/M{XX}/index.html`), con resolución responsive 1280x720 sin iframes anidados, KaTeX 0.16.9 riguroso, deducciones analíticas completas (sin omitir pasos), canvas interactivos, árboles de decisión, mapas conceptuales SVG reactivos con flujo de luz, líneas de tiempo y tarjetas flashcards 3D (`preserve-3d`).
+   - `player.html` enruta automáticamente las 13 clases hacia sus respectivos decks maestros.
+2. **Talleres Prácticos y Protocolo Sears-Zemansky (13/13 Completados — 100%):**
+   - Todos los talleres (`Taller_1` a `Taller_13`) han sido reescritos y verificados bajo el protocolo de 7 pasos, con dos caminos analíticos seleccionables (Camino A vs Camino B), formulario de cálculo numérico interactivo y sección de entrega con exportación a PDF (`#seccion-entrega`).
+3. **Generación de Archivos CAD/3D Físicos (Siguiente Hito):**
+   - Crear la carpeta `.design/modelos_3d/` y programar los scripts generadores paramétricos en OpenSCAD (`.scad`) o componentes Three.js interactivos para que los estudiantes puedan previsualizar y descargar los archivos STL de cada pieza didáctica (M1 a M13 descritas en la Sección 2) desde la web.
+4. **Fase 4 (Layout Multiplataforma y Limpieza):**
    - Asegurar que todas las páginas cuenten con `<meta name="viewport" content="width=device-width, initial-scale=1.0">`.
    - Limpieza gradual de Tailwind CDN residual hacia variables de tokens unificados en `css/tokens.css`.
-4. **Telemetría y Seguimiento:**
+5. **Telemetría y Seguimiento:**
    - Verificar que los simuladores emitan eventos `SIM_TELEMETRY` hacia `js/seguimiento.js` para registrar los aciertos y errores de los retos en la bitácora del estudiante en Firestore.
 
 ### 3.2. Criterios de Aceptación para Revisión de Código (Checklist)

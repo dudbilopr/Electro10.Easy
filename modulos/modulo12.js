@@ -77,7 +77,7 @@ export const modulo12 = {
             "id": "m12-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_12_Ecuaciones_Maxwell.html",
-            "titulo": "5. Taller Práctico No. 11 — Ecuaciones de Maxwell",
+            "titulo": "5. Taller Práctico No. 12 — Ecuaciones de Maxwell",
             "descripcion": "Problemas de corriente de desplazamiento en capacitores, cálculo del vector de Poynting y balance energético.",
             "xp": 30
         },

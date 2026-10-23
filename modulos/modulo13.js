@@ -85,7 +85,7 @@ export const modulo13 = {
             "id": "m13-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_13_Circuitos_CA.html",
-            "titulo": "5. Taller Práctico No. 12 — Circuitos RLC y Corriente Alterna",
+            "titulo": "5. Taller Práctico No. 13 — Circuitos RLC y Corriente Alterna",
             "descripcion": "Problemas de régimen transitorio, análisis de impedancia compleja, factor de potencia y diseño de filtros.",
             "xp": 30
         },

@@ -1,456 +1,466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller 12: Circuitos AC y RLC</title>
-    <!-- Bibliotecas Externas -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <title>Taller Práctico No. 13 · Circuitos de Corriente Alterna y Resonancia RLC — Electro10.Easy</title>
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
-        .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
-        
-        /* Cargas y SVG */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 2; transition: transform 0.2s; cursor: pointer; }
-        .charge-pos:hover, .charge-neg:hover { transform: scale(1.2); }
-        .svg-container { display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 0.5rem; overflow: hidden; }
-        
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: rgba(179, 36, 107, 0.08);
+            --e10-accent: #0B8CA8;
+            --e10-accent-strong: #08758C;
+            --e10-accent-soft: rgba(11, 140, 168, 0.08);
+            --e10-ink: #0f172a;
+            --e10-muted: #64748b;
+            --e10-surface: #ffffff;
+            --e10-bg: #f8fafc;
+            --e10-line: #e2e8f0;
+            --e10-success: #10b981;
+            --e10-success-soft: rgba(16, 185, 129, 0.08);
+            --e10-warning: #f59e0b;
+            --e10-warning-soft: rgba(245, 158, 11, 0.08);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
+        .max-w-container { max-width: 1040px; margin: 0 auto; }
+        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
+        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
+        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
+        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
+        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
+        .warnbox { background: var(--e10-warning-soft); border-left: 4px solid var(--e10-warning); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
+        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
+        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
+        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
+        .btn-pri:hover { background: #961b57; }
+        .btn-acc { background: var(--e10-accent); border-color: var(--e10-accent); color: #fff; }
+        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
+        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
+        .path-content { display: none; margin-top: 10px; }
+        .path-content.active { display: block; }
+        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
+        input:focus { border-color: var(--e10-primary); ring: 2px var(--e10-primary-soft); }
         @media print {
             .no-print { display: none !important; }
-            .page-break { page-break-after: always; }
-            body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
-            main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; }
+            body { background: #fff; padding: 0; }
+            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
         }
-        .toolbar-btn { transition: all 0.2s; }
-        .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
-        .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
+<div class="max-w-container">
 
-    <!-- Capa de Dibujo Global -->
-    <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
-
-    <!-- Toolbar Superior Fija -->
-    <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
-        <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
-            <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-amber-600">Pausar Vista 3D</button>
+    <!-- Encabezado Institucional 10.Easy -->
+    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <span class="badge badge-primary">Capítulo 13 · Régimen Senoidal Permanente</span>
+                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
+            </div>
+            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 13: Circuitos de Corriente Alterna y Resonancia RLC</h1>
+            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Impedancia compleja, diagrama de fasores, potencia activa/aparente, factor de potencia y comportamiento resonante.</p>
         </div>
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-            <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
-            <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
-            <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
-        </div>
-    </nav>
-
-    <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller 12: Circuitos AC y RLC</h2>
-        <!-- Reemplazado texto prohibido por uno general universitario -->
-        <p class="text-slate-500 mt-2 text-sm">Corriente Alterna e Impedancia • Física II</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 1</span>
+        <div class="no-print" style="display:flex;gap:8px">
+            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
+            <a href="../presentaciones/M13_AC/index.html" class="btn" style="text-decoration:none">Ver Clase 13 →</a>
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="taller-content">
-
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 01</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+    <!-- Fórmulas Clave de Referencia -->
+    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
+        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Corriente Alterna (CA)</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Reactancias</b>
+                \[X_L = \omega L, \quad X_C = \frac{1}{\omega C}\]
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 1:</strong> Un circuito RL en serie tiene R = 50 Ω y L = 0.1 H conectado a 120 V, 60 Hz. Calcule la reactancia inductiva y la impedancia.
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Impedancia Total Serie</b>
+                \[Z = \sqrt{R^2 + (X_L - X_C)^2}\]
             </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Ángulo de Desfasaje</b>
+                \[\tan\phi = \frac{X_L - X_C}{R}\]
             </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Corriente Alterna e Impedancia y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Frecuencia de Resonancia</b>
+                \[f_0 = \frac{1}{2\pi\sqrt{LC}}, \quad Q = \frac{\omega_0 L}{R}\]
             </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 02</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        </div>
+    </section>
+
+    <!-- PROBLEMA 1: RLC SERIE A 60 HZ -->
+    <article class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Análisis Fasorial y Caídas de Tensión en Circuito RLC Serie</h2>
+            <span class="badge badge-accent">Nivel Intermedio</span>
+        </div>
+        <p style="font-size:16px">
+            Un circuito RLC serie se conecta a una red eléctrica domiciliaria comercial de $V_{\text{rms}} = 120\ \text{V}$ a una frecuencia estándar $f = 60{,}0\ \text{Hz}$. Los componentes pasivos del circuito son:
+            una resistencia pura $R = 40{,}0\ \Omega$, un inductor real de inductancia $L = 120\ \text{mH}$ ($0{,}120\ \text{H}$), y un condensador de capacitancia $C = 25{,}0\ \mu\text{F}$ ($25{,}0\times 10^{-6}\ \text{F}$).<br>
+            <b>a)</b> Calcula las reactancias inductiva $X_L$ y capacitiva $X_C$, la impedancia equivalente total $Z$, y la corriente eficaz $I_{\text{rms}}$.<br>
+            <b>b)</b> Determina el ángulo de desfasaje $\phi$ entre la tensión de la fuente y la corriente, e indica si la corriente adelanta o retrasa al voltaje.<br>
+            <b>c)</b> Calcula las caídas de tensión eficaces individuales $V_R$, $V_L$ y $V_C$ y demuestra que su suma fasorial conserva la tensión de la fuente.
+        </p>
+
+        <!-- 7 PASOS METODOLÓGICOS -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">1</span>
+                    <b>Identificación de Parámetros y Frecuencia Angular:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Frecuencia cíclica: $f = 60{,}0\ \text{Hz} \implies \omega = 2\pi f = 2\pi(60{,}0) = 120\pi \approx 376{,}99\ \text{rad/s}$.<br>
+                    Valores nominales: $R = 40{,}0\ \Omega$, $L = 0{,}120\ \text{H}$, $C = 25{,}0\times 10^{-6}\ \text{F}$, $V_{\text{rms}} = 120\ \text{V}$.
+                </p>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 2:</strong> Para el circuito anterior, determine la corriente rms y el ángulo de fase.
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">2</span>
+                    <b>Cálculo de Reactancias $X_L$ y $X_C$:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Reactancia inductiva:
+                    \[X_L = \omega L = (376{,}99\ \text{rad/s})(0{,}120\ \text{H}) = 45{,}24\ \Omega\]
+                    Reactancia capacitiva:
+                    \[X_C = \frac{1}{\omega C} = \frac{1}{(376{,}99\ \text{rad/s})(25{,}0\times 10^{-6}\ \text{F})} = \frac{1}{0{,}0094248} = 106{,}10\ \Omega\]
+                    Reactancia neta del circuito:
+                    \[X_{\text{net}} = X_L - X_C = 45{,}24\ \Omega - 106{,}10\ \Omega = -60{,}86\ \Omega\]
+                </p>
             </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
+
+            <!-- COMPARATIVA: 2 CAMINOS METODOLÓGICOS -->
+            <div class="card" style="border:1px solid var(--e10-primary);margin-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+                    <b style="color:var(--e10-primary)">Paso 3: Impedancia y Fasor de Corriente — Elige el Camino Analítico:</b>
+                    <div style="display:flex;gap:6px">
+                        <button id="btn-cam-a-13" class="btn btn-tab active">Camino A: Álgebra Fasorial Compleja</button>
+                        <button id="btn-cam-b-13" class="btn btn-tab">Camino B: Triángulo de Impedancias</button>
+                    </div>
+                </div>
+
+                <!-- CONTENIDO CAMINO A -->
+                <div id="cont-cam-a-13" class="path-content active">
+                    <div class="tipbox">
+                        <b>Camino A (Notación Fasorial Compleja de Steinmetz):</b>
+                        <p style="margin:6px 0 0">
+                            Escribimos la impedancia compleja en el plano cartesiano $Z = R + j(X_L - X_C)$:
+                            \[\mathbf{Z} = 40{,}0 - j\, 60{,}86\ \Omega\]
+                            Convertimos a forma polar $\mathbf{Z} = |Z| e^{j\phi}$:
+                            \[|Z| = \sqrt{40{,}0^2 + (-60{,}86)^2} = \sqrt{1600 + 3703{,}94} = \sqrt{5303{,}94} \approx 72{,}83\ \Omega\]
+                            \[\phi = \arctan\left(\frac{-60{,}86}{40{,}0}\right) = \arctan(-1{,}5215) \approx -56{,}68^\circ \quad (-0{,}989\ \text{rad})\]
+                            Tomando la tensión de la fuente como referencia con fase cero $\mathbf{V}_{\text{rms}} = 120\angle 0^\circ\ \text{V}$, calculamos el fasor de corriente mediante la Ley de Ohm compleja:
+                            \[\mathbf{I}_{\text{rms}} = \frac{\mathbf{V}_{\text{rms}}}{\mathbf{Z}} = \frac{120\angle 0^\circ\ \text{V}}{72{,}83\angle -56{,}68^\circ\ \Omega} = 1{,}648\angle +56{,}68^\circ\ \text{A}\]
+                            <b>Conclusión física:</b> Dado que $\phi < 0$, la reactancia neta es capacitiva y la corriente <em>adelanta</em> a la tensión aplicada en un ángulo de $+56{,}68^\circ$.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CONTENIDO CAMINO B -->
+                <div id="cont-cam-b-13" class="path-content">
+                    <div class="tipbox">
+                        <b>Camino B (Triángulo Geométrico de Impedancias y Ondas Temporales):</b>
+                        <p style="margin:6px 0 0">
+                            A partir del triángulo rectángulo con cateto horizontal $R = 40\ \Omega$ y cateto vertical descendente $|X_C - X_L| = 60{,}86\ \Omega$:
+                            \[Z = \sqrt{R^2 + (X_L - X_C)^2} = \sqrt{40^2 + 60{,}86^2} = 72{,}83\ \Omega\]
+                            La magnitud de la corriente eficaz es:
+                            \[I_{\text{rms}} = \frac{V_{\text{rms}}}{Z} = \frac{120\ \text{V}}{72{,}83\ \Omega} \approx 1{,}648\ \text{A}\]
+                            El factor de potencia geométrico es:
+                            \[\cos\phi = \frac{R}{Z} = \frac{40{,}0}{72{,}83} \approx 0{,}5492 \implies |\phi| = \arccos(0{,}5492) \approx 56{,}68^\circ\]
+                            Como $X_C > X_L$, el circuito es capacitivo dominante y la onda sinusoidal de corriente $i(t) = I_0 \cos(\omega t + 56{,}68^\circ)$ alcanza su cresta antes que el voltaje $v(t) = V_0 \cos(\omega t)$.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Corriente Alterna e Impedancia y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">4</span>
+                    <b>Tensiones Eficaces en Cada Componente:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Aplicando la relación fasorial a cada elemento con $I_{\text{rms}} = 1{,}648\ \text{A}$:
+                    \[V_R = I_{\text{rms}} R = (1{,}648\ \text{A})(40{,}0\ \Omega) = 65{,}92\ \text{V}\]
+                    \[V_L = I_{\text{rms}} X_L = (1{,}648\ \text{A})(45{,}24\ \Omega) = 74{,}56\ \text{V}\]
+                    \[V_C = I_{\text{rms}} X_C = (1{,}648\ \text{A})(106{,}10\ \Omega) = 174{,}85\ \text{V}\]
+                </p>
             </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 03</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">5</span>
+                    <b>Demostración de Conservación Fasorial (Paradoja del Principiante):</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Si sumáramos los voltajes de forma escalar aritmética simple obtendríamos:
+                    $65{,}92 + 74{,}56 + 174{,}85 = 315{,}33\ \text{V}$, ¡un valor más de 2.6 veces mayor que los $120\ \text{V}$ de la toma eléctrica!<br>
+                    En CA los voltajes tienen desfases relativos ($\vec{V}_L$ adelanta $90^\circ$ a $\vec{I}$, $\vec{V}_C$ retrasa $90^\circ$ a $\vec{I}$, y $\vec{V}_R$ está en fase con $\vec{I}$). La tensión total instantánea se conserva por suma fasorial:
+                    \[V_{\text{fuente}} = \sqrt{V_R^2 + (V_L - V_C)^2} = \sqrt{65{,}92^2 + (74{,}56 - 174{,}85)^2} = \sqrt{4345{,}45 + (-100{,}29)^2} = \sqrt{4345{,}45 + 10058{,}08} = \sqrt{14403{,}53} = 120{,}01\ \text{V}\]
+                    ¡La suma fasorial verifica rigurosamente la Ley de Mallas de Kirchhoff en cualquier instante de tiempo $t$!
+                </p>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 3:</strong> Un circuito RLC en serie con R=100 Ω, L=0.5 H y C=10 µF se conecta a un voltaje alterno. Calcule la frecuencia de resonancia.
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">6</span>
+                    <b>Balance de Potencias y Factor de Potencia:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    <b>Potencia Aparente:</b> $S = V_{\text{rms}} I_{\text{rms}} = (120\ \text{V})(1{,}648\ \text{A}) = 197{,}76\ \text{VA}$.<br>
+                    <b>Factor de Potencia:</b> $\text{fp} = \cos(-56{,}68^\circ) = 0{,}5492$ (capacitivo / en adelanto).<br>
+                    <b>Potencia Activa (Disipada exclusivamente en $R$ en forma de calor):</b>
+                    \[P = V_{\text{rms}} I_{\text{rms}} \cos\phi = (120)(1{,}648)(0{,}5492) = 108{,}61\ \text{W} \quad \left(\text{o bien } I_{\text{rms}}^2 R = 1{,}648^2 \times 40 = 108{,}64\ \text{W}\right)\]
+                    <b>Potencia Reactiva (Intercambio electromagnético oscilante sin consumo neto):</b>
+                    \[Q_r = V_{\text{rms}} I_{\text{rms}} \sin\phi = (120)(1{,}648)\sin(-56{,}68^\circ) = -165{,}25\ \text{VAR}\]
+                </p>
             </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">7</span>
+                    <b>Validación Físico-Matemática y Conclusión de Ingeniería:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Un factor de potencia bajo de $0{,}55$ significa que la línea eléctrica debe transportar $1{,}65\ \text{A}$ para entregar tan sólo $108{,}6\ \text{W}$ útiles a la carga, sobrecargando los conductores por corrientes reactivas. En la industria, esto se compensa conectando una inductancia en paralelo para elevar el $\text{fp}$ a un valor cercano a $0{,}95-1{,}00$.
+                </p>
             </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Corriente Alterna e Impedancia y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
+        </div>
+
+        <!-- SIMULADOR NUMÉRICO RLC -->
+        <div class="card" style="margin-top:16px;background:var(--e10-bg)">
+            <h4 style="margin:0 0 10px;font-size:15px;color:var(--e10-primary)">Laboratorio RLC Interactivo (Recalcular Parámetros)</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Resistencia $R$ ($\Omega$)</label>
+                    <input type="number" id="calc13-R" value="40" step="5">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Inductancia $L$ (mH)</label>
+                    <input type="number" id="calc13-L" value="120" step="10">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Capacitancia $C$ ($\mu$F)</label>
+                    <input type="number" id="calc13-C" value="25" step="5">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Frecuencia $f$ (Hz)</label>
+                    <input type="number" id="calc13-f" value="60" step="5">
+                </div>
             </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 04</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+                <button class="btn btn-acc" id="btn-calc13-eval">Calcular Fasores</button>
+                <span id="calc13-res" style="font-size:14px;font-weight:600;color:var(--e10-ink)"></span>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 4:</strong> En la frecuencia de resonancia, ¿cuál es la impedancia total del circuito RLC y por qué?
+        </div>
+    </article>
+
+    <!-- PROBLEMA 2: RESONANCIA Y FACTOR DE CALIDAD -->
+    <article class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 2: Frecuencia de Resonancia, Factor de Calidad $Q$ y Sobretensión</h2>
+            <span class="badge badge-accent">Nivel Avanzado</span>
+        </div>
+        <p style="font-size:16px">
+            Para el mismo circuito RLC serie ($R = 40{,}0\ \Omega$, $L = 120\ \text{mH}$, $C = 25{,}0\ \mu\text{F}$), se ajusta un generador de señal de amplitud constante $V_{\text{rms}} = 120\ \text{V}$ barriendo su frecuencia.<br>
+            <b>a)</b> Determina la frecuencia angular de resonancia $\omega_0$ y la frecuencia de sintonía $f_0$ en hertz.<br>
+            <b>b)</b> Calcula la impedancia del circuito a la frecuencia de resonancia y la máxima corriente eficaz $I_{\text{rms, max}}$ alcanzada.<br>
+            <b>c)</b> Calcula el Factor de Calidad $Q$ del circuito y la magnitud de la caída de tensión en el inductor $V_L$ y en el condensador $V_C$ a resonancia.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <div class="soft-box">
+                <b>1. Condición de Resonancia:</b>
+                <p style="margin:6px 0 0;font-size:15px">
+                    La resonancia ocurre cuando la reactancia inductiva cancela exactamente a la reactancia capacitiva ($X_L = X_C$), anulando la parte reactiva de la impedancia:
+                    \[\omega_0 L = \frac{1}{\omega_0 C} \implies \omega_0^2 = \frac{1}{LC} \implies \omega_0 = \frac{1}{\sqrt{LC}}\]
+                    Sustituyendo los valores del circuito:
+                    \[\omega_0 = \frac{1}{\sqrt{(0{,}120\ \text{H})(25{,}0\times 10^{-6}\ \text{F})}} = \frac{1}{\sqrt{3{,}00\times 10^{-6}}} = \frac{1}{1{,}73205\times 10^{-3}} \approx 577{,}35\ \text{rad/s}\]
+                    Frecuencia cíclica de resonancia:
+                    \[f_0 = \frac{\omega_0}{2\pi} = \frac{577{,}35\ \text{rad/s}}{2\pi} \approx 91{,}89\ \text{Hz}\]
+                </p>
             </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
+
+            <div class="soft-box">
+                <b>2. Impedancia Mínima y Corriente de Pico:</b>
+                <p style="margin:6px 0 0;font-size:15px">
+                    A resonancia, $X_L - X_C = 0$, por lo que la impedancia alcanza su mínimo absoluto posible:
+                    \[Z_{\text{res}} = \sqrt{R^2 + 0^2} = R = 40{,}0\ \Omega\]
+                    El ángulo de fase se anula ($\phi = 0^\circ$), el factor de potencia es unitario ($\text{fp} = 1{,}00$) y la corriente eficaz alcanza su máximo:
+                    \[I_{\text{rms, max}} = \frac{V_{\text{rms}}}{R} = \frac{120\ \text{V}}{40{,}0\ \Omega} = 3{,}00\ \text{A}\]
+                </p>
             </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Corriente Alterna e Impedancia y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
+
+            <div class="soft-box">
+                <b>3. Factor de Calidad $Q$ y Fenómeno de Sobretensión:</b>
+                <p style="margin:6px 0 0;font-size:15px">
+                    El factor de calidad mide la agudeza del pico de resonancia y la relación entre la energía almacenada y la energía disipada por ciclo:
+                    \[Q = \frac{\omega_0 L}{R} = \frac{(577{,}35\ \text{rad/s})(0{,}120\ \text{H})}{40{,}0\ \Omega} = \frac{69{,}282\ \Omega}{40{,}0\ \Omega} \approx 1{,}732\]
+                    \[\left(\text{Fórmula alternativa idéntica: } Q = \frac{1}{R}\sqrt{\frac{L}{C}} = \frac{1}{40}\sqrt{\frac{0{,}120}{25\times 10^{-6}}} = \frac{1}{40}\sqrt{4800} = \frac{69{,}282}{40} = 1{,}732\right)\]
+                    A resonancia, los voltajes en los reactores experimentan una multiplicación por el factor $Q$:
+                    \[V_{L,\text{res}} = I_{\text{rms, max}} (\omega_0 L) = (3{,}00\ \text{A})(69{,}282\ \Omega) = 207{,}85\ \text{V}\]
+                    \[V_{C,\text{res}} = I_{\text{rms, max}} \left(\frac{1}{\omega_0 C}\right) = (3{,}00\ \text{A})(69{,}282\ \Omega) = 207{,}85\ \text{V}\]
+                    Nótese que $V_{L,\text{res}} = Q \cdot V_{\text{fuente}} = 1{,}732 \times 120\ \text{V} = 207{,}84\ \text{V}$. ¡Cada reactor soporta $207{,}8\ \text{V}$, significativamente superior a la tensión de la fuente ($120\ \text{V}$)! Como están desfasados $180^\circ$ entre sí, sus vectores se cancelan mutuamente por completo ($\vec{V}_L + \vec{V}_C = 0$).
+                </p>
             </div>
-        </section>
-        
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start">
-                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">EJ 05</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">TALLER</span>
+        </div>
+    </article>
+
+    <!-- SECCIÓN DE ENTREGA Y CERTIFICACIÓN PDF -->
+    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div>
+                <span class="badge badge-primary">Evaluación del Taller 13</span>
+                <h3 style="margin:4px 0 0;font-size:20px;color:var(--e10-ink)">Hoja de Entrega y Certificado de Resultados</h3>
             </div>
-            <div class="problem-text compact-text text-sm">
-                <strong>Problema 5:</strong> Calcule el factor de potencia y la potencia promedio disipada en el resistor fuera de resonancia.
+            <span style="font-size:12px;color:var(--e10-muted)">Generación Instantánea de PDF</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:16px">
+            <div>
+                <label style="font-size:13px;font-weight:600">Nombre del Estudiante:</label>
+                <input type="text" id="ent13-nombre" placeholder="Nombre completo">
             </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 flex items-center justify-center min-h-[100px] text-slate-400 text-xs italic">
-                Espacio de trabajo del estudiante (Añade SVGs aquí si lo requieres)
+            <div>
+                <label style="font-size:13px;font-weight:600">Código / ID Estudiantil:</label>
+                <input type="text" id="ent13-codigo" placeholder="Ej: 20261013">
             </div>
-            <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print mt-auto">💡 Ver Pista Didáctica</button>
-            <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                <strong>Pista:</strong> Revisa la teoría de Corriente Alterna e Impedancia y aplica las fórmulas correspondientes. ¡Recuerda las unidades del SI!
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px">
+            <div>
+                <label style="font-size:12px;font-weight:600">P1: Impedancia Total $Z$ ($\Omega$)</label>
+                <input type="number" id="ent13-p1-z" placeholder="72.83" step="0.1">
             </div>
-        </section>
-        </main>
+            <div>
+                <label style="font-size:12px;font-weight:600">P1: Corriente Eficaz $I_{\text{rms}}$ (A)</label>
+                <input type="number" id="ent13-p1-irms" placeholder="1.65" step="0.01">
+            </div>
+            <div>
+                <label style="font-size:12px;font-weight:600">P1: Potencia Activa $P$ (W)</label>
+                <input type="number" id="ent13-p1-p" placeholder="108.6" step="0.5">
+            </div>
+            <div>
+                <label style="font-size:12px;font-weight:600">P2: Frecuencia Resonancia $f_0$ (Hz)</label>
+                <input type="number" id="ent13-p2-f0" placeholder="91.89" step="0.1">
+            </div>
+        </div>
 
-    <footer class="mt-8 mb-4 text-center text-slate-400 text-xs no-print">
-        <p>Generador de Talleres Universitarios • Mode: Builder</p>
-    </footer>
+        <div class="no-print" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-pri" id="btn-validar-entrega-13">Validar Respuestas</button>
+            <button class="btn btn-acc" id="btn-descargar-pdf-13">Descargar Certificado en PDF</button>
+            <span id="msg-feedback-13" style="font-size:14px;font-weight:600;display:none"></span>
+        </div>
+    </section>
 
-    <!-- Scripts de Lógica y Visualización -->
-    <script>
-        const scenes = {};
+</div>
 
-        // Iniciar Three.js al cargar
-        function init3D() { return; 
-            createScene('3dfield', 'container-3dfield', createDipoleGeometry, 'dipole_field', 3);
-            animate();
-        }
+<script>
+// CONTROL DE CAMINOS METODOLÓGICOS (CAMINO A VS CAMINO B)
+const btnCamA13 = document.getElementById('btn-cam-a-13');
+const btnCamB13 = document.getElementById('btn-cam-b-13');
+const contCamA13 = document.getElementById('cont-cam-a-13');
+const contCamB13 = document.getElementById('cont-cam-b-13');
 
-        function createScene(id, containerId, geometryFunc, fieldType, defaultDensity) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
+btnCamA13.addEventListener('click', () => {
+    btnCamA13.classList.add('active');
+    btnCamB13.classList.remove('active');
+    contCamA13.classList.add('active');
+    contCamB13.classList.remove('active');
+});
 
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a);
+btnCamB13.addEventListener('click', () => {
+    btnCamB13.classList.add('active');
+    btnCamA13.classList.remove('active');
+    contCamB13.classList.add('active');
+    contCamA13.classList.remove('active');
+});
 
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(10, 8, 12);
-            camera.lookAt(0, 0, 0);
+// MINI-CALCULADORA INTERACTIVA RLC
+document.getElementById('btn-calc13-eval').addEventListener('click', () => {
+    const R = parseFloat(document.getElementById('calc13-R').value);
+    const L = parseFloat(document.getElementById('calc13-L').value) * 1e-3;
+    const C = parseFloat(document.getElementById('calc13-C').value) * 1e-6;
+    const f = parseFloat(document.getElementById('calc13-f').value);
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
+    const omega = 2 * Math.PI * f;
+    const XL = omega * L;
+    const XC = 1 / (omega * C);
+    const X = XL - XC;
+    const Z = Math.sqrt(R * R + X * X);
+    const phi = Math.atan2(X, R) * (180 / Math.PI);
+    const f0 = 1 / (2 * Math.PI * Math.sqrt(L * C));
 
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 2.0;
+    document.getElementById('calc13-res').innerHTML = 
+        `$Z = ${Z.toFixed(2)}\\ \\Omega$ &nbsp;|&nbsp; $\\phi = ${phi.toFixed(2)}^\\circ$ &nbsp;|&nbsp; $f_0 = ${f0.toFixed(2)}\\ \\text{Hz}$`;
+    if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('calc13-res'), {
+            delimiters: [{left: '$', right: '$', display: false}]
+        });
+    }
+});
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 0.8);
-            directional.position.set(10, 20, 15);
-            scene.add(directional);
+// VALIDACIÓN DE RESULTADOS
+document.getElementById('btn-validar-entrega-13').addEventListener('click', () => {
+    const vZ = parseFloat(document.getElementById('ent13-p1-z').value);
+    const vI = parseFloat(document.getElementById('ent13-p1-irms').value);
+    const vP = parseFloat(document.getElementById('ent13-p1-p').value);
+    const vf0 = parseFloat(document.getElementById('ent13-p2-f0').value);
+    const fb = document.getElementById('msg-feedback-13');
+    fb.style.display = 'block';
 
-            const axes = new THREE.AxesHelper(5);
-            scene.add(axes);
+    const okZ = Math.abs(vZ - 72.83) < 1.0;
+    const okI = Math.abs(vI - 1.65) < 0.05;
+    const okP = Math.abs(vP - 108.6) < 2.0;
+    const okf0 = Math.abs(vf0 - 91.89) < 1.0;
 
-            const meshes = geometryFunc();
-            const group = new THREE.Group();
-            if(Array.isArray(meshes)) { meshes.forEach(m => group.add(m)); } 
-            else { group.add(meshes); }
-            scene.add(group);
+    if (okZ && okI && okP && okf0) {
+        fb.style.color = '#10b981';
+        fb.innerHTML = '✔ ¡Cálculos impecables! Todos los parámetros de régimen senoidal y resonancia coinciden exactamente. Ya puedes descargar tu certificado.';
+    } else {
+        fb.style.color = '#b3246b';
+        fb.innerHTML = '⚠ Revisa tus cálculos: recuerda que $X = X_L - X_C$, $Z = \\sqrt{R^2 + X^2}$ y $f_0 = 1/(2\\pi\\sqrt{LC})$.';
+    }
+});
 
-            const field = createVolumeField(fieldType, defaultDensity, 5);
-            scene.add(field);
+// EXPORTACIÓN A PDF
+document.getElementById('btn-descargar-pdf-13').addEventListener('click', () => {
+    const nombre = document.getElementById('ent13-nombre').value.trim() || 'Estudiante';
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Taller_13_Circuitos_CA_${nombre.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(document.getElementById('seccion-entrega')).save();
+});
 
-            scenes[id] = { scene, camera, renderer, controls, meshGroup: group, field, fieldType, currentDensity: defaultDensity, fieldVisible: true };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
+document.getElementById('btn-print-top').addEventListener('click', () => window.print());
 
-        // --- Geometrías 3D ---
-        function createDipoleGeometry() {
-            const group = new THREE.Group();
-            // Carga Positiva
-            const chargePos = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0xef4444}));
-            chargePos.position.set(-2, 0, 0);
-            
-            // Carga Negativa
-            const chargeNeg = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshPhongMaterial({color: 0x3b82f6}));
-            chargeNeg.position.set(2, 0, 0);
-            
-            group.add(chargePos);
-            group.add(chargeNeg);
-
-            // Equipotenciales representativos transparentes
-            const equip1 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.15}));
-            equip1.position.set(-2, 0, 0);
-            const equip2 = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00aaff, wireframe: true, transparent: true, opacity: 0.15}));
-            equip2.position.set(2, 0, 0);
-            group.add(equip1);
-            group.add(equip2);
-
-            return group;
-        }
-
-        // --- Campo Vectorial 3D ---
-        function createVolumeField(type, densityParam, bounds) {
-            const group = new THREE.Group();
-            const density = parseInt(densityParam); 
-            const step = (bounds * 2) / density;
-            const size = step * 0.5;
-            
-            const addArrow = (dir, pos, color) => {
-                if(dir.lengthSq() < 0.001) return; // Evitar división por cero
-                const arrow = new THREE.ArrowHelper(dir.normalize(), pos, size, color, size*0.3, size*0.15);
-                if(arrow.line && arrow.line.material) { arrow.line.material.transparent = true; arrow.line.material.opacity = 0.6; }
-                if(arrow.cone && arrow.cone.material) { arrow.cone.material.transparent = true; arrow.cone.material.opacity = 0.6; }
-                group.add(arrow);
-            };
-
-            // Campo simulado de Dipolo E = k(q1/r1^2 * r1_hat - q2/r2^2 * r2_hat)
-            if (type === 'dipole_field') {
-                const q1Pos = new THREE.Vector3(-2, 0, 0);
-                const q2Pos = new THREE.Vector3(2, 0, 0);
-                
-                for(let x=-bounds; x<=bounds; x+=step) {
-                    for(let y=-bounds; y<=bounds; y+=step) {
-                        for(let z=-bounds; z<=bounds; z+=step) {
-                            let pos = new THREE.Vector3(x,y,z);
-                            let r1 = new THREE.Vector3().subVectors(pos, q1Pos);
-                            let r2 = new THREE.Vector3().subVectors(pos, q2Pos);
-                            
-                            let dist1 = r1.length();
-                            let dist2 = r2.length();
-                            
-                            // Evitar infinito cerca de cargas
-                            if(dist1 < 0.8 || dist2 < 0.8) continue;
-                            
-                            // Aproximación de fuerza E
-                            let e1 = r1.normalize().multiplyScalar(1 / (dist1 * dist1));
-                            let e2 = r2.normalize().multiplyScalar(-1 / (dist2 * dist2)); // Negativa atrae
-                            
-                            let totalE = new THREE.Vector3().addVectors(e1, e2);
-                            
-                            // Color basado en dirección predominante para visualización
-                            let color = 0xfacc15; // default yellow
-                            if (totalE.x > 0) color = 0x34d399; // green-ish
-                            else color = 0xf472b6; // pink-ish
-                            
-                            addArrow(totalE, pos, color);
-                        }
-                    }
-                }
-            }
-            return group;
-        }
-
-        function updateVolumeField(id, inputId) {
-            const config = scenes[id];
-            if (!config) return;
-            const densityInput = document.getElementById(inputId).value;
-            config.scene.remove(config.field);
-            config.field = createVolumeField(config.fieldType, densityInput, 5);
-            if(config.fieldVisible) config.scene.add(config.field);
-        }
-
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-            if(config.field) config.field.rotation.y = angleRad;
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
-            });
-        }
-
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
-        }
-
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
-        }
-
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
-        const canvas = document.getElementById('globalDrawingCanvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function toggleDrawing() {
-            canvas.classList.toggle('active');
-            const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
-        }
-
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
-        }
-
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.clientX, e.clientY);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
-            ctx.lineTo(e.clientX, e.clientY);
-            ctx.stroke();
-        }
-
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Fuerza_Electrica_Coulomb.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
-    </script>
+// AUTO-RENDER KATEX
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
+    }
+});
+</script>
 </body>
 </html>

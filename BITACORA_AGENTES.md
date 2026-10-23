@@ -33,10 +33,8 @@
 > **Referencia obligatoria antes de codificar:** Lee [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md). Explica detalladamente la arquitectura, las fórmulas completas sin recortar y el catálogo de las 13 piezas 3D.
 
 - [x] ~~**Videos de todos los módulos:**~~ 100% verificados con API oEmbed de YouTube. M9, M11, M12 y M13 reabastecidos con 34 videos verificados y metadatos estructurados en `titulosRecursos`.
-- [x] ~~**Estandarización de M6, M8, M9, M10 y M11:**~~ Presentaciones maestras 16:9 creadas/actualizadas, talleres HTML bajo estándar de 7 pasos y 2 caminos, y documentos LaTeX compilados en PDF en sus respectivas carpetas `recursos/`.
-- [ ] **Migración de Presentaciones Restantes al formato Master Deck (`presentaciones/M{XX}/index.html`):**
-  - Módulos a migrar: **M1** (Coulomb), **M2** (Campo Eléctrico), **M3** (Potencial), **M4** (Distribuciones Continuas), **M5** (Gauss), **M7** (Circuitos CC), **M12** (Maxwell) y **M13** (Circuitos CA).
-  - *Regla:* No usar esqueletos de 4 diapositivas ni fórmulas de juguete; incluir deducciones completas, canvas, árbol de decisión, mapa conceptual reactivo y glosario.
+- [x] ~~**Estandarización de Módulos 1 al 13 (100% de Presentaciones Master Deck):**~~ Todos los módulos disponen de su master deck autónomo 16:9 (`presentaciones/M{XX}/index.html`), resolución responsive 1280x720, KaTeX 0.16.9, canvas dinámicos, simuladores incrustados, árboles de decisión, mapas conceptuales SVG reactivos con flujo de luz y tarjetas flashcard 3D (`preserve-3d`).
+- [x] ~~**Estandarización de Talleres Prácticos (Taller 1 a Taller 13):**~~ Todos los talleres refactorizados con el protocolo Sears-Zemansky de 7 pasos, 2 caminos analíticos seleccionables (Camino A vs Camino B), comprobador interactivo en tiempo real y certificado PDF (`#seccion-entrega`).
 - [ ] **Modelos 3D imprimibles (Fase de Modelado CAD / Web):**
   - Basándose en las especificaciones mecánicas de `GUIA_DIDACTICA_Y_MODELOS_3D.md`, crear los scripts paramétricos OpenSCAD (`.scad`) en `.design/modelos_3d/` y/o componentes de previsualización Three.js en la plataforma web para que estudiantes y docentes descarguen los archivos STL de cada módulo.
 - [ ] **Fase 4 de `PLAN_FASES_10Easy.md` (Layout multiplataforma y limpieza):**
@@ -44,7 +42,25 @@
   - Retiro gradual de Tailwind CDN residual hacia variables de tokens unificados en `css/tokens.css`.
   - Asegurar que la telemetría de todos los simuladores (`SIM_TELEMETRY`) se registre limpiamente en `js/seguimiento.js`.
 
-### 2026-10-23 · Gemini · Estandarización Completa de Presentaciones y Talleres de Módulos 1 al 5 (M1 a M5)
+### 2026-10-23 · Gemini · Estandarización Completa de Módulos 7, 12 y 13 (Presentaciones Maestras y Talleres Prácticos) — 100% del Currículo
+- Qué hice:
+  1. **Módulo 7: Circuitos de Corriente Continua (CC):**
+     - Archivo de diapositivas previas a `presentaciones/M7_CircuitosCC/anterior/`.
+     - Creación de `presentaciones/M7_CircuitosCC/index.html`: Master deck autónomo 16:9 (14 diapositivas) con KaTeX 0.16.9, canvas interactivo 2D para cálculo y animación de mallas y corrientes de Kirchhoff, deducción analítica de la ecuación diferencial de carga y descarga RC, formulación matricial por regla de Cramer, árbol de decisión, mapa conceptual reactivo SVG, línea de tiempo histórica y tarjetas flashcards 3D.
+  2. **Módulo 12: Ecuaciones de Maxwell y Ondas Electromagnéticas:**
+     - Archivo de diapositivas previas a `presentaciones/M12_Maxwell/anterior/`.
+     - Creación de `presentaciones/M12_Maxwell/index.html`: Master deck autónomo 16:9 (15 diapositivas) con formulación integral y diferencial completa, corriente de desplazamiento de Maxwell $I_d = \epsilon_0 d\Phi_E/dt$, deducción matemática rigurosa de la ecuación de onda en el vacío $\nabla^2 \vec{E} = \mu_0\epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2}$ y velocidad $c = 1/\sqrt{\mu_0\epsilon_0}$, canvas 3D interactivo con ondas transversales acopladas $\vec{E} \perp \vec{B}$, vector de Poynting $\vec{S} = \frac{1}{\mu_0}(\vec{E}\times\vec{B})$, presión de radiación, árbol de decisión, mapa conceptual y flashcards 3D.
+     - Refactorización de `talleres/Taller_12_Ecuaciones_Maxwell.html`: Protocolo de 7 pasos, 2 caminos analíticos para $dE/dt$, condensador circular con campo magnético inducido y presión de radiación láser, validador interactivo y exportación a PDF (`#seccion-entrega`).
+  3. **Módulo 13: Circuitos de Corriente Alterna (CA) y Resonancia RLC:**
+     - Archivo de diapositivas previas a `presentaciones/M13_AC/anterior/`.
+     - Creación de `presentaciones/M13_AC/index.html`: Master deck autónomo 16:9 (15 diapositivas) con álgebra fasorial compleja en notación polar, deducción de impedancia serie y paralelo, canvas dinámico con fasor rotatorio y osciloscopio en tiempo real, fenómeno de resonancia $f_0 = 1/(2\pi\sqrt{LC})$, factor de calidad $Q$, triángulo de potencias ($P, Q, S$) y transformadores ideales, árbol de decisión, mapa conceptual y flashcards 3D.
+     - Refactorización de `talleres/Taller_13_Circuitos_CA.html`: Protocolo de 7 pasos, 2 caminos analíticos (álgebra fasorial compleja de Steinmetz vs triángulo geométrico de impedancias), RLC serie a 60 Hz, caídas de tensión vectoriales demostrando conservación fasorial ($V_{\text{fuente}} = \sqrt{V_R^2 + (V_L - V_C)^2}$), cálculo de resonancia, calculadora de fasores en tiempo real y formulario de entrega con descarga en PDF.
+  4. **Enrutamiento Centralizado en `player.html`:**
+     - Actualizado el diccionario `CLASES` para que los 13 módulos (1 al 13) y todos sus alias de retrocompatibilidad (`modulo1`...`modulo13`, `M1_Coulomb`...`M13_AC`) redirijan limpiamente al master deck `index.html` de cada capítulo.
+     - Corregidos los títulos de taller en `modulos/modulo12.js` y `modulos/modulo13.js`.
+- Qué falta para el otro agente (Claude):
+  - **100% de las presentaciones magistrales (M1 a M13) y de los talleres prácticos (1 a 13) se encuentran ya completados, estandarizados y sin simplificaciones.**
+  - Queda abierta la fase de generación de modelos 3D físicos (archivos OpenSCAD / STL en `.design/modelos_3d/`) y la Fase 4 de limpieza general del layout.
 - Qué hice:
   1. **Módulo 1: Ley de Coulomb y Carga Eléctrica:**
      - Archivo de diapositivas previas a `presentaciones/M1_Coulomb/anterior/`.

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 13 · Circuitos de Corriente Alterna y Análisis Fasorial — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 13 · Deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:34px;line-height:1.15}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:76px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 17px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+/* Estilos Árbol y Mapa */
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 13 · Módulo Final</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 13 · Corriente Alterna y Redes RLC</span>
+    <h1 style="font-size:50px;line-height:1.06;margin:0">Circuitos de Corriente Alterna y Análisis Fasorial</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:920px">Generación sinusoidal, valor eficaz RMS, método de fasores complejos de Euler, reactancias inductiva y capacitiva, resonancia RLC, potencia compleja (activa, reactiva y aparente) y transformadores ideales.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-sim" style="height:48px;padding:0 20px;font-size:16px">Ver simulador de fasores en vivo</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 15</span></div>
+</section>
+
+<!-- 2 · SEÑALES SINUSOIDALES Y RMS -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Fundamentos Temporales</span></div>
+  <h2>Señales Sinusoidales y el Concepto de Valor Eficaz (RMS)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Formulación Matemática de una Señal Alterna:</b>
+        \[v(t) = V_{\text{máx}}\cos(\omega t + \phi)\]
+        <p style="margin:4px 0">Donde $\omega = 2\pi f = \frac{2\pi}{T}$ es la frecuencia angular y $\phi$ es el ángulo de fase inicial.</p>
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Definición Rigurosa de Valor Eficaz (RMS - Root Mean Square):</b>
+          <p style="margin:3px 0">Es el valor equivalente en CC que produce la <b>misma disipación media de calor por efecto Joule</b> en un resistor durante un período completo $T$:</p>
+          \[V_{\text{rms}} = \sqrt{\frac{1}{T}\int_0^T v^2(t)\, dt} = \sqrt{\frac{V_{\text{máx}}^2}{T}\int_0^T \cos^2(\omega t)\, dt} = \frac{V_{\text{máx}}}{\sqrt{2}} \approx 0{,}7071 V_{\text{máx}}\]
+          \[I_{\text{rms}} = \frac{I_{\text{máx}}}{\sqrt{2}} \approx 0{,}7071 I_{\text{máx}}\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="tipbox" style="font-size:14px">
+        <b>El Voltaje de la Red Eléctrica Domiciliaria:</b><br>
+        Cuando decimos que el tomacorriente entrega $120\ \text{V}$ (o $220\ \text{V}$), nos referimos siempre a su <b>valor RMS</b> ($V_{\text{rms}}$). Su voltaje pico real es:
+        \[V_{\text{máx}} = \sqrt{2}\times 120\ \text{V} \approx 170\ \text{V}\]
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>¿Por qué el promedio simple es cero?</b><br>
+        En una sinusoide simétrica, $\langle v(t) \rangle = \frac{1}{T}\int_0^T v(t)dt \equiv 0$. Por eso un voltímetro de CC marcará $0\ \text{V}$ si se conecta a un tomacorriente de CA.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de metrología eléctrica industrial</span><span class="mono">Diapositiva 2 / 15</span></div>
+</section>
+
+<!-- 3 · FASORES Y EULER -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Herramienta Matemática</span></div>
+  <h2>El Método de Fasores y la Identidad de Euler</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Representación en el Plano Complejo:</b>
+        <p style="margin:4px 0">Un fasor es un vector de longitud fija que rota en sentido antihorario con velocidad angular constante $\omega$. Usando la fórmula de Euler $e^{j\theta} = \cos\theta + j\sin\theta$:</p>
+        \[v(t) = V_0 \cos(\omega t + \phi) = \text{Re}\left\{ V_0 e^{j\phi} e^{j\omega t} \right\} = \text{Re}\left\{ \mathbf{V} e^{j\omega t} \right\}\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Fasor Complejo Polar:</b>
+          \[\mathbf{V} = V_0 e^{j\phi} = V_0\angle\phi \quad \left(\text{o en valores RMS: } \mathbf{V}_{\text{rms}} = V_{\text{rms}}\angle\phi\right)\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="ok" style="font-size:14px">
+        <b>La Transformación Mágica de Steinmetz:</b><br>
+        Las operaciones de cálculo diferencial se convierten en <b>álgebra multiplicativa simple</b>:
+        \[\frac{d}{dt} \longleftrightarrow j\omega, \quad \int dt \longleftrightarrow \frac{1}{j\omega} = -\frac{j}{\omega}\]
+        ¡Resolver circuitos RLC ya no requiere resolver ecuaciones diferenciales acopladas!
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Multiplicar por $+j$:</b> Rota el fasor $90^\circ$ en sentido antihorario (adelanto de fase).<br>
+        <b>Multiplicar por $-j$:</b> Rota el fasor $90^\circ$ en sentido horario (retraso de fase).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Inventado por Charles Proteus Steinmetz en 1893</span><span class="mono">Diapositiva 3 / 15</span></div>
+</section>
+
+<!-- 4 · ELEMENTOS PASIVOS R, L, C -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Comportamiento de Componentes</span></div>
+  <h2>Elementos Pasivos en CA: Resistencia y Reactancias</h2>
+  <div class="row">
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:14px;border-top:4px solid var(--e10-ink)">
+        <b style="color:var(--e10-ink);font-size:16px">Resistor Puro ($R$)</b>
+        \[v(t) = R i(t) \implies \mathbf{V}_R = R \mathbf{I}\]
+        <p style="margin:4px 0"><b>Desfasaje:</b> $\phi = 0^\circ$ (En fase estricta). La corriente y el voltaje cruzan por cero al mismo tiempo.</p>
+        <span class="mono" style="color:var(--e10-muted)">Impedancia: $\mathbf{Z}_R = R$</span>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:14px;border-top:4px solid var(--e10-primary)">
+        <b style="color:var(--e10-primary);font-size:16px">Inductor Puro ($L$)</b>
+        \[v_L = L\frac{di}{dt} \implies \mathbf{V}_L = j\omega L \mathbf{I}\]
+        <p style="margin:4px 0"><b>Desfasaje:</b> El voltaje <b>adelanta $90^\circ$</b> a la corriente. Se opone a variaciones de $i$.</p>
+        <span class="mono" style="color:var(--e10-primary)">Reactancia: $X_L = \omega L$, $\mathbf{Z}_L = j X_L$</span>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:14px;border-top:4px solid var(--e10-accent)">
+        <b style="color:var(--e10-accent-strong);font-size:16px">Condensador Puro ($C$)</b>
+        \[i = C\frac{dv}{dt} \implies \mathbf{V}_C = -j\frac{1}{\omega C}\mathbf{I}\]
+        <p style="margin:4px 0"><b>Desfasaje:</b> El voltaje <b>retrasa $90^\circ$</b> a la corriente. Se opone a variaciones de $v$.</p>
+        <span class="mono" style="color:var(--e10-accent-strong)">Reactancia: $X_C = \frac{1}{\omega C}$, $\mathbf{Z}_C = -j X_C$</span>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:6px;text-align:center">
+    <b>Regla Mnemotécnica Universal: "ELI the ICE man"</b><br>
+    En un inductor (<b>L</b>), el voltaje <b>E</b> adelanta a la corriente <b>I</b> (<b>E-L-I</b>).<br>
+    En un condensador (<b>C</b>), la corriente <b>I</b> adelanta al voltaje <b>E</b> (<b>I-C-E</b>).
+  </div>
+  <div class="foot"><span>Fundamento de desfasaje para redes lineales en estado senoidal permanente</span><span class="mono">Diapositiva 4 / 15</span></div>
+</section>
+
+<!-- 5 · CIRCUITO RLC SERIE E IMPEDANCIA -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Circuito RLC</span></div>
+  <h2>El Circuito RLC Serie y la Impedancia Compleja ($Z$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Ley de Kirchhoff Fasorial:</b>
+        \[\mathbf{V}_s = \mathbf{V}_R + \mathbf{V}_L + \mathbf{V}_C = \left[ R + j\left(X_L - X_C\right) \right] \mathbf{I} = \mathbf{Z} \mathbf{I}\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Impedancia Compleja $\mathbf{Z}$ en Forma Polar:</b>
+          \[\mathbf{Z} = Z e^{j\phi} = Z\angle\phi\]
+          \[Z = |\mathbf{Z}| = \sqrt{R^2 + (X_L - X_C)^2} = \sqrt{R^2 + \left(\omega L - \frac{1}{\omega C}\right)^2}\]
+          \[\tan\phi = \frac{X_L - X_C}{R} = \frac{\omega L - \frac{1}{\omega C}}{R} \implies \phi = \arctan\left(\frac{X_L - X_C}{R}\right)\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Los 3 Regímenes Operativos del Circuito:</b>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>$X_L > X_C$ (Inductivo):</b> $\phi > 0$. El voltaje total adelanta a la corriente.</li>
+          <li><b>$X_C > X_L$ (Capacitivo):</b> $\phi < 0$. La corriente adelanta al voltaje total.</li>
+          <li><b>$X_L = X_C$ (Resonancia):</b> $\phi = 0$. $Z = R$. Voltaje y corriente en perfecta fase.</li>
+        </ul>
+      </div>
+      <div class="warn" style="font-size:13px">
+        <b>¡No sumes magnitudes escalares!</b> $V_s \neq V_R + V_L + V_C$. Los voltajes tienen fases distintas; se deben sumar fasorialmente: $V_s = \sqrt{V_R^2 + (V_L - V_C)^2}$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Triángulo de impedancias en el plano complejo</span><span class="mono">Diapositiva 5 / 15</span></div>
+</section>
+
+<!-- 6 · SIMULADOR INTERACTIVO 2D (CANVAS) -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Laboratorio de Fasores</b><span class="tag l">Simulador Dinámico de Fasores y Ondas</span></div>
+  <div class="row">
+    <div class="col" style="flex:1.45">
+      <canvas id="phasor-canvas" class="sim" width="680" height="430" style="width:100%;height:430px"></canvas>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="checkbox" id="chk-rot" checked> Animar rotación fasorial ($\omega t$)
+        </label>
+        <button class="btn" id="btn-reset-ac" style="margin-left:auto;padding:4px 10px;min-height:32px;font-size:13px">Reset</button>
+      </div>
+    </div>
+    <div class="col" style="flex:0.85;gap:10px">
+      <div class="card" style="font-size:14px;display:flex;flex-direction:column;gap:8px">
+        <b>Parámetros del Circuito RLC:</b>
+        <div class="ctrl">
+          <label>Frecuencia $f$:</label>
+          <input type="range" id="rng-acf" min="10" max="100" step="5" value="50">
+          <output id="out-acf">50 Hz</output>
+        </div>
+        <div class="ctrl">
+          <label>Resistencia $R$:</label>
+          <input type="range" id="rng-acr" min="5" max="50" step="5" value="20">
+          <output id="out-acr">20 Ω</output>
+        </div>
+        <div class="ctrl">
+          <label>Inductancia $L$:</label>
+          <input type="range" id="rng-acl" min="20" max="200" step="10" value="80">
+          <output id="out-acl">80 mH</output>
+        </div>
+        <div class="ctrl">
+          <label>Capacitancia $C$:</label>
+          <input type="range" id="rng-acc" min="20" max="200" step="10" value="100">
+          <output id="out-acc">100 µF</output>
+        </div>
+      </div>
+      <div class="read">
+        <div>Impedancia $Z$<b id="lbl-zval">-- Ω</b></div>
+        <div>Fase $\phi$<b id="lbl-phival">--°</b></div>
+        <div>Régimen<b id="lbl-acreg" style="color:var(--e10-primary)">--</b></div>
+      </div>
+      <div class="tipbox" style="font-size:13px;line-height:1.4">
+        A la izquierda: Fasores rotando en el plano complejo ($\mathbf{V}_R$ verde, $\mathbf{V}_L$ rojo, $\mathbf{V}_C$ azul, $\mathbf{V}_{\text{tot}}$ magenta). A la derecha: Osciloscopio con las ondas sinusoidales resultantes en el tiempo.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sincronización en vivo entre el plano complejo y el dominio del tiempo</span><span class="mono">Diapositiva 6 / 15</span></div>
+</section>
+
+<!-- 7 · RESONANCIA RLC -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Fenómeno de Resonancia</span></div>
+  <h2>Resonancia Eléctrica y Factor de Calidad ($Q$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Condición Matemática de Resonancia Serie:</b>
+        <p style="margin:4px 0">Ocurre a la frecuencia precisa donde la reactancia inductiva neutraliza exactamente a la reactancia capacitiva ($X_L = X_C$):</p>
+        \[\omega_0 L = \frac{1}{\omega_0 C} \implies \mathbf{\omega_0 = \frac{1}{\sqrt{LC}}}, \quad \mathbf{f_0 = \frac{1}{2\pi\sqrt{LC}}}\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Comportamiento Extraordinario en Resonancia:</b>
+          <ul style="margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px">
+            <li>La impedancia es puramente resistiva y <b>mínima absoluta</b>: $Z_{\text{mín}} = R$.</li>
+            <li>La corriente es <b>máxima absoluta</b>: $I_{\text{máx}} = V_s / R$.</li>
+            <li>Factor de potencia unitario: $\cos\phi = 1$ ($\phi = 0^\circ$).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-primary)">Factor de Calidad ($Q$) y Selectividad:</b>
+        \[Q = \frac{\omega_0 L}{R} = \frac{1}{\omega_0 R C} = \frac{1}{R}\sqrt{\frac{L}{C}}\]
+        <p style="margin:4px 0">Ancho de banda a media potencia: $\Delta\omega = \frac{\omega_0}{Q}$.</p>
+        <span style="font-size:13px;color:var(--e10-muted)">Un valor alto de $Q$ ($Q > 50$) significa un pico de corriente muy estrecho y selectivo, base del sintonizador de radio y televisión.</span>
+      </div>
+      <div class="warn" style="font-size:13px">
+        <b>¡Sobretensión Peligrosa!</b> En resonancia con alto $Q$, los voltajes en el inductor y condensador pueden superar decenas de veces al voltaje de la fuente: $V_L = V_C = Q V_s$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de filtros pasabandas y sintonización de señales</span><span class="mono">Diapositiva 7 / 15</span></div>
+</section>
+
+<!-- 8 · POTENCIA Y FACTOR DE POTENCIA -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Energía y Redes Eléctricas</span></div>
+  <h2>Potencia en Corriente Alterna y Factor de Potencia ($\cos\phi$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:14px;line-height:1.45">
+        <b style="color:var(--e10-primary)">El Triángulo de Potencias:</b>
+        <p style="margin:4px 0">En CA existen tres potencias físicamente distintas debido al desfasaje $\phi$ entre voltaje y corriente:</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px">
+          <div class="soft" style="text-align:center;padding:8px">
+            <b>Activa ($P$)</b>
+            \[P = V_{\text{rms}} I_{\text{rms}} \cos\phi\]
+            <span style="font-size:12px;color:var(--e10-muted)">Trabajo real disipado $[\text{W}]$</span>
+          </div>
+          <div class="soft" style="text-align:center;padding:8px">
+            <b>Reactiva ($Q$)</b>
+            \[Q = V_{\text{rms}} I_{\text{rms}} \sin\phi\]
+            <span style="font-size:12px;color:var(--e10-muted)">Oscilación de campos $[\text{VAR}]$</span>
+          </div>
+          <div class="soft" style="text-align:center;padding:8px">
+            <b>Aparente ($S$)</b>
+            \[S = V_{\text{rms}} I_{\text{rms}}\]
+            <span style="font-size:12px;color:var(--e10-muted)">Capacidad del transformador $[\text{VA}]$</span>
+          </div>
+        </div>
+        <div class="soft" style="margin-top:8px;padding:8px">
+          <b>Relación Pitagórica:</b> $S = \sqrt{P^2 + Q^2} \implies \mathbf{S} = P + j Q = \mathbf{V}_{\text{rms}}\mathbf{I}_{\text{rms}}^*$
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Factor de Potencia ($\text{fp} = \cos\phi = P/S$):</b>
+        <p style="margin:4px 0">Mide qué fracción de la energía suministrada se aprovecha efectivamente.</p>
+        <div class="warn" style="font-size:13px;padding:8px;margin-top:6px">
+          <b>Penalización por Bajo $\text{fp}$ ($\cos\phi < 0{,}9$):</b><br>
+          Los motores industriales (cargas fuertemente inductivas) absorben corriente reactiva que sobrecarga los cables sin generar potencia mecánica, aumentando las pérdidas $I^2 R$.
+        </div>
+      </div>
+      <div class="ok" style="font-size:13px">
+        <b>Compensación con Condensadores:</b> Conectar bancos de condensadores en paralelo suministra localmente la corriente reactiva inductiva ($Q_C = -Q_L$), elevando $\cos\phi \approx 1$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Gestión energética y tarifación en ingeniería eléctrica</span><span class="mono">Diapositiva 8 / 15</span></div>
+</section>
+
+<!-- 9 · TRANSFORMADORES IDEALES -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Máquinas Eléctricas</span></div>
+  <h2>Transformadores Ideales y Transmisión de Alta Tensión</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Principio de Inducción Mutua de Faraday:</b>
+        <p style="margin:4px 0">Dos devanados acoplados magnéticamente por un núcleo ferromagnético cerrado de flujo común $\Phi_B$:</p>
+        \[v_1 = -N_1 \frac{d\Phi_B}{dt}, \quad v_2 = -N_2 \frac{d\Phi_B}{dt}\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Leyes del Transformador Ideal (Rendimiento 100%):</b>
+          \[\frac{V_2}{V_1} = \frac{N_2}{N_1} = a, \quad \frac{I_2}{I_1} = \frac{N_1}{N_2} = \frac{1}{a}\]
+          \[P_{\text{entrada}} = P_{\text{salida}} \implies V_1 I_1 = V_2 I_2\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-primary)">¿Por qué Triunfó la CA de Tesla sobre la CC de Edison?</b>
+        <p style="margin:4px 0">Para transportar una potencia $P$ a través de una línea de resistencia $R_{\text{línea}}$:</p>
+        \[P_{\text{pérdidas}} = I^2 R_{\text{línea}} = \left(\frac{P}{V}\right)^2 R_{\text{línea}} = \frac{P^2 R_{\text{línea}}}{V^2}\]
+        <div class="ok" style="font-size:13px;padding:8px;margin-top:6px">
+          <b>Efecto Cuadrático del Voltaje:</b> Al elevar el voltaje 10 veces ($V \times 10$), las pérdidas de transporte se reducen <b>100 veces</b> ($V^2 = 100$). La CA permite elevar y reducir voltajes con transformadores estáticos sin partes móviles.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de las redes eléctricas modernas de distribución continental</span><span class="mono">Diapositiva 9 / 15</span></div>
+</section>
+
+<!-- 10 · COMPARATIVA DE ENFOQUES -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag p">Técnicas de Resolución</span></div>
+  <h2>Dos Caminos: ¿Ecuaciones Diferenciales o Fasores Complejos?</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:18px;color:var(--e10-accent-strong)">Camino A: Dominio del Tiempo Diferencial</b>
+        <p style="font-size:15px;margin:8px 0">Planteamiento de la ecuación diferencial ordinaria de segundo orden:</p>
+        \[L\frac{d^2 i}{dt^2} + R\frac{di}{dt} + \frac{i}{C} = \frac{dv_s}{dt}\]
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Ventaja:</b> Da la respuesta completa (transitoria + permanente).</li>
+          <li><b>Desventaja:</b> Extremadamente tedioso y propenso a errores en redes con más de una malla.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:18px;color:var(--e10-primary)">Camino B: Álgebra Fasorial Compleja</b>
+        <p style="font-size:15px;margin:8px 0">Uso directo de la ley de Ohm generalizada $\mathbf{V} = \mathbf{Z}\mathbf{I}$ con números complejos.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Ventaja:</b> Se aplican todas las técnicas de CC (mallas, nodos, Thevenin, superposición) usando simplemente álgebra compleja.</li>
+          <li><b>Condición:</b> Solo calcula el régimen permanente sinusoidal estacionario.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;text-align:center">
+    <b>Estándar Universitario Sears-Zemansky:</b> En régimen permanente senoidal, el 100% de los problemas se resuelven mediante el <b>Camino B (Fasores)</b>.
+  </div>
+  <div class="foot"><span>Estrategia de cálculo para ingeniería y física aplicada</span><span class="mono">Diapositiva 10 / 15</span></div>
+</section>
+
+<!-- 11 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Árbol de Decisión</span></div>
+  <h2>¿Qué Procedimiento Seguir según el Tipo de Circuito de CA?</h2>
+  <div class="row">
+    <div class="col" style="flex:0.95;gap:10px">
+      <div class="tq">
+        <div class="tqh">Paso 1: Identifica el Problema de CA</div>
+        <div class="tq-opts" id="tq-opts-13">
+          <button class="opt on" data-target="leaf-rlc">Circuito RLC Serie (Z, Corriente, Fase)</button>
+          <button class="opt" data-target="leaf-res">Frecuencia de Resonancia y Calidad ($f_0, Q$)</button>
+          <button class="opt" data-target="leaf-pot">Balance de Potencia y Factor de Potencia</button>
+          <button class="opt" data-target="leaf-trafo">Transformador de Tensión / Corriente</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf" id="leaf-display-13" style="flex:1.05">
+      <div id="leaf-rlc">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Impedancia y Respuesta de Corriente</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Fórmulas:</b> $X_L = \omega L$, $X_C = 1/(\omega C)$, $Z = \sqrt{R^2 + (X_L - X_C)^2}$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Corriente eficaz: $I_{\text{rms}} = V_{\text{rms}} / Z$<br>
+          Fase: $\phi = \arctan((X_L - X_C)/R)$
+        </div>
+      </div>
+      <div id="leaf-res" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Cálculo de Resonancia</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Condición:</b> $X_L = X_C \implies f_0 = \frac{1}{2\pi\sqrt{LC}}$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Factor de calidad: $Q = \frac{\omega_0 L}{R} = \frac{1}{R}\sqrt{\frac{L}{C}}$<br>
+          Ancho de banda: $\Delta f = f_0 / Q$
+        </div>
+      </div>
+      <div id="leaf-pot" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Potencias Activa, Reactiva y Aparente</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Fórmulas:</b> $P = V_{\text{rms}} I_{\text{rms}}\cos\phi$, $Q = V_{\text{rms}} I_{\text{rms}}\sin\phi$, $S = V_{\text{rms}} I_{\text{rms}}$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Factor de potencia: $\text{fp} = \cos\phi = P/S$<br>
+          Capacitor corrector: $C = \frac{P(\tan\phi_1 - \tan\phi_2)}{\omega V_{\text{rms}}^2}$
+        </div>
+      </div>
+      <div id="leaf-trafo" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Transformador Ideal</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Relación de transformación:</b> $a = N_2 / N_1$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Voltaje secundario: $V_2 = a V_1$<br>
+          Corriente secundaria: $I_2 = I_1 / a$<br>
+          Impedancia reflejada: $Z_1 = Z_2 / a^2$
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Algoritmo completo de análisis de redes de CA</span><span class="mono">Diapositiva 11 / 15</span></div>
+</section>
+
+<!-- 12 · MAPA CONCEPTUAL INTERACTIVO CON FLUJO DE LUZ -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 13</b><span class="tag c">Ontología Integral del Curso</span></div>
+  <h2>Mapa Conceptual: La Cúspide del Electromagnetismo</h2>
+  <div class="row">
+    <div class="cmap" id="cmap-13">
+      <svg width="780" height="520" viewBox="0 0 780 520">
+        <!-- Enlaces -->
+        <path class="edge" d="M120,260 L280,140"/>
+        <path class="edge" d="M120,260 L280,260"/>
+        <path class="edge" d="M120,260 L280,380"/>
+        <path class="edge" d="M280,140 L450,140"/>
+        <path class="edge" d="M280,260 L450,260"/>
+        <path class="edge" d="M280,380 L450,380"/>
+        <path class="edge" d="M450,140 L640,200"/>
+        <path class="edge" d="M450,260 L640,260"/>
+        <path class="edge" d="M450,380 L640,320"/>
+        <!-- Flujos de Luz Animados -->
+        <path class="flow" d="M120,260 L280,260"/>
+        <path class="flow" d="M280,260 L450,260"/>
+        <path class="flow" d="M450,260 L640,260"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="cnode past" style="left:120px;top:260px" data-tip="Módulos 6, 7 y 11: R, L, C y ley de Faraday">Fundamentos R-L-C<br><b>(Módulos 6, 7, 11)</b></div>
+      <div class="cnode this" style="left:280px;top:140px" data-tip="Método de fasores rotatorios y números complejos: V = V_0 e^(j phi)">Fasores de Euler<br><b>$\mathbf{V} = V_0\angle\phi$</b></div>
+      <div class="cnode this" style="left:280px;top:260px" data-tip="Reactancias: X_L = omega L, X_C = 1/(omega C)">Reactancias<br><b>$X_L$ y $X_C$</b></div>
+      <div class="cnode this" style="left:280px;top:380px" data-tip="Impedancia compleja total: Z = sqrt(R^2 + (X_L - X_C)^2)">Impedancia $Z$<br><b>RLC Serie</b></div>
+      <div class="cnode this" style="left:450px;top:140px" data-tip="Resonancia: omega_0 = 1/sqrt(LC), corriente máxima">Resonancia RLC<br><b>$\omega_0 = 1/\sqrt{LC}$</b></div>
+      <div class="cnode this" style="left:450px;top:260px" data-tip="Potencias P, Q, S y factor de potencia cos(phi)">Potencias P, Q, S<br><b>y Factor $\cos\phi$</b></div>
+      <div class="cnode this" style="left:450px;top:380px" data-tip="Transformadores y transmisión en alta tensión">Transformadores<br><b>$V_2/V_1 = N_2/N_1$</b></div>
+      <div class="cnode fut" style="left:640px;top:260px" data-tip="¡Felicidades! Has completado el currículo universitario completo de 10.Easy">Física Universitaria<br><b>COMPLETADA</b></div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" id="cmap-tip-13" style="flex:1;font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Síntesis del Módulo Final:</b>
+        <p id="cmap-desc-13" style="margin:8px 0 0">Pasa el cursor o haz clic en cualquier nodo para revisar la integración entre las leyes fundamentales de Maxwell y la ingeniería de redes de corriente alterna.</p>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Meta Pedagógica Alcanzada:</b> Desde la cuantización de la carga en el Módulo 1 hasta las redes resonantes de CA en el Módulo 13, dominas ahora el 100% del programa de electromagnetismo universitario.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interconexión conceptual y epistemológica final</span><span class="mono">Diapositiva 12 / 15</span></div>
+</section>
+
+<!-- 13 · FLASHCARDS 3D -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Repaso Activo</b><span class="tag e">Flashcards 3D</span></div>
+  <h2>Fórmulas y Conceptos Clave para Memorización</h2>
+  <p style="font-size:16px;color:var(--e10-muted);margin:0">Haz clic en cada tarjeta para verificar tu asimilación final:</p>
+  <div style="grid-template-columns:1fr 1fr;display:grid;gap:16px;flex:1;margin-top:10px">
+    <div class="flip" id="fc13-1">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 1</span>
+          <b style="font-size:18px">¿Qué elemento adelanta a cuál en un inductor puro y en un condensador puro?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la regla</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">Inductor: $V$ adelanta a $I$ &nbsp;|&nbsp; Condensador: $I$ adelanta a $V$</b>
+          <p style="font-size:14px;margin:0">Regla mnemotécnica <i>ELI the ICE man</i>. En ambos casos el desfasaje angular entre ellos es estrictamente de $90^\circ$ ($\pi/2$ rad).</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc13-2">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 2</span>
+          <b style="font-size:18px">¿Cuánto vale la impedancia total de un circuito RLC serie cuando opera en resonancia?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$Z = R$ (Mínima Absoluta)</b>
+          <p style="font-size:14px;margin:0">Como $X_L = X_C$, las reactancias se cancelan idénticamente: $\sqrt{R^2 + (0)^2} = R$. La corriente es puramente resistiva y máxima.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc13-3">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 3</span>
+          <b style="font-size:18px">¿Cuál es la diferencia entre potencia activa ($P$), reactiva ($Q$) y aparente ($S$)?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:17px;color:var(--e10-primary)">$P$ [W] real &nbsp;|&nbsp; $Q$ [VAR] campos &nbsp;|&nbsp; $S$ [VA] total</b>
+          <p style="font-size:14px;margin:0">$P = VI\cos\phi$ se convierte en calor o trabajo útil. $Q = VI\sin\phi$ oscila en los campos sin consumirse. $S = \sqrt{P^2+Q^2}$.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc13-4">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 4</span>
+          <b style="font-size:18px">¿Por qué las pérdidas en las líneas de transmisión se reducen con el cuadrado del voltaje ($1/V^2$)?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la deducción</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:20px;color:var(--e10-primary)">$P_{\text{pérdidas}} = \frac{P^2 R_{\text{línea}}}{V^2}$</b>
+          <p style="font-size:14px;margin:0">Para transmitir la misma potencia $P = VI$, al multiplicar el voltaje por 10, la corriente se reduce a la décima parte ($I/10$), y como las pérdidas son $I^2 R$, caen 100 veces.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Repaso activo y consolidación neurocognitiva final</span><span class="mono">Diapositiva 14 / 15</span></div>
+</section>
+
+<!-- 15 · RESUMEN Y GRADUACIÓN -->
+<section class="slide" data-n="15">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Cierre del Curso</b><span class="tag e">Graduación Académica</span></div>
+  <h2>¡Felicitaciones! Has Completado el Curso Electro10.Easy</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Competencias Universitarias Consolidadas:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Electrostática Completa:</b> Coulomb, campo eléctrico, potencial, distribuciones continuas e integrales de Gauss.</li>
+          <li><b>Corriente y Redes:</b> Ley de Ohm microscópica, leyes de Kirchhoff matriciales y transitorios RC.</li>
+          <li><b>Magnetostática e Inducción:</b> Fuerza de Lorentz, ley de Biot-Savart, ley de Ampère y ley de Faraday-Lenz.</li>
+          <li><b>Síntesis y Aplicación:</b> Las 4 ecuaciones de Maxwell, ondas transversales TEM y circuitos de corriente alterna fasoriales.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Certificación Final:</b> Completa el Taller No. 13 para emitir tu certificado consolidado de entrega en formato PDF.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px;justify-content:center">
+      <a href="../../talleres/Taller_13_Circuitos_CA.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico No. 13 →</a>
+      <button class="btn" id="btn-print-deck-13" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
+      <a href="../../index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Volver al Inicio de 10.Easy 🏠</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 15 / 15</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra de Controles Global -->
+<div class="deck-ui no-print">
+  <button class="btn" id="deck-prev">◀ Anterior</button>
+  <span class="count" id="deck-count">1 / 15</span>
+  <button class="btn" id="deck-next">Siguiente ▶</button>
+  <button class="btn" id="deck-fit">Ajustar Pantalla</button>
+</div>
+
+<script>
+// MOTOR DEL DECK 16:9
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 1;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > totalSlides) n = totalSlides;
+  currentSlide = n;
+  slides.forEach((s, idx) => {
+    s.classList.toggle('on', (idx + 1) === currentSlide);
+  });
+  document.getElementById('deck-count').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress').style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+  
+  if (window.renderMathInElement) {
+    const active = slides[currentSlide - 1];
+    window.renderMathInElement(active, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.getElementById('deck-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+document.getElementById('deck-next').addEventListener('click', () => showSlide(currentSlide + 1));
+document.getElementById('btn-start').addEventListener('click', () => showSlide(2));
+document.getElementById('btn-to-sim').addEventListener('click', () => showSlide(6));
+document.getElementById('btn-print-deck-13').addEventListener('click', () => window.print());
+
+// NAVEGACIÓN POR TECLADO
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    showSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides);
+  }
+});
+
+// ESCALADO 16:9 RESPONSIVE
+function fitStage() {
+  const stage = document.getElementById('stage');
+  const sw = 1280, sh = 720;
+  const ww = window.innerWidth, wh = window.innerHeight;
+  const scale = Math.min(ww / sw, wh / sh);
+  stage.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitStage);
+document.getElementById('deck-fit').addEventListener('click', fitStage);
+
+// FLASHCARDS 3D
+document.querySelectorAll('.flip').forEach(fc => {
+  fc.addEventListener('click', () => fc.classList.toggle('open'));
+});
+
+// ÁRBOL DE DECISIÓN INTERACTIVO
+const tqOpts13 = document.querySelectorAll('#tq-opts-13 .opt');
+const leafDisplay13 = document.getElementById('leaf-display-13');
+tqOpts13.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tqOpts13.forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const target = btn.dataset.target;
+    leafDisplay13.querySelectorAll(':scope > div').forEach(d => d.style.display = 'none');
+    const el = document.getElementById(target);
+    if (el) {
+      el.style.display = 'block';
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  });
+});
+
+// MAPA CONCEPTUAL INTERACTIVO
+document.querySelectorAll('#cmap-13 .cnode').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    document.getElementById('cmap-desc-13').textContent = node.dataset.tip;
+  });
+  node.addEventListener('click', () => {
+    document.querySelectorAll('#cmap-13 .cnode').forEach(n => n.classList.remove('on'));
+    node.classList.add('on');
+    document.getElementById('cmap-desc-13').textContent = node.dataset.tip;
+  });
+});
+
+// SIMULADOR 2D DE FASORES Y OSCILOSCOPIO (CANVAS)
+const cvAC = document.getElementById('phasor-canvas');
+const ctxAC = cvAC.getContext('2d');
+
+const rngACf = document.getElementById('rng-acf');
+const rngACR = document.getElementById('rng-acr');
+const rngACL = document.getElementById('rng-acl');
+const rngACC = document.getElementById('rng-acc');
+const chkRot = document.getElementById('chk-rot');
+
+let phaseAngle = 0;
+
+function updateACSim() {
+  const f = parseFloat(rngACf.value);
+  const R = parseFloat(rngACR.value);
+  const L = parseFloat(rngACL.value) * 1e-3;
+  const C = parseFloat(rngACC.value) * 1e-6;
+
+  document.getElementById('out-acf').textContent = `${f} Hz`;
+  document.getElementById('out-acr').textContent = `${R} Ω`;
+  document.getElementById('out-acl').textContent = `${(L * 1e3).toFixed(0)} mH`;
+  document.getElementById('out-acc').textContent = `${(C * 1e6).toFixed(0)} µF`;
+
+  const omega = 2 * Math.PI * f;
+  const XL = omega * L;
+  const XC = 1 / (omega * C);
+  const Z = Math.sqrt(R * R + (XL - XC) * (XL - XC));
+  const phi = Math.atan2(XL - XC, R);
+  const phiDeg = (phi * 180) / Math.PI;
+
+  document.getElementById('lbl-zval').textContent = `${Z.toFixed(1)} Ω`;
+  document.getElementById('lbl-phival').textContent = `${phiDeg >= 0 ? '+' : ''}${phiDeg.toFixed(1)}°`;
+
+  const reg = document.getElementById('lbl-acreg');
+  if (Math.abs(XL - XC) < 1.0) {
+    reg.textContent = 'RESONANCIA (Z=R)';
+    reg.style.color = '#10b981';
+  } else if (XL > XC) {
+    reg.textContent = 'INDUCTIVO (+)';
+    reg.style.color = '#b3246b';
+  } else {
+    reg.textContent = 'CAPACITIVO (−)';
+    reg.style.color = '#0b8ca8';
+  }
+
+  drawACView(R, XL, XC, Z, phi, omega);
+}
+
+function drawACView(R, XL, XC, Z, phi, omega) {
+  ctxAC.clearRect(0, 0, cvAC.width, cvAC.height);
+
+  // División del canvas: Fasores izquierda (0..300), Osciloscopio derecha (320..680)
+  const cx = 150, cy = cvAC.height / 2;
+  const ox = 340, oy = cvAC.height / 2;
+  const wScope = cvAC.width - ox - 20;
+
+  // Separador vertical
+  ctxAC.strokeStyle = '#e2e8f0';
+  ctxAC.lineWidth = 1.5;
+  ctxAC.beginPath(); ctxAC.moveTo(310, 20); ctxAC.lineTo(310, cvAC.height - 20); ctxAC.stroke();
+
+  // Ejes Fasoriales Complejos
+  ctxAC.strokeStyle = '#cbd5e1';
+  ctxAC.lineWidth = 1;
+  ctxAC.beginPath();
+  ctxAC.moveTo(20, cy); ctxAC.lineTo(280, cy); // Eje Real
+  ctxAC.moveTo(cx, 20); ctxAC.lineTo(cx, cvAC.height - 20); // Eje Imag
+  ctxAC.stroke();
+  ctxAC.font = '11px Inter, sans-serif';
+  ctxAC.fillStyle = '#94a3b8';
+  ctxAC.fillText('+Re (I)', 250, cy - 8);
+  ctxAC.fillText('+j (Im)', cx + 8, 35);
+
+  // Escala fasorial
+  const scaleP = 90 / Math.max(Z, 40);
+  const rot = phaseAngle;
+
+  // Fasor Corriente I (referencia sobre rot)
+  const I_len = 70;
+  const ix = cx + I_len * Math.cos(rot);
+  const iy = cy - I_len * Math.sin(rot);
+  drawPhasor(cx, cy, ix, iy, '#10b981', 'I (ref)');
+
+  // Fasor Voltaje Resistor V_R (en fase con I)
+  const VR_len = R * scaleP;
+  const vrx = cx + VR_len * Math.cos(rot);
+  const vry = cy - VR_len * Math.sin(rot);
+
+  // Fasor Voltaje Total V_s (desfasado por phi)
+  const Vs_len = Z * scaleP;
+  const vsx = cx + Vs_len * Math.cos(rot + phi);
+  const vsy = cy - Vs_len * Math.sin(rot + phi);
+  drawPhasor(cx, cy, vsx, vsy, '#b3246b', 'V_total (Vs)', 2.5);
+
+  // Osciloscopio Derecha: Eje temporal
+  ctxAC.strokeStyle = '#94a3b8';
+  ctxAC.lineWidth = 1.5;
+  ctxAC.beginPath();
+  ctxAC.moveTo(ox, oy); ctxAC.lineTo(ox + wScope, oy);
+  ctxAC.stroke();
+  ctxAC.fillText('Tiempo t →', ox + wScope - 60, oy - 8);
+
+  // Trazado de ondas en tiempo: v(t) e i(t)
+  const nPts = wScope;
+  // Onda Voltaje (magenta)
+  ctxAC.strokeStyle = '#b3246b';
+  ctxAC.lineWidth = 2.2;
+  ctxAC.beginPath();
+  for (let px = 0; px < nPts; px += 2) {
+    const tVal = px * 0.04;
+    const vVal = 65 * Math.cos(tVal - phaseAngle - phi);
+    if (px === 0) ctxAC.moveTo(ox + px, oy - vVal);
+    else ctxAC.lineTo(ox + px, oy - vVal);
+  }
+  ctxAC.stroke();
+
+  // Onda Corriente (verde)
+  ctxAC.strokeStyle = '#10b981';
+  ctxAC.lineWidth = 2;
+  ctxAC.beginPath();
+  for (let px = 0; px < nPts; px += 2) {
+    const tVal = px * 0.04;
+    const iVal = 45 * Math.cos(tVal - phaseAngle);
+    if (px === 0) ctxAC.moveTo(ox + px, oy - iVal);
+    else ctxAC.lineTo(ox + px, oy - iVal);
+  }
+  ctxAC.stroke();
+
+  // Etiquetas Osciloscopio
+  ctxAC.font = 'bold 13px Inter, sans-serif';
+  ctxAC.fillStyle = '#b3246b';
+  ctxAC.fillText('— Voltaje v(t)', ox + 20, 40);
+  ctxAC.fillStyle = '#10b981';
+  ctxAC.fillText('— Corriente i(t)', ox + 140, 40);
+}
+
+function drawPhasor(fromx, fromy, tox, toy, col, label, lw = 2) {
+  const headlen = 7;
+  const angle = Math.atan2(toy - fromy, tox - fromx);
+  ctxAC.strokeStyle = col;
+  ctxAC.fillStyle = col;
+  ctxAC.lineWidth = lw;
+  ctxAC.beginPath();
+  ctxAC.moveTo(fromx, fromy);
+  ctxAC.lineTo(tox, toy);
+  ctxAC.stroke();
+
+  ctxAC.beginPath();
+  ctxAC.moveTo(tox, toy);
+  ctxAC.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  ctxAC.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  ctxAC.closePath();
+  ctxAC.fill();
+
+  ctxAC.font = '600 11px Inter, sans-serif';
+  ctxAC.fillText(label, tox + 6 * Math.cos(angle), toy + 6 * Math.sin(angle));
+}
+
+function animatePhasors() {
+  if (chkRot.checked) {
+    phaseAngle = (phaseAngle + 0.035) % (Math.PI * 2);
+    updateACSim();
+  }
+  requestAnimationFrame(animatePhasors);
+}
+
+[rngACf, rngACR, rngACL, rngACC].forEach(el => {
+  el.addEventListener('input', updateACSim);
+  el.addEventListener('change', updateACSim);
+});
+
+document.getElementById('btn-reset-ac').addEventListener('click', () => {
+  rngACf.value = 50; rngACR.value = 20; rngACL.value = 80; rngACC.value = 100;
+  phaseAngle = 0;
+  updateACSim();
+});
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  fitStage();
+  showSlide(1);
+  updateACSim();
+  animatePhasors();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 7 · Circuitos de Corriente Continua y Leyes de Kirchhoff — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 7 · Deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:34px;line-height:1.15}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:76px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 17px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+/* Estilos Árbol y Mapa */
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:140px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 20px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 22px var(--e10-font-display)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 7</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 7 · Electrodinámica Clásica</span>
+    <h1 style="font-size:52px;line-height:1.06;margin:0">Circuitos de Corriente Continua</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:900px">Densidad de corriente y ley de Ohm microscópica. Leyes de Kirchhoff rigurosas, balance de potencia, análisis matricial de mallas y respuesta transitoria completa de circuitos RC.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-sim" style="height:48px;padding:0 20px;font-size:16px">Ver simulador de Kirchhoff 2D</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 14</span></div>
+</section>
+
+<!-- 2 · CORRIENTE Y DENSIDAD J -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Fundamentos Microscópicos</span></div>
+  <h2>Corriente Eléctrica y Densidad de Corriente ($\vec{J}$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Del Flujo de Portadores a la Ley de Ohm:</b>
+        <p style="margin:6px 0">La corriente neta $I$ es el caudal macroscópico de carga por unidad de tiempo: $I = \frac{dq}{dt}$ $[\text{A} \equiv \text{C/s}]$. A nivel diferencial continuo, se define el vector <b>densidad de corriente</b> $\vec{J}$:</p>
+        \[I = \iint_S \vec{J}\cdot d\vec{A}, \quad \vec{J} = n q \vec{v}_d\]
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px">
+          <li>$n$: densidad volumétrica de portadores libres de carga $[\text{m}^{-3}]$.</li>
+          <li>$q$: carga de cada portador (para electrones en metales, $q = -e$).</li>
+          <li>$\vec{v}_d$: <b>velocidad de arrastre (drift)</b> promedio ($\sim 10^{-4}\ \text{m/s}$, ¡muy lenta!).</li>
+        </ul>
+      </div>
+      <div class="soft" style="font-size:15px">
+        <b style="color:var(--e10-primary)">Ley de Ohm en Forma Microscópica y Macroscópica:</b>
+        \[\vec{J} = \sigma \vec{E} = \frac{1}{\rho}\vec{E} \quad \Longleftrightarrow \quad V = I R\]
+        <span style="font-size:14px;color:var(--e10-muted)">$\sigma$ es la conductividad eléctrica y $\rho$ es la resistividad intrínseca del material conductor.</span>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="tipbox" style="font-size:14px">
+        <b>¿Por qué la luz enciende al instante?</b><br>
+        Aunque los electrones derivan a milímetros por segundo, la <b>onda electromagnética</b> guiada por el conductor se propaga casi a la velocidad de la luz ($v \sim 0{,}7 c$), ejerciendo fuerza sobre todos los electrones simultáneamente.
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>Convención de Corriente:</b> Por convención histórica fijada por Benjamín Franklin, el sentido de $I$ es el que tendrían las cargas <b>positivas</b>, opuesto al movimiento real de los electrones.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de transporte de carga en estado estacionario</span><span class="mono">Diapositiva 2 / 14</span></div>
+</section>
+
+<!-- 3 · RESISTENCIA Y RESISTIVIDAD -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Propiedades de Materiales</span></div>
+  <h2>Resistencia, Geometría y Coeficiente Térmico</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Dependencia Geométrica de un Conductor Cilíndrico:</b>
+        \[R = \rho \frac{L}{A}\]
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li>$L$: Longitud del conductor en la dirección del flujo de corriente.</li>
+          <li>$A$: Área de sección transversal perpendicular al flujo.</li>
+          <li>$\rho$: Resistividad intrínseca $[\Omega\cdot\text{m}]$.</li>
+        </ul>
+        <div class="soft" style="margin-top:10px;padding:10px">
+          <b>Dependencia con la Temperatura:</b>
+          \[\rho(T) = \rho_0 [1 + \alpha(T - T_0)] \implies R(T) = R_0 [1 + \alpha(T - T_0)]\]
+          <span style="font-size:13px;color:var(--e10-muted)">$\alpha$ es el coeficiente térmico de resistividad ($[\text{K}^{-1}]$ o $[^\circ\text{C}^{-1}]$). En metales $\alpha > 0$ (aumenta con $T$), mientras que en semiconductores $\alpha < 0$.</span>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Valores Típicos de Resistividad ($20^\circ\text{C}$):</b>
+        <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:14px">
+          <tr style="border-bottom:1px solid var(--e10-line)"><th style="text-align:left;padding:4px 0">Material</th><th style="text-align:left;padding:4px 0">$\rho\ [\Omega\cdot\text{m}]$</th><th style="text-align:left;padding:4px 0">Tipo</th></tr>
+          <tr style="border-bottom:1px solid var(--e10-line)"><td style="padding:4px 0">Plata / Cobre</td><td style="padding:4px 0;color:var(--e10-primary)">$1{,}7\times 10^{-8}$</td><td style="padding:4px 0">Conductor</td></tr>
+          <tr style="border-bottom:1px solid var(--e10-line)"><td style="padding:4px 0">Silicio puro</td><td style="padding:4px 0;color:var(--e10-primary)">$2{,}3\times 10^{3}$</td><td style="padding:4px 0">Semiconductor</td></tr>
+          <tr><td style="padding:4px 0">Vidrio / Teflón</td><td style="padding:4px 0;color:var(--e10-primary)">$10^{14} - 10^{16}$</td><td style="padding:4px 0">Aislante</td></tr>
+        </table>
+      </div>
+      <div class="ok" style="font-size:14px">
+        <b>Superconductividad:</b> Por debajo de una temperatura crítica $T_c$, ciertos materiales experimentan una transición cuántica donde $\rho \equiv 0$ exactamente, permitiendo corrientes permanentes sin disipación térmica.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Modelado analítico de disipación y transporte</span><span class="mono">Diapositiva 3 / 14</span></div>
+</section>
+
+<!-- 4 · FEM Y VOLTAJE DE TERMINALES -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Fuentes de Energía</span></div>
+  <h2>Fuerza Electromotriz (fem) y Resistencia Interna</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">¿Qué es la Fuerza Electromotriz ($\mathcal{E}$)?</b>
+        <p style="margin:6px 0">No es una fuerza mecánica $[\text{N}]$, sino el <b>trabajo no electrostático</b> (químico, térmico, magnético) que realiza la fuente por unidad de carga para elevar su energía potencial:</p>
+        \[\mathcal{E} = \frac{dW_{\text{no-el}}}{dq} \quad [\text{V} \equiv \text{J/C}]\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Modelo de Fuente Real con Resistencia Interna $r$:</b>
+          \[V_{ab} = \mathcal{E} - I r\]
+          <span style="font-size:13px;color:var(--e10-muted)">El voltaje real en bornes $V_{ab}$ cae linealmente a medida que la corriente extraída $I$ aumenta debido a la caída óhmica interna $Ir$.</span>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Casos Extremos de una Fuente Real:</b>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Circuito Abierto ($I = 0$):</b> $V_{ab} = \mathcal{E}$ (Se mide con un voltímetro de alta impedancia).</li>
+          <li><b>Cortocircuito ($V_{ab} = 0$):</b> $I_{\text{cc}} = \frac{\mathcal{E}}{r}$ (Corriente máxima peligrosa).</li>
+          <li><b>Fuente Conectada a Carga $R_L$:</b>
+            \[I = \frac{\mathcal{E}}{R_L + r} \implies V_{ab} = \mathcal{E}\left(\frac{R_L}{R_L + r}\right)\]
+          </li>
+        </ul>
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>¡Cuidado al medir voltajes!</b> Conectar un amperímetro en paralelo causa cortocircuito directo ($R_A \approx 0$). Conectar un voltímetro en serie interrumpe el circuito ($R_V \approx \infty$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de análisis en generadores y baterías</span><span class="mono">Diapositiva 4 / 14</span></div>
+</section>
+
+<!-- 5 · LEYES DE KIRCHHOFF -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Leyes Fundamentales</span></div>
+  <h2>Las Dos Leyes de Kirchhoff y Conservación Física</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <span class="tag l" style="font-size:11px">1ª Ley · Regla de los Nodos (LKC)</span>
+        <h3 style="font-size:22px;margin:6px 0;color:var(--e10-accent-strong)">\[\sum I_{\text{entrantes}} = \sum I_{\text{salientes}} \quad \Longleftrightarrow \quad \sum_{k=1}^N I_k = 0\]</h3>
+        <p style="font-size:14px;margin:6px 0"><b>Principio Subyacente:</b> Conservación estricta de la carga eléctrica en estado estacionario ($dq_{\text{nodo}}/dt = 0$). En ningún nodo puede acumularse o destruirse carga.</p>
+        <span style="font-size:13px;color:var(--e10-muted)">Para $N$ nodos independientes en un circuito, se obtienen exactamente $N - 1$ ecuaciones linealmente independientes.</span>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <span class="tag c" style="font-size:11px">2ª Ley · Regla de las Mallas (LKV)</span>
+        <h3 style="font-size:22px;margin:6px 0;color:var(--e10-primary)">\[\sum_{\text{malla cerrada}} \Delta V_k = 0 \quad \Longleftrightarrow \quad \sum \mathcal{E} = \sum I R\]</h3>
+        <p style="font-size:14px;margin:6px 0"><b>Principio Subyacente:</b> Conservación de la energía y naturaleza conservativa del campo electrostático ($\oint \vec{E}\cdot d\vec{\ell} = 0$). Al dar una vuelta completa, el potencial regresa a su valor inicial.</p>
+        <span style="font-size:13px;color:var(--e10-muted)">Convención de signos: Si el recorrido va de $-$ a $+$ en una fem: $+\mathcal{E}$. Si recorre un resistor a favor de $I$: $-IR$.</span>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:8px;text-align:center">
+    <b>Protocolo Sistemático de Resolución:</b> 1. Asignar corrientes arbitrarias con flechas. 2. Plantear $N-1$ nodos. 3. Plantear $M$ mallas independientes. 4. Resolver el sistema lineal de $B = (N-1) + M$ ecuaciones.
+  </div>
+  <div class="foot"><span>Pilar metodológico para el análisis de redes complejas</span><span class="mono">Diapositiva 5 / 14</span></div>
+</section>
+
+<!-- 6 · SIMULADOR INTERACTIVO 2D (CANVAS) -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Laboratorio de Circuitos</b><span class="tag l">Simulador de Kirchhoff 2D</span></div>
+  <div class="row">
+    <div class="col" style="flex:1.35">
+      <canvas id="kc-canvas" class="sim" width="680" height="430" style="width:100%;height:430px"></canvas>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="checkbox" id="chk-flow" checked> Animar flujo de corriente
+        </label>
+        <button class="btn" id="btn-reset-circuit" style="margin-left:auto;padding:4px 10px;min-height:32px;font-size:13px">Valores Iniciales</button>
+      </div>
+    </div>
+    <div class="col" style="flex:0.85;gap:10px">
+      <div class="card" style="font-size:14px;display:flex;flex-direction:column;gap:8px">
+        <b>Ajuste de Fuentes y Resistores:</b>
+        <div class="ctrl">
+          <label>Fuente $\mathcal{E}_1$:</label>
+          <input type="range" id="rng-e1" min="0" max="24" step="1" value="12">
+          <output id="out-e1">12 V</output>
+        </div>
+        <div class="ctrl">
+          <label>Fuente $\mathcal{E}_2$:</label>
+          <input type="range" id="rng-e2" min="0" max="24" step="1" value="6">
+          <output id="out-e2">6 V</output>
+        </div>
+        <div class="ctrl">
+          <label>Resistencia $R_1$:</label>
+          <input type="range" id="rng-r1" min="1" max="10" step="0.5" value="4">
+          <output id="out-r1">4.0 Ω</output>
+        </div>
+        <div class="ctrl">
+          <label>Resistencia $R_2$:</label>
+          <input type="range" id="rng-r2" min="1" max="10" step="0.5" value="2">
+          <output id="out-r2">2.0 Ω</output>
+        </div>
+        <div class="ctrl">
+          <label>Resistencia $R_3$:</label>
+          <input type="range" id="rng-r3" min="1" max="10" step="0.5" value="3">
+          <output id="out-r3">3.0 Ω</output>
+        </div>
+      </div>
+      <div class="read">
+        <div>Rama 1 ($I_1$)<b id="lbl-i1">-- A</b></div>
+        <div>Rama 2 ($I_2$)<b id="lbl-i2">-- A</b></div>
+        <div>Rama Central ($I_3$)<b id="lbl-i3">-- A</b></div>
+      </div>
+      <div class="tipbox" style="font-size:13px;line-height:1.4">
+        Simulador en tiempo real: Resuelve el sistema $2\times 2$ de mallas por determinantes continuos. Si una corriente resulta negativa, significa que circula en sentido contrario al supuesto.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Validación computacional interactiva en vivo</span><span class="mono">Diapositiva 6 / 14</span></div>
+</section>
+
+<!-- 7 · ANÁLISIS MATRICIAL Y CRAMER -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Métodos Avanzados</span></div>
+  <h2>Solución Matricial de Redes de Múltiples Mallas</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Formulación Canónica Matricial $[R][I] = [\mathcal{E}]$:</b>
+        <p style="margin:4px 0">Para un circuito de 2 mallas con corrientes de lazo $I_A$ e $I_B$:</p>
+        \[\begin{bmatrix} R_{11} & R_{12} \\ R_{21} & R_{22} \end{bmatrix} \begin{bmatrix} I_A \\ I_B \end{bmatrix} = \begin{bmatrix} \mathcal{E}_A \\ \mathcal{E}_B \end{bmatrix}\]
+        <ul style="margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px">
+          <li>$R_{11}$: Suma de todas las resistencias de la Malla 1 (autoresistencia).</li>
+          <li>$R_{22}$: Suma de todas las resistencias de la Malla 2.</li>
+          <li>$R_{12} = R_{21}$: Resistencia mutua compartida entre Malla 1 y Malla 2 (signo negativo si los lazos se oponen).</li>
+        </ul>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Regla de Cramer para Resolución Rápida:</b>
+        \[\Delta = R_{11}R_{22} - R_{12}^2, \quad I_A = \frac{\det \begin{bmatrix}\mathcal{E}_A & R_{12} \\ \mathcal{E}_B & R_{22}\end{bmatrix}}{\Delta}, \quad I_B = \frac{\det \begin{bmatrix}R_{11} & \mathcal{E}_A \\ R_{21} & \mathcal{E}_B\end{bmatrix}}{\Delta}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="ok" style="font-size:14px">
+        <b>Ventajas del Método Matricial:</b><br>
+        1. Elimina errores algebraicos de despeje manual.<br>
+        2. Es inmediatamente escalable a 3, 4 o $N$ mallas en Python/MATLAB mediante `numpy.linalg.solve(R, E)`.<br>
+        3. La matriz de resistencias $[R]$ es siempre simétrica e invertible ($\det R \neq 0$).
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Teorema de Superposición:</b> En cualquier red resistiva lineal, la corriente en cualquier rama es la suma algebraica de las corrientes producidas por cada fuente actuando de forma independiente (apagando las demás: fuentes de tensión en corto, fuentes de corriente en abierto).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Álgebra lineal aplicada al modelado de circuitos</span><span class="mono">Diapositiva 7 / 14</span></div>
+</section>
+
+<!-- 8 · POTENCIA Y BALANCE ENERGÉTICO -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Termodinámica y Potencia</span></div>
+  <h2>Potencia Eléctrica y Teorema de Máxima Transferencia</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Formulaciones de Potencia (Efecto Joule):</b>
+        \[P = V I = I^2 R = \frac{V^2}{R} \quad [\text{W} \equiv \text{J/s}]\]
+        <p style="margin:4px 0"><b>Balance Energético Global:</b> La potencia total suministrada por las fuentes activas es idénticamente igual a la potencia disipada en forma de calor por todos los resistores más la potencia absorbida por fuentes en recarga:</p>
+        \[\sum P_{\text{generada}} = \sum P_{\text{disipada}} \implies \sum \mathcal{E}_k I_k = \sum I_j^2 R_j\]
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b style="color:var(--e10-primary)">Deducción del Teorema de Máxima Transferencia de Potencia:</b>
+        <p style="margin:4px 0">Conectando una carga variable $R_L$ a una fuente real $(\mathcal{E}, r)$: $P_L = I^2 R_L = \frac{\mathcal{E}^2 R_L}{(R_L + r)^2}$.</p>
+        \[\frac{dP_L}{dR_L} = \mathcal{E}^2 \frac{(R_L + r)^2 - R_L \cdot 2(R_L + r)}{(R_L + r)^4} = \mathcal{E}^2 \frac{r - R_L}{(R_L + r)^3} = 0 \implies \mathbf{R_L = r}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="warn" style="font-size:14px">
+        <b>Rendimiento vs. Potencia Máxima:</b><br>
+        En la condición de máxima transferencia ($R_L = r$), la eficiencia es de tan solo el <b>50%</b> (la mitad de la energía se pierde como calor dentro de la fuente).
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Aplicación en Ingeniería:</b><br>
+        • <b>Comunicaciones y Audio:</b> Se acoplan impedancias ($R_L = r$) para maximizar la señal.<br>
+        • <b>Redes de Distribución Eléctrica:</b> Se busca $r \ll R_L$ para maximizar la eficiencia ($> 95\%$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Optimización analítica de transferencia energética</span><span class="mono">Diapositiva 8 / 14</span></div>
+</section>
+
+<!-- 9 · TRANSITORIOS RC -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Dinámica Transitoria</span></div>
+  <h2>Circuitos RC: Deducción de Carga y Descarga Transitoria</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:14px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Deducción Diferencial para la Carga del Condensador:</b>
+        <p style="margin:3px 0">Por 2ª Ley de Kirchhoff: $\mathcal{E} - i R - \frac{q}{C} = 0$. Como $i = \frac{dq}{dt}$:</p>
+        \[R\frac{dq}{dt} = \mathcal{E} - \frac{q}{C} = \frac{C\mathcal{E} - q}{C} \implies \frac{dq}{C\mathcal{E} - q} = \frac{dt}{RC}\]
+        <p style="margin:3px 0">Integrando con condición inicial $q(0) = 0$:</p>
+        \[-\ln\left(\frac{C\mathcal{E} - q}{C\mathcal{E}}\right) = \frac{t}{RC} \implies q(t) = C\mathcal{E}\left(1 - e^{-t/\tau}\right), \quad \tau = RC\]
+        \[i(t) = \frac{dq}{dt} = \frac{\mathcal{E}}{R} e^{-t/\tau}, \quad v_C(t) = \mathcal{E}\left(1 - e^{-t/\tau}\right)\]
+      </div>
+      <div class="soft" style="font-size:14px;padding:10px">
+        <b>Proceso de Descarga ($R, C$ sin fuente, $q(0) = Q_0$):</b>
+        \[R\frac{dq}{dt} + \frac{q}{C} = 0 \implies q(t) = Q_0 e^{-t/\tau}, \quad i(t) = -\frac{Q_0}{RC} e^{-t/\tau}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">La Constante de Tiempo $\tau = RC$:</b>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li>En $t = 1\tau$: La carga alcanza el <b>$63{,}2\%$</b> del valor final ($1 - e^{-1}$).</li>
+          <li>En $t = 5\tau$: La carga alcanza el <b>$99{,}3\%$</b> (Estado estacionario práctico).</li>
+          <li>Unidades: $[\Omega\cdot\text{F}] \equiv [\text{s}]$.</li>
+        </ul>
+      </div>
+      <div class="ok" style="font-size:13px">
+        <b>La Paradoja del 50% en la Carga:</b> La energía suministrada por la batería es $W_{\text{bat}} = \mathcal{E} Q_f = C\mathcal{E}^2$. La energía almacenada en el condensador es $U_C = \frac{1}{2}C\mathcal{E}^2$. ¡Exactamente el 50% se disipa en el resistor, sin importar el valor de $R$!
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Solución analítica de ecuaciones diferenciales de 1er orden</span><span class="mono">Diapositiva 9 / 14</span></div>
+</section>
+
+<!-- 10 · COMPARATIVA DE MÉTODOS -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag p">Estrategias de Resolución</span></div>
+  <h2>Dos Caminos: ¿Reducción Serie/Paralelo o Mallas de Kirchhoff?</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:18px;color:var(--e10-accent-strong)">Camino A: Reducción Equivalente</b>
+        <p style="font-size:15px;margin:8px 0">Agrupamiento sucesivo de resistores en serie ($R_{\text{eq}} = \sum R_i$) y paralelo ($R_{\text{eq}}^{-1} = \sum R_i^{-1}$).</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Muy rápido e intuitivo para circuitos con una sola fuente o ramas aislables.</li>
+          <li><b>Limitación severa:</b> Falla completamente cuando existen fuentes en ramas intermedias o puentes en cruz (puente de Wheatstone desbalanceado).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:18px;color:var(--e10-primary)">Camino B: Leyes de Kirchhoff Matriciales</b>
+        <p style="font-size:15px;margin:8px 0">Formulación formal de corrientes de malla y solución lineal de matrices.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Método universal 100% infalible; resuelve cualquier red con $N$ fuentes y múltiples bucles.</li>
+          <li><b>Requisito:</b> Exige cuidado estricto con los signos de recorrido y el álgebra de determinantes.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;text-align:center">
+    <b>Recomendación de Cátedra:</b> Intenta reducción serie/paralelo únicamente si el circuito tiene una sola fuente. Si hay 2 o más fuentes en ramas distintas, ve <b>directamente al Camino B con Kirchhoff</b>.
+  </div>
+  <div class="foot"><span>Criterio analítico para parciales y talleres</span><span class="mono">Diapositiva 10 / 14</span></div>
+</section>
+
+<!-- 11 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Árbol de Decisión</span></div>
+  <h2>¿Qué Herramienta Usar según la Tipología del Circuito?</h2>
+  <div class="row">
+    <div class="col" style="flex:0.95;gap:10px">
+      <div class="tq">
+        <div class="tqh">Paso 1: Clasifica la Topología de la Red</div>
+        <div class="tq-opts" id="tq-opts-7">
+          <button class="opt on" data-target="leaf-1fuente">1 sola fuente + resistores serie/paralelo</button>
+          <button class="opt" data-target="leaf-multifuente">Múltiples fuentes en ramas distintas</button>
+          <button class="opt" data-target="leaf-rc">Circuito con condensador $R-C$ y conmutador</button>
+          <button class="opt" data-target="leaf-puente">Puente en cruz (Wheatstone)</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf" id="leaf-display-7" style="flex:1.05">
+      <div id="leaf-1fuente">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Reducción Óhmica Simple</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Estrategia:</b> Reduce desde el extremo opuesto a la fuente calculando $R_{\text{eq}}$. Luego $I_{\text{total}} = \mathcal{E}/R_{\text{eq}}$ y divisores de corriente/tensión.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Divisor de tensión: $V_1 = V_{\text{tot}}\frac{R_1}{R_1+R_2}$<br>
+          Divisor de corriente: $I_1 = I_{\text{tot}}\frac{R_2}{R_1+R_2}$
+        </div>
+      </div>
+      <div id="leaf-multifuente" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Leyes de Kirchhoff / Corrientes de Malla</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Estrategia:</b> Asigna lazos de corriente $I_A, I_B$, plantea LKV en cada lazo y resuelve el sistema $[R][I] = [\mathcal{E}]$ por Cramer.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          $I_{\text{rama compartida}} = I_A \pm I_B$<br>
+          Comprobación: $\sum P_{\text{fuentes}} = \sum I^2 R$
+        </div>
+      </div>
+      <div id="leaf-rc" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Análisis Transitorio Temporal</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Estrategia:</b> Determina condiciones iniciales en $t=0^+$ (condensador descargado actúa como corto $V_C = 0$) y en $t \to \infty$ (condensador cargado actúa como circuito abierto $I_C = 0$).</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          $v_C(t) = V_{\text{final}} + (V_{\text{inicial}} - V_{\text{final}})e^{-t/\tau}$<br>
+          $\tau = R_{\text{Th}} C$
+        </div>
+      </div>
+      <div id="leaf-puente" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Puente de Wheatstone</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Condición de Equilibrio:</b> El galvanómetro central marca cero corriente ($I_G = 0$) si y solo si los productos cruzados son iguales:</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          $R_1 R_4 = R_2 R_3 \implies R_x = R_3 \frac{R_2}{R_1}$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)">Si está desbalanceado, no se puede reducir: se debe aplicar Kirchhoff o transformación $\Delta - Y$.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Selección analítica de algoritmos de resolución</span><span class="mono">Diapositiva 11 / 14</span></div>
+</section>
+
+<!-- 12 · MAPA CONCEPTUAL INTERACTIVO CON FLUJO DE LUZ -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 7</b><span class="tag c">Ontología Conceptual</span></div>
+  <h2>Mapa Conceptual: De la Dinámica de Portadores a las Redes RC</h2>
+  <div class="row">
+    <div class="cmap" id="cmap-7">
+      <svg width="780" height="520" viewBox="0 0 780 520">
+        <!-- Enlaces -->
+        <path class="edge" d="M120,260 L280,140"/>
+        <path class="edge" d="M120,260 L280,260"/>
+        <path class="edge" d="M120,260 L280,380"/>
+        <path class="edge" d="M280,140 L450,140"/>
+        <path class="edge" d="M280,260 L450,260"/>
+        <path class="edge" d="M280,380 L450,380"/>
+        <path class="edge" d="M450,140 L640,200"/>
+        <path class="edge" d="M450,260 L640,260"/>
+        <path class="edge" d="M450,380 L640,320"/>
+        <!-- Flujos de Luz Animados -->
+        <path class="flow" d="M120,260 L280,260"/>
+        <path class="flow" d="M280,260 L450,260"/>
+        <path class="flow" d="M450,260 L640,260"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="cnode past" style="left:120px;top:260px" data-tip="M3 y M6: Potencial V, diferencia de potencial y capacitores">Potencial y Campo<br><b>(Módulos 3 y 6)</b></div>
+      <div class="cnode this" style="left:280px;top:140px" data-tip="Transporte de portadores libres: J = sigma E y v_d">Densidad $\vec{J}$<br><b>y Ley de Ohm</b></div>
+      <div class="cnode this" style="left:280px;top:260px" data-tip="Fuentes de fem y resistencia interna: V = E - Ir">Fuentes de fem<br><b>$V_{ab} = \mathcal{E} - Ir$</b></div>
+      <div class="cnode this" style="left:280px;top:380px" data-tip="Disipación de energía por efecto Joule: P = I^2 R">Potencia $P$<br><b>y Efecto Joule</b></div>
+      <div class="cnode this" style="left:450px;top:140px" data-tip="1ª y 2ª Leyes de Kirchhoff: Nodos y Mallas">Leyes de Kirchhoff<br><b>LKC y LKV</b></div>
+      <div class="cnode this" style="left:450px;top:260px" data-tip="Solución matricial por determinantes y regla de Cramer">Análisis Matricial<br><b>Mallas $[R][I] = [V]$</b></div>
+      <div class="cnode this" style="left:450px;top:380px" data-tip="Carga y descarga de condensadores con constante tau = RC">Transitorios RC<br><b>$\tau = RC$</b></div>
+      <div class="cnode fut" style="left:640px;top:260px" data-tip="Módulo 8: Corrientes en presencia de campo magnético y fuerza de Lorentz">Fuerza de Lorentz<br><b>(Módulo 8)</b></div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" id="cmap-tip-7" style="flex:1;font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Explorador Ontológico de Circuitos:</b>
+        <p id="cmap-desc-7" style="margin:8px 0 0">Pasa el cursor o haz clic en cualquier nodo para explorar las relaciones conceptuales entre el transporte microscópico, las leyes de conservación de Kirchhoff y los transitorios temporales.</p>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Transición a Magnetismo:</b> En el Módulo 8 veremos que cuando las cargas se mueven formando estas corrientes $I$, experimentan una fuerza magnética transversal $\vec{F} = I\vec{L}\times\vec{B}$ descubierta por Lorentz.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interconexión conceptual y epistemológica</span><span class="mono">Diapositiva 12 / 14</span></div>
+</section>
+
+<!-- 13 · FLASHCARDS 3D -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Repaso Activo</b><span class="tag e">Flashcards 3D</span></div>
+  <h2>Fórmulas y Conceptos Clave para Memorización</h2>
+  <p style="font-size:16px;color:var(--e10-muted);margin:0">Haz clic en cada tarjeta interactiva para comprobar tu dominio conceptual:</p>
+  <div style="grid-template-columns:1fr 1fr;display:grid;gap:16px;flex:1;margin-top:10px">
+    <div class="flip" id="fc7-1">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 1</span>
+          <b style="font-size:18px">¿Qué leyes universales de conservación sustentan la 1ª y la 2ª Ley de Kirchhoff?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">Nodos: Carga &nbsp;|&nbsp; Mallas: Energía</b>
+          <p style="font-size:14px;margin:0">1ª Ley: Conservación de carga en estado estacionario ($\sum I = 0$). 2ª Ley: Campo electrostático conservativo ($\oint \vec{E}\cdot d\vec{\ell} = 0 \implies \sum \Delta V = 0$).</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc7-2">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 2</span>
+          <b style="font-size:18px">¿Cuál es la condición para que una fuente real con resistencia interna $r$ entregue la máxima potencia a una carga $R_L$?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la deducción</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$R_L = r$</b>
+          <p style="font-size:14px;margin:0">Teorema de máxima transferencia de potencia ($dP_L/dR_L = 0$). En este punto de operación la potencia máxima es $P_{\text{máx}} = \mathcal{E}^2 / (4r)$ con eficiencia del 50%.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc7-3">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 3</span>
+          <b style="font-size:18px">¿Cómo se comporta un condensador inicialmente descargado en $t = 0^+$ y en $t \to \infty$?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">$t=0^+$: Cortocircuito &nbsp;|&nbsp; $t\to\infty$: Abierto</b>
+          <p style="font-size:14px;margin:0">En $t=0^+$, como $q=0$, el voltaje es nulo ($V_C=0$), actuando como cable ideal. En $t\to\infty$, se carga completamente ($V_C = \mathcal{E}$) e interrumpe la corriente ($i = 0$).</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc7-4">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 4</span>
+          <b style="font-size:18px">¿Qué porcentaje de la carga máxima $Q_f$ se alcanza exactamente en $t = 1\tau$ durante la carga de un circuito RC?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$63{,}2\%$</b>
+          <p style="font-size:14px;margin:0">Resulta de evaluar $1 - e^{-1} = 1 - 0{,}3679 = 0{,}6321$. Al cabo de $5\tau$, alcanza más del $99{,}3\%$ considerándose el régimen estacionario alcanzado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Repaso activo y consolidación neurocognitiva</span><span class="mono">Diapositiva 13 / 14</span></div>
+</section>
+
+<!-- 14 · RESUMEN Y ACCESO A TALLER -->
+<section class="slide" data-n="14">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Resumen de Unidad</b><span class="tag c">Cierre Metodológico</span></div>
+  <h2>Síntesis Ejecutiva del Módulo 7</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Puntos Clave Dominados en la Sesión:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Leyes de Kirchhoff:</b> Conservación de carga en nodos ($\sum I = 0$) y de energía en mallas ($\sum \Delta V = 0$).</li>
+          <li><b>Solución Matricial:</b> La formulación $[R][I] = [\mathcal{E}]$ resuelve cualquier topología compleja sin ambigüedades.</li>
+          <li><b>Acople de Carga:</b> La máxima potencia útil se logra con $R_L = r$, con $P_{\text{máx}} = \mathcal{E}^2/(4r)$.</li>
+          <li><b>Transitorios RC:</b> La evolución temporal exponencial está gobernada por $\tau = RC$, disipando siempre el 50% de la energía durante la carga.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Siguiente Sesión · Módulo 8:</b> Magnetostática, Fuerza de Lorentz, movimiento de partículas cargadas en campos $\vec{E}$ y $\vec{B}$, efecto Hall y selector de velocidades.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px;justify-content:center">
+      <a href="../../talleres/Taller_7_2_Leyes_K.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico de Kirchhoff →</a>
+      <button class="btn" id="btn-print-deck-7" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
+      <a href="../M8_Lorentz/index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Continuar al Módulo 8 (Lorentz) →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 14 / 14</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra de Controles Global -->
+<div class="deck-ui no-print">
+  <button class="btn" id="deck-prev">◀ Anterior</button>
+  <span class="count" id="deck-count">1 / 14</span>
+  <button class="btn" id="deck-next">Siguiente ▶</button>
+  <button class="btn" id="deck-fit">Ajustar Pantalla</button>
+</div>
+
+<script>
+// MOTOR DEL DECK 16:9
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 1;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > totalSlides) n = totalSlides;
+  currentSlide = n;
+  slides.forEach((s, idx) => {
+    s.classList.toggle('on', (idx + 1) === currentSlide);
+  });
+  document.getElementById('deck-count').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress').style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+  
+  if (window.renderMathInElement) {
+    const active = slides[currentSlide - 1];
+    window.renderMathInElement(active, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.getElementById('deck-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+document.getElementById('deck-next').addEventListener('click', () => showSlide(currentSlide + 1));
+document.getElementById('btn-start').addEventListener('click', () => showSlide(2));
+document.getElementById('btn-to-sim').addEventListener('click', () => showSlide(6));
+document.getElementById('btn-print-deck-7').addEventListener('click', () => window.print());
+
+// NAVEGACIÓN POR TECLADO
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    showSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides);
+  }
+});
+
+// ESCALADO 16:9 RESPONSIVE
+function fitStage() {
+  const stage = document.getElementById('stage');
+  const sw = 1280, sh = 720;
+  const ww = window.innerWidth, wh = window.innerHeight;
+  const scale = Math.min(ww / sw, wh / sh);
+  stage.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitStage);
+document.getElementById('deck-fit').addEventListener('click', fitStage);
+
+// FLASHCARDS 3D
+document.querySelectorAll('.flip').forEach(fc => {
+  fc.addEventListener('click', () => fc.classList.toggle('open'));
+});
+
+// ÁRBOL DE DECISIÓN INTERACTIVO
+const tqOpts7 = document.querySelectorAll('#tq-opts-7 .opt');
+const leafDisplay7 = document.getElementById('leaf-display-7');
+tqOpts7.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tqOpts7.forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const target = btn.dataset.target;
+    leafDisplay7.querySelectorAll(':scope > div').forEach(d => d.style.display = 'none');
+    const el = document.getElementById(target);
+    if (el) {
+      el.style.display = 'block';
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  });
+});
+
+// MAPA CONCEPTUAL INTERACTIVO
+document.querySelectorAll('#cmap-7 .cnode').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    document.getElementById('cmap-desc-7').textContent = node.dataset.tip;
+  });
+  node.addEventListener('click', () => {
+    document.querySelectorAll('#cmap-7 .cnode').forEach(n => n.classList.remove('on'));
+    node.classList.add('on');
+    document.getElementById('cmap-desc-7').textContent = node.dataset.tip;
+  });
+});
+
+// SIMULADOR DE KIRCHHOFF 2D (CANVAS)
+const cvK = document.getElementById('kc-canvas');
+const ctxK = cvK.getContext('2d');
+
+const rngE1 = document.getElementById('rng-e1');
+const rngE2 = document.getElementById('rng-e2');
+const rngR1 = document.getElementById('rng-r1');
+const rngR2 = document.getElementById('rng-r2');
+const rngR3 = document.getElementById('rng-r3');
+const chkFlow = document.getElementById('chk-flow');
+
+let flowOffset = 0;
+
+function solveKirchhoff() {
+  const E1 = parseFloat(rngE1.value);
+  const E2 = parseFloat(rngE2.value);
+  const R1 = parseFloat(rngR1.value);
+  const R2 = parseFloat(rngR2.value);
+  const R3 = parseFloat(rngR3.value);
+
+  document.getElementById('out-e1').textContent = `${E1} V`;
+  document.getElementById('out-e2').textContent = `${E2} V`;
+  document.getElementById('out-r1').textContent = `${R1.toFixed(1)} Ω`;
+  document.getElementById('out-r2').textContent = `${R2.toFixed(1)} Ω`;
+  document.getElementById('out-r3').textContent = `${R3.toFixed(1)} Ω`;
+
+  // Matriz 2x2 para corrientes de lazo IA e IB:
+  // Malla 1: (R1 + R3) IA + R3 IB = E1
+  // Malla 2: R3 IA + (R2 + R3) IB = E2
+  const a11 = R1 + R3, a12 = R3;
+  const a21 = R3, a22 = R2 + R3;
+  const det = a11 * a22 - a12 * a21;
+
+  const IA = (E1 * a22 - a12 * E2) / det;
+  const IB = (a11 * E2 - E1 * a21) / det;
+
+  // Corrientes de rama:
+  // Rama 1 (izquierda, hacia arriba): I1 = IA
+  // Rama 2 (derecha, hacia arriba): I2 = IB
+  // Rama central (hacia abajo): I3 = IA + IB
+  const I1 = IA;
+  const I2 = IB;
+  const I3 = IA + IB;
+
+  document.getElementById('lbl-i1').textContent = `${I1.toFixed(2)} A`;
+  document.getElementById('lbl-i2').textContent = `${I2.toFixed(2)} A`;
+  document.getElementById('lbl-i3').textContent = `${I3.toFixed(2)} A`;
+
+  drawCircuit(E1, E2, R1, R2, R3, I1, I2, I3);
+}
+
+function drawCircuit(E1, E2, R1, R2, R3, I1, I2, I3) {
+  ctxK.clearRect(0, 0, cvK.width, cvK.height);
+
+  const left = 90, mid = cvK.width / 2, right = cvK.width - 90;
+  const top = 80, bot = cvK.height - 80;
+
+  // Cables principales
+  ctxK.lineWidth = 3.5;
+  ctxK.strokeStyle = '#64748b';
+  ctxK.beginPath();
+  // Rectángulo izquierdo
+  ctxK.strokeRect(left, top, mid - left, bot - top);
+  // Rectángulo derecho
+  ctxK.strokeRect(mid, top, right - mid, bot - top);
+
+  // Línea de flujo animada si está activa
+  if (chkFlow.checked) {
+    ctxK.save();
+    ctxK.lineWidth = 2;
+    ctxK.strokeStyle = '#0b8ca8';
+    ctxK.setLineDash([6, 8]);
+    ctxK.lineDashOffset = -flowOffset;
+    ctxK.strokeRect(left, top, mid - left, bot - top);
+    ctxK.strokeRect(mid, top, right - mid, bot - top);
+    ctxK.restore();
+  }
+
+  // Componente Fuente 1 (Rama Izquierda)
+  drawBattery(left, (top + bot) / 2, E1, 'E₁');
+  // Componente Resistor R1 (Rama Superior Izq)
+  drawResistor((left + mid) / 2, top, R1, 'R₁', true);
+
+  // Componente Resistor R3 (Rama Central)
+  drawResistor(mid, (top + bot) / 2, R3, 'R₃', false);
+
+  // Componente Fuente 2 (Rama Derecha)
+  drawBattery(right, (top + bot) / 2, E2, 'E₂');
+  // Componente Resistor R2 (Rama Superior Der)
+  drawResistor((mid + right) / 2, top, R2, 'R₂', true);
+
+  // Nodos A y B
+  drawNode(mid, top, 'Nodo A');
+  drawNode(mid, bot, 'Nodo B');
+
+  // Flechas y valores de corriente
+  drawCurrentBadge(left - 30, (top + bot) / 2 - 40, `I₁ = ${I1.toFixed(2)}A`, I1 >= 0 ? '▲' : '▼', '#b3246b');
+  drawCurrentBadge(mid + 35, (top + bot) / 2 + 35, `I₃ = ${I3.toFixed(2)}A`, I3 >= 0 ? '▼' : '▲', '#0b8ca8');
+  drawCurrentBadge(right + 30, (top + bot) / 2 - 40, `I₂ = ${I2.toFixed(2)}A`, I2 >= 0 ? '▲' : '▼', '#b3246b');
+}
+
+function drawBattery(x, y, val, label) {
+  ctxK.fillStyle = '#ffffff';
+  ctxK.fillRect(x - 18, y - 24, 36, 48);
+  ctxK.lineWidth = 3;
+  ctxK.strokeStyle = '#b3246b';
+  // Placa larga (+)
+  ctxK.beginPath(); ctxK.moveTo(x - 16, y - 6); ctxK.lineTo(x + 16, y - 6); ctxK.stroke();
+  // Placa corta (-)
+  ctxK.lineWidth = 4.5;
+  ctxK.strokeStyle = '#1e293b';
+  ctxK.beginPath(); ctxK.moveTo(x - 10, y + 6); ctxK.lineTo(x + 10, y + 6); ctxK.stroke();
+
+  ctxK.font = 'bold 12px Inter, sans-serif';
+  ctxK.fillStyle = '#b3246b';
+  ctxK.fillText('+', x + 20, y - 6);
+  ctxK.fillStyle = '#1e293b';
+  ctxK.fillText('−', x + 20, y + 8);
+
+  ctxK.fillStyle = '#b3246b';
+  ctxK.textAlign = 'center';
+  ctxK.fillText(`${label} (${val}V)`, x, y + 36);
+}
+
+function drawResistor(x, y, val, label, horiz) {
+  ctxK.fillStyle = '#ffffff';
+  if (horiz) {
+    ctxK.fillRect(x - 26, y - 12, 52, 24);
+    ctxK.strokeStyle = '#0b8ca8';
+    ctxK.lineWidth = 2.5;
+    ctxK.strokeRect(x - 22, y - 9, 44, 18);
+    ctxK.fillStyle = '#08758c';
+    ctxK.font = '600 12px Inter, sans-serif';
+    ctxK.textAlign = 'center';
+    ctxK.fillText(`${label}=${val.toFixed(1)}Ω`, x, y - 16);
+  } else {
+    ctxK.fillRect(x - 12, y - 26, 24, 52);
+    ctxK.strokeStyle = '#0b8ca8';
+    ctxK.lineWidth = 2.5;
+    ctxK.strokeRect(x - 9, y - 22, 18, 44);
+    ctxK.fillStyle = '#08758c';
+    ctxK.font = '600 12px Inter, sans-serif';
+    ctxK.textAlign = 'center';
+    ctxK.fillText(`${label}=${val.toFixed(1)}Ω`, x - 35, y + 4);
+  }
+}
+
+function drawNode(x, y, label) {
+  ctxK.fillStyle = '#1e293b';
+  ctxK.beginPath();
+  ctxK.arc(x, y, 6, 0, Math.PI * 2);
+  ctxK.fill();
+  ctxK.font = 'bold 12px Inter, sans-serif';
+  ctxK.textAlign = 'center';
+  ctxK.fillText(label, x, y < 150 ? y - 12 : y + 20);
+}
+
+function drawCurrentBadge(x, y, txt, arrow, col) {
+  ctxK.fillStyle = col;
+  ctxK.font = '600 12px Inter, sans-serif';
+  ctxK.textAlign = 'center';
+  ctxK.fillText(`${arrow} ${txt}`, x, y);
+}
+
+[rngE1, rngE2, rngR1, rngR2, rngR3].forEach(el => {
+  el.addEventListener('input', solveKirchhoff);
+  el.addEventListener('change', solveKirchhoff);
+});
+
+document.getElementById('btn-reset-circuit').addEventListener('click', () => {
+  rngE1.value = 12; rngE2.value = 6;
+  rngR1.value = 4; rngR2.value = 2; rngR3.value = 3;
+  solveKirchhoff();
+});
+
+function animateFlow() {
+  if (chkFlow.checked) {
+    flowOffset = (flowOffset + 0.6) % 14;
+    solveKirchhoff();
+  }
+  requestAnimationFrame(animateFlow);
+}
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  fitStage();
+  showSlide(1);
+  solveKirchhoff();
+  animateFlow();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>

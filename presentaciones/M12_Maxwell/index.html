@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 12 · Ecuaciones de Maxwell y Ondas Electromagnéticas — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 12 · Deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:34px;line-height:1.15}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:76px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 17px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+/* Estilos Árbol y Mapa */
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 12</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 12 · Síntesis Electromagnética Clásica</span>
+    <h1 style="font-size:50px;line-height:1.06;margin:0">Ecuaciones de Maxwell y Ondas Electromagnéticas</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:920px">Corriente de desplazamiento de Maxwell, unificación fundamental de la electricidad y el magnetismo, deducción rigurosa de la ecuación de onda en el vacío, velocidad de la luz $c$, vector de Poynting y presión de radiación.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-sim" style="height:48px;padding:0 20px;font-size:16px">Ver simulador de onda EM 3D</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 15</span></div>
+</section>
+
+<!-- 2 · LA FALLA DE AMPÈRE -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Crisis Epistemológica</span></div>
+  <h2>La Inconsistencia de la Ley de Ampère Original</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">La Paradoja del Condensador en Carga:</b>
+        <p style="margin:4px 0">Consideremos un bucle ampariano circular $\Gamma$ alrededor del cable que carga un condensador. Aplicando la ley clásica de Ampère $\oint_\Gamma \vec{B}\cdot d\vec{\ell} = \mu_0 I_{\text{enc}}$:</p>
+        <ul style="margin:6px 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Superficie Plana $S_1$:</b> El cable perfora la superficie $\implies I_{\text{enc}} = I_c \implies \oint \vec{B}\cdot d\vec{\ell} = \mu_0 I_c \neq 0$.</li>
+          <li><b>Superficie Abombada $S_2$</b> (que pasa entre las placas sin tocar el conductor): No hay corriente de conducción atravesándola $\implies I_{\text{enc}} = 0 \implies \oint \vec{B}\cdot d\vec{\ell} = 0$.</li>
+        </ul>
+        <div class="warn" style="margin-top:6px;padding:8px">
+          <b>¡Contradicción Inaceptable!</b> La integral de línea a lo largo del mismo bucle cerrado $\Gamma$ da dos valores completamente distintos según la superficie elegida.
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Incompatibilidad con el Teorema del Divergente:</b>
+        <p style="margin:6px 0">Tomando la divergencia de la ley de Ampère original $\vec{\nabla}\times\vec{B} = \mu_0\vec{J}$:</p>
+        \[\vec{\nabla}\cdot(\vec{\nabla}\times\vec{B}) \equiv 0 \implies \mu_0 (\vec{\nabla}\cdot\vec{J}) = 0\]
+        <p style="margin:6px 0">Pero la <b>Ecuación de Continuidad</b> exige:</p>
+        \[\vec{\nabla}\cdot\vec{J} = -\frac{\partial\rho}{\partial t}\]
+        <span style="font-size:13px;color:var(--e10-muted)">Ampère solo es válida si $\partial\rho/\partial t = 0$ (magnetostática pura estacionaria). En regímenes variables, ¡estaba incompleta!</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Origen de la mayor síntesis teórica del siglo XIX</span><span class="mono">Diapositiva 2 / 15</span></div>
+</section>
+
+<!-- 3 · CORRIENTE DE DESPLAZAMIENTO -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">El Postulado de Maxwell</span></div>
+  <h2>La Corriente de Desplazamiento de Maxwell ($I_d$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="soft" style="padding:14px">
+        <b style="color:var(--e10-primary)">La Genialidad de James Clerk Maxwell (1861):</b>
+        <p style="margin:6px 0;font-size:15px">Maxwell postuló que un <b>campo eléctrico variable en el tiempo</b> genera un campo magnético exactamente igual a como lo haría una corriente real de portadores:</p>
+        \[I_d = \epsilon_0 \frac{d\Phi_E}{dt} \quad \Longleftrightarrow \quad \vec{J}_d = \epsilon_0 \frac{\partial\vec{E}}{\partial t}\]
+      </div>
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-primary)">Demostración en Condensador de Placas Paralelas:</b>
+        <p style="margin:4px 0">El campo entre placas es $E = \frac{\sigma}{\epsilon_0} = \frac{q}{\epsilon_0 A}$. El flujo eléctrico es $\Phi_E = E A = \frac{q}{\epsilon_0}$.</p>
+        \[I_d = \epsilon_0 \frac{d}{dt}\left(\frac{q}{\epsilon_0}\right) = \frac{dq}{dt} = I_c\]
+        <div class="ok" style="margin-top:8px;padding:8px">
+          <b>Continuidad Perfecta:</b> La corriente de conducción $I_c$ en los cables se transforma exactamente en corriente de desplazamiento $I_d$ en el espacio entre placas.
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="tipbox" style="font-size:14px">
+        <b>¿Por qué se llama «desplazamiento»?</b><br>
+        En dieléctricos materiales, representa el desplazamiento elástico real de las cargas atómicas ligadas ($\vec{D} = \epsilon_0\vec{E} + \vec{P}$). En el vacío absoluto ($\vec{P} = \vec{0}$), no hay nada material desplazándose: es una propiedad intrínseca del espacio-tiempo.
+      </div>
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Campo Magnético Inducido en el Dieléctrico ($r \le R$):</b>
+        \[B(r) = \frac{\mu_0\epsilon_0 r}{2}\frac{dE}{dt} = \frac{\mu_0 r}{2\pi R^2} I_c\]
+        <span style="font-size:13px;color:var(--e10-muted)">El campo magnético crece linealmente desde cero en el eje hasta un máximo en el borde del condensador.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Simetría dual: variaciones de E inducen B, variaciones de B inducen E</span><span class="mono">Diapositiva 3 / 15</span></div>
+</section>
+
+<!-- 4 · LEY DE AMPÈRE-MAXWELL -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Ley Unificada</span></div>
+  <h2>La Ley de Ampère-Maxwell Completa</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="soft" style="text-align:center;padding:16px">
+        <span class="tag c" style="font-size:12px">Formulación Integral Canónica</span>
+        <h3 style="font-size:24px;margin:8px 0;color:var(--e10-primary)">
+          \[\oint_\Gamma \vec{B}\cdot d\vec{\ell} = \mu_0 I_{\text{conducción}} + \mu_0\epsilon_0 \frac{d\Phi_E}{dt}\]
+        </h3>
+        <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">El campo magnético a lo largo de un lazo cerrado tiene dos orígenes independientes: corrientes eléctricas reales y campos eléctricos que varían en el tiempo.</p>
+      </div>
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Forma Diferencial Local:</b>
+        \[\vec{\nabla}\times\vec{B} = \mu_0 \vec{J} + \mu_0\epsilon_0 \frac{\partial\vec{E}}{\partial t}\]
+        <p style="margin:6px 0 0;font-size:14px">Tomando la divergencia ahora:</p>
+        \[\vec{\nabla}\cdot(\vec{\nabla}\times\vec{B}) = 0 = \mu_0 (\vec{\nabla}\cdot\vec{J}) + \mu_0\epsilon_0 \frac{\partial}{\partial t}(\vec{\nabla}\cdot\vec{E})\]
+        <p style="margin:4px 0 0;font-size:14px">Usando la ley de Gauss $\vec{\nabla}\cdot\vec{E} = \rho/\epsilon_0$:</p>
+        \[\mu_0 \left( \vec{\nabla}\cdot\vec{J} + \frac{\partial\rho}{\partial t} \right) = 0 \quad \text{¡Satisface idénticamente la conservación de la carga!}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="ok" style="font-size:14px">
+        <b>Cierre del Bucle Electromagnético:</b><br>
+        • Faraday (1831): $\frac{\partial\vec{B}}{\partial t} \implies$ Crea campo $\vec{E}$.<br>
+        • Maxwell (1861): $\frac{\partial\vec{E}}{\partial t} \implies$ Crea campo $\vec{B}$.<br>
+        ¡Ambos campos pueden auto-sostenerse mutuamente en el vacío sin necesidad de cargas ni cables, propagándose como una <b>onda</b>!
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Consistencia matemática absoluta del electromagnetismo</span><span class="mono">Diapositiva 4 / 15</span></div>
+</section>
+
+<!-- 5 · EL CUARTETO DE MAXWELL -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Cúspide de la Física Clásica</span></div>
+  <h2>El Cuarteto de Ecuaciones de Maxwell</h2>
+  <div class="row">
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:14px;padding:12px">
+        <table style="width:100%;border-collapse:collapse;line-height:1.4">
+          <tr style="border-bottom:2px solid var(--e10-primary);background:var(--e10-primary-soft)">
+            <th style="padding:6px;text-align:left">Ley Físico-Matemática</th>
+            <th style="padding:6px;text-align:left">Forma Integral</th>
+            <th style="padding:6px;text-align:left">Forma Diferencial</th>
+            <th style="padding:6px;text-align:left">Significado Físico</th>
+          </tr>
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <td style="padding:8px 6px"><b>1. Gauss Eléctrico</b></td>
+            <td style="padding:8px 6px">$\oint \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\epsilon_0}$</td>
+            <td style="padding:8px 6px">$\vec{\nabla}\cdot\vec{E} = \frac{\rho}{\epsilon_0}$</td>
+            <td style="padding:8px 6px">Las cargas eléctricas son fuentes/sumideros de $\vec{E}$.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <td style="padding:8px 6px"><b>2. Gauss Magnético</b></td>
+            <td style="padding:8px 6px">$\oint \vec{B}\cdot d\vec{A} = 0$</td>
+            <td style="padding:8px 6px">$\vec{\nabla}\cdot\vec{B} = 0$</td>
+            <td style="padding:8px 6px">No existen monopolos magnéticos aislados. Líneas cerradas.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <td style="padding:8px 6px"><b>3. Faraday-Lenz</b></td>
+            <td style="padding:8px 6px">$\oint \vec{E}\cdot d\vec{\ell} = -\frac{d\Phi_B}{dt}$</td>
+            <td style="padding:8px 6px">$\vec{\nabla}\times\vec{E} = -\frac{\partial\vec{B}}{\partial t}$</td>
+            <td style="padding:8px 6px">Campos $\vec{B}$ variables inducen campos $\vec{E}$ no conservativos.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 6px"><b>4. Ampère-Maxwell</b></td>
+            <td style="padding:8px 6px">$\oint \vec{B}\cdot d\vec{\ell} = \mu_0(I_c + I_d)$</td>
+            <td style="padding:8px 6px">$\vec{\nabla}\times\vec{B} = \mu_0\vec{J} + \mu_0\epsilon_0\frac{\partial\vec{E}}{\partial t}$</td>
+            <td style="padding:8px 6px">Corrientes y campos $\vec{E}$ variables generan campos $\vec{B}$.</td>
+          </tr>
+        </table>
+      </div>
+      <div class="soft" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:15px">
+        <span><b>Relaciones Constitutivas en Medios Materiales:</b> $\vec{D} = \epsilon \vec{E}$, $\vec{B} = \mu \vec{H}$, $\vec{J} = \sigma \vec{E}$</span>
+        <span class="mono" style="color:var(--e10-primary)">Fuerza de Lorentz: $\vec{F} = q(\vec{E} + \vec{v}\times\vec{B})$</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Toda la tecnología eléctrica, óptica y de telecomunicaciones descansa en estas 4 líneas</span><span class="mono">Diapositiva 5 / 15</span></div>
+</section>
+
+<!-- 6 · SIMULADOR INTERACTIVO 2D (CANVAS) -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Laboratorio de Ondas</b><span class="tag l">Simulador de Onda EM Plana</span></div>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <canvas id="em-canvas" class="sim" width="680" height="430" style="width:100%;height:430px"></canvas>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="checkbox" id="chk-anim" checked> Animar propagación
+        </label>
+        <button class="btn" id="btn-reset-em" style="margin-left:auto;padding:4px 10px;min-height:32px;font-size:13px">Reset</button>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:10px">
+      <div class="card" style="font-size:14px;display:flex;flex-direction:column;gap:8px">
+        <b>Parámetros de la Onda EM:</b>
+        <div class="ctrl">
+          <label>Frecuencia $f$:</label>
+          <input type="range" id="rng-f" min="0.5" max="3" step="0.25" value="1.5">
+          <output id="out-f">1.5 Hz</output>
+        </div>
+        <div class="ctrl">
+          <label>Amplitud $E_0$:</label>
+          <input type="range" id="rng-e0" min="20" max="70" step="5" value="50">
+          <output id="out-e0">50 V/m</output>
+        </div>
+        <div class="ctrl">
+          <label>Longitud $\lambda$:</label>
+          <input type="range" id="rng-lam" min="120" max="300" step="10" value="200">
+          <output id="out-lam">200 px</output>
+        </div>
+      </div>
+      <div class="read">
+        <div>$B_0 = E_0/c$<b id="lbl-b0">166.8 nT</b></div>
+        <div>Poynting $\langle S \rangle$<b id="lbl-savg">3.32 W/m²</b></div>
+        <div>Fase<b id="lbl-phase" style="color:var(--e10-success)">En Fase (0°)</b></div>
+      </div>
+      <div class="tipbox" style="font-size:13px;line-height:1.4">
+        Visualización ortogonal: En rojo el campo eléctrico vertical $\vec{E}(x,t)$; en cian el campo magnético horizontal $\vec{B}(x,t)$. Observa que ambos alcanzan sus crestas y nodos simultáneamente (en fase).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Visualización de ondas transversales TEM</span><span class="mono">Diapositiva 6 / 15</span></div>
+</section>
+
+<!-- 7 · DEDUCCIÓN DE LA ECUACIÓN DE ONDA -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Deducción Histórica</span></div>
+  <h2>Deducción Analítica de la Ecuación de Onda y la Velocidad $c$</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">En el Vacío Absoluto ($\rho = 0, \vec{J} = \vec{0}$):</b>
+        <p style="margin:3px 0">Aplicamos el operador rotor a la ley de Faraday $\vec{\nabla}\times\vec{E} = -\frac{\partial\vec{B}}{\partial t}$:</p>
+        \[\vec{\nabla}\times(\vec{\nabla}\times\vec{E}) = -\frac{\partial}{\partial t}(\vec{\nabla}\times\vec{B})\]
+        <p style="margin:3px 0">Usando la identidad del cálculo vectorial $\vec{\nabla}\times(\vec{\nabla}\times\vec{E}) = \vec{\nabla}(\vec{\nabla}\cdot\vec{E}) - \nabla^2\vec{E}$, y dado que $\vec{\nabla}\cdot\vec{E} = 0$:</p>
+        \[-\nabla^2\vec{E} = -\frac{\partial}{\partial t}\left(\mu_0\epsilon_0 \frac{\partial\vec{E}}{\partial t}\right) \implies \mathbf{\nabla^2\vec{E} = \mu_0\epsilon_0 \frac{\partial^2\vec{E}}{\partial t^2}}\]
+        <p style="margin:3px 0">Exactamente la misma ecuación se deduce para el campo magnético $\vec{B}$:</p>
+        \[\nabla^2\vec{B} = \mu_0\epsilon_0 \frac{\partial^2\vec{B}}{\partial t^2}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="text-align:center">
+        <span class="tag e" style="font-size:12px">El Gran Triunfo de la Física Clásica</span>
+        <h3 style="font-size:24px;margin:8px 0;color:var(--e10-primary)">
+          \[c = \frac{1}{\sqrt{\mu_0\epsilon_0}}\]
+        </h3>
+        \[c = \frac{1}{\sqrt{(4\pi\times 10^{-7})(8{,}85419\times 10^{-12})}} \approx 2{,}9979\times 10^8\ \text{m/s}\]
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>¡La Luz es una Onda Electromagnética!</b><br>
+        Constantes medidas en experimentos puramente electrostáticos ($\epsilon_0$) y magnetostáticos ($\mu_0$) predicen exactamente la velocidad de la luz medida por Fizeau y Foucault.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Unificación de la electricidad, el magnetismo y la óptica</span><span class="mono">Diapositiva 7 / 15</span></div>
+</section>
+
+<!-- 8 · PROPIEDADES DE ONDA PLANA -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Geometría de Campos</span></div>
+  <h2>Propiedades de las Ondas Planas y Relación de Amplitud</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Ecuaciones de Onda Armónica Plana (Propagación en $+x$):</b>
+        \[\vec{E}(x,t) = E_0 \cos(kx - \omega t)\hat{\jmath}\]
+        \[\vec{B}(x,t) = B_0 \cos(kx - \omega t)\hat{k}\]
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px">
+          <li>$k = \frac{2\pi}{\lambda}$: Número de onda angular $[\text{rad/m}]$.</li>
+          <li>$\omega = 2\pi f$: Frecuencia angular $[\text{rad/s}]$.</li>
+          <li>Velocidad de fase: $c = \frac{\omega}{k} = \lambda f$.</li>
+        </ul>
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Relación Fundamental de Amplitudes en el Vacío:</b>
+          \[E_0 = c B_0 \quad \Longleftrightarrow \quad \frac{E(x,t)}{B(x,t)} = c\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Los 3 Postulados de la Onda Plana Transversal:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Transversalidad Estricta:</b> $\vec{E} \perp \vec{B}$ y ambos son perpendiculares a la dirección del vector de propagación $\hat{k}$.</li>
+          <li><b>Dirección de Propagación:</b> Coincide con el producto vectorial unitario: $\hat{k} = \frac{\vec{E}\times\vec{B}}{|\vec{E}\times\vec{B}|}$.</li>
+          <li><b>En Fase:</b> Las crestas, ceros y valles de $\vec{E}$ y $\vec{B}$ coinciden en el mismo instante y posición en el vacío.</li>
+        </ol>
+      </div>
+      <div class="warn" style="font-size:13px">
+        <b>¿Por qué el campo magnético de la luz parece débil?</b><br>
+        Como $B = E/c$, un campo intenso de $E = 300\ \text{V/m}$ solo tiene $B = 1\ \mu\text{T}$. Sin embargo, la energía transportada por ambos campos es exactamente idéntica.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de telecomunicaciones por radio, microondas y láser</span><span class="mono">Diapositiva 8 / 15</span></div>
+</section>
+
+<!-- 9 · VECTOR DE POYNTING -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Flujo de Energía</span></div>
+  <h2>El Vector de Poynting y la Intensidad de Radiación</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Definición del Vector de Poynting ($\vec{S}$):</b>
+        <p style="margin:4px 0">Representa la densidad de flujo de energía electromagnética instantánea por unidad de área y por unidad de tiempo:</p>
+        \[\vec{S} = \frac{1}{\mu_0}(\vec{E}\times\vec{B}) \quad \left[\frac{\text{W}}{\text{m}^2} \equiv \frac{\text{J}}{\text{s}\cdot\text{m}^2}\right]\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Densidad de Energía Volumétrica Total ($u$):</b>
+          \[u = u_E + u_B = \frac{1}{2}\epsilon_0 E^2 + \frac{1}{2\mu_0}B^2 = \epsilon_0 E^2 \quad \left[\frac{\text{J}}{\text{m}^3}\right]\]
+          <span style="font-size:13px;color:var(--e10-muted)">Como $B = E/c$, $u_B = \frac{E^2}{2\mu_0 c^2} = \frac{1}{2}\epsilon_0 E^2 = u_E$. ¡El 50% de la energía de la luz es eléctrica y el 50% magnética!</span>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="ok" style="font-size:14px">
+        <b>Intensidad Promedio en el Tiempo (Irradiancia $I$):</b>
+        \[I = \langle S \rangle = \frac{E_0 B_0}{2\mu_0} = \frac{E_0^2}{2\mu_0 c} = \frac{1}{2}\epsilon_0 c E_0^2\]
+        <span style="font-size:13px">El factor $1/2$ proviene del promedio temporal de $\cos^2(kx-\omega t)$, cuyo valor medio es $\langle\cos^2\rangle = 1/2$.</span>
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Constante Solar Terrestre:</b> En la cima de la atmósfera terrestre, la radiación solar incidente tiene una intensidad promedio de $I \approx 1360\ \text{W/m}^2$, lo que corresponde a $E_{\text{rms}} \approx 716\ \text{V/m}$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Teorema de Poynting para conservación de energía local</span><span class="mono">Diapositiva 9 / 15</span></div>
+</section>
+
+<!-- 10 · PRESIÓN DE RADIACIÓN -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Momento Lineal</span></div>
+  <h2>Presión de Radiación y Momento Lineal de la Luz</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Transporte de Momento Lineal:</b>
+        <p style="margin:4px 0">Las ondas electromagnéticas no solo transportan energía, sino también <b>momento lineal</b> $p$. Para un pulso que entrega una energía total $U$:</p>
+        \[p = \frac{U}{c}\]
+        <div class="soft" style="margin-top:8px;padding:10px">
+          <b>Presión de Radiación Mecánica ($P_{\text{rad}}$):</b>
+          <ul style="margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px">
+            <li><b>Superficie Perfectamente Absorbente (Cuerpo negro):</b>
+              \[P_{\text{rad}} = \frac{I}{c} = u_{\text{prom}}\]
+            </li>
+            <li><b>Superficie Perfectamente Reflectora (Espejo ideal):</b> El fotón rebota invirtiendo su momento ($\Delta p = 2p$):
+              \[P_{\text{rad}} = \frac{2I}{c} = 2 u_{\text{prom}}\]
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="tipbox" style="font-size:14px">
+        <b>Aplicaciones Tecnológicas Asombrosas:</b><br>
+        • <b>Velas Solares Espaciales:</b> Propulsión de sondas espaciales (como IKAROS y LightSail) sin combustible químico, impulsadas puramente por la luz del Sol.<br>
+        • <b>Colas de Cometas:</b> La presión de radiación solar empuja el polvo cometario en dirección opuesta al Sol.<br>
+        • <b>Pinzas Ópticas:</b> Láseres focalizados atrapan y manipulan bacterias y moléculas de ADN (Premio Nobel 2018).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interacción de radiación electromagnética con la materia</span><span class="mono">Diapositiva 10 / 15</span></div>
+</section>
+
+<!-- 11 · COMPARATIVA DE ENFOQUES -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag p">Técnicas de Resolución</span></div>
+  <h2>Dos Enfoques: ¿Campo Cercano o Campo de Radiación Lejano?</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:18px;color:var(--e10-accent-strong)">Enfoque A: Campo Cercano (Quasi-Estático)</b>
+        <p style="font-size:15px;margin:8px 0">Análisis dentro de los dispositivos (condensadores, solenoides) con $I_d = \epsilon_0 d\Phi_E/dt$.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Dominio:</b> Distancias mucho menores que la longitud de onda ($r \ll \lambda$).</li>
+          <li><b>Comportamiento:</b> Predominan las fuerzas coulombianas e inductivas de Biot-Savart; no hay emisión de ondas libres.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:18px;color:var(--e10-primary)">Enfoque B: Campo de Radiación Lejano</b>
+        <p style="font-size:15px;margin:8px 0">Análisis de ondas viajeras transversales libres ($r \gg \lambda$).</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Dominio:</b> Propagación en el espacio libre, fibras ópticas y antenas.</li>
+          <li><b>Comportamiento:</b> Se aplica la relación de amplitudes $E = cB$, vector de Poynting $S = E B / \mu_0$ e irradiancia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;text-align:center">
+    <b>Recomendación de Cátedra:</b> Para problemas de carga de condensadores con $dE/dt$, usa el <b>Enfoque A</b>. Para antenas, láseres o presión solar, utiliza el <b>Enfoque B</b> con Poynting.
+  </div>
+  <div class="foot"><span>Criterio analítico de regímenes electromagnéticos</span><span class="mono">Diapositiva 11 / 15</span></div>
+</section>
+
+<!-- 12 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Árbol de Decisión</span></div>
+  <h2>¿Qué Ecuación o Relación Utilizar según el Problema?</h2>
+  <div class="row">
+    <div class="col" style="flex:0.95;gap:10px">
+      <div class="tq">
+        <div class="tqh">Paso 1: Identifica el Escenario Físico</div>
+        <div class="tq-opts" id="tq-opts-12">
+          <button class="opt on" data-target="leaf-id">Corriente en Dieléctrico / Condensador</button>
+          <button class="opt" data-target="leaf-onda">Onda EM en el Vacío ($E_0, B_0, \lambda$)</button>
+          <button class="opt" data-target="leaf-poynting">Potencia, Láser o Antena ($I, \vec{S}$)</button>
+          <button class="opt" data-target="leaf-fuerza">Fuerza o Presión sobre una Superficie</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf" id="leaf-display-12" style="flex:1.05">
+      <div id="leaf-id">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Corriente de Desplazamiento y Campo Inducido</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Fórmula de Corriente:</b> $I_d = \epsilon_0 \frac{d\Phi_E}{dt} = \epsilon_0 A \frac{dE}{dt} = I_c$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Interior placas ($r \le R$): $B(r) = \frac{\mu_0 r}{2\pi R^2} I_c$<br>
+          Exterior placas ($r \ge R$): $B(r) = \frac{\mu_0 I_c}{2\pi r}$
+        </div>
+      </div>
+      <div id="leaf-onda" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Parámetros de Onda Plana</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Fórmulas Cinéticas:</b> $c = \lambda f = \omega/k = 1/\sqrt{\mu_0\epsilon_0}$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Amplitud: $E_0 = c B_0$<br>
+          Vector unitario: $\hat{k} = \hat{E} \times \hat{B}$
+        </div>
+      </div>
+      <div id="leaf-poynting" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Flujo Energético y Potencia</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Vector de Poynting:</b> $\vec{S} = \frac{1}{\mu_0}(\vec{E}\times\vec{B})$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Intensidad promedio: $I = \frac{E_0^2}{2\mu_0 c} = \frac{P_{\text{fuente}}}{4\pi r^2}$ (para emisor isotrópico)
+        </div>
+      </div>
+      <div id="leaf-fuerza" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Presión y Fuerza de Radiación</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Presión:</b> $P_{\text{rad}} = \frac{I}{c}$ (absorbente) o $\frac{2I}{c}$ (reflector).</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          Fuerza total: $F_{\text{rad}} = P_{\text{rad}} \cdot A$
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Algoritmo de resolución para el examen final</span><span class="mono">Diapositiva 12 / 15</span></div>
+</section>
+
+<!-- 13 · MAPA CONCEPTUAL INTERACTIVO CON FLUJO DE LUZ -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 12</b><span class="tag c">Ontología Conceptual</span></div>
+  <h2>Mapa Conceptual: La Gran Síntesis de Maxwell</h2>
+  <div class="row">
+    <div class="cmap" id="cmap-12">
+      <svg width="780" height="520" viewBox="0 0 780 520">
+        <!-- Enlaces -->
+        <path class="edge" d="M120,260 L280,140"/>
+        <path class="edge" d="M120,260 L280,260"/>
+        <path class="edge" d="M120,260 L280,380"/>
+        <path class="edge" d="M280,140 L450,140"/>
+        <path class="edge" d="M280,260 L450,260"/>
+        <path class="edge" d="M280,380 L450,380"/>
+        <path class="edge" d="M450,140 L640,200"/>
+        <path class="edge" d="M450,260 L640,260"/>
+        <path class="edge" d="M450,380 L640,320"/>
+        <!-- Flujos de Luz Animados -->
+        <path class="flow" d="M120,260 L280,260"/>
+        <path class="flow" d="M280,260 L450,260"/>
+        <path class="flow" d="M450,260 L640,260"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="cnode past" style="left:120px;top:260px" data-tip="Módulos 1-11: Leyes empíricas separadas de Coulomb, Gauss, Ampère y Faraday">Leyes Previas<br><b>(Módulos 1-11)</b></div>
+      <div class="cnode this" style="left:280px;top:140px" data-tip="El término faltante de Maxwell: I_d = eps_0 dPhi_E/dt">Corriente $I_d$<br><b>Desplazamiento</b></div>
+      <div class="cnode this" style="left:280px;top:260px" data-tip="Las 4 ecuaciones de Maxwell unificadas en forma diferencial e integral">4 Ecuaciones<br><b>de Maxwell</b></div>
+      <div class="cnode this" style="left:280px;top:380px" data-tip="Ecuación de onda en el vacío: c = 1 / sqrt(mu_0 eps_0)">Ecuación de Onda<br><b>$c = 3\times 10^8\text{m/s}$</b></div>
+      <div class="cnode this" style="left:450px;top:140px" data-tip="Ondas transversales TEM: E perpendicular a B y E_0 = c B_0">Onda Plana TEM<br><b>$E_0 = c B_0$</b></div>
+      <div class="cnode this" style="left:450px;top:260px" data-tip="Flujo direccional de energía: S = (1/mu_0)(E x B)">Vector Poynting<br><b>$\vec{S}$ y $\langle S \rangle$</b></div>
+      <div class="cnode this" style="left:450px;top:380px" data-tip="Momento lineal y presión mecánica: P_rad = I/c o 2I/c">Presión Radiación<br><b>$P_{\text{rad}}$</b></div>
+      <div class="cnode fut" style="left:640px;top:260px" data-tip="Módulo 13: Aplicación a circuitos de corriente alterna, fasores e impedancias">Circuitos CA<br><b>(Módulo 13)</b></div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" id="cmap-tip-12" style="flex:1;font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Explorador Ontológico de Maxwell:</b>
+        <p id="cmap-desc-12" style="margin:8px 0 0">Pasa el cursor o haz clic en cualquier nodo para comprender cómo la corriente de desplazamiento unificó la física clásica, predijo la luz y abrió el camino a la relatividad de Einstein.</p>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Génesis de la Relatividad Especial (1905):</b> La invariancia de la velocidad de la luz $c = 1/\sqrt{\mu_0\epsilon_0}$ frente a transformaciones galileanas llevó a Einstein a formular la Relatividad Especial.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interconexión conceptual y epistemológica</span><span class="mono">Diapositiva 13 / 15</span></div>
+</section>
+
+<!-- 14 · FLASHCARDS 3D -->
+<section class="slide" data-n="14">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Repaso Activo</b><span class="tag e">Flashcards 3D</span></div>
+  <h2>Fórmulas y Conceptos Clave para Memorización</h2>
+  <p style="font-size:16px;color:var(--e10-muted);margin:0">Haz clic en cada tarjeta para verificar tu asimilación conceptual:</p>
+  <div style="grid-template-columns:1fr 1fr;display:grid;gap:16px;flex:1;margin-top:10px">
+    <div class="flip" id="fc12-1">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 1</span>
+          <b style="font-size:18px">¿Cuál fue el término físico que introdujo Maxwell para corregir la ley de Ampère y qué representa?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">$I_d = \epsilon_0 \frac{d\Phi_E}{dt}$</b>
+          <p style="font-size:14px;margin:0">La corriente de desplazamiento: representa la capacidad de un campo eléctrico variable en el tiempo de generar campo magnético, cerrando la continuidad en condensadores.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc12-2">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 2</span>
+          <b style="font-size:18px">¿Cómo se reparten las densidades de energía eléctrica y magnética en una onda electromagnética en el vacío?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:20px;color:var(--e10-primary)">Exactamente 50% - 50%</b>
+          <p style="font-size:14px;margin:0">Como $B = E/c$ y $c = 1/\sqrt{\mu_0\epsilon_0}$, se cumple rigurosamente que $u_E = \frac{1}{2}\epsilon_0 E^2 = \frac{1}{2\mu_0}B^2 = u_B$ en todo instante.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc12-3">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 3</span>
+          <b style="font-size:18px">¿Cuál es la relación de amplitudes entre el campo eléctrico y el magnético en una onda plana en el vacío?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$E_0 = c B_0$</b>
+          <p style="font-size:14px;margin:0">La amplitud del campo eléctrico es $3\times 10^8$ veces mayor que la del magnético en unidades del SI, y ambos campos oscilan en fase.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc12-4">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 4</span>
+          <b style="font-size:18px">¿Por qué la presión de radiación sobre un espejo reflector es el doble que sobre un cuerpo absorbente?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">$P_{\text{reflector}} = \frac{2I}{c} = 2 P_{\text{absorbente}}$</b>
+          <p style="font-size:14px;margin:0">Por la tercera ley de Newton: el fotón invierte su sentido de movimiento, experimentando una variación de momento lineal doble ($\Delta p = p - (-p) = 2p$).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Repaso activo y consolidación neurocognitiva</span><span class="mono">Diapositiva 14 / 15</span></div>
+</section>
+
+<!-- 15 · RESUMEN Y ACCESO A TALLER -->
+<section class="slide" data-n="15">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Resumen de Unidad</b><span class="tag c">Cierre Metodológico</span></div>
+  <h2>Síntesis Ejecutiva del Módulo 12</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Conclusiones Fundamentales:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Unificación Máxima:</b> Las 4 ecuaciones de Maxwell describen la totalidad de los fenómenos electromagnéticos clásicos.</li>
+          <li><b>Naturaleza de la Luz:</b> La predicción teórica $c = 1/\sqrt{\mu_0\epsilon_0}$ demostró que la luz es una perturbación transversal electromagnética.</li>
+          <li><b>Flujo y Presión:</b> Las ondas electromagnéticas transportan energía ($\vec{S}$) y momento lineal ($p = U/c$), ejerciendo fuerza mecánica real sobre la materia.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Siguiente Sesión · Módulo 13 (Cierre del Curso):</b> Circuitos de Corriente Alterna (CA), fasores, impedancia compleja $Z$, resonancia y factor de potencia.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px;justify-content:center">
+      <a href="../../talleres/Taller_12_Ecuaciones_Maxwell.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico No. 12 →</a>
+      <button class="btn" id="btn-print-deck-12" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
+      <a href="../M13_AC/index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Continuar al Módulo 13 (Circuitos CA) →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 15 / 15</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra de Controles Global -->
+<div class="deck-ui no-print">
+  <button class="btn" id="deck-prev">◀ Anterior</button>
+  <span class="count" id="deck-count">1 / 15</span>
+  <button class="btn" id="deck-next">Siguiente ▶</button>
+  <button class="btn" id="deck-fit">Ajustar Pantalla</button>
+</div>
+
+<script>
+// MOTOR DEL DECK 16:9
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 1;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > totalSlides) n = totalSlides;
+  currentSlide = n;
+  slides.forEach((s, idx) => {
+    s.classList.toggle('on', (idx + 1) === currentSlide);
+  });
+  document.getElementById('deck-count').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress').style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+  
+  if (window.renderMathInElement) {
+    const active = slides[currentSlide - 1];
+    window.renderMathInElement(active, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.getElementById('deck-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+document.getElementById('deck-next').addEventListener('click', () => showSlide(currentSlide + 1));
+document.getElementById('btn-start').addEventListener('click', () => showSlide(2));
+document.getElementById('btn-to-sim').addEventListener('click', () => showSlide(6));
+document.getElementById('btn-print-deck-12').addEventListener('click', () => window.print());
+
+// NAVEGACIÓN POR TECLADO
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    showSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides);
+  }
+});
+
+// ESCALADO 16:9 RESPONSIVE
+function fitStage() {
+  const stage = document.getElementById('stage');
+  const sw = 1280, sh = 720;
+  const ww = window.innerWidth, wh = window.innerHeight;
+  const scale = Math.min(ww / sw, wh / sh);
+  stage.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitStage);
+document.getElementById('deck-fit').addEventListener('click', fitStage);
+
+// FLASHCARDS 3D
+document.querySelectorAll('.flip').forEach(fc => {
+  fc.addEventListener('click', () => fc.classList.toggle('open'));
+});
+
+// ÁRBOL DE DECISIÓN INTERACTIVO
+const tqOpts12 = document.querySelectorAll('#tq-opts-12 .opt');
+const leafDisplay12 = document.getElementById('leaf-display-12');
+tqOpts12.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tqOpts12.forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const target = btn.dataset.target;
+    leafDisplay12.querySelectorAll(':scope > div').forEach(d => d.style.display = 'none');
+    const el = document.getElementById(target);
+    if (el) {
+      el.style.display = 'block';
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  });
+});
+
+// MAPA CONCEPTUAL INTERACTIVO
+document.querySelectorAll('#cmap-12 .cnode').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    document.getElementById('cmap-desc-12').textContent = node.dataset.tip;
+  });
+  node.addEventListener('click', () => {
+    document.querySelectorAll('#cmap-12 .cnode').forEach(n => n.classList.remove('on'));
+    node.classList.add('on');
+    document.getElementById('cmap-desc-12').textContent = node.dataset.tip;
+  });
+});
+
+// SIMULADOR 2D DE ONDA ELECTROMAGNÉTICA PLANA (CANVAS)
+const cvEM = document.getElementById('em-canvas');
+const ctxEM = cvEM.getContext('2d');
+const cLight = 2.99792e8;
+const eps0 = 8.85419e-12;
+const mu0 = 1.25664e-6;
+
+const rngF = document.getElementById('rng-f');
+const rngE0 = document.getElementById('rng-e0');
+const rngLam = document.getElementById('rng-lam');
+const chkAnim = document.getElementById('chk-anim');
+
+let timeEM = 0;
+
+function updateEMSim() {
+  const f = parseFloat(rngF.value);
+  const E0 = parseFloat(rngE0.value);
+  const lambdaPx = parseFloat(rngLam.value);
+
+  document.getElementById('out-f').textContent = `${f.toFixed(2)} Hz`;
+  document.getElementById('out-e0').textContent = `${E0} V/m`;
+  document.getElementById('out-lam').textContent = `${lambdaPx} px`;
+
+  const B0 = (E0 / cLight) * 1e9; // en nT
+  const Savg = (E0 * E0) / (2 * mu0 * cLight);
+
+  document.getElementById('lbl-b0').textContent = `${B0.toFixed(1)} nT`;
+  document.getElementById('lbl-savg').textContent = `${Savg.toFixed(2)} W/m²`;
+
+  drawEMWave(f, E0, lambdaPx);
+}
+
+function drawEMWave(f, E0, lambdaPx) {
+  ctxEM.clearRect(0, 0, cvEM.width, cvEM.height);
+
+  const ox = 60, oy = cvEM.height / 2;
+  const endX = cvEM.width - 50;
+  const k = (2 * Math.PI) / lambdaPx;
+  const omega = 2 * Math.PI * f;
+
+  // Eje de propagación X
+  ctxEM.strokeStyle = '#94a3b8';
+  ctxEM.lineWidth = 2;
+  ctxEM.beginPath();
+  ctxEM.moveTo(ox, oy);
+  ctxEM.lineTo(endX, oy);
+  ctxEM.stroke();
+  // Flecha de eje X (+c)
+  ctxEM.fillStyle = '#64748b';
+  ctxEM.beginPath();
+  ctxEM.moveTo(endX + 10, oy);
+  ctxEM.lineTo(endX - 4, oy - 6);
+  ctxEM.lineTo(endX - 4, oy + 6);
+  ctxEM.fill();
+  ctxEM.font = 'bold 13px Inter, sans-serif';
+  ctxEM.fillText('Propagación +c (Poynting S)', endX - 160, oy - 14);
+
+  // Muestreo y dibujo de vectores E y B a lo largo de x
+  const step = 8;
+  const B_scale = 0.7; // Factor de proyección en perspectiva para B (eje z inclinado)
+
+  for (let x = ox; x <= endX; x += step) {
+    const phase = k * (x - ox) - omega * timeEM;
+    const Ey = E0 * Math.cos(phase);
+    const Bz = Ey * B_scale; // Proyección en perspectiva de B
+
+    // Vector Campo Eléctrico E (Vertical Y, Rojo)
+    ctxEM.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+    ctxEM.lineWidth = 1.6;
+    ctxEM.beginPath();
+    ctxEM.moveTo(x, oy);
+    ctxEM.lineTo(x, oy - Ey);
+    ctxEM.stroke();
+
+    // Vector Campo Magnético B (Perspectiva Z a 45°, Cian)
+    const bx = x - Bz * 0.55;
+    const by = oy + Bz * 0.45;
+    ctxEM.strokeStyle = 'rgba(6, 182, 212, 0.7)';
+    ctxEM.beginPath();
+    ctxEM.moveTo(x, oy);
+    ctxEM.lineTo(bx, by);
+    ctxEM.stroke();
+  }
+
+  // Trazado envolvente suave de E (rojo)
+  ctxEM.strokeStyle = '#ef4444';
+  ctxEM.lineWidth = 2.5;
+  ctxEM.beginPath();
+  for (let x = ox; x <= endX; x += 3) {
+    const phase = k * (x - ox) - omega * timeEM;
+    const Ey = E0 * Math.cos(phase);
+    if (x === ox) ctxEM.moveTo(x, oy - Ey);
+    else ctxEM.lineTo(x, oy - Ey);
+  }
+  ctxEM.stroke();
+
+  // Trazado envolvente suave de B (cian)
+  ctxEM.strokeStyle = '#06b6d4';
+  ctxEM.beginPath();
+  for (let x = ox; x <= endX; x += 3) {
+    const phase = k * (x - ox) - omega * timeEM;
+    const Bz = E0 * Math.cos(phase) * B_scale;
+    const bx = x - Bz * 0.55;
+    const by = oy + Bz * 0.45;
+    if (x === ox) ctxEM.moveTo(bx, by);
+    else ctxEM.lineTo(bx, by);
+  }
+  ctxEM.stroke();
+
+  // Leyenda de colores
+  ctxEM.fillStyle = '#ef4444';
+  ctxEM.font = 'bold 14px Inter, sans-serif';
+  ctxEM.fillText('▲ Campo Eléctrico E(x,t)', ox + 20, 36);
+  ctxEM.fillStyle = '#06b6d4';
+  ctxEM.fillText('◆ Campo Magnético B(x,t)', ox + 220, 36);
+}
+
+function animateEM() {
+  if (chkAnim.checked) {
+    timeEM += 0.016;
+    updateEMSim();
+  }
+  requestAnimationFrame(animateEM);
+}
+
+[rngF, rngE0, rngLam].forEach(el => {
+  el.addEventListener('input', updateEMSim);
+  el.addEventListener('change', updateEMSim);
+});
+
+document.getElementById('btn-reset-em').addEventListener('click', () => {
+  rngF.value = 1.5; rngE0.value = 50; rngLam.value = 200;
+  timeEM = 0;
+  updateEMSim();
+});
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  fitStage();
+  showSlide(1);
+  updateEMSim();
+  animateEM();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>
