@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 4 · Distribuciones Continuas de Carga — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 4 · Deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:34px;line-height:1.15}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 17px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+/* Estilos Árbol y Mapa */
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.tline{position:relative;height:130px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:85px;height:3px;background:var(--e10-line)}
+.fcard{flex:1;min-height:140px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 20px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 22px var(--e10-font-display)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 4</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 4 · Cálculo Integral en Electrostática</span>
+    <h1 style="font-size:52px;line-height:1.06;margin:0">Distribuciones Continuas de Carga</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:900px">Densidades lineal, superficial y volumétrica ($\lambda, \sigma, \rho$). Superposición integral en 3D, cancelación por simetría y soluciones analíticas exactas para hilos, anillos, discos y planos infinitos.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-sim" style="height:48px;padding:0 20px;font-size:16px">Ir al simulador de integración</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 14</span></div>
+</section>
+
+<!-- 2 · DENSIDADES DE CARGA -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Modelado Macroscópico</span></div>
+  <h2>Densidades Continuas de Carga ($\lambda, \sigma, \rho$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b style="color:var(--e10-primary)">De la Suma Discreta a la Integral de Continuo:</b>
+        <p style="margin:6px 0">A escala macroscópica ($N \sim 10^{23}$ electrones), la granulación discreta de la carga se promedia como un continuo espacial continuo caracterizado por tres densidades diferenciales:</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
+          <div class="soft" style="text-align:center;padding:10px">
+            <b>Lineal ($\lambda$)</b>
+            \[\lambda = \frac{dq}{dL}\]
+            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Unidad SI: $[\text{C/m}]$</span>
+          </div>
+          <div class="soft" style="text-align:center;padding:10px">
+            <b>Superficial ($\sigma$)</b>
+            \[\sigma = \frac{dq}{dA}\]
+            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Unidad SI: $[\text{C/m}^2]$</span>
+          </div>
+          <div class="soft" style="text-align:center;padding:10px">
+            <b>Volumétrica ($\rho$)</b>
+            \[\rho = \frac{dq}{dV}\]
+            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Unidad SI: $[\text{C/m}^3]$</span>
+          </div>
+        </div>
+      </div>
+      <div class="tipbox">
+        <b>Conservación y Carga Total:</b> Si la distribución es uniforme, $Q = \lambda L = \sigma A = \rho V$. Si es no homogénea, se integra:
+        \[Q = \int_L \lambda(\vec{r}')\, dL' = \iint_S \sigma(\vec{r}')\, dA' = \iiint_V \rho(\vec{r}')\, dV'\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Elementos Diferenciales Estándar:</b>
+        <ul style="margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Varilla recta:</b> $dq = \lambda dx'$</li>
+          <li><b>Arco de radio $R$:</b> $dq = \lambda R d\theta'$</li>
+          <li><b>Anillo de grosor $dr'$:</b> $dq = \sigma (2\pi r' dr')$</li>
+          <li><b>Cascarón esférico $dr'$:</b> $dq = \rho (4\pi r'^2 dr')$</li>
+          <li><b>Volumen cartesiano:</b> $dq = \rho dx' dy' dz'$</li>
+        </ul>
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>¡Ojo al vector relativo!</b> La posición del elemento de carga fuente se denota con prima $\vec{r}'$, mientras que el punto de campo donde medimos se denota sin prima $\vec{r}$. El vector de separación es $\vec{\mathcal{R}} = \vec{r} - \vec{r}'$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamentos analíticos de distribución</span><span class="mono">Diapositiva 2 / 14</span></div>
+</section>
+
+<!-- 3 · FORMULACIÓN INTEGRAL GENERAL -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Principio Integral</span></div>
+  <h2>El Principio de Superposición Integral</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card">
+        <b style="color:var(--e10-primary)">Campo Eléctrico Producido por un Diferencial $dq$:</b>
+        \[d\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{dq}{|\vec{r} - \vec{r}'|^3}(\vec{r} - \vec{r}') = \frac{1}{4\pi\epsilon_0}\frac{dq}{\mathcal{R}^2}\hat{\mathcal{R}}\]
+        <p style="margin:6px 0 0;font-size:15px">Integrando sobre toda la geometría fuente extendida $\Omega$:</p>
+        \[\vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\int_\Omega \frac{\vec{r} - \vec{r}'}{|\vec{r} - \vec{r}'|^3}\, dq'\]
+      </div>
+      <div class="soft" style="font-size:15px">
+        <b style="color:var(--e10-primary)">Potencial Eléctrico Escalar Asociado:</b>
+        \[V(\vec{r}) = \frac{1}{4\pi\epsilon_0}\int_\Omega \frac{dq'}{|\vec{r} - \vec{r}'|}\]
+        <span style="font-size:14px;color:var(--e10-muted)">El potencial es un escalar: ¡no requiere descomposición vectorial para integrarse! Luego se obtiene $\vec{E} = -\vec{\nabla} V$.</span>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="border-left:4px solid var(--e10-primary);font-size:15px">
+        <b style="color:var(--e10-primary)">Protocolo de Integración en 5 Pasos (Sears-Zemansky):</b>
+        <ol style="margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Dibujar el sistema:</b> Fijar origen cartesiano y ubicar el diferencial genérico $dq$.</li>
+          <li><b>Escribir $dq$</b> en términos de la densidad ($\lambda dx', \sigma dA', \dots$).</li>
+          <li><b>Definir la distancia euclídea:</b> $\mathcal{R} = |\vec{r} - \vec{r}'|$.</li>
+          <li><b>Aplicar simetría:</b> Identificar si pares simétricos cancelan componentes ($E_x, E_y$ o $E_z$).</li>
+          <li><b>Integrar entre límites físicos:</b> Resolver la integral definida univariada resultante.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:14px">
+        <b>Regla de Oro:</b> ¡Nunca integres magnitudes vectoriales $|\vec{E}| = \int |d\vec{E}|$ directamente! Siempre debes proyectar en componentes cartesianas ortogonales: $E_x = \int dE_x$, $E_y = \int dE_y$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Estructura formal de la electrostática de medios continuos</span><span class="mono">Diapositiva 3 / 14</span></div>
+</section>
+
+<!-- 4 · HILO FINITO DE CARGA -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 1</span></div>
+  <h2>Segmento Rectilíneo Finito de Carga Uniforme</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Deducción Rigurosa sobre la Mediatriz ($x=0$ a distancia $y$):</b>
+        <p style="margin:4px 0">Alambre sobre el eje $x$ desde $-L/2$ hasta $+L/2$, con $\lambda = Q/L$. Medimos en $P(0, y)$.</p>
+        <p style="margin:4px 0">Para un elemento $dq = \lambda dx'$ en $x'$: distancia $\mathcal{R} = \sqrt{x'^2 + y^2}$.</p>
+        \[dE = \frac{1}{4\pi\epsilon_0}\frac{\lambda dx'}{x'^2 + y^2}, \quad dE_y = dE \cos\theta = dE \frac{y}{\sqrt{x'^2 + y^2}}\]
+        <p style="margin:4px 0">Por simetría especular respecto al eje $y$, para cada elemento en $+x'$ existe un elemento idéntico en $-x'$ cuya componente horizontal se cancela: $E_x = \int_{-L/2}^{L/2} dE_x = 0$.</p>
+        \[E_y = \frac{2\lambda y}{4\pi\epsilon_0}\int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}}\]
+        <p style="margin:4px 0">Sustitución trigonométrica: $x' = y\tan\theta \implies dx' = y\sec^2\theta d\theta$:</p>
+        \[\int \frac{y\sec^2\theta\, d\theta}{(y^2\sec^2\theta)^{3/2}} = \frac{1}{y^2}\int \cos\theta\, d\theta = \frac{\sin\theta}{y^2} = \frac{x'}{y^2\sqrt{x'^2 + y^2}}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="text-align:center">
+        <b style="color:var(--e10-primary)">Resultado Exacto en la Mediatriz:</b>
+        \[E_y = \frac{1}{4\pi\epsilon_0}\frac{\lambda L}{y\sqrt{y^2 + (L/2)^2}} = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}\]
+      </div>
+      <div class="card" style="font-size:14px">
+        <b>Forma Angular General (punto asimétrico):</b>
+        Si los extremos subtienden ángulos $\theta_1$ y $\theta_2$ con respecto a la normal:
+        \[E_y = \frac{k\lambda}{y}(\sin\theta_2 - \sin\theta_1)\]
+        \[E_x = \frac{k\lambda}{y}(\cos\theta_2 - \cos\theta_1)\]
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Límite Lejano ($y \gg L$):</b> $\sqrt{4y^2+L^2} \approx 2y$, luego:
+        \[E_y \approx \frac{2k\lambda L}{y(2y)} = \frac{k(\lambda L)}{y^2} = \frac{kQ}{y^2}\]
+        ¡El hilo finito se percibe idéntico a una carga puntual $Q$ a gran distancia!
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Deducción elemental mediante sustitución trigonométrica</span><span class="mono">Diapositiva 4 / 14</span></div>
+</section>
+
+<!-- 5 · HILO INFINITO -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 2</span></div>
+  <h2>Límite Asintótico: Alambre Rectilíneo Infinito ($L \to \infty$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Paso al Límite $L \to \infty$ o Ángulos $\theta \to \pm \pi/2$:</b>
+        <p style="margin:8px 0">A partir de la solución exacta del hilo finito, factorizamos $L$ en el denominador:</p>
+        \[E_y = \frac{2k\lambda L}{y L \sqrt{4(y/L)^2 + 1}} = \frac{2k\lambda}{y\sqrt{4(y/L)^2 + 1}}\]
+        <p style="margin:8px 0">Tomando el límite riguroso cuando $L/y \to \infty$:</p>
+        \[\lim_{L \to \infty} E_y = \frac{2k\lambda}{y\sqrt{0 + 1}} = \frac{2k\lambda}{y} = \frac{2\lambda}{4\pi\epsilon_0 y} = \frac{\lambda}{2\pi\epsilon_0 y}\]
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Ecuación Maestra del Alambre Infinito:</b>
+        \[\vec{E} = \frac{\lambda}{2\pi\epsilon_0 r}\hat{r}\]
+        <span style="font-size:14px">Donde $r$ es la distancia radial cilíndrica perpendicular al eje del conductor. El campo decae como $\mathbf{1/r}$ (ley inversa de primer orden).</span>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Comparativa de Leyes de Decaimiento:</b>
+        <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:14px">
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <th style="text-align:left;padding:6px 0">Geometría</th>
+            <th style="text-align:left;padding:6px 0">Decaimiento</th>
+            <th style="text-align:left;padding:6px 0">Simetría</th>
+          </tr>
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <td style="padding:6px 0">Carga Puntual</td>
+            <td style="padding:6px 0;color:var(--e10-primary)">$E \propto 1/r^2$</td>
+            <td style="padding:6px 0">Esférica</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--e10-line)">
+            <td style="padding:6px 0">Línea Infinita</td>
+            <td style="padding:6px 0;color:var(--e10-primary)">$E \propto 1/r$</td>
+            <td style="padding:6px 0">Cilíndrica</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0">Plano Infinito</td>
+            <td style="padding:6px 0;color:var(--e10-primary)">$E \propto r^0 = \text{cte}$</td>
+            <td style="padding:6px 0">Planar</td>
+          </tr>
+        </table>
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>¿Por qué el campo decae más lento ($1/r$ en vez de $1/r^2$)?</b><br>
+        A medida que nos alejamos de la varilla, la distancia aumenta, pero más longitud efectiva de la varilla contribuye con proyecciones no despreciables, mitigando la atenuación.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Transición asintótica fundamental para electromagnetismo industrial</span><span class="mono">Diapositiva 5 / 14</span></div>
+</section>
+
+<!-- 6 · SIMULADOR INTERACTIVO 2D (CANVAS) -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Laboratorio de Integración</b><span class="tag l">Simulador Visual 2D</span></div>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <canvas id="sim-canvas" class="sim" width="680" height="430" style="width:100%;height:430px"></canvas>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="checkbox" id="chk-pair" checked> Mostrar par diferencial simétrico $(\pm x')$
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="checkbox" id="chk-vectors" checked> Ver componentes cartesianas ($dE_x, dE_y$)
+        </label>
+        <button class="btn" id="btn-reset-sim" style="margin-left:auto;padding:4px 10px;min-height:32px;font-size:13px">Reset</button>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:10px">
+      <div class="card" style="font-size:14px;display:flex;flex-direction:column;gap:10px">
+        <b>Controles de la Distribución:</b>
+        <div class="ctrl">
+          <label>Longitud $L$:</label>
+          <input type="range" id="rng-L" min="1" max="10" step="0.5" value="4">
+          <output id="out-L">4.0 m</output>
+        </div>
+        <div class="ctrl">
+          <label>Densidad $\lambda$:</label>
+          <input type="range" id="rng-lam" min="-10" max="10" step="1" value="5">
+          <output id="out-lam">+5.0 nC/m</output>
+        </div>
+        <div class="ctrl">
+          <label>Posición $y_P$:</label>
+          <input type="range" id="rng-y" min="0.5" max="6" step="0.25" value="2">
+          <output id="out-y">2.00 m</output>
+        </div>
+        <div class="ctrl">
+          <label>Elemento $x'$:</label>
+          <input type="range" id="rng-xp" min="0" max="2" step="0.05" value="1.2">
+          <output id="out-xp">1.20 m</output>
+        </div>
+      </div>
+      <div class="read">
+        <div>$E_{\text{teórico}}$<b id="lbl-etheory">-- N/C</b></div>
+        <div>$E_{\text{infinito}}$<b id="lbl-einf">-- N/C</b></div>
+        <div>$dE_x \text{ neta}$<b id="lbl-dex">0.00 N/C</b></div>
+      </div>
+      <div class="tipbox" style="font-size:13px;line-height:1.4">
+        Arrastra el punto verde $P$ o usa los controles deslizantes para comprobar en tiempo real cómo las componentes horizontales del par simétrico se anulan exactamente ($dE_{1x} + dE_{2x} = 0$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interacción numérica y vectorial directa</span><span class="mono">Diapositiva 6 / 14</span></div>
+</section>
+
+<!-- 7 · ANILLO CIRCULAR EN EL EJE AXIAL -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 3</span></div>
+  <h2>Anillo Circular Uniformemente Cargado en su Eje Axial</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Análisis de Simetría Azimutal y Geometría 3D:</b>
+        <p style="margin:4px 0">Anillo de radio $R$ centrado en el plano $yz$ con carga neta $Q$ distribuida uniformemente ($\lambda = Q/(2\pi R)$). Calculamos $\vec{E}$ en un punto $P(x, 0, 0)$ sobre su eje axial.</p>
+        <p style="margin:4px 0">Para cualquier elemento diferencial $dq = \lambda ds = \lambda R d\phi$, la distancia euclídea a $P$ es <b>estrictamente constante</b> para todo el anillo:</p>
+        \[r = \sqrt{x^2 + R^2}\]
+        <p style="margin:4px 0">Para cada elemento diferencial $dq$ existe un elemento diametralmente opuesto. Sus componentes perpendiculares al eje $x$ son iguales y opuestas: $dE_\perp = 0$.</p>
+        \[dE_x = dE \cos\theta = \left(\frac{1}{4\pi\epsilon_0}\frac{dq}{x^2 + R^2}\right)\left(\frac{x}{\sqrt{x^2 + R^2}}\right) = \frac{1}{4\pi\epsilon_0}\frac{x\, dq}{(x^2 + R^2)^{3/2}}\]
+        <p style="margin:4px 0">Como $x$ y $R$ son independientes de la posición azimutal en el anillo, salen de la integral:</p>
+        \[E_x = \frac{x}{4\pi\epsilon_0(x^2 + R^2)^{3/2}}\oint_{\text{anillo}} dq = \frac{1}{4\pi\epsilon_0}\frac{Q x}{(x^2 + R^2)^{3/2}}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="text-align:center">
+        <b style="color:var(--e10-primary)">Ecuación Axial del Anillo:</b>
+        \[\vec{E}(x) = \frac{k Q x}{(x^2 + R^2)^{3/2}}\hat{\imath}\]
+      </div>
+      <div class="card" style="font-size:14px">
+        <b>Comportamiento en Puntos Clave:</b>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>En el centro ($x=0$):</b> $E_x(0) = 0$. (Fuerzas radiales se cancelan mutuamente).</li>
+          <li><b>Límite lejano ($x \gg R$):</b> $E_x \approx \frac{kQx}{(x^2)^{3/2}} = \frac{kQ}{x^2}$ (Carga puntual).</li>
+          <li><b>Punto de campo máximo:</b> Derivando $dE_x/dx = 0$:
+            \[(x^2+R^2)^{3/2} - x\cdot \frac{3}{2}(x^2+R^2)^{1/2}(2x) = 0\]
+            \[x^2 + R^2 - 3x^2 = 0 \implies x_{\text{máx}} = \frac{R}{\sqrt{2}} \approx 0{,}707 R\]
+          </li>
+        </ul>
+      </div>
+      <div class="warn" style="font-size:13px">
+        <b>Oscilador Armónico Axial:</b> Una carga negativa $-q_0$ colocada cerca del centro ($x \ll R$) experimenta fuerza restauradora $F \approx -(\frac{kQq_0}{R^3})x$, ¡oscilando con MAS!
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Simetría axial pura en coordenadas cilíndricas</span><span class="mono">Diapositiva 7 / 14</span></div>
+</section>
+
+<!-- 8 · DISCO CIRCULAR CARGADO -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 4</span></div>
+  <h2>Disco Circular Uniformemente Cargado en su Eje Axial</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Estrategia por Anillos Concéntricos:</b>
+        <p style="margin:4px 0">Disco de radio $R$ con densidad superficial uniforme $\sigma = Q/(\pi R^2)$. Descomponemos el disco en infinitos anillos coaxiales concéntricos de radio $r'$ y espesor diferencial $dr'$.</p>
+        <p style="margin:4px 0">Área diferencial: $dA = 2\pi r' dr'$. Carga diferencial del anillo: $dq = \sigma 2\pi r' dr'$.</p>
+        <p style="margin:4px 0">Usando el resultado exacto del anillo axial obtenido en la diapositiva anterior:</p>
+        \[dE_x = \frac{1}{4\pi\epsilon_0}\frac{x\, dq}{(x^2 + r'^2)^{3/2}} = \frac{1}{4\pi\epsilon_0}\frac{x(\sigma 2\pi r' dr')}{(x^2 + r'^2)^{3/2}} = \frac{\sigma x}{4\epsilon_0}\frac{2r' dr'}{(x^2 + r'^2)^{3/2}}\]
+        <p style="margin:4px 0">Cambiando variable $u = x^2 + r'^2 \implies du = 2r' dr'$, con límites $u(0)=x^2$ y $u(R)=x^2+R^2$:</p>
+        \[E_x = \frac{\sigma x}{4\epsilon_0}\int_{x^2}^{x^2+R^2} u^{-3/2} du = \frac{\sigma x}{4\epsilon_0}\left[ -2 u^{-1/2} \right]_{x^2}^{x^2+R^2} = \frac{\sigma x}{2\epsilon_0}\left[ \frac{1}{x} - \frac{1}{\sqrt{x^2+R^2}} \right]\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="text-align:center">
+        <b style="color:var(--e10-primary)">Campo Axial del Disco Cargado:</b>
+        \[E_x(x) = \frac{\sigma}{2\epsilon_0}\left[ 1 - \frac{x}{\sqrt{x^2 + R^2}} \right]\]
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Interpretación Geométrica con Ángulo Semiapical $\alpha$:</b>
+        Si $\alpha$ es el ángulo subtendido por el borde del disco respecto al eje en el punto $P$, $\cos\alpha = x/\sqrt{x^2+R^2}$:
+        \[E_x = \frac{\sigma}{2\epsilon_0}(1 - \cos\alpha)\]
+        ¡La intensidad del campo depende únicamente del ángulo visual sólido con que se observa el disco!
+      </div>
+      <div class="ok" style="font-size:14px">
+        <b>Comportamiento en la Superficie ($x \to 0^+$):</b>
+        \[\lim_{x \to 0^+} E_x = \frac{\sigma}{2\epsilon_0}\]
+        Justo en la cara del disco, el campo es completamente perpendicular e igual a $\sigma/(2\epsilon_0)$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Construcción de geometrías 2D mediante partición concéntrica</span><span class="mono">Diapositiva 8 / 14</span></div>
+</section>
+
+<!-- 9 · PLANO INFINITO Y DISCONTINUIDAD -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 5</span></div>
+  <h2>Plano Infinito de Carga y Discontinuidad del Campo</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Límite Asintótico $R \to \infty$ (o Aproximación Cercana $x \ll R$):</b>
+        <p style="margin:8px 0">Tomando el radio del disco hacia el infinito:</p>
+        \[\lim_{R \to \infty} \frac{x}{\sqrt{x^2 + R^2}} = 0\]
+        <p style="margin:8px 0">Por tanto, el campo eléctrico producido por una lámina plana infinita con densidad $\sigma$ es:</p>
+        \[E = \frac{\sigma}{2\epsilon_0}\]
+        <div class="ok" style="font-size:15px;margin-top:10px">
+          <b>Propiedad Extraordinaria:</b> ¡El campo electrostático es <b>estrictamente uniforme e independiente de la distancia</b> a la lámina!
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="warn" style="font-size:15px">
+        <b style="color:var(--e10-warning)">Teorema de Discontinuidad Superficial:</b>
+        Al cruzar una superficie con densidad superficial neta $\sigma$, la componente normal del campo experimenta un salto finito:
+        \[\Delta E_n = E_{n,\text{arriba}} - E_{n,\text{abajo}} = \frac{\sigma}{2\epsilon_0} - \left(-\frac{\sigma}{2\epsilon_0}\right) = \frac{\sigma}{\epsilon_0}\]
+      </div>
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-primary)">Placas Paralelas Infinitas (Condensador Ideal):</b>
+        Dos láminas infinitas con densidades $+\sigma$ y $-\sigma$:
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li><b>Región exterior ($x < 0$ y $x > d$):</b> Los campos se cancelan vectorialmente: $E_{\text{ext}} = 0$.</li>
+          <li><b>Región interior ($0 < x < d$):</b> Los campos se suman constructivamente:
+            \[E_{\text{int}} = \frac{\sigma}{2\epsilon_0} + \frac{\sigma}{2\epsilon_0} = \frac{\sigma}{\epsilon_0}\]
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de condensadores y condiciones de frontera</span><span class="mono">Diapositiva 9 / 14</span></div>
+</section>
+
+<!-- 10 · COMPARATIVA DE MÉTODOS -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag p">Técnicas de Resolución</span></div>
+  <h2>Dos Caminos Analíticos: ¿Trigonométrico o Vectorial Puro?</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:18px;color:var(--e10-accent-strong)">Camino A: Parametrización Trigonométrica</b>
+        <p style="font-size:15px;margin:8px 0">Cambio de coordenadas a ángulos subtendidos ($\theta, \phi$) desde el inicio.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Integrales inmediatas en $\sin\theta$ o $\cos\theta$, reduciendo el álgebra de radicales.</li>
+          <li><b>Ideal para:</b> Arcos circulares, segmentos finitos observados desde puntos con simetría visual simple.</li>
+          <li><b>Desventaja:</b> Requiere cuidado extremo al definir el signo y cuadrante de los ángulos límite ($\theta_1, \theta_2$).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:18px;color:var(--e10-primary)">Camino B: Formulación Vectorial Cartesiana</b>
+        <p style="font-size:15px;margin:8px 0">Uso directo del vector relativo $\vec{\mathcal{R}} = \vec{r} - \vec{r}'$ y norma $\mathcal{R}^3$.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Procedimiento completamente algorítmico y programable; no depende de intuición angular.</li>
+          <li><b>Ideal para:</b> Configuraciones 3D arbitrarias, poligonales de carga, o cuando se integra primero el potencial escalar $V$.</li>
+          <li><b>Desventaja:</b> Conduce a integrales algebraicas con potencias semienteras $(x'^2 + y'^2 + z^2)^{3/2}$.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;text-align:center">
+    <b>Recomendación Docente 10.Easy:</b> Para alambres rectos y arcos, usa el <b>Camino A</b>. Para anillos, discos, y problemas en coordenadas 3D, utiliza el <b>Camino B</b> con potencias directas.
+  </div>
+  <div class="foot"><span>Estrategia metacognitiva para talleres y parciales</span><span class="mono">Diapositiva 10 / 14</span></div>
+</section>
+
+<!-- 11 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Árbol de Decisión</span></div>
+  <h2>¿Qué Estrategia y Fórmula Elegir según la Geometría?</h2>
+  <div class="row">
+    <div class="col" style="flex:0.95;gap:10px">
+      <div class="tq">
+        <div class="tqh">Paso 1: Identifica la Dimensión de la Carga</div>
+        <div class="tq-opts" id="tq-opts">
+          <button class="opt on" data-target="leaf-linea">1D · Varilla, Hilo o Alambre ($\lambda$)</button>
+          <button class="opt" data-target="leaf-anillo">1D Curva · Anillo Circular Axial ($R, Q$)</button>
+          <button class="opt" data-target="leaf-disco">2D Plano · Disco Circular Axial ($\sigma, R$)</button>
+          <button class="opt" data-target="leaf-plano">2D Extenso · Lámina Plana Infinita ($\sigma$)</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf" id="leaf-display" style="flex:1.05">
+      <div id="leaf-linea">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Línea / Segmento de Carga ($\lambda$)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Diferencial:</b> $dq = \lambda dx'$. <b>Vector:</b> $\vec{r}-\vec{r}' = -x'\hat{\imath} + y\hat{\jmath}$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Fórmula Mediatriz:</b> $E_y = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}$<br>
+          <b>Límite Infinito:</b> $E = \frac{\lambda}{2\pi\epsilon_0 r}$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Si el punto de campo no está en la mediatriz simétrica, $E_x \neq 0$ y se debe integrar con ángulos asimétricos $(\sin\theta_2 - \sin\theta_1)$.</p>
+      </div>
+      <div id="leaf-anillo" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Anillo Circular en su Eje Axial ($R, Q$)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Diferencial:</b> $dq = \lambda R d\phi$. Distancia $\mathcal{R} = \sqrt{x^2+R^2}$ constante.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Fórmula Axial:</b> $E_x = \frac{k Q x}{(x^2+R^2)^{3/2}}$<br>
+          <b>Punto Máximo:</b> $x = R/\sqrt{2}$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Esta solución solo es válida sobre el eje axial $x$. Fuera del eje, el campo no tiene solución elemental cerrada y requiere integrales elípticas.</p>
+      </div>
+      <div id="leaf-disco" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Disco Circular en su Eje Axial ($\sigma, R$)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Partición:</b> Anillos concéntricos de área $dA = 2\pi r' dr'$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Fórmula Axial:</b> $E_x = \frac{\sigma}{2\epsilon_0}\left[ 1 - \frac{x}{\sqrt{x^2+R^2}} \right]$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Al evaluar en $x < 0$ (lado izquierdo), el signo del término cambia por dirección vectorial hacia $-x$.</p>
+      </div>
+      <div id="leaf-plano" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Plano Infinito de Carga ($\sigma$)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Geometría límite:</b> Disco con $R \to \infty$ o distancia de campo muy pequeña ($x \ll R$).</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Fórmula Universal:</b> $E = \frac{\sigma}{2\epsilon_0}$<br>
+          <b>Salto de Frontera:</b> $\Delta E_n = \sigma/\epsilon_0$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> No confundir el campo de una lámina aislante con densidad $\sigma$ ($E = \sigma/2\epsilon_0$) con el campo en la superficie de un conductor en equilibrio ($E = \sigma/\epsilon_0$).</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Guía interactiva de selección algorítmica</span><span class="mono">Diapositiva 11 / 14</span></div>
+</section>
+
+<!-- 12 · MAPA CONCEPTUAL INTERACTIVO CON FLUJO DE LUZ -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Ontología Conceptual</span></div>
+  <h2>Mapa Conceptual: De la Partícula Puntual al Medio Continuo</h2>
+  <div class="row">
+    <div class="cmap" id="cmap-4">
+      <svg width="780" height="520" viewBox="0 0 780 520">
+        <!-- Enlaces -->
+        <path class="edge" d="M120,260 L280,140"/>
+        <path class="edge" d="M120,260 L280,260"/>
+        <path class="edge" d="M120,260 L280,380"/>
+        <path class="edge" d="M280,140 L450,140"/>
+        <path class="edge" d="M280,260 L450,260"/>
+        <path class="edge" d="M280,380 L450,380"/>
+        <path class="edge" d="M450,140 L640,200"/>
+        <path class="edge" d="M450,260 L640,260"/>
+        <path class="edge" d="M450,380 L640,320"/>
+        <!-- Flujos de Luz Animados -->
+        <path class="flow" d="M120,260 L280,260"/>
+        <path class="flow" d="M280,260 L450,260"/>
+        <path class="flow" d="M450,260 L640,260"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="cnode past" style="left:120px;top:260px" data-tip="M1-M3: Carga discreta puntual q_i y suma directa de Coulomb">Cargas Puntuales<br><b>(Módulo 1-3)</b></div>
+      <div class="cnode this" style="left:280px;top:140px" data-tip="Línea 1D: lambda = dq/dL, varillas, hilos rectos y arcos">Densidad Lineal<br><b>$\lambda = dq/dL$</b></div>
+      <div class="cnode this" style="left:280px;top:260px" data-tip="Superficie 2D: sigma = dq/dA, discos, planos y cascarones">Densidad Superf.<br><b>$\sigma = dq/dA$</b></div>
+      <div class="cnode this" style="left:280px;top:380px" data-tip="Volumen 3D: rho = dq/dV, esferas y cilindros macizos">Densidad Volum.<br><b>$\rho = dq/dV$</b></div>
+      <div class="cnode this" style="left:450px;top:140px" data-tip="Hilo finito y límite infinito: E = lambda / (2 pi eps_0 r)">Alambre Infinito<br><b>$E \propto 1/r$</b></div>
+      <div class="cnode this" style="left:450px;top:260px" data-tip="Anillo axial y disco cargado mediante superposición continua">Anillo y Disco<br><b>Axiales</b></div>
+      <div class="cnode this" style="left:450px;top:380px" data-tip="Lámina infinita uniforme: E = sigma / (2 eps_0)">Plano Infinito<br><b>$E = \sigma / 2\epsilon_0$</b></div>
+      <div class="cnode fut" style="left:640px;top:260px" data-tip="Módulo 5: Flujo eléctrico y cálculo simplificado mediante Ley de Gauss">Ley de Gauss<br><b>(Módulo 5)</b></div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" id="cmap-tip" style="flex:1;font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Explorador Ontológico:</b>
+        <p id="cmap-desc" style="margin:8px 0 0">Pasa el cursor o haz clic en cualquier nodo para explorar las relaciones conceptuales entre distribuciones continuas, simetrías y la transición hacia la Ley de Gauss.</p>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Conexión Directa con el Módulo 5:</b> Cuando la geometría presenta simetría esférica, cilíndrica o planar, la <b>Ley de Gauss</b> permite hallar estos mismos campos en solo dos líneas de cálculo sin integrar funciones complejas.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interconexión conceptual y epistemológica</span><span class="mono">Diapositiva 12 / 14</span></div>
+</section>
+
+<!-- 13 · FLASHCARDS 3D -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Repaso Activo</b><span class="tag e">Flashcards 3D</span></div>
+  <h2>Fórmulas y Conceptos Clave para Memorización</h2>
+  <p style="font-size:16px;color:var(--e10-muted);margin:0">Haz clic en cada tarjeta interactiva para voltearla y evaluar tu retención analítica antes del taller:</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;margin-top:10px">
+    <div class="flip" id="fc-1">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 1</span>
+          <b style="font-size:18px">¿En qué posición axial $x$ el campo eléctrico de un anillo cargado de radio $R$ alcanza su valor máximo?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta analítica</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:20px;color:var(--e10-primary)">$x = \frac{R}{\sqrt{2}} \approx 0{,}707 R$</b>
+          <p style="font-size:14px;margin:0">Se deduce al resolver $dE_x/dx = 0$. En el centro ($x=0$) el campo es nulo y para $x \to \infty$ decae asintóticamente a cero.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc-2">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 2</span>
+          <b style="font-size:18px">¿Cómo decae la magnitud del campo eléctrico con la distancia para un alambre infinito vs. una carga puntual?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta analítica</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">Alambre: $E \propto \frac{1}{r}$ &nbsp;|&nbsp; Puntual: $E \propto \frac{1}{r^2}$</b>
+          <p style="font-size:14px;margin:0">La línea infinita atenúa más suavemente debido a que elementos lejanos del hilo siguen sumando proyecciones laterales significativas.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc-3">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 3</span>
+          <b style="font-size:18px">¿Cuánto vale el campo eléctrico cerca de una lámina plana infinita con carga uniforme $\sigma$?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta analítica</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$E = \frac{\sigma}{2\epsilon_0}$</b>
+          <p style="font-size:14px;margin:0">¡Es estrictamente uniforme e independiente de la distancia! Apunta perpendicularmente alejándose (si $\sigma > 0$) o acercándose (si $\sigma < 0$).</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc-4">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 4</span>
+          <b style="font-size:18px">¿Cuál es la discontinuidad en la componente normal del campo al atravesar una superficie con carga $\sigma$?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta analítica</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$\Delta E_n = \frac{\sigma}{\epsilon_0}$</b>
+          <p style="font-size:14px;margin:0">Condición de frontera fundamental en electrostática: $E_{n2} - E_{n1} = \sigma/\epsilon_0$, base del funcionamiento de condensadores y conductores.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Repaso activo y consolidación neurocognitiva</span><span class="mono">Diapositiva 13 / 14</span></div>
+</section>
+
+<!-- 14 · RESUMEN Y ACCESO A TALLER -->
+<section class="slide" data-n="14">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Resumen de Unidad</b><span class="tag c">Cierre Metodológico</span></div>
+  <h2>Síntesis Ejecutiva del Módulo 4</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Conclusiones Fundamentales:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Cálculo diferencial continuo:</b> Se sustituye la sumatoria por la integral extendida $\int d\vec{E}$, proyectando previamente sobre los ejes ortogonales.</li>
+          <li><b>Simetrías de reflexión:</b> Detectar componentes impares que se cancelan idénticamente en pares $(\pm x', \pm y')$ es esencial antes de integrar.</li>
+          <li><b>Jerarquía de decaimiento:</b> Puntual ($1/r^2$) $\to$ Alambre ($1/r$) $\to$ Plano ($r^0 = \text{cte}$).</li>
+          <li><b>Puente a la Ley de Gauss:</b> Los resultados para hilos y planos infinitos son la base comparativa para validar el teorema del flujo en el Módulo 5.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Siguiente Sesión · Módulo 5:</b> Ley de Gauss, flujo del campo vectorial $\Phi_E = \oint \vec{E}\cdot d\vec{A}$, superficies gaussianas y conductores en equilibrio.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px;justify-content:center">
+      <a href="../../talleres/Taller_4_Distribuciones_de_Carga_Continua.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico No. 4 →</a>
+      <button class="btn" id="btn-print-deck" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
+      <a href="../M5_Gauss/index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Continuar al Módulo 5 (Gauss) →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 14 / 14</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra de Controles Global -->
+<div class="deck-ui no-print">
+  <button class="btn" id="deck-prev">◀ Anterior</button>
+  <span class="count" id="deck-count">1 / 14</span>
+  <button class="btn" id="deck-next">Siguiente ▶</button>
+  <button class="btn" id="deck-fit">Ajustar Pantalla</button>
+</div>
+
+<script>
+// MOTOR DEL DECK 16:9
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 1;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > totalSlides) n = totalSlides;
+  currentSlide = n;
+  slides.forEach((s, idx) => {
+    s.classList.toggle('on', (idx + 1) === currentSlide);
+  });
+  document.getElementById('deck-count').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress').style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+  
+  if (window.renderMathInElement) {
+    const active = slides[currentSlide - 1];
+    window.renderMathInElement(active, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.getElementById('deck-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+document.getElementById('deck-next').addEventListener('click', () => showSlide(currentSlide + 1));
+document.getElementById('btn-start').addEventListener('click', () => showSlide(2));
+document.getElementById('btn-to-sim').addEventListener('click', () => showSlide(6));
+document.getElementById('btn-print-deck').addEventListener('click', () => window.print());
+
+// NAVEGACIÓN POR TECLADO
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    showSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides);
+  } else if (e.key === 'p' && (e.ctrlKey || e.metaKey)) {
+    // Permite print nativo
+  }
+});
+
+// ESCALADO 16:9 RESPONSIVE
+function fitStage() {
+  const stage = document.getElementById('stage');
+  const sw = 1280, sh = 720;
+  const ww = window.innerWidth, wh = window.innerHeight;
+  const scale = Math.min(ww / sw, wh / sh);
+  stage.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitStage);
+document.getElementById('deck-fit').addEventListener('click', fitStage);
+
+// FLASHCARDS 3D
+document.querySelectorAll('.flip').forEach(fc => {
+  fc.addEventListener('click', () => fc.classList.toggle('open'));
+});
+
+// ÁRBOL DE DECISIÓN INTERACTIVO
+const tqOpts = document.querySelectorAll('#tq-opts .opt');
+const leafDisplay = document.getElementById('leaf-display');
+tqOpts.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tqOpts.forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const target = btn.dataset.target;
+    leafDisplay.querySelectorAll(':scope > div').forEach(d => d.style.display = 'none');
+    const el = document.getElementById(target);
+    if (el) {
+      el.style.display = 'block';
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  });
+});
+
+// MAPA CONCEPTUAL INTERACTIVO
+document.querySelectorAll('#cmap-4 .cnode').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    document.getElementById('cmap-desc').textContent = node.dataset.tip;
+  });
+  node.addEventListener('click', () => {
+    document.querySelectorAll('#cmap-4 .cnode').forEach(n => n.classList.remove('on'));
+    node.classList.add('on');
+    document.getElementById('cmap-desc').textContent = node.dataset.tip;
+  });
+});
+
+// SIMULADOR INTERACTIVO 2D (CANVAS)
+const cv = document.getElementById('sim-canvas');
+const ctx = cv.getContext('2d');
+const kConst = 8.98755e9;
+
+const rngL = document.getElementById('rng-L');
+const rngLam = document.getElementById('rng-lam');
+const rngY = document.getElementById('rng-y');
+const rngXp = document.getElementById('rng-xp');
+const chkPair = document.getElementById('chk-pair');
+const chkVectors = document.getElementById('chk-vectors');
+
+function updateSim() {
+  const L = parseFloat(rngL.value);
+  const lam_nC = parseFloat(rngLam.value);
+  const y = parseFloat(rngY.value);
+  let xp = parseFloat(rngXp.value);
+  if (xp > L / 2) {
+    xp = L / 2;
+    rngXp.value = xp;
+  }
+  rngXp.max = (L / 2).toFixed(2);
+
+  document.getElementById('out-L').textContent = `${L.toFixed(1)} m`;
+  document.getElementById('out-lam').textContent = `${lam_nC >= 0 ? '+' : ''}${lam_nC.toFixed(1)} nC/m`;
+  document.getElementById('out-y').textContent = `${y.toFixed(2)} m`;
+  document.getElementById('out-xp').textContent = `${xp.toFixed(2)} m`;
+
+  const lam = lam_nC * 1e-9;
+  // Campo teórico finito
+  const E_theory = (2 * kConst * Math.abs(lam) * L) / (y * Math.sqrt(4 * y * y + L * L));
+  // Campo alambre infinito
+  const E_inf = (2 * kConst * Math.abs(lam)) / y;
+
+  document.getElementById('lbl-etheory').textContent = `${E_theory.toFixed(1)} N/C`;
+  document.getElementById('lbl-einf').textContent = `${E_inf.toFixed(1)} N/C`;
+  document.getElementById('lbl-dex').textContent = `0.00 N/C (Simetría)`;
+
+  drawCanvas(L, lam_nC, y, xp);
+}
+
+function drawCanvas(L, lam_nC, y, xp) {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const cx = cv.width / 2;
+  const cy = cv.height - 90;
+  const scale = 50; // 50 px por metro
+
+  // Ejes
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(30, cy); ctx.lineTo(cv.width - 30, cy); // Eje X
+  ctx.moveTo(cx, 20); ctx.lineTo(cx, cv.height - 20); // Eje Y
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Varilla (hilo de carga)
+  const x1 = cx - (L / 2) * scale;
+  const x2 = cx + (L / 2) * scale;
+  ctx.lineWidth = 8;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = lam_nC >= 0 ? '#b3246b' : '#0b8ca8';
+  ctx.beginPath();
+  ctx.moveTo(x1, cy);
+  ctx.lineTo(x2, cy);
+  ctx.stroke();
+
+  // Etiqueta Varilla
+  ctx.font = '600 13px Inter, sans-serif';
+  ctx.fillStyle = ctx.strokeStyle;
+  ctx.textAlign = 'center';
+  ctx.fillText(`Varilla L = ${L.toFixed(1)} m (λ = ${lam_nC.toFixed(1)} nC/m)`, cx, cy + 28);
+
+  // Punto P(0, y)
+  const py = cy - y * scale;
+  ctx.fillStyle = '#10b981';
+  ctx.beginPath();
+  ctx.arc(cx, py, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillText(`P (0, ${y.toFixed(2)}m)`, cx + 12, py - 10);
+
+  // Elemento diferencial 1 (+xp)
+  const px1 = cx + xp * scale;
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.arc(px1, cy, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillText(`+dq`, px1, cy + 18);
+
+  // Línea de acción 1
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(px1, cy);
+  ctx.lineTo(cx, py);
+  ctx.stroke();
+
+  // Vector dE_1
+  const r1 = Math.sqrt(xp * xp + y * y);
+  const dE_mag = 40;
+  const sgn = lam_nC >= 0 ? 1 : -1;
+  const dE1_x = sgn * ((-xp) / r1) * dE_mag;
+  const dE1_y = sgn * (y / r1) * dE_mag;
+
+  if (chkVectors.checked) {
+    drawArrow(cx, py, cx + dE1_x, py - dE1_y, '#f59e0b', 'dE₁');
+  }
+
+  // Elemento diferencial 2 (-xp) si está activo
+  if (chkPair.checked && xp > 0.05) {
+    const px2 = cx - xp * scale;
+    ctx.fillStyle = '#06b6d4';
+    ctx.beginPath();
+    ctx.arc(px2, cy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillText(`-dq`, px2, cy + 18);
+
+    // Línea de acción 2
+    ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+    ctx.beginPath();
+    ctx.moveTo(px2, cy);
+    ctx.lineTo(cx, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const dE2_x = sgn * (xp / r1) * dE_mag;
+    const dE2_y = sgn * (y / r1) * dE_mag;
+
+    if (chkVectors.checked) {
+      drawArrow(cx, py, cx + dE2_x, py - dE2_y, '#06b6d4', 'dE₂');
+    }
+  }
+
+  // Vector resultante neto E_total en P
+  const E_net_len = 70;
+  const Ey_dir = lam_nC >= 0 ? -1 : 1;
+  drawArrow(cx, py, cx, py + Ey_dir * E_net_len, '#b3246b', 'E_neto', 3);
+}
+
+function drawArrow(fromx, fromy, tox, toy, color, label, lw = 2) {
+  const headlen = 8;
+  const angle = Math.atan2(toy - fromy, tox - fromx);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = lw;
+  ctx.beginPath();
+  ctx.moveTo(fromx, fromy);
+  ctx.lineTo(tox, toy);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(tox, toy);
+  ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  ctx.closePath();
+  ctx.fill();
+
+  if (label) {
+    ctx.font = '600 12px Inter, sans-serif';
+    ctx.fillText(label, tox + 8 * Math.cos(angle), toy + 8 * Math.sin(angle));
+  }
+}
+
+[rngL, rngLam, rngY, rngXp, chkPair, chkVectors].forEach(el => {
+  el.addEventListener('input', updateSim);
+  el.addEventListener('change', updateSim);
+});
+
+document.getElementById('btn-reset-sim').addEventListener('click', () => {
+  rngL.value = 4;
+  rngLam.value = 5;
+  rngY.value = 2;
+  rngXp.value = 1.2;
+  chkPair.checked = true;
+  chkVectors.checked = true;
+  updateSim();
+});
+
+// INTERACCIÓN MOUSE EN CANVAS PARA MOVER PUNTO P
+let isDraggingP = false;
+cv.addEventListener('mousedown', (e) => {
+  const rect = cv.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const cx = cv.width / 2;
+  const cy = cv.height - 90;
+  const py = cy - parseFloat(rngY.value) * 50;
+  if (Math.hypot(mx - cx, my - py) < 18) {
+    isDraggingP = true;
+  }
+});
+
+cv.addEventListener('mousemove', (e) => {
+  if (!isDraggingP) return;
+  const rect = cv.getBoundingClientRect();
+  const my = e.clientY - rect.top;
+  const cy = cv.height - 90;
+  let newY = (cy - my) / 50;
+  if (newY < 0.5) newY = 0.5;
+  if (newY > 6) newY = 6;
+  rngY.value = newY.toFixed(2);
+  updateSim();
+});
+
+window.addEventListener('mouseup', () => { isDraggingP = false; });
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  fitStage();
+  showSlide(1);
+  updateSim();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>

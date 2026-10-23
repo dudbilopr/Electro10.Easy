@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 2 · Campo Eléctrico y Dipolos — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 2 · deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:36px;line-height:1.12}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.lab-frame{flex:1;border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);width:100%}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.tline{position:relative;height:140px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:90px;height:3px;background:var(--e10-line)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 24px var(--e10-font-display)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 2</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 2 · Teoría de Campos</span>
+    <h1 style="font-size:54px;line-height:1.05;margin:0">El Campo Eléctrico y Dipolos</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:880px">Definición operacional, superposición vectorial de fuentes, análisis asintótico de dipolos y dinámica de momento dipolar en campos externos.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-lab" style="height:48px;padding:0 20px;font-size:16px">Ver simulador de campo</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 13</span></div>
+</section>
+
+<!-- 2 · DEFINICIÓN OPERACIONAL -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Fundamento Teórico</span></div>
+  <h2>Concepto y Definición Operacional de Campo</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:14px">
+      <div class="soft" style="font-size:22px;text-align:center;padding:16px">
+        \[\vec{E}(\vec{r}) \equiv \lim_{q_0 \to 0} \frac{\vec{F}_0(\vec{r})}{q_0}\]
+      </div>
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b>¿Por qué el límite infinitesimal $q_0 \to 0$?</b>
+        <p style="margin:6px 0 0">La carga de prueba $q_0$ debe ser tan pequeña que no altere las posiciones ni la distribución de las cargas fuentes que generan el campo a medir. Si $q_0$ fuera finita, induciría redistribuciones de carga en conductores cercanos alterando el valor original.</p>
+      </div>
+      <div class="tipbox">
+        <b>Unidades SI:</b> $[\vec{E}] = \text{N/C} \equiv \text{V/m}$. Ambas dimensiones son físicamente idénticas y se usan indistintamente en electrostática y circuitos.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card">
+        <b style="color:var(--e10-primary)">Campo de una Carga Puntual:</b>
+        <p style="font-size:15px;margin:8px 0 0">
+          Ubicando la fuente $q$ en el origen:
+          \[\vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{r^2}\hat{r}\]
+          Si $q > 0$: $\vec{E}$ apunta radialmente hacia afuera.<br>
+          Si $q < 0$: $\vec{E}$ apunta radialmente hacia la carga.
+        </p>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Fuerza sobre carga en campo:</b> Una vez conocido $\vec{E}$, la fuerza sobre cualquier partícula con carga $q$ es $\vec{F} = q\vec{E}$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears-Zemansky Cap. 21.4 · Griffiths Cap. 2.1</span><span class="mono">Diapositiva 2 / 13</span></div>
+</section>
+
+<!-- 3 · FORMULACIÓN RELATIVA Y SUPERPOSICIÓN -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Cálculo Vectorial</span></div>
+  <h2>Campo de Múltiples Fuentes Discretas</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <p style="margin:0;font-size:16px">Si la carga fuente $q_i$ está ubicada en una posición arbitraria $\vec{r}_i'$, el campo en el punto de observación $\vec{r}$ se calcula mediante el vector relativo:</p>
+      <div class="soft" style="font-size:20px;text-align:center;padding:14px">
+        \[\vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\sum_{i=1}^N \frac{q_i}{|\vec{r} - \vec{r}_i'|^3} (\vec{r} - \vec{r}_i')\]
+      </div>
+      <div class="card" style="font-size:16px">
+        <b>Procedimiento analítico para el cálculo de componentes:</b>
+        <ol style="margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+          <li>Determina las coordenadas del punto de campo $P(x,y,z)$.</li>
+          <li>Escribe los vectores de cada fuente $q_i(x_i', y_i', z_i')$.</li>
+          <li>Calcula la distancia euclídea: $r_i = \sqrt{(x - x_i')^2 + (y - y_i')^2 + (z - z_i')^2}$.</li>
+          <li>Suma algebraicamente las componentes $E_x = \sum E_{ix}$, $E_y = \sum E_{iy}$.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="tipbox" style="font-size:15px">
+        <b>Principio de Superposición:</b> El campo eléctrico es un operador lineal. Las fuentes no interactúan entre sí modificando su capacidad de crear campo; cada una suma su contribución vectorial independientemente.
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>¡Cuidado!</b> No confundir el punto fuente $\vec{r}'$ con el punto de campo $\vec{r}$. El vector relativo siempre apunta <b>hacia el punto de observación</b>: $\vec{\mathcal{R}} = \vec{r} - \vec{r}'$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Coordenadas relativas y notación de Griffiths</span><span class="mono">Diapositiva 3 / 13</span></div>
+</section>
+
+<!-- 4 · CANVAS INTERACTIVO DE LÍNEAS DE CAMPO -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag l">Simulador Canvas</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Líneas de Campo y Vectores en Tiempo Real</h2>
+    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Mueve el sensor de prueba sobre el mapa vectorial</span>
+  </div>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <canvas id="cv-efield" class="sim" width="700" height="390" style="width:100%;height:390px"></canvas>
+    </div>
+    <div class="col" style="flex:1;gap:10px">
+      <div class="ctrl">
+        <label for="ef-q1">Carga $q_1$</label>
+        <input id="ef-q1" type="range" min="-8" max="8" step="1" value="4">
+        <output id="ef-q1-o">+4 nC</output>
+      </div>
+      <div class="ctrl">
+        <label for="ef-q2">Carga $q_2$</label>
+        <input id="ef-q2" type="range" min="-8" max="8" step="1" value="-4">
+        <output id="ef-q2-o">-4 nC</output>
+      </div>
+      <div class="read">
+        <div>$E_x$<b id="ef-ex">124 N/C</b></div>
+        <div>$E_y$<b id="ef-ey">-52 N/C</b></div>
+        <div>$|\vec{E}|_{\text{sensor}}$<b id="ef-mag" style="color:var(--e10-primary)">134 N/C</b></div>
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Propiedades de las líneas de Faraday:</b> Salen de cargas positivas y entran en negativas; su densidad espacial representa la intensidad de campo; <b>jamás se cruzan</b>.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Simulación interactiva con cálculo puntual exacto</span><span class="mono">Diapositiva 4 / 13</span></div>
+</section>
+
+<!-- 5 · EL DIPOLO ELÉCTRICO -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Configuración Universal</span></div>
+  <h2>El Dipolo Eléctrico y Momento Dipolar</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <p style="margin:0;font-size:17px">Un dipolo eléctrico consiste en dos cargas de igual magnitud y signos opuestos ($+q$ y $-q$) separadas una distancia fija $d$.</p>
+      <div class="soft" style="font-size:22px;text-align:center;padding:14px">
+        \[\vec{p} \equiv q\,\vec{d}\]
+      </div>
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b>Definición formal del vector momento dipolar $\vec{p}$:</b>
+        <ul style="margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+          <li>Tiene magnitud $|\vec{p}| = q d$. Unidad SI: $\text{C}\cdot\text{m}$ (o Debye en química).</li>
+          <li><b>Dirección y sentido:</b> Por convención física, $\vec{p}$ apunta <b>desde la carga negativa $-q$ hacia la positiva $+q$</b>.</li>
+          <li>Es la base de la polarización en dieléctricos, la resonancia de moléculas polares de agua ($H_2O$) y antenas dipolares de radio.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="tipbox" style="font-size:15px">
+        <b>Neutralidad macroscópica:</b> La carga neta del dipolo es cero ($q_{\text{net}} = +q - q = 0$). Sin embargo, produce campo eléctrico debido a que las cargas no coinciden en el mismo punto espacial.
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Molécula de agua:</b> El agua tiene un momento dipolar permanente de $p \approx 6{,}2 \times 10^{-30}\ \text{C}\cdot\text{m}$, responsable de su alta constante dieléctrica ($\kappa \approx 80$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears-Zemansky Cap. 21.7</span><span class="mono">Diapositiva 5 / 13</span></div>
+</section>
+
+<!-- 6 · CAMPO DEL DIPOLO: EJE AXIAL -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag e">Deducción Analítica 1</span></div>
+  <h2>Campo en el Eje Axial del Dipolo ($z \gg d$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:10px;font-size:15px">
+      <div class="card">
+        <b>Configuración:</b> Carga $+q$ en $z = +d/2$ y $-q$ en $z = -d/2$. Se calcula el campo en un punto $P(0,0,z)$ sobre el eje de simetría con $z > d/2$.
+      </div>
+      <div class="soft">
+        <b>Paso 1 · Suma vectorial directa:</b>
+        \[E_z(z) = \frac{1}{4\pi\epsilon_0}\left[\frac{q}{(z - d/2)^2} - \frac{q}{(z + d/2)^2}\right] = \frac{q}{4\pi\epsilon_0 z^2}\left[\left(1 - \frac{d}{2z}\right)^{-2} - \left(1 + \frac{d}{2z}\right)^{-2}\right]\]
+      </div>
+      <div class="soft">
+        <b>Paso 2 · Expansión binomial para campo lejano ($z \gg d$):</b>
+        Recordando $(1 \pm x)^{-2} \approx 1 \mp 2x$ para $x \ll 1$:
+        \[\left(1 - \frac{d}{2z}\right)^{-2} \approx 1 + \frac{d}{z}, \qquad \left(1 + \frac{d}{2z}\right)^{-2} \approx 1 - \frac{d}{z}\]
+        Restando: $\left(1 + \frac{d}{z}\right) - \left(1 - \frac{d}{z}\right) = \frac{2d}{z}$.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="font-size:20px;text-align:center;padding:16px">
+        \[\vec{E}_{\text{axial}} \approx \frac{1}{4\pi\epsilon_0} \frac{2\vec{p}}{z^3}\]
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Conclusión Fundamental:</b>
+        El campo en el eje apunta en la misma dirección que $\vec{p}$ y decae como $1/z^3$, mucho más rápido que el campo de una carga monipolar ($1/r^2$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Aproximación asintótica de campo lejano</span><span class="mono">Diapositiva 6 / 13</span></div>
+</section>
+
+<!-- 7 · CAMPO DEL DIPOLO: PLANO ECUATORIAL -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag e">Deducción Analítica 2</span></div>
+  <h2>Campo en el Plano Ecuatorial ($y \gg d$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:10px;font-size:15px">
+      <div class="card">
+        <b>Configuración:</b> Punto $P(0, y, 0)$ en el plano bisector perpendicular al eje del dipolo. La distancia de cada carga a $P$ es $r = \sqrt{y^2 + (d/2)^2}$.
+      </div>
+      <div class="soft">
+        <b>Paso 1 · Simetría de componentes:</b>
+        Las componentes $E_y$ de $+q$ y $-q$ se cancelan por simetría impar: $E_y \equiv 0$.<br>
+        Las componentes paralelas $E_z$ se suman y apuntan hacia $-z$ (en sentido contrario a $\vec{p}$):
+        \[E_z = -2 E_1 \cos\alpha, \quad \cos\alpha = \frac{d/2}{r} = \frac{d}{2\sqrt{y^2 + (d/2)^2}}\]
+      </div>
+      <div class="soft">
+        <b>Paso 2 · Sustitución y límite $y \gg d$:</b>
+        \[E_z = -2 \left(\frac{1}{4\pi\epsilon_0}\frac{q}{y^2 + (d/2)^2}\right)\frac{d}{2\sqrt{y^2 + (d/2)^2}} = -\frac{1}{4\pi\epsilon_0}\frac{q d}{[y^2 + (d/2)^2]^{3/2}}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="font-size:20px;text-align:center;padding:16px">
+        \[\vec{E}_{\text{ecuat}} \approx -\frac{1}{4\pi\epsilon_0} \frac{\vec{p}}{y^3}\]
+      </div>
+      <div class="tipbox" style="font-size:15px">
+        <b>Comparación axial vs. ecuatorial:</b> A la misma distancia $r$, el campo axial es exactamente el <b>doble</b> del campo ecuatorial y apunta en sentido opuesto:
+        \[|\vec{E}_{\text{axial}}| = 2 |\vec{E}_{\text{ecuat}}|\]
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Geometría bipolar y contraste de factores de forma</span><span class="mono">Diapositiva 7 / 13</span></div>
+</section>
+
+<!-- 8 · DIPOLO EN CAMPO EXTERNO: TORQUE Y ENERGÍA -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Dinámica de Dipolos</span></div>
+  <h2>Dipolo en Campo Externo: Torque y Energía</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <p style="margin:0;font-size:16px">Al sumergir un dipolo $\vec{p}$ en un campo uniforme $\vec{E}_{\text{ext}}$, la fuerza neta es nula ($\vec{F}_{\text{net}} = +q\vec{E} - q\vec{E} = 0$), pero surge un par de torsión (torque):</p>
+      <div class="soft" style="font-size:22px;text-align:center;padding:14px">
+        \[\vec{\tau} = \vec{p} \times \vec{E}_{\text{ext}}, \qquad |\vec{\tau}| = p E \sin\theta\]
+      </div>
+      <div class="card" style="font-size:16px">
+        <b>Energía Potencial Electrostática Almacenada:</b>
+        El trabajo requerido para girar el dipolo desde $\theta = 90^\circ$ hasta $\theta$ es:
+        \[U(\theta) = -\int_{90^\circ}^\theta \tau\,d\theta = -\vec{p}\cdot\vec{E}_{\text{ext}} = -p E \cos\theta\]
+        <ul style="margin:6px 0 0;padding-left:20px;font-size:15px">
+          <li>$\theta = 0^\circ$: $\vec{p} \parallel \vec{E}$ $\implies U = -pE$ (<b>Equilibrio estable mínimo</b>).</li>
+          <li>$\theta = 90^\circ$: $\vec{p} \perp \vec{E}$ $\implies U = 0$, torque máximo $|\vec{\tau}| = pE$.</li>
+          <li>$\theta = 180^\circ$: $\vec{p}$ antiparalelo a $\vec{E}$ $\implies U = +pE$ (<b>Equilibrio inestable máximo</b>).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="ok" style="font-size:15px">
+        <b>Tendencia natural:</b> El campo externo siempre ejerce un torque que tiende a alinear el momento dipolar $\vec{p}$ en la dirección de $\vec{E}$. Este es el principio del calentamiento en hornos microondas.
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>Campos no uniformes:</b> Si $\vec{E}$ no es uniforme, las fuerzas en $+q$ y $-q$ difieren y surge una fuerza neta translacional: $\vec{F} = (\vec{p}\cdot\nabla)\vec{E}$.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sears-Zemansky Cap. 21.7 · Balance energético</span><span class="mono">Diapositiva 8 / 13</span></div>
+</section>
+
+<!-- 9 · ERRORES COMUNES -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag p">Diagnóstico de Errores</span></div>
+  <h2>Cuatro Errores Frecuentes en Campo Eléctrico</h2>
+  <div class="row" style="gap:16px">
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
+      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«La carga de prueba crea el campo»</b><span>¿Quién lo origina?</span></div>
+      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">No, solo lo mide.</b><span>$\vec{E}$ existe en el espacio independientemente de si colocamos o no la carga $q_0$. $q_0$ solo experimenta la fuerza.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
+      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«El campo del dipolo cae con 1/r²»</b><span>¿Cómo decae?</span></div>
+      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Decae con 1/r³.</b><span>Debido a que las dos cargas opuestas casi se cancelan vistas desde lejos, el campo dipolar cae como $1/r^3$.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
+      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Las líneas de campo son trayectorias»</b><span>¿Sigue la partícula la línea?</span></div>
+      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Casi nunca.</b><span>La línea de campo indica la aceleración ($\vec{F} = m\vec{a}$), no la velocidad. Una carga con inercia se sale de líneas curvas.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 4"><div class="in">
+      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«El torque es mínimo en 90°»</b><span>¿Dónde es máximo?</span></div>
+      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Máximo en 90°.</b><span>$\tau = p E \sin\theta$. En $90^\circ$, $\sin(90^\circ) = 1$ (torque pico). En $0^\circ$, $\sin(0^\circ) = 0$ (torque cero).</span></div>
+    </div></div>
+  </div>
+  <div class="foot"><span>Haz clic o posa el cursor en cada tarjeta para voltearla</span><span class="mono">Diapositiva 9 / 13</span></div>
+</section>
+
+<!-- 10 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag p">Estrategia de Resolución</span></div>
+  <h2>Árbol de Decisión: Cálculo de Campo Eléctrico</h2>
+  <div class="row" style="gap:18px">
+    <div class="col" style="width:420px;flex:none;gap:8px">
+      <div class="tq">
+        <div class="tqh"><span class="mono">1</span><b>¿Cuál es la naturaleza de la fuente?</b></div>
+        <div class="tq-opts" id="tq1">
+          <button class="opt on" data-val="point">Cargas puntuales aisladas</button>
+          <button class="opt" data-val="dipole">Par de cargas opuestas (Dipolo)</button>
+          <button class="opt" data-val="uniform">Campo externo uniforme conocido</button>
+        </div>
+      </div>
+      <span class="tq-down">↓</span>
+      <div class="tq">
+        <div class="tqh"><span class="mono">2</span><b>¿Qué magnitud deseas determinar?</b></div>
+        <div class="tq-opts" id="tq2">
+          <button class="opt on" data-val="field">Vector Campo Eléctrico $\vec{E}$</button>
+          <button class="opt" data-val="torque">Torque y Energía Potencial</button>
+        </div>
+      </div>
+    </div>
+    <div class="leaf col">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <b class="leaf-name" id="leaf-name">Superposición de Cargas Puntuales</b>
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">MODELO MATEMÁTICO</span>
+      </div>
+      <div class="soft" id="leaf-eq" style="min-height:80px;display:flex;align-items:center;justify-content:center;font-size:22px">
+        \[\vec{E} = \frac{1}{4\pi\epsilon_0}\sum \frac{q_i}{r_i^2}\hat{r}_i\]
+      </div>
+      <div class="col" style="gap:6px;font-size:16px">
+        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
+        <span id="leaf-p1">1. Dibuja el punto de campo $P$ y traza las flechas salientes (si $+q$) o entrantes (si $-q$).</span>
+        <span id="leaf-p2">2. Descompón en ejes ortogonales y aprovecha posibles cancelaciones por simetría.</span>
+        <span id="leaf-p3">3. La fuerza sobre cualquier carga insertada en $P$ será simplemente $\vec{F} = q_0\vec{E}$.</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Algoritmo de decisión para talleres y exámenes</span><span class="mono">Diapositiva 10 / 13</span></div>
+</section>
+
+<!-- 11 · MAPA CONCEPTUAL -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Red de Conocimiento</span></div>
+  <h2>Mapa Conceptual: Campo Eléctrico y Dinámica Vectorial</h2>
+  <div class="row">
+    <div class="cmap" id="cmap">
+      <svg width="780" height="520" id="cmap-svg"></svg>
+      <div style="position:absolute;left:14px;bottom:12px;display:flex;gap:8px">
+        <span class="tag past">Viene de Coulomb</span>
+        <span class="tag c">Capítulo 2</span>
+        <span class="tag l">Lleva a Potencial y Gauss</span>
+      </div>
+    </div>
+    <div class="col card" style="flex:1;gap:10px">
+      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
+      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Campo Eléctrico</b>
+      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[\vec E = \frac{\vec F}{q_0}\]</div>
+      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Propiedad del espacio que transmite interacciones electrostáticas a la velocidad de la luz sin acción a distancia instantánea.</p>
+      <div class="tipbox" id="cm-where">Permite calcular el potencial mediante $\Delta V = -\int \vec{E}\cdot d\vec{\ell}$ y el flujo con $\oint \vec{E}\cdot d\vec{A}$.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 11 / 13</span></div>
+</section>
+
+<!-- 12 · LÍNEA DE TIEMPO Y GLOSARIO -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Historia y Terminología</span></div>
+  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
+  <div class="row" style="flex-direction:column;gap:16px">
+    <div class="tline" id="tline">
+      <div class="tline-axis"></div>
+      <div style="position:absolute;left:16px;bottom:8px;font-size:12px;color:var(--e10-muted)" id="tl-text">
+        <b style="color:var(--e10-primary)">Michael Faraday, 1831.</b> Introduce el concepto visual de «líneas de fuerza» para eliminar la acción a distancia de Newton.
+      </div>
+    </div>
+    <div class="row" style="gap:20px;flex:1">
+      <button type="button" class="fcard" id="fc-card">
+        <span class="mono" id="fc-side">TÉRMINO</span>
+        <span id="fc-text">Campo Eléctrico</span>
+      </button>
+      <div class="col" style="width:260px;justify-content:center;gap:10px">
+        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
+        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
+        <button class="btn" id="fc-next">Siguiente término</button>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 12 / 13</span></div>
+</section>
+
+<!-- 13 · RESUMEN Y EXPORTACIÓN -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 2</b><span class="tag c">Cierre y Evaluación</span></div>
+  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="soft">
+          <b>Definición Operacional:</b>
+          \[\vec{E} = \frac{\vec{F}}{q_0}, \quad \vec{F} = q\vec{E}\]
+        </div>
+        <div class="soft">
+          <b>Carga Puntual:</b>
+          \[\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{q}{r^2}\hat{r}\]
+        </div>
+        <div class="soft">
+          <b>Momento Dipolar:</b>
+          \[\vec{p} = q\vec{d}, \quad \vec{\tau} = \vec{p} \times \vec{E}\]
+        </div>
+        <div class="soft">
+          <b>Dipolo Lejano:</b>
+          \[\vec{E}_{\text{axial}} \approx \frac{2k\vec{p}}{z^3}, \quad U = -\vec{p}\cdot\vec{E}\]
+        </div>
+      </div>
+      <div class="ok">
+        <b>Regla de Oro:</b> El campo eléctrico exterior a una fuente no depende en absoluto de la presencia ni magnitud de la carga de prueba que se use para medirlo.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
+      <div class="card" style="text-align:center;padding:24px;gap:14px">
+        <b style="font-size:20px;color:var(--e10-ink)">Documentación y Práctica</b>
+        <p style="font-size:15px;color:var(--e10-muted);margin:0">Descarga los materiales oficiales en PDF o exporta esta clase completa en alta definición.</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap02_Taller_CampoElectrico.pdf" download>Taller (PDF)</a>
+          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap02_Guia_CampoElectrico.pdf" download>Guía de estudio (PDF)</a>
+        </div>
+        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
+        <a href="../../talleres/Taller_2_Campo_Electrico.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 2</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 13 / 13</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra inferior de navegación del deck -->
+<nav class="deck-ui" aria-label="Navegación del deck">
+  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
+  <span class="count" id="nav-count">1 / 13</span>
+  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
+  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
+  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+</nav>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const renderMath = (el) => {
+    if (window.renderMathInElement) {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    }
+  };
+
+  const stage = $('stage');
+  const fitStage = () => {
+    const sw = window.innerWidth, sh = window.innerHeight;
+    const s = Math.min(sw / 1280, sh / 720);
+    stage.style.transform = `scale(${s})`;
+  };
+  window.addEventListener('resize', fitStage);
+  fitStage();
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let cur = 1;
+
+  const showSlide = (n) => {
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    cur = n;
+    slides.forEach((sl, idx) => {
+      sl.classList.toggle('on', idx + 1 === cur);
+    });
+    $('nav-count').textContent = `${cur} / ${total}`;
+    $('progress').style.width = `${(cur / total) * 100}%`;
+    location.hash = `#${cur}`;
+
+    const activeSlide = slides[cur - 1];
+    renderMath(activeSlide);
+  };
+
+  $('nav-prev').addEventListener('click', () => showSlide(cur - 1));
+  $('nav-next').addEventListener('click', () => showSlide(cur + 1));
+  $('btn-start').addEventListener('click', () => showSlide(2));
+  $('btn-to-lab').addEventListener('click', () => showSlide(4));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      showSlide(cur + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      showSlide(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      showSlide(1);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      showSlide(total);
+    }
+  });
+
+  $('nav-fs').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+
+  const printDeck = () => { window.print(); };
+  $('nav-print').addEventListener('click', printDeck);
+  $('btn-print2').addEventListener('click', printDeck);
+
+  // Simulación Canvas de Campo Eléctrico (Slide 4)
+  const cv = $('cv-efield');
+  if (cv) {
+    const ctx = cv.getContext('2d');
+    let q1 = 4, q2 = -4;
+    let p1 = { x: 250, y: 195 }, p2 = { x: 450, y: 195 };
+    let sensor = { x: 350, y: 120 };
+    let drag = null;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      const k = 8.99e9;
+
+      // Dibujar cuadrícula de agujas vectoriales de campo
+      const step = 45;
+      for (let x = 30; x < cv.width; x += step) {
+        for (let y = 30; y < cv.height; y += step) {
+          const r1 = Math.hypot(x - p1.x, y - p1.y);
+          const r2 = Math.hypot(x - p2.x, y - p2.y);
+          if (r1 < 25 || r2 < 25) continue;
+
+          const e1x = (k * q1 * 1e-9 * (x - p1.x)) / Math.pow(r1 / 400, 3);
+          const e1y = (k * q1 * 1e-9 * (y - p1.y)) / Math.pow(r1 / 400, 3);
+          const e2x = (k * q2 * 1e-9 * (x - p2.x)) / Math.pow(r2 / 400, 3);
+          const e2y = (k * q2 * 1e-9 * (y - p2.y)) / Math.pow(r2 / 400, 3);
+
+          const ex = e1x + e2x, ey = e1y + e2y;
+          const mag = Math.hypot(ex, ey);
+          const ang = Math.atan2(ey, ex);
+          const len = Math.min(18, Math.max(6, Math.log10(mag + 1) * 3));
+
+          ctx.strokeStyle = '#cbd5e1';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(x - Math.cos(ang) * len, y - Math.sin(ang) * len);
+          ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+          ctx.stroke();
+        }
+      }
+
+      // Carga 1
+      ctx.fillStyle = q1 >= 0 ? '#b3246b' : '#0b8ca8';
+      ctx.beginPath();
+      ctx.arc(p1.x, p1.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`${q1 > 0 ? '+' : ''}${q1}`, p1.x, p1.y);
+
+      // Carga 2
+      ctx.fillStyle = q2 >= 0 ? '#b3246b' : '#0b8ca8';
+      ctx.beginPath();
+      ctx.arc(p2.x, p2.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.fillText(`${q2 > 0 ? '+' : ''}${q2}`, p2.x, p2.y);
+
+      // Sensor de prueba
+      const sr1 = Math.max(0.02, Math.hypot(sensor.x - p1.x, sensor.y - p1.y) / 400);
+      const sr2 = Math.max(0.02, Math.hypot(sensor.x - p2.x, sensor.y - p2.y) / 400);
+      const sex1 = (k * q1 * 1e-9 * (sensor.x - p1.x)) / Math.pow(sr1, 3);
+      const sey1 = (k * q1 * 1e-9 * (sensor.y - p1.y)) / Math.pow(sr1, 3);
+      const sex2 = (k * q2 * 1e-9 * (sensor.x - p2.x)) / Math.pow(sr2, 3);
+      const sey2 = (k * q2 * 1e-9 * (sensor.y - p2.y)) / Math.pow(sr2, 3);
+
+      const sex = sex1 + sex2, sey = sey1 + sey2;
+      const smag = Math.hypot(sex, sey);
+      const sang = Math.atan2(sey, sex);
+      const sArrow = Math.min(65, Math.max(20, Math.sqrt(smag) * 1.8));
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.arc(sensor.x, sensor.y, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(sensor.x, sensor.y);
+      ctx.lineTo(sensor.x + Math.cos(sang) * sArrow, sensor.y + Math.sin(sang) * sArrow);
+      ctx.stroke();
+
+      $('ef-ex').textContent = `${sex.toFixed(0)} N/C`;
+      $('ef-ey').textContent = `${sey.toFixed(0)} N/C`;
+      $('ef-mag').textContent = `${smag.toFixed(0)} N/C`;
+    };
+
+    $('ef-q1').addEventListener('input', (e) => {
+      q1 = parseFloat(e.target.value);
+      $('ef-q1-o').textContent = `${q1 > 0 ? '+' : ''}${q1} nC`;
+      draw();
+    });
+    $('ef-q2').addEventListener('input', (e) => {
+      q2 = parseFloat(e.target.value);
+      $('ef-q2-o').textContent = `${q2 > 0 ? '+' : ''}${q2} nC`;
+      draw();
+    });
+
+    const getPos = (e) => {
+      const r = cv.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * (cv.width / r.width), y: (e.clientY - r.top) * (cv.height / r.height) };
+    };
+
+    cv.addEventListener('pointerdown', (e) => {
+      const p = getPos(e);
+      if (Math.hypot(p.x - sensor.x, p.y - sensor.y) < 22) drag = 'sensor';
+      else if (Math.hypot(p.x - p1.x, p.y - p1.y) < 22) drag = 'p1';
+      else if (Math.hypot(p.x - p2.x, p.y - p2.y) < 22) drag = 'p2';
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const p = getPos(e);
+      if (drag === 'sensor') { sensor.x = Math.max(20, Math.min(680, p.x)); sensor.y = Math.max(20, Math.min(370, p.y)); }
+      else if (drag === 'p1') { p1.x = Math.max(30, Math.min(670, p.x)); p1.y = Math.max(30, Math.min(360, p.y)); }
+      else if (drag === 'p2') { p2.x = Math.max(30, Math.min(670, p.x)); p2.y = Math.max(30, Math.min(360, p.y)); }
+      draw();
+    });
+    window.addEventListener('pointerup', () => { drag = null; });
+    draw();
+  }
+
+  // Árbol de Decisión (Slide 10)
+  const treeConfig = {
+    point: {
+      field: {
+        name: 'Superposición de Cargas Puntuales',
+        eq: '\\[\\vec{E}(\\vec{r}) = \\frac{1}{4\\pi\\epsilon_0}\\sum_{i=1}^N \\frac{q_i}{r_i^2}\\hat{r}_i\\]',
+        p1: '1. Traza vectores radiales desde cada carga al punto de campo $P$.',
+        p2: '2. Proyecta en componentes cartesianas: $E_x = \\sum E_{ix}$, $E_y = \\sum E_{iy}$.',
+        p3: '3. Si hay simetría espacial, una de las componentes se anula de inmediato.'
+      },
+      torque: {
+        name: 'Fuerza Neta sobre Carga Puntual',
+        eq: '\\[\\vec{F} = q\\vec{E}, \\quad \\vec{\\tau} = \\vec{r}\\times\\vec{F}\\]',
+        p1: '1. Una sola carga puntual no posee momento dipolar propio respecto a sí misma.',
+        p2: '2. Experimenta una fuerza neta puramente translacional colineal a $\\vec{E}$.',
+        p3: '3. Su aceleración newtoniana es $\\vec{a} = q\\vec{E}/m$.'
+      }
+    },
+    dipole: {
+      field: {
+        name: 'Campo Dipolar de Lejano Alcance (1/r³)',
+        eq: '\\[\\vec{E}_{\\text{axial}} \\approx \\frac{2k\\vec{p}}{z^3}, \\quad \\vec{E}_{\\text{ecuat}} \\approx -\\frac{k\\vec{p}}{y^3}\\]',
+        p1: '1. El campo cae con el inverso del cubo de la distancia ($1/r^3$).',
+        p2: '2. En el eje, el campo apunta en el mismo sentido que $\\vec{p}$.',
+        p3: '3. En el plano ecuatorial, el campo apunta en sentido opuesto a $\\vec{p}$.'
+      },
+      torque: {
+        name: 'Dinámica de Rotación y Energía de Dipolo',
+        eq: '\\[\\vec{\\tau} = \\vec{p}\\times\\vec{E}, \\quad U = -\\vec{p}\\cdot\\vec{E}\\]',
+        p1: '1. El torque tiende a alinear $\\vec{p}$ con $\\vec{E}$ para minimizar energía.',
+        p2: '2. En campo uniforme la fuerza neta es estrictamente cero: $\\sum \\vec{F} = 0$.',
+        p3: '3. Si $\\vec{p} \\perp \\vec{E}$, el torque es máximo y la energía es nula.'
+      }
+    },
+    uniform: {
+      field: {
+        name: 'Campo Uniforme Homogéneo',
+        eq: '\\[\\vec{E} = E_0\\hat{\\imath} = \\text{cte}, \\quad \\Delta V = -E_0 d\\]',
+        p1: '1. Las líneas de campo son rectas paralelas equidistantes.',
+        p2: '2. Típico entre placas plano-paralelas infinitas con $\\sigma/\\epsilon_0$.',
+        p3: '3. La trayectoria de una partícula cargada inyectada es parabólica (tiro balístico).'
+      },
+      torque: {
+        name: 'Oscilador Armónico Dipolar',
+        eq: '\\[I\\frac{d^2\\theta}{dt^2} + pE\\sin\\theta = 0 \\implies \\omega = \\sqrt{\\frac{pE}{I}}\\]',
+        p1: '1. Para perturbaciones angulares pequeñas ($\\sin\\theta \\approx \\theta$), el dipolo oscila.',
+        p2: '2. Movimiento armónico simple torsional con frecuencia $\\omega = \\sqrt{pE/I}$.',
+        p3: '3. La energía mecánica total $K + U$ se conserva en ausencia de fricción.'
+      }
+    }
+  };
+
+  let tq1Val = 'point', tq2Val = 'field';
+  const updateTree = () => {
+    const data = treeConfig[tq1Val][tq2Val];
+    $('leaf-name').textContent = data.name;
+    $('leaf-eq').innerHTML = data.eq;
+    $('leaf-p1').textContent = data.p1;
+    $('leaf-p2').textContent = data.p2;
+    $('leaf-p3').textContent = data.p3;
+    renderMath($('leaf-eq'));
+  };
+
+  document.querySelectorAll('#tq1 .opt').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#tq1 .opt').forEach((x) => x.classList.remove('on'));
+      b.classList.add('on');
+      tq1Val = b.dataset.val;
+      updateTree();
+    });
+  });
+  document.querySelectorAll('#tq2 .opt').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#tq2 .opt').forEach((x) => x.classList.remove('on'));
+      b.classList.add('on');
+      tq2Val = b.dataset.val;
+      updateTree();
+    });
+  });
+
+  // Flip cards
+  document.querySelectorAll('.flip').forEach((f) => {
+    f.addEventListener('click', () => f.classList.toggle('open'));
+  });
+
+  // Mapa Conceptual SVG Dinámico
+  const cmapNodes = [
+    { id: 'coulomb', label: 'Ley de Coulomb', eq: '\\[\\vec F = q\\vec E\\]', def: 'Fuerza sobre carga puntual.', kind: 'past', x: 200, y: 150 },
+    { id: 'campo', label: 'Campo Eléctrico', eq: '\\[\\vec E = \\lim \\frac{\\vec F}{q_0}\\]', def: 'Perturbación vectorial del espacio.', kind: 'this', x: 390, y: 150 },
+    { id: 'dipolo', label: 'Dipolo Eléctrico', eq: '\\[\\vec p = q\\vec d\\]', def: 'Par de cargas opuestas y torque.', kind: 'this', x: 580, y: 150 },
+    { id: 'lineas', label: 'Líneas de Campo', eq: '\\[\\text{Densidad} \\propto |\\vec E|\\]', def: 'Representación geométrica de Faraday.', kind: 'this', x: 280, y: 290 },
+    { id: 'potencial', label: 'Potencial Eléctrico', eq: '\\[\\vec E = -\\nabla V\\]', def: 'Gradiente del potencial escalar (Cap. 3).', kind: 'fut', x: 490, y: 290 },
+    { id: 'gauss', label: 'Ley de Gauss', eq: '\\[\\oint \\vec E\\cdot d\\vec A = \\frac{q_{\\text{enc}}}{\\epsilon_0}\\]', def: 'Flujo y simetría de Maxwell (Cap. 5).', kind: 'fut', x: 390, y: 420 }
+  ];
+
+  const cmapEdges = [
+    { from: 'coulomb', to: 'campo' },
+    { from: 'campo', to: 'dipolo' },
+    { from: 'campo', to: 'lineas' },
+    { from: 'campo', to: 'potencial' },
+    { from: 'lineas', to: 'gauss' },
+    { from: 'potencial', to: 'gauss' }
+  ];
+
+  const svg = $('cmap-svg');
+  if (svg) {
+    let svgHtml = '';
+    cmapEdges.forEach((e) => {
+      const n1 = cmapNodes.find((x) => x.id === e.from);
+      const n2 = cmapNodes.find((x) => x.id === e.to);
+      svgHtml += `<line class="edge" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
+      svgHtml += `<line class="flow" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
+    });
+    svg.innerHTML = svgHtml;
+
+    const cmapDiv = $('cmap');
+    cmapNodes.forEach((n) => {
+      const nodeEl = document.createElement('div');
+      nodeEl.className = `cnode ${n.kind}`;
+      nodeEl.style.left = `${n.x}px`;
+      nodeEl.style.top = `${n.y}px`;
+      nodeEl.textContent = n.label;
+      nodeEl.addEventListener('click', () => {
+        document.querySelectorAll('.cnode').forEach((x) => x.classList.remove('on'));
+        nodeEl.classList.add('on');
+        $('cm-label').textContent = n.label;
+        $('cm-def').textContent = n.def;
+        $('cm-eq').innerHTML = n.eq;
+        renderMath($('cm-eq'));
+      });
+      cmapDiv.appendChild(nodeEl);
+    });
+  }
+
+  // Flashcards Glosario
+  const fcards = [
+    { term: 'Campo Eléctrico (E)', def: 'Fuerza eléctrica por unidad de carga: E = F/q₀ (en N/C o V/m).' },
+    { term: 'Momento Dipolar (p)', def: 'Vector p = q d dirigido de la carga negativa a la positiva.' },
+    { term: 'Líneas de Campo', def: 'Curvas continuas tangentes al vector campo eléctrico en cada punto del espacio.' },
+    { term: 'Torque Dipolar', def: 'Momento de torsión τ = p × E que tiende a alinear el dipolo con el campo externo.' },
+    { term: 'Energía de Dipolo', def: 'Energía electrostática U = -p · E; mínima cuando p está alineado con E.' },
+    { term: 'Carga de Prueba', def: 'Carga positiva infinitesimal q₀ empleada para mapear el campo sin perturbar las fuentes.' }
+  ];
+  let fcIndex = 0, fcIsFront = true;
+  const updateFc = () => {
+    $('fc-side').textContent = fcIsFront ? 'TÉRMINO' : 'DEFINICIÓN';
+    $('fc-text').textContent = fcIsFront ? fcards[fcIndex].term : fcards[fcIndex].def;
+    $('fc-count').textContent = `Tarjeta ${fcIndex + 1} de ${fcards.length}`;
+  };
+  $('fc-card').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
+  $('fc-flip').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
+  $('fc-next').addEventListener('click', () => {
+    fcIndex = (fcIndex + 1) % fcards.length;
+    fcIsFront = true;
+    updateFc();
+  });
+  updateFc();
+
+  if (location.hash) {
+    const h = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(h) && h >= 1 && h <= total) cur = h;
+  }
+  showSlide(cur);
+})();
+</script>
+</body>
+</html>

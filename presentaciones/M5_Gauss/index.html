@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 5 · Ley de Gauss y Teorema del Flujo — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Clase 5 · Deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
+.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex-shrink:0}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 60px 30px;gap:16px;background:var(--e10-bg);opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease,visibility .28s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--e10-muted)}
+.topbar b{color:var(--e10-ink)}.topbar b span{color:var(--e10-primary)}
+.tag{font:500 13px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px}
+.tag.c{background:var(--e10-primary-soft);color:var(--e10-primary)}
+.tag.p{background:var(--e10-warning-soft);color:var(--e10-warning)}
+.tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
+.tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:34px;line-height:1.15}
+.row{display:flex;gap:24px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
+.soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn b{color:var(--e10-warning)}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok b{color:var(--e10-success)}
+.foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
+.mono{font-family:var(--e10-font-mono)}
+canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:28px 28px;border:1px solid var(--e10-line);border-radius:14px;touch-action:none}
+.ctrl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:15px}
+.ctrl input[type=range]{width:100%;accent-color:var(--e10-primary)}
+.ctrl output{font-family:var(--e10-font-mono);font-size:14px;min-width:84px;text-align:right}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.btn:hover{border-color:var(--e10-primary);transform:translateY(-1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
+.read b{display:block;font:600 17px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
+.deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+/* Estilos Árbol y Mapa */
+.tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tq-opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.cmap svg{position:absolute;inset:0}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
+@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.cnode.this{border-color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:140px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 20px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 22px var(--e10-font-display)}
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  .viewport{position:static!important;display:block!important}
+  .stage{width:100%!important;height:auto!important;transform:none!important}
+  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  .deck-ui,.progress,.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="viewport"><div class="stage" id="stage">
+
+<!-- 1 · PORTADA -->
+<section class="slide on" data-n="1">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 5</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 5 · Flujo Eléctrico y Simetrías</span>
+    <h1 style="font-size:52px;line-height:1.06;margin:0">Ley de Gauss y Teorema del Flujo</h1>
+    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:900px">Definición de flujo eléctrico $\Phi_E$, teorema integral de Gauss, superficies gaussianas óptimas para simetrías esférica, cilíndrica y planar. Conductores en equilibrio y 1ª ecuación de Maxwell.</p>
+    <div style="display:flex;gap:12px;margin-top:14px">
+      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
+      <button class="btn" id="btn-to-sim" style="height:48px;padding:0 20px;font-size:16px">Ver simulador de flujo 2D</button>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 14</span></div>
+</section>
+
+<!-- 2 · CONCEPTO DE FLUJO ELÉCTRICO -->
+<section class="slide" data-n="2">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Fundamentos Físicos</span></div>
+  <h2>El Concepto Físico de Flujo Eléctrico ($\Phi_E$)</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:16px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Definición Geométrica y Operacional:</b>
+        <p style="margin:6px 0">El flujo mide cuantitativamente el número neto de líneas de campo eléctrico que atraviesan una superficie orientada en el espacio:</p>
+        \[\Phi_E = \iint_S \vec{E}\cdot d\vec{A} = \iint_S E \cos\theta\, dA\]
+        <ul style="margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:5px;font-size:15px">
+          <li><b>Vector de área diferencial ($d\vec{A}$):</b> Magnitud $dA$, dirección perpendicular (normal $\hat{n}$) a la superficie: $d\vec{A} = \hat{n} dA$.</li>
+          <li><b>Para superficies cerradas:</b> Por convención universal, $\hat{n}$ apunta siempre hacia el <b>exterior</b> del volumen encerrado.</li>
+          <li><b>Unidades en el SI:</b> $[\text{N}\cdot\text{m}^2/\text{C}] \equiv [\text{V}\cdot\text{m}]$.</li>
+        </ul>
+      </div>
+      <div class="tipbox">
+        <b>Signo del Flujo:</b><br>
+        • $\vec{E}$ saliente ($\theta < 90^\circ$): $\Phi_E > 0$ (Fuente de campo).<br>
+        • $\vec{E}$ entrante ($\theta > 90^\circ$): $\Phi_E < 0$ (Sumidero de campo).<br>
+        • $\vec{E}$ tangente a la superficie ($\theta = 90^\circ$): $\Phi_E = 0$.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="soft" style="text-align:center">
+        <b style="color:var(--e10-primary)">Campo Uniforme en Superficie Plana:</b>
+        \[\Phi_E = \vec{E}\cdot\vec{A} = E A \cos\theta\]
+      </div>
+      <div class="warn" style="font-size:14px">
+        <b>¡Error Común!</b> $\theta$ es el ángulo entre el vector campo $\vec{E}$ y la <b>normal a la superficie $\hat{n}$</b>, ¡no el ángulo respecto al plano de la superficie!
+      </div>
+      <div class="ok" style="font-size:14px">
+        <b>Analogía Hidrodinámica:</b> Si $\vec{E}$ fuera la velocidad de un fluido incompresible $\vec{v}$, $\Phi$ representaría el caudal volumétrico ($Q = \iint \vec{v}\cdot d\vec{A}$) que cruza el área por unidad de tiempo.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de cálculo vectorial de campos</span><span class="mono">Diapositiva 2 / 14</span></div>
+</section>
+
+<!-- 3 · TEOREMA DE GAUSS INTEGRAL -->
+<section class="slide" data-n="3">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Principio Fundamental</span></div>
+  <h2>La Ley de Gauss en Forma Integral</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="soft" style="text-align:center;padding:16px">
+        <span class="tag c" style="font-size:12px">Ecuación Fundamental de la Electrostática</span>
+        <h3 style="font-size:26px;margin:8px 0;color:var(--e10-primary)">
+          \[\oint_S \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\epsilon_0}\]
+        </h3>
+        <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">El flujo eléctrico neto a través de <i>cualquier</i> superficie cerrada imaginaria (superficie gaussiana) es directamente proporcional a la carga neta $Q_{\text{enc}}$ contenida en su interior.</p>
+      </div>
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Consecuencias Físicas Directas:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>Cargas exteriores:</b> Las cargas fuera de la superficie no contribuyen al flujo neto cerrado: cada línea que entra por un lado debe salir por el otro.</li>
+          <li><b>Independencia de la forma:</b> Si encerramos una carga $q$, el flujo vale $q/\epsilon_0$ sin importar si la superficie es una esfera, un cubo o una ameba irregular.</li>
+          <li><b>Equivalencia con Coulomb:</b> La Ley de Gauss es matemáticamente equivalente a la ley de Coulomb para fuerzas que decaen con $1/r^2$.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="border-left:4px solid var(--e10-primary);font-size:15px">
+        <b style="color:var(--e10-primary)">¿Cuándo permite Gauss calcular $\vec{E}$ directamente?</b>
+        <p style="margin:6px 0">Aunque Gauss es siempre verdadera, solo es útil para hallar $\vec{E}$ si existe suficiente <b>alta simetría</b> para cumplir dos condiciones en partes de la superficie:</p>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li>$\vec{E}$ es <b>paralelo</b> a $\hat{n}$ y tiene magnitud <b>constante</b>: $\vec{E}\cdot d\vec{A} = E dA \implies \int E dA = E \int dA = E A$.</li>
+          <li>O bien $\vec{E}$ es <b>perpendicular</b> a $\hat{n}$: $\vec{E}\cdot d\vec{A} = 0$.</li>
+        </ul>
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Las 3 Únicas Simetrías Clásicas:</b><br>
+        1. <b>Esférica:</b> Carga puntual, esfera o cascarón concéntrico.<br>
+        2. <b>Cilíndrica:</b> Línea infinita, cilindro largo, cable coaxial.<br>
+        3. <b>Planar:</b> Lámina plana infinita, placas de condensador.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Primera ley de Maxwell de la electrostática</span><span class="mono">Diapositiva 3 / 14</span></div>
+</section>
+
+<!-- 4 · SIMETRÍA ESFÉRICA -->
+<section class="slide" data-n="4">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Simetría 1</span></div>
+  <h2>Simetría Esférica: Esfera Aislante Uniformemente Cargada</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Esfera de Radio $R$, Carga Total $Q$, Densidad $\rho = \frac{Q}{\frac{4}{3}\pi R^3}$:</b>
+        <p style="margin:4px 0">Elegimos como superficie gaussiana una esfera concéntrica imaginaria de radio $r$. Por simetría radial, $\vec{E} = E(r)\hat{r}$ y $\hat{n} = \hat{r}$ en todo punto:</p>
+        \[\oint \vec{E}\cdot d\vec{A} = \oint E(r) dA = E(r) \oint dA = E(r)(4\pi r^2)\]
+        <div class="soft" style="margin:8px 0;padding:10px">
+          <b>Región Exterior ($r \ge R$):</b> Encierra toda la carga $Q_{\text{enc}} = Q$:
+          \[E(4\pi r^2) = \frac{Q}{\epsilon_0} \implies E(r) = \frac{1}{4\pi\epsilon_0}\frac{Q}{r^2} = \frac{kQ}{r^2}\]
+          <span style="font-size:13px;color:var(--e10-muted)">¡Exactamente igual al campo de una carga puntual concentrada en el centro!</span>
+        </div>
+        <div class="soft" style="margin:8px 0;padding:10px">
+          <b>Región Interior ($r < R$):</b> Encierra solo una fracción del volumen:
+          \[Q_{\text{enc}} = \rho V(r) = \left(\frac{Q}{\frac{4}{3}\pi R^3}\right)\left(\frac{4}{3}\pi r^3\right) = Q \frac{r^3}{R^3}\]
+          \[E(4\pi r^2) = \frac{Q r^3}{\epsilon_0 R^3} \implies E(r) = \frac{Q r}{4\pi\epsilon_0 R^3} = \frac{kQ}{R^3} r\]
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-ink)">Perfil Radial del Campo Eléctrico:</b>
+        <ul style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>En el centro ($r = 0$):</b> $E = 0$ (Cancelación por simetría esférica completa).</li>
+          <li><b>Interior ($r < R$):</b> $E \propto r$ (Crecimiento estrictamente <b>lineal</b>).</li>
+          <li><b>En la superficie ($r = R$):</b> Máximo continuo $E_{\text{máx}} = kQ/R^2$.</li>
+          <li><b>Exterior ($r > R$):</b> $E \propto 1/r^2$ (Decaimiento cuadrático inverso).</li>
+        </ul>
+      </div>
+      <div class="tipbox" style="font-size:13px">
+        <b>Teorema del Cascarón Esférico:</b> En un cascarón esférico delgado con carga uniforme, el campo en cualquier punto de su cavidad interior es <b>idénticamente nulo</b> ($E = 0$).
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Cálculo analítico del modelo atómico de Thomson / esferas planetarias</span><span class="mono">Diapositiva 4 / 14</span></div>
+</section>
+
+<!-- 5 · SIMETRÍA CILÍNDRICA -->
+<section class="slide" data-n="5">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Simetría 2</span></div>
+  <h2>Simetría Cilíndrica: Hilo Infinito y Cable Coaxial</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.45">
+        <b style="color:var(--e10-primary)">Deducción Gaussiana para Alambre Rectilíneo Infinito ($\lambda$):</b>
+        <p style="margin:4px 0">Superficie gaussiana: cilindro circular recto de radio $r$ y longitud arbitraria $L$, coaxial con el hilo de carga.</p>
+        <p style="margin:4px 0">El flujo total se descompone en tres superficies:</p>
+        \[\oint \vec{E}\cdot d\vec{A} = \iint_{\text{tapa 1}} \vec{E}\cdot d\vec{A} + \iint_{\text{tapa 2}} \vec{E}\cdot d\vec{A} + \iint_{\text{lateral}} \vec{E}\cdot d\vec{A}\]
+        <ul style="margin:4px 0;padding-left:18px;font-size:14px">
+          <li>En las tapas circulares planas, $\vec{E}$ es radial y los vectores $d\vec{A}$ son axiales ($\vec{E} \perp d\vec{A} \implies \Phi_{\text{tapas}} = 0$).</li>
+          <li>En el área lateral cilíndrica, $\vec{E}$ es estrictamente paralelo a $\hat{n}$ y su magnitud es constante:
+            \[\iint_{\text{lat}} E dA = E \iint_{\text{lat}} dA = E (2\pi r L)\]
+          </li>
+        </ul>
+        <p style="margin:4px 0">Carga encerrada por el cilindro: $Q_{\text{enc}} = \lambda L$. Igualando por Ley de Gauss:</p>
+        \[E (2\pi r L) = \frac{\lambda L}{\epsilon_0} \implies E(r) = \frac{\lambda}{2\pi\epsilon_0 r}\]
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px">
+      <div class="ok" style="font-size:14px">
+        <b>¡Poder y Elegancia de Gauss!</b> Mientras que en el Módulo 4 requerimos sustitución trigonométrica, cambio de variables y límites integrales, con la Ley de Gauss el resultado surge en <b>dos líneas algebraicas</b> gracias a la simetría cilíndrica.
+      </div>
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-primary)">Cable Coaxial en Telecomunicaciones:</b>
+        <p style="margin:4px 0">Conductor interior con $+\lambda$, malla exterior con $-\lambda$:</p>
+        <ul style="margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li><b>Entre conductores ($a < r < b$):</b> $E = \frac{\lambda}{2\pi\epsilon_0 r}$.</li>
+          <li><b>Exterior ($r > b$):</b> $Q_{\text{enc}} = +\lambda L - \lambda L = 0 \implies E = 0$.</li>
+        </ul>
+        <span style="font-size:13px;color:var(--e10-muted)">¡Cero radiación e inmunidad total a interferencias externas!</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Fundamento de líneas de transmisión y fibra coaxial</span><span class="mono">Diapositiva 5 / 14</span></div>
+</section>
+
+<!-- 6 · SIMULADOR INTERACTIVO 2D (CANVAS) -->
+<section class="slide" data-n="6">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Laboratorio de Flujo</b><span class="tag l">Simulador Gaussiano 2D</span></div>
+  <div class="row">
+    <div class="col" style="flex:1.4">
+      <canvas id="gauss-canvas" class="sim" width="680" height="430" style="width:100%;height:430px"></canvas>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+        <span style="font-size:14px;color:var(--e10-muted)">Arrastra la carga con el ratón hacia dentro o fuera de la superficie gaussiana punteada.</span>
+        <button class="btn" id="btn-reset-gauss" style="margin-left:auto;padding:4px 10px;min-height:32px;font-size:13px">Centrar</button>
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:10px">
+      <div class="card" style="font-size:14px;display:flex;flex-direction:column;gap:10px">
+        <b>Parámetros de Simulación:</b>
+        <div class="ctrl">
+          <label>Carga $q$:</label>
+          <input type="range" id="rng-gq" min="-10" max="10" step="1" value="4">
+          <output id="out-gq">+4.0 nC</output>
+        </div>
+        <div class="ctrl">
+          <label>Radio Gaussiano $R_G$:</label>
+          <input type="range" id="rng-gr" min="60" max="180" step="10" value="120">
+          <output id="out-gr">120 px</output>
+        </div>
+        <div class="ctrl">
+          <label>No. Líneas:</label>
+          <input type="range" id="rng-glines" min="8" max="32" step="4" value="16">
+          <output id="out-glines">16</output>
+        </div>
+      </div>
+      <div class="read">
+        <div>$Q_{\text{encerrada}}$<b id="lbl-gqenc">+4.0 nC</b></div>
+        <div>Flujo Neto $\Phi$<b id="lbl-gflux">+451.8 V·m</b></div>
+        <div>Estado<b id="lbl-gstat" style="color:var(--e10-success)">INTERIOR</b></div>
+      </div>
+      <div class="tipbox" style="font-size:13px;line-height:1.4">
+        Observa que al arrastrar la carga <b>fuera</b> de la circunferencia, el número de líneas que penetran es idéntico al número que emergen, dando un flujo neto estrictamente igual a <b>0.0 V·m</b>.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Visualización topológica del teorema de la divergencia</span><span class="mono">Diapositiva 6 / 14</span></div>
+</section>
+
+<!-- 7 · SIMETRÍA PLANAR -->
+<section class="slide" data-n="7">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Simetría 3</span></div>
+  <h2>Simetría Planar: Lámina Aislante vs. Superficie Conductora</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:17px;color:var(--e10-accent-strong)">Lámina Aislante Infinita ($\sigma$)</b>
+        <p style="font-size:14px;margin:6px 0">Caja de pastillas (pillbox) cilíndrica simétrica que atraviesa la lámina con dos tapas de área $A$ a ambos lados:</p>
+        \[\oint \vec{E}\cdot d\vec{A} = E A_{\text{tapa 1}} + E A_{\text{tapa 2}} = 2 E A\]
+        \[Q_{\text{enc}} = \sigma A \implies 2 E A = \frac{\sigma A}{\epsilon_0}\]
+        <div class="soft" style="text-align:center;margin-top:6px;padding:8px">
+          \[E = \frac{\sigma}{2\epsilon_0}\]
+        </div>
+        <span style="font-size:13px;color:var(--e10-muted)">El campo emerge simétricamente hacia <b>ambos lados</b> del plano con igual magnitud.</span>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:17px;color:var(--e10-primary)">Superficie de un Conductor ($\sigma$)</b>
+        <p style="font-size:14px;margin:6px 0">Caja de pastillas con una tapa en el exterior y la otra alojada en el <b>interior del metal</b> (donde $\vec{E} = \vec{0}$):</p>
+        \[\oint \vec{E}\cdot d\vec{A} = E A_{\text{ext}} + 0_{\text{int}} + 0_{\text{lat}} = E A\]
+        \[Q_{\text{enc}} = \sigma A \implies E A = \frac{\sigma A}{\epsilon_0}\]
+        <div class="soft" style="text-align:center;margin-top:6px;padding:8px">
+          \[E = \frac{\sigma}{\epsilon_0}\]
+        </div>
+        <span style="font-size:13px;color:var(--e10-muted)">¡Es exactamente el <b>doble</b> porque las líneas solo emergen hacia el exterior del conductor!</span>
+      </div>
+    </div>
+  </div>
+  <div class="warn" style="font-size:14px;margin-top:6px;text-align:center">
+    <b>¡Alerta Pedagógica!</b> Pregunta recurrente de examen: la lámina aislante produce $\sigma/(2\epsilon_0)$; el conductor en equilibrio produce $\sigma/\epsilon_0$.
+  </div>
+  <div class="foot"><span>Diferenciación crucial de condiciones de contorno</span><span class="mono">Diapositiva 7 / 14</span></div>
+</section>
+
+<!-- 8 · CONDUCTORES Y JAULA DE FARADAY -->
+<section class="slide" data-n="8">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Propiedades de Materiales</span></div>
+  <h2>Conductores en Equilibrio Electrostático y Cavidades</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Los 4 Teoremas Fundamentales de los Conductores:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px">
+          <li><b>$\vec{E} = \vec{0}$ en el interior masivo:</b> Si hubiera campo, los electrones libres acelerarían ($\vec{F} = -e\vec{E}$), contradiciendo el reposo electrostático.</li>
+          <li><b>$Q_{\text{neta}}$ reside en la superficie:</b> Aplicando Gauss a cualquier superficie gaussiana dentro del metal, $\Phi = 0 \implies Q_{\text{enc}} = 0$.</li>
+          <li><b>$\vec{E}$ en la superficie es normal ($\vec{E} \perp \text{superficie}$):</b> La componente tangencial $E_\parallel$ debe ser nula para evitar corrientes superficiales permanentes.</li>
+          <li><b>Cuerpo equipotencial:</b> Como $\vec{E} = \vec{0}$, la diferencia de potencial $\Delta V = -\int \vec{E}\cdot d\vec{\ell} = 0 \implies V = \text{constante}$.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="ok" style="font-size:15px">
+        <b style="color:var(--e10-success)">Apantallamiento y Jaula de Faraday:</b>
+        <p style="margin:4px 0">En una cavidad vacía rodeada de conductor, el campo es <b>estrictamente nulo</b>, protegiendo todo dispositivo interno contra rayos, microondas y descargas eléctricas de alto voltaje.</p>
+      </div>
+      <div class="card" style="font-size:14px">
+        <b style="color:var(--e10-primary)">Cavidad con Carga Interior $+q$:</b>
+        Si se introduce una carga $+q$ flotando en la cavidad:
+        <ul style="margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li>En la <b>pared interior</b> se induce exactamente $-q$.</li>
+          <li>En la <b>superficie exterior</b> se redistribuye $+q$.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Física aplicada a compatibilidad electromagnética (EMC)</span><span class="mono">Diapositiva 8 / 14</span></div>
+</section>
+
+<!-- 9 · FORMA DIFERENCIAL Y DIVERGENCIA -->
+<section class="slide" data-n="9">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Cálculo Vectorial</span></div>
+  <h2>Forma Diferencial de Gauss: Primera Ecuación de Maxwell</h2>
+  <div class="row">
+    <div class="col" style="flex:1.1;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Del Flujo Macroscópico a la Divergencia Local:</b>
+        <p style="margin:6px 0">Aplicando el <b>Teorema de la Divergencia de Gauss</b> a la formulación integral:</p>
+        \[\oint_S \vec{E}\cdot d\vec{A} = \iiint_V (\vec{\nabla}\cdot\vec{E})\, dV\]
+        <p style="margin:6px 0">Por otra parte, la carga total encerrada expresada mediante la densidad volumétrica $\rho$ es:</p>
+        \[\frac{Q_{\text{enc}}}{\epsilon_0} = \frac{1}{\epsilon_0}\iiint_V \rho\, dV = \iiint_V \frac{\rho}{\epsilon_0}\, dV\]
+        <p style="margin:6px 0">Como esta igualdad se cumple para <i>cualquier</i> volumen arbitrario $V$:</p>
+        <div class="soft" style="text-align:center;padding:10px">
+          <b style="font-size:20px;color:var(--e10-primary)">\[\vec{\nabla}\cdot\vec{E} = \frac{\rho}{\epsilon_0}\]</b>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:0.9;gap:12px">
+      <div class="card" style="font-size:15px">
+        <b style="color:var(--e10-ink)">Ecuaciones de Poisson y Laplace:</b>
+        <p style="margin:6px 0">Recordando la relación entre el campo y el potencial electrostático $\vec{E} = -\vec{\nabla} V$:</p>
+        \[\vec{\nabla}\cdot(-\vec{\nabla} V) = \frac{\rho}{\epsilon_0} \implies \nabla^2 V = -\frac{\rho}{\epsilon_0} \quad \text{(Poisson)}\]
+        <p style="margin:6px 0">En regiones del espacio libres de carga neta ($\rho = 0$):</p>
+        \[\nabla^2 V = 0 \quad \text{(Ecuación de Laplace)}\]
+      </div>
+      <div class="tipbox" style="font-size:14px">
+        <b>Interpretación Física de la Divergencia:</b><br>
+        $\vec{\nabla}\cdot\vec{E} > 0 \implies$ Fuente de líneas (carga positiva $+q$).<br>
+        $\vec{\nabla}\cdot\vec{E} < 0 \implies$ Sumidero de líneas (carga negativa $-q$).<br>
+        $\vec{\nabla}\cdot\vec{E} = 0 \implies$ No hay densidad local de carga.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Conexión formal entre cálculo diferencial e integral de campos</span><span class="mono">Diapositiva 9 / 14</span></div>
+</section>
+
+<!-- 10 · COMPARATIVA DE ENFOQUES -->
+<section class="slide" data-n="10">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag p">Técnicas de Resolución</span></div>
+  <h2>Dos Enfoques: ¿Ley de Gauss o Integración de Coulomb?</h2>
+  <div class="row">
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-primary)">
+        <b style="font-size:18px;color:var(--e10-primary)">Enfoque A: Ley de Gauss</b>
+        <p style="font-size:15px;margin:8px 0">Explota la simetría espacial global para convertir la integral en un producto escalar elemental.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Resolución instantánea (2 a 3 pasos algebraicos) sin antiderivadas complejas.</li>
+          <li><b>Limitación estricta:</b> Solo aplicable cuando existe simetría esférica, cilíndrica infinita o planar infinita.</li>
+          <li><b>Ejemplos:</b> Esferas, cilindros infinitos, planos infinitos, cavidades conductoras.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" style="border-top:4px solid var(--e10-accent)">
+        <b style="font-size:18px;color:var(--e10-accent-strong)">Enfoque B: Superposición de Coulomb</b>
+        <p style="font-size:15px;margin:8px 0">Integración diferencial $d\vec{E}$ sobre cada elemento infinitesimal geométrico.</p>
+        <ul style="font-size:14px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Ventaja:</b> Válido para <b>absolutamente cualquier</b> geometría finita sin importar si hay simetría.</li>
+          <li><b>Limitación:</b> Requiere resolver integrales vectoriales extensas (sustituciones trigonométricas).</li>
+          <li><b>Ejemplos:</b> Anillo axial, disco finito, segmento de varilla finita, arcos de circunferencia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;text-align:center">
+    <b>Regla de Oro en Evaluaciones:</b> Si la distribución es <i>finita</i> (varilla corta, disco finito, anillo), Gauss no puede aislar $E$; debes usar <b>Coulomb</b>. Si es <i>infinita o esférica concéntrica</i>, usa <b>Gauss</b>.
+  </div>
+  <div class="foot"><span>Criterio analítico de selección metodológica</span><span class="mono">Diapositiva 10 / 14</span></div>
+</section>
+
+<!-- 11 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="11">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Árbol de Decisión</span></div>
+  <h2>¿Qué Superficie Gaussiana Elegir según la Geometría?</h2>
+  <div class="row">
+    <div class="col" style="flex:0.95;gap:10px">
+      <div class="tq">
+        <div class="tqh">Paso 1: Selecciona la Simetría Física del Problema</div>
+        <div class="tq-opts" id="tq-opts-5">
+          <button class="opt on" data-target="leaf-esfera">Simetría Esférica (Puntual, Esfera, Cascarón)</button>
+          <button class="opt" data-target="leaf-cilindro">Simetría Cilíndrica (Hilo largo, Cable coaxial)</button>
+          <button class="opt" data-target="leaf-placa">Simetría Planar (Lámina infinita, Placas planas)</button>
+          <button class="opt" data-target="leaf-asimetrico">Geometría Finita o Irregular (Anillo, Disco, Varilla)</button>
+        </div>
+      </div>
+    </div>
+    <div class="col leaf" id="leaf-display-5" style="flex:1.05">
+      <div id="leaf-esfera">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Superficie Gaussiana: Esfera Concéntrica de Radio $r$</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Flujo:</b> $\oint \vec{E}\cdot d\vec{A} = E(r)(4\pi r^2)$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Exterior ($r \ge R$):</b> $E = \frac{k Q_{\text{tot}}}{r^2}$<br>
+          <b>Interior uniforme ($r < R$):</b> $E = \frac{k Q_{\text{tot}}}{R^3} r$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Si la esfera tiene una cavidad hueca con $\rho = 0$, el campo en la cavidad vacía es estrictamente cero.</p>
+      </div>
+      <div id="leaf-cilindro" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Superficie Gaussiana: Cilindro Coaxial (Radio $r$, Longitud $L$)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Flujo:</b> $\oint \vec{E}\cdot d\vec{A} = E(r)(2\pi r L)$ (Flujo por tapas es nulo).</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Exterior ($r \ge R$):</b> $E = \frac{\lambda}{2\pi\epsilon_0 r}$<br>
+          <b>Cilindro macizo uniforme interior:</b> $E = \frac{\rho r}{2\epsilon_0}$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Esta solución requiere que el cilindro sea muy largo ($L \gg r$) para despreciar efectos de borde.</p>
+      </div>
+      <div id="leaf-placa" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">Superficie Gaussiana: Caja de Pastillas Cilíndrica (Pillbox)</h3>
+        <p style="font-size:15px;margin:4px 0"><b>Flujo:</b> Las paredes laterales tienen $\vec{E} \perp \hat{n} \implies \Phi_{\text{lat}} = 0$.</p>
+        <div class="card" style="font-size:14px;background:var(--e10-bg);margin:8px 0">
+          <b>Lámina aislante (2 tapas):</b> $2 E A = \frac{\sigma A}{\epsilon_0} \implies E = \frac{\sigma}{2\epsilon_0}$<br>
+          <b>Conductor (1 tapa ext, 1 int):</b> $E A = \frac{\sigma A}{\epsilon_0} \implies E = \frac{\sigma}{\epsilon_0}$
+        </div>
+        <p style="font-size:14px;color:var(--e10-muted)"><b>Advertencia:</b> Recuerda que si hay dos placas con cargas opuestas $\pm\sigma$, los campos se duplican dentro ($E = \sigma/\epsilon_0$) y se anulan fuera.</p>
+      </div>
+      <div id="leaf-asimetrico" style="display:none">
+        <h3 style="margin:0 0 6px;color:var(--e10-primary)">¡Gauss NO es Práctica para esta Configuración!</h3>
+        <p style="font-size:15px;margin:4px 0">Para un anillo, disco finito o varilla finita, el campo <b>no tiene magnitud constante</b> sobre ninguna superficie geométrica simple integrable.</p>
+        <div class="warn" style="font-size:14px;margin:8px 0">
+          <b>Estrategia Recomendada:</b><br>
+          Usa la técnica de integración continua del <b>Módulo 4</b> mediante $d\vec{E} = \frac{k dq}{\mathcal{R}^2}\hat{\mathcal{R}}$.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Selección analítica de superficies gaussianas</span><span class="mono">Diapositiva 11 / 14</span></div>
+</section>
+
+<!-- 12 · MAPA CONCEPTUAL INTERACTIVO CON FLUJO DE LUZ -->
+<section class="slide" data-n="12">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 5</b><span class="tag c">Ontología Conceptual</span></div>
+  <h2>Mapa Conceptual: Flujo, Simetrías y Ley de Gauss</h2>
+  <div class="row">
+    <div class="cmap" id="cmap-5">
+      <svg width="780" height="520" viewBox="0 0 780 520">
+        <!-- Enlaces -->
+        <path class="edge" d="M120,260 L280,140"/>
+        <path class="edge" d="M120,260 L280,260"/>
+        <path class="edge" d="M120,260 L280,380"/>
+        <path class="edge" d="M280,140 L450,140"/>
+        <path class="edge" d="M280,260 L450,260"/>
+        <path class="edge" d="M280,380 L450,380"/>
+        <path class="edge" d="M450,140 L640,200"/>
+        <path class="edge" d="M450,260 L640,260"/>
+        <path class="edge" d="M450,380 L640,320"/>
+        <!-- Flujos de Luz Animados -->
+        <path class="flow" d="M120,260 L280,260"/>
+        <path class="flow" d="M280,260 L450,260"/>
+        <path class="flow" d="M450,260 L640,260"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="cnode past" style="left:120px;top:260px" data-tip="Flujo macroscópico de líneas de campo: Phi = int E . dA">Flujo Eléctrico<br><b>$\Phi_E = \iint \vec{E}\cdot d\vec{A}$</b></div>
+      <div class="cnode this" style="left:280px;top:140px" data-tip="Superficie gaussiana esférica concéntrica de área 4 pi r^2">Simetría Esférica<br><b>$E(4\pi r^2) = \frac{Q}{\epsilon_0}$</b></div>
+      <div class="cnode this" style="left:280px;top:260px" data-tip="Ley de Gauss: Flujo cerrado proporcional a la carga interna">Ley de Gauss<br><b>$\oint \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\epsilon_0}$</b></div>
+      <div class="cnode this" style="left:280px;top:380px" data-tip="Superficie cilíndrica de radio r y longitud L de área 2 pi r L">Simetría Cilíndrica<br><b>$E(2\pi r L) = \frac{\lambda L}{\epsilon_0}$</b></div>
+      <div class="cnode this" style="left:450px;top:140px" data-tip="Comportamiento del campo: E prop r dentro, E prop 1/r^2 fuera">Esfera Aislante<br><b>Perfil $E(r)$</b></div>
+      <div class="cnode this" style="left:450px;top:260px" data-tip="Caja de pastillas (pillbox): E = sigma / (2 eps_0) en lámina plana">Simetría Planar<br><b>$E = \sigma / 2\epsilon_0$</b></div>
+      <div class="cnode this" style="left:450px;top:380px" data-tip="E = 0 en el interior, E = sigma / eps_0 en la superficie">Conductores<br><b>Equilibrio</b></div>
+      <div class="cnode fut" style="left:640px;top:260px" data-tip="1ª Ecuación de Maxwell y teorema de la divergencia: div E = rho / eps_0">1ª Ecuación Maxwell<br><b>$\vec{\nabla}\cdot\vec{E} = \frac{\rho}{\epsilon_0}$</b></div>
+    </div>
+    <div class="col" style="flex:1;gap:12px">
+      <div class="card" id="cmap-tip-5" style="flex:1;font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Explorador Ontológico de Gauss:</b>
+        <p id="cmap-desc-5" style="margin:8px 0 0">Pasa el cursor o haz clic en cualquier nodo para comprender la arquitectura de la Ley de Gauss, desde el flujo integral hasta las ecuaciones diferenciales de Maxwell.</p>
+      </div>
+      <div class="soft" style="font-size:14px">
+        <b>Importancia para Condensadores:</b> La relación de campo en conductores y placas paralelas ($E = \sigma/\epsilon_0$) es el pilar para deducir la capacitancia $C = Q/\Delta V$ en los módulos siguientes.
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Interconexión conceptual y epistemológica</span><span class="mono">Diapositiva 12 / 14</span></div>
+</section>
+
+<!-- 13 · FLASHCARDS 3D -->
+<section class="slide" data-n="13">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Repaso Activo</b><span class="tag e">Flashcards 3D</span></div>
+  <h2>Fórmulas y Conceptos Clave para Memorización</h2>
+  <p style="font-size:16px;color:var(--e10-muted);margin:0">Haz clic en cada tarjeta para evaluar tu dominio conceptual antes del taller:</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;margin-top:10px">
+    <div class="flip" id="fc5-1">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 1</span>
+          <b style="font-size:18px">¿Cómo depende el campo eléctrico $E(r)$ con la distancia $r$ en el interior de una esfera aislante con carga uniforme?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la deducción</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:20px;color:var(--e10-primary)">$E(r) \propto r \quad \left(E = \frac{kQ}{R^3} r\right)$</b>
+          <p style="font-size:14px;margin:0">Crece estrictamente de manera lineal porque la carga encerrada crece como $r^3$ mientras el área de Gauss crece como $r^2$.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc5-2">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 2</span>
+          <b style="font-size:18px">¿Cuánto vale el flujo eléctrico neto a través de una superficie cerrada que NO contiene cargas en su interior?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:22px;color:var(--e10-primary)">$\Phi_E = 0$</b>
+          <p style="font-size:14px;margin:0">Por la Ley de Gauss: $\oint \vec{E}\cdot d\vec{A} = Q_{\text{enc}}/\epsilon_0 = 0$. Toda línea de campo que penetra la superficie debe emerger por otro lado.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc5-3">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 3</span>
+          <b style="font-size:18px">¿Cuál es el valor del campo eléctrico en la superficie de un conductor en equilibrio vs. una lámina aislante?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">Conductor: $\frac{\sigma}{\epsilon_0}$ &nbsp;|&nbsp; Lámina: $\frac{\sigma}{2\epsilon_0}$</b>
+          <p style="font-size:14px;margin:0">En el conductor, el campo interior es nulo y todas las líneas emergen exclusivamente hacia afuera, duplicando la densidad de flujo exterior.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip" id="fc5-4">
+      <div class="in">
+        <div class="f">
+          <span class="tag p" style="align-self:flex-start">Pregunta 4</span>
+          <b style="font-size:18px">Si colocamos una carga puntual $+q$ en la cavidad de un cascarón conductor neutro, ¿qué carga se induce?</b>
+          <span style="font-size:13px;color:var(--e10-muted);margin-top:auto">Toca para ver la respuesta</span>
+        </div>
+        <div class="b">
+          <span class="tag e" style="align-self:flex-start">Respuesta</span>
+          <b style="font-size:18px;color:var(--e10-primary)">$-q$ en pared interior &nbsp;|&nbsp; $+q$ en superficie exterior</b>
+          <p style="font-size:14px;margin:0">Garantiza que una superficie gaussiana dentro del metal encierre carga neta cero ($+q - q = 0$), manteniendo $\vec{E} = 0$ en el seno del conductor.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Repaso activo y consolidación neurocognitiva</span><span class="mono">Diapositiva 13 / 14</span></div>
+</section>
+
+<!-- 14 · RESUMEN Y ACCESO A TALLER -->
+<section class="slide" data-n="14">
+  <div class="topbar"><b>Electro<span>10.Easy</span> · Resumen de Unidad</b><span class="tag c">Cierre Metodológico</span></div>
+  <h2>Síntesis Ejecutiva del Módulo 5</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2;gap:12px">
+      <div class="card" style="font-size:15px;line-height:1.5">
+        <b style="color:var(--e10-primary)">Puntos Clave Dominados en la Sesión:</b>
+        <ol style="margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li><b>Teorema Fundamental:</b> El flujo total a través de una superficie cerrada depende exclusivamente de la carga neta encerrada: $\Phi = Q_{\text{enc}}/\epsilon_0$.</li>
+          <li><b>Aislamiento del Campo $E$:</b> Solo es posible extraer $E$ fuera de la integral cuando la simetría garantiza que $E$ es constante y paralelo al vector normal $\hat{n}$.</li>
+          <li><b>Perfiles Característicos:</b> Esfera ($\propto r$ dentro, $\propto 1/r^2$ fuera); Cilíndrico ($\propto 1/r$); Planar ($r^0 = \text{cte}$).</li>
+          <li><b>Blindaje Electrostático:</b> En cualquier conductor en equilibrio, $\vec{E} = 0$ en su masa y las cavidades vacías quedan completamente aisladas de campos externos.</li>
+        </ol>
+      </div>
+      <div class="ok" style="font-size:15px">
+        <b>Siguiente Sesión · Módulo 6:</b> Capacitancia, dieléctricos, polarización atómica y energía almacenada en el campo electrostático.
+      </div>
+    </div>
+    <div class="col" style="flex:0.8;gap:12px;justify-content:center">
+      <a href="../../talleres/Taller_5_Ley_de_Gauss.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico No. 5 →</a>
+      <button class="btn" id="btn-print-deck-5" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
+      <a href="../M6_Capacitancia/index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Continuar al Módulo 6 (Capacitancia) →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 14 / 14</span></div>
+</section>
+
+</div></div>
+
+<!-- Barra de Controles Global -->
+<div class="deck-ui no-print">
+  <button class="btn" id="deck-prev">◀ Anterior</button>
+  <span class="count" id="deck-count">1 / 14</span>
+  <button class="btn" id="deck-next">Siguiente ▶</button>
+  <button class="btn" id="deck-fit">Ajustar Pantalla</button>
+</div>
+
+<script>
+// MOTOR DEL DECK 16:9
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 1;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > totalSlides) n = totalSlides;
+  currentSlide = n;
+  slides.forEach((s, idx) => {
+    s.classList.toggle('on', (idx + 1) === currentSlide);
+  });
+  document.getElementById('deck-count').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress').style.width = `${((currentSlide - 1) / (totalSlides - 1)) * 100}%`;
+  
+  if (window.renderMathInElement) {
+    const active = slides[currentSlide - 1];
+    window.renderMathInElement(active, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.getElementById('deck-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+document.getElementById('deck-next').addEventListener('click', () => showSlide(currentSlide + 1));
+document.getElementById('btn-start').addEventListener('click', () => showSlide(2));
+document.getElementById('btn-to-sim').addEventListener('click', () => showSlide(6));
+document.getElementById('btn-print-deck-5').addEventListener('click', () => window.print());
+
+// NAVEGACIÓN POR TECLADO
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    showSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    showSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(totalSlides);
+  }
+});
+
+// ESCALADO 16:9 RESPONSIVE
+function fitStage() {
+  const stage = document.getElementById('stage');
+  const sw = 1280, sh = 720;
+  const ww = window.innerWidth, wh = window.innerHeight;
+  const scale = Math.min(ww / sw, wh / sh);
+  stage.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitStage);
+document.getElementById('deck-fit').addEventListener('click', fitStage);
+
+// FLASHCARDS 3D
+document.querySelectorAll('.flip').forEach(fc => {
+  fc.addEventListener('click', () => fc.classList.toggle('open'));
+});
+
+// ÁRBOL DE DECISIÓN INTERACTIVO
+const tqOpts5 = document.querySelectorAll('#tq-opts-5 .opt');
+const leafDisplay5 = document.getElementById('leaf-display-5');
+tqOpts5.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tqOpts5.forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const target = btn.dataset.target;
+    leafDisplay5.querySelectorAll(':scope > div').forEach(d => d.style.display = 'none');
+    const el = document.getElementById(target);
+    if (el) {
+      el.style.display = 'block';
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  });
+});
+
+// MAPA CONCEPTUAL INTERACTIVO
+document.querySelectorAll('#cmap-5 .cnode').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    document.getElementById('cmap-desc-5').textContent = node.dataset.tip;
+  });
+  node.addEventListener('click', () => {
+    document.querySelectorAll('#cmap-5 .cnode').forEach(n => n.classList.remove('on'));
+    node.classList.add('on');
+    document.getElementById('cmap-desc-5').textContent = node.dataset.tip;
+  });
+});
+
+// SIMULADOR GAUSSIANO 2D (CANVAS)
+const cvG = document.getElementById('gauss-canvas');
+const ctxG = cvG.getContext('2d');
+const eps0 = 8.854187817e-12;
+
+const rngGq = document.getElementById('rng-gq');
+const rngGr = document.getElementById('rng-gr');
+const rngGlines = document.getElementById('rng-glines');
+
+let chargePos = { x: cvG.width / 2, y: cvG.height / 2 };
+const centerG = { x: cvG.width / 2, y: cvG.height / 2 };
+
+function updateGaussSim() {
+  const q_nC = parseFloat(rngGq.value);
+  const R_G = parseFloat(rngGr.value);
+  const nLines = parseInt(rngGlines.value);
+
+  document.getElementById('out-gq').textContent = `${q_nC >= 0 ? '+' : ''}${q_nC.toFixed(1)} nC`;
+  document.getElementById('out-gr').textContent = `${R_G} px`;
+  document.getElementById('out-glines').textContent = `${nLines}`;
+
+  const distToCenter = Math.hypot(chargePos.x - centerG.x, chargePos.y - centerG.y);
+  const isInside = distToCenter < R_G;
+
+  const q_enc = isInside ? (q_nC * 1e-9) : 0;
+  const flux = q_enc / eps0;
+
+  document.getElementById('lbl-gqenc').textContent = `${isInside ? (q_nC >= 0 ? '+' : '') + q_nC.toFixed(1) + ' nC' : '0.0 nC'}`;
+  document.getElementById('lbl-gflux').textContent = `${isInside ? (flux >= 0 ? '+' : '') + flux.toFixed(1) + ' V·m' : '0.0 V·m'}`;
+
+  const stat = document.getElementById('lbl-gstat');
+  if (isInside) {
+    stat.textContent = 'INTERIOR (Flux ≠ 0)';
+    stat.style.color = '#10b981';
+  } else {
+    stat.textContent = 'EXTERIOR (Flux = 0)';
+    stat.style.color = '#f59e0b';
+  }
+
+  drawGaussCanvas(q_nC, R_G, nLines, isInside);
+}
+
+function drawGaussCanvas(q_nC, R_G, nLines, isInside) {
+  ctxG.clearRect(0, 0, cvG.width, cvG.height);
+
+  // Superficie Gaussiana (círculo 2D)
+  ctxG.save();
+  ctxG.beginPath();
+  ctxG.arc(centerG.x, centerG.y, R_G, 0, Math.PI * 2);
+  ctxG.fillStyle = isInside ? 'rgba(179, 36, 107, 0.05)' : 'rgba(11, 140, 168, 0.05)';
+  ctxG.fill();
+  ctxG.lineWidth = 2.5;
+  ctxG.setLineDash([6, 6]);
+  ctxG.strokeStyle = isInside ? '#b3246b' : '#0b8ca8';
+  ctxG.stroke();
+  ctxG.restore();
+
+  // Etiqueta Superficie
+  ctxG.font = '600 13px Inter, sans-serif';
+  ctxG.fillStyle = isInside ? '#b3246b' : '#0b8ca8';
+  ctxG.textAlign = 'center';
+  ctxG.fillText('Superficie Gaussiana S', centerG.x, centerG.y - R_G - 8);
+
+  // Líneas de Campo que emergen de la carga
+  const lineLen = 170;
+  for (let i = 0; i < nLines; i++) {
+    const angle = (i * 2 * Math.PI) / nLines;
+    const tox = chargePos.x + lineLen * Math.cos(angle);
+    const toy = chargePos.y + lineLen * Math.sin(angle);
+
+    ctxG.strokeStyle = q_nC >= 0 ? 'rgba(239, 68, 68, 0.45)' : 'rgba(59, 130, 246, 0.45)';
+    ctxG.lineWidth = 1.8;
+    ctxG.beginPath();
+    ctxG.moveTo(chargePos.x, chargePos.y);
+    ctxG.lineTo(tox, toy);
+    ctxG.stroke();
+
+    // Flechas de dirección
+    const arrowDist = 70;
+    const ax = chargePos.x + arrowDist * Math.cos(angle);
+    const ay = chargePos.y + arrowDist * Math.sin(angle);
+    drawSmallArrow(chargePos.x, chargePos.y, ax, ay, q_nC >= 0 ? '#ef4444' : '#3b82f6', q_nC >= 0);
+  }
+
+  // Carga puntual
+  ctxG.beginPath();
+  ctxG.arc(chargePos.x, chargePos.y, 14, 0, Math.PI * 2);
+  ctxG.fillStyle = q_nC >= 0 ? '#ef4444' : '#3b82f6';
+  ctxG.fill();
+  ctxG.strokeStyle = '#ffffff';
+  ctxG.lineWidth = 2.5;
+  ctxG.stroke();
+
+  // Símbolo de signo
+  ctxG.fillStyle = '#ffffff';
+  ctxG.font = 'bold 16px Inter, sans-serif';
+  ctxG.textAlign = 'center';
+  ctxG.textBaseline = 'middle';
+  ctxG.fillText(q_nC >= 0 ? '+' : '−', chargePos.x, chargePos.y);
+}
+
+function drawSmallArrow(fromx, fromy, tox, toy, color, outward) {
+  const headlen = 7;
+  const angle = Math.atan2(toy - fromy, tox - fromx) + (outward ? 0 : Math.PI);
+  ctxG.fillStyle = color;
+  ctxG.beginPath();
+  ctxG.moveTo(tox, toy);
+  ctxG.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  ctxG.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  ctxG.closePath();
+  ctxG.fill();
+}
+
+[rngGq, rngGr, rngGlines].forEach(el => {
+  el.addEventListener('input', updateGaussSim);
+  el.addEventListener('change', updateGaussSim);
+});
+
+document.getElementById('btn-reset-gauss').addEventListener('click', () => {
+  chargePos = { x: cvG.width / 2, y: cvG.height / 2 };
+  updateGaussSim();
+});
+
+// INTERACCIÓN MOUSE / DRAG
+let isDraggingCharge = false;
+cvG.addEventListener('mousedown', (e) => {
+  const rect = cvG.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  if (Math.hypot(mx - chargePos.x, my - chargePos.y) < 22) {
+    isDraggingCharge = true;
+  }
+});
+
+cvG.addEventListener('mousemove', (e) => {
+  if (!isDraggingCharge) return;
+  const rect = cvG.getBoundingClientRect();
+  chargePos.x = e.clientX - rect.left;
+  chargePos.y = e.clientY - rect.top;
+  updateGaussSim();
+});
+
+window.addEventListener('mouseup', () => { isDraggingCharge = false; });
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  fitStage();
+  showSlide(1);
+  updateGaussSim();
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>

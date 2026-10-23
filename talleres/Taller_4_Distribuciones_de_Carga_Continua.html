@@ -1,654 +1,493 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EXGD1GSLLB'); </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Interactivo: Distribuciones de Carga Continua</title>
-    <!-- Bibliotecas Externas -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls para interacción manual -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <title>Taller Práctico No. 4 · Distribuciones Continuas de Carga — Electro10.Easy</title>
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .math-tex { font-size: 1.1em; color: #2563eb; }
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #000; border-radius: 0.75rem; overflow: hidden; cursor: grab; }
-        .canvas-container:active { cursor: grabbing; }
-        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 30; width: 100vw; height: 100vh; }
-        .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
-        
-        /* Cargas y SVG Específicos */
-        .charge-pos { fill: #ef4444; stroke: #b91c1c; stroke-width: 1.5; transition: transform 0.2s; cursor: pointer; }
-        .charge-neg { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 1.5; transition: transform 0.2s; cursor: pointer; }
-        .point-p { fill: #10b981; stroke: #059669; stroke-width: 2.5; transition: transform 0.2s; cursor: pointer; }
-        .charge-continuous { fill: #fca5a5; stroke: #ef4444; stroke-width: 1.5; opacity: 0.8; }
-        .charge-continuous-neg { fill: #93c5fd; stroke: #3b82f6; stroke-width: 1.5; opacity: 0.8; }
-        .svg-container { display: flex; justify-content: center; align-items: center; padding: 1.5rem; background: #ffffff; border-radius: 1rem; border: 1px solid #e2e8f0; min-height: 180px; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05); }
-        .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
-        
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: rgba(179, 36, 107, 0.08);
+            --e10-accent: #0B8CA8;
+            --e10-accent-strong: #08758C;
+            --e10-accent-soft: rgba(11, 140, 168, 0.08);
+            --e10-ink: #0f172a;
+            --e10-muted: #64748b;
+            --e10-surface: #ffffff;
+            --e10-bg: #f8fafc;
+            --e10-line: #e2e8f0;
+            --e10-success: #10b981;
+            --e10-success-soft: rgba(16, 185, 129, 0.08);
+            --e10-warning: #f59e0b;
+            --e10-warning-soft: rgba(245, 158, 11, 0.08);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
+        .max-w-container { max-width: 1040px; margin: 0 auto; }
+        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
+        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
+        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
+        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
+        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
+        .warnbox { background: var(--e10-warning-soft); border-left: 4px solid var(--e10-warning); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
+        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
+        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
+        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
+        .btn-pri:hover { background: #961b57; }
+        .btn-acc { background: var(--e10-accent); border-color: var(--e10-accent); color: #fff; }
+        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
+        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
+        .path-content { display: none; margin-top: 10px; }
+        .path-content.active { display: block; }
+        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
+        input:focus { border-color: var(--e10-primary); ring: 2px var(--e10-primary-soft); }
         @media print {
             .no-print { display: none !important; }
-            .page-break { page-break-after: always; }
-            body { background: white; padding: 0; }
-            .problem-card { border: 1px solid #e2e8f0; break-inside: avoid; box-shadow: none; margin-bottom: 1rem; }
-            main { display: block !important; }
-            .svg-container { border: 1px solid #ccc; box-shadow: none; }
+            body { background: #fff; padding: 0; }
+            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
         }
-        .toolbar-btn { transition: all 0.2s; }
-        .toolbar-btn:hover { transform: translateY(-1px); }
-        input[type="number"], input[type="range"] { border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; width: 100%; accent-color: #2563eb; }
-        .hint-content { display: none; margin-top: 0.5rem; }
-        .hint-content.show { display: block; }
-        .compact-text { font-size: 0.85rem; line-height: 1.5; color: #334155; }
-        .problem-text { margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 3px solid #cbd5e1; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
+<div class="max-w-container">
 
-    <!-- Capa de Dibujo Global -->
-    <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
-
-    <!-- Toolbar Superior Fija -->
-    <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
-        <div class="flex items-center gap-3">
-            <h1 class="font-bold text-slate-800 text-sm md:text-base">Physics.10easy Workshop</h1>
-            <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
-            <button onclick="exportToPDF()" class="toolbar-btn bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-blue-700">Exportar PDF</button>
-            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Tips Didácticos</button>
-            <button onclick="toggleAllRotations()" class="toolbar-btn bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-emerald-600">Pausar Vista 3D</button>
+    <!-- Encabezado Institucional 10.Easy -->
+    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <span class="badge badge-primary">Capítulo 4 · Electrostática de Medios Continuos</span>
+                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
+            </div>
+            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 4: Distribuciones Continuas de Carga</h1>
+            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Deducción analítica rigurosa, descomposición diferencial en 3D, simetría de reflexión y campos de hilos y anillos axiales.</p>
         </div>
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-            <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
-            <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
-            <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
-            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 border-l border-slate-300 ml-1">Dibujo OFF</button>
-        </div>
-    </nav>
-
-    <!-- Header Principal -->
-    <header class="text-center mb-8 border-b border-blue-100 pb-6">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Taller: Distribuciones de Carga Continua</h2>
-        <p class="text-slate-500 mt-2 text-sm">Física II • Electromagnetismo • Integración de Elementos de Carga (\(dq\))</p>
-        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[10px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
-            <span>Grupo: 10E-PHYS</span>
-            <span>Docente: Physics.10easy Builder</span>
-            <span>Unidad 3</span>
+        <div class="no-print" style="display:flex;gap:8px">
+            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
+            <a href="../presentaciones/M4_DistribucionesContinuas/index.html" class="btn" style="text-decoration:none">Ver Clase 4 →</a>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto space-y-6" id="taller-content">
-        
-        <!-- PROBLEMA 1: DENSIDADES DE CARGA -->
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-start gap-4 mb-6">
-                <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm flex-shrink-0">1</span>
+    <!-- Fórmulas Clave de Referencia -->
+    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
+        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Integración Continua</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Diferencial de Campo Integral</b>
+                \[d\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{dq}{\mathcal{R}^2}\hat{\mathcal{R}}\]
+            </div>
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Hilo Finito (Mediatriz)</b>
+                \[E_y = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}\]
+            </div>
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Anillo Circular (Eje Axial)</b>
+                \[E_x = \frac{k Q x}{(x^2 + R^2)^{3/2}}\]
+            </div>
+            <div class="card" style="padding:12px;margin:0">
+                <b style="font-size:13px;color:var(--e10-muted)">Límite Hilo Infinito</b>
+                \[E = \frac{\lambda}{2\pi\epsilon_0 r}\]
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEMA 1: HILO FINITO EN LA MEDIATRIZ CON 2 CAMINOS -->
+    <article class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Campo Eléctrico en la Mediatriz de un Segmento Recto</h2>
+            <span class="badge badge-accent">Nivel Intermedio</span>
+        </div>
+        <p style="font-size:16px">
+            Una varilla delgada y no conductora de longitud $L = 0{,}60\ \text{m}$ descansa sobre el eje $x$ centrada en el origen (extendiéndose desde $x = -0{,}30\ \text{m}$ hasta $x = +0{,}30\ \text{m}$). La varilla posee una carga total uniforme $Q = +15{,}0\ \text{nC}$. Determina la magnitud y dirección del vector de campo eléctrico $\vec{E}$ en un punto $P(0, 0{,}20\ \text{m})$ sobre el eje $y$.
+        </p>
+
+        <!-- 7 PASOS METODOLÓGICOS -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">1</span>
+                    <b>Identificación y Parametrización Geométrica de la Distribución:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Longitud $L = 0{,}60\ \text{m}$, carga $Q = 15{,}0\times 10^{-9}\ \text{C}$.<br>
+                    Densidad lineal uniforme: $\lambda = \frac{Q}{L} = \frac{15{,}0\times 10^{-9}\ \text{C}}{0{,}60\ \text{m}} = 25{,}0\times 10^{-9}\ \text{C/m} = 25{,}0\ \text{nC/m}$.<br>
+                    Elemento diferencial de carga ubicado en una coordenada fuente $x'$: $dq = \lambda dx'$.
+                </p>
+            </div>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">2</span>
+                    <b>Vector de Posición Relativa y Distancia Euclídea:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Punto fuente: $\vec{r}' = x'\hat{\imath} + 0\hat{\jmath}$. Punto de campo: $\vec{r} = 0\hat{\imath} + y\hat{\jmath}$ (donde $y = 0{,}20\ \text{m}$).<br>
+                    Vector de separación relativa: $\vec{\mathcal{R}} = \vec{r} - \vec{r}' = -x'\hat{\imath} + y\hat{\jmath}$.<br>
+                    Distancia euclídea al elemento: $\mathcal{R} = \sqrt{(-x')^2 + y^2} = \sqrt{x'^2 + y^2}$.
+                </p>
+            </div>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">3</span>
+                    <b>Diferencial Vectorial de Campo $d\vec{E}$ y Descomposición:</b>
+                </div>
+                \[d\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{dq}{\mathcal{R}^3}\vec{\mathcal{R}} = \frac{k\lambda dx'}{(x'^2 + y^2)^{3/2}}(-x'\hat{\imath} + y\hat{\jmath})\]
+                \[dE_x = -\frac{k\lambda x' dx'}{(x'^2 + y^2)^{3/2}}, \quad dE_y = \frac{k\lambda y dx'}{(x'^2 + y^2)^{3/2}}\]
+            </div>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">4</span>
+                    <b>Análisis de Simetría Especular (Cancelación de $E_x$):</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    El integrando de $E_x$ es una función <b>impar</b> respecto a $x'$ ($f(-x') = -f(x')$), mientras que el intervalo de integración $[-L/2, L/2]$ es simétrico alrededor del origen. Por simetría par/impar:
+                    \[E_x = \int_{-L/2}^{L/2} dE_x = 0\]
+                    El integrando de $E_y$ es estrictamente <b>par</b> ($f(-x') = f(x')$). Por ende:
+                    \[E_y = 2\int_0^{L/2} dE_y = 2 k\lambda y \int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}}\]
+                </p>
+            </div>
+
+            <!-- COMPARATIVA: 2 CAMINOS DE RESOLUCIÓN -->
+            <div class="card" style="border:1px solid var(--e10-primary);margin-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+                    <b style="color:var(--e10-primary)">Paso 5: Resolución de la Integral — Elige el Camino Analítico:</b>
+                    <div style="display:flex;gap:6px">
+                        <button class="btn btn-tab active" id="btn-p1-camA">Camino A: Sustitución Trigonométrica</button>
+                        <button class="btn btn-tab" id="btn-p1-camB">Camino B: Integral Algebraica Directa</button>
+                    </div>
+                </div>
+
+                <div id="content-p1-camA" class="path-content active">
+                    <div class="tipbox">
+                        <b>Camino A (Método Clásico Angular):</b><br>
+                        Hacemos el cambio de variable angular $x' = y\tan\theta \implies dx' = y\sec^2\theta d\theta$.<br>
+                        El denominador se transforma: $(x'^2 + y^2)^{3/2} = (y^2(\tan^2\theta + 1))^{3/2} = (y^2\sec^2\theta)^{3/2} = y^3\sec^3\theta$.<br>
+                        Sustituyendo en la integral indefinida:
+                        \[\int \frac{dx'}{(x'^2 + y^2)^{3/2}} = \int \frac{y\sec^2\theta d\theta}{y^3\sec^3\theta} = \frac{1}{y^2}\int \frac{d\theta}{\sec\theta} = \frac{1}{y^2}\int \cos\theta d\theta = \frac{\sin\theta}{y^2}\]
+                        Regresando a la variable cartesiana mediante el triángulo rectángulo asociado ($\sin\theta = \frac{x'}{\sqrt{x'^2 + y^2}}$):
+                        \[\left[ \frac{x'}{y^2\sqrt{x'^2 + y^2}} \right]_0^{L/2} = \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}} = \frac{L}{y^2\sqrt{4y^2 + L^2}}\]
+                    </div>
+                </div>
+
+                <div id="content-p1-camB" class="path-content">
+                    <div class="tipbox">
+                        <b>Camino B (Tabla de Primitivas Algebraicas):</b><br>
+                        Utilizando directamente la fórmula de integración de tablas estándar $\int \frac{du}{(u^2 + a^2)^{3/2}} = \frac{u}{a^2\sqrt{u^2 + a^2}} + C$ con $u=x'$ y $a=y$:
+                        \[\int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}} = \left[ \frac{x'}{y^2\sqrt{x'^2 + y^2}} \right]_0^{L/2} = \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}}\]
+                        Ambos caminos conducen a la misma expresión cerrada exacta.
+                    </div>
+                </div>
+            </div>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">6</span>
+                    <b>Expresión Analítica Final y Validación Asintótica:</b>
+                </div>
+                \[E_y = 2 k\lambda y \left( \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}} \right) = \frac{k\lambda L}{y\sqrt{y^2 + (L/2)^2}} = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}\]
+                <p style="margin:6px 0 0;font-size:14px;color:var(--e10-muted)">
+                    <b>Comprobación de límites:</b><br>
+                    • Límite puntual ($y \gg L$): $\sqrt{4y^2+L^2} \approx 2y \implies E_y \approx \frac{2k\lambda L}{y(2y)} = \frac{k(\lambda L)}{y^2} = \frac{kQ}{y^2}$ (¡Correcto!).<br>
+                    • Límite alambre infinito ($L \gg y$): $\sqrt{4y^2+L^2} \approx L \implies E_y \approx \frac{2k\lambda L}{y L} = \frac{2k\lambda}{y} = \frac{\lambda}{2\pi\epsilon_0 y}$ (¡Correcto!).
+                </p>
+            </div>
+
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">7</span>
+                    <b>Sustitución Numérica y Solución Vectorial Final:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Datos: $k = 8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$, $\lambda = 25{,}0\times 10^{-9}\ \text{C/m}$, $L = 0{,}60\ \text{m}$, $y = 0{,}20\ \text{m}$.
+                </p>
+                \[4y^2 + L^2 = 4(0{,}20)^2 + (0{,}60)^2 = 4(0{,}04) + 0{,}36 = 0{,}16 + 0{,}36 = 0{,}52\ \text{m}^2\]
+                \[\sqrt{4y^2 + L^2} = \sqrt{0{,}52} \approx 0{,}72111\ \text{m}\]
+                \[E_y = \frac{2(8{,}99\times 10^9)(25{,}0\times 10^{-9})(0{,}60)}{(0{,}20)(0{,}72111)} = \frac{269{,}7}{0{,}14422} \approx 1870{,}0\ \text{N/C}\]
+                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
+                    <b style="color:var(--e10-success)">Vector de Campo Eléctrico Neto:</b>
+                    \[\vec{E} = 0\hat{\imath} + 1{,}87\times 10^3\hat{\jmath}\ \text{N/C} = (1{,}87\ \text{kN/C})\hat{\jmath}\]
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora Interactiva de Comprobación -->
+        <div class="card no-print" style="margin-top:16px;background:var(--e10-bg)">
+            <b style="color:var(--e10-primary)">Calculadora Paramétrica para Problema 1:</b>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-800">Conceptos: Geometría de la Carga Continua</h3>
-                    <p class="text-slate-500 text-sm">Identifique el diferencial de carga \(dq\) apropiado para cada dimensión geométrica.</p>
+                    <label style="font-size:12px;color:var(--e10-muted)">Longitud $L$ [m]:</label>
+                    <input type="number" id="calc1-L" value="0.60" step="0.05">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Carga $Q$ [nC]:</label>
+                    <input type="number" id="calc1-Q" value="15.0" step="1">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:var(--e10-muted)">Posición $y$ [m]:</label>
+                    <input type="number" id="calc1-y" value="0.20" step="0.02">
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                    <button class="btn btn-pri" id="btn-calc1-eval" style="width:100%">Recalcular</button>
                 </div>
             </div>
-
-            <div class="case-grid grid-cols-1 md:grid-cols-3">
-                <!-- Lineal -->
-                <div class="border border-slate-100 rounded-xl p-3 bg-slate-50/50 text-center">
-                    <span class="text-[9px] font-bold text-slate-400 block mb-2 uppercase tracking-widest">1D: Densidad Lineal (\(\lambda\))</span>
-                    <svg viewBox="0 0 100 50" class="h-16 mx-auto">
-                        <line x1="10" y1="25" x2="90" y2="25" stroke="#ef4444" stroke-width="4" stroke-linecap="round" />
-                        <rect x="45" y="21" width="10" height="8" fill="#1e293b" />
-                        <text x="50" y="15" font-size="6" font-family="monospace" text-anchor="middle" font-weight="bold">dl</text>
-                        <text x="80" y="40" font-size="7" font-weight="bold" fill="#ef4444">Q</text>
-                    </svg>
-                    <div class="mt-2 text-xs font-mono text-slate-700">\( dq = \lambda \cdot dl \)</div>
-                </div>
-                <!-- Superficial -->
-                <div class="border border-slate-100 rounded-xl p-3 bg-slate-50/50 text-center">
-                    <span class="text-[9px] font-bold text-slate-400 block mb-2 uppercase tracking-widest">2D: Densidad Superficial (\(\sigma\))</span>
-                    <svg viewBox="0 0 100 50" class="h-16 mx-auto">
-                        <polygon points="20,40 80,40 90,10 30,10" class="charge-continuous" />
-                        <polygon points="50,25 60,25 62,20 52,20" fill="#1e293b" />
-                        <text x="56" y="16" font-size="6" font-family="monospace" text-anchor="middle" font-weight="bold">dA</text>
-                        <text x="75" y="35" font-size="7" font-weight="bold" fill="#ef4444">Q</text>
-                    </svg>
-                    <div class="mt-2 text-xs font-mono text-slate-700">\( dq = \sigma \cdot dA \)</div>
-                </div>
-                <!-- Volumétrica -->
-                <div class="border border-slate-100 rounded-xl p-3 bg-slate-50/50 text-center">
-                    <span class="text-[9px] font-bold text-slate-400 block mb-2 uppercase tracking-widest">3D: Densidad Volumétrica (\(\rho\))</span>
-                    <svg viewBox="0 0 100 50" class="h-16 mx-auto">
-                        <circle cx="50" cy="25" r="20" class="charge-continuous" />
-                        <rect x="45" y="20" width="10" height="10" fill="#1e293b" rx="1" />
-                        <text x="50" y="15" font-size="6" font-family="monospace" text-anchor="middle" font-weight="bold">dV</text>
-                        <text x="60" y="35" font-size="7" font-weight="bold" fill="#ef4444">Q</text>
-                    </svg>
-                    <div class="mt-2 text-xs font-mono text-slate-700">\( dq = \rho \cdot dV \)</div>
-                </div>
-            </div>
-            
-            <div class="mt-4">
-                <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Regla de Integración</button>
-                <div class="hint-content p-3 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                    Para hallar el Campo Eléctrico o Potencial de un objeto continuo, dividimos el objeto en fragmentos diminutos \(dq\). Luego, sumamos las contribuciones de todos los fragmentos usando integración: 
-                    \( \vec{E} = \int \frac{k \cdot dq}{r^2} \hat{r} \) y \( V = \int \frac{k \cdot dq}{r} \).
-                </div>
-            </div>
-        </section>
-
-        <!-- GRUPO 2: PROBLEMAS CON SVG (GRID) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            
-            <!-- PROBLEMA 2: ANILLO CARGADO -->
-            <article class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm">2</span>
-                    <h3 class="text-lg font-bold">Anillo Uniformemente Cargado</h3>
-                </div>
-                <div class="problem-text compact-text mb-4">
-                    <p>Un anillo delgado de radio \(R = 15.0\text{ cm}\) tiene una carga total \(Q = +24.0\ \mu\text{C}\) distribuida uniformemente en su longitud.</p>
-                    <ul class="space-y-1 mt-2 text-xs">
-                        <li><strong>(a)</strong> Demuestre la expresión analítica para el Campo Eléctrico \(\vec{E}\) en un punto P sobre el eje central (eje Z), a una distancia \(z\) del centro.</li>
-                        <li><strong>(b)</strong> Calcule la magnitud de \(E\) en \(z = 20.0\text{ cm}\).</li>
-                    </ul>
-                </div>
-                
-                <div class="svg-container w-full h-[180px] mt-auto">
-                    <svg viewBox="0 0 200 150" class="w-full max-w-[260px]">
-                        <!-- Ejes -->
-                        <line x1="100" y1="130" x2="100" y2="20" stroke="#cbd5e1" stroke-dasharray="2" />
-                        <text x="105" y="25" font-size="10" font-family="monospace">z</text>
-                        <!-- Anillo en perspectiva -->
-                        <ellipse cx="100" cy="110" rx="60" ry="15" fill="none" stroke="#ef4444" stroke-width="4" />
-                        <!-- Punto P y dq -->
-                        <circle cx="100" cy="40" r="4" class="point-p"/><text x="110" y="45" font-weight="bold" font-size="12">P</text>
-                        <circle cx="40" cy="110" r="4" fill="#1e293b" /><text x="25" y="115" font-size="10">dq</text>
-                        <!-- Vector r -->
-                        <line x1="40" y1="110" x2="100" y2="40" stroke="#94a3b8" stroke-dasharray="3" />
-                        <text x="60" y="70" font-size="10">r</text>
-                        <!-- dE -->
-                        <line x1="100" y1="40" x2="130" y2="5" stroke="#3b82f6" stroke-width="1.5" />
-                        <polygon points="130,5 125,10 132,10" fill="#3b82f6" transform="rotate(-15, 130, 5)"/>
-                        <text x="135" y="15" font-size="10" fill="#3b82f6" font-weight="bold">dE</text>
-                        <!-- Radio R -->
-                        <line x1="100" y1="110" x2="160" y2="110" stroke="#475569" />
-                        <text x="125" y="105" font-size="10">R</text>
-                    </svg>
-                </div>
-                <div class="mt-4">
-                    <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Pista de Simetría</button>
-                    <div class="hint-content p-2 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                        Por simetría, las componentes perpendiculares al eje Z (\(dE_x, dE_y\)) se cancelan. Solo sobrevive \(dE_z = dE \cdot \cos(\theta)\). Sustituye \(\cos(\theta) = \frac{z}{r}\) y \(r = \sqrt{R^2 + z^2}\). Como \(z\) y \(R\) son constantes para todos los \(dq\) del anillo, la integral de \(dq\) es simplemente la carga total \(Q\).
-                    </div>
-                </div>
-            </article>
-
-            <!-- PROBLEMA 3: LÍNEA FINITA -->
-            <article class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm">3</span>
-                    <h3 class="text-lg font-bold">Hilo Rectilíneo Finito</h3>
-                </div>
-                <div class="problem-text compact-text mb-4">
-                    <p>Un hilo recto de longitud \(L = 2a\) tiene una carga positiva distribuida de manera uniforme con densidad lineal \(\lambda\).</p>
-                    <p class="font-bold text-primary mt-2">Encuentre el potencial eléctrico \(V\) en un punto P situado sobre la mediatriz del hilo, a una distancia \(x\) de su centro.</p>
-                </div>
-                
-                <div class="svg-container w-full h-[180px] mt-auto">
-                    <svg viewBox="0 0 250 160" class="w-full">
-                        <line x1="40" y1="80" x2="210" y2="80" stroke="#cbd5e1" stroke-dasharray="2" /> <!-- Eje X -->
-                        <line x1="50" y1="20" x2="50" y2="140" stroke="#ef4444" stroke-width="4" stroke-linecap="round" /> <!-- Hilo -->
-                        <text x="35" y="30" font-size="10">+a</text>
-                        <text x="35" y="140" font-size="10">-a</text>
-                        
-                        <circle cx="50" cy="40" r="3" fill="#1e293b" /><text x="25" y="45" font-size="10">dy</text>
-                        
-                        <circle cx="170" cy="80" r="4" class="point-p"/><text x="180" y="85" font-weight="bold" font-size="12">P</text>
-                        
-                        <line x1="50" y1="40" x2="170" y2="80" stroke="#94a3b8" stroke-dasharray="3" />
-                        <text x="100" y="55" font-size="10">r</text>
-                        <text x="100" y="95" font-size="10">x</text>
-                        <text x="60" y="65" font-size="10">y</text>
-                    </svg>
-                </div>
-                <div class="mt-4">
-                    <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Pista de Integración</button>
-                    <div class="hint-content p-2 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                        El elemento de carga es \(dq = \lambda dy\). La distancia es \(r = \sqrt{x^2 + y^2}\). El potencial es la integral escalar \( V = \int_{-a}^{a} \frac{k \lambda dy}{\sqrt{x^2 + y^2}} \). Utilice la tabla de integrales: \(\int \frac{du}{\sqrt{u^2 + c^2}} = \ln(u + \sqrt{u^2 + c^2})\).
-                    </div>
-                </div>
-            </article>
-
-            <!-- PROBLEMA 4: PLANO INFINITO -->
-            <article class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm">4</span>
-                    <h3 class="text-lg font-bold">Placa Plana y Levitación</h3>
-                </div>
-                <div class="problem-text compact-text mb-4">
-                    <p>Una lámina horizontal muy grande (infinita) posee una densidad de carga superficial \(\sigma = -4.5 \times 10^{-9}\text{ C/m}^2\).</p>
-                    <p class="font-bold text-primary mt-2">Un protón (\(m = 1.67 \times 10^{-27}\text{ kg}\)) se suelta sobre la lámina. Determine su aceleración inicial debido al campo eléctrico y la gravedad.</p>
-                </div>
-                
-                <div class="svg-container w-full h-[180px] mt-auto">
-                    <svg viewBox="0 0 250 160" class="w-full">
-                        <!-- Plano en perspectiva -->
-                        <polygon points="30,120 180,120 220,80 70,80" class="charge-continuous-neg" />
-                        <text x="40" y="110" font-size="12" font-weight="bold" fill="#1e3a8a">σ (-)</text>
-                        
-                        <!-- Protón -->
-                        <circle cx="125" cy="40" r="6" class="charge-pos"/><text x="135" y="45" font-size="10">p⁺</text>
-                        
-                        <!-- Fuerzas -->
-                        <line x1="125" y1="40" x2="125" y2="70" stroke="#3b82f6" stroke-width="2" />
-                        <polygon points="125,70 120,60 130,60" fill="#3b82f6" />
-                        <text x="135" y="65" font-size="10" fill="#1d4ed8" font-weight="bold">F_e</text>
-                        
-                        <line x1="125" y1="40" x2="125" y2="90" stroke="#059669" stroke-width="2" />
-                        <polygon points="125,90 120,80 130,80" fill="#059669" />
-                        <text x="100" y="85" font-size="10" fill="#059669" font-weight="bold">mg</text>
-                    </svg>
-                </div>
-                <div class="mt-4">
-                    <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Pista</button>
-                    <div class="hint-content p-2 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                        El campo eléctrico de una placa infinita es uniforme y constante a cualquier distancia: \(E = \frac{|\sigma|}{2\epsilon_0}\). Ambas fuerzas (eléctrica y gravitatoria) apuntan hacia abajo. Usa la segunda ley de Newton: \( \sum F = m \cdot a \implies qE + mg = m \cdot a\).
-                    </div>
-                </div>
-            </article>
-
-            <!-- PROBLEMA 5: ESFERA SÓLIDA VOLUMÉTRICA -->
-            <article class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm">5</span>
-                    <h3 class="text-lg font-bold">Esfera Sólida (Distribución Volumétrica)</h3>
-                </div>
-                <div class="problem-text compact-text mb-4">
-                    <p>Una esfera aislante de radio \(R\) tiene una carga \(Q\) distribuida uniformemente en todo su volumen (\(\rho = cte\)).</p>
-                    <p class="font-bold text-primary mt-2">Aplicando la Ley de Gauss, encuentre la magnitud del campo eléctrico \(E\) para un radio interno \(r < R\).</p>
-                </div>
-                
-                <div class="svg-container w-full h-[180px] mt-auto">
-                    <svg viewBox="0 0 200 160" class="w-full max-w-[200px]">
-                        <!-- Esfera solida -->
-                        <circle cx="100" cy="80" r="60" fill="#fca5a5" opacity="0.5" stroke="#ef4444" stroke-width="2" />
-                        <text x="120" y="50" font-size="12" fill="#b91c1c" font-weight="bold">ρ</text>
-                        <!-- Superficie Gaussiana -->
-                        <circle cx="100" cy="80" r="35" fill="none" stroke="#10b981" stroke-dasharray="4" stroke-width="2" />
-                        <text x="75" y="100" font-size="10" fill="#059669" font-weight="bold">Sup. Gauss</text>
-                        
-                        <!-- Radios -->
-                        <line x1="100" y1="80" x2="160" y2="80" stroke="#475569" />
-                        <text x="145" y="75" font-size="10">R</text>
-                        
-                        <line x1="100" y1="80" x2="100" y2="45" stroke="#059669" />
-                        <text x="90" y="65" font-size="10">r</text>
-                        
-                        <circle cx="100" cy="80" r="3" fill="#1e293b" />
-                    </svg>
-                </div>
-                <div class="mt-4">
-                    <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Pista de Gauss</button>
-                    <div class="hint-content p-2 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                        La carga encerrada \(q_{enc}\) por la superficie gaussiana imaginaria de radio \(r\) es una fracción del total: \(q_{enc} = \rho \cdot V_{gauss} = \rho \left( \frac{4}{3}\pi r^3 \right)\). Al aplicar Gauss \(\oint E \cdot dA = \frac{q_{enc}}{\epsilon_0}\), el área es \(4\pi r^2\). El campo crece linealmente con \(r\).
-                    </div>
-                </div>
-            </article>
-
-            <!-- PROBLEMA 6: ARCO DE CARGA -->
-            <article class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col md:flex-row gap-6">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm">6</span>
-                        <h3 class="text-lg font-bold">Arco de Carga Uniforme</h3>
-                    </div>
-                    <div class="problem-text compact-text">
-                        <p>Un alambre de plástico no conductor está doblado en forma de un semicírculo de radio \(R\).</p>
-                        <p>Tiene una carga total \(+Q\) distribuida uniformemente a lo largo de su longitud.</p>
-                        <p class="font-bold text-primary mt-2">Halle el potencial eléctrico \(V\) y el campo eléctrico \(\vec{E}\) en el punto \(O\) (el centro de curvatura).</p>
-                    </div>
-                    <div class="mt-4">
-                        <button onclick="toggleHint(this)" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 no-print">💡 Ver Pista Analítica</button>
-                        <div class="hint-content p-2 bg-blue-50 rounded border border-blue-100 text-xs text-slate-700">
-                            <strong>Para el Potencial (Escalar):</strong> Todos los \(dq\) están exactamente a la misma distancia \(R\) del punto O. Por tanto, no hay que integrar vectores. La respuesta es directa: \(V = \frac{kQ}{R}\). <br><br>
-                            <strong>Para el Campo (Vectorial):</strong> Por simetría, las componentes horizontales se cancelan. Solo se integran las componentes verticales: \(dE_y = \frac{k \cdot dq}{R^2} \sin(\theta)\), donde \(dq = \lambda \cdot R \cdot d\theta\). Integra desde $0$ a $\pi$.
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 flex flex-col justify-center">
-                    <div class="svg-container bg-slate-50 border-slate-200 rounded-xl h-[160px]">
-                        <svg viewBox="0 0 200 120" class="w-full max-w-[200px]">
-                            <!-- Ejes -->
-                            <line x1="20" y1="100" x2="180" y2="100" stroke="#cbd5e1" stroke-dasharray="2" />
-                            <line x1="100" y1="110" x2="100" y2="10" stroke="#cbd5e1" stroke-dasharray="2" />
-                            
-                            <!-- Semicirculo -->
-                            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round" />
-                            <text x="140" y="40" font-size="12" fill="#b91c1c" font-weight="bold">+λ</text>
-                            
-                            <!-- Punto O -->
-                            <circle cx="100" cy="100" r="4" class="point-p"/><text x="105" y="115" font-weight="bold" font-size="12">O</text>
-                            
-                            <!-- dq y radio -->
-                            <circle cx="57" cy="57" r="4" fill="#1e293b" /><text x="35" y="55" font-size="10">dq</text>
-                            <line x1="100" y1="100" x2="57" y2="57" stroke="#94a3b8" />
-                            <text x="85" y="75" font-size="10">R</text>
-                            
-                            <!-- Angulo -->
-                            <path d="M 80 100 A 20 20 0 0 1 85 85" fill="none" stroke="#64748b" />
-                            <text x="70" y="95" font-size="10">θ</text>
-                        </svg>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- VISUALIZACIÓN AVANZADA 3D: SUPERFICIE DE POTENCIAL DEL ANILLO -->
-        <section class="problem-card bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-3">
-            <div class="flex justify-between items-start mb-2">
-                <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider">VISUALIZACIÓN AVANZADA 3D - PAISAJE DE POTENCIAL DE UN ANILLO</span>
-                <span class="text-slate-400 text-[10px] uppercase font-semibold">Three.js Engine</span>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="problem-text compact-text text-xs md:col-span-1" style="border-left-color: #6366f1;">
-                    <strong>Simulador Topográfico de Potencial (Anillo Cargado):</strong><br><br>
-                    El potencial eléctrico generado por una distribución continua se mapea en 3D calculando la superposición de infinitos puntos de carga.<br><br>
-                    En este modelo, observamos el <strong>"Cráter de Potencial"</strong> creado por un anillo cargado uniformemente en el plano XZ. La altura (eje vertical) representa la magnitud del potencial \(V\). <br><br>
-                    Note cómo el potencial alcanza un valor máximo en el borde del anillo y desciende de forma curva hacia el centro (originando un mínimo local, aunque el campo E es cero allí) y decae suavemente hacia el exterior a medida que \(1/r\).
-                </div>
-                
-                <div class="md:col-span-2 flex flex-col gap-2">
-                    <div class="canvas-container h-[300px] w-full" id="container-3dfield">
-                        <div class="absolute top-2 left-2 text-white/70 text-[10px] font-mono">Topografía de V - Anillo de Carga Continua</div>
-                        <div class="absolute bottom-2 left-2 z-10 no-print">
-                            <button onclick="toggleRotation('3dfield')" class="bg-blue-600 text-white px-2 py-1 text-[10px] rounded btn-pause shadow hover:bg-blue-700">Pausar Vista</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="mt-20 border-t border-slate-200 bg-white py-12 text-center">
-        <div class="max-w-4xl mx-auto px-6">
-            <h4 class="text-primary font-black uppercase tracking-widest text-xs mb-4">Taller Didáctico de Física</h4>
-            <p class="text-slate-500 text-[11px] leading-relaxed max-w-xl mx-auto">
-                Taller interactivo de repaso de Electromagnetismo enfocado en técnicas de integración para distribuciones de Carga Continua (Ley de Coulomb y Ley de Gauss).
-            </p>
-            <div class="flex justify-center gap-8 mt-6 grayscale opacity-40">
-                <div class="text-[9px] font-mono">FÍSICA_II_2026</div>
-                <div class="text-[9px] font-mono">ID_DOC: CT-CONTINUA-03</div>
+            <div id="calc1-res" style="margin-top:10px;font-weight:600;color:var(--e10-ink)">
+                Resultado: $E_y = 1870{,}0\ \text{N/C}$ &nbsp;|&nbsp; $\vec{E} = 1870{,}0\hat{\jmath}\ \text{N/C}$
             </div>
         </div>
-    </footer>
+    </article>
 
-    <!-- Scripts de Lógica y Visualización -->
-    <script>
-        const scenes = {};
+    <!-- PROBLEMA 2: ANILLO CARGADO Y MÁXIMO AXIAL -->
+    <article class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 2: Campo Axial de un Anillo y Optimización del Máximo</h2>
+            <span class="badge badge-accent">Nivel Avanzado</span>
+        </div>
+        <p style="font-size:16px">
+            Un anillo delgado de plástico de radio $R = 0{,}15\ \text{m}$ se encuentra fijo en el plano $yz$ centrado en el origen. El anillo tiene una carga neta positiva $Q = +30{,}0\ \text{nC}$ distribuida homogéneamente a lo largo de su perímetro.<br>
+            <b>a)</b> Deduce analíticamente la expresión del campo eléctrico sobre el eje axial $x$ y evalúa su magnitud en $x = 0{,}20\ \text{m}$.<br>
+            <b>b)</b> Mediante cálculo diferencial ($dE_x/dx = 0$), demuestra la coordenada $x_{\text{máx}}$ donde el campo alcanza su valor máximo absoluto y calcula dicho campo pico.
+        </p>
 
-        // Iniciar Three.js al cargar
-        function init3D() {
-            createSceneRing('3dfield', 'container-3dfield');
-            animate();
-        }
+        <!-- 7 PASOS METODOLÓGICOS -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">1</span>
+                    <b>Definición Geométrica y Simetría Azimutal:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Radio $R = 0{,}15\ \text{m}$, carga total $Q = 30{,}0\times 10^{-9}\ \text{C}$.<br>
+                    Elemento de arco en el anillo: $ds = R d\phi$. Diferencial de carga: $dq = \lambda ds = \frac{Q}{2\pi R}(R d\phi) = \frac{Q}{2\pi} d\phi$.
+                </p>
+            </div>
 
-        function createSceneRing(id, containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">2</span>
+                    <b>Invarianza de la Distancia Euclídea:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Para <b>cualquier</b> punto sobre el anillo, las coordenadas son $(0, R\cos\phi, R\sin\phi)$.<br>
+                    La distancia euclídea al punto de observación $P(x, 0, 0)$ es estrictamente constante para todo el anillo:
+                    \[\mathcal{R} = \sqrt{(x - 0)^2 + (0 - R\cos\phi)^2 + (0 - R\sin\phi)^2} = \sqrt{x^2 + R^2(\cos^2\phi + \sin^2\phi)} = \sqrt{x^2 + R^2}\]
+                </p>
+            </div>
 
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f172a); // Fondo oscuro
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">3</span>
+                    <b>Cancelación de Componentes Perpendiculares al Eje:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Para cada elemento $dq$ ubicado en un ángulo $\phi$, existe un elemento idéntico situado en $\phi + \pi$ diametralmente opuesto. Sus componentes radiales en el plano $yz$ son iguales en módulo y con sentidos opuestos:
+                    \[\vec{E}_\perp = \int (dE_y\hat{\jmath} + dE_z\hat{k}) = \vec{0}\]
+                    Por tanto, el campo resultante es estrictamente unidireccional sobre el eje axial $x$.
+                </p>
+            </div>
 
-            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 18, 22); // Cámara viendo desde arriba-lado
-            camera.lookAt(0, 0, 0);
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">4</span>
+                    <b>Proyección Axial e Integración:</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    El ángulo $\theta$ entre el vector $\vec{\mathcal{R}}$ y el eje $x$ cumple $\cos\theta = \frac{x}{\sqrt{x^2 + R^2}}$.
+                </p>
+                \[dE_x = dE \cos\theta = \left(\frac{k\, dq}{x^2 + R^2}\right)\left(\frac{x}{\sqrt{x^2 + R^2}}\right) = \frac{k x\, dq}{(x^2 + R^2)^{3/2}}\]
+                \[E_x = \int dE_x = \frac{k x}{(x^2 + R^2)^{3/2}}\oint_{\text{anillo}} dq = \frac{k Q x}{(x^2 + R^2)^{3/2}}\]
+            </div>
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">5</span>
+                    <b>Evaluación Numérica en $x = 0{,}20\ \text{m}$:</b>
+                </div>
+                \[x^2 + R^2 = (0{,}20)^2 + (0{,}15)^2 = 0{,}0400 + 0{,}0225 = 0{,}0625\ \text{m}^2\]
+                \[(x^2 + R^2)^{3/2} = (0{,}0625)^{3/2} = (\sqrt{0{,}0625})^3 = (0{,}25)^3 = 0{,}015625\ \text{m}^3\]
+                \[E_x = \frac{(8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2)(30{,}0\times 10^{-9}\ \text{C})(0{,}20\ \text{m})}{0{,}015625\ \text{m}^3} = \frac{53{,}94}{0{,}015625} = 3452{,}16\ \text{N/C} \approx 3{,}45\ \text{kN/C}\]
+            </div>
 
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.autoRotate = true; 
-            controls.autoRotateSpeed = 1.0;
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">6</span>
+                    <b>Demostración Analítica del Punto de Campo Máximo ($x_{\text{máx}}$):</b>
+                </div>
+                <p style="margin:6px 0 0;font-size:15px">
+                    Aplicando la regla del cociente o del producto a la función $E_x(x) = kQ \cdot x (x^2 + R^2)^{-3/2}$:
+                </p>
+                \[\frac{dE_x}{dx} = kQ \left[ 1\cdot (x^2 + R^2)^{-3/2} + x \cdot \left(-\frac{3}{2}\right)(x^2 + R^2)^{-5/2}(2x) \right] = 0\]
+                \[(x^2 + R^2)^{-3/2} - 3x^2(x^2 + R^2)^{-5/2} = 0\]
+                <p style="margin:4px 0 0;font-size:15px">Multiplicando ambos lados por $(x^2 + R^2)^{5/2}$:</p>
+                \[(x^2 + R^2) - 3x^2 = 0 \implies R^2 - 2x^2 = 0 \implies x^2 = \frac{R^2}{2}\]
+                <div class="tipbox">
+                    <b>Coordenada del Máximo Axial:</b>
+                    \[x_{\text{máx}} = \frac{R}{\sqrt{2}} = \frac{0{,}15\ \text{m}}{\sqrt{2}} \approx 0{,}10607\ \text{m} = 10{,}61\ \text{cm}\]
+                </div>
+            </div>
 
-            // Iluminación
-            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-            scene.add(ambient);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-            dirLight.position.set(10, 20, 10);
-            scene.add(dirLight);
+            <div class="soft-box">
+                <div style="display:flex;align-items:center">
+                    <span class="step-badge">7</span>
+                    <b>Cálculo del Campo Máximo Pico ($E_{\text{máx}}$):</b>
+                </div>
+                \[x_{\text{máx}}^2 + R^2 = \frac{R^2}{2} + R^2 = \frac{3}{2}R^2\]
+                \[(x_{\text{máx}}^2 + R^2)^{3/2} = \left(\frac{3}{2}\right)^{3/2} R^3 = \frac{3\sqrt{3}}{2\sqrt{2}} R^3\]
+                \[E_{\text{máx}} = \frac{k Q (R/\sqrt{2})}{(3\sqrt{3} / 2\sqrt{2}) R^3} = \frac{2 k Q}{3\sqrt{3} R^2} = \frac{2(8{,}99\times 10^9)(30{,}0\times 10^{-9})}{3\sqrt{3}(0{,}15)^2} = \frac{539{,}4}{3(1{,}73205)(0{,}0225)} = \frac{539{,}4}{0{,}11691} \approx 4613{,}7\ \text{N/C}\]
+                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
+                    <b style="color:var(--e10-success)">Conclusión del Problema 2:</b>
+                    \[E_x(0{,}20\ \text{m}) = 3{,}45\times 10^3\hat{\imath}\ \text{N/C}, \quad x_{\text{máx}} = 10{,}61\ \text{cm}, \quad E_{\text{máx}} = 4{,}61\times 10^3\ \text{N/C}\]
+                </div>
+            </div>
+        </div>
+    </article>
 
-            const meshGroup = new THREE.Group();
+    <!-- FORMULARIO DE ENTREGA DEL ESTUDIANTE -->
+    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+            <div>
+                <span class="badge badge-primary">Evaluación Formal</span>
+                <h3 style="margin:4px 0 0;font-size:20px;color:var(--e10-ink)">Certificado Oficial de Entrega de Taller No. 4</h3>
+            </div>
+            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Plataforma Electro10.Easy</span>
+        </div>
 
-            // 1. Crear el plano base para mapear el potencial del Anillo
-            const size = 20;
-            const resolution = 150;
-            const geometry = new THREE.PlaneGeometry(size, size, resolution, resolution);
-            
-            // Rotar para que quede plano (XY a XZ)
-            geometry.rotateX(-Math.PI / 2);
+        <form id="form-entrega" onsubmit="return false;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+                <div>
+                    <label style="font-size:13px;font-weight:600">Nombre Completo del Estudiante:</label>
+                    <input type="text" id="ent-nombre" placeholder="Ej. Ana María Gómez" required>
+                </div>
+                <div>
+                    <label style="font-size:13px;font-weight:600">Código Estudiantil / ID:</label>
+                    <input type="text" id="ent-codigo" placeholder="Ej. 20261045" required>
+                </div>
+            </div>
 
-            const pos = geometry.attributes.position;
-            const colors = [];
-            const colorPos = new THREE.Color(0xef4444); // Rojo (Alto potencial)
-            const colorZero = new THREE.Color(0x1e293b); // Base oscura
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
+                <div>
+                    <label style="font-size:13px;font-weight:600">Valor de $E_y$ calculado para el Hilo [N/C]:</label>
+                    <input type="number" id="ent-p1" step="0.1" placeholder="Ej. 1870.0" required>
+                </div>
+                <div>
+                    <label style="font-size:13px;font-weight:600">Coordenada $x_{\text{máx}}$ para el Anillo [cm]:</label>
+                    <input type="number" id="ent-p2-xmax" step="0.01" placeholder="Ej. 10.61" required>
+                </div>
+                <div>
+                    <label style="font-size:13px;font-weight:600">Campo Máximo $E_{\text{máx}}$ del Anillo [N/C]:</label>
+                    <input type="number" id="ent-p2-emax" step="0.1" placeholder="Ej. 4613.7" required>
+                </div>
+            </div>
 
-            // Aproximación de un anillo continuo usando integración discreta (muchas cargas)
-            const ringRadius = 5;
-            const numCharges = 60; 
-            const qTotal = 20;
-            const dq = qTotal / numCharges;
-            const ringCharges = [];
+            <div style="margin-top:12px">
+                <label style="font-size:13px;font-weight:600">Conclusiones Físicas del Estudiante:</label>
+                <textarea id="ent-obs" style="width:100%;border:1px solid var(--e10-line);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;height:70px" placeholder="Describe brevemente el comportamiento de los límites asintóticos analizados en la clase..."></textarea>
+            </div>
 
-            for(let i=0; i<numCharges; i++) {
-                let theta = (i / numCharges) * Math.PI * 2;
-                ringCharges.push(new THREE.Vector3(ringRadius * Math.cos(theta), 0, ringRadius * Math.sin(theta)));
-            }
+            <div class="no-print" style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
+                <button type="button" class="btn" id="btn-validar-entrega">Verificar Resultados</button>
+                <button type="button" class="btn btn-pri" id="btn-descargar-pdf">Generar Certificado de Entrega en PDF</button>
+            </div>
+            <div id="msg-feedback" style="margin-top:10px;font-size:14px;font-weight:600;display:none"></div>
+        </form>
+    </section>
 
-            for (let i = 0; i < pos.count; i++) {
-                let x = pos.getX(i);
-                let z = pos.getZ(i);
+</div>
 
-                let V = 0;
-                // Sumar potencial de todas las cargas del anillo
-                for(let c of ringCharges) {
-                    let r = Math.sqrt(Math.pow(x - c.x, 2) + Math.pow(z - c.z, 2));
-                    r = Math.max(r, 0.3); // Prevenir pico infinito justo encima del anillo
-                    V += (dq / r);
-                }
-                
-                // Escalar altura
-                let h = V * 1.5;
-                pos.setY(i, h);
+<script>
+// PESTAÑAS CAMINO A / CAMINO B
+const btnCamA = document.getElementById('btn-p1-camA');
+const btnCamB = document.getElementById('btn-p1-camB');
+const contCamA = document.getElementById('content-p1-camA');
+const contCamB = document.getElementById('content-p1-camB');
 
-                // Asignar color según altura (Potencial)
-                let vertexColor = new THREE.Color();
-                let factor = Math.min(1, h / 12);
-                vertexColor.lerpColors(colorZero, colorPos, Math.pow(factor, 0.8)); // Power for better color distribution
-                
-                colors.push(vertexColor.r, vertexColor.g, vertexColor.b);
-            }
+btnCamA.addEventListener('click', () => {
+    btnCamA.classList.add('active');
+    btnCamB.classList.remove('active');
+    contCamA.classList.add('active');
+    contCamB.classList.remove('active');
+});
 
-            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-            geometry.computeVertexNormals();
+btnCamB.addEventListener('click', () => {
+    btnCamB.classList.add('active');
+    btnCamA.classList.remove('active');
+    contCamB.classList.add('active');
+    contCamA.classList.remove('active');
+});
 
-            const material = new THREE.MeshPhongMaterial({
-                vertexColors: true,
-                side: THREE.DoubleSide,
-                flatShading: false,
-                shininess: 40,
-                transparent: true,
-                opacity: 0.95
-            });
+// CALCULADORA PROBLEMA 1
+const kConst = 8.98755e9;
+document.getElementById('btn-calc1-eval').addEventListener('click', () => {
+    const L = parseFloat(document.getElementById('calc1-L').value);
+    const Q = parseFloat(document.getElementById('calc1-Q').value) * 1e-9;
+    const y = parseFloat(document.getElementById('calc1-y').value);
+    const lam = Q / L;
+    const Ey = (2 * kConst * lam * L) / (y * Math.sqrt(4 * y * y + L * L));
+    document.getElementById('calc1-res').innerHTML = `Resultado: $E_y = ${Ey.toFixed(1)}\\ \\text{N/C}$ &nbsp;|&nbsp; $\\vec{E} = ${Ey.toFixed(1)}\\hat{\\jmath}\\ \\text{N/C}$`;
+    if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('calc1-res'), {
+            delimiters: [{left: '$', right: '$', display: false}]
+        });
+    }
+});
 
-            const surfaceMesh = new THREE.Mesh(geometry, material);
-            meshGroup.add(surfaceMesh);
+// VALIDACIÓN DE RESULTADOS DEL ESTUDIANTE
+document.getElementById('btn-validar-entrega').addEventListener('click', () => {
+    const valP1 = parseFloat(document.getElementById('ent-p1').value);
+    const valXmax = parseFloat(document.getElementById('ent-p2-xmax').value);
+    const valEmax = parseFloat(document.getElementById('ent-p2-emax').value);
+    const fb = document.getElementById('msg-feedback');
+    fb.style.display = 'block';
 
-            // 2. Anillo Visual flotando ligeramente encima para referencia
-            const ringGeom = new THREE.TorusGeometry(ringRadius, 0.15, 16, 100);
-            const ringMat = new THREE.MeshBasicMaterial({color: 0xffffff});
-            const ringMesh = new THREE.Mesh(ringGeom, ringMat);
-            ringMesh.rotation.x = Math.PI / 2;
-            ringMesh.position.y = 12; // Colocado sobre el pico del cráter
-            meshGroup.add(ringMesh);
+    const okP1 = Math.abs(valP1 - 1870.0) < 30.0;
+    const okXmax = Math.abs(valXmax - 10.61) < 0.5;
+    const okEmax = Math.abs(valEmax - 4613.7) < 60.0;
 
-            // Plano base de referencia
-            const gridHelper = new THREE.GridHelper(20, 20, 0x475569, 0x1e293b);
-            gridHelper.position.y = -0.5;
-            meshGroup.add(gridHelper);
+    if (okP1 && okXmax && okEmax) {
+        fb.style.color = '#10b981';
+        fb.innerHTML = '✔ ¡Excelentes resultados analíticos! Todos los cálculos concuerdan con la deducción exacta de Sears-Zemansky. Ya puedes descargar tu certificado.';
+    } else {
+        fb.style.color = '#b3246b';
+        fb.innerHTML = '⚠ Revisa tus cálculos numéricos: verifica las unidades (m vs cm, nC vs C) y los radicales en el denominador.';
+    }
+});
 
-            scene.add(meshGroup);
+// EXPORTACIÓN A PDF CON HTML2PDF
+document.getElementById('btn-descargar-pdf').addEventListener('click', () => {
+    const nombre = document.getElementById('ent-nombre').value.trim() || 'Estudiante';
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Taller_4_Continuo_${nombre.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(document.getElementById('seccion-entrega')).save();
+});
 
-            scenes[id] = { scene, camera, renderer, controls, meshGroup };
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-        }
+document.getElementById('btn-print-top').addEventListener('click', () => window.print());
 
-        function rotateObject(id, angleDeg) {
-            const config = scenes[id];
-            if (!config) return;
-            const angleRad = (angleDeg * Math.PI) / 180;
-            config.meshGroup.rotation.y = angleRad;
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            Object.keys(scenes).forEach(id => {
-                const s = scenes[id];
-                s.controls.update(); 
-                s.renderer.render(s.scene, s.camera);
-            });
-        }
-
-        function toggleRotation(id) {
-            scenes[id].controls.autoRotate = !scenes[id].controls.autoRotate;
-            updatePauseButtons();
-        }
-
-        function toggleAllRotations() {
-            let anyTrue = Object.values(scenes).some(s => s.controls.autoRotate);
-            Object.keys(scenes).forEach(k => scenes[k].controls.autoRotate = !anyTrue);
-            updatePauseButtons();
-        }
-
-        function updatePauseButtons() {
-            document.querySelectorAll('.btn-pause').forEach(btn => {
-                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
-                if(match) {
-                    const id = match[1];
-                    const isRotating = scenes[id].controls.autoRotate;
-                    btn.innerText = isRotating ? "Pausar Vista" : "Reanudar Vista";
-                    btn.className = isRotating 
-                        ? "bg-blue-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-blue-700" 
-                        : "bg-emerald-600 text-white px-2 py-1 text-[10px] rounded shadow font-bold btn-pause no-print hover:bg-emerald-700";
-                }
-            });
-        }
-
-        // --- Lógica de Dibujo Global ---
-        const canvas = document.getElementById('globalDrawingCanvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let drawMode = 'pen';
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function toggleDrawing() {
-            canvas.classList.toggle('active');
-            const btn = document.getElementById('toggleDrawBtn');
-            if (canvas.classList.contains('active')) {
-                btn.innerText = "Dibujo ON";
-                btn.classList.add('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                btn.innerText = "Dibujo OFF";
-                btn.classList.remove('text-blue-600', 'font-extrabold');
-                document.body.style.overflow = 'auto';
-            }
-            resizeCanvas();
-        }
-
-        function setDrawingMode(mode) {
-            drawMode = mode;
-            document.getElementById('penBtn').classList.toggle('bg-white', mode === 'pen');
-            document.getElementById('eraserBtn').classList.toggle('bg-white', mode === 'eraser');
-        }
-
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('touchstart', (e) => startDraw(e.touches[0]));
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        canvas.addEventListener('touchend', endDraw);
-
-        function startDraw(e) {
-            if(!canvas.classList.contains('active')) return;
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.clientX, e.clientY);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.lineWidth = drawMode === 'pen' ? 3 : 40;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'pen' ? '#dc2626' : '#f8fafc';
-            ctx.globalCompositeOperation = drawMode === 'pen' ? 'source-over' : 'destination-out';
-            ctx.lineTo(e.clientX, e.clientY);
-            ctx.stroke();
-        }
-
-        function endDraw() { isDrawing = false; }
-
-        function toggleHint(btn) { 
-            const hintElement = btn.nextElementSibling;
-            if(hintElement.classList.contains('show')) {
-                hintElement.classList.remove('show');
-            } else {
-                hintElement.classList.add('show');
-            }
-        }
-        
-        function toggleAllHints() { 
-            document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); 
-        }
-
-        function exportToPDF() {
-            const element = document.body;
-            const opt = {
-                margin: 0.2,
-                filename: 'Taller_Carga_Continua.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        window.onload = () => { init3D(); resizeCanvas(); };
-        window.onresize = () => { resizeCanvas(); };
-    </script>
+// AUTO-RENDER KATEX
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
+    }
+});
+</script>
 </body>
 </html>
