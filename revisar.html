@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz de Trazabilidad y Revisión Curricular · Electro10.Easy</title>
+    <!-- Tokens y Fuentes -->
+    <link rel="stylesheet" href="./css/tokens.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX 0.16.9 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: rgba(179, 36, 107, 0.08);
+            --e10-accent: #0B8CA8;
+            --e10-accent-strong: #08758C;
+            --e10-accent-soft: rgba(11, 140, 168, 0.08);
+            --e10-ink: #0f172a;
+            --e10-muted: #64748b;
+            --e10-surface: #ffffff;
+            --e10-bg: #f8fafc;
+            --e10-line: #e2e8f0;
+            --e10-success: #10b981;
+            --e10-success-soft: rgba(16, 185, 129, 0.08);
+            --e10-warning: #f59e0b;
+            --e10-warning-soft: rgba(245, 158, 11, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: #090d16;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hub-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* HEADER DEL HUB */
+        .hub-header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 30px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .hub-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hub-tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: #38bdf8;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hub-tag::before {
+            content: '';
+            width: 8px; height: 8px; border-radius: 50%; background: #38bdf8;
+            box-shadow: 0 0 10px #38bdf8;
+        }
+
+        .hub-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .hub-desc {
+            font-size: 15px;
+            color: #94a3b8;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .hub-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-hub {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-pri {
+            background: linear-gradient(135deg, var(--e10-primary), #d946ef);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(179, 36, 107, 0.4);
+        }
+        .btn-pri:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(179, 36, 107, 0.6);
+        }
+
+        .btn-sec {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+        }
+        .btn-sec:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* KPI STATS ROW */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .kpi-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .kpi-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .kpi-num span {
+            font-size: 15px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .kpi-sub {
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        /* MATRIZ DE MÓDULOS INTERCONECTADA */
+        .matrix-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-search {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 13.5px;
+            color: white;
+            outline: none;
+            width: 280px;
+        }
+        .filter-search:focus {
+            border-color: var(--e10-primary);
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 18px;
+        }
+
+        .mcard {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mcard:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.85);
+        }
+
+        .mcard::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--mod-accent, var(--e10-primary));
+        }
+
+        .mcard-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .mcard-badge {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #38bdf8;
+        }
+
+        .mcard-status {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mcard-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #f8fafc;
+            line-height: 1.25;
+            margin-top: 4px;
+        }
+
+        .mcard-desc {
+            font-size: 13.5px;
+            color: #94a3b8;
+            line-height: 1.45;
+        }
+
+        /* RUTAS CONECTADAS */
+        .conn-pill {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .conn-pill span {
+            color: var(--e10-primary);
+            font-weight: 600;
+        }
+
+        /* ACCIONES DEL MÓDULO */
+        .mcard-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .mlink {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .mlink:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #38bdf8;
+        }
+
+        .mlink.pri-link {
+            background: rgba(179, 36, 107, 0.2);
+            border-color: rgba(179, 36, 107, 0.4);
+            color: #f472b6;
+        }
+        .mlink.pri-link:hover {
+            background: var(--e10-primary);
+            color: white;
+        }
+
+        .mlink.poster-link {
+            background: rgba(11, 140, 168, 0.2);
+            border-color: rgba(11, 140, 168, 0.4);
+            color: #38bdf8;
+        }
+        .mlink.poster-link:hover {
+            background: var(--e10-accent);
+            color: white;
+        }
+
+        /* MODELO 3D ESPECIFICACIÓN RÁPIDA */
+        .proto-info {
+            font-size: 11.5px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 0;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        @media (max-width: 900px) {
+            .module-grid { grid-template-columns: 1fr; }
+            .hub-header { flex-direction: column; align-items: flex-start; }
+            .filter-search { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hub-container">
+
+        <!-- HEADER PRINCIPAL -->
+        <header class="hub-header">
+            <div class="hub-brand">
+                <div class="hub-tag">Plataforma Global Electro10.Easy · Ecosistema Interconectado</div>
+                <h1 class="hub-title">Matriz de Trazabilidad y Revisión Curricular</h1>
+                <p class="hub-desc">
+                    Centro unificado de navegación y evaluación para docentes, evaluadores y agentes de IA (Claude & Gemini).
+                    Cada módulo integra de forma simbiótica su presentación magistral en resolución 16:9, taller de 7 pasos, póster científico de congreso, especificación física para impresión 3D y conectores de aprendizaje "Viene de → Lleva a".
+                </p>
+            </div>
+            <div class="hub-actions">
+                <a class="btn-hub btn-pri" href="./posters/index.html">
+                    <span class="material-symbols-outlined">analytics</span> Ver Galería de Pósters
+                </a>
+                <a class="btn-hub btn-sec" href="./index.html">
+                    <span class="material-symbols-outlined">dashboard</span> Portal Principal
+                </a>
+                <a class="btn-hub btn-sec" href="./GUIA_DIDACTICA_Y_MODELOS_3D.md" target="_blank">
+                    <span class="material-symbols-outlined">view_in_ar</span> Guía Modelos 3D
+                </a>
+            </div>
+        </header>
+
+        <!-- KPI SUMMARY ROW -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-num">13 <span>/ 13</span></div>
+                <div class="kpi-label">Master Decks 16:9</div>
+                <div class="kpi-sub">Autónomos, KaTeX y sin simplificar</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">14 <span>/ 14</span></div>
+                <div class="kpi-label">Talleres de 7 Pasos</div>
+                <div class="kpi-sub">Dualidad de caminos y entrega PDF</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">13 <span>/ 13</span></div>
+                <div class="kpi-label">Pósters de Congreso</div>
+                <div class="kpi-sub">Diagramas vectoriales e investigación</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">13 <span>/ 13</span></div>
+                <div class="kpi-label">Modelos 3D Imprimibles</div>
+                <div class="kpi-sub">Cotas, PLA y laboratorios físicos</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">100%</div>
+                <div class="kpi-label">Identidad 10.Easy</div>
+                <div class="kpi-sub">Cero marcas UNAB · Dudbil Pabón</div>
+            </div>
+        </div>
+
+        <!-- LISTADO INTERCONECTADO DE MÓDULOS -->
+        <section class="matrix-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined" style="color: var(--e10-primary);">schema</span>
+                    Currículo Electromagnético Completo (Módulos 1 al 13)
+                </h2>
+                <input type="text" id="module-search" class="filter-search" placeholder="Buscar concepto, módulo o fórmula...">
+            </div>
+
+            <div class="module-grid" id="modules-container">
+                <!-- Se inyecta dinámicamente con JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+    const MODULOS_MAP = [
+        {
+            id: 1,
+            badge: "Módulo 01",
+            title: "Ley de Coulomb y Carga Eléctrica",
+            desc: "Cuantificación de carga, balanza de torsión, formulación cartesiana 3D del inverso del cuadrado y principio de superposición.",
+            accent: "#b3246b",
+            deck: "presentaciones/M1_Coulomb/index.html",
+            taller: "talleres/Taller_1_Ley_de_Coulomb.html",
+            poster: "posters/index.html?cap=1",
+            sim: "simuladores/Coulomb.html",
+            proto: "CoulombBench-3D (Balanza de torsión y cunas triboeléctricas)",
+            from: "Vectores & Gravitación Universal",
+            to: "M2: Campo Eléctrico & Dipolos"
+        },
+        {
+            id: 2,
+            badge: "Módulo 02",
+            title: "Campo Eléctrico y Dipolos",
+            desc: "Límite operacional q₀→0, líneas de fuerza, momentos dipolares p = qd, torque vectorial τ = p × E y energía de dipolo.",
+            accent: "#0b8ca8",
+            deck: "presentaciones/M2_CampoElectrico/index.html",
+            taller: "talleres/Taller_2_Campo_Electrico.html",
+            poster: "posters/index.html?cap=2",
+            sim: "simuladores/Sim_M2_Campo_Lineas.html",
+            proto: "E-Field Vector Grid (Matriz 3D perforada con flechas esféricas)",
+            from: "M1: Ley de Coulomb",
+            to: "M3: Potencial Eléctrico"
+        },
+        {
+            id: 3,
+            badge: "Módulo 03",
+            title: "Potencial Eléctrico y Energía",
+            desc: "Integral de línea de E, relación de gradiente E = -∇V, superficies equipotenciales y equilibrio electrostático de conductores.",
+            accent: "#4f46e5",
+            deck: "presentaciones/M3_Potencial/index.html",
+            taller: "talleres/Taller_3_Potencial_Electrico.html",
+            poster: "posters/index.html?cap=3",
+            sim: "simuladores/Sim_M3_SuperficiesEquipotenciales.html",
+            proto: "V-Potential Surface (Topografía 3D de pozo y barrera)",
+            from: "M2: Campo Eléctrico",
+            to: "M4: Distribuciones Continuas"
+        },
+        {
+            id: 4,
+            badge: "Módulo 04",
+            title: "Distribuciones Continuas de Carga",
+            desc: "Densidades λ, σ, ρ. Deducción de hilo finito e infinito, anillo cargado en su eje, disco coaxial y plano infinito.",
+            accent: "#059669",
+            deck: "presentaciones/M4_DistribucionesContinuas/index.html",
+            taller: "talleres/Taller_4_Distribuciones_de_Carga_Continua.html",
+            poster: "posters/index.html?cap=4",
+            sim: "simuladores/Sim_M4_Hilo_Anillo_Disco.html",
+            proto: "Continuous Charge Integrator (Segmentador de diferenciales dq)",
+            from: "M3: Potencial Eléctrico",
+            to: "M5: Ley de Gauss"
+        },
+        {
+            id: 5,
+            badge: "Módulo 05",
+            title: "Ley de Gauss y Flujo Eléctrico",
+            desc: "Flujo Φ_E, teorema integral de Gauss, simetrías esférica, cilíndrica y planar. Forma diferencial ∇·E = ρ/ε₀ y blindaje.",
+            accent: "#d97706",
+            deck: "presentaciones/M5_Gauss/index.html",
+            taller: "talleres/Taller_5_Ley_de_Gauss.html",
+            poster: "posters/index.html?cap=5",
+            sim: "simuladores/Sim_M5_Flujo_Gauss.html",
+            proto: "GaussShells-3D (Superficies gaussianas esféricas y cilíndricas)",
+            from: "M4: Distribuciones Continuas",
+            to: "M6: Capacitancia & Dieléctricos"
+        },
+        {
+            id: 6,
+            badge: "Módulo 06",
+            title: "Capacitancia y Dieléctricos",
+            desc: "Definición C = Q/V, geometrías de placas, coaxiales y esféricas. Polarización dieléctrica atómica y densidad de energía u_E.",
+            accent: "#0ea5e9",
+            deck: "presentaciones/M6_Capacitancia/index.html",
+            taller: "talleres/Taller_6_Capacitancia.html",
+            poster: "posters/index.html?cap=6",
+            sim: "simuladores/Sim_M6_Capacitancia.html",
+            proto: "CapacitorLab-Rig (Banco micrométrico de placas deslizantes)",
+            from: "M5: Ley de Gauss",
+            to: "M7: Circuitos de Corriente Continua"
+        },
+        {
+            id: 7,
+            badge: "Módulo 07",
+            title: "Circuitos de Corriente Continua",
+            desc: "Corriente, densidad J, Ley de Ohm, redes resistivas, Leyes de Kirchhoff (LKV y LKC) y análisis dinámico transitorio RC.",
+            accent: "#10b981",
+            deck: "presentaciones/M7_CircuitosCC/index.html",
+            taller: "talleres/Taller_7_1_Reduccion_Circuitos.html",
+            poster: "posters/index.html?cap=7",
+            sim: "simuladores/Resistance.html",
+            proto: "Kirchhoff-Snap (Bloques modulares magnéticos de mallas)",
+            from: "M6: Capacitancia & Energía",
+            to: "M8: Fuerza de Lorentz & Magnetismo"
+        },
+        {
+            id: 8,
+            badge: "Módulo 08",
+            title: "Fuerza de Lorentz y Magnetismo",
+            desc: "Fuerza F = q(E + v × B), movimiento helicoidal, selector de velocidades de Wien, espectrómetro de masas y efecto Hall.",
+            accent: "#8b5cf6",
+            deck: "presentaciones/M8_Lorentz/index.html",
+            taller: "talleres/Taller_8_Ley_de_Lorentz.html",
+            poster: "posters/index.html?cap=8",
+            sim: "simuladores/Sim_M8_Lorentz_Lab.html",
+            proto: "Lorentz-Rig 3D (Balanza de corriente magnética y mano derecha)",
+            from: "M7: Circuitos CC",
+            to: "M9: Ley de Biot-Savart"
+        },
+        {
+            id: 9,
+            badge: "Módulo 09",
+            title: "Ley de Biot-Savart (Estándar de Oro)",
+            desc: "Campo de hilos rectilíneos finitos e infinitos, espiras en su eje axial, arcos y horquillas. Deducción de 7 pasos y 2 caminos.",
+            accent: "#b3246b",
+            deck: "presentaciones/M9_BiotSavart/index.html",
+            taller: "talleres/Taller_9_Biot_Savart.html",
+            poster: "posters/index.html?cap=9",
+            sim: "simuladores/Sim_M9_BiotSavart_Lab.html",
+            proto: "BiotSavart-Jig (Jig paramétrico calibrado de espiras y horquillas)",
+            from: "M8: Fuerza de Lorentz",
+            to: "M10: Ley de Ampère"
+        },
+        {
+            id: 10,
+            badge: "Módulo 10",
+            title: "Ley de Ampère y Circuitos Magnéticos",
+            desc: "Circulación de B, corrientes concatenadas, solenoide ideal, toroide, conductor cilíndrico grueso y forma diferencial ∇ × B = μ₀J.",
+            accent: "#f59e0b",
+            deck: "presentaciones/M10_Ampere/index.html",
+            taller: "talleres/Taller_10_Ley_de_Ampere.html",
+            poster: "posters/index.html?cap=10",
+            sim: "simuladores/Sim_M10_Ampere_Lab.html",
+            proto: "AmpereLoop-Snap (Lazo ampèriano articulado con hilos)",
+            from: "M9: Ley de Biot-Savart",
+            to: "M11: Ley de Faraday e Inductancia"
+        },
+        {
+            id: 11,
+            badge: "Módulo 11",
+            title: "Ley de Faraday-Lenz e Inductancia",
+            desc: "Fem inducida E = -dΦ_B/dt, fem de movimiento, corrientes de Foucault, autoinductancia L, energía magnética y transitorios RL.",
+            accent: "#06b6d4",
+            deck: "presentaciones/M11_Faraday/index.html",
+            taller: "talleres/Taller_11_Ley_de_Faraday.html",
+            poster: "posters/index.html?cap=11",
+            sim: "simuladores/Sim_M11_Faraday_Lab.html",
+            proto: "FaradayRails & LenzTower (Rieles conductores y torre Foucault)",
+            from: "M10: Ley de Ampère",
+            to: "M12: Ecuaciones de Maxwell & Ondas"
+        },
+        {
+            id: 12,
+            badge: "Módulo 12",
+            title: "Ecuaciones de Maxwell y Ondas EM",
+            desc: "Corriente de desplazamiento I_d, síntesis electromagnética, ecuación de onda c = 1/√(μ₀ε₀), vector de Poynting y radiación.",
+            accent: "#4f46e5",
+            deck: "presentaciones/M12_Maxwell/index.html",
+            taller: "talleres/Taller_12_Ecuaciones_Maxwell.html",
+            poster: "posters/index.html?cap=12",
+            sim: "simuladores/Sim_M11_OndaEM.html",
+            proto: "Maxwell-Wave 3D (Onda transversal ortogonal con polarizadores)",
+            from: "M11: Ley de Faraday",
+            to: "M13: Circuitos de Corriente Alterna"
+        },
+        {
+            id: 13,
+            badge: "Módulo 13",
+            title: "Circuitos de Corriente Alterna y RLC",
+            desc: "Álgebra fasorial compleja, impedancia Z, resonancia serie y paralelo f₀ = 1/(2π√LC), factor de calidad Q y balance de potencia.",
+            accent: "#84cc16",
+            deck: "presentaciones/M13_AC/index.html",
+            taller: "talleres/Taller_13_Circuitos_CA.html",
+            poster: "posters/index.html?cap=13",
+            sim: "simuladores/Sim_M12_Fasores.html",
+            proto: "RLC-PhasorDial (Fasor mecánico articulado de impedancias)",
+            from: "M12: Ecuaciones de Maxwell",
+            to: "Física Cuántica & Óptica Moderna"
+        }
+    ];
+
+    function renderModules(filterText = '') {
+        const container = document.getElementById('modules-container');
+        const q = filterText.toLowerCase();
+
+        const filtered = MODULOS_MAP.filter(m => 
+            m.title.toLowerCase().includes(q) ||
+            m.desc.toLowerCase().includes(q) ||
+            m.badge.toLowerCase().includes(q) ||
+            m.proto.toLowerCase().includes(q)
+        );
+
+        container.innerHTML = filtered.map(m => `
+            <div class="mcard" style="--mod-accent: ${m.accent}">
+                <div>
+                    <div class="mcard-head">
+                        <span class="mcard-badge">${m.badge}</span>
+                        <span class="mcard-status"><span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span> 100% Verificado</span>
+                    </div>
+                    <h3 class="mcard-title">${m.title}</h3>
+                    <p class="mcard-desc" style="margin-top: 6px;">${m.desc}</p>
+                </div>
+
+                <div class="conn-pill">
+                    <small>Ruta:</small> ${m.from} → <span>${m.badge}</span> → ${m.to}
+                </div>
+
+                <div class="proto-info">
+                    <span class="material-symbols-outlined" style="font-size: 16px; color: ${m.accent}">precision_manufacturing</span>
+                    <span><b>3D:</b> ${m.proto}</span>
+                </div>
+
+                <div class="mcard-links">
+                    <a class="mlink pri-link" href="./${m.deck}" target="_blank" title="Master Deck 16:9">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">slideshow</span> Clase 16:9
+                    </a>
+                    <a class="mlink" href="./${m.taller}" target="_blank" title="Taller Práctico de 7 Pasos">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">assignment</span> Taller
+                    </a>
+                    <a class="mlink poster-link" href="./${m.poster}" target="_blank" title="Póster Científico de Congreso">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">analytics</span> Póster
+                    </a>
+                    <a class="mlink" href="./${m.sim}" target="_blank" title="Simulador Interactivo">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">science</span> Simulador
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('module-search').addEventListener('input', (e) => {
+        renderModules(e.target.value);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        renderModules();
+    });
+    </script>
+</body>
+</html>

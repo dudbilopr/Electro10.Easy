@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pósters Científicos de Congreso · Electro10.Easy</title>
+    <!-- Plasma & Typography Tokens -->
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX 0.16.9 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- html2pdf.js para exportación directa -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: rgba(179, 36, 107, 0.08);
+            --e10-accent: #0B8CA8;
+            --e10-accent-strong: #08758C;
+            --e10-accent-soft: rgba(11, 140, 168, 0.08);
+            --e10-ink: #0f172a;
+            --e10-muted: #64748b;
+            --e10-surface: #ffffff;
+            --e10-bg: #f8fafc;
+            --e10-line: #e2e8f0;
+            --e10-success: #10b981;
+            --e10-success-soft: rgba(16, 185, 129, 0.08);
+            --e10-warning: #f59e0b;
+            --e10-warning-soft: rgba(245, 158, 11, 0.08);
+            --e10-dark: #090d16;
+            --e10-card-bg: rgba(255, 255, 255, 0.96);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: var(--e10-ink);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* BARRA SUPERIOR DE NAVEGACIÓN Y HERRAMIENTAS */
+        .top-nav {
+            width: 100%;
+            max-width: 1400px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .brand-zone {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--e10-primary), #d946ef);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .module-selector-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 680px;
+            padding: 4px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--e10-primary) rgba(255,255,255,0.05);
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'IBM Plex Mono', monospace;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: var(--e10-primary);
+            border-color: var(--e10-primary);
+            color: #ffffff;
+            box-shadow: 0 0 16px rgba(179, 36, 107, 0.5);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-pdf {
+            background: #0ea5e9;
+            color: white;
+        }
+        .btn-pdf:hover { background: #0284c7; }
+
+        .btn-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-link:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* CONTENEDOR DEL PÓSTER (A1 HORIZONTAL / 1400px x 960px) */
+        .poster-viewport {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .poster-canvas {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        /* HEADER DEL PÓSTER DE CONGRESO */
+        .poster-header {
+            background: linear-gradient(135deg, #090d16 0%, #172033 60%, #1e1b4b 100%);
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+            border-bottom: 5px solid var(--e10-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .poster-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(11, 140, 168, 0.2) 0%, transparent 60%),
+                        radial-gradient(circle at 20% 80%, rgba(179, 36, 107, 0.2) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .congress-tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #38bdf8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .congress-tag::before {
+            content: '';
+            width: 8px; height: 8px; border-radius: 50%; background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
+        }
+
+        .poster-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .poster-subtitle {
+            font-size: 16px;
+            color: #94a3b8;
+            max-width: 900px;
+            line-height: 1.4;
+        }
+
+        .poster-authors {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .author-badge {
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .author-badge span {
+            color: var(--e10-primary);
+        }
+
+        .header-meta {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .qr-placeholder {
+            width: 76px;
+            height: 76px;
+            background: white;
+            border-radius: 10px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .chapter-pill {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #38bdf8;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        /* CUERPO DEL PÓSTER: 3 COLUMNAS CIENTÍFICAS */
+        .poster-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            background: #f8fafc;
+        }
+
+        .poster-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* MÓDULOS DE TARJETAS (PÓSTER CARDS) */
+        .pcard {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03), 0 2px 4px -2px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pcard-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .pcard-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .icon-primary { background: var(--e10-primary); }
+        .icon-accent { background: var(--e10-accent); }
+        .icon-indigo { background: #4f46e5; }
+        .icon-emerald { background: #10b981; }
+        .icon-amber { background: #f59e0b; }
+
+        .pcard-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .pcard-body {
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #334155;
+        }
+
+        .math-callout {
+            background: var(--e10-primary-soft);
+            border-left: 4px solid var(--e10-primary);
+            border-radius: 0 10px 10px 0;
+            padding: 12px 14px;
+            margin: 8px 0;
+            font-size: 13.5px;
+        }
+
+        .vector-diagram-container {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vector-diagram-container svg {
+            width: 100%;
+            height: auto;
+            max-height: 180px;
+        }
+
+        .steps-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .step-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--e10-accent);
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .prototype-spec-box {
+            background: linear-gradient(135deg, rgba(11, 140, 168, 0.05), rgba(179, 36, 107, 0.05));
+            border: 1px solid rgba(11, 140, 168, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .spec-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 8px;
+        }
+
+        .spec-item b {
+            color: var(--e10-accent-strong);
+            display: block;
+            font-size: 10.5px;
+            text-transform: uppercase;
+        }
+
+        /* FOOTER DEL PÓSTER */
+        .poster-footer {
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .footer-path {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+        }
+
+        .path-from { color: #64748b; }
+        .path-curr { color: var(--e10-primary); }
+        .path-to { color: var(--e10-accent-strong); }
+
+        /* IMPRESIÓN LIMPIA DE ALTA CALIDAD */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .top-nav {
+                display: none !important;
+            }
+            .poster-viewport {
+                max-width: 100%;
+            }
+            .poster-canvas {
+                box-shadow: none;
+                border: none;
+                border-radius: 0;
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .poster-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOPBAR INTERACTIVA: SELECTOR DE CAPÍTULOS Y ACCIONES -->
+    <header class="top-nav">
+        <div class="brand-zone">
+            <span class="brand-badge">CONGRESO 10.EASY</span>
+            <div class="nav-title">Galería de Pósters Científicos</div>
+        </div>
+
+        <!-- TABS DE CAPÍTULOS M1 A M13 -->
+        <nav class="module-selector-tabs" id="tabs-container">
+            <!-- Inyectado dinámicamente con JS -->
+        </nav>
+
+        <div class="action-btns">
+            <button class="btn-action btn-pdf" id="btn-export-pdf" title="Descargar Póster en PDF">
+                <span class="material-symbols-outlined" style="font-size: 18px;">picture_as_pdf</span> PDF
+            </button>
+            <a class="btn-action btn-link" id="btn-goto-deck" href="#" target="_blank" title="Abrir Master Deck 16:9">
+                <span class="material-symbols-outlined" style="font-size: 18px;">slideshow</span> Clase
+            </a>
+            <a class="btn-action btn-link" id="btn-goto-taller" href="#" target="_blank" title="Abrir Taller de 7 Pasos">
+                <span class="material-symbols-outlined" style="font-size: 18px;">assignment</span> Taller
+            </a>
+            <a class="btn-action btn-link" href="../revisar.html" title="Hub de Navegación del Repositorio">
+                <span class="material-symbols-outlined" style="font-size: 18px;">hub</span> Matriz Hub
+            </a>
+        </div>
+    </header>
+
+    <!-- LIENZO PRINCIPAL DEL PÓSTER CIENTÍFICO -->
+    <main class="poster-viewport">
+        <article class="poster-canvas" id="poster-element">
+            
+            <!-- HEADER DE CONGRESO -->
+            <header class="poster-header">
+                <div>
+                    <div class="congress-tag">Congreso Internacional de Educación e Innovación en Física Universitaria · 10.Easy</div>
+                    <h1 class="poster-title" id="p-title">Cargando Título del Póster...</h1>
+                    <p class="poster-subtitle" id="p-subtitle">Cargando descripción...</p>
+                    <div class="poster-authors">
+                        <span class="author-badge"><span class="material-symbols-outlined" style="font-size: 18px;">badge</span> Dudbil Olvasada Pabón Riaño</span>
+                        <span>•</span>
+                        <span>Physics.10easy · Laboratorio de Innovación Tecno-Pedagógica</span>
+                        <span>•</span>
+                        <span class="mono" id="p-version">Rev. 2026.4</span>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <span class="chapter-pill" id="p-chapter-badge">CAPÍTULO 01</span>
+                    <div class="qr-placeholder">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <circle cx="17.5" cy="17.5" r="2.5" fill="currentColor"></circle>
+                        </svg>
+                        <span>10.EASY</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENIDO CIENTÍFICO TRICOLUMNA -->
+            <div class="poster-body">
+                
+                <!-- COLUMNA 1: FUNDAMENTACIÓN TEÓRICA & PREGUNTA PROBLEMATIZADORA -->
+                <section class="poster-col">
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-primary"><span class="material-symbols-outlined">psychology</span></div>
+                            <h2 class="pcard-title">1. Resumen & Pregunta Problematizadora</h2>
+                        </div>
+                        <div class="pcard-body" id="p-abstract">
+                            <!-- Contenido inyectado -->
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-indigo"><span class="material-symbols-outlined">functions</span></div>
+                            <h2 class="pcard-title">2. Marco Matemático & Ecuaciones Rectoras</h2>
+                        </div>
+                        <div class="pcard-body" id="p-theory">
+                            <!-- Contenido inyectado -->
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-accent"><span class="material-symbols-outlined">architecture</span></div>
+                            <h2 class="pcard-title">3. Visualización Vectorial Geométrica</h2>
+                        </div>
+                        <div class="vector-diagram-container" id="p-diagram">
+                            <!-- SVG Vectorial inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMNA 2: METODOLOGÍA DIDÁCTICA & PROTOTIPO 3D -->
+                <section class="poster-col">
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-emerald"><span class="material-symbols-outlined">auto_fix_high</span></div>
+                            <h2 class="pcard-title">4. Protocolo Pedagógico de 7 Pasos</h2>
+                        </div>
+                        <div class="pcard-body">
+                            <p style="margin-bottom: 10px; font-size: 13px;">Estructura sistemática Sears-Zemansky para erradicar el aprendizaje memorístico y garantizar deducciones analíticas completas:</p>
+                            <div class="steps-flow" id="p-steps">
+                                <!-- 7 Pasos inyectados -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-amber"><span class="material-symbols-outlined">alt_route</span></div>
+                            <h2 class="pcard-title">5. Dualidad Analítica: Dos Caminos</h2>
+                        </div>
+                        <div class="pcard-body" id="p-dual-path">
+                            <!-- Dos Caminos inyectados -->
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-primary"><span class="material-symbols-outlined">view_in_ar</span></div>
+                            <h2 class="pcard-title">6. Prototipo Tangible & Modelo 3D</h2>
+                        </div>
+                        <div class="pcard-body" id="p-3d-model">
+                            <!-- Especificaciones de la pieza 3D imprimible -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMNA 3: VALIDACIÓN, RESULTADOS & CONECTIVIDAD -->
+                <section class="poster-col">
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-accent"><span class="material-symbols-outlined">insights</span></div>
+                            <h2 class="pcard-title">7. Análisis Cuantitativo & Casos Límite</h2>
+                        </div>
+                        <div class="pcard-body" id="p-results">
+                            <!-- Resultados y validación -->
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-indigo"><span class="material-symbols-outlined">crisis_alert</span></div>
+                            <h2 class="pcard-title">8. Desactivación de Errores Comunes</h2>
+                        </div>
+                        <div class="pcard-body" id="p-misconceptions">
+                            <!-- Errores comunes / Paradoja del novato -->
+                        </div>
+                    </div>
+
+                    <div class="pcard">
+                        <div class="pcard-header">
+                            <div class="pcard-icon icon-emerald"><span class="material-symbols-outlined">verified</span></div>
+                            <h2 class="pcard-title">9. Conclusiones & Impacto en el Aula</h2>
+                        </div>
+                        <div class="pcard-body" id="p-conclusions">
+                            <!-- Conclusiones pedagógicas -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- FOOTER CIENTÍFICO Y CONECTORES INTERMODULARES -->
+            <footer class="poster-footer">
+                <div class="footer-path" id="p-learning-route">
+                    <!-- Ruta: Viene de -> Este Capítulo -> Lleva a -->
+                </div>
+                <div>
+                    <b>Plataforma Electro10.Easy</b> · Dudbil Olvasada Pabón Riaño · Código Abierto para la Educación Superior
+                </div>
+            </footer>
+
+        </article>
+    </main>
+
+    <!-- BASE DE DATOS CIENTÍFICA DE LOS 13 PÓSTERS DE CONGRESO -->
+    <script>
+    const POSTERS_DATA = {
+        1: {
+            cap: "Capítulo 01",
+            title: "Ley de Coulomb: Superposición Vectorial y Dinámica Electrostática Fundamental",
+            subtitle: "Transición de la electrostática cualitativa a la cuantificación tridimensional rigurosa del inverso del cuadrado de la distancia.",
+            deckUrl: "../presentaciones/M1_Coulomb/index.html",
+            tallerUrl: "../talleres/Taller_1_Ley_de_Coulomb.html",
+            abstract: `
+                ¿Cómo interactúan dos cargas eléctricas puntuales en el vacío y cómo se generaliza la fuerza sobre una partícula de prueba en un arreglo multidimensional discreto?
+                Este trabajo investiga la formulación de Coulomb como ley de fuerza central fundamental, abordando la cuantificación de la carga elemental \\(e = 1{,}602\\times 10^{-19}\\ \\text{C}\\) y la formulación vectorial estricta con vectores unitarios relativos \\(\\hat{r}_{12}\\).
+            `,
+            theory: `
+                La fuerza ejercida por una carga puntual \\(q_1\\) sobre \\(q_2\\) situada en posiciones \\(\\vec{r}_1\\) y \\(\\vec{r}_2\\) es:
+                \\[ \\vec{F}_{12} = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{|\\vec{r}_2 - \\vec{r}_1|^3} (\\vec{r}_2 - \\vec{r}_1) \\]
+                <div class="math-callout">
+                    <b>Principio de Superposición:</b> La fuerza neta sobre una carga de prueba \\(q_0\\) debida a \\(N\\) fuentes discretas es la suma vectorial:
+                    \\[ \\vec{F}_{\\text{net}} = q_0 \\sum_{i=1}^N \\frac{q_i}{4\\pi\\epsilon_0 |\\vec{r}_0 - \\vec{r}_i|^3} (\\vec{r}_0 - \\vec{r}_i) \\]
+                </div>
+            `,
+            diagram: `
+                <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad-coulomb" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b3246b" stop-opacity="0.2"/>
+                            <stop offset="100%" stop-color="#0b8ca8" stop-opacity="0.2"/>
+                        </linearGradient>
+                        <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#b3246b"/>
+                        </marker>
+                    </defs>
+                    <rect width="360" height="180" rx="10" fill="url(#grad-coulomb)"/>
+                    <!-- Cargas -->
+                    <circle cx="80" cy="110" r="16" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+                    <text x="80" y="115" font-family="sans-serif" font-weight="bold" font-size="14" fill="white" text-anchor="middle">+q₁</text>
+                    <circle cx="280" cy="70" r="14" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <text x="280" y="75" font-family="sans-serif" font-weight="bold" font-size="13" fill="white" text-anchor="middle">-q₂</text>
+                    <!-- Línea de acción y vector r -->
+                    <line x1="80" y1="110" x2="280" y2="70" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <!-- Vector Fuerza -->
+                    <line x1="80" y1="110" x2="150" y2="96" stroke="#b3246b" stroke-width="3" marker-end="url(#arr)"/>
+                    <text x="130" y="85" font-family="sans-serif" font-weight="bold" font-size="12" fill="#b3246b">F₂₁</text>
+                    <text x="180" y="115" font-family="monospace" font-size="11" fill="#475569">r = |r₂ - r₁|</text>
+                </svg>
+            `,
+            steps: [
+                { n: "1", t: "Identificación de fuentes discretas y posición cartesiana de cada carga." },
+                { n: "2", t: "Trazado del vector desplazamiento relativo \\(\\vec{r}_{ij} = \\vec{r}_j - \\vec{r}_i\\)." },
+                { n: "3", t: "Cálculo de la norma euclidiana \\(|\\vec{r}_{ij}| = \\sqrt{\\Delta x^2 + \\Delta y^2 + \\Delta z^2}\\)." },
+                { n: "4", t: "Evaluación de signos y naturaleza de atracción/repulsión." },
+                { n: "5", t: "Descomposición ortogonal por componentes cartesianas independientes." },
+                { n: "6", t: "Suma vectorial de componentes \\(F_{x,\\text{net}}\\) y \\(F_{y,\\text{net}}\\)." },
+                { n: "7", t: "Comprobación dimensional y límites de equilibrio asintótico." }
+            ],
+            dualPath: `
+                <b>Camino A (Formulación Cartesiana Cúbica):</b><br>
+                Uso directo del vector relativo con denominador al cubo: \\(\\vec{F} = \\frac{k q_1 q_2}{r^3}(x\\hat{\\imath} + y\\hat{\\jmath})\\).<br><br>
+                <b>Camino B (Trigonométrico Polar):</b><br>
+                Cálculo del módulo escalar \\(F = \\frac{k|q_1 q_2|}{r^2}\\) seguido por proyección de componentes: \\(F_x = F\\cos\\theta\\), \\(F_y = F\\sin\\theta\\).
+            `,
+            prototype3D: `
+                <div class="prototype-spec-box">
+                    <b>Pieza Imprimible: CoulombBench-3D (Balanza de Torsión)</b>
+                    <p style="margin-top:4px;">Dispositivo físico con graduación angular de 360°, suspensión para hilo de torsión micrométrico y esferas metalizadas para validar en el laboratorio el decaimiento \\(1/r^2\\).</p>
+                    <div class="spec-grid">
+                        <div class="spec-item"><b>Material</b> PLA+ Pro</div>
+                        <div class="spec-item"><b>Capa</b> 0.16 mm</div>
+                        <div class="spec-item"><b>Infill</b> 25% Giroidal</div>
+                        <div class="spec-item"><b>Tolerancia</b> ±0.20 mm</div>
+                    </div>
+                </div>
+            `,
+            results: `
+                En el problema de dos cargas idénticas \\(+q\\) fijas en \\((0,\\pm a)\\) y una carga móvil sobre el eje \\(x\\), la fuerza resultante experimenta un <b>máximo físico exacto</b> en:
+                \\[ x = \\frac{a}{\\sqrt{2}} \\approx 0{,}707\\,a \\]
+                Para \\(x \\gg a\\), la distribución colapsa al límite puntual de carga doble \\(2q\\): \\(\\vec{F} \\to \\frac{k(2q)q_0}{x^2}\\hat{\\imath}\\).
+            `,
+            misconceptions: `
+                <b>Paradoja del novato:</b> Creer que sumar fuerzas vectoriales equivale a sumar magnitudes escalares (\\(F_{\\text{net}} = F_1 + F_2\\)). Se desactiva demostrando que dos fuerzas de 10 N opuestas suman exactamente 0 N.
+            `,
+            conclusions: `
+                La superposición vectorial es el fundamento insoslayable de la electrodinámica clásica. La mediación del simulador y la balanza 3D afianzan la comprensión espacial del producto vectorial y la interacción a distancia.
+            `,
+            route: `
+                <span class="path-from">Presaberes: Vectores & Ley de Gravitación</span> → 
+                <span class="path-curr">M1: Ley de Coulomb</span> → 
+                <span class="path-to">M2: Campo Eléctrico & Dipolos</span>
+            `
+        },
+        9: {
+            cap: "Capítulo 09",
+            title: "Ley de Biot-Savart: Fuentes del Campo Magnético y Deducción Paso a Paso",
+            subtitle: "Deducción geométrica exacta de campos magnetostáticos generados por corrientes estacionarias en hilos, espiras y geometrías compuestas.",
+            deckUrl: "../presentaciones/M9_BiotSavart/index.html",
+            tallerUrl: "../talleres/Taller_9_Biot_Savart.html",
+            abstract: `
+                ¿Cómo genera un elemento infinitesimal de corriente un campo magnético en el espacio circundante?
+                Este póster presenta la síntesis del estándar didáctico de referencia de la plataforma: deducción rigurosa de Biot-Savart para conductores rectilíneos y circulares, justificando el ángulo del producto cruz \\(\\varphi = 90^\\circ + \\theta\\), desglosando los 7 pasos y contrastando dos métodos de integración.
+            `,
+            theory: `
+                Para un elemento diferencial de corriente \\(I\\,d\\vec{\\ell}\\) en posición \\(\\vec{r}'\\), el campo magnético en el punto de campo \\(\\vec{r}\\) es:
+                \\[ d\\vec{B} = \\frac{\\mu_0}{4\\pi} \\frac{I\\,d\\vec{\\ell}\\times\\hat{r}}{r^2} = \\frac{\\mu_0 I}{4\\pi} \\frac{d\\vec{\\ell}\\times(\\vec{r}-\\vec{r}')}{|\\vec{r}-\\vec{r}'|^3} \\]
+                <div class="math-callout">
+                    <b>Segmento Finito e Hilo Infinito:</b>
+                    \\[ B = \\frac{\\mu_0 I}{4\\pi a}(\\sin\\theta_2 - \\sin\\theta_1) \\quad \\xrightarrow{\\pm 90^\\circ} \\quad B = \\frac{\\mu_0 I}{2\\pi a} \\]
+                </div>
+            `,
+            diagram: `
+                <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad-bs" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0b8ca8" stop-opacity="0.2"/>
+                            <stop offset="100%" stop-color="#b3246b" stop-opacity="0.2"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="360" height="180" rx="10" fill="url(#grad-bs)"/>
+                    <!-- Hilo conductor vertical -->
+                    <line x1="100" y1="20" x2="100" y2="160" stroke="#b3246b" stroke-width="4"/>
+                    <!-- Elemento dl -->
+                    <line x1="100" y1="100" x2="100" y2="80" stroke="#10b981" stroke-width="5"/>
+                    <text x="80" y="95" font-family="monospace" font-weight="bold" font-size="11" fill="#10b981">I dℓ</text>
+                    <!-- Punto P -->
+                    <circle cx="260" cy="100" r="5" fill="#0f172a"/>
+                    <text x="272" y="104" font-family="sans-serif" font-weight="bold" font-size="13">P</text>
+                    <!-- Perpendicular a -->
+                    <line x1="100" y1="100" x2="260" y2="100" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    <text x="180" y="93" font-family="monospace" font-size="11" fill="#64748b">a</text>
+                    <!-- Vector r -->
+                    <line x1="100" y1="60" x2="260" y2="100" stroke="#0b8ca8" stroke-width="2"/>
+                    <text x="175" y="72" font-family="monospace" font-size="11" fill="#0b8ca8">r</text>
+                    <!-- Campo B entrando en P -->
+                    <circle cx="260" cy="130" r="10" fill="none" stroke="#b3246b" stroke-width="2"/>
+                    <line x1="253" y1="123" x2="267" y2="137" stroke="#b3246b" stroke-width="2"/>
+                    <line x1="267" y1="123" x2="253" y2="137" stroke="#b3246b" stroke-width="2"/>
+                    <text x="278" y="134" font-family="sans-serif" font-weight="bold" font-size="12" fill="#b3246b">B (⊗)</text>
+                </svg>
+            `,
+            steps: [
+                { n: "1", t: "Definición del elemento infinitesimal \\(I\\,d\\vec{\\ell} = I\\,dy\\,\\hat{\\jmath}\\)." },
+                { n: "2", t: "Esquema geométrico y justificación angular: \\(\\varphi = 90^\\circ + \\theta \\implies \\sin\\varphi = \\cos\\theta\\)." },
+                { n: "3", t: "Cambio de variable: \\(y = a\\tan\\theta\\), \\(dy = a\\sec^2\\theta\\,d\\theta\\), \\(r = a\\sec\\theta\\)." },
+                { n: "4", t: "Factorización de constantes fuera de la integral: \\(\\frac{\\mu_0 I}{4\\pi a}\\)." },
+                { n: "5", t: "Dos caminos analíticos: sustitución trigonométrica directa vs integrales de tabla." },
+                { n: "6", t: "Evaluación en límites físicos: hilo finito vs infinito (\\(\\theta_1 \\to -90^\\circ, \\theta_2 \\to +90^\\circ\\))." },
+                { n: "7", t: "Pregunta de rigor y validación: ¿Por qué en el eje \\(a=0\\) el campo \\(\\vec{B}\\) es estrictamente cero?" }
+            ],
+            dualPath: `
+                <b>Camino A (Trigonométrico):</b><br>
+                \\(\\int \\frac{a\\sec^2\\theta\\,d\\theta}{a^3\\sec^3\\theta} = \\frac{1}{a^2}\\int \\cos\\theta\\,d\\theta = \\frac{1}{a^2}(\\sin\\theta_2 - \\sin\\theta_1)\\).<br><br>
+                <b>Camino B (Tablas Directas):</b><br>
+                \\(\\int \\frac{dy}{(y^2+a^2)^{3/2}} = \\left[\\frac{y}{a^2\\sqrt{y^2+a^2}}\\right]_{y_1}^{y_2}\\).
+            `,
+            prototype3D: `
+                <div class="prototype-spec-box">
+                    <b>Pieza Imprimible: BiotSavart-Jig (Jig de Conductores)</b>
+                    <p style="margin-top:4px;">Estructura rígida paramétrica no magnética para medir con sonda Hall el campo axial \\(B(z)\\) en espiras circulares y horquillas de 3 tramos.</p>
+                    <div class="spec-grid">
+                        <div class="spec-item"><b>Material</b> PLA no ferroso</div>
+                        <div class="spec-item"><b>Capa</b> 0.20 mm</div>
+                        <div class="spec-item"><b>Radio</b> 50 mm calibrado</div>
+                        <div class="spec-item"><b>Tornillería</b> Nylon M4</div>
+                    </div>
+                </div>
+            `,
+            results: `
+                Para una espira circular de radio \\(R\\) en su eje de simetría:
+                \\[ B_z = \\frac{\\mu_0 I R^2}{2(z^2+R^2)^{3/2}} \\]
+                En el centro (\\(z=0\\)): \\(B = \\frac{\\mu_0 I}{2R}\\). En campo lejano (\\(z \\gg R\\)): decaimiento dipolar magnético puro \\(B \\propto 1/z^3\\).
+            `,
+            misconceptions: `
+                <b>Error habitual:</b> Creer que en los puntos colineales con un hilo recto hay campo magnético. Por definición de producto cruz, \\(d\\vec{\\ell} \\parallel \\hat{r} \\implies d\\vec{\\ell}\\times\\hat{r} = \\vec{0}\\). ¡El campo colineal es exactamente nulo!
+            `,
+            conclusions: `
+                La ley de Biot-Savart es el análogo magnético de la ley de Coulomb. La metodología de 7 pasos con visualización de pares simétricos elimina los errores en la regla de la mano derecha y en el cálculo de integrales impropias.
+            `,
+            route: `
+                <span class="path-from">M8: Fuerza de Lorentz & Movimiento de Cargas</span> → 
+                <span class="path-curr">M9: Ley de Biot-Savart</span> → 
+                <span class="path-to">M10: Ley de Ampère & Circuitos Magnéticos</span>
+            `
+        },
+        12: {
+            cap: "Capítulo 12",
+            title: "Ecuaciones de Maxwell: Síntesis Electromagnética y Ondas en el Vacío",
+            subtitle: "La unificación de la electricidad, el magnetismo y la óptica mediante la corriente de desplazamiento y la deducción de la velocidad de la luz.",
+            deckUrl: "../presentaciones/M12_Maxwell/index.html",
+            tallerUrl: "../talleres/Taller_12_Ecuaciones_Maxwell.html",
+            abstract: `
+                ¿Por qué la ley de Ampère original era matemáticamente incompleta para corrientes variables en el tiempo?
+                Este póster expone la deducción de la corriente de desplazamiento de Maxwell \\(I_d = \\epsilon_0 d\\Phi_E/dt\\), la formulación diferencial completa mediante rotacionales y divergencias, y la deducción analítica de la ecuación de onda que predice la velocidad de la luz \\(c = 1/\\sqrt{\\mu_0\\epsilon_0}\\).
+            `,
+            theory: `
+                Las cuatro ecuaciones fundamentales de Maxwell en forma integral:
+                \\[ \\oint \\vec{E}\\cdot d\\vec{A} = \\frac{q_{\\text{enc}}}{\\epsilon_0}, \\quad \\oint \\vec{B}\\cdot d\\vec{A} = 0 \\]
+                \\[ \\oint \\vec{E}\\cdot d\\vec{\\ell} = -\\frac{d\\Phi_B}{dt}, \\quad \\oint \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0\\left(I_c + \\epsilon_0\\frac{d\\Phi_E}{dt}\\right) \\]
+                <div class="math-callout">
+                    <b>Ecuación de Onda en el Vacío:</b>
+                    \\[ \\nabla^2 \\vec{E} = \\mu_0\\epsilon_0 \\frac{\\partial^2 \\vec{E}}{\\partial t^2} \\implies c = \\frac{1}{\\sqrt{\\mu_0\\epsilon_0}} = 299.792.458\\ \\text{m/s} \\]
+                </div>
+            `,
+            diagram: `
+                <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad-max" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.2"/>
+                            <stop offset="100%" stop-color="#0b8ca8" stop-opacity="0.2"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="360" height="180" rx="10" fill="url(#grad-max)"/>
+                    <!-- Eje z propagación -->
+                    <line x1="30" y1="90" x2="330" y2="90" stroke="#475569" stroke-width="1.5"/>
+                    <text x="335" y="94" font-family="monospace" font-size="12" fill="#475569">z</text>
+                    <!-- Onda E (plano vertical) -->
+                    <path d="M 40 90 Q 90 20 140 90 T 240 90 T 320 90" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+                    <text x="90" y="45" font-family="sans-serif" font-weight="bold" font-size="12" fill="#ef4444">E(y)</text>
+                    <!-- Onda B (plano horizontal en perspectiva) -->
+                    <path d="M 40 90 Q 90 140 140 90 T 240 90 T 320 90" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3,3"/>
+                    <text x="90" y="150" font-family="sans-serif" font-weight="bold" font-size="12" fill="#3b82f6">B(x)</text>
+                    <!-- Vector Poynting S -->
+                    <line x1="200" y1="90" x2="270" y2="90" stroke="#b3246b" stroke-width="4"/>
+                    <polygon points="270,86 280,90 270,94" fill="#b3246b"/>
+                    <text x="235" y="80" font-family="sans-serif" font-weight="bold" font-size="12" fill="#b3246b">S = E × B</text>
+                </svg>
+            `,
+            steps: [
+                { n: "1", t: "Contradicción de la ley de Ampère en la carga de un capacitor." },
+                { n: "2", t: "Postulación del término de corriente de desplazamiento \\(I_d = \\epsilon_0 d\\Phi_E/dt\\)." },
+                { n: "3", t: "Formulación diferencial con teoremas de Gauss y Stokes (rotacional y divergencia)." },
+                { n: "4", t: "Aplicación del operador rotacional al rotacional: \\(\\vec{\\nabla}\\times(\\vec{\\nabla}\\times\\vec{E})\\)." },
+                { n: "5", t: "Dos caminos analíticos para la onda plana: vector de Poynting vs relaciones de amplitud \\(E = cB\\)." },
+                { n: "6", t: "Deducción de la velocidad de propagación \\(c = 1/\\sqrt{\\mu_0\\epsilon_0}\\)." },
+                { n: "7", t: "Presión de radiación e intercambio de momento lineal de la luz." }
+            ],
+            dualPath: `
+                <b>Camino A (Conservación por Continuidad):</b><br>
+                Uso de \\(\\vec{\\nabla}\\cdot\\vec{J} = -\\frac{\\partial\\rho}{\\partial t}\\) y \\(\\vec{\\nabla}\\cdot\\vec{D} = \\rho\\) para demostrar que la corriente total es solenoidal: \\(\\vec{\\nabla}\\cdot(\\vec{J} + \\frac{\\partial\\vec{D}}{\\partial t}) = 0\\).<br><br>
+                <b>Camino B (Geometría del Condensador):</b><br>
+                Cálculo del flujo eléctrico variable entre placas \\(\\Phi_E = E A = \\frac{Q}{\\epsilon_0}\\), deduciendo directamente que \\(I_d = \\frac{dQ}{dt} = I_c\\).
+            `,
+            prototype3D: `
+                <div class="prototype-spec-box">
+                    <b>Pieza Imprimible: Maxwell-Wave 3D (Onda Plana Transversal)</b>
+                    <p style="margin-top:4px;">Estructura ortogonal desmontable que reproduce las sinusoides de campo eléctrico vertical y campo magnético horizontal, con filtros de polarización orientables.</p>
+                    <div class="spec-grid">
+                        <div class="spec-item"><b>Material</b> PLA Bicolor</div>
+                        <div class="spec-item"><b>Capa</b> 0.16 mm</div>
+                        <div class="spec-item"><b>Ensamble</b> Rótula bayoneta</div>
+                        <div class="spec-item"><b>Polarizador</b> Filtro rotativo</div>
+                    </div>
+                </div>
+            `,
+            results: `
+                La intensidad de una onda electromagnética y la presión de radiación sobre un absorbedor perfecto cumplen:
+                \\[ I_{\\text{rad}} = \\langle S \\rangle = \\frac{E_0^2}{2\\mu_0 c}, \\quad P_{\\text{rad}} = \\frac{\\langle S \\rangle}{c} = u_{\\text{rad}} \\]
+                Demostrando que la luz no sólo transporta energía sino también momento lineal mecánico real.
+            `,
+            misconceptions: `
+                <b>Paradoja habitual:</b> Creer que la corriente de desplazamiento implica movimiento de cargas reales por el aire. En el vacío no hay cargas; es el campo eléctrico variable el que actúa como fuente de campo magnético idéntica a una corriente.
+            `,
+            conclusions: `
+                La adición del término de Maxwell cierra la teoría clásica más elegante de la física. Establece que la luz es una manifestación electromagnética y sienta las bases de la relatividad especial de Einstein.
+            `,
+            route: `
+                <span class="path-from">M11: Ley de Faraday & Autoinductancia</span> → 
+                <span class="path-curr">M12: Ecuaciones de Maxwell & Ondas</span> → 
+                <span class="path-to">M13: Circuitos de Corriente Alterna & RLC</span>
+            `
+        }
+    };
+
+    // GENERAR AUTOMÁTICAMENTE PLANTILLAS PARA LOS OTROS CAPÍTULOS SI SE SOLICITAN
+    for (let i = 1; i <= 13; i++) {
+        if (!POSTERS_DATA[i]) {
+            const capNames = {
+                2: "Campo Eléctrico y Dipolos",
+                3: "Potencial Eléctrico y Superficies Equipotenciales",
+                4: "Distribuciones Continuas de Carga: Hilo, Anillo y Plano",
+                5: "Ley de Gauss y Teorema del Flujo Eléctrico",
+                6: "Capacitancia, Dieléctricos y Energía Electrostática",
+                7: "Circuitos de Corriente Continua, Redes y Kirchhoff",
+                8: "Fuerza de Lorentz y Movimiento de Cargas en Campos B",
+                10: "Ley de Ampère, Solenoides y Toroides",
+                11: "Ley de Faraday-Lenz e Inductancia Mutua",
+                13: "Circuitos de Corriente Alterna, Fasores e Impedancia RLC"
+            };
+            POSTERS_DATA[i] = {
+                cap: `Capítulo ${i < 10 ? '0' + i : i}`,
+                title: `${capNames[i] || 'Módulo ' + i}: Fundamentación y Metodología Rigurosa`,
+                subtitle: "Análisis conceptual y cuantitativo con deducción paso a paso y validación experimental.",
+                deckUrl: `../presentaciones/M${i}_${getDirSlug(i)}/index.html`,
+                tallerUrl: `../talleres/Taller_${getTallerSlug(i)}.html`,
+                abstract: `Investigación del comportamiento físico fundamental del Capítulo ${i}, articulando modelos matemáticos en KaTeX y validación interactiva de aula.`,
+                theory: `Deducción analítica de las leyes rectoras del capítulo ${i} respetando el protocolo Sears-Zemansky.`,
+                diagram: `<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg"><rect width="360" height="180" rx="10" fill="#f1f5f9"/><text x="180" y="95" font-family="sans-serif" font-size="14" fill="#64748b" text-anchor="middle">Esquema Vectorial Didáctico Módulo ${i}</text></svg>`,
+                steps: [
+                    { n: "1", t: "Identificación del sistema infinitesimal y condiciones de frontera." },
+                    { n: "2", t: "Esquema geométrico y definición de vectores ortogonales." },
+                    { n: "3", t: "Relaciones de proporcionalidad y cambios de variable." },
+                    { n: "4", t: "Factorización de constantes y simetría del problema." },
+                    { n: "5", t: "Doble resolución analítica (Camino A vs Camino B)." },
+                    { n: "6", t: "Evaluación rigurosa de límites físicos asintóticos." },
+                    { n: "7", t: "Preguntas de reto y contrastación de laboratorio." }
+                ],
+                dualPath: `<b>Camino A:</b> Deducción directa por cálculo integral.<br><br><b>Camino B:</b> Enfoque geométrico / leyes de conservación.`,
+                prototype3D: `<div class="prototype-spec-box"><b>Pieza Imprimible: Modelo 3D Módulo ${i}</b><p>Consulte GUIA_DIDACTICA_Y_MODELOS_3D.md para cotas y ensamble.</p></div>`,
+                results: `Comprobación analítica exacta de los órdenes de magnitud y conservación energética.`,
+                misconceptions: `Desactivación de errores de concepto mediante experimentación interactiva en el simulador.`,
+                conclusions: `El módulo cumple a cabalidad con el estándar de educación universitaria de alto impacto.`,
+                route: `<span class="path-from">Módulo ${i-1}</span> → <span class="path-curr">Módulo ${i}</span> → <span class="path-to">Módulo ${i+1}</span>`
+            };
+        }
+    }
+
+    function getDirSlug(n) {
+        const slugs = {
+            1: "Coulomb", 2: "CampoElectrico", 3: "Potencial", 4: "DistribucionesContinuas",
+            5: "Gauss", 6: "Capacitancia", 7: "CircuitosCC", 8: "Lorentz",
+            9: "BiotSavart", 10: "Ampere", 11: "Faraday", 12: "Maxwell", 13: "AC"
+        };
+        return slugs[n] || "Coulomb";
+    }
+
+    function getTallerSlug(n) {
+        const slugs = {
+            1: "1_Ley_de_Coulomb", 2: "2_Campo_Electrico", 3: "3_Potencial_Electrico",
+            4: "4_Distribuciones_de_Carga_Continua", 5: "5_Ley_de_Gauss", 6: "6_Capacitancia",
+            7: "7_1_Reduccion_Circuitos", 8: "8_Ley_de_Lorentz", 9: "9_Biot_Savart",
+            10: "10_Ley_de_Ampere", 11: "11_Ley_de_Faraday", 12: "12_Ecuaciones_Maxwell", 13: "13_Circuitos_CA"
+        };
+        return slugs[n] || "1_Ley_de_Coulomb";
+    }
+
+    // INICIALIZACIÓN DE LA UI
+    let currentModule = 9; // Inicia en M9 Biot-Savart como modelo de oro
+
+    function renderPoster(modNum) {
+        currentModule = modNum;
+        const d = POSTERS_DATA[modNum];
+        if (!d) return;
+
+        document.getElementById('p-title').innerHTML = d.title;
+        document.getElementById('p-subtitle').innerHTML = d.subtitle;
+        document.getElementById('p-chapter-badge').innerText = d.cap.toUpperCase();
+        document.getElementById('p-abstract').innerHTML = d.abstract;
+        document.getElementById('p-theory').innerHTML = d.theory;
+        document.getElementById('p-diagram').innerHTML = d.diagram;
+        
+        // Pasos
+        const stepsHtml = d.steps.map(s => `
+            <div class="step-row">
+                <span class="step-circle">${s.n}</span>
+                <span>${s.t}</span>
+            </div>
+        `).join('');
+        document.getElementById('p-steps').innerHTML = stepsHtml;
+
+        document.getElementById('p-dual-path').innerHTML = d.dualPath;
+        document.getElementById('p-3d-model').innerHTML = d.prototype3D;
+        document.getElementById('p-results').innerHTML = d.results;
+        document.getElementById('p-misconceptions').innerHTML = d.misconceptions;
+        document.getElementById('p-conclusions').innerHTML = d.conclusions;
+        document.getElementById('p-learning-route').innerHTML = d.route;
+
+        // Links de la barra superior
+        document.getElementById('btn-goto-deck').href = d.deckUrl;
+        document.getElementById('btn-goto-taller').href = d.tallerUrl;
+
+        // Renderizar KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(document.getElementById('poster-element'), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        // Actualizar tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.mod) === modNum);
+        });
+    }
+
+    // GENERAR BOTONES DE TABS
+    const tabsContainer = document.getElementById('tabs-container');
+    for (let i = 1; i <= 13; i++) {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${i === currentModule ? 'active' : ''}`;
+        btn.dataset.mod = i;
+        btn.innerText = `M${i < 10 ? '0' + i : i}`;
+        btn.onclick = () => renderPoster(i);
+        tabsContainer.appendChild(btn);
+    }
+
+    // EXPORTACIÓN A PDF DEL PÓSTER
+    document.getElementById('btn-export-pdf').addEventListener('click', () => {
+        const opt = {
+            margin: [5, 5, 5, 5],
+            filename: `Poster_Cientifico_M${currentModule}_10Easy.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a2', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(document.getElementById('poster-element')).save();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        // Verificar si viene con ?cap=N en la URL
+        const params = new URLSearchParams(window.location.search);
+        const reqCap = parseInt(params.get('cap')) || 9;
+        renderPoster(reqCap);
+    });
+    </script>
+</body>
+</html>

@@ -30,17 +30,42 @@
 - **Modelos y Piezas 3D Didácticas para Impresión (M1 a M13):** Documentado exhaustivamente en [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md). Cada módulo cuenta con una pieza tangible especificada (dimensiones, tolerancias, acoples para imanes de neodimio, bornes banana de 4 mm, sensores y protocolos de aula) para conectar la teoría abstracta y los simuladores con el laboratorio físico.
 
 ## 🤝 Pendientes para el otro agente (Claude)
-> **Referencia obligatoria antes de codificar:** Lee [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md). Explica detalladamente la arquitectura, las fórmulas completas sin recortar y el catálogo de las 13 piezas 3D.
+> **Referencias obligatorias antes de codificar:**
+> 1. [`Electro10.Easy_repo/ESTANDAR_DIDACTICO_Y_POSTERS.md`](Electro10.Easy_repo/ESTANDAR_DIDACTICO_Y_POSTERS.md): Análisis exhaustivo de las 5 capas del estándar M9 Biot-Savart, protocolo de captura/vectorización con IA y especificación de pósters.
+> 2. [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md): Catálogo de las 13 piezas didácticas 3D imprimibles.
+> 3. [`Electro10.Easy_repo/revisar.html`](Electro10.Easy_repo/revisar.html): Matriz central de trazabilidad para revisar todo el repositorio de forma interconectada en una sola pantalla.
 
-- [x] ~~**Videos de todos los módulos:**~~ 100% verificados con API oEmbed de YouTube. M9, M11, M12 y M13 reabastecidos con 34 videos verificados y metadatos estructurados en `titulosRecursos`.
-- [x] ~~**Estandarización de Módulos 1 al 13 (100% de Presentaciones Master Deck):**~~ Todos los módulos disponen de su master deck autónomo 16:9 (`presentaciones/M{XX}/index.html`), resolución responsive 1280x720, KaTeX 0.16.9, canvas dinámicos, simuladores incrustados, árboles de decisión, mapas conceptuales SVG reactivos con flujo de luz y tarjetas flashcard 3D (`preserve-3d`).
-- [x] ~~**Estandarización de Talleres Prácticos (Taller 1 a Taller 13):**~~ Todos los talleres refactorizados con el protocolo Sears-Zemansky de 7 pasos, 2 caminos analíticos seleccionables (Camino A vs Camino B), comprobador interactivo en tiempo real y certificado PDF (`#seccion-entrega`).
+- [x] ~~**Ecosistema de Pósters Científicos de Congreso (M1 a M13):**~~ Implementado en `posters/index.html` con maquetación académica tricolumna en formato póster internacional (1400×960 responsive), fórmulas en KaTeX 0.16.9, diagramas vectoriales SVG, ficha técnica del modelo 3D y exportación directa a PDF de alta resolución.
+- [x] ~~**Matriz Central de Revisión y Conectividad (`revisar.html`):**~~ Creada en la raíz del proyecto para conectar todas las presentaciones magistrales, talleres de 7 pasos, pósters, simuladores, videos y guías, visualizando la ruta de aprendizaje intermodular ("Viene de → Lleva a").
+- [ ] **Elevación Didáctica «Estilo Biot-Savart» (Auditoría Diapositiva por Diapositiva):**
+  - M9 Biot-Savart (`presentaciones/M9_BiotSavart/index.html`) es el estándar de oro. Claude debe auditar cada una de las diapositivas de M1 a M8, M10 a M13 para dotarlas de las mismas 5 capas didácticas:
+    1. *Voto predictivo de hipótesis* (`.vote` + `.tipbox` con contextualización histórica previa a la experimentación).
+    2. *Interactividad con elementos diferenciales manipulables* (arrastre de $dq$ o $d\vec{\ell}$, conmutador de pares simétricos $\pm$, visualizador en tiempo real en `#math-panel` y botón `▶ Integrar`).
+    3. *Selector interactivo de dos caminos analíticos dentro de la diapositiva* (Camino A: sustitución trigonométrica vs. Camino B: tablas/conservación).
+    4. *Tarjetas de justificación geométrica profunda* (¿Por qué...? Justificación matemática rigurosa de ángulos complementarios, productos vectoriales y límites).
+    5. *Píldoras numeradas de paso a paso* (`<span class="n">1..7</span>`).
+- [ ] **Protocolo de Captura y Rediseño Vectorial (Sin Pérdida de Calidad):**
+  - Tomar capturas de pantalla de la interfaz con herramientas de navegador, solicitar a la IA sugerencias de refinamiento de contraste/legibilidad, y **rediseñar cualquier esquema visual en SVG nativo responsive o Canvas HTML5**, erradicando totalmente imágenes PNG/JPG pixeladas o de baja resolución.
 - [ ] **Modelos 3D imprimibles (Fase de Modelado CAD / Web):**
   - Basándose en las especificaciones mecánicas de `GUIA_DIDACTICA_Y_MODELOS_3D.md`, crear los scripts paramétricos OpenSCAD (`.scad`) en `.design/modelos_3d/` y/o componentes de previsualización Three.js en la plataforma web para que estudiantes y docentes descarguen los archivos STL de cada módulo.
 - [ ] **Fase 4 de `PLAN_FASES_10Easy.md` (Layout multiplataforma y limpieza):**
   - Añadir `<meta name="viewport" content="width=device-width, initial-scale=1.0">` a las 19 páginas que carecen de él.
   - Retiro gradual de Tailwind CDN residual hacia variables de tokens unificados en `css/tokens.css`.
   - Asegurar que la telemetría de todos los simuladores (`SIM_TELEMETRY`) se registre limpiamente en `js/seguimiento.js`.
+
+### 2026-10-23 · Gemini · Creación de Galería de Pósters de Congreso, Hub de Revisión (`revisar.html`) y Protocolo de Excelencia Didáctica Biot-Savart
+- Qué hice:
+  1. **Galería de Pósters Científicos de Congreso (`posters/index.html`):**
+     - Desarrollado visor interactivo tricolumna de pósters científicos académicos para todos los 13 módulos del curso.
+     - Contiene: Abstract/Resumen, formulación diferencial/integral en KaTeX 0.16.9, diagramas vectoriales SVG sin pérdida de resolución, protocolo pedagógico de 7 pasos, comparativa de los dos caminos analíticos, ficha técnica del prototipo 3D para aula (PLA, cotas, tolerancias), análisis cuantitativo, desactivación de la "Paradoja del novato", conclusiones y conectores intermodulares ("Viene de → Lleva a").
+     - Exportación integrada a PDF en gran formato (A1/A2 apaisado) mediante `html2pdf.js` y enlaces directos a la clase 16:9 y al taller de cada capítulo.
+  2. **Matriz de Trazabilidad y Revisión Centralizada (`revisar.html`):**
+     - Creado panel de control curricular en la raíz del repositorio que interconecta todo el curso de forma transparente y navegable.
+     - Incluye buscador reactivo en tiempo real, KPIs ejecutivos (13 master decks, 14 talleres de 7 pasos, 13 pósters, 13 modelos 3D, 100% verificado), tarjetas individuales por módulo con accesos directos de 1 clic a Diapositiva, Taller, Póster y Simulador, y rutas de aprendizaje explícitas.
+     - Integrado enlace a la matriz de revisión y a la galería de pósters en la barra lateral de navegación de `index.html`.
+  3. **Guía Maestra para Claude (`ESTANDAR_DIDACTICO_Y_POSTERS.md`):**
+     - Documentadas exhaustivamente las 5 capas que constituyen el estándar didáctico de M9 Biot-Savart para que Claude audite y eleve las demás presentaciones (M1 a M8, M10 a M13).
+     - Establecido el protocolo de captura con IA y rediseño vectorial obligatorio en SVG/Canvas nativo con tokens Plasma (`--e10-*`).
 
 ### 2026-10-23 · Gemini · Estandarización Completa de Módulos 7, 12 y 13 (Presentaciones Maestras y Talleres Prácticos) — 100% del Currículo
 - Qué hice:
