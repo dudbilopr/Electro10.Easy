@@ -228,14 +228,31 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         <div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div>
         <div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div>
       </div>
+      <div id="hi-math-panel" class="card" style="font-size:12px;padding:6px 10px;margin-top:4px;background:var(--e10-surface);border-left:3px solid var(--e10-primary);min-height:38px;line-height:1.4"></div>
       <div class="no-print" style="font-size:11px;color:var(--e10-muted);text-align:center;margin-top:2px">
         💡 <b>Arrastra el elemento \(d\vec\ell\)</b> verticalmente sobre el hilo para explorar la variación de \(\theta\) y \(\hat r\).
       </div>
     </div>
-    <div class="col" style="flex:1;overflow-y:auto;gap:8px">
-      <div class="steps" style="font-size:14px;gap:5px">
-        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y vector relativo \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
-        <div><span class="n">2</span><span><b>Variables y referencia angular:</b> Los ángulos \(\theta_1, \theta_2\) y \(\theta\) se miden <b>respecto a la perpendicular del hilo al punto \(P\) (\(\theta=0^\circ\))</b>. Geometría: \(y=a\tan\theta\), \(r=\sqrt{a^2+y^2}=a\sec\theta\). El ángulo entre \(d\vec\ell\) y \(\hat r\) es \(\varphi = 90^\circ + \theta \implies |d\vec\ell\times\hat r|=dy\sin\varphi=dy\cos\theta\) (entrando \(\otimes\)).</span></div>
+    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
+      <div class="steps" style="font-size:13.5px;gap:5px">
+        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y vector de posición relativa \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
+        <div><span class="n">2</span><span><b>Referencia angular (\(\theta=0^\circ\)):</b> Los ángulos \(\theta_1, \theta_2\) y \(\theta\) se miden desde la <b>perpendicular trazada de \(P\) al hilo</b> (\(\theta_1 < 0\) abajo, \(\theta_2 > 0\) arriba). Geometría: \(y=a\tan\theta\), \(r=\sqrt{a^2+y^2}=a\sec\theta\).</span></div>
+      </div>
+      <!-- Explicación rigurosa de phi = 90 + theta -->
+      <div class="card" style="background:var(--e10-primary-soft);border-color:var(--e10-primary);padding:8px 12px;font-size:12.5px;line-height:1.4">
+        <b style="color:var(--e10-primary);font-size:13px">¿Por qué el ángulo del producto cruz es \(\varphi = 90^\circ + \theta\)?</b>
+        <div style="margin-top:3px">
+          El producto cruz requiere el ángulo \(\varphi\) entre el vector tangente \(d\vec\ell = dy\,\hat\jmath\) (que apunta vertical hacia \(+y\)) y el vector posición \(\hat r\) (que desciende hacia \(P\)):
+          <ul style="margin:3px 0 3px 18px;padding:0">
+            <li>El ángulo entre \(d\vec\ell\) (\(+y\)) y la perpendicular horizontal hacia \(P\) es exactamente \(90^\circ\).</li>
+            <li>El vector hacia \(P\) se inclina un ángulo \(\theta\) adicional respecto a esa horizontal.</li>
+          </ul>
+          Por tanto, el ángulo total formado es \(\varphi = 90^\circ + \theta\). Por identidad de ángulos complementarios:
+          \[ \sin\varphi = \sin(90^\circ + \theta) = \cos\theta \]
+          Así, la magnitud del producto cruz resulta: \(|d\vec\ell \times \hat r| = dy \sin\varphi = dy \cos\theta\) (con dirección \(\otimes\) hacia adentro).
+        </div>
+      </div>
+      <div class="steps" style="font-size:13.5px;gap:5px">
         <div><span class="n">3</span><span><b>Cambio de variable:</b> \(B=\dfrac{\mu_0 I a}{4\pi}\displaystyle\int_{y_1}^{y_2}\dfrac{dy}{(y^2+a^2)^{3/2}}\).</span></div>
       </div>
       <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
@@ -762,7 +779,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     const onDown = (e) => {
       if (!showDl) return;
       const p = getPos(e);
-      const wx = 90, py = (+cv.dataset.h || 340) / 2, a = 220;
+      const wx = 75, py = (+cv.dataset.h || 340) / 2, a = 230;
       const ey1 = py - a * Math.tan(dlAng * Math.PI / 180);
       if (Math.hypot(p.x - wx, p.y - ey1) < 38 || (Math.abs(p.x - wx) < 32 && p.y >= 10 && p.y <= (+cv.dataset.h || 340) - 10)) {
         dragDl = true;
@@ -775,7 +792,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     const onMove = (e) => {
       if (!dragDl) return;
       const p = getPos(e);
-      const py = (+cv.dataset.h || 340) / 2, a = 220;
+      const py = (+cv.dataset.h || 340) / 2, a = 230;
       const curDeg = Math.atan2(py - p.y, a) * 180 / Math.PI;
       dlAng = Math.max(-84, Math.min(84, curDeg));
       draw();
@@ -794,38 +811,50 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
       const end = sweep == null ? t2 : Math.min(t2, sweep);
       const ratio = (Math.sin(end * Math.PI / 180) - Math.sin(t1 * Math.PI / 180)) / 2; const Binf = MU0 * 5 / (2 * Math.PI * 0.02);
       $('hi-ratio').textContent = dec(Math.max(0, ratio) * 100, 0) + ' %'; $('hi-b').textContent = sci(Math.max(0, ratio) * Binf) + ' T';
-      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const wx = 90, py = h / 2, a = 220, px = wx + a;
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const wx = 75, py = h / 2, a = 230, px = wx + a;
       
-      // Eje del hilo
-      ctx.strokeStyle = col('line'); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(wx, 8); ctx.lineTo(wx, h - 8); ctx.stroke();
+      // Eje del hilo infinito (línea guía)
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(wx, 8); ctx.lineTo(wx, h - 8); ctx.stroke();
       const yOf = (deg) => py - a * Math.tan(deg * Math.PI / 180);
       
-      // Segmento real de hilo
+      // Segmento real de hilo con corriente
       ctx.strokeStyle = col('ink'); ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(wx, Math.max(8, Math.min(h - 8, yOf(t1)))); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(end)))); ctx.stroke();
+      arrow(ctx, wx, Math.max(20, yOf(t1) - 4), wx, Math.max(12, yOf(end) + 4), col('primary'), 3.5);
+      text(ctx, 'I', wx - 18, 22, col('primary'), "bold 13px 'STIX Two Text'");
       
-      // Líneas de los extremos angulares
-      [t1, end].forEach((deg, i) => { ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 1.8; ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, Math.max(8, Math.min(h - 8, yOf(deg)))); ctx.stroke(); ctx.setLineDash([]); });
+      // Rayos de los extremos del segmento
+      [t1, end].forEach((deg, i) => {
+        const ey = Math.max(8, Math.min(h - 8, yOf(deg)));
+        ctx.strokeStyle = col(i ? 'primary' : 'accent'); ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(wx, ey); ctx.stroke(); ctx.setLineDash([]);
+      });
       
       // Línea perpendicular de referencia theta = 0
-      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.moveTo(wx, py); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
-      text(ctx, 'Ref: θ = 0° (perpendicular al hilo)', wx + 12, py - 6, '#64748b', "bold 10.5px 'IBM Plex Sans'");
-      text(ctx, 'a = 2 cm', wx + a / 2 - 14, py + 18, col('muted'), "bold italic 13px 'STIX Two Text'");
+      // Etiqueta clara de referencia en la base del hilo
+      text(ctx, 'θ = 0°', wx + 8, py - 6, '#64748b', "bold 11px 'IBM Plex Sans'");
+      // Etiqueta de la distancia a centrada debajo de la perpendicular
+      text(ctx, 'a = 2 cm', wx + a / 2 - 18, py + 16, col('muted'), "bold italic 12.5px 'STIX Two Text'");
       
       // Punto de observación P
-      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill(); text(ctx, 'P', px + 10, py - 8, col('ink'), "bold 16px 'IBM Plex Sans'");
+      ctx.fillStyle = col('ink'); ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fill();
+      text(ctx, 'P', px + 10, py - 4, col('ink'), "bold 16px 'IBM Plex Sans'");
       
-      // Arcos angulares en P
-      // theta 1
-      ctx.strokeStyle = col('accent-strong'); ctx.lineWidth = 1.6; ctx.beginPath();
+      // Arcos angulares en P (θ₁ y θ₂)
+      // theta 1 (extremo inferior)
       const a1_rad = -t1 * Math.PI / 180;
-      ctx.arc(px, py, 42, Math.PI, Math.PI + a1_rad, t1 < 0); ctx.stroke();
-      text(ctx, `θ₁=${t1}°`, px - 78, yOf(t1) > py ? py + 38 : py - 28, col('accent-strong'), "bold 12px 'IBM Plex Sans'");
-      // theta 2
-      ctx.strokeStyle = col('primary'); ctx.lineWidth = 1.6; ctx.beginPath();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.arc(px, py, 38, Math.PI, Math.PI + a1_rad, t1 < 0); ctx.stroke();
+      const midA1 = Math.PI + a1_rad / 2;
+      text(ctx, `θ₁`, px + Math.cos(midA1) * 52 - 4, py + Math.sin(midA1) * 52, col('accent'), "bold italic 12px 'STIX Two Text'");
+      
+      // theta 2 (extremo superior)
       const a2_rad = -end * Math.PI / 180;
-      ctx.arc(px, py, 58, Math.PI, Math.PI + a2_rad, end < 0); ctx.stroke();
-      text(ctx, `θ₂=${end}°`, px - 78, yOf(end) < py ? py - 48 : py + 56, col('primary'), "bold 12px 'IBM Plex Sans'");
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.arc(px, py, 60, Math.PI, Math.PI + a2_rad, end < 0); ctx.stroke();
+      const midA2 = Math.PI + a2_rad / 2;
+      text(ctx, `θ₂`, px + Math.cos(midA2) * 74 - 4, py + Math.sin(midA2) * 74, col('primary'), "bold italic 12px 'STIX Two Text'");
       
       // Elementos infinitesimales dℓ y vectores
       if (showDl) {
@@ -835,67 +864,78 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(wx, ey1, 5, 0, 2 * Math.PI); ctx.fill();
         ctx.strokeStyle = dragDl ? '#f59e0b' : '#ef4444'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(wx, ey1, 10, 0, 2 * Math.PI); ctx.stroke();
         
-        // Vector del elemento I dℓ₁
-        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 7; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(wx, ey1 + 14); ctx.lineTo(wx, ey1 - 14); ctx.stroke();
-        arrow(ctx, wx, ey1 + 14, wx, ey1 - 18, '#ef4444', 4);
-        text(ctx, `I dℓ₁ (θ=${dlAng >= 0 ? '+' : ''}${dec(dlAng, 0)}°)`, wx - 86, ey1 - 4, '#ef4444', "bold 11px 'IBM Plex Sans'");
+        // Vector diferencial I dℓ₁
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(wx, ey1 + 12); ctx.lineTo(wx, ey1 - 12); ctx.stroke();
+        arrow(ctx, wx, ey1 + 12, wx, ey1 - 16, '#ef4444', 3.5);
+        text(ctx, 'dℓ₁', wx - 32, ey1 + 4, '#ef4444', "bold italic 12px 'STIX Two Text'");
         
         // Línea punteada r₁ hacia P
-        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 4]);
         ctx.beginPath(); ctx.moveTo(wx, ey1); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
-        text(ctx, 'r₁ = a·sec θ', (wx + px) / 2 - 18, (ey1 + py) / 2 - 8, '#0284c7', "bold italic 12.5px 'STIX Two Text'");
         
-        // Vector unitario r̂₁
+        // Vector unitario r̂₁ desde el elemento hacia P
         const L1 = Math.hypot(px - wx, py - ey1); const u1x = (px - wx) / L1, u1y = (py - ey1) / L1;
-        arrow(ctx, wx, ey1, wx + u1x * 38, ey1 + u1y * 38, '#0284c7', 3);
-        text(ctx, 'r̂₁', wx + u1x * 44 + 2, ey1 + u1y * 44, '#0284c7', "bold 12px 'IBM Plex Sans'");
+        arrow(ctx, wx, ey1, wx + u1x * 34, ey1 + u1y * 34, '#0284c7', 2.8);
+        text(ctx, 'r̂₁', wx + u1x * 42, ey1 + u1y * 42 + 2, '#0284c7', "bold italic 12px 'STIX Two Text'");
         
         // Arco del ángulo θ en P hacia el elemento
         ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.8; ctx.beginPath();
         const curRad = -dlAng * Math.PI / 180;
-        ctx.arc(px, py, 26, Math.PI, Math.PI + curRad, dlAng < 0); ctx.stroke();
-        text(ctx, 'θ', px - 35, dlAng >= 0 ? py - 8 : py + 14, '#ef4444', "bold 11px 'IBM Plex Sans'");
+        ctx.arc(px, py, 22, Math.PI, Math.PI + curRad, dlAng < 0); ctx.stroke();
+        text(ctx, 'θ', px - 28, dlAng >= 0 ? py - 6 : py + 12, '#ef4444', "bold italic 12px 'STIX Two Text'");
         
-        // Ángulo φ en el elemento (entre dℓ y r̂)
+        // Ángulo φ en el elemento (entre dℓ vertical hacia arriba y r̂ hacia P)
         ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.8; ctx.beginPath();
         const baseAng1 = Math.atan2(py - ey1, px - wx);
-        ctx.arc(wx, ey1, 22, -Math.PI / 2, baseAng1); ctx.stroke();
-        text(ctx, 'φ = 90°+θ', wx + 14, ey1 - 12, '#f59e0b', "bold 10.5px 'IBM Plex Sans'");
+        ctx.arc(wx, ey1, 20, -Math.PI / 2, baseAng1); ctx.stroke();
+        text(ctx, 'φ', wx + 12, ey1 - 10, '#f59e0b', "bold italic 12px 'STIX Two Text'");
         
-        // Campo dB₁ en P entrando
-        dotSym(ctx, px + 26, py - 22, 7, false, '#ef4444');
-        text(ctx, 'dB₁ ⊗', px + 38, py - 18, '#ef4444', "bold 11px 'IBM Plex Sans'");
+        // Campo dB₁ en P entrando a la página ⊗
+        dotSym(ctx, px + 24, py - 20, 6.5, false, '#ef4444');
+        text(ctx, 'dB₁ ⊗', px + 36, py - 16, '#ef4444', "bold 11px 'IBM Plex Sans'");
 
         // Elemento simétrico 2 a -y
         if (showSym) {
           const ey2 = py + (py - ey1);
-          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 7; ctx.lineCap = 'round';
-          ctx.beginPath(); ctx.moveTo(wx, ey2 + 14); ctx.lineTo(wx, ey2 - 14); ctx.stroke();
-          arrow(ctx, wx, ey2 + 14, wx, ey2 - 18, '#10b981', 4);
-          text(ctx, `I dℓ₂ (−θ)`, wx - 78, ey2 + 8, '#10b981', "bold 11px 'IBM Plex Sans'");
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(wx, ey2 + 12); ctx.lineTo(wx, ey2 - 12); ctx.stroke();
+          arrow(ctx, wx, ey2 + 12, wx, ey2 - 16, '#10b981', 3.5);
+          text(ctx, 'dℓ₂', wx - 32, ey2 + 4, '#10b981', "bold italic 12px 'STIX Two Text'");
           
           // Línea punteada r₂ hacia P
-          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 4]);
           ctx.beginPath(); ctx.moveTo(wx, ey2); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
-          text(ctx, 'r₂', (wx + px) / 2 - 10, (ey2 + py) / 2 + 16, '#10b981', "bold italic 13px 'STIX Two Text'");
           
           // Vector unitario r̂₂
           const L2 = Math.hypot(px - wx, py - ey2); const u2x = (px - wx) / L2, u2y = (py - ey2) / L2;
-          arrow(ctx, wx, ey2, wx + u2x * 38, ey2 + u2y * 38, '#10b981', 3);
-          text(ctx, 'r̂₂', wx + u2x * 44 + 2, ey2 + u2y * 44, '#10b981', "bold 12px 'IBM Plex Sans'");
+          arrow(ctx, wx, ey2, wx + u2x * 34, ey2 + u2y * 34, '#10b981', 2.8);
+          text(ctx, 'r̂₂', wx + u2x * 42, ey2 + u2y * 42 + 2, '#10b981', "bold italic 12px 'STIX Two Text'");
           
-          // Campo dB₂ en P entrando
-          dotSym(ctx, px + 26, py + 22, 7, false, '#10b981');
-          text(ctx, 'dB₂ ⊗', px + 38, py + 26, '#10b981', "bold 11px 'IBM Plex Sans'");
-          
-          text(ctx, 'Simetría ±y: dB₁ y dB₂ ambos ⊗ hacia adentro (se refuerzan)', 10, h - 14, col('primary'), "bold 11px 'IBM Plex Sans'");
+          // Campo dB₂ en P entrando a la página ⊗
+          dotSym(ctx, px + 24, py + 20, 6.5, false, '#10b981');
+          text(ctx, 'dB₂ ⊗', px + 36, py + 24, '#10b981', "bold 11px 'IBM Plex Sans'");
+        }
+      }
+
+      // Actualizar el panel de fórmulas matemáticas renderizadas en KaTeX real
+      const pMath = $('hi-math-panel');
+      if (pMath) {
+        const thD = Math.round(dlAng);
+        const phiD = 90 + thD;
+        const curR_cm = (2 / Math.cos(dlAng * Math.PI / 180)).toFixed(2).replace('.', ',');
+        const tex = `\\text{Elemento } d\\vec\\ell_1: \\; \\theta = ${thD}^\\circ, \\quad \\varphi = 90^\\circ + \\theta = ${phiD}^\\circ, \\quad r_1 = a\\sec\\theta = ${curR_cm}\\,\\text{cm} \\\\[2pt]
+        |d\\vec\\ell_1 \\times \\hat r_1| = dy\\sin(${phiD}^\\circ) = dy\\cos(${thD}^\\circ) \\implies d\\vec B_1 = \\frac{\\mu_0 I}{4\\pi} \\frac{\\cos\\theta}{a}\\,d\\theta\\;(\\otimes)`;
+        try {
+          pMath.innerHTML = katex.renderToString(tex, { throwOnError: false, displayMode: false });
+        } catch (_) {
+          pMath.textContent = `θ = ${thD}°, φ = ${phiD}°, r = ${curR_cm} cm`;
         }
       }
 
       // Barra vertical B/B∞
-      const bw = 24, bh = 280; ctx.fillStyle = col('line'); ctx.fillRect(w - 38, 45, bw, bh); ctx.fillStyle = col('success'); const f = Math.max(0, ratio); ctx.fillRect(w - 38, 45 + bh * (1 - f), bw, bh * f);
-      text(ctx, 'B/B∞', w - 46, 34, col('muted'), "500 12px 'IBM Plex Mono', monospace");
+      const bw = 20, bh = 260; ctx.fillStyle = col('line'); ctx.fillRect(w - 32, 45, bw, bh); ctx.fillStyle = col('success'); const f = Math.max(0, ratio); ctx.fillRect(w - 32, 45 + bh * (1 - f), bw, bh * f);
+      text(ctx, 'B/B∞', w - 38, 34, col('muted'), "500 11px 'IBM Plex Mono', monospace");
     }
     const step = () => { draw(); };
     bind('hi-t1', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step); bind('hi-t2', (v) => (v < 0 ? '−' : '') + Math.abs(v) + '°', step);

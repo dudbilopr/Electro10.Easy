@@ -583,13 +583,15 @@ const scSegmento = {
     ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, py); ctx.stroke(); ctx.restore();
     
     if (Math.abs(G.P.x) > 1e-4) {
-      text(`Ref: θ = 0° (a = ${fp(Math.abs(G.P.x) * 100, 1)} cm)`, (px + ax) / 2, py - 8, '#64748b', 11, 'center', 600);
+      // Línea perpendicular (a) y referencia theta = 0
+      text(`θ = 0°`, ax + Math.sign(px - ax) * 22, py - 6, '#64748b', 11, 'center', 600);
+      text(`a = ${fp(Math.abs(G.P.x) * 100, 1)} cm`, (px + ax) / 2, py + 16, '#64748b', 11, 'center', 600);
       if (G.showAng) {
-        const side = -Math.sign(G.P.x), base = side > 0 ? 0 : Math.PI, r = 46;
+        const side = -Math.sign(G.P.x), base = side > 0 ? 0 : Math.PI, r = 40;
         [[g.s1, 'θ₁', COL.ok], [g.s2, 'θ₂', COL.danger]].forEach(([s, lab, col], i) => {
           const th = Math.asin(clamp(s, -1, 1)), a2 = side > 0 ? -th : Math.PI + th;
-          ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(px, py, r + i * 14, Math.min(base, a2), Math.max(base, a2)); ctx.stroke(); ctx.restore();
-          const am = (base + a2) / 2; text(`${lab} = ${fp(th * DEG, 1)}°`, px + Math.cos(am) * (r + 30 + i * 14), py + Math.sin(am) * (r + 30 + i * 14), col, 12, 'center', 600);
+          ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(px, py, r + i * 16, Math.min(base, a2), Math.max(base, a2)); ctx.stroke(); ctx.restore();
+          const am = (base + a2) / 2; text(`${lab} = ${fp(th * DEG, 0)}°`, px + Math.cos(am) * (r + 26 + i * 16), py + Math.sin(am) * (r + 26 + i * 16), col, 11, 'center', 600);
         });
       }
     }
@@ -599,24 +601,22 @@ const scSegmento = {
       const [e1x, e1y] = gS(0, y1);
       
       // Handle de arrastre
-      ctx.fillStyle = COL.danger; ctx.beginPath(); ctx.arc(e1x, e1y, 5, 0, 2 * Math.PI); ctx.fill();
-      ctx.strokeStyle = COL.danger; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e1x, e1y, 10, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = COL.danger; ctx.beginPath(); ctx.arc(e1x, e1y, 4, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = COL.danger; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e1x, e1y, 9, 0, 2 * Math.PI); ctx.stroke();
       
       // Vector del elemento I dℓ₁
-      arrow(e1x, e1y + G.dir * 14, e1x, e1y - G.dir * 14, COL.danger, 4, 8);
-      const th_cur = Math.atan2(y1 - G.P.y, Math.abs(G.P.x)) * DEG;
-      text(`I dℓ₁ (θ=${fp(th_cur, 0)}°)`, e1x - 38, e1y - 6, COL.danger, 11, 'right', 600);
+      arrow(e1x, e1y + G.dir * 14, e1x, e1y - G.dir * 14, COL.danger, 3.5, 8);
+      text('dℓ₁', e1x - 22, e1y - 2, COL.danger, 11, 'right', 600);
       
       // Línea punteada r₁ hacia P
-      ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+      ctx.save(); ctx.strokeStyle = COL.accent; ctx.lineWidth = 1.6; ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.moveTo(e1x, e1y); ctx.lineTo(px, py); ctx.stroke(); ctx.restore();
-      text('r₁', (e1x + px) / 2 - 8, (e1y + py) / 2 - 8, COL.accent, 12, 'center', 600);
       
       // Vector unitario r̂₁
       const d1x = px - e1x, d1y = py - e1y, L1 = Math.hypot(d1x, d1y);
       if (L1 > 5) {
-        arrow(e1x, e1y, e1x + (d1x / L1) * 36, e1y + (d1y / L1) * 36, COL.accent, 2.5, 8);
-        text('r̂₁', e1x + (d1x / L1) * 44, e1y + (d1y / L1) * 44, COL.accent, 11, 'center', 600);
+        arrow(e1x, e1y, e1x + (d1x / L1) * 32, e1y + (d1y / L1) * 32, COL.accent, 2.5, 7);
+        text('r̂₁', e1x + (d1x / L1) * 40, e1y + (d1y / L1) * 40, COL.accent, 11, 'center', 600);
       }
       
       // Elemento simétrico 2
@@ -624,20 +624,18 @@ const scSegmento = {
         const y2 = G.P.y - (y1 - G.P.y);
         const [e2x, e2y] = gS(0, y2);
         
-        ctx.fillStyle = COL.ok; ctx.beginPath(); ctx.arc(e2x, e2y, 5, 0, 2 * Math.PI); ctx.fill();
-        arrow(e2x, e2y + G.dir * 14, e2x, e2y - G.dir * 14, COL.ok, 4, 8);
-        text(`I dℓ₂ (−θ)`, e2x - 38, e2y + 8, COL.ok, 11, 'right', 600);
+        ctx.fillStyle = COL.ok; ctx.beginPath(); ctx.arc(e2x, e2y, 4, 0, 2 * Math.PI); ctx.fill();
+        arrow(e2x, e2y + G.dir * 14, e2x, e2y - G.dir * 14, COL.ok, 3.5, 8);
+        text('dℓ₂', e2x - 22, e2y + 6, COL.ok, 11, 'right', 600);
         
-        ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.8; ctx.setLineDash([4, 4]);
+        ctx.save(); ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.6; ctx.setLineDash([4, 4]);
         ctx.beginPath(); ctx.moveTo(e2x, e2y); ctx.lineTo(px, py); ctx.stroke(); ctx.restore();
-        text('r₂', (e2x + px) / 2 - 8, (e2y + py) / 2 + 16, COL.ok, 12, 'center', 600);
         
         const d2x = px - e2x, d2y = py - e2y, L2 = Math.hypot(d2x, d2y);
         if (L2 > 5) {
-          arrow(e2x, e2y, e2x + (d2x / L2) * 36, e2y + (d2y / L2) * 36, COL.ok, 2.5, 8);
-          text('r̂₂', e2x + (d2x / L2) * 44, e2y + (d2y / L2) * 44, COL.ok, 11, 'center', 600);
+          arrow(e2x, e2y, e2x + (d2x / L2) * 32, e2y + (d2y / L2) * 32, COL.ok, 2.5, 7);
+          text('r̂₂', e2x + (d2x / L2) * 40, e2y + (d2y / L2) * 40, COL.ok, 11, 'center', 600);
         }
-        text(`Simetría ±y: dℓ₁ y dℓ₂ aportan al campo en el mismo sentido (${segSign() > 0 ? 'sale ⊙' : 'entra ⊗'})`, 16, HU - 32, COL.primary, 12, 'left', 600);
       }
     }
     // P y su campo
