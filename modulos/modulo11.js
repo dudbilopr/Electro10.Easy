@@ -12,35 +12,41 @@ export const modulo11 = {
         "FEM de movimiento: análisis de barras conductoras deslizantes sobre rieles",
         "Inductancia mutua y coeficientes de acoplamiento magnético",
         "Autoinductancia L y energía magnética almacenada UB = ½ L I²",
-        "Transformadores ideales: relación de espiras y transmisión de potencia"
+        "Generador de corriente alterna: fem sinusoidal, valor máximo y eficaz",
+        "Campo eléctrico inducido no conservativo y corrientes parásitas",
+        "Inductancia mutua, base del transformador (se completa en el capítulo 13)"
     ],
     "lecciones": [
         {
             "id": "m11-l1",
             "tipo": "multivideo",
-            "recurso": "nZjNWgRmIdY|DfJCQZOyR4w|3XdeuEFV4QQ|zVzWm1f9JD4|BO8IdReQeDw|0xZv6_HwFVU|xBPwx9dBtl8|Clnp9-Wk9_Y|UcJPlOnrYnk|SwaEw6zjqJg",
-            "titulo": "1. Videos: Ley de Faraday, Inductancia y Circuitos RL",
-            "descripcion": "Colección de 10 clases universitarias verificadas: flujo magnético, fem inducida de Faraday-Lenz, autoinductancia, balance energético y análisis transitorio en circuitos RL.",
+            "recurso": "nZjNWgRmIdY|DfJCQZOyR4w|588bqqz2oq4|BO8IdReQeDw|AfeQP8mObI4|3XdeuEFV4QQ|zVzWm1f9JD4|2rwz9jZF6Vo|5e_5kEvnvWM|39bmxwgKCCo|21oFy9ALhP8|B1IO4xiUSTE|3Gcr7UcmFV4|Clnp9-Wk9_Y",
+            "titulo": "1. Videos: Ley de Faraday e inductancia",
+            "descripcion": "Catorce videos verificados: ley de Faraday y de Lenz, fem de movimiento, generador, inductancia mutua y autoinductancia.",
             "xp": 10,
             "titulosRecursos": [
                 {"titulo": "Inducción Electromagnética, Ley de Faraday y Ley de Lenz", "canal": "Es Ciencia"},
-                {"titulo": "Inducción electromagnética: Ley de Faraday - Lenz", "canal": "JUANMA FÍSICA"},
-                {"titulo": "Ley de Faraday-Lenz: Experiencia de Laboratorio", "canal": "Profesor Física y Química"},
-                {"titulo": "Inducción: FEM inducida, Espira y Flujo Magnético", "canal": "FísicaPRO"},
-                {"titulo": "Ley de Faraday y Ley de Lenz (Explicación Teórica)", "canal": "Les Ingenieurs"},
-                {"titulo": "Circuitos RL: Explicación y Deducción Analítica", "canal": "espiral ciencias"},
-                {"titulo": "Inducción: Circuito RL y Crecimiento de Corriente", "canal": "Aritz Leonardo - Física General"},
-                {"titulo": "El Inductor: Comportamiento Físico y Autoinductancia", "canal": "Les Ingenieurs"},
-                {"titulo": "Ecuación Diferencial Circuito RL: Análisis Transitorio", "canal": "EngiTube"},
-                {"titulo": "Respuesta Natural y Descarga del Circuito RL", "canal": "EngiTube"}
+                {"titulo": "5- Inducción electromagnética: Ley de Faraday - Lenz", "canal": "JUANMA FÍSICA"},
+                {"titulo": "Magnetismo: Ley de Faraday", "canal": "Ubermooc"},
+                {"titulo": "LEY de FARADAY y LEY de LENZ (Explicación TEORÍA)", "canal": "Les Ingenieurs"},
+                {"titulo": "30. Ley de Lenz. Qué significado tiene el signo Negativo? Ejercicios Resueltos - TinTutor.", "canal": "Tin Tutor (Martin)"},
+                {"titulo": "LEY DE FARADAY - LENZ. Experiencia de laboratorio EXPLICADA. Inducción electromagnética", "canal": "Profesor Física y Química"},
+                {"titulo": "INDUCCIÓN ELECTROMAGNÉTICA Resumen y Ejemplos: Ley de Faraday-Lenz, FEM en espira y Flujo Magnético", "canal": "FísicaPRO"},
+                {"titulo": "Clase 27-Ley de Faraday fem de movimiento-explicacion", "canal": "espiral ciencias"},
+                {"titulo": "FEM DE MOVIMIENTO EJ7", "canal": "GRANA2 Y SUS PROBLEMAS"},
+                {"titulo": "FEM EN UNA ESPIRA GIRANDO EN UN CAMPO MAGNÉTICO", "canal": "Ignacio González Prieto"},
+                {"titulo": "Generador de corriente alterna", "canal": "ceroentropia"},
+                {"titulo": "Inductancia mutua y autoinducción Introducción 1", "canal": "Hector Hugo Torres Ortega"},
+                {"titulo": "Inductancia e inductancia mutua. Ejemplo 1", "canal": "Profesor Juan Carlos Miranda"},
+                {"titulo": "El Inductor lo que debes saber!", "canal": "Les Ingenieurs"}
             ]
         },
         {
             "id": "m11-l2",
             "tipo": "presentacion",
             "recurso": "./player.html?clase=11",
-            "titulo": "2. Diapositivas de Apoyo Magistral",
-            "descripcion": "Visualización vectorial interactiva de espiras en rotación, barras conductoras y flujos variantes en el tiempo.",
+            "titulo": "2. Clase interactiva: Ley de Faraday",
+            "descripcion": "14 diapositivas con simulaciones, deducciones en siete pasos (fem de movimiento y autoinductancia), retos con valores nuevos, árbol de decisión, mapa de conceptos, glosario y PDF descargable.",
             "xp": 15
         },
         {
@@ -51,28 +57,67 @@ export const modulo11 = {
                 {
                     "id": "m11-s1",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M10_FlujoMagnetico.html",
-                    "titulo": "3.1 Analizador de Flujo Magnético y FEM",
-                    "descripcion": "Calcula y grafica en tiempo real la derivada temporal del flujo magnético.",
+                    "recurso": "simuladores/Faraday.html#flujo",
+                    "titulo": "3.1 FaradayLab · Flujo que cambia",
+                    "descripcion": "Cambia el campo, el área o la inclinación de la bobina; predice el sentido de la corriente y calcula la fem.",
                     "xp": 20
                 },
                 {
                     "id": "m11-s2",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M10_FEM_Movimiento.html",
-                    "titulo": "3.2 FEM de Movimiento en Rieles Conductores",
-                    "descripcion": "Estudio dinámico de fuerza magnética retardadora y disipación de energía por efecto Joule.",
+                    "recurso": "simuladores/Faraday.html#iman",
+                    "titulo": "3.2 FaradayLab · Imán y bobina",
+                    "descripcion": "Acerca o aleja un imán por el eje de una bobina: ley de Lenz y fem según la distancia.",
+                    "xp": 20
+                },
+                {
+                    "id": "m11-s3",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Faraday.html#barra",
+                    "titulo": "3.3 FaradayLab · Barra sobre rieles",
+                    "descripcion": "Fem de movimiento, fuerza de frenado y balance de energía; suelta la barra y mira cómo se frena.",
+                    "xp": 20
+                },
+                {
+                    "id": "m11-s4",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/Faraday.html#generador",
+                    "titulo": "3.4 FaradayLab · Generador",
+                    "descripcion": "Bobina que gira: flujo y fem en el tiempo, valor máximo y eficaz.",
                     "xp": 20
                 }
             ]
         },
         {
-            "id": "m11-l7",
-            "tipo": "ejercicio",
-            "recurso": "talleres/Taller_11_Ley_de_Faraday.html",
-            "titulo": "4. Taller Práctico No. 10 — Ley de Faraday",
-            "descripcion": "Problemas de inductancia mutua, barras deslizantes con fricción y circuitos con inductores acoplados.",
-            "xp": 30
+            "id": "m11-g2",
+            "tipo": "grupo",
+            "titulo": "4. Taller No. 11 — Ley de Faraday",
+            "sublecciones": [
+                {
+                    "id": "m11-l7",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M11_Faraday/recursos/Cap11_Taller_Faraday.pdf",
+                    "titulo": "4.1 Taller (PDF)",
+                    "descripcion": "7 ejercicios resueltos (dos por dos caminos), 14 retos por niveles, preguntas de teoría, dos programas de Python y códigos QR al simulador.",
+                    "xp": 30
+                },
+                {
+                    "id": "m11-l8",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M11_Faraday/recursos/Cap11_Guia_Faraday.pdf",
+                    "titulo": "4.2 Guía de estudio (PDF)",
+                    "descripcion": "Ideas clave, fórmulas, errores comunes, autoevaluación con respuestas, conectores, glosario y bibliografía.",
+                    "xp": 15
+                },
+                {
+                    "id": "m11-l9",
+                    "tipo": "ejercicio",
+                    "recurso": "talleres/Taller_11_Ley_de_Faraday.html",
+                    "titulo": "4.3 Taller de práctica (versión web)",
+                    "descripcion": "Problemas de inductancia mutua, barras deslizantes e inductores acoplados, con hoja de entrega.",
+                    "xp": 20
+                }
+            ]
         },
         {
             "id": "m11-desafio",

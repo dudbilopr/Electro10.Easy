@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clase 11 · Ley de Faraday, Inducción y Circuitos RL — Electro10.Easy</title>
+<title>Clase 11 · Ley de Faraday — Electro10.Easy</title>
 <link rel="stylesheet" href="../../css/tokens.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <style>
-/* Clase 11 · deck 16:9 de 10.Easy. Colores desde css/tokens.css. */
+/* Clase 11 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
 .viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
@@ -24,16 +24,16 @@ html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);fon
 .tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
 .tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
 h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
-h2{font-size:36px;line-height:1.12}
-.row{display:flex;gap:26px;flex:1;min-height:0}
+h2{font-size:38px;line-height:1.12}
+.row{display:flex;gap:28px;flex:1;min-height:0}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
 .soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
-.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.tipbox{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px;font-size:16px}
 .tipbox b{color:var(--e10-accent-strong)}
-.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px;font-size:16px}
 .warn b{color:var(--e10-warning)}
-.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.ok{background:var(--e10-success-soft);border-radius:12px;padding:12px 16px;font-size:16px}
 .ok b{color:var(--e10-success)}
 .foot{display:flex;justify-content:space-between;font-size:13px;color:var(--e10-muted)}
 .mono{font-family:var(--e10-font-mono)}
@@ -46,37 +46,52 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
 .btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
 .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
-.vote{display:flex;flex-direction:column;gap:9px}
-.vote .btn{text-align:left;font-weight:500;font-size:17px;min-height:48px;padding:0 16px}
+.vote{display:flex;flex-direction:column;gap:10px}
+.vote .btn{text-align:left;font-weight:500;font-size:18px;min-height:52px;padding:0 18px}
 .vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
 .vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
 .read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
 .read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
-.steps{display:flex;flex-direction:column;gap:10px;font-size:17px}
+.reto{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto .q{font-size:16px}
+.reto .ans{display:flex;gap:8px;align-items:center}
+.reto input{flex:1;min-height:40px;border-radius:10px;border:1px solid var(--e10-line);padding:0 10px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.reto .fb{font-size:15px;min-height:20px}
+.reto .sol{display:none;font-size:15px;background:var(--e10-bg);border-radius:10px;padding:8px 12px}
+.reto .sol.show{display:block}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:18px}
 .steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
 .steps>div{display:flex;align-items:baseline}
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.flip .f{background:var(--e10-warning-soft)}
+.flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.lab-frame{flex:1;border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);width:100%}
 .deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
 .deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
 .deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
 .progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
 .print-only{display:none}
-
-/* Árbol, Mapa, Timeline, Tarjetas */
+/* Árbol de decisión, mapa de conceptos, línea de tiempo y tarjetas (diapositivas 9, 11 y 12) */
 body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
 .tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
 .tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
 .tq-opts{display:flex;flex-direction:column;gap:7px}
-.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:42px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
 .opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
 .tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
 .leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
 .leaf-name{font:600 22px var(--e10-font-display)}
-.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:86px;overflow-x:auto}
-.leaf-eq .katex{font-size:1.45em}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:96px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.55em}#cm-eq .katex{font-size:1.15em}
 .cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
 .cmap svg{position:absolute;inset:0}
 .cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+/* Luz que viaja por cada conexión, del concepto de origen al de destino */
 .cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
 .cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
 @keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
@@ -93,6 +108,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 .chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
 .chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
 .chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.conn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.conn>span{font-size:13px;color:var(--e10-muted);width:70px}.conn .chip{font-size:13px;font-family:var(--e10-font-body)}
 .tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
 .tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
 .tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
@@ -103,9 +119,34 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 .fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
 .fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
 .fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
-#tq1{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:38px;padding:6px 12px;font-size:14px}#tq2{gap:6px}
+/* Clase 11: las dos preguntas del árbol en dos columnas para que quepan */
+#tq1,#tq2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:44px;padding:6px 12px;font-size:14px}
 @media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
-@media (prefers-reduced-motion:reduce){.slide,.btn{transition:none}}
+@media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+/* Deducción en pasos: un paso a la vez, en letra legible desde el fondo del aula */
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.stp-nav{display:flex;gap:5px;flex-wrap:wrap}
+.stp-nav button{font:500 12px/1 var(--e10-font-body);min-height:32px;padding:0 9px;border-radius:999px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.stp-nav button b{font:600 12px var(--e10-font-mono)}
+.stp-nav button.seen{border-color:var(--e10-primary);color:var(--e10-primary)}
+.stp-nav button.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.stp-nav button:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.stp-body{flex:1;min-height:0;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 22px;overflow:auto}
+.stp-p{display:none;flex-direction:column;gap:10px;font-size:18px;line-height:1.45}
+.stp-p.on{display:flex;animation:stpIn .25s ease}
+@keyframes stpIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stp-p h3{margin:0;font:600 21px/1.2 var(--e10-font-display);color:var(--e10-primary)}
+.stp-p p{margin:0}
+.stp-p .eq{text-align:center;padding:6px 14px;overflow-x:auto}
+.stp-p .eq .katex-display{margin:.35em 0}
+.stp-p .card.live{font-size:15px;border-left:3px solid var(--e10-primary)}
+.stp-p .card.live:empty{display:none}
+.stp-foot{display:flex;justify-content:space-between;align-items:center}
+.stp-count{font-size:13px;color:var(--e10-muted)}
+.seg2{display:flex;gap:6px}.seg2 .btn{flex:1;min-height:34px;font-size:13px;padding:0 8px}
+.ans-d summary{cursor:pointer;color:var(--e10-primary);font-weight:600}
+.ans-d[open] summary{margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){.stp-p.on{animation:none}}
 @page{size:1280px 720px;margin:0}
 @media print{
   html,body{overflow:visible;height:auto;background:#fff}
@@ -114,6 +155,8 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
   .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
   .deck-ui,.progress,.no-print{display:none!important}
   .print-only{display:block}
+  .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+  .stp-p{display:none!important}.stp-p[data-print]{display:flex!important;animation:none}
 }
 </style>
 </head>
@@ -122,969 +165,914 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 <div class="viewport"><div class="stage" id="stage">
 
 <!-- 1 · PORTADA -->
-<section class="slide on" data-n="1" style="flex-direction:row;padding:0;gap:0">
+<section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
   <div style="width:14px;background:var(--e10-primary)"></div>
   <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
-    <div style="display:flex;gap:12px;align-items:center">
-      <img src="../../img/logo_electro10.svg" alt="Electro10.Easy Emblem" style="height:42px;width:auto">
-      <b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b>
-      <span class="tag c">Capítulo 11</span>
-    </div>
+    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 11</span></div>
     <div style="display:flex;gap:40px;align-items:center">
       <div class="col" style="flex:1;gap:16px">
-        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">ELECTRODINÁMICA CLÁSICA · INDUCCIÓN</span>
-        <h1 style="font-size:66px;line-height:1.04">Ley de Faraday<br>& Circuitos RL</h1>
-        <p style="margin:0;font-size:23px;color:var(--e10-muted);max-width:560px">Generación de fuerza electromotriz mediante flujos variantes, ley de Lenz, inductancia y dinámica transitoria.</p>
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">INDUCCIÓN ELECTROMAGNÉTICA</span>
+        <h1 style="font-size:74px;line-height:1.02">Ley de<br>Faraday</h1>
+        <p style="margin:0;font-size:24px;color:var(--e10-muted);max-width:560px">Un flujo magnético que cambia produce una fem.</p>
         <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
-          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Flujo magnético y formulación rigurosa de Faraday-Lenz: \(\mathcal{E} = -d\Phi_B/dt\).</span>
-          <span><b style="color:var(--e10-primary)">2</b>&nbsp; FEM de movimiento, fuerza retardadora y balance de potencia mecánica vs Joule.</span>
-          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Autoinductancia \(L\) y resolución analítica de circuitos RL transitorios.</span>
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Calcular el flujo y la fem \(\varepsilon=-N\,d\Phi_B/dt\).</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Hallar el sentido de la corriente con la ley de Lenz.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Fem de movimiento, generadores, campos inducidos e inductancia.</span>
         </div>
       </div>
-      <canvas id="cv-cover-faraday" width="440" height="440" aria-label="Imán oscilando a través de una bobina e induciendo corriente"></canvas>
+      <canvas id="cv-cover" width="440" height="440" aria-label="Imán que oscila dentro de una bobina conectada a un galvanómetro"></canvas>
     </div>
-    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o la barra inferior</span></div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o los botones de abajo</span></div>
   </div>
 </section>
 
-<!-- 2 · EL DESCUBRIMIENTO DE LA INDUCCIÓN -->
+<!-- 2 · PREDICE -->
 <section class="slide" data-n="2">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Génesis Experimental</span></div>
-  <h2>El Descubrimiento de Michael Faraday (1831)</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag p">Predice</span></div>
+  <h2>Acercas el polo norte de un imán a una espira. ¿Qué hace la espira?</h2>
   <div class="row">
-    <div class="col" style="flex:1.1;gap:14px">
-      <p style="margin:0;font-size:18px;line-height:1.45">Tras el experimento de Ørsted en 1820 (la corriente crea magnetismo), Faraday se planteó la hipótesis inversa: <i>¿Puede el magnetismo producir electricidad?</i> Tras una década de ensayos, descubrió que solo un <b>campo magnético variable en el tiempo</b> genera corriente eléctrica.</p>
-      <div class="card" style="gap:10px">
-        <b style="color:var(--e10-primary);font-size:17px">Las Tres Experiencias Históricas:</b>
-        <div class="steps" style="font-size:16px">
-          <div><span class="n">1</span><span><b>Anillo de inducción:</b> Al cerrar o abrir el circuito primario de una bobina sobre un núcleo de hierro, el galvanómetro del secundario da un pulso momentáneo.</span></div>
-          <div><span class="n">2</span><span><b>Movimiento de imán:</b> Al acercar un imán a una espira, se induce corriente; al dejarlo inmóvil dentro de ella, la corriente cesa (\(I_{\text{ind}} = 0\)).</span></div>
-          <div><span class="n">3</span><span><b>Deformación de la espira:</b> Modificar el área o rotar la espira dentro de un campo magnético constante genera igualmente corriente inducida.</span></div>
-        </div>
-      </div>
-      <div class="tipbox">
-        <b>Conclusión de Faraday:</b> Lo que induce la fem no es la presencia del campo magnético \(\vec B\), sino la <b>rapidez con que cambia el flujo magnético</b> que atraviesa el circuito.
-      </div>
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-pre" width="540" height="380" aria-label="Imán que se acerca a una espira por su eje"></canvas>
+      <div class="no-print seg2"><button type="button" class="btn" id="pre-pole">Acercar el polo sur</button><button type="button" class="btn" id="pre-dir">Alejar el imán</button><button type="button" class="btn pri" id="pre-go">▶ Mover el imán</button></div>
     </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-faraday-exp" class="sim" width="460" height="340"></canvas>
-      <div class="ctrl card">
-        <span>Velocidad del Imán \(v\):</span>
-        <input type="range" id="rng-far-v" min="-5" max="5" step="0.5" value="2">
-        <output id="out-far-v">+2.0 cm/s</output>
+    <div class="col" style="flex:1">
+      <span style="color:var(--e10-muted)" id="pre-txt">Vota antes de mover el imán.</span>
+      <div class="vote" id="pre-vote">
+        <button type="button" class="btn" data-v="rep"><b style="color:var(--e10-primary)">A</b>&nbsp; Lo repele: se comporta como un polo norte.</button>
+        <button type="button" class="btn" data-v="atr"><b style="color:var(--e10-primary)">B</b>&nbsp; Lo atrae: se comporta como un polo sur.</button>
+        <button type="button" class="btn" data-v="nada"><b style="color:var(--e10-primary)">C</b>&nbsp; Nada: la espira no es un imán.</button>
       </div>
+      <div class="tipbox" id="pre-fb" style="visibility:hidden"><b>Lo repele.</b> Al acercarse el imán aumenta el flujo por la espira; la corriente inducida crea un campo que se opone a ese aumento: la espira presenta un norte al norte que llega. Es la <b>ley de Lenz</b>, consecuencia de la conservación de la energía. Prueba a alejar el imán.</div>
+      <div class="read"><div>Flujo por la espira<b id="pre-f">—</b></div><div>Corriente vista desde el imán<b id="pre-s" style="font-size:15px">—</b></div><div>La espira presenta<b id="pre-p" style="font-size:15px">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky Cap. 29.1</span><span class="mono">Diapositiva 2 / 16</span></div>
+  <div class="foot"><span>Michael Faraday y Joseph Henry descubrieron la inducción en la década de 1830 (Young y Freedman, 2009, sección 29.1).</span><span class="mono">2 / 14</span></div>
 </section>
 
 <!-- 3 · FLUJO MAGNÉTICO -->
 <section class="slide" data-n="3">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Definición Vectorial</span></div>
-  <h2>Flujo Magnético \(\Phi_B\)</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag c">Concepto</span></div>
+  <h2>El flujo cuenta cuánto campo atraviesa la espira</h2>
   <div class="row">
-    <div class="col" style="flex:1.1;gap:12px">
-      <p style="margin:0;font-size:18px">El flujo magnético mide el número neto de líneas de inducción magnética que atraviesan una superficie orientada \(S\):</p>
-      <div class="soft" style="text-align:center">
-        \[\Phi_B = \iint_S \vec B \cdot d\vec A = \iint_S B \cos\theta \, dA\]
+    <div class="col" style="flex:1.1">
+      <div class="soft" style="text-align:center;font-size:28px">\[ \Phi_B=\int\vec B\cdot d\vec A=BA\cos\phi\quad(\vec B\ \text{uniforme}) \]</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px">
+        <div class="card"><b style="color:var(--e10-primary)">\(\phi\)</b> es el ángulo entre \(\vec B\) y la <b>normal</b> de la espira, no el plano.</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">Unidad.</b> \(1\ \mathrm{Wb}=1\ \mathrm{T\cdot m^2}\).</div>
+        <div class="card"><b style="color:var(--e10-vec-field)">Tres formas de cambiarlo:</b> cambiar \(B\), cambiar \(A\) o girar la espira (cambiar \(\phi\)).</div>
+        <div class="card"><b>Con N vueltas</b> el flujo total es \(N\Phi_B\).</div>
       </div>
-      <div class="card" style="gap:8px">
-        <b style="color:var(--e10-primary)">Caso de Campo Uniforme y Superficie Plana:</b>
-        <div style="font-size:20px;text-align:center">\[\Phi_B = \vec B \cdot \vec A = B A \cos\theta\]</div>
-        <div style="font-size:15px;color:var(--e10-muted)">Donde \(\theta = \angle(\vec B, \hat n)\) es el ángulo formado entre el campo y el vector unitario normal a la superficie.</div>
-      </div>
-      <div class="read">
-        <div>Unidad SI<b>1 Weber (Wb)</b></div>
-        <div>Equivalencia<b>\(1\text{ Wb} = 1\text{ T}\cdot\text{m}^2\)</b></div>
-        <div>Flujo cerrado<b>\(\oint \vec B \cdot d\vec A \equiv 0\)</b></div>
-      </div>
-      <div class="warn">
-        <b>Ley de Gauss para el Magnetismo:</b> El flujo magnético sobre cualquier superficie <b>cerrada</b> es siempre nulo, pues no existen monopolos magnéticos aislados; las líneas de campo son siempre cerradas sobre sí mismas.
-      </div>
+      <div class="tipbox"><b>Ejemplo.</b> Espira cuadrada de 10 cm en 0,40 T con la normal a 60°: \(\Phi_B=(0{,}40)(0{,}010)\cos60^\circ=2{,}0\times10^{-3}\ \mathrm{Wb}\).</div>
     </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-flux" class="sim" width="460" height="340"></canvas>
-      <div class="ctrl card">
-        <span>Ángulo \(\theta\) (\(^\circ\)):</span>
-        <input type="range" id="rng-flux-ang" min="0" max="90" step="5" value="30">
-        <output id="out-flux-ang">30°</output>
-      </div>
+    <div class="col" style="width:470px;flex:none">
+      <canvas class="sim" id="cv-fl" width="470" height="350" aria-label="Espira vista de lado que se inclina dentro de un campo uniforme"></canvas>
+      <div class="ctrl no-print"><label for="fl-p">φ</label><input id="fl-p" type="range" min="0" max="90" step="5" value="60"><output id="fl-p-o">60°</output></div>
+      <div class="read"><div>cos φ<b id="fl-c">—</b></div><div>Φ (10 cm × 10 cm, 0,40 T)<b id="fl-f">—</b></div><div>Líneas que la cruzan<b id="fl-n">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 27.3 & 29.1</span><span class="mono">Diapositiva 3 / 16</span></div>
+  <div class="foot"><span>Vista de lado: la espira es la barra; su normal \(\hat n\) forma el ángulo φ con \(\vec B\).</span><span class="mono">3 / 14</span></div>
 </section>
 
-<!-- 4 · LEY DE FARADAY Y LEY DE LENZ -->
+<!-- 4 · LEY DE FARADAY Y LENZ -->
 <section class="slide" data-n="4">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Principio Fundamental</span></div>
-  <h2>Ley de Faraday y Significado de la Ley de Lenz</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag l">Simula</span></div>
+  <h2>La fem depende de lo rápido que cambia el flujo</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="soft">
-        <p style="margin:0 0 6px;font-size:14px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em">Formulación Universal de Faraday–Lenz</p>
-        <div style="font-size:26px;text-align:center">\[\mathcal{E} = -N \frac{d\Phi_B}{dt}\]</div>
-      </div>
-      <div class="card" style="gap:10px">
-        <b style="color:var(--e10-primary)">La Ley de Lenz (1834) y Conservación de Energía:</b>
-        <p style="margin:0;font-size:16px;line-height:1.45">El signo negativo no es un mero detalle algebraico; representa la <b>inercia electromagnética</b> de la naturaleza: <i>La corriente inducida fluye en un sentido tal que su propio campo magnético inducido \(\vec B_{\text{ind}}\) se OPONE a la variación del flujo magnético exterior \(\Delta\Phi_B\) que la engendra.</i></p>
-        <div class="steps" style="font-size:15px">
-          <div><span class="n">A</span><span><b>Si \(\Phi_B\) aumenta:</b> \(\vec B_{\text{ind}}\) apunta en sentido contrario a \(\vec B_{\text{ext}}\) para intentar contrarrestar el incremento.</span></div>
-          <div><span class="n">B</span><span><b>Si \(\Phi_B\) disminuye:</b> \(\vec B_{\text{ind}}\) apunta en el mismo sentido de \(\vec B_{\text{ext}}\) para reforzar el campo decreciente.</span></div>
-          <div><span class="n">C</span><span><b>Corriente inducida en espira de resistencia \(R\):</b> \(i_{\text{ind}} = \frac{\mathcal{E}}{R} = -\frac{1}{R} \frac{d\Phi_B}{dt}\).</span></div>
-        </div>
-      </div>
+    <div class="col" style="width:520px;flex:none">
+      <canvas class="sim" id="cv-fa" width="520" height="330" aria-label="Campo que crece y se mantiene; gráficas del flujo y la fem"></canvas>
+      <div class="ctrl no-print"><label for="fa-t">Δt</label><input id="fa-t" type="range" min="0.05" max="0.5" step="0.05" value="0.15"><output id="fa-t-o">0,15 s</output></div>
     </div>
-    <div class="col" style="flex:0.8">
-      <div class="card" style="flex:1;justify-content:center;gap:14px">
-        <b style="font-size:17px;color:var(--e10-ink)">Desafío Conceptual de Lenz:</b>
-        <p style="font-size:15px;color:var(--e10-muted);margin:0">El polo norte de un imán se aproxima desde arriba hacia una espira horizontal. ¿En qué sentido circula la corriente inducida vista desde arriba?</p>
-        <div class="vote" id="vote-lenz">
-          <button class="btn" data-r="c">A)&nbsp; Sentido antihorario (crea polo norte arriba)</button>
-          <button class="btn" data-r="w">B)&nbsp; Sentido horario (crea polo sur arriba)</button>
-          <button class="btn" data-r="w">C)&nbsp; Cero porque el campo es estático</button>
-        </div>
-        <div id="fb-lenz" class="ok" style="display:none;font-size:14px">
-          <b>¡Exacto!</b> Para oponerse al avance del polo norte, la espira debe generar un polo norte en su cara superior (campo saliente hacia arriba), lo que por regla de la mano derecha exige corriente antihoraria.
-        </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:24px">\[ \varepsilon=-N\,\frac{d\Phi_B}{dt} \]</div>
+      <div style="font-size:16px"><b style="color:var(--e10-primary)">El signo menos es la ley de Lenz:</b> la corriente inducida se opone al <i>cambio</i> del flujo. Bobina de 50 vueltas y 20 cm²; el campo sube de 0 a 0,60 T en \(\Delta t\): la misma variación de flujo, más rápido, da más fem.</div>
+      <div class="read"><div>fem<b id="fa-e">—</b></div><div>Corriente (R = 8,0 Ω)<b id="fa-i">—</b></div><div>Carga que circula<b id="fa-q">—</b></div></div>
+      <div class="reto" id="reto-fl">
+        <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
+        <span class="q" id="fl-q"></span>
+        <div class="ans"><input id="fl-in" inputmode="decimal" placeholder="fem en V" aria-label="Tu respuesta en voltios"><button type="button" class="btn pri" id="fl-ck">Comprobar</button><button type="button" class="btn" id="fl-new">Nuevo</button></div>
+        <span class="fb" id="fl-fb"></span>
+        <button type="button" class="btn" id="fl-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="fl-sol"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 29.2 · Griffiths 7.2</span><span class="mono">Diapositiva 4 / 16</span></div>
+  <div class="foot"><span>La carga total \(Q=N\,\Delta\Phi/R\) no depende de lo rápido que cambie el flujo.</span><span class="mono">4 / 14</span></div>
 </section>
 
-<!-- 5 · FEM DE MOVIMIENTO Y BALANCE ENERGÉTICO -->
+<!-- 5 · FEM DE MOVIMIENTO: PASOS -->
 <section class="slide" data-n="5">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Balance Mecánico-Eléctrico</span></div>
-  <h2>FEM de Movimiento en Barra Conductora Deslizante</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag c">Deducción</span></div>
+  <h2>Fem de movimiento: deducción en siete pasos</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:18px">Una barra conductora de longitud \(L\) se desliza con velocidad constante \(v\) sobre rieles paralelos conectados a un resistor \(R\) en presencia de un campo \(\vec B\) uniforme entrante.</p>
-      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <b style="color:var(--e10-primary)">Deducción Cinemática:</b>
-          <div style="font-size:14px;color:var(--e10-muted)">Flujo instantáneo \(A = L x\):</div>
-          <div style="font-size:15px">
-            \[\Phi_B = B L x\]
-            \[\mathcal{E} = -\frac{d\Phi_B}{dt} = -B L \frac{dx}{dt} = -B L v\]
-            \[I = \frac{|\mathcal{E}|}{R} = \frac{B L v}{R}\]
-          </div>
-        </div>
-        <div>
-          <b style="color:var(--e10-accent-strong)">Fuerza Retardadora Magnética:</b>
-          <div style="font-size:14px;color:var(--e10-muted)">Fuerza sobre la barra con corriente:</div>
-          <div style="font-size:15px">
-            \[\vec F_{\text{mag}} = I \vec L \times \vec B\]
-            \[F_{\text{mag}} = \left(\frac{B L v}{R}\right) L B = \frac{B^2 L^2 v}{R}\]
-            <div>Opuesta a la velocidad \(\vec v\).</div>
-          </div>
-        </div>
-      </div>
-      <div class="ok">
-        <b>Demostración Rigurosa del Teorema de Conservación:</b>
-        Para mantener la velocidad constante \(v\), un agente exterior debe ejercer una fuerza mecánica \(F_{\text{ext}} = F_{\text{mag}}\). La potencia mecánica suministrada es:
-        \[P_{\text{mec}} = F_{\text{ext}} v = \left(\frac{B^2 L^2 v}{R}\right) v = \frac{B^2 L^2 v^2}{R}\]
-        La potencia térmica disipada por efecto Joule en la resistencia del circuito es:
-        \[P_J = I^2 R = \left(\frac{B L v}{R}\right)^2 R = \frac{B^2 L^2 v^2}{R} \equiv P_{\text{mec}}\]
-        ¡El 100% del trabajo mecánico aportado se convierte exactamente en energía eléctrica disipada!
-      </div>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-ba" width="440" height="330" aria-label="Barra que se desliza sobre rieles dentro de un campo que entra en la página"></canvas>
+      <div class="ctrl no-print"><label for="ba-v">v</label><input id="ba-v" type="range" min="0" max="8" step="0.5" value="4"><output id="ba-v-o">4,0 m/s</output></div>
+      <div class="read"><div>ε = BLv<b id="ba-e">—</b></div><div>I (R = 2,0 Ω)<b id="ba-i">—</b></div><div>Fuerza de frenado<b id="ba-f">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.8">
-      <canvas id="cv-moti" class="sim" width="440" height="340"></canvas>
-      <div class="ctrl card">
-        <span>Velocidad \(v\):</span>
-        <input type="range" id="rng-moti-v" min="1" max="10" step="0.5" value="4">
-        <output id="out-moti-v">4.0 m/s</output>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Montaje">
+          <h3>1 · El montaje</h3>
+          <p>Una barra de largo \(L\) se desliza con rapidez \(v\) sobre dos rieles unidos por una resistencia \(R\). El campo \(\vec B\) es uniforme y entra en la página.</p>
+          <p>Ejemplo: \(L=0{,}50\) m, \(v=4{,}0\) m/s, \(B=0{,}80\) T, \(R=2{,}0\ \Omega\).</p>
+        </div>
+        <div class="stp-p" data-t="Lorentz">
+          <h3>2 · Fuerza sobre las cargas de la barra</h3>
+          <p>Las cargas de la barra se mueven con ella. Sobre cada una actúa la fuerza de Lorentz del capítulo 8:</p>
+          <div class="soft eq">\[ \vec F=q\,\vec v\times\vec B,\qquad F=qvB\ \text{a lo largo de la barra} \]</div>
+        </div>
+        <div class="stp-p" data-t="Trabajo">
+          <h3>3 · Trabajo por unidad de carga</h3>
+          <p>La fem es el trabajo que hace esa fuerza por unidad de carga al recorrer la barra:</p>
+          <div class="soft eq">\[ \varepsilon=\frac{W}{q}=\frac{(qvB)\,L}{q}=vBL \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>4 · Dos caminos para la misma fem</h3>
+          <div class="seg2 no-print" style="max-width:520px"><button type="button" class="btn on" data-path="ba:a">Camino A · Lorentz</button><button type="button" class="btn" data-path="ba:b">Camino B · Faraday</button></div>
+          <div data-pathbox="ba:a"><p>El de los pasos 2 y 3: la fuerza magnética sobre las cargas, por unidad de carga y a lo largo de \(L\):</p><div class="soft eq">\[ \varepsilon=vBL \]</div></div>
+          <div data-pathbox="ba:b" hidden><p>El circuito encierra un área \(A=Lx\) que crece a ritmo \(dx/dt=v\):</p><div class="soft eq">\[ |\varepsilon|=\frac{d\Phi_B}{dt}=\frac{d(BLx)}{dt}=BL\,\frac{dx}{dt}=BLv \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Sentido">
+          <h3>5 · Sentido de la corriente</h3>
+          <p>Hacia la derecha el área crece y el flujo que entra aumenta. Por Lenz, el campo inducido sale: la corriente va en <b>sentido antihorario</b>, hacia arriba por la barra.</p>
+          <p>Lo mismo dice Lorentz: \(q\vec v\times\vec B\) empuja las cargas positivas hacia arriba.</p>
+        </div>
+        <div class="stp-p" data-t="Energía" data-print>
+          <h3>6 · Corriente, frenado y energía</h3>
+          <div class="ok eq">\[ \varepsilon=BLv=1{,}6\ \text{V}\qquad I=\frac{\varepsilon}{R}=0{,}80\ \text{A}\qquad F=ILB=0{,}32\ \text{N} \]</div>
+          <p>La fuerza sobre la barra se opone al movimiento. Para mantener \(v\) hay que empujar: la potencia \(Fv=1{,}28\) W es igual a \(I^2R=1{,}28\) W, el calor en la resistencia.</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-ba">
+            <span class="q" id="ba-q"></span>
+            <div class="ans"><input id="ba-in" inputmode="decimal" placeholder="I en A" aria-label="Tu respuesta en amperios"><button type="button" class="btn pri" id="ba-ck">Comprobar</button><button type="button" class="btn" id="ba-new">Nuevo</button></div>
+            <span class="fb" id="ba-fb"></span>
+            <button type="button" class="btn" id="ba-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="ba-sol"></div>
+          </div>
+        </div>
       </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 29.3</span><span class="mono">Diapositiva 5 / 16</span></div>
+  <div class="foot"><span>B = 0,80 T entrando · L = 0,50 m · R = 2,0 Ω. La fem de movimiento es la fuerza de Lorentz del capítulo 8.</span><span class="mono">5 / 14</span></div>
 </section>
 
-<!-- 6 · CAMPO ELÉCTRICO INDUCIDO -->
+<!-- 6 · GENERADOR -->
 <section class="slide" data-n="6">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Campos No Conservativos</span></div>
-  <h2>Campos Eléctricos Inducidos No Conservativos</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag e">Ejemplo resuelto</span></div>
+  <h2>Una bobina que gira genera corriente alterna</h2>
   <div class="row">
-    <div class="col" style="flex:1.1;gap:12px">
-      <p style="margin:0;font-size:18px">Cuando el flujo magnético varía sin que haya conductores móviles, la fuerza que pone en movimiento a los electrones libres proviene de un <b>campo eléctrico inducido</b> \(\vec E_{\text{ind}}\).</p>
-      <div class="soft">
-        <p style="margin:0 0 6px;font-size:14px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em">Formulación Integral de Maxwell–Faraday</p>
-        <div style="font-size:24px;text-align:center">\[\oint \vec E \cdot d\vec\ell = -\frac{d\Phi_B}{dt} = -\iint_S \frac{\partial \vec B}{\partial t} \cdot d\vec A\]</div>
-      </div>
-      <div class="card" style="gap:10px">
-        <b style="color:var(--e10-primary)">Diferencias Esenciales con la Electrostática:</b>
-        <div class="steps" style="font-size:15px">
-          <div><span class="n">1</span><span><b>Electrostático:</b> Producido por cargas estacionarias. Circulación nula \(\oint \vec E_c \cdot d\vec\ell = 0\). Conservativo, deriva de potencial \(V\). Líneas de campo nacen en cargas \(+\) y mueren en \(-\).</span></div>
-          <div><span class="n">2</span><span><b>Inducido:</b> Producido por flujo magnético variable \(\partial \vec B/\partial t\). Circulación no nula \(\oint \vec E_{\text{ind}} \cdot d\vec\ell \ne 0\). <b>No conservativo</b>; sus líneas de campo forman curvas concéntricas cerradas.</span></div>
-        </div>
-      </div>
-      <div class="tipbox">
-        <b>Aplicación Tecnológica: El Betatrón:</b> Acelerador donde el campo eléctrico tangencial inducido por un campo magnético variable en el tiempo acelera electrones hasta energías relativistas.
-      </div>
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-ge" width="540" height="330" aria-label="Bobina que gira en un campo y gráficas del flujo y la fem"></canvas>
+      <div class="ctrl no-print"><label for="ge-f">f</label><input id="ge-f" type="range" min="10" max="120" step="5" value="60"><output id="ge-f-o">60 Hz</output></div>
     </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-eind" class="sim" width="460" height="340"></canvas>
-      <div class="card" style="font-size:14px;color:var(--e10-muted)">
-        Las líneas del campo eléctrico inducido \(\vec E_{\text{ind}}\) son circunferencias concéntricas tangentes a la dirección de aceleración de las cargas.
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:21px">\[ \Phi_B=NBA\cos\omega t\ \Rightarrow\ \varepsilon=NBA\omega\sin\omega t \]</div>
+      <div class="steps" style="font-size:16px;gap:8px">
+        <div><span class="n">1</span><span>100 vueltas de 10 × 20 cm en 0,30 T a 60 Hz: \(\omega=2\pi f=377\) rad/s.</span></div>
+        <div><span class="n">2</span><span>\(\varepsilon_{\max}=NBA\omega=226\) V; valor eficaz \(\varepsilon_{\max}/\sqrt2=160\) V.</span></div>
+        <div><span class="n">3</span><span>La fem es máxima cuando el flujo pasa por cero: plano de la bobina paralelo a \(\vec B\).</span></div>
+      </div>
+      <div class="reto" id="reto-ge">
+        <span class="q" id="ge-q"></span>
+        <div class="ans"><input id="ge-in" inputmode="decimal" placeholder="fem máxima en V" aria-label="Tu respuesta en voltios"><button type="button" class="btn pri" id="ge-ck">Comprobar</button><button type="button" class="btn" id="ge-new">Nuevo</button></div>
+        <span class="fb" id="ge-fb"></span>
+        <button type="button" class="btn" id="ge-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="ge-sol"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 29.4</span><span class="mono">Diapositiva 6 / 16</span></div>
+  <div class="foot"><span>Así funcionan los alternadores; la corriente alterna se estudia en el capítulo 13.</span><span class="mono">6 / 14</span></div>
 </section>
 
-<!-- 7 · CORRIENTES DE FOUCAULT -->
+<!-- 7 · CAMPOS ELÉCTRICOS INDUCIDOS -->
 <section class="slide" data-n="7">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Dinámica de Masas Metálicas</span></div>
-  <h2>Corrientes de Foucault (Eddy Currents)</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag c">Concepto</span></div>
+  <h2>Un campo magnético que cambia crea un campo eléctrico</h2>
   <div class="row">
-    <div class="col" style="flex:1.1;gap:12px">
-      <p style="margin:0;font-size:18px">Cuando una masa volumétrica de conductor (chapa o bloque sólido) se mueve a través de un campo magnético no homogéneo, o experimenta \(\partial B/\partial t\), se generan corrientes circulantes internas llamadas <b>corrientes parásitas o de Foucault</b>.</p>
-      <div class="card" style="gap:10px">
-        <b style="color:var(--e10-primary)">Efectos Físicos y Aplicaciones:</b>
-        <div class="steps" style="font-size:15px">
-          <div><span class="n">1</span><span><b>Frenado Magnético:</b> Por ley de Lenz, las corrientes inducidas experimentan una fuerza de Lorentz opuesta al movimiento de la pieza, frenándola suavemente sin desgaste mecánico (usado en trenes bala y montañas rusas).</span></div>
-          <div><span class="n">2</span><span><b>Calentamiento por Efecto Joule:</b> La circulación disipa gran potencia calorífica \(P = I^2 R\), base del funcionamiento de las <b>cocinas de inducción</b> y hornos metalúrgicos.</span></div>
-          <div><span class="n">3</span><span><b>Mitigación en Transformadores:</b> Los núcleos de hierro se construyen mediante <b>chapas laminadas y aisladas con barniz</b> para interrumpir los bucles de corriente y reducir pérdidas térmicas.</span></div>
-        </div>
-      </div>
+    <div class="col" style="width:520px;flex:none">
+      <canvas class="sim" id="cv-ei" width="520" height="350" aria-label="Corte de un solenoide con campo creciente y líneas circulares del campo eléctrico inducido, con la gráfica E(r)"></canvas>
+      <div class="ctrl no-print"><label for="ei-r">r</label><input id="ei-r" type="range" min="0" max="15" step="0.5" value="2"><output id="ei-r-o">2,0 cm</output></div>
     </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-foucault" class="sim" width="460" height="340"></canvas>
-      <div class="tipbox">
-        <b>Péndulo de Waltenhofen:</b> Una placa sólida oscilando entre los polos de un electroimán se frena casi instantáneamente al encender el campo magnético.
-      </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:22px">\[ \oint\vec E\cdot d\vec\ell=-\frac{d\Phi_B}{dt} \]</div>
+      <div style="font-size:16px">Las líneas de este \(\vec E\) se cierran sobre sí mismas: <b>no es conservativo</b> y no se puede describir con un potencial. Solenoide de radio 5,0 cm, \(n=1000\) vueltas/m y \(dI/dt=50\) A/s, así que \(dB/dt=\mu_0 n\,dI/dt=0{,}0628\) T/s:</div>
+      <div class="soft" style="font-size:17px;padding:8px 16px;text-align:center">\(r&lt;R:\ E=\dfrac{r}{2}\dfrac{dB}{dt}\qquad r&gt;R:\ E=\dfrac{R^2}{2r}\dfrac{dB}{dt}\)</div>
+      <div class="read"><div>E en r<b id="ei-e">—</b></div><div>Región<b id="ei-g" style="font-size:15px">—</b></div><div>dB/dt<b id="ei-d">—</b></div></div>
+      <div class="tipbox"><b>Corrientes parásitas.</b> En un bloque metálico este campo mueve cargas en remolinos que lo calientan y frenan su movimiento: frenos magnéticos, cocinas de inducción, núcleos laminados en los transformadores.</div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 29.6</span><span class="mono">Diapositiva 7 / 16</span></div>
+  <div class="foot"><span>Fuera del solenoide no hay campo magnético, pero sí campo eléctrico inducido.</span><span class="mono">7 / 14</span></div>
 </section>
 
-<!-- 8 · GENERADORES ELÉCTRICOS DE CA -->
+<!-- 8 · INDUCTANCIA: PASOS -->
 <section class="slide" data-n="8">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Conversión Electromecánica</span></div>
-  <h2>El Generador de Corriente Alterna</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag c">Deducción</span></div>
+  <h2>Autoinductancia del solenoide en siete pasos</h2>
   <div class="row">
-    <div class="col" style="flex:1.1;gap:12px">
-      <p style="margin:0;font-size:18px">Consiste en una bobina plana de \(N\) espiras y área \(A\) que gira con velocidad angular constante \(\omega\) dentro de un campo magnético uniforme \(\vec B\).</p>
-      <div class="card" style="gap:8px">
-        <b style="color:var(--e10-primary)">Deducción de la FEM Senoidal:</b>
-        <div style="font-size:15px">El ángulo instantáneo varía linealmente: \(\theta(t) = \omega t\). El flujo magnético concatenado es:</div>
-        \[\Phi_B(t) = B A \cos(\omega t)\]
-        Aplicando la ley de Faraday:
-        \[\mathcal{E}(t) = -N \frac{d\Phi_B}{dt} = -N B A \frac{d}{dt}\left[\cos(\omega t)\right]\]
-        \[\mathcal{E}(t) = \mathcal{E}_{\text{máx}} \sin(\omega t), \quad \text{donde } \mathcal{E}_{\text{máx}} = N B A \omega\]
-      </div>
-      <div class="read">
-        <div>Amplitud máxima<b>\(\mathcal{E}_{\text{máx}} = N B A \omega\)</b></div>
-        <div>Voltaje Eficaz RMS<b>\(\mathcal{E}_{\text{rms}} = \frac{\mathcal{E}_{\text{máx}}}{\sqrt{2}}\)</b></div>
-        <div>Frecuencia de red<b>\(f = \frac{\omega}{2\pi} = 60\text{ Hz}\)</b></div>
-      </div>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-in" width="440" height="330" aria-label="Solenoide con su corriente y la fem autoinducida que se opone al cambio"></canvas>
+      <div class="ctrl no-print"><label for="in-d">dI/dt</label><input id="in-d" type="range" min="-200" max="200" step="10" value="100"><output id="in-d-o">100 A/s</output></div>
+      <div class="read"><div>L<b id="in-l">—</b></div><div>fem autoinducida<b id="in-e">—</b></div><div>U con 2,0 A<b id="in-u">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-acgen" class="sim" width="460" height="340"></canvas>
-      <div class="tipbox">
-        <b>Principio de la Energía Eléctrica Moderna:</b> Más del 95% de la energía eléctrica consumida en el planeta se engendra mediante turbinas hidroeléctricas, térmicas o eólicas acopladas a generadores de Faraday.
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Idea">
+          <h3>1 · La bobina se induce a sí misma</h3>
+          <p>Si cambia la corriente de una bobina, cambia el flujo de su propio campo por sus propias vueltas: aparece una fem que se opone al cambio.</p>
+          <div class="soft eq">\[ \varepsilon=-L\,\frac{dI}{dt},\qquad L=\frac{N\Phi_B}{I} \]</div>
+        </div>
+        <div class="stp-p" data-t="Campo">
+          <h3>2 · El campo del solenoide</h3>
+          <p>Del capítulo 10, para un solenoide largo de \(N\) vueltas y largo \(\ell\):</p>
+          <div class="soft eq">\[ B=\mu_0\,n\,I=\frac{\mu_0 N I}{\ell} \]</div>
+        </div>
+        <div class="stp-p" data-t="Flujo">
+          <h3>3 · Flujo por cada vuelta</h3>
+          <div class="soft eq">\[ \Phi_B=BA=\frac{\mu_0 N I A}{\ell} \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>4 · Dos caminos para L</h3>
+          <div class="seg2 no-print" style="max-width:520px"><button type="button" class="btn on" data-path="in:a">Camino A · flujo</button><button type="button" class="btn" data-path="in:b">Camino B · energía</button></div>
+          <div data-pathbox="in:a"><p>Con la definición \(L=N\Phi_B/I\):</p><div class="soft eq">\[ L=\frac{N}{I}\cdot\frac{\mu_0 N I A}{\ell}=\frac{\mu_0 N^2 A}{\ell} \]</div></div>
+          <div data-pathbox="in:b" hidden><p>La energía del campo, con densidad \(B^2/2\mu_0\) en el volumen \(A\ell\), debe ser \(\tfrac12 LI^2\):</p><div class="soft eq">\[ \frac{B^2}{2\mu_0}\,A\ell=\frac{\mu_0 N^2 I^2 A}{2\ell}=\frac12 LI^2\ \Rightarrow\ L=\frac{\mu_0 N^2 A}{\ell} \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Valor">
+          <h3>5 · Un solenoide concreto</h3>
+          <p>500 vueltas, 25 cm de largo y 4,0 cm² de sección:</p>
+          <div class="soft eq">\[ L=\frac{(4\pi\times10^{-7})(500)^2(4{,}0\times10^{-4})}{0{,}25}=5{,}03\times10^{-4}\ \text{H}=0{,}503\ \text{mH} \]</div>
+        </div>
+        <div class="stp-p" data-t="Resultado" data-print>
+          <h3>6 · Fem, energía e inductancia mutua</h3>
+          <div class="ok eq">\[ |\varepsilon|=L\left|\frac{dI}{dt}\right|=50{,}3\ \text{mV}\ (100\ \text{A/s})\qquad U=\tfrac12 LI^2=1{,}01\ \text{mJ}\ (2{,}0\ \text{A}) \]</div>
+          <p>Con una segunda bobina de 100 vueltas enrollada encima: \(M=\mu_0 N_1N_2A/\ell=0{,}101\) mH. Un cambio de corriente en una induce fem en la otra: así funciona el transformador.</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-in">
+            <span class="q" id="in-q"></span>
+            <div class="ans"><input id="in-in" inputmode="decimal" placeholder="L en mH" aria-label="Tu respuesta en milihenrios"><button type="button" class="btn pri" id="in-ck">Comprobar</button><button type="button" class="btn" id="in-new">Nuevo</button></div>
+            <span class="fb" id="in-fb"></span>
+            <button type="button" class="btn" id="in-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="in-sol"></div>
+          </div>
+        </div>
       </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 29.5</span><span class="mono">Diapositiva 8 / 16</span></div>
+  <div class="foot"><span>La unidad de inductancia, el henry (H), honra a Joseph Henry. 1 H = 1 V·s/A.</span><span class="mono">8 / 14</span></div>
 </section>
 
-<!-- 9 · AUTOINDUCTANCIA -->
+<!-- 9 · ERRORES -->
 <section class="slide" data-n="9">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Parámetro Circuital</span></div>
-  <h2>Autoinductancia e Inductor (Bobina)</h2>
-  <div class="row">
-    <div class="col" style="flex:1.1;gap:12px">
-      <p style="margin:0;font-size:18px">Cuando una corriente variable \(i(t)\) fluye por un circuito, engendra un campo magnético propio cuyo flujo variable induce una fem en el propio circuito que <b>se opone al cambio de corriente</b>: fem autoinducida.</p>
-      <div class="soft" style="text-align:center">
-        \[L = \frac{N \Phi_B}{i} \implies \mathcal{E}_L = -L \frac{di}{dt}\]
-      </div>
-      <div class="card" style="gap:8px">
-        <b style="color:var(--e10-primary)">Deducción para un Solenoide Ideal de Longitud \(\ell\):</b>
-        <div class="steps" style="font-size:15px">
-          <div><span class="n">1</span><span>Campo magnético interior: \(B = \mu_0 n i = \mu_0 \left(\frac{N}{\ell}\right) i\).</span></div>
-          <div><span class="n">2</span><span>Flujo a través de cada espira: \(\Phi_B = B A = \mu_0 \frac{N A}{\ell} i\).</span></div>
-          <div><span class="n">3</span><span>Flujo total concatenado: \(N \Phi_B = \mu_0 \frac{N^2 A}{\ell} i\).</span></div>
-          <div><span class="n">4</span><span>Dividiendo por la corriente \(i\): \[L = \mu_0 \frac{N^2 A}{\ell} = \mu_0 n^2 A \ell = \mu_0 n^2 V\]</span></div>
-        </div>
-      </div>
-      <div class="tipbox">
-        <b>Unidad SI: El Henry (H):</b> \(1\text{ H} = 1\text{ Wb/A} = 1\text{ V}\cdot\text{s/A} = 1\ \Omega\cdot\text{s}\).
-      </div>
-    </div>
-    <div class="col" style="flex:0.9">
-      <canvas id="cv-inductor" class="sim" width="460" height="340"></canvas>
-      <div class="card" style="font-size:14px;color:var(--e10-muted)">
-        La autoinductancia \(L\) depende estrictamente de la geometría del devanado (\(N, A, \ell\)) y de la permeabilidad del núcleo magnético (\(\mu = \kappa_m \mu_0\)).
-      </div>
-    </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag p">Errores comunes</span></div>
+  <h2>Cuatro errores frecuentes (haz clic para voltear)</h2>
+  <div class="row" style="gap:16px">
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Un imán muy potente junto a la espira induce corriente.»</b><span>¿Y si está quieto?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Solo si el flujo cambia.</b><span>Un flujo grande pero constante no induce nada. La fem depende de \(d\Phi_B/dt\), no de \(\Phi_B\).</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«El campo inducido se opone al campo del imán.»</b><span>¿Siempre en contra?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Se opone al cambio.</b><span>Si el flujo disminuye, el campo inducido va a favor del campo externo, para mantenerlo.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«En el flujo uso el ángulo con el plano.»</b><span>¿Con qué se mide φ?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Con la normal.</b><span>\(\Phi=BA\cos\phi\), con \(\phi\) entre \(\vec B\) y la normal. Con el plano paralelo a \(\vec B\), el flujo es cero.</span></div>
+    </div></div>
+    <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 4"><div class="in">
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«La fem del generador es máxima con el flujo máximo.»</b><span>¿Cuándo cambia más rápido?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Es máxima con flujo cero.</b><span>\(\varepsilon\propto\sin\omega t\) y \(\Phi\propto\cos\omega t\): cuando el flujo es máximo, no cambia y la fem es cero.</span></div>
+    </div></div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 30.2</span><span class="mono">Diapositiva 9 / 16</span></div>
+  <div class="foot"><span>Pregunta clave: ¿qué cambia, \(B\), el área o el ángulo? Si nada cambia, no hay fem.</span><span class="mono">9 / 14</span></div>
 </section>
 
-<!-- 10 · CIRCUITOS RL: CRECIMIENTO DE CORRIENTE -->
+<!-- 10 · ÁRBOL DE DECISIÓN -->
 <section class="slide" data-n="10">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Dinámica Transitoria</span></div>
-  <h2>Circuitos RL: Conexión y Crecimiento</h2>
-  <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:18px">Al cerrar el interruptor de un circuito formado por una fuente de voltaje \(\mathcal{E}_0\), una resistencia \(R\) y un inductor \(L\), la corriente no salta instantáneamente a \(\mathcal{E}_0/R\) debido a la oposición inductiva \(\mathcal{E}_L = -L \frac{di}{dt}\).</p>
-      <div class="card" style="gap:8px">
-        <b style="color:var(--e10-primary)">Resolución Analítica Paso a Paso:</b>
-        <div style="font-size:15px">Aplicando la ley de voltajes de Kirchhoff en la malla:</div>
-        \[\mathcal{E}_0 - i R - L \frac{di}{dt} = 0 \implies \frac{di}{\frac{\mathcal{E}_0}{R} - i} = \frac{R}{L} dt\]
-        Integrando desde \(t=0\) (\(i=0\)) hasta un tiempo arbitrario \(t\):
-        \[\int_0^i \frac{di'}{\frac{\mathcal{E}_0}{R} - i'} = \frac{R}{L} \int_0^t dt' \implies -\ln\left(\frac{\frac{\mathcal{E}_0}{R} - i}{\frac{\mathcal{E}_0}{R}}\right) = \frac{R}{L} t\]
-        \[1 - \frac{i}{\frac{\mathcal{E}_0}{R}} = e^{-t/\tau_L} \implies i(t) = \frac{\mathcal{E}_0}{R}\left(1 - e^{-t/\tau_L}\right)\]
-      </div>
-      <div class="read">
-        <div>Constante de tiempo<b>\(\tau_L = \frac{L}{R}\)</b></div>
-        <div>En \(t = \tau_L\)<b>\(i(\tau_L) = 0.632 \frac{\mathcal{E}_0}{R}\)</b></div>
-        <div>Régimen estacionario<b>\(I_{\text{máx}} = \frac{\mathcal{E}_0}{R}\)</b></div>
-      </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag p">Árbol de decisión</span></div>
+  <h2>¿Qué cambia? Responde y el árbol te da la fórmula</h2>
+  <div class="row" style="gap:18px">
+    <div class="col" style="width:430px;flex:none;gap:6px">
+      <div class="tq"><div class="tqh"><span class="mono">1</span><b>¿Qué hace cambiar el flujo?</b></div><div class="tq-opts" id="tq1"></div></div>
+      <span class="tq-down" aria-hidden="true">↓</span>
+      <div class="tq"><div class="tqh"><span class="mono">2</span><b>¿Qué buscas?</b></div><div class="tq-opts" id="tq2"></div></div>
     </div>
-    <div class="col" style="flex:0.8">
-      <canvas id="cv-rl-rise" class="sim" width="440" height="340"></canvas>
-      <div class="ctrl card">
-        <span>Inductancia \(L\) (\(\text{H}\)):</span>
-        <input type="range" id="rng-rl-l" min="0.5" max="5.0" step="0.5" value="2.0">
-        <output id="out-rl-l">2.0 H</output>
+    <div class="leaf col">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b class="leaf-name" id="leaf-name"></b><span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">USA ESTA FÓRMULA</span></div>
+      <div class="leaf-eq" id="leaf-eq"></div>
+      <div style="font-size:15px"><b>Cuándo vale.</b> <span id="leaf-when"></span></div>
+      <div style="font-size:15px"><b>Sentido.</b> <span id="leaf-dir"></span></div>
+      <div class="reto" style="margin-top:auto">
+        <div class="q"><b style="color:var(--e10-primary)">Reto rápido.</b> <span id="leaf-reto"></span></div>
+        <div class="ans no-print"><input id="leaf-in" type="text" inputmode="decimal" aria-label="Tu respuesta en unidades del SI" placeholder="en unidades SI, p. ej. 0,40"><button type="button" class="btn pri" id="leaf-check">Comprobar</button><a class="btn" id="leaf-lab" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Abrir en FaradayLab</a></div>
+        <div class="fb" id="leaf-fb"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 30.4</span><span class="mono">Diapositiva 10 / 16</span></div>
+  <div class="foot"><span>Elige una respuesta en cada pregunta; el camino elegido queda resaltado</span><span class="mono">10 / 14</span></div>
 </section>
 
-<!-- 11 · CIRCUITOS RL: DESCARGA Y ENERGÍA MAGNÉTICA -->
+<!-- 11 · LABORATORIO -->
 <section class="slide" data-n="11">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Almacenamiento de Energía</span></div>
-  <h2>Circuitos RL: Descarga y Energía Magnética</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag l">Laboratorio</span></div>
+  <h2>Comprueba en FaradayLab lo que acabas de deducir</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:18px">Al retirar la fuente desconectando la batería, el inductor mantiene temporalmente la corriente mediante la fem autoinducida, disipando su energía almacenada en la resistencia:</p>
-      <div class="card" style="gap:8px">
-        <b style="color:var(--e10-primary)">Ecuación Diferencial de Descarga:</b>
-        \[-i R - L \frac{di}{dt} = 0 \implies i(t) = I_0 \, e^{-t/\tau_L}\]
-        <div style="font-size:15px;color:var(--e10-muted)">En cada intervalo \(\tau_L = L/R\), la corriente disminuye al \(36.8\%\) de su valor anterior.</div>
-      </div>
-      <div class="soft" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <b>Energía en el Inductor:</b>
-          \[U_B = \int_0^I L i \, di = \frac{1}{2} L I^2 \quad [\text{Joule}]\]
-        </div>
-        <div>
-          <b>Densidad Volumétrica de Energía:</b>
-          \[u_B = \frac{U_B}{A \ell} = \frac{B^2}{2 \mu_0} \quad [\text{J/m}^3]\]
-        </div>
-      </div>
-      <div class="warn">
-        <b>Sobrevoltaje Inductivo y Diodo Flyback:</b> Al abrir bruscamente un circuito inductivo (\(dt \to 0\)), la derivada \(di/dt\) es colosalmente negativa, generando una fem inducida de cientos o miles de voltios que crea chispas destructivas en los interruptores. Se neutraliza colocando un <b>diodo de libre circulación (flyback)</b> en antiparalelo.
-      </div>
+    <div class="col" style="flex:1.4">
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn on" data-lab="../../simuladores/Faraday.html?embed#flujo">Flujo</button><button type="button" class="btn" data-lab="../../simuladores/Faraday.html?embed#iman">Imán</button><button type="button" class="btn" data-lab="../../simuladores/Faraday.html?embed#barra">Barra</button><button type="button" class="btn" data-lab="../../simuladores/Faraday.html?embed#generador">Generador</button></div>
+      <iframe class="lab-frame no-print" id="lab-frame" title="Simulador del laboratorio" loading="lazy"></iframe>
+      <div class="print-only card">Abre FaradayLab en la plataforma Electro10.Easy: escenas Flujo, Imán y bobina, Barra sobre rieles y Generador.</div>
     </div>
-    <div class="col" style="flex:0.8">
-      <canvas id="cv-rl-decay" class="sim" width="440" height="340"></canvas>
-      <div class="card" style="font-size:14px;color:var(--e10-muted)">
-        Analogía mecánica: La inductancia \(L\) equivale a la <b>inercia de masa</b> \(m\) de la mecánica clásica; el inductor resiste cambios en el flujo de corriente igual que la masa resiste cambios en la velocidad.
-      </div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 1 · Flujo.</b> Pon \(B_1=B_2\). ¿Hay fem aunque el campo sea de 1 T? Luego inclina la bobina 60°: ¿qué le pasa a la fem?</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 2 · Imán.</b> Arrastra el imán por el eje. ¿Dónde es máxima la fem? ¿Y justo en el centro de la bobina?</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 3 · Barra.</b> Suelta la barra. Duplica \(B\): ¿cuánto cambia la constante de tiempo?</div>
+      <div class="tipbox"><b>Consejo.</b> Antes de comprobar, di qué cambia: el campo, el área o el ángulo.</div>
     </div>
   </div>
-  <div class="foot"><span>Sears–Zemansky 30.3 & 30.4</span><span class="mono">Diapositiva 11 / 16</span></div>
+  <div class="foot"><span></span><span class="mono">11 / 14</span></div>
 </section>
 
-<!-- 12 · ÁRBOL DE DECISIÓN -->
+<!-- 12 · MAPA DE CONCEPTOS -->
 <section class="slide" data-n="12">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Metodología Didáctica</span></div>
-  <h2>Árbol de Decisión: ¿Qué Fenómeno Inductivo Analizar?</h2>
-  <div class="row">
-    <div class="col" style="width:380px;gap:10px">
-      <div class="tq">
-        <div class="tqh"><span>Paso 1 · ¿Cuál es la causa del cambio?</span></div>
-        <div class="tq-opts" id="tq1">
-          <button class="opt on" data-q="b">Campo magnético B variable</button>
-          <button class="opt" data-q="a">Área variable por movimiento</button>
-          <button class="opt" data-q="r">Espira en rotación continua</button>
-          <button class="opt" data-q="l">Transitorio en circuito RL</button>
-        </div>
-      </div>
-      <span class="tq-down">↓</span>
-      <div class="tq">
-        <div class="tqh"><span>Paso 2 · ¿Qué variable se busca determinar?</span></div>
-        <div class="tq-opts" id="tq2">
-          <button class="opt on" data-a="e">Fuerza electromotriz \(\mathcal{E}\)</button>
-          <button class="opt" data-a="i">Corriente inducida instantánea</button>
-          <button class="opt" data-a="p">Potencia o energía disipada</button>
-        </div>
-      </div>
-    </div>
-    <div class="col leaf">
-      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em">Fórmula seleccionada y procedimiento</div>
-      <div class="leaf-name" id="leaf-title">Ley de Faraday–Lenz con Campo Variable</div>
-      <div class="leaf-eq" id="leaf-formula">\[\mathcal{E} = -N A \cos\theta \frac{dB}{dt}\]</div>
-      <div class="col" style="gap:6px;font-size:16px">
-        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
-        <span id="leaf-p1">1. Calcula la derivada temporal del campo magnético \(\frac{dB}{dt}\).</span>
-        <span id="leaf-p2">2. Evalúa el área estática \(A\) y el ángulo normal \(\theta\).</span>
-        <span id="leaf-p3">3. Aplica la regla de Lenz para fijar el sentido de circulación de la corriente.</span>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>Algoritmo de decisión para talleres y exámenes</span><span class="mono">Diapositiva 12 / 16</span></div>
-</section>
-
-<!-- 13 · SIMULADOR FARADAYLAB INCRUSTADO -->
-<section class="slide" data-n="13">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Laboratorio Virtual</span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>FaradayLab · Exploración Interactiva</h2>
-    <div style="display:flex;gap:8px" id="lab-scenes">
-      <button class="btn on" data-lab="../../simuladores/Sim_M10_FlujoMagnetico.html">Flujo Magnético y FEM</button>
-      <button class="btn" data-lab="../../simuladores/Sim_M10_FEM_Movimiento.html">FEM de Movimiento</button>
-    </div>
-  </div>
-  <div class="row" style="margin-top:4px">
-    <iframe id="lab-frame" class="lab-frame" src="../../simuladores/Sim_M10_FlujoMagnetico.html" title="Simulador FaradayLab"></iframe>
-  </div>
-  <div class="foot"><span>Simulador interactivo con telemetría en tiempo real</span><span class="mono">Diapositiva 13 / 16</span></div>
-</section>
-
-<!-- 14 · MAPA CONCEPTUAL -->
-<section class="slide" data-n="14">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Red de Conocimiento</span></div>
-  <h2>Mapa Conceptual: Inducción Electromagnética</h2>
-  <div class="row">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag l">Mapa de conceptos</span></div>
+  <h2>De dónde viene y a dónde lleva este capítulo</h2>
+  <div class="row" style="gap:24px">
     <div class="cmap" id="cmap">
-      <svg id="cmap-svg" width="780" height="520"></svg>
-      <div class="cmap-legend">
-        <span class="chip past">Magnetostática</span>
-        <span class="chip this">Capítulo 11 (Inducción)</span>
-        <span class="chip fut">Ecuaciones de Maxwell</span>
-      </div>
+      <svg width="780" height="520" viewBox="0 0 780 520" aria-hidden="true" id="cmap-svg"></svg>
+      <div class="cmap-legend"><span class="chip past">viene de</span><span class="chip this">este capítulo</span><span class="chip fut">lleva a</span></div>
     </div>
-    <div class="col card" style="flex:1;gap:10px">
-      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
-      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Ley de Faraday</b>
-      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[\mathcal{E} = -\frac{d\Phi_B}{dt}\]</div>
-      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Principio que gobierna la generación de fem mediante la variación temporal del flujo magnético en un circuito cerrado.</p>
-      <div class="tipbox" id="cm-where">Pilar fundamental para los generadores eléctricos, transformadores y circuitos inductivos RL.</div>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="card col" style="gap:10px">
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)" id="cm-kind"></span>
+        <b style="font:600 22px var(--e10-font-display)" id="cm-label"></b>
+        <p style="margin:0;font-size:16px" id="cm-def"></p>
+        <div class="leaf-eq" id="cm-eq" style="min-height:70px"></div>
+        <div style="font-size:14px;color:var(--e10-muted)" id="cm-where"></div>
+        <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap" id="cm-actions"></div>
+      </div>
+      <div class="tipbox"><b>Analogía.</b> En un circuito, la inductancia se opone a los cambios de corriente como la masa se opone a los cambios de velocidad; \(\tfrac12LI^2\) se parece a \(\tfrac12mv^2\).</div>
     </div>
   </div>
-  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 14 / 16</span></div>
+  <div class="foot"><span>Toca un concepto para ver su definición, su fórmula y dónde se estudia</span><span class="mono">12 / 14</span></div>
 </section>
 
-<!-- 15 · LÍNEA DE TIEMPO Y GLOSARIO -->
-<section class="slide" data-n="15">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Historia y Terminología</span></div>
-  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
-  <div class="row" style="flex-direction:column;gap:16px">
-    <div class="tline" id="tline">
-      <div class="tline-axis"></div>
-      <div class="tline-note" id="tl-text"><b style="color:var(--e10-primary)">Faraday, 1831.</b> Descubre la inducción electromagnética tras una década de experimentación.</div>
+<!-- 13 · HISTORIA, GLOSARIO Y BIBLIOGRAFÍA -->
+<section class="slide" data-n="13">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag e">Repaso</span></div>
+  <h2>Historia, palabras clave y para leer más</h2>
+  <div class="tline" id="tline"><div class="tline-axis"></div><span class="tline-note">escala no proporcional</span></div>
+  <div class="soft" style="font-size:16px;padding:10px 16px" id="tl-text"></div>
+  <div class="row" style="gap:20px">
+    <div class="col" style="width:560px;flex:none;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font:600 18px var(--e10-font-display)">Glosario en tarjetas</b><span class="mono" style="font-size:12px;color:var(--e10-muted)" id="fc-count"></span></div>
+      <button type="button" class="fcard" id="fc-card" aria-live="polite"><span class="mono" id="fc-side"></span><span id="fc-text"></span></button>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fc-flip">Girar</button><button type="button" class="btn" id="fc-again">Repasar pronto</button><button type="button" class="btn pri" id="fc-ok">Ya la sé</button><button type="button" class="btn" id="fc-reset" style="margin-left:auto">Empezar de nuevo</button></div>
     </div>
-    <div class="row" style="gap:20px;flex:1">
-      <button type="button" class="fcard" id="fc-card">
-        <span class="mono" id="fc-side">TÉRMINO</span>
-        <span id="fc-text">Ley de Faraday</span>
-      </button>
-      <div class="col" style="width:260px;justify-content:center;gap:10px">
-        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
-        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
-        <button class="btn" id="fc-next">Siguiente término</button>
+    <div class="col" style="flex:1;min-width:0;gap:10px">
+      <div class="card col" style="gap:8px">
+        <b style="font:600 16px var(--e10-font-display)">Conectores</b>
+        <div class="conn"><span>Viene de</span><a class="chip past" href="../../player.html?clase=8" target="_top">cap. 8 · Lorentz</a><a class="chip past" href="../../player.html?clase=10" target="_top">cap. 10 · Ampère</a></div>
+        <div class="conn"><span>Lleva a</span><a class="chip fut" href="../../player.html?clase=12" target="_top">cap. 12 · Maxwell</a><a class="chip fut" href="../../player.html?clase=13" target="_top">cap. 13 · CA</a></div>
+      </div>
+      <div class="card col" style="gap:6px;font-size:13px;line-height:1.45">
+        <b style="font:600 16px var(--e10-font-display)">Bibliografía</b>
+        <span>Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson. Cap. 29 «Inducción electromagnética», secciones 29.1–29.7, pp. 993–1018; cap. 30 «Inductancia», secciones 30.1–30.3, pp. 1030–1040.</span>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 15 / 16</span></div>
+  <div class="foot"><span>Toca un hito de la línea de tiempo o gira la tarjeta; tu avance en el glosario se guarda en este navegador</span><span class="mono">13 / 14</span></div>
 </section>
 
-<!-- 16 · RESUMEN Y EXPORTACIÓN -->
-<section class="slide" data-n="16">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 11</b><span class="tag c">Cierre y Evaluación</span></div>
-  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
+<!-- 14 · CIERRE -->
+<section class="slide" data-n="14">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 11 · Faraday</span><span class="tag e">Resumen</span></div>
+  <h2>Lo que debes llevarte</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="soft">
-          <b>Inducción Fundamental:</b>
-          \[\mathcal{E} = -N \frac{d\Phi_B}{dt}\]
-          \[\Phi_B = B A \cos\theta\]
-        </div>
-        <div class="soft">
-          <b>Barra Deslizante:</b>
-          \[\mathcal{E} = B L v\]
-          \[F_{\text{mag}} = \frac{B^2 L^2 v}{R}, \quad P_{\text{mec}} \equiv P_J\]
-        </div>
-        <div class="soft">
-          <b>Autoinductancia \(L\):</b>
-          \[L = \frac{N\Phi_B}{i} = \mu_0 n^2 A \ell\]
-          \[\mathcal{E}_L = -L \frac{di}{dt}\]
-        </div>
-        <div class="soft">
-          <b>Circuito RL y Energía:</b>
-          \[i(t) = \frac{\mathcal{E}_0}{R}(1 - e^{-t/\tau_L})\]
-          \[U_B = \frac{1}{2} L I^2, \quad \tau_L = \frac{L}{R}\]
-        </div>
-      </div>
-      <div class="ok">
-        <b>Regla de Oro:</b> El inductor es la masa inercial de los circuitos: resiste cualquier cambio brusco de corriente y sostiene el balance energético del sistema.
+    <div class="col" style="flex:1.3">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:17px">
+        <div class="card">Ley de Faraday<br>\(\varepsilon=-N\dfrac{d\Phi_B}{dt},\ \ \Phi_B=BA\cos\phi\)</div>
+        <div class="card">Fem de movimiento<br>\(\varepsilon=vBL\)</div>
+        <div class="card">Generador<br>\(\varepsilon=NBA\omega\sin\omega t\)</div>
+        <div class="card">Campo inducido<br>\(\oint\vec E\cdot d\vec\ell=-\dfrac{d\Phi_B}{dt}\)</div>
+        <div class="card">Inductancia<br>\(\varepsilon=-L\dfrac{dI}{dt},\ \ L=\dfrac{\mu_0N^2A}{\ell}\)</div>
+        <div class="card">Energía en un inductor<br>\(U=\tfrac12LI^2\)</div>
       </div>
     </div>
-    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
-      <div class="card" style="text-align:center;padding:24px;gap:14px">
-        <b style="font-size:20px;color:var(--e10-ink)">¿Listo para imprimir o estudiar sin conexión?</b>
-        <p style="font-size:15px;color:var(--e10-muted);margin:0">Exporta este deck completo de 16 diapositivas en alta resolución en formato PDF 16:9.</p>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap11_Taller_Faraday.pdf" download>Taller (PDF)</a>
-          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap11_Guia_Faraday.pdf" download>Guía de estudio (PDF)</a>
-        </div>
-        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
-        <a href="../../talleres/Taller_11_Ley_de_Faraday.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 11</a>
+    <div class="col" style="flex:1">
+      <div class="soft col" style="gap:10px">
+        <b style="font:600 18px var(--e10-font-display)">Para practicar</b>
+        <a class="btn pri" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap11_Taller_Faraday.pdf" download>Taller (PDF)</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap11_Guia_Faraday.pdf" download>Guía de estudio (PDF)</a>
+        <button type="button" class="btn no-print" id="btn-print2">Esta clase en PDF</button>
       </div>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../simuladores/Faraday.html" target="_blank" rel="noopener">Abrir FaradayLab</a>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=12" target="_top">Siguiente capítulo: Maxwell →</a>
     </div>
   </div>
-  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 16 / 16</span></div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">14 / 14</span></div>
 </section>
 
 </div></div>
 
-<!-- Barra inferior de navegación del deck -->
-<nav class="deck-ui" aria-label="Navegación del deck">
-  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
-  <span class="count" id="nav-count">1 / 16</span>
-  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
-  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
-  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+<nav class="deck-ui" aria-label="Navegación de la clase">
+  <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
+  <span class="count" id="nav-count">1 / 14</span>
+  <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
+  <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
+  <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
 </nav>
-
 <script>
 (() => {
+  'use strict';
+  // Constantes de la tabla de constantes fundamentales de Young y Freedman (2009), a 4 cifras.
+  const QE = 1.602e-19, MP = 1.673e-27, ME = 9.109e-31, UMA = 1.661e-27, NCU = 8.5e28;
   const $ = (id) => document.getElementById(id);
-  const renderMath = (el) => {
-    if (window.renderMathInElement) {
-      renderMathInElement(el, {
-        delimiters: [
-          { left: '\\[', right: '\\]', display: true },
-          { left: '\\(', right: '\\)', display: false },
-        ],
-        throwOnError: false,
-      });
-    }
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  // Notación científica con coma decimal: 1,26×10⁻⁵
+  const sci = (x, d = 2) => {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(x))); let m = x / 10 ** e;
+    if (Math.abs(+m.toFixed(d)) >= 10) { e += 1; m = x / 10 ** e; }
+    const ms = m.toFixed(d).replace('.', ',');
+    return e === 0 ? ms : ms + '×10' + String(e).split('').map((c) => SUP[c]).join('');
   };
+  const dec = (x, d = 1) => x.toFixed(d).replace('.', ',');
+  const tdec = (x, d = 1) => dec(x, d).replace(',', '{,}');
+  const texSci = (x, d = 2) => { if (x === 0) return '0'; let e = Math.floor(Math.log10(Math.abs(x))); if (Math.abs(+(x / 10 ** e).toFixed(d)) >= 10) e += 1; const m = (x / 10 ** e).toFixed(d).replace('.', '{,}'); return e === 0 ? m : `${m}\\times10^{${e}}`; };
+  const renderMath = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/(N·?m|N|T|V|J|cm|m\/s|m-3|m⁻³)$/i, '').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return s === '' ? NaN : Number(s); };
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const rad = (d) => d * Math.PI / 180;
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ── Canvas con alta densidad ──
+  function setup(cv) {
+    const dpr = window.devicePixelRatio || 1; const w = cv.width, h = cv.height;
+    if (!cv.dataset.w) { cv.dataset.w = w; cv.dataset.h = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.width = w * dpr; cv.height = h * dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: +cv.dataset.w, h: +cv.dataset.h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const hd = Math.min(14, L * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hd * 0.6 * Math.cos(a), y2 - hd * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function dotSym(ctx, x, y, r, out, color) { // ⊙ sale / ⊗ entra
+    ctx.fillStyle = col('surface'); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = Math.max(1.5, r / 6); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
+    if (out) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+    else { const s = r * 0.62; ctx.beginPath(); ctx.moveTo(x - s, y - s); ctx.lineTo(x + s, y + s); ctx.moveTo(x + s, y - s); ctx.lineTo(x - s, y + s); ctx.stroke(); }
+  }
+  function field(ctx, w, h, out, gap = 36, x0 = 0, y0 = 0) { // marcas tenues del campo perpendicular
+    ctx.save(); ctx.globalAlpha = 0.3; for (let x = x0 + gap / 2; x < w; x += gap) for (let y = y0 + gap / 2; y < h; y += gap) dotSym(ctx, x, y, 5, out, col('vec-field')); ctx.restore();
+  }
+  function fieldPlane(ctx, w, h, gap = 44) { // B hacia la derecha, en el plano
+    ctx.save(); ctx.globalAlpha = 0.3; for (let x = gap / 2; x < w; x += gap) for (let y = gap / 2; y < h; y += gap) arrow(ctx, x - 11, y, x + 11, y, col('vec-field'), 1.6); ctx.restore();
+  }
+  function charge(ctx, x, y, q, r = 11) {
+    ctx.fillStyle = col(q > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = col('surface'); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y); if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke();
+  }
+  const text = (ctx, s, x, y, color, font = "italic 20px 'STIX Two Text', 'Times New Roman', serif") => { ctx.fillStyle = color; ctx.font = font; ctx.fillText(s, x, y); };
+  const SANS = (n, w = 500) => `${w} ${n}px 'IBM Plex Sans', sans-serif`;
+  const bind = (id, fmt, fn) => { const el = $(id), o = $(id + '-o'); const f = () => { if (o) o.textContent = fmt(+el.value); fn(); }; el.addEventListener('input', f); return f; };
+  // Reto con valores nuevos: gen() devuelve { q, ans, unit, sol, hint }
+  function reto(p, gen) {
+    let R = null;
+    function nuevo() { R = gen(); $(p + '-q').textContent = R.q; $(p + '-in').value = ''; $(p + '-fb').textContent = ''; $(p + '-sol').classList.remove('show'); $(p + '-sol').innerHTML = R.sol; renderMath($(p + '-sol')); }
+    $(p + '-new').addEventListener('click', nuevo); $(p + '-sb').addEventListener('click', () => $(p + '-sol').classList.toggle('show'));
+    $(p + '-ck').addEventListener('click', () => {
+      const v = parseNum($(p + '-in').value); if (!isFinite(v)) { $(p + '-fb').textContent = `Escribe un número en ${R.unit}.`; return; }
+      const ok = Math.abs(v - R.ans) <= 0.03 * Math.abs(R.ans);
+      $(p + '-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : `<b style="color:var(--e10-danger)">Aún no.</b> ${R.hint}`;
+    });
+    $(p + '-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $(p + '-ck').click(); });
+    nuevo();
+    (window.__retos = window.__retos || {})[p] = () => R;
+  }
+  // Animación que solo corre mientras su diapositiva está a la vista
+  function anim(frame) { let raf = null; const loop = (t) => { frame(t); raf = reduced() ? null : requestAnimationFrame(loop); }; return { show() { if (!raf) raf = requestAnimationFrame(loop); }, hide() { if (raf) cancelAnimationFrame(raf); raf = null; }, draw() { frame(performance.now()); } }; }
+
+  const MU0 = 4e-7 * Math.PI;
   const sims = {};
+  function coil(ctx, x, y, R, col0, turns = 3) { ctx.save(); ctx.strokeStyle = col0; ctx.lineWidth = 4; for (let k = 0; k < turns; k++) { ctx.beginPath(); ctx.ellipse(x + (k - (turns - 1) / 2) * 7, y, 9, R, 0, 0, 2 * Math.PI); ctx.stroke(); } ctx.restore(); }
+  function magnet(ctx, x, y, northRight) { // imán de 100 × 40 px; x es la cara derecha
+    ctx.fillStyle = col(northRight ? 'q-neg' : 'q-pos'); ctx.fillRect(x - 100, y - 20, 50, 40); ctx.fillStyle = col(northRight ? 'q-pos' : 'q-neg'); ctx.fillRect(x - 50, y - 20, 50, 40);
+    ctx.fillStyle = '#fff'; ctx.font = SANS(17, 700); ctx.textAlign = 'center'; ctx.fillText(northRight ? 'S' : 'N', x - 75, y + 6); ctx.fillText(northRight ? 'N' : 'S', x - 25, y + 6); ctx.textAlign = 'left';
+  }
+  function turnIcon(ctx, x, y, sense, label) { // flecha circular: +1 horario, −1 antihorario
+    const a0 = -Math.PI / 2, a1 = a0 + sense * 1.6 * Math.PI; ctx.strokeStyle = col('primary'); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, 20, a0, a1, sense < 0); ctx.stroke();
+    const ex = x + 20 * Math.cos(a1), ey = y + 20 * Math.sin(a1), tx = -Math.sin(a1) * sense, ty = Math.cos(a1) * sense; arrow(ctx, ex - tx * 6, ey - ty * 6, ex + tx * 6, ey + ty * 6, col('primary'), 2.5);
+    ctx.textAlign = 'center'; text(ctx, label, x, y + 38, col('muted'), SANS(11)); ctx.textAlign = 'left';
+  }
 
-  // 1 · Portada: Imán oscilante a través de espira
-  sims.cover = (() => {
-    const cv = $('cv-cover-faraday'); if (!cv) return {};
-    const ctx = cv.getContext('2d');
-    let t = 0, req = null;
-    function frame() {
-      ctx.clearRect(0, 0, 440, 440);
-      const cx = 220, cy = 220;
+  // ── 1 · Portada: imán que oscila dentro de una bobina y galvanómetro ──
+  sims.cover = anim((t) => {
+    const { ctx, w, h } = setup($('cv-cover')); ctx.clearRect(0, 0, w, h);
+    const ph = t / 900, xm = 220 + 120 * Math.sin(ph), vel = Math.cos(ph), cy = 170;
+    coil(ctx, 240, cy, 70, col('primary'), 6);
+    magnet(ctx, xm + 50, cy, true);
+    ctx.strokeStyle = col('ink'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(240, cy + 70); ctx.lineTo(240, 330); ctx.lineTo(160, 330); ctx.moveTo(240, 330); ctx.lineTo(320, 330); ctx.stroke();
+    ctx.fillStyle = col('surface'); ctx.strokeStyle = col('ink'); ctx.beginPath(); ctx.arc(220, 360, 52, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+    const na = -Math.PI / 2 + 0.9 * (-vel); ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(220, 358); ctx.lineTo(220 + 44 * Math.cos(na), 358 + 44 * Math.sin(na)); ctx.stroke();
+    text(ctx, 'G', 214, 382, col('muted'), SANS(14, 700));
+    text(ctx, 'La aguja se mueve solo mientras el imán se mueve', 40, 425, col('muted'), SANS(13));
+  });
 
-      // Espira vista en perspectiva elíptica
-      ctx.beginPath();
-      ctx.ellipse(cx, cy + 40, 140, 45, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = '#0B8CA8'; ctx.lineWidth = 8; ctx.stroke();
-
-      // Imán oscilando verticalmente
-      const my = cy - 60 + Math.sin(t * 2) * 90;
-      
-      // Polo norte (rojo/magenta)
-      ctx.fillStyle = '#B3246B';
-      ctx.fillRect(cx - 24, my - 45, 48, 45);
-      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 20px sans-serif'; ctx.fillText('N', cx - 7, my - 15);
-
-      // Polo sur (azul/cian)
-      ctx.fillStyle = '#08758C';
-      ctx.fillRect(cx - 24, my, 48, 45);
-      ctx.fillStyle = '#ffffff'; ctx.fillText('S', cx - 6, my + 30);
-
-      // Líneas de flujo inducido
-      ctx.strokeStyle = 'rgba(179, 36, 107, 0.4)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
-      ctx.beginPath(); ctx.ellipse(cx, my, 80, 110, 0, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
-
-      t += 0.025;
-      req = requestAnimationFrame(frame);
+  // ── 2 · Predice: imán que se acerca a una espira ──
+  sims.pre = (() => {
+    const cv = $('cv-pre'), a = 0.03, m = 1.0; let north = true, acerca = true, voted = false, t0 = null, raf = null;
+    const phi = (z) => MU0 * m * a * a / (2 * (a * a + z * z) ** 1.5);
+    function state() { return { rep: acerca, ccw: acerca === north }; }
+    function frame(t) {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); const ay = 200, xc = 420, s = 3000; // píxeles por metro
+      const u = t0 === null ? 0 : Math.min(1, (t - t0) / 2200), z = acerca ? 0.10 - 0.07 * u : 0.03 + 0.07 * u;
+      ctx.save(); ctx.strokeStyle = col('line'); ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.moveTo(10, ay); ctx.lineTo(w - 10, ay); ctx.stroke(); ctx.restore();
+      coil(ctx, xc, ay, a * s, col('primary'), 1);
+      magnet(ctx, xc - z * s, ay, north);
+      text(ctx, `z = ${dec(z * 100, 1)} cm`, xc - z * s / 2 - 30, ay + 70, col('muted'), SANS(12));
+      if (t0 !== null) {
+        const st = state(), moving = u < 1;
+        arrow(ctx, xc - z * s - 50, ay - 40, xc - z * s - 50 + (acerca ? 40 : -40), ay - 40, col('ink'), 3);
+        if (moving) {
+          turnIcon(ctx, xc + 80, 80, st.ccw ? -1 : 1, 'visto desde el imán');
+          const facePole = acerca === north ? 'N' : 'S';
+          ctx.fillStyle = col(facePole === 'N' ? 'q-pos' : 'q-neg'); ctx.font = SANS(18, 700); ctx.fillText(facePole, xc - 34, ay - a * s - 10);
+          arrow(ctx, xc - z * s - 50, ay + 44, xc - z * s - 50 + (acerca ? -36 : 36), ay + 44, col('vec-force'), 3.5);
+          text(ctx, acerca ? 'repele' : 'atrae', xc - z * s - 70, ay + 64, col('vec-force'), SANS(12, 600));
+        } else text(ctx, 'El imán se detuvo: ya no hay corriente', 20, 30, col('muted'), SANS(13, 600));
+        $('pre-f').textContent = sci(phi(z), 2) + ' Wb';
+        $('pre-s').textContent = moving ? (st.ccw ? 'antihoraria' : 'horaria') : 'ninguna';
+        $('pre-p').textContent = moving ? (acerca === north ? 'un norte hacia el imán' : 'un sur hacia el imán') : '—';
+        if (!moving) stop();
+      } else { $('pre-f').textContent = sci(phi(z), 2) + ' Wb'; }
     }
-    return {
-      show() { if (!req) req = requestAnimationFrame(frame); },
-      hide() { if (req) { cancelAnimationFrame(req); req = null; } }
-    };
+    function stop() { if (raf) cancelAnimationFrame(raf); raf = null; }
+    function go() { stop(); t0 = performance.now(); if (reduced()) { t0 = performance.now() - 1000; frame(performance.now()); return; } const loop = (t) => { frame(t); if (raf !== null) raf = requestAnimationFrame(loop); }; raf = requestAnimationFrame(loop); }
+    function txt() { $('pre-txt').textContent = `El polo ${north ? 'norte' : 'sur'} del imán ${acerca ? 'se acerca a' : 'se aleja de'} la espira.${voted ? '' : ' Vota antes de mover el imán.'}`; }
+    $('pre-pole').addEventListener('click', () => { north = !north; $('pre-pole').textContent = north ? 'Acercar el polo sur' : 'Acercar el polo norte'; t0 = null; stop(); txt(); frame(0); });
+    $('pre-dir').addEventListener('click', () => { acerca = !acerca; $('pre-dir').textContent = acerca ? 'Alejar el imán' : 'Acercar el imán'; t0 = null; stop(); txt(); frame(0); });
+    $('pre-go').addEventListener('click', go);
+    document.querySelectorAll('#pre-vote .btn').forEach((b) => b.addEventListener('click', () => {
+      if (voted) return; voted = true; const right = state().rep ? 'rep' : 'atr';
+      document.querySelectorAll('#pre-vote .btn').forEach((x) => { if (x.dataset.v === right) x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+      $('pre-fb').style.visibility = 'visible'; txt(); go();
+    }));
+    return { draw() { txt(); frame(performance.now()); }, hide: stop };
   })();
 
-  // 3 · Flujo Magnético
-  sims.flux = (() => {
-    const cv = $('cv-flux'); if (!cv) return {};
-    const ctx = cv.getContext('2d');
+  // ── 3 · Flujo con la espira inclinada ──
+  sims.fl = (() => {
+    const cv = $('cv-fl');
     function draw() {
-      const deg = parseFloat($('rng-flux-ang').value);
-      const rad = deg * Math.PI / 180;
-      $('out-flux-ang').textContent = deg + '°';
-      ctx.clearRect(0, 0, 460, 340);
-      const cx = 230, cy = 170;
-
-      // Líneas de campo magnético horizontales
-      ctx.strokeStyle = 'rgba(11, 140, 168, 0.35)'; ctx.lineWidth = 2;
-      for (let y = 60; y <= 280; y += 40) {
-        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(420, y); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(410, y - 5); ctx.lineTo(420, y); ctx.lineTo(410, y + 5); ctx.stroke();
-      }
-
-      // Superficie plana rotada
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(rad);
-
-      ctx.fillStyle = 'rgba(179, 36, 107, 0.2)';
-      ctx.fillRect(-10, -90, 20, 180);
-      ctx.strokeStyle = '#B3246B'; ctx.lineWidth = 4;
-      ctx.strokeRect(-10, -90, 20, 180);
-
-      // Vector normal unitario n
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(90, 0);
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px sans-serif'; ctx.fillText('n̂', 95, 5);
-
-      ctx.restore();
-
-      // Indicador numérico de flujo relativo cos(theta)
-      ctx.fillStyle = '#0B8CA8'; ctx.font = '16px monospace';
-      ctx.fillText(`Φ_B / Φ_máx = cos(${deg}°) = ${(Math.cos(rad)).toFixed(3)}`, 110, 320);
+      const p = +$('fl-p').value, c = Math.cos(rad(p)), { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2, L = 120, gap = 20, half = L * Math.abs(c); let n = 0;
+      for (let y = 20; y < h - 10; y += gap) { const inside = Math.abs(y - cy) < half - 1; if (inside) n++; ctx.save(); ctx.globalAlpha = inside ? 0.9 : 0.25; arrow(ctx, 20, y, w - 20, y, col('vec-field'), inside ? 2 : 1.4); ctx.restore(); }
+      const bx = L * Math.cos(rad(p + 90)), by = L * Math.sin(rad(p + 90));
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - bx, cy + by); ctx.lineTo(cx + bx, cy - by); ctx.stroke();
+      arrow(ctx, cx, cy, cx + 90 * c, cy - 90 * Math.sin(rad(p)), col('ink'), 3.5); text(ctx, 'n̂', cx + 98 * c, cy - 98 * Math.sin(rad(p)), col('ink'));
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, -rad(p), true); ctx.stroke(); text(ctx, `φ = ${p}°`, cx + 46, cy - 16, col('muted'), SANS(13, 600));
+      text(ctx, 'B →', 16, h - 12, col('vec-field'), SANS(13, 600));
+      $('fl-c').textContent = dec(c, 3); $('fl-f').textContent = sci(0.4 * 0.01 * c, 2) + ' Wb'; $('fl-n').textContent = String(n);
     }
-    $('rng-flux-ang').addEventListener('input', draw);
+    bind('fl-p', (v) => v + '°', draw);
     return { draw };
   })();
 
-  // 5 · Barra deslizante
-  sims.moti = (() => {
-    const cv = $('cv-moti'); if (!cv) return {};
-    const ctx = cv.getContext('2d');
+  // ── 4 · Faraday: el mismo cambio de flujo, más o menos rápido ──
+  sims.fa = (() => {
+    const cv = $('cv-fa'), N = 50, A = 20e-4, B2 = 0.6, R = 8;
     function draw() {
-      const v = parseFloat($('rng-moti-v').value);
-      $('out-moti-v').textContent = v.toFixed(1) + ' m/s';
-      ctx.clearRect(0, 0, 440, 340);
-
-      // Rieles conductores
-      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 8;
-      ctx.beginPath(); ctx.moveTo(60, 80); ctx.lineTo(390, 80); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(60, 260); ctx.lineTo(390, 260); ctx.stroke();
-
-      // Resistencia a la izquierda
-      ctx.strokeStyle = '#B3246B'; ctx.lineWidth = 6;
-      ctx.beginPath(); ctx.moveTo(60, 80); ctx.lineTo(60, 260); ctx.stroke();
-      ctx.fillStyle = '#B3246B'; ctx.font = 'bold 16px monospace'; ctx.fillText('R', 35, 175);
-
-      // Cruces de campo B entrante
-      ctx.strokeStyle = 'rgba(11, 140, 168, 0.3)'; ctx.lineWidth = 1.5;
-      for (let x = 90; x <= 360; x += 40) {
-        for (let y = 110; y <= 230; y += 40) {
-          ctx.beginPath();
-          ctx.moveTo(x - 4, y - 4); ctx.lineTo(x + 4, y + 4);
-          ctx.moveTo(x + 4, y - 4); ctx.lineTo(x - 4, y + 4);
-          ctx.stroke();
-        }
-      }
-
-      // Barra deslizante vertical
-      const bx = 120 + v * 20;
-      ctx.strokeStyle = '#0B8CA8'; ctx.lineWidth = 12; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(bx, 75); ctx.lineTo(bx, 265); ctx.stroke();
-
-      // Flecha de velocidad v hacia la derecha
-      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.moveTo(bx, 170); ctx.lineTo(bx + 55, 170); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx + 45, 163); ctx.lineTo(bx + 55, 170); ctx.lineTo(bx + 45, 177); ctx.stroke();
-      ctx.fillStyle = '#10b981'; ctx.font = 'bold 15px sans-serif'; ctx.fillText('v⃗', bx + 62, 175);
-
-      // Flecha de fuerza magnética retardadora hacia la izquierda
-      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(bx, 190); ctx.lineTo(bx - 45, 190); ctx.stroke();
-      ctx.fillStyle = '#ef4444'; ctx.fillText('F⃗_mag', bx - 95, 195);
+      const dt = +$('fa-t').value, e = N * A * B2 / dt, { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const X0 = 56, X1 = w - 20, T = 0.6, X = (t) => X0 + t / T * (X1 - X0);
+      const top = { y0: 140, y1: 30 }, bot = { y0: h - 40, y1: 180 }, eMax = N * A * B2 / 0.05;
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.2; ctx.beginPath(); [top, bot].forEach((g) => { ctx.moveTo(X0, g.y0); ctx.lineTo(X1, g.y0); ctx.moveTo(X0, g.y0); ctx.lineTo(X0, g.y1); }); ctx.stroke();
+      const F = (t) => N * A * B2 * Math.min(1, t / dt), Fy = (v) => top.y0 - v / (N * A * B2) * (top.y0 - top.y1 - 10);
+      ctx.strokeStyle = col('vec-field'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const t = T * i / 300; i ? ctx.lineTo(X(t), Fy(F(t))) : ctx.moveTo(X(t), Fy(F(t))); } ctx.stroke();
+      const Ey = (v) => bot.y0 - v / eMax * (bot.y0 - bot.y1 - 10);
+      ctx.fillStyle = col('primary-soft'); ctx.fillRect(X(0), Ey(e), X(dt) - X(0), bot.y0 - Ey(e));
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(0), Ey(e)); ctx.lineTo(X(dt), Ey(e)); ctx.lineTo(X(dt), bot.y0); ctx.lineTo(X(T), bot.y0); ctx.stroke();
+      text(ctx, 'NΦ (Wb)', X0 + 6, top.y1 + 4, col('vec-field'), SANS(12, 600)); text(ctx, 'ε (V): el área es NΔΦ, la misma siempre', X0 + 6, bot.y1 + 4, col('primary'), SANS(12, 600));
+      text(ctx, 't', X1 - 8, bot.y0 + 18, col('muted')); text(ctx, 'Δt', X(dt) - 8, bot.y0 + 18, col('muted'), SANS(12));
+      $('fa-e').textContent = dec(e, 2) + ' V'; $('fa-i').textContent = dec(e / R * 1000, 0) + ' mA'; $('fa-q').textContent = sci(N * A * B2 / R, 2) + ' C';
     }
-    $('rng-moti-v').addEventListener('input', draw);
+    bind('fa-t', (v) => dec(v, 2) + ' s', draw);
+    reto('fl', () => {
+      const N = pick([20, 50, 100, 200]), A = pick([10, 20, 25, 50]), Bs = [0, 0.1, 0.2, 0.3, 0.5, 0.8], B1 = pick(Bs), B2 = pick(Bs.filter((b) => b !== B1)), dt = pick([0.05, 0.1, 0.2, 0.4]), e = N * A * 1e-4 * Math.abs(B2 - B1) / dt;
+      return { q: `Una bobina de ${N} vueltas y ${A} cm² es perpendicular a un campo que pasa de ${dec(B1, 1)} T a ${dec(B2, 1)} T en ${dec(dt, 2)} s. ¿Cuánto vale la fem?`, ans: e, unit: 'voltios', hint: 'ε = N A |ΔB| / Δt, con el área en m².',
+        sol: `\\(\\varepsilon=N\\,\\dfrac{A\\,|\\Delta B|}{\\Delta t}=\\dfrac{(${N})(${A}\\times10^{-4})(${tdec(Math.abs(B2 - B1), 1)})}{${tdec(dt, 2)}}=${texSci(e, 3)}\\,\\mathrm V\\).` };
+    });
     return { draw };
   })();
 
-  // 10 · Curva de Crecimiento RL
-  sims.rl = (() => {
-    const cv = $('cv-rl-rise'); if (!cv) return {};
-    const ctx = cv.getContext('2d');
+  // ── 5 · Barra sobre rieles ──
+  sims.ba = (() => {
+    const cv = $('cv-ba'), B = 0.8, L = 0.5, R = 2;
+    const A = anim((t) => {
+      const v = +$('ba-v').value, e = B * L * v, I = e / R, { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h); field(ctx, w, h, false, 38);
+      const yT = 90, yB = 250, xR = 40, xb = 120 + ((t / 1000 * v * 30) % (w - 160));
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(xR, yT); ctx.lineTo(w - 10, yT); ctx.moveTo(xR, yB); ctx.lineTo(w - 10, yB); ctx.moveTo(xR, yT); ctx.lineTo(xR, yB); ctx.stroke();
+      ctx.fillStyle = col('surface'); ctx.strokeStyle = col('ink'); ctx.lineWidth = 2; ctx.fillRect(xR - 10, 145, 20, 50); ctx.strokeRect(xR - 10, 145, 20, 50); text(ctx, 'R', xR + 14, 175, col('ink'), SANS(13, 600));
+      ctx.save(); ctx.globalAlpha = 0.14; ctx.fillStyle = col('primary'); ctx.fillRect(xR, yT, xb - xR, yB - yT); ctx.restore();
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(xb, yT - 12); ctx.lineTo(xb, yB + 12); ctx.stroke();
+      if (v > 0) {
+        arrow(ctx, xb, yT - 30, xb + 40, yT - 30, col('ink'), 3); text(ctx, 'v', xb + 46, yT - 24, col('ink'));
+        arrow(ctx, xb + 14, (yT + yB) / 2 + 20, xb + 14, (yT + yB) / 2 - 20, col('accent'), 3); // corriente hacia arriba en la barra: antihoraria
+        arrow(ctx, xb - 4, yB - 30, xb - 46, yB - 30, col('vec-force'), 3.5); text(ctx, 'F', xb - 60, yB - 24, col('vec-force'));
+        dotSym(ctx, (xR + xb) / 2, (yT + yB) / 2, 12, true, col('accent-strong')); text(ctx, 'B inducido', (xR + xb) / 2 - 34, (yT + yB) / 2 + 32, col('accent-strong'), SANS(12, 600));
+      }
+      text(ctx, 'B ⊗ = 0,80 T', 12, h - 12, col('vec-field'), SANS(12, 600));
+      $('ba-e').textContent = dec(e, 2) + ' V'; $('ba-i').textContent = dec(I, 2) + ' A'; $('ba-f').textContent = dec(I * L * B, 3) + ' N';
+    });
+    bind('ba-v', (x) => dec(x, 1) + ' m/s', () => A.draw());
+    reto('ba', () => {
+      const B = pick([0.2, 0.4, 0.5, 0.8, 1.0]), L = pick([20, 30, 50, 100]), v = pick([1, 2, 4, 5, 10]), R = pick([0.5, 1, 2, 4, 5]), I = B * L / 100 * v / R;
+      return { q: `Una barra de ${L} cm se desliza a ${v} m/s sobre rieles unidos por ${dec(R, 1)} Ω, en un campo de ${dec(B, 1)} T perpendicular al circuito. ¿Qué corriente circula?`, ans: I, unit: 'amperios', hint: 'ε = BLv con L en metros, e I = ε/R.',
+        sol: `\\(\\varepsilon=BLv=(${tdec(B, 1)})(${tdec(L / 100, 2)})(${v})=${tdec(B * L / 100 * v, 3)}\\,\\mathrm V\\), \\(I=\\varepsilon/R=${tdec(I, 3)}\\,\\mathrm A\\).` };
+    });
+    return A;
+  })();
+
+  // ── 6 · Generador ──
+  sims.ge = (() => {
+    const cv = $('cv-ge'), N = 100, A = 0.02, B = 0.3;
+    const An = anim((t) => {
+      const f = +$('ge-f').value, em = N * B * A * 2 * Math.PI * f, th = (t / 3000) * 2 * Math.PI, { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      ctx.save(); ctx.globalAlpha = 0.3; for (let y = 30; y < h - 20; y += 40) arrow(ctx, 14, y, 200, y, col('vec-field'), 1.5); ctx.restore();
+      const cx = 110, cy = h / 2, R = 80, ux = R * Math.cos(th + Math.PI / 2), uy = R * Math.sin(th + Math.PI / 2);
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - ux, cy + uy); ctx.lineTo(cx + ux, cy - uy); ctx.stroke();
+      arrow(ctx, cx, cy, cx + 60 * Math.cos(th), cy - 60 * Math.sin(th), col('ink'), 3); text(ctx, 'n̂', cx + 68 * Math.cos(th), cy - 68 * Math.sin(th), col('ink'));
+      const X0 = 230, X1 = w - 14, mid = h / 2, hh = h / 2 - 40, X = (u) => X0 + u / (4 * Math.PI) * (X1 - X0);
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X0, mid); ctx.lineTo(X1, mid); ctx.stroke();
+      [[Math.cos, 'vec-field', 'NΦ'], [Math.sin, 'primary', 'ε']].forEach(([fn, c, l], i) => { ctx.strokeStyle = col(c); ctx.lineWidth = 2.5; ctx.beginPath(); for (let k = 0; k <= 240; k++) { const u = 4 * Math.PI * k / 240, y = mid - fn(u) * hh; k ? ctx.lineTo(X(u), y) : ctx.moveTo(X(u), y); } ctx.stroke(); text(ctx, l, X1 - 26, 24 + i * 18, col(c), SANS(13, 700)); });
+      const u = th % (4 * Math.PI); ctx.strokeStyle = col('accent'); ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(u), 20); ctx.lineTo(X(u), h - 20); ctx.stroke(); ctx.setLineDash([]);
+      text(ctx, `ε máx = ${dec(em, 0)} V`, X0, h - 10, col('primary'), SANS(13, 600)); text(ctx, 'B →', 14, h - 10, col('vec-field'), SANS(12, 600));
+    });
+    bind('ge-f', (v) => v + ' Hz', () => An.draw());
+    reto('ge', () => {
+      const N = pick([50, 100, 200, 500]), a = pick([5, 10, 15, 20]), b = pick([10, 20, 25]), B = pick([0.1, 0.2, 0.3, 0.5]), f = pick([10, 25, 50, 60]), em = N * B * a * b * 1e-4 * 2 * Math.PI * f;
+      return { q: `Una bobina de ${N} vueltas, de ${a} cm × ${b} cm, gira a ${f} Hz en un campo de ${dec(B, 1)} T. ¿Cuánto vale la fem máxima?`, ans: em, unit: 'voltios', hint: 'ε máx = N B A ω, con ω = 2πf y el área en m².',
+        sol: `\\(\\varepsilon_{\\max}=NBA\\omega=(${N})(${tdec(B, 1)})(${a * b}\\times10^{-4})(2\\pi\\cdot${f})=${texSci(em, 3)}\\,\\mathrm V\\).` };
+    });
+    return An;
+  })();
+
+  // ── 7 · Campo eléctrico inducido dentro y fuera de un solenoide ──
+  sims.ei = (() => {
+    const cv = $('cv-ei'), R0 = 0.05, dB = MU0 * 1000 * 50;
+    const E = (r) => r <= R0 ? r / 2 * dB : R0 * R0 / (2 * r) * dB;
     function draw() {
-      const L = parseFloat($('rng-rl-l').value);
-      $('out-rl-l').textContent = L.toFixed(1) + ' H';
-      ctx.clearRect(0, 0, 440, 340);
-
-      // Ejes coordenados
-      ctx.strokeStyle = 'var(--e10-line, #334155)'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(50, 280); ctx.lineTo(410, 280); ctx.stroke(); // eje t
-      ctx.beginPath(); ctx.moveTo(50, 280); ctx.lineTo(50, 40); ctx.stroke();  // eje i
-
-      ctx.fillStyle = 'var(--e10-muted, #94a3b8)'; ctx.font = '13px monospace';
-      ctx.fillText('tiempo t (s)', 340, 305);
-      ctx.fillText('corriente i(t)', 60, 35);
-
-      // Asíntota I_max = E/R
-      ctx.strokeStyle = 'rgba(11, 140, 168, 0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]);
-      ctx.beginPath(); ctx.moveTo(50, 80); ctx.lineTo(410, 80); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#0B8CA8'; ctx.fillText('I_máx = E/R', 60, 75);
-
-      // Gráfica exponencial i(t) = I_max * (1 - exp(-t/tau))
-      const tau = L / 1.0; // R = 1.0 ohm nominal
-      ctx.strokeStyle = '#B3246B'; ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      for (let px = 0; px <= 350; px += 2) {
-        const t = (px / 350) * 8.0;
-        const i_val = 1 - Math.exp(-t / tau);
-        const py = 280 - i_val * 200;
-        if (px === 0) ctx.moveTo(50 + px, py);
-        else ctx.lineTo(50 + px, py);
-      }
-      ctx.stroke();
-
-      // Marcador en t = tau
-      const px_tau = (tau / 8.0) * 350;
-      if (px_tau <= 350) {
-        ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]);
-        ctx.beginPath(); ctx.moveTo(50 + px_tau, 280); ctx.lineTo(50 + px_tau, 280 - 0.632 * 200); ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#10b981'; ctx.fillText(`τ = ${(tau).toFixed(1)} s`, 45 + px_tau, 298);
-      }
+      const r = +$('ei-r').value / 100, { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cx = 140, cy = h / 2, s = 900; // píxeles por metro
+      ctx.fillStyle = col('primary-soft'); ctx.beginPath(); ctx.arc(cx, cy, R0 * s, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.stroke();
+      ctx.save(); ctx.globalAlpha = 0.55; for (let x = -R0; x <= R0; x += 0.015) for (let y = -R0; y <= R0; y += 0.015) if (Math.hypot(x, y) < R0 - 0.006) dotSym(ctx, cx + x * s, cy + y * s, 4, true, col('vec-field')); ctx.restore();
+      [0.025, 0.07, 0.1].forEach((rr) => { ctx.strokeStyle = col('accent'); ctx.lineWidth = 1.6; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(cx, cy, rr * s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + 0.6, x = cx + rr * s * Math.cos(a), y = cy + rr * s * Math.sin(a), tx = -Math.sin(a), ty = Math.cos(a); arrow(ctx, x - tx * 8, y - ty * 8, x + tx * 8, y + ty * 8, col('accent'), 2.5); } });
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, Math.max(r * s, 1), 0, 2 * Math.PI); ctx.stroke();
+      text(ctx, 'B ⊙ crece', cx - 34, cy - R0 * s - 10, col('vec-field'), SANS(12, 600)); text(ctx, 'E inducido (horario)', 12, h - 12, col('accent-strong'), SANS(12, 600));
+      const X0 = 290, X1 = w - 16, Y0 = h - 40, Y1 = 30, rm = 0.15, Em = E(R0) * 1.15, X = (q) => X0 + q / rm * (X1 - X0), Y = (v) => Y0 - v / Em * (Y0 - Y1);
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.moveTo(X0, Y0); ctx.lineTo(X0, Y1); ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const q = rm * i / 200; i ? ctx.lineTo(X(q), Y(E(q))) : ctx.moveTo(X(q), Y(E(q))); } ctx.stroke();
+      ctx.fillStyle = col('primary'); ctx.beginPath(); ctx.arc(X(r), Y(E(r)), 6, 0, 2 * Math.PI); ctx.fill();
+      text(ctx, 'R', X(R0) - 4, Y0 + 18, col('muted')); text(ctx, 'r', X1 - 8, Y0 + 18, col('muted')); text(ctx, 'E(r)', X0 + 6, Y1 + 4, col('muted'), SANS(12, 600));
+      $('ei-e').textContent = sci(E(r), 2) + ' V/m'; $('ei-g').textContent = r < R0 ? 'dentro (∝ r)' : 'fuera (∝ 1/r)'; $('ei-d').textContent = dec(dB, 4) + ' T/s';
     }
-    $('rng-rl-l').addEventListener('input', draw);
+    bind('ei-r', (v) => dec(v, 1) + ' cm', draw);
     return { draw };
   })();
 
-  // 12 · Árbol de Decisión Didáctico
+  // ── 8 · Inductancia del solenoide ──
+  sims.in = (() => {
+    const cv = $('cv-in'), N = 500, l = 0.25, A = 4e-4, L = MU0 * N * N * A / l;
+    function draw() {
+      const d = +$('in-d').value, { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const x0 = 60, x1 = w - 60, cy = 150, r = 50;
+      for (let x = x0; x <= x1; x += 14) { ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x, cy, 6, r, 0, 0, 2 * Math.PI); ctx.stroke(); }
+      if (d !== 0) {
+        arrow(ctx, w / 2 - 70, cy, w / 2 + 70, cy, col('vec-field'), 4); text(ctx, d > 0 ? 'B crece' : 'B disminuye', w / 2 - 34, cy - 12, col('vec-field'), SANS(13, 600));
+        arrow(ctx, x0 - 40, cy + r + 40, x0 + 30, cy + r + 40, col('primary'), 3); text(ctx, 'I', x0 - 50, cy + r + 46, col('primary'));
+        const opp = d > 0; arrow(ctx, x1 + 30, cy + r + 40, x1 - 40, cy + r + 40, col('accent-strong'), 3);
+        text(ctx, opp ? 'la fem autoinducida se opone a que I crezca' : 'la fem autoinducida intenta mantener I', 30, h - 40, col('accent-strong'), SANS(13, 600));
+      } else text(ctx, 'Corriente constante: no hay fem autoinducida', 30, h - 40, col('muted'), SANS(13, 600));
+      text(ctx, '500 vueltas · 25 cm · 4,0 cm²', 30, 30, col('ink'), SANS(13, 600));
+      $('in-l').textContent = dec(L * 1e3, 3) + ' mH'; $('in-e').textContent = dec(L * Math.abs(d) * 1e3, 1) + ' mV'; $('in-u').textContent = dec(0.5 * L * 4 * 1e3, 2) + ' mJ';
+    }
+    bind('in-d', (v) => v + ' A/s', draw);
+    reto('in', () => {
+      const N = pick([200, 300, 500, 800, 1000]), l = pick([10, 20, 25, 40, 50]), A = pick([1, 2, 4, 5, 10]), Lh = MU0 * N * N * A * 1e-4 / (l / 100);
+      return { q: `Un solenoide de ${N} vueltas mide ${l} cm de largo y tiene ${A} cm² de sección. ¿Cuál es su autoinductancia?`, ans: Lh * 1e3, unit: 'milihenrios', hint: 'L = μ₀ N² A / ℓ, con A en m² y ℓ en m; luego pasa a mH.',
+        sol: `\\(L=\\dfrac{\\mu_0N^2A}{\\ell}=\\dfrac{(4\\pi\\times10^{-7})(${N})^2(${A}\\times10^{-4})}{${tdec(l / 100, 2)}}=${texSci(Lh, 3)}\\,\\mathrm H=${tdec(Lh * 1e3, 3)}\\,\\mathrm{mH}\\).` };
+    });
+    return { draw };
+  })();
+
+  // ── Errores: tarjetas ──
+  document.querySelectorAll('.flip').forEach((c) => { const t = () => c.classList.toggle('open'); c.addEventListener('click', t); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); });
+
+  // ── Laboratorio: simulador bajo demanda ──
+  const labBtns = document.querySelectorAll('[data-lab]');
+  labBtns.forEach((b) => b.addEventListener('click', () => { labBtns.forEach((x) => x.classList.toggle('on', x === b)); $('lab-frame').src = b.dataset.lab; }));
+
+  // ── Deducciones en pasos y «dos caminos» ──
+  document.querySelectorAll('[data-stp]').forEach((box) => {
+    const ps = [...box.querySelectorAll('.stp-p')], nav = box.querySelector('.stp-nav'), cnt = box.querySelector('.stp-count'); let k = 0;
+    ps.forEach((p, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<b>${i + 1}</b>${p.dataset.t}`; b.addEventListener('click', () => show(i)); nav.appendChild(b); });
+    const bs = [...nav.children];
+    function show(i) { k = Math.max(0, Math.min(ps.length - 1, i)); ps.forEach((p, j) => p.classList.toggle('on', j === k)); bs.forEach((b, j) => { b.classList.toggle('on', j === k); if (j === k) b.classList.add('seen'); }); cnt.textContent = `paso ${k + 1} de ${ps.length}`; box.querySelector('[data-stp-prev]').disabled = k === 0; box.querySelector('[data-stp-next]').disabled = k === ps.length - 1; }
+    box.querySelector('[data-stp-prev]').addEventListener('click', () => show(k - 1)); box.querySelector('[data-stp-next]').addEventListener('click', () => show(k + 1));
+    show(0);
+  });
+  document.querySelectorAll('[data-path]').forEach((b) => b.addEventListener('click', () => {
+    const [g] = b.dataset.path.split(':');
+    document.querySelectorAll(`[data-path^="${g}:"]`).forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll(`[data-pathbox^="${g}:"]`).forEach((x) => { x.hidden = x.dataset.pathbox !== b.dataset.path; });
+  }));
+
+  const katexTo = (el, tex) => { if (window.katex) katex.render(tex, el, { throwOnError: false, displayMode: true }); else el.textContent = tex; };
+  const LAB = '../../simuladores/Faraday.html#';
+
+  // ── 10 · Árbol de decisión ──
   sims.tree = (() => {
-    const data = {
-      'b-e': {
-        title: 'Ley de Faraday con Campo Variable B(t)',
-        formula: '\\[\\mathcal{E} = -N A \\cos\\theta \\frac{dB}{dt}\\]',
-        p1: '1. Obtén la derivada temporal del campo magnético \\(\\frac{dB}{dt}\\).',
-        p2: '2. Multiplica por el área constante \\(A\\) y el número de espiras \\(N\\).',
-        p3: '3. Aplica la regla de Lenz para fijar el sentido de la corriente inducida.'
-      },
-      'a-e': {
-        title: 'FEM de Movimiento por Variación de Área',
-        formula: '\\[\\mathcal{E} = B L v, \\quad F_{\\text{mag}} = \\frac{B^2 L^2 v}{R}\\]',
-        p1: '1. Comprueba la perpendicularidad mutua entre \\(\\vec v\\), \\(\\vec L\\) y \\(\\vec B\\).',
-        p2: '2. Evalúa la corriente circulante por la ley de Ohm: \\(I = BLv/R\\).',
-        p3: '3. Aplica balance de potencia mecánica exterior \\(P_{\\text{mec}} = F v\\).'
-      },
-      'r-e': {
-        title: 'Generador de Corriente Alterna',
-        formula: '\\[\\mathcal{E}(t) = N B A \\omega \\sin(\\omega t) = \\mathcal{E}_{\\text{máx}} \\sin(\\omega t)\\]',
-        p1: '1. Identifica la frecuencia angular de rotación \\(\\omega = 2\\pi f\\).',
-        p2: '2. Calcula la amplitud pico \\(\\mathcal{E}_{\\text{máx}} = N B A \\omega\\).',
-        p3: '3. Obtén el valor eficaz o RMS dividiendo entre \\(\\sqrt{2}\\).'
-      },
-      'l-e': {
-        title: 'Transitorio de Conexión en Circuito RL',
-        formula: '\\[i(t) = \\frac{\\mathcal{E}_0}{R}\\left(1 - e^{-t/\\tau_L}\\right), \\quad \\tau_L = \\frac{L}{R}\\]',
-        p1: '1. Halla la constante de tiempo inductiva \\(\\tau_L = L/R\\).',
-        p2: '2. Determina la corriente asintótica final en régimen estacionario \\(I_0 = \\mathcal{E}_0/R\\).',
-        p3: '3. Evalúa la energía magnética almacenada: \\(U_B = \\frac{1}{2}L I_0^2\\).'
-      }
+    const Q1 = [['B', 'Cambia el campo B'], ['A', 'Cambia el área (barra)'], ['ang', 'Cambia el ángulo (gira)'], ['I', 'Cambia la corriente propia']];
+    const Q2 = { B: [['e', 'La fem'], ['q', 'La carga que circula']], A: [['e2', 'La fem'], ['f', 'La fuerza de frenado']], ang: [['m', 'La fem máxima'], ['rms', 'La fem eficaz']], I: [['L', 'La autoinductancia'], ['U', 'La energía almacenada']] };
+    // Las respuestas de los retos se calculan con la misma fórmula que se muestra.
+    const L = {
+      e: { name: 'Ley de Faraday', tex: String.raw`\varepsilon=N\,\dfrac{A\cos\phi\,|\Delta B|}{\Delta t}`, when: 'B cambia de manera uniforme durante Δt.', dir: 'Lenz: la corriente se opone al cambio del flujo.', reto: 'Bobina de 200 vueltas y 10 cm²; B pasa de 0,10 T a 0,50 T en 0,20 s. ¿ε en V?', ans: 200 * 10e-4 * 0.4 / 0.2, lab: LAB + 'flujo' },
+      q: { name: 'Carga inducida', tex: String.raw`Q=\dfrac{N\,|\Delta\Phi_B|}{R}`, when: 'No depende de lo rápido que cambie el flujo.', dir: 'Igual que el de la corriente inducida.', reto: 'La misma bobina con R = 20 Ω. ¿Carga que circula, en C?', ans: 200 * 10e-4 * 0.4 / 20, lab: LAB + 'flujo' },
+      e2: { name: 'Fem de movimiento', tex: String.raw`\varepsilon=vBL`, when: 'Barra perpendicular a B y a su velocidad.', dir: 'q v × B empuja las cargas a lo largo de la barra.', reto: 'Barra de 0,40 m a 3,0 m/s en 0,50 T. ¿ε en V?', ans: 0.5 * 0.4 * 3, lab: LAB + 'barra' },
+      f: { name: 'Fuerza de frenado', tex: String.raw`F=ILB=\dfrac{B^2L^2v}{R}`, when: 'La barra cierra un circuito de resistencia R.', dir: 'Siempre opuesta a la velocidad.', reto: 'La misma barra con R = 1,5 Ω. ¿Fuerza de frenado en N?', ans: 0.25 * 0.16 * 3 / 1.5, lab: LAB + 'barra' },
+      m: { name: 'Fem máxima del generador', tex: String.raw`\varepsilon_{\max}=NBA\omega,\quad\omega=2\pi f`, when: 'Bobina que gira con rapidez angular constante.', dir: 'Alterna: cambia de signo cada media vuelta.', reto: 'Bobina de 50 vueltas y 100 cm² a 50 Hz en 0,40 T. ¿ε máx en V?', ans: 50 * 0.4 * 0.01 * 2 * Math.PI * 50, lab: LAB + 'generador' },
+      rms: { name: 'Fem eficaz', tex: String.raw`\varepsilon_{\text{ef}}=\dfrac{\varepsilon_{\max}}{\sqrt2}`, when: 'Fem sinusoidal.', dir: 'Es el valor que dan los voltímetros de CA.', reto: 'El mismo generador. ¿Fem eficaz en V?', ans: 50 * 0.4 * 0.01 * 2 * Math.PI * 50 / Math.SQRT2, lab: LAB + 'generador' },
+      L: { name: 'Autoinductancia del solenoide', tex: String.raw`L=\dfrac{\mu_0N^2A}{\ell}`, when: 'Solenoide largo (ℓ mucho mayor que su radio).', dir: 'La fem −L dI/dt se opone al cambio de corriente.', reto: 'Solenoide de 1000 vueltas, 0,50 m de largo y 5,0 cm² de sección. ¿L en H?', ans: MU0 * 1e6 * 5e-4 / 0.5, lab: null },
+      U: { name: 'Energía en un inductor', tex: String.raw`U=\tfrac12LI^2`, when: 'Energía guardada en el campo magnético.', dir: '—', reto: 'Inductor de 2,0 mH con 3,0 A. ¿U en J?', ans: 0.5 * 2e-3 * 9, lab: null },
     };
-
-    let q1 = 'b', q2 = 'e';
-    function update() {
-      const key = `${q1}-${q2}`;
-      const item = data[key] || data['b-e'];
-      $('leaf-title').textContent = item.title;
-      $('leaf-formula').innerHTML = item.formula;
-      $('leaf-p1').textContent = item.p1;
-      $('leaf-p2').textContent = item.p2;
-      $('leaf-p3').textContent = item.p3;
-      renderMath($('leaf-formula'));
+    let a = 'B', b = 'e', fails = 0;
+    const opts = (box, list, val, pickF) => { box.innerHTML = ''; list.forEach(([id, label]) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'opt' + (id === val ? ' on' : ''); el.textContent = label; el.addEventListener('click', () => pickF(id)); box.appendChild(el); }); };
+    function draw() {
+      opts($('tq1'), Q1, a, (id) => { a = id; b = Q2[id][0][0]; reset(); });
+      opts($('tq2'), Q2[a], b, (id) => { b = id; reset(); });
+      const leaf = L[b];
+      $('leaf-name').textContent = leaf.name; katexTo($('leaf-eq'), leaf.tex);
+      $('leaf-when').textContent = leaf.when; $('leaf-dir').textContent = leaf.dir; $('leaf-reto').textContent = leaf.reto;
+      const lab = $('leaf-lab'); lab.hidden = !leaf.lab; if (leaf.lab) lab.href = leaf.lab;
     }
-
-    $('tq1').querySelectorAll('.opt').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        $('tq1').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
-        q1 = btn.dataset.q;
-        update();
-      });
+    function reset() { fails = 0; $('leaf-in').value = ''; $('leaf-fb').textContent = ''; draw(); }
+    $('leaf-check').addEventListener('click', () => {
+      const leaf = L[b], v = parseNum($('leaf-in').value), fb = $('leaf-fb');
+      if (!isFinite(v)) { fb.textContent = 'Escribe un número, por ejemplo 0,40.'; fb.style.color = 'var(--e10-muted)'; return; }
+      if (Math.abs(v - leaf.ans) <= 0.02 * leaf.ans) { fb.textContent = `Correcto: ${sci(leaf.ans, 3)}.`; fb.style.color = 'var(--e10-success)'; return; }
+      fails++; fb.style.color = 'var(--e10-danger)';
+      fb.textContent = fails < 2 ? 'No coincide. Pasa todo a unidades SI (cm² → m², mH → H) y revisa si usas ΔB, ω = 2πf o N.' : `No coincide. La respuesta es ${sci(leaf.ans, 3)}: compárala paso a paso con la fórmula.`;
     });
-
-    $('tq2').querySelectorAll('.opt').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        $('tq2').querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
-        q2 = btn.dataset.a;
-        update();
-      });
-    });
-    return { draw: update };
+    $('leaf-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('leaf-check').click(); });
+    window.__arbol = L;
+    return { draw };
   })();
 
-  // 14 · Mapa Conceptual de Inducción
+  // ── 12 · Mapa de conceptos con conexiones animadas ──
   sims.cmap = (() => {
-    const nodes = [
-      { id: 'FA', label: 'Ley de Faraday', k: 'this', x: 390, y: 140, big: true, def: 'La variación del flujo magnético genera una fem inducida en el circuito.', eq: '\\[\\mathcal{E} = -\\frac{d\\Phi_B}{dt}\\]' },
-      { id: 'LZ', label: 'Ley de Lenz', k: 'this', x: 210, y: 260, def: 'La corriente inducida se opone a la causa que la produce (inercia energética).', eq: '\\[\\vec B_{\\text{ind}} \\text{ se opone a } \\Delta\\vec B\\]' },
-      { id: 'MV', label: 'FEM de Movimiento', k: 'this', x: 390, y: 270, def: 'Conductor móvil cortando líneas de campo magnético.', eq: '\\[\\mathcal{E} = B L v\\]' },
-      { id: 'FC', label: 'Corrientes Foucault', k: 'this', x: 570, y: 260, def: 'Bucles de corriente en masas metálicas volumétricas: frenado y calor.', eq: '\\[P = I^2 R\\]' },
-      { id: 'IN', label: 'Autoinductancia L', k: 'this', x: 250, y: 400, def: 'Parámetro geométrico que mide la oposición del devanado a cambios de corriente.', eq: '\\[L = \\frac{N\\Phi_B}{i} = \\mu_0 n^2 A \\ell\\]' },
-      { id: 'RL', label: 'Circuitos RL', k: 'this', x: 440, y: 410, def: 'Evolución exponencial transitoria con constante tau = L/R.', eq: '\\[i(t) = I_0(1 - e^{-t/\\tau})\\]' },
-      { id: 'MX', label: 'Maxwell-Faraday', k: 'fut', x: 620, y: 400, def: 'Capítulo 12: Campo eléctrico inducido no conservativo con rotacional no nulo.', eq: '\\[\\nabla \\times \\vec E = -\\frac{\\partial \\vec B}{\\partial t}\\]' },
+    const K = { past: 'Viene de un capítulo anterior', this: 'Este capítulo', fut: 'Lleva a un capítulo siguiente' };
+    const N = [
+      { id: 'LO', x: 80, y: 70, k: 'past', label: 'Fuerza de Lorentz', sub: 'cap. 8', def: 'La fuerza sobre las cargas de una barra que se mueve es la fem de movimiento.', tex: String.raw`\vec F=q\,\vec v\times\vec B`, where: 'Repaso: capítulo 8', clase: 8 },
+      { id: 'AM', x: 80, y: 250, k: 'past', label: 'Campo del solenoide', sub: 'cap. 10', def: 'El campo uniforme de un solenoide permite calcular su flujo y su inductancia.', tex: String.raw`B=\mu_0 nI`, where: 'Repaso: capítulo 10', clase: 10 },
+      { id: 'GA', x: 80, y: 430, k: 'past', label: 'Potencial eléctrico', sub: 'cap. 3', def: 'El campo electrostático es conservativo: su circulación es cero. El campo inducido no lo es.', tex: String.raw`\oint\vec E\cdot d\vec\ell=0`, where: 'Repaso: capítulo 3', clase: 3 },
+      { id: 'FM', x: 290, y: 70, k: 'this', label: 'Fem de movimiento', sub: 'vBL', def: 'Fem de un conductor que se mueve en un campo magnético.', tex: String.raw`\varepsilon=vBL`, where: 'Diapositiva 5 · escena Barra', slide: 5, lab: 'barra' },
+      { id: 'FA', x: 290, y: 240, k: 'this', big: true, label: 'Ley de Faraday', sub: 'idea central', def: 'La fem inducida es igual al ritmo de cambio del flujo magnético, con signo menos.', tex: String.raw`\varepsilon=-N\dfrac{d\Phi_B}{dt}`, where: 'Diapositiva 4 · escena Flujo', slide: 4, lab: 'flujo' },
+      { id: 'LE', x: 290, y: 420, k: 'this', label: 'Ley de Lenz', sub: 'el signo menos', def: 'La corriente inducida se opone al cambio que la produce.', tex: String.raw`\varepsilon=-\dfrac{d\Phi_B}{dt}`, where: 'Diapositiva 2 · escena Imán', slide: 2, lab: 'iman' },
+      { id: 'FB', x: 510, y: 60, k: 'this', label: 'Flujo magnético', sub: 'weber', def: 'Cuánto campo atraviesa una superficie.', tex: String.raw`\Phi_B=BA\cos\phi`, where: 'Diapositiva 3', slide: 3 },
+      { id: 'GE', x: 510, y: 165, k: 'this', label: 'Generador', sub: 'NBAω sen ωt', def: 'Una bobina que gira en un campo produce una fem alterna.', tex: String.raw`\varepsilon=NBA\omega\sin\omega t`, where: 'Diapositiva 6 · escena Generador', slide: 6, lab: 'generador' },
+      { id: 'EI', x: 510, y: 270, k: 'this', label: 'Campo eléctrico inducido', sub: 'no conservativo', def: 'Un campo magnético que cambia crea un campo eléctrico con líneas cerradas.', tex: String.raw`\oint\vec E\cdot d\vec\ell=-\dfrac{d\Phi_B}{dt}`, where: 'Diapositiva 7', slide: 7 },
+      { id: 'IN', x: 510, y: 390, k: 'this', label: 'Inductancia', sub: 'L y M', def: 'Relaciona el flujo de una bobina con su propia corriente (L) o con la de otra (M).', tex: String.raw`\varepsilon=-L\dfrac{dI}{dt}\quad U=\tfrac12LI^2`, where: 'Diapositiva 8', slide: 8 },
+      { id: 'MX', x: 710, y: 200, k: 'fut', label: 'Ecuaciones de Maxwell', sub: 'cap. 12', def: 'La ley de Faraday es una de las cuatro ecuaciones; con ella se deducen las ondas electromagnéticas.', tex: String.raw`\oint\vec E\cdot d\vec\ell=-\dfrac{d\Phi_B}{dt}`, where: 'Capítulo 12', clase: 12 },
+      { id: 'CA', x: 710, y: 390, k: 'fut', label: 'Corriente alterna', sub: 'cap. 13', def: 'Circuitos RL, LC y RLC, transformadores y la fem de los generadores.', tex: String.raw`\dfrac{V_2}{V_1}=\dfrac{N_2}{N_1}`, where: 'Capítulo 13', clase: 13 },
     ];
-
-    const edges = [
-      ['FA', 'LZ', 'signo (-)'], ['FA', 'MV', 'área variable'], ['FA', 'FC', 'masas conductoras'],
-      ['FA', 'IN', 'auto-flujo'], ['IN', 'RL', 'transitorio'], ['FA', 'MX', 'forma diferencial']
-    ];
-
-    let built = false;
+    const E = [['LO', 'FM', 'q v × B'], ['AM', 'FB', 'B del solenoide'], ['AM', 'IN', 'L = μ₀N²A/ℓ'], ['GA', 'EI', 'contraste', 1], ['FB', 'FA', 'su cambio'], ['FM', 'FA', 'caso particular'],
+      ['FA', 'LE', 'signo'], ['FA', 'GE', ''], ['FA', 'EI', ''], ['FA', 'IN', 'autoinducción'], ['EI', 'MX', ''], ['IN', 'CA', 'RL, transformador'], ['GE', 'CA', 'alterna']];
+    const by = {}; N.forEach((n) => { by[n.id] = n; });
+    let sel = 'FA', hov = null, built = false;
+    const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg', lines = [];
     function build() {
-      const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg';
-      const by = {}; nodes.forEach(n => by[n.id] = n);
-      edges.forEach(([u, v]) => {
-        const p = by[u], q = by[v];
-        const line = document.createElementNS(NS, 'line');
-        line.setAttribute('x1', p.x); line.setAttribute('y1', p.y);
-        line.setAttribute('x2', q.x); line.setAttribute('y2', q.y);
-        line.setAttribute('class', 'edge');
-        svg.appendChild(line);
-
-        const flow = document.createElementNS(NS, 'line');
-        flow.setAttribute('x1', p.x); flow.setAttribute('y1', p.y);
-        flow.setAttribute('x2', q.x); flow.setAttribute('y2', q.y);
-        flow.setAttribute('class', 'flow');
-        svg.appendChild(flow);
+      E.forEach((e) => {
+        const p = by[e[0]], q = by[e[1]];
+        const base = document.createElementNS(NS, 'line'), flow = document.createElementNS(NS, 'line');
+        [base, flow].forEach((l) => { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); l.setAttribute('x2', q.x); l.setAttribute('y2', q.y); svg.appendChild(l); });
+        if (e[2]) { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'elab'); t.setAttribute('x', (p.x + q.x) / 2); t.setAttribute('y', (p.y + q.y) / 2 - 4); t.textContent = e[2]; svg.appendChild(t); }
+        lines.push({ e, base, flow });
       });
-
-      nodes.forEach(n => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `cnode ${n.k}${n.big ? ' big' : ''}`;
-        btn.style.left = n.x + 'px'; btn.style.top = n.y + 'px';
-        btn.textContent = n.label;
-        btn.addEventListener('click', () => {
-          $('cmap').querySelectorAll('.cnode').forEach(b => b.classList.remove('on'));
-          btn.classList.add('on');
-          $('cm-label').textContent = n.label;
-          $('cm-def').textContent = n.def;
-          $('cm-eq').innerHTML = n.eq;
-          renderMath($('cm-eq'));
-        });
-        $('cmap').appendChild(btn);
+      N.forEach((n) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `cnode ${n.k}${n.big ? ' big' : ''}`; b.style.left = n.x + 'px'; b.style.top = n.y + 'px';
+        b.innerHTML = `${n.label}<small>${n.sub}</small>`; b.dataset.id = n.id;
+        b.addEventListener('click', () => { sel = n.id; paint(); });
+        b.addEventListener('mouseenter', () => { hov = n.id; paint(); }); b.addEventListener('mouseleave', () => { hov = null; paint(); });
+        b.addEventListener('focus', () => { hov = n.id; paint(); }); b.addEventListener('blur', () => { hov = null; paint(); });
+        $('cmap').appendChild(b);
       });
       built = true;
     }
-    return { draw() { if (!built) build(); } };
-  })();
-
-  // 15 · Glosario en Tarjetas
-  sims.glossary = (() => {
-    const terms = [
-      ['Ley de Faraday', 'La fem inducida es proporcional a la rapidez de cambio del flujo magnético: E = -dPhi/dt.'],
-      ['Ley de Lenz', 'El sentido de la fem inducida se opone siempre a la variación del flujo que la produce.'],
-      ['Flujo Magnético (Wb)', 'Integral de superficie del campo magnético Phi = integral B · dA. Unidad SI: Weber.'],
-      ['FEM de Movimiento', 'Voltaje inducido a lo largo de un conductor que corta líneas de campo: E = B L v.'],
-      ['Autoinductancia (H)', 'Propiedad circuital L = N Phi/i que se opone a cambios de corriente. Unidad SI: Henry.'],
-      ['Constante de Tiempo RL', 'Tiempo característico tau = L/R en que la corriente alcanza el 63.2% del valor final.'],
-      ['Corrientes de Foucault', 'Corrientes parásitas circulantes inducidas en la masa de un bloque conductor.'],
-      ['Energía Magnética', 'Energía almacenada en el campo del inductor: U_B = (1/2) L I^2.']
-    ];
-    let idx = 0, isBack = false;
-    function update() {
-      const card = $('fc-card');
-      card.className = 'fcard' + (isBack ? ' back' : '');
-      $('fc-side').textContent = isBack ? 'DEFINICIÓN RIGUROSA' : 'TÉRMINO';
-      $('fc-text').textContent = isBack ? terms[idx][1] : terms[idx][0];
-      $('fc-count').textContent = `Tarjeta ${idx + 1} de ${terms.length}`;
+    function paint() {
+      lines.forEach(({ e, base, flow }) => {
+        const hot = [sel, hov].includes(e[0]) || [sel, hov].includes(e[1]);
+        base.setAttribute('class', 'edge' + (e[3] ? ' dash' : '') + (hot ? ' hot' : '')); flow.setAttribute('class', 'flow' + (hot ? ' hot' : ''));
+      });
+      $('cmap').querySelectorAll('.cnode').forEach((b) => b.classList.toggle('on', b.dataset.id === sel));
+      const n = by[sel];
+      $('cm-kind').textContent = K[n.k]; $('cm-label').textContent = n.label; $('cm-def').textContent = n.def; $('cm-where').textContent = n.where; katexTo($('cm-eq'), n.tex);
+      const act = $('cm-actions'); act.innerHTML = '';
+      const add = (label, pri, fn, href) => { const el = document.createElement(href ? 'a' : 'button'); el.className = 'btn' + (pri ? ' pri' : ''); el.textContent = label; if (href) { el.href = href; el.target = href.startsWith('../../player') ? '_top' : '_blank'; el.style.cssText = 'display:inline-flex;align-items:center;text-decoration:none'; } else { el.type = 'button'; el.addEventListener('click', fn); } act.appendChild(el); };
+      if (n.slide) add(`Ir a la diapositiva ${n.slide}`, true, () => go(n.slide - 1));
+      if (n.clase) add(`Abrir el capítulo ${n.clase}`, true, null, `../../player.html?clase=${n.clase}`);
+      if (n.lab) add('Abrir en FaradayLab', false, null, LAB + n.lab);
     }
-    $('fc-card').addEventListener('click', () => { isBack = !isBack; update(); });
-    $('fc-flip').addEventListener('click', () => { isBack = !isBack; update(); });
-    $('fc-next').addEventListener('click', () => { idx = (idx + 1) % terms.length; isBack = false; update(); });
-    return { draw: update };
+    return { draw() { if (!built) build(); paint(); } };
   })();
 
-  // Pregunta interactiva Diapositiva 4
-  const voteBtns = document.querySelectorAll('#vote-lenz .btn');
-  voteBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      voteBtns.forEach(b => b.classList.remove('right', 'wrong'));
-      if (btn.dataset.r === 'c') {
-        btn.classList.add('right');
-        $('fb-lenz').style.display = 'block';
-      } else {
-        btn.classList.add('wrong');
-      }
-    });
-  });
+  // ── 13 · Línea de tiempo y glosario en tarjetas ──
+  sims.hist = (() => {
+    // Hechos tomados de Young y Freedman (2009), secciones 29.1, 29.3 y 29.7.
+    const EV = [
+      { y: 'década de 1830', x: 200, who: 'Michael Faraday', what: 'En Inglaterra, sus experimentos muestran que un imán que se mueve cerca de una bobina induce una corriente, pero solo mientras se mueve.', link: 'Diapositivas 2 y 4.' },
+      { y: 'década de 1830', x: 440, who: 'Joseph Henry', what: 'En Estados Unidos realiza experimentos pioneros con la fem inducida. La unidad de inductancia, el henry, lleva su nombre.', link: 'Diapositiva 8.' },
+      { y: '1804–1865', x: 700, who: 'H. F. E. Lenz', what: 'Científico ruso que reprodujo de forma independiente muchos descubrimientos de Faraday y Henry. Su ley da el sentido de la corriente inducida.', link: 'Diapositiva 2.' },
+      { y: 1865, x: 1000, who: 'J. C. Maxwell', what: 'Introduce la corriente de desplazamiento y reúne la inducción con el resto del electromagnetismo.', link: 'Capítulo 12.' },
+    ];
+    const G = [
+      ['Flujo magnético', 'Φ_B = ∫ B · dA; para B uniforme, BA cos φ. Unidad: weber, 1 Wb = 1 T · m².'],
+      ['Fem inducida', 'Fem producida por un flujo magnético que cambia.'],
+      ['Ley de Faraday', 'ε = −N dΦ_B/dt: la fem es el ritmo de cambio del flujo total.'],
+      ['Ley de Lenz', 'La corriente inducida se opone al cambio que la produce.'],
+      ['Fem de movimiento', 'ε = vBL: fem de un conductor que se mueve en un campo magnético.'],
+      ['Generador', 'Bobina que gira en un campo: ε = NBAω sen ωt.'],
+      ['Valor eficaz', 'Para una fem sinusoidal, ε_máx / √2.'],
+      ['Campo eléctrico inducido', 'Campo eléctrico de líneas cerradas producido por un campo magnético que cambia; no es conservativo.'],
+      ['Corrientes parásitas', 'Corrientes en remolino inducidas en un bloque metálico; lo calientan y frenan su movimiento.'],
+      ['Autoinductancia L', 'L = NΦ_B / I; una bobina se opone a los cambios de su propia corriente. Unidad: henry.'],
+      ['Inductancia mutua M', 'Relaciona la fem en una bobina con el cambio de corriente en otra.'],
+      ['Energía magnética', 'U = ½ L I², guardada en el campo, con densidad B² / 2μ₀.'],
+    ];
+    const KEY = 'e10_c11_glosario';
+    let ev = 0, back = false, st = null, built = false;
+    const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.queue)) return s; } catch (_) {} return { queue: G.map((_, i) => i), known: [] }; };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+    function build() {
+      const tl = $('tline');
+      EV.forEach((e, i) => {
+        const d = document.createElement('span'); d.className = 'tdot'; d.style.left = e.x + 'px'; tl.appendChild(d);
+        const t = document.createElement('span'); t.className = 'tyear'; t.style.left = e.x + 'px'; t.textContent = e.y; tl.appendChild(t);
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'tev'; b.style.left = e.x + 'px'; b.innerHTML = `<b>${e.y}</b>${e.who}`; b.addEventListener('click', () => { ev = i; paint(); }); tl.appendChild(b);
+      });
+      st = load();
+      $('fc-card').addEventListener('click', () => { back = !back; paint(); }); $('fc-flip').addEventListener('click', () => { back = !back; paint(); });
+      $('fc-again').addEventListener('click', () => { if (!st.queue.length) return; const c = st.queue.shift(); st.queue.splice(Math.min(3, st.queue.length), 0, c); back = false; save(); paint(); });
+      $('fc-ok').addEventListener('click', () => { if (!st.queue.length) return; st.known.push(st.queue.shift()); back = false; save(); paint(); });
+      $('fc-reset').addEventListener('click', () => { st = { queue: G.map((_, i) => i), known: [] }; back = false; save(); paint(); });
+      built = true;
+    }
+    function paint() {
+      $('tline').querySelectorAll('.tev').forEach((b, i) => b.classList.toggle('on', i === ev));
+      const e = EV[ev]; $('tl-text').innerHTML = `<b style="color:var(--e10-primary)">${e.who}, ${e.y}.</b> ${e.what} <span style="color:var(--e10-muted)">${e.link}</span>`;
+      const card = $('fc-card');
+      if (!st.queue.length) { card.className = 'fcard back'; $('fc-side').textContent = 'GLOSARIO COMPLETO'; $('fc-text').textContent = 'Dominaste las 12 palabras clave. Pulsa «Empezar de nuevo» para repasar.'; }
+      else { const c = G[st.queue[0]]; card.className = 'fcard' + (back ? ' back' : ''); $('fc-side').textContent = back ? 'DEFINICIÓN' : 'TÉRMINO'; $('fc-text').textContent = back ? c[1] : c[0]; }
+      $('fc-count').textContent = `por repasar ${st.queue.length} · dominadas ${st.known.length} de ${G.length}`;
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
 
-  // Switcher de escenas del laboratorio
-  const labBtns = document.querySelectorAll('#lab-scenes .btn');
-  labBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      labBtns.forEach(b => b.classList.remove('on'));
-      btn.classList.add('on');
-      $('lab-frame').src = btn.dataset.lab;
-    });
-  });
-
-  // Navegación
-  const slides = [...document.querySelectorAll('.slide')];
-  let cur = 0;
-  const onShow = {
-    1: () => sims.cover.show(),
-    3: sims.flux.draw,
-    5: sims.moti.draw,
-    10: sims.rl.draw,
-    12: sims.tree.draw,
-    14: sims.cmap.draw,
-    15: sims.glossary.draw,
-  };
-
+  // ── Navegación ──
+  const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
+  const onShow = { 1: () => sims.cover.show(), 2: sims.pre.draw, 3: sims.fl.draw, 4: sims.fa.draw, 5: () => sims.ba.show(), 6: () => sims.ge.show(), 7: sims.ei.draw, 8: sims.in.draw, 10: sims.tree.draw, 11: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; }, 12: sims.cmap.draw, 13: sims.hist.draw };
+  const onHide = { 1: () => sims.cover.hide(), 2: () => sims.pre.hide(), 5: () => sims.ba.hide(), 6: () => sims.ge.hide() };
   function go(i) {
-    i = Math.max(0, Math.min(slides.length - 1, i));
-    slides[cur].classList.remove('on');
-    if (cur === 0) sims.cover.hide();
-    cur = i;
-    slides[cur].classList.add('on');
-    (onShow[cur + 1] || (() => {}))();
-    $('nav-count').textContent = `${cur + 1} / ${slides.length}`;
-    $('progress').style.width = `${((cur + 1) / slides.length) * 100}%`;
+    i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); (onHide[cur + 1] || (() => {}))();
+    cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`; $('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
     try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
   }
+  $('nav-prev').addEventListener('click', () => go(cur - 1)); $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1); });
+  $('nav-fs').addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {}); else document.exitFullscreen?.(); });
+  const drawAll = () => Object.values(sims).forEach((s) => s.draw && s.draw());
+  const print = () => { drawAll(); setTimeout(() => window.print(), 150); };
+  $('nav-print').addEventListener('click', print); $('btn-print2').addEventListener('click', print);
+  window.addEventListener('beforeprint', drawAll);
 
-  $('nav-prev').addEventListener('click', () => go(cur - 1));
-  $('nav-next').addEventListener('click', () => go(cur + 1));
-  document.addEventListener('keydown', (e) => {
-    if (e.target.closest('input,textarea')) return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1);
-    if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
-  });
+  // ── Escala al tamaño de la ventana ──
+  function fit() { const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720); $('stage').style.transform = `scale(${s})`; }
+  window.addEventListener('resize', fit); fit();
 
-  $('nav-fs').addEventListener('click', () => {
-    const d = document.documentElement;
-    if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {});
-    else document.exitFullscreen?.();
-  });
-
-  const print = () => {
-    Object.values(sims).forEach(s => s.draw && s.draw());
-    setTimeout(() => window.print(), 150);
-  };
-  $('nav-print').addEventListener('click', print);
-  $('btn-print2').addEventListener('click', print);
-
-  function fit() {
-    const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720);
-    $('stage').style.transform = `scale(${s})`;
-  }
-  window.addEventListener('resize', fit);
-  fit();
-
-  window.addEventListener('load', () => {
-    renderMath(document.body);
-    const n = parseInt(location.hash.slice(1));
-    go(isFinite(n) ? n - 1 : 0);
-  });
+  window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  window.addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1)); if (isFinite(n) && n - 1 !== cur) go(n - 1); });
+  slides[0].classList.add('on');
+  window.__c11 = { sims, go };
 })();
 </script>
 </body>
