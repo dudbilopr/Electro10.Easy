@@ -1,337 +1,431 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Práctico No. 2 · Campo Eléctrico y Dipolos — Electro10.Easy</title>
-    <link rel="stylesheet" href="../css/tokens.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        :root {
-            --e10-primary: #B3246B;
-            --e10-primary-soft: rgba(179, 36, 107, 0.08);
-            --e10-accent: #0B8CA8;
-            --e10-accent-strong: #08758C;
-            --e10-accent-soft: rgba(11, 140, 168, 0.08);
-            --e10-ink: #0f172a;
-            --e10-muted: #64748b;
-            --e10-surface: #ffffff;
-            --e10-bg: #f8fafc;
-            --e10-line: #e2e8f0;
-            --e10-success: #10b981;
-            --e10-success-soft: rgba(16, 185, 129, 0.08);
-            --e10-warning: #f59e0b;
-            --e10-warning-soft: rgba(245, 158, 11, 0.08);
-        }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
-        .max-w-container { max-width: 1040px; margin: 0 auto; }
-        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
-        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
-        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
-        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
-        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
-        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
-        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
-        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
-        .btn-pri:hover { background: #961b57; }
-        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
-        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
-        .path-content { display: none; margin-top: 10px; }
-        .path-content.active { display: block; }
-        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
-        input:focus { border-color: var(--e10-primary); }
-        @media print {
-            .no-print { display: none !important; }
-            body { background: #fff; padding: 0; }
-            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller 2 · Campo eléctrico y dipolos — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Taller 2 · espejo del PDF presentaciones/M2_CampoElectrico/recursos/Cap02_Taller.pdf: mismos enunciados y constantes. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 17px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--e10-muted)}
+.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1,h2,h3{font-family:var(--e10-font-display);letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.08;margin:18px 0 6px}
+.sub{color:var(--e10-muted);font-size:19px;margin:0 0 18px}
+h2{font-size:23px;margin:34px 0 12px;display:flex;gap:10px;align-items:baseline}
+h2 .n{font:600 15px var(--e10-font-mono);color:var(--e10-primary)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 18px;margin:12px 0}
+.formula{background:var(--e10-primary-soft);border-radius:12px;padding:6px 14px;text-align:center;overflow-x:auto}
+.clave{background:var(--e10-primary-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.clave b{color:var(--e10-primary)}
+.muted{color:var(--e10-muted);font-size:15px}
+.res{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);margin:14px 0;overflow:hidden}
+.res>.h{background:var(--e10-primary-soft);color:var(--e10-primary);font:600 16px var(--e10-font-display);padding:9px 16px}
+.res>.b{padding:12px 18px}
+.pred{background:var(--e10-warning-soft);border-radius:10px;padding:8px 14px;font-size:16px}
+.pred b{color:var(--e10-warning)}
+.paso{font:600 15px var(--e10-font-body);color:var(--e10-primary);margin:12px 0 2px}
+.eq{overflow-x:auto;padding:2px 0}
+.result{background:var(--e10-success-soft);border-radius:10px;padding:9px 14px;margin-top:10px}
+.result b{color:var(--e10-success)}
+details.sol>summary{cursor:pointer;color:var(--e10-primary);font-weight:600;margin:8px 0;list-style:none}
+details.sol>summary::before{content:'▸ '}details.sol[open]>summary::before{content:'▾ '}
+.reto{border:1px solid var(--e10-line);border-radius:12px;background:var(--e10-surface);padding:12px 16px;margin:10px 0}
+.reto .rh{font:600 14px var(--e10-font-display);color:var(--e10-accent-strong)}
+.reto .rh small{font:500 12px var(--e10-font-mono);color:var(--e10-muted);margin-left:6px}
+.ans{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ans input{flex:1;min-width:140px;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.ans input:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.ans .u{font-size:14px;color:var(--e10-muted)}
+.fb{font-size:15px;min-height:1.2em;margin-top:6px}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.toc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.toc a{font:500 13px var(--e10-font-body);border:1px solid var(--e10-line);border-radius:999px;padding:5px 11px;color:var(--e10-ink);text-decoration:none;background:var(--e10-surface)}
+.toc a:hover{border-color:var(--e10-primary);color:var(--e10-primary)}
+.teo{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:12px;padding:10px 16px;margin:8px 0}
+.teo summary{cursor:pointer;font-weight:600}
+pre{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:10px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 var(--e10-font-mono)}
+figure{margin:8px 0;text-align:center}
+figure svg{max-width:100%;height:auto}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}
+.tip b{color:var(--e10-accent-strong)}
+.entrega{border:2px solid var(--e10-primary)}
+.entrega label{display:block;font-size:14px;color:var(--e10-muted);margin-top:8px}
+.entrega input[type=text]{width:100%;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:16px var(--e10-font-body);background:var(--e10-surface);color:var(--e10-ink)}
+table.sum{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+table.sum td,table.sum th{border-bottom:1px solid var(--e10-line);padding:6px 8px;text-align:left}
+.print-only{display:none}
+@media print{
+  body{background:#fff;font-size:12pt}.no-print{display:none!important}.print-only{display:block}
+  details{display:block}details>summary{display:none}details>*{display:block!important}
+  .res,.reto,.card{break-inside:avoid}
+}
+.cita{font-size:12px;color:var(--e10-muted);margin:6px 0 0}
+</style>
 </head>
 <body>
-<div class="max-w-container">
+<div class="wrap">
+  <div class="top"><span><b>Electro<span>10.Easy</span></b> · Capítulo 2 · Campo eléctrico y dipolos</span><span class="mono">Taller</span></div>
+  <h1>Campo eléctrico y dipolos</h1>
+  <p class="sub">La carga modifica el espacio; otra carga responde a esa modificación.</p>
 
-    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
-        <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-                <span class="badge badge-primary">Capítulo 2 · Campo Eléctrico</span>
-                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
-            </div>
-            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 2: Campo Eléctrico y Dinámica Dipolar</h1>
-            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Superposición de campos vectoriales en el plano, análisis de dipolos y cálculo de torque electrostático.</p>
-        </div>
-        <div class="no-print" style="display:flex;gap:8px">
-            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
-            <a href="../presentaciones/M2_CampoElectrico/index.html" class="btn" style="text-decoration:none">Ver Clase 2 →</a>
-        </div>
-    </header>
+  <div class="bar no-print">
+    <a class="btn pri" href="../presentaciones/M2_CampoElectrico/recursos/Cap02_Taller.pdf" download>Descargar este taller en PDF</a>
+    <a class="btn" href="../presentaciones/M2_CampoElectrico/recursos/Cap02_Guia.pdf" download>Guía de estudio (PDF)</a>
+    <a class="btn" href="../presentaciones/M2_CampoElectrico/index.html" target="_blank" rel="noopener">Clase interactiva</a>
+    <a class="btn" href="../simuladores/VectorField.html" target="_blank" rel="noopener">VectorFieldLab</a>
+  </div>
 
-    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
-        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Referencia</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Campo Carga Puntual</b>
-                \[\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{q}{r^2}\hat{r}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Momento Dipolar</b>
-                \[\vec{p} = q\,\vec{d}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Torque y Energía</b>
-                \[\vec{\tau} = \vec{p}\times\vec{E}, \quad U = -\vec{p}\cdot\vec{E}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Dipolo Axial Lejano</b>
-                \[\vec{E}_{\text{axial}} \approx \frac{1}{4\pi\epsilon_0}\frac{2\vec{p}}{z^3}\]
-            </div>
-        </div>
-    </section>
+  <p><b>Qué vas a practicar.</b> Obtener el campo a partir de la fuerza sobre una carga de prueba; calcular el campo de una carga puntual como vector; sumar campos por superposición en una recta y en un plano; deducir el campo de un dipolo en su mediatriz y en su eje, con sus aproximaciones a gran distancia; calcular el torque y la energía de un dipolo en un campo uniforme, y describir el movimiento de una carga entre placas.</p>
+  <div class="formula">\[ \vec E=\lim_{q_0\to0}\frac{\vec F_0}{q_0}\qquad \vec E=k\,\frac{q}{r^2}\,\hat r\qquad \vec E=\sum_i\vec E_i\qquad p=qd\qquad \vec\tau=\vec p\times\vec E\qquad U=-\vec p\cdot\vec E \]</div>
+  <p class="muted">Cómo usar este taller: lee el ejercicio resuelto de cada sección, intenta rehacerlo antes de abrir la solución y luego resuelve los retos; cada reto tiene su comprobador. Antes de calcular, dibuja las cargas, el punto donde mides el campo y una flecha por cada carga: se aleja de las positivas y apunta hacia las negativas. \(\hat r\) es el vector unitario que va de la carga fuente al punto. Constantes (Young y Freedman, 2009): \(k=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}\), \(e=1{,}602\times10^{-19}\ \mathrm C\), \(m_e=9{,}109\times10^{-31}\ \mathrm{kg}\), \(m_p=1{,}673\times10^{-27}\ \mathrm{kg}\), \(g=9{,}80\ \mathrm{m/s^2}\).</p>
+  <div class="clave"><b>Antes de empezar, repasa.</b> La ley de Coulomb y la superposición de fuerzas (capítulo 1); producto escalar y vectorial; torque \(\tau=rF\sin\phi\) y trabajo de un torque, \(dW=\tau\,d\phi\); cinemática con aceleración constante. Las palabras nuevas están en el glosario de la guía de estudio.</div>
 
-    <!-- PROBLEMA 1: CAMPO EN UN VÉRTICE DE CUADRADO -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Campo Resultante en el Vértice Libre de un Cuadrado</h2>
-            <span class="badge badge-accent">Nivel Intermedio</span>
-        </div>
-        <p style="font-size:16px">
-            Tres cargas puntuales están situadas en los vértices de un cuadrado de lado $L = 0{,}30\ \text{m}$ en el plano $xy$: $q_1 = +5{,}0\ \text{nC}$ en $(0, L)$, $q_2 = -5{,}0\ \text{nC}$ en $(0, 0)$ y $q_3 = +5{,}0\ \text{nC}$ en $(L, 0)$. Determina analíticamente el vector campo eléctrico resultante $\vec{E}_{\text{net}}$ en el vértice desocupado $P(L, L)$.
-        </p>
+  <nav class="toc no-print" aria-label="Secciones">
+    <a href="#s21">2.1 Definición</a><a href="#s22">2.2 Carga puntual</a><a href="#s23">2.3 Recta</a><a href="#s24">2.4 Plano</a><a href="#s25">2.5 Mediatriz</a><a href="#s26">2.6 Eje</a><a href="#s27">2.7 Torque</a><a href="#s28">2.8 Placas</a><a href="#sT">Teoría</a><a href="#sP">Python</a><a href="#sE">Entrega</a>
+  </nav>
 
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <span class="step-badge">1</span><b>Identificación de Fuentes y Vectores de Posición:</b>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Fuentes: $q_1 = +5\ \text{nC}$ en $(0, 0{,}30)$, $q_2 = -5\ \text{nC}$ en $(0, 0)$, $q_3 = +5\ \text{nC}$ en $(0{,}30, 0)$.<br>
-                    Punto de campo: $P(0{,}30, 0{,}30)\ \text{m}$.
-                </p>
-            </div>
+  <!-- 2.1 -->
+  <h2 id="s21"><span class="n">2.1</span>El campo es fuerza por unidad de carga</h2>
+  <div class="res" data-res="1"><div class="h">Ejercicio resuelto 1 · Lo que mide la carga de prueba</div><div class="b">
+    <p>Una carga de prueba \(q_0=-2{,}0\ \mathrm{nC}\) colocada en el punto \(P\) siente una fuerza de \(6{,}0\times10^{-5}\ \mathrm N\) hacia \(+x\). ¿Cuánto vale el campo en \(P\)? Si se cambia \(q_0\) por una carga de \(+5{,}0\ \mathrm{nC}\), ¿qué fuerza siente?</p>
+    <div class="pred"><b>Predice antes de calcular.</b> Si \(q_0\) es negativa, ¿el campo apunta como la fuerza o al revés?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Definición</div><p>El campo es la fuerza dividida entre la carga de prueba, con su signo:</p>
+      <div class="eq">\[ \vec E=\frac{\vec F_0}{q_0}=\frac{(+6{,}0\times10^{-5}\ \mathrm N)\,\hat\imath}{-2{,}0\times10^{-9}\ \mathrm C}=-3{,}0\times10^{4}\ \mathrm{N/C}\,\hat\imath. \]</div>
+      <div class="paso">2. El campo no depende de \(q_0\)</div><p>El campo lo producen las otras cargas: sigue siendo \(-3{,}0\times10^{4}\ \mathrm{N/C}\,\hat\imath\) cuando se cambia la carga de prueba. Lo que cambia es la fuerza:</p>
+      <div class="eq">\[ \vec F=q\,\vec E=(+5{,}0\times10^{-9}\ \mathrm C)(-3{,}0\times10^{4}\ \mathrm{N/C})\,\hat\imath=-1{,}5\times10^{-4}\ \mathrm N\,\hat\imath. \]</div>
+      <div class="paso">3. Verificación</div><p>Una carga negativa siente la fuerza opuesta al campo; una positiva, en el sentido del campo. Las dos respuestas lo cumplen.</p>
+      <div class="result"><b>Resultado.</b> \(\vec E=3{,}0\times10^{4}\ \mathrm{N/C}\) hacia \(-x\), el mismo con cualquier carga de prueba. Sobre \(+5{,}0\ \mathrm{nC}\): \(1{,}5\times10^{-4}\ \mathrm N\) hacia \(-x\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="1"><div class="rh">Reto 1<small>nivel básico</small></div><p>¿Qué módulo debe tener un campo vertical para que la fuerza eléctrica sobre un electrón iguale su peso? ¿Hacia dónde debe apuntar el campo para sostenerlo?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.29, inciso b.</p></div>
+  <div class="reto" data-reto="2"><div class="rh">Reto 2<small>nivel básico</small></div><p>Una gota de aceite de \(2{,}00\times10^{-15}\ \mathrm{kg}\) queda en reposo entre dos placas, donde hay un campo de \(3{,}06\times10^{4}\ \mathrm{N/C}\) dirigido hacia abajo. ¿Qué signo tiene su carga? ¿Cuántos electrones de más tiene?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), problema 23.91 (experimento de Millikan).</p></div>
 
-            <div class="soft-box">
-                <span class="step-badge">2</span><b>Esquema Vectorial y Distancias:</b>
-                <p style="margin:6px 0 0;font-size:15px">
-                    De $q_1$ a $P$: vector relativo $\vec{r}_{1P} = 0{,}30\hat{\imath} + 0\hat{\jmath}$, distancia $r_1 = L = 0{,}30\ \text{m}$.<br>
-                    De $q_3$ a $P$: vector relativo $\vec{r}_{3P} = 0\hat{\imath} + 0{,}30\hat{\jmath}$, distancia $r_3 = L = 0{,}30\ \text{m}$.<br>
-                    De $q_2$ a $P$: vector diagonal $\vec{r}_{2P} = 0{,}30\hat{\imath} + 0{,}30\hat{\jmath}$, distancia $r_2 = L\sqrt{2} = 0{,}30\sqrt{2} \approx 0{,}424\ \text{m}$.
-                </p>
-            </div>
+  <!-- 2.2 -->
+  <h2 id="s22"><span class="n">2.2</span>Campo de una carga puntual</h2>
+  <div class="res" data-res="2"><div class="h">Ejercicio resuelto 2 · Un vector que apunta hacia la carga, por dos caminos</div><div class="b">
+    <p>Una carga \(q=-6{,}0\ \mathrm{nC}\) está en el origen. Calcula el campo en \(P=(0{,}90;\ 1{,}20)\) m.</p>
+    <figure><svg role="img" viewBox="0 0 300 250" width="280" aria-label="Carga negativa en el origen y el campo en P apuntando hacia ella"><defs><marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="20" y1="220" x2="290" y2="220" stroke="var(--e10-line)"/><line x1="50" y1="245" x2="50" y2="10" stroke="var(--e10-line)"/>
+      <line x1="50" y1="220" x2="194" y2="28" stroke="var(--e10-muted)" stroke-dasharray="5 5"/>
+      <line x1="194" y1="28" x2="146" y2="92" stroke="var(--e10-vec-field)" stroke-width="4" marker-end="url(#ah1)"/>
+      <circle cx="50" cy="220" r="11" fill="var(--e10-q-neg)"/><circle cx="194" cy="28" r="5" fill="var(--e10-ink)"/>
+      <text x="64" y="240" font-size="14" fill="var(--e10-q-neg)">q &lt; 0</text><text x="204" y="32" font-size="14">P</text><text x="160" y="100" font-size="14" fill="var(--e10-vec-field)">E</text><text x="100" y="140" font-size="14" fill="var(--e10-muted)">r</text></svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿El campo en \(P\) se aleja del origen o apunta hacia él?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Distancia</div><p>\(r=\sqrt{0{,}90^2+1{,}20^2}=1{,}50\ \mathrm m\).</p>
+      <div class="paso">2. Camino A · módulo y dirección</div><p>Con el valor absoluto de la carga, \(E=k\dfrac{|q|}{r^2}=(8{,}988\times10^{9})\dfrac{6{,}0\times10^{-9}}{(1{,}50)^2}=23{,}97\ \mathrm{N/C}\). Como \(q&lt;0\), el campo apunta hacia la carga, en el sentido de \(-\hat r\), con \(\hat r=(0{,}60\,\hat\imath+0{,}80\,\hat\jmath)\):</p>
+      <div class="eq">\[ \vec E=-(23{,}97)(0{,}60\,\hat\imath+0{,}80\,\hat\jmath)=(-14{,}38\,\hat\imath-19{,}17\,\hat\jmath)\ \mathrm{N/C}. \]</div>
+      <div class="paso">3. Camino B · fórmula vectorial</div><p>Con \(\vec E=k\,q\,\vec r/r^3\) el signo de \(q\) da el sentido sin pensarlo aparte:</p>
+      <div class="eq">\[ \vec E=(8{,}988\times10^{9})\frac{(-6{,}0\times10^{-9})}{(1{,}50)^3}(0{,}90\,\hat\imath+1{,}20\,\hat\jmath)=(-14{,}38\,\hat\imath-19{,}17\,\hat\jmath)\ \mathrm{N/C}. \]</div>
+      <div class="result"><b>Resultado.</b> \(\vec E=(-14{,}38\,\hat\imath-19{,}17\,\hat\jmath)\ \mathrm{N/C}\): \(23{,}97\ \mathrm{N/C}\) dirigido de \(P\) hacia la carga negativa.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="3"><div class="rh">Reto 3<small>nivel básico</small></div><p>¿A qué distancia de una carga puntual de \(5{,}0\ \mathrm{nC}\) el campo vale \(100\ \mathrm{N/C}\)?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.26, inciso b.</p></div>
+  <div class="reto" data-reto="4"><div class="rh">Reto 4<small>nivel básico</small></div><p>El núcleo de un átomo de carbono tiene 6 protones. Trátalo como una carga puntual: ¿cuánto vale su campo a \(1{,}0\times10^{-10}\ \mathrm m\)?</p></div>
 
-            <div class="soft-box">
-                <span class="step-badge">3</span><b>Magnitudes de Campo Individuales ($k_e = 8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$):</b>
-                \[E_1 = k_e \frac{|q_1|}{L^2} = (8{,}99\times 10^9)\frac{5\times 10^{-9}}{(0{,}30)^2} = \frac{44{,}95}{0{,}09} = 499{,}4\ \text{N/C}\]
-                \[E_3 = k_e \frac{|q_3|}{L^2} = 499{,}4\ \text{N/C}\]
-                \[E_2 = k_e \frac{|q_2|}{(L\sqrt{2})^2} = \frac{k_e |q_2|}{2L^2} = \frac{499{,}4}{2} = 249{,}7\ \text{N/C}\]
-            </div>
+  <!-- 2.3 -->
+  <h2 id="s23"><span class="n">2.3</span>Superposición en una recta</h2>
+  <div class="res" data-res="3"><div class="h">Ejercicio resuelto 3 · Dos cargas de signo opuesto, por dos caminos</div><div class="b">
+    <p>\(q_1=+4{,}0\ \mathrm{nC}\) está en \(x=0\) y \(q_2=-2{,}0\ \mathrm{nC}\) en \(x=0{,}50\ \mathrm m\). Calcula el campo en \(x=0{,}20\ \mathrm m\) (entre las cargas) y en \(x=0{,}80\ \mathrm m\) (a la derecha de \(q_2\)).</p>
+    <figure><svg role="img" viewBox="0 0 460 120" width="440" aria-label="Dos cargas en una recta y los campos en dos puntos"><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="10" y1="80" x2="450" y2="80" stroke="var(--e10-line)"/>
+      <circle cx="30" cy="80" r="11" fill="var(--e10-q-pos)"/><circle cx="280" cy="80" r="11" fill="var(--e10-q-neg)"/><circle cx="130" cy="80" r="4" fill="var(--e10-ink)"/><circle cx="430" cy="80" r="4" fill="var(--e10-ink)"/>
+      <line x1="130" y1="55" x2="210" y2="55" stroke="var(--e10-vec-field)" stroke-width="3.5" marker-end="url(#ah2)"/><text x="214" y="59" font-size="13" fill="var(--e10-vec-field)">E₁</text>
+      <line x1="130" y1="30" x2="150" y2="30" stroke="var(--e10-accent)" stroke-width="3.5" marker-end="url(#ah2)"/><text x="156" y="34" font-size="13" fill="var(--e10-accent-strong)">E₂</text>
+      <line x1="430" y1="55" x2="440" y2="55" stroke="var(--e10-vec-field)" stroke-width="3.5" marker-end="url(#ah2)"/><text x="400" y="59" font-size="13" fill="var(--e10-vec-field)">E₁</text>
+      <line x1="430" y1="30" x2="390" y2="30" stroke="var(--e10-accent)" stroke-width="3.5" marker-end="url(#ah2)"/><text x="364" y="34" font-size="13" fill="var(--e10-accent-strong)">E₂</text>
+      <text x="16" y="108" font-size="13">q₁, 0</text><text x="122" y="108" font-size="13">0,20</text><text x="258" y="108" font-size="13">q₂, 0,50</text><text x="418" y="108" font-size="13">0,80</text></svg></figure>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Camino A · módulos y dibujo</div><p>En \(x=0{,}20\): \(E_1=k\dfrac{4{,}0\times10^{-9}}{(0{,}20)^2}=898{,}8\ \mathrm{N/C}\), se aleja de \(q_1\) (hacia \(+x\)); \(E_2=k\dfrac{2{,}0\times10^{-9}}{(0{,}30)^2}=199{,}7\ \mathrm{N/C}\), apunta hacia \(q_2\) (también hacia \(+x\)). Se suman: \(E_x=1098{,}5\ \mathrm{N/C}\).</p>
+      <div class="paso">2. Camino A en \(x=0{,}80\)</div><p>\(E_1=56{,}2\ \mathrm{N/C}\) hacia \(+x\) y \(E_2=199{,}7\ \mathrm{N/C}\) hacia \(q_2\), es decir, hacia \(-x\): \(E_x=56{,}2-199{,}7=-143{,}6\ \mathrm{N/C}\).</p>
+      <div class="paso">3. Camino B · fórmula con signo</div><p>En una recta, \(E_x=\sum_i k\,q_i\,\dfrac{x-x_i}{|x-x_i|^3}\). En \(x=0{,}80\):</p>
+      <div class="eq">\[ E_x=(8{,}988\times10^{9})\left[\frac{(4{,}0\times10^{-9})(0{,}80)}{(0{,}80)^3}+\frac{(-2{,}0\times10^{-9})(0{,}30)}{(0{,}30)^3}\right]=-143{,}6\ \mathrm{N/C}. \]</div>
+      <div class="result"><b>Resultado.</b> \(1098{,}5\ \mathrm{N/C}\) hacia \(+x\) entre las cargas y \(143{,}6\ \mathrm{N/C}\) hacia \(-x\) en \(x=0{,}80\ \mathrm m\). Entre cargas de signo opuesto los dos campos se refuerzan.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="5"><div class="rh">Reto 5<small>nivel medio</small></div><p>Con las cargas del ejercicio 3, ¿en qué punto del eje \(x\) el campo es nulo? Pista: no está entre las cargas.</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.44.</p></div>
+  <div class="reto" data-reto="6"><div class="rh">Reto 6<small>nivel medio</small></div><p>Dos cargas de \(+3{,}0\ \mathrm{nC}\) y \(-3{,}0\ \mathrm{nC}\) están separadas \(0{,}20\ \mathrm m\). ¿Cuánto vale el campo en el punto medio?</p></div>
 
-            <div class="soft-box">
-                <span class="step-badge">4</span><b>Orientaciones y Descomposición Vectorial:</b>
-                <p style="margin:6px 0 0;font-size:15px">
-                    $q_1 > 0 \implies \vec{E}_1$ sale de $q_1$ hacia la derecha: $\vec{E}_1 = +499{,}4\hat{\imath}\ \text{N/C}$.<br>
-                    $q_3 > 0 \implies \vec{E}_3$ sale de $q_3$ hacia arriba: $\vec{E}_3 = +499{,}4\hat{\jmath}\ \text{N/C}$.<br>
-                    $q_2 < 0 \implies \vec{E}_2$ entra hacia $q_2$ a lo largo de la diagonal a $225^\circ$: $\cos(225^\circ) = -\frac{\sqrt{2}}{2}$, $\sin(225^\circ) = -\frac{\sqrt{2}}{2}$.
-                </p>
-            </div>
+  <!-- 2.4 -->
+  <h2 id="s24"><span class="n">2.4</span>Superposición en el plano</h2>
+  <div class="res" data-res="4"><div class="h">Ejercicio resuelto 4 · Dos cargas y un punto fuera de la recta, por dos caminos</div><div class="b">
+    <p>\(q_1=+5{,}0\ \mathrm{nC}\) está en \((0;\ 0{,}30)\) m y \(q_2=-4{,}0\ \mathrm{nC}\) en \((0{,}40;\ 0{,}30)\) m. Calcula el campo en el origen.</p>
+    <figure><svg role="img" viewBox="0 0 360 330" width="320" aria-label="Dos cargas en el plano y los campos en el origen, a escala"><defs><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="40" y1="190" x2="350" y2="190" stroke="var(--e10-line)"/><line x1="70" y1="325" x2="70" y2="10" stroke="var(--e10-line)"/>
+      <line x1="70" y1="190" x2="310" y2="10" stroke="var(--e10-muted)" stroke-dasharray="5 5"/>
+      <circle cx="70" cy="10" r="11" fill="var(--e10-q-pos)"/><circle cx="310" cy="10" r="11" fill="var(--e10-q-neg)"/>
+      <line x1="70" y1="190" x2="70" y2="315" stroke="var(--e10-accent)" stroke-width="4" marker-end="url(#ah3)"/>
+      <line x1="70" y1="190" x2="98.8" y2="168.4" stroke="var(--e10-accent)" stroke-width="4" marker-end="url(#ah3)"/>
+      <line x1="70" y1="190" x2="98.8" y2="293.3" stroke="var(--e10-vec-field)" stroke-width="4" marker-end="url(#ah3)"/>
+      <circle cx="70" cy="190" r="5" fill="var(--e10-ink)"/>
+      <text x="84" y="26" font-size="14">q₁</text><text x="288" y="40" font-size="14">q₂</text><text x="44" y="206" font-size="14">P</text>
+      <text x="36" y="300" font-size="13" fill="var(--e10-accent-strong)">E₁</text><text x="104" y="166" font-size="13" fill="var(--e10-accent-strong)">E₂</text><text x="106" y="300" font-size="13" fill="var(--e10-vec-field)">E</text>
+      <text x="190" y="92" font-size="13" fill="var(--e10-muted)">0,50 m</text><text x="160" y="260" font-size="12" fill="var(--e10-muted)">flechas a escala</text></svg></figure>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Cada campo por separado</div><p>\(E_1=k\,\dfrac{5{,}0\times10^{-9}}{(0{,}30)^2}=499{,}3\ \mathrm{N/C}\), se aleja de \(q_1\): hacia \(-y\). \(E_2=k\,\dfrac{4{,}0\times10^{-9}}{(0{,}50)^2}=143{,}8\ \mathrm{N/C}\), apunta hacia \(q_2\).</p>
+      <div class="paso">2. Camino A · ángulos</div><p>La recta de \(P\) a \(q_2\) tiene \(\cos\alpha=0{,}40/0{,}50=0{,}80\) y \(\sin\alpha=0{,}60\):</p>
+      <div class="eq">\[ \vec E_2=(143{,}8)(0{,}80\,\hat\imath+0{,}60\,\hat\jmath)=(115{,}0\,\hat\imath+86{,}3\,\hat\jmath)\ \mathrm{N/C}. \]</div>
+      <div class="paso">3. Camino B · vector unitario</div><p>Con \(\vec E_j=k\,q_j\,(\vec r_P-\vec r_j)/|\vec r_P-\vec r_j|^3\):</p>
+      <div class="eq">\[ \vec E_2=(8{,}988\times10^{9})\frac{(-4{,}0\times10^{-9})}{(0{,}50)^3}(-0{,}40\,\hat\imath-0{,}30\,\hat\jmath)=(115{,}0\,\hat\imath+86{,}3\,\hat\jmath)\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Suma</div><p>\(\vec E=(115{,}0\,\hat\imath+86{,}3\,\hat\jmath)+(-499{,}3\,\hat\jmath)=(115{,}0\,\hat\imath-413{,}0\,\hat\jmath)\ \mathrm{N/C}\).</p>
+      <div class="eq">\[ E=\sqrt{115{,}0^2+413{,}0^2}=428{,}8\ \mathrm{N/C},\qquad \theta=\arctan\frac{-413{,}0}{115{,}0}=-74{,}4^\circ. \]</div>
+      <div class="result"><b>Resultado.</b> \(\vec E=(115{,}0\,\hat\imath-413{,}0\,\hat\jmath)\ \mathrm{N/C}\): \(428{,}8\ \mathrm{N/C}\) a \(74{,}4^\circ\) por debajo de \(+x\). Sumar módulos daría \(643{,}1\ \mathrm{N/C}\): los campos son vectores.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="7"><div class="rh">Reto 7<small>nivel medio</small></div><p>Un cuadrado de \(0{,}10\ \mathrm m\) de lado tiene \(+2{,}0\ \mathrm{nC}\) en sus dos vértices de abajo y \(-2{,}0\ \mathrm{nC}\) en los dos de arriba. ¿Cuánto vale el campo en el centro y hacia dónde apunta?</p></div>
+  <div class="reto" data-reto="8"><div class="rh">Reto 8<small>nivel medio</small></div><p>\(q_1=-3{,}0\ \mathrm{nC}\) está en \((0;\ 0{,}40)\) m y \(q_2=+3{,}0\ \mathrm{nC}\) en \((0{,}30;\ 0)\) m. ¿Cuánto vale el campo en el origen? Da su ángulo con el eje \(+x\).</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.50.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
-                    <div style="display:flex;align-items:center">
-                        <span class="step-badge">5</span>
-                        <b>Resolución por Dos Caminos Analíticos:</b>
-                    </div>
-                    <div class="no-print" style="display:flex;gap:6px">
-                        <button class="btn-tab active" onclick="switchPath('p2', 'a', this)">Camino A: Componentes Trigonométricas</button>
-                        <button class="btn-tab" onclick="switchPath('p2', 'b', this)">Camino B: Notación Vectorial de Griffiths</button>
-                    </div>
-                </div>
+  <!-- 2.5 -->
+  <h2 id="s25"><span class="n">2.5</span>El dipolo en su mediatriz</h2>
+  <div class="res" data-res="5"><div class="h">Ejercicio resuelto 5 · Deducción en siete pasos</div><div class="b">
+    <p>Un dipolo tiene \(-q\) en \((-a,0)\) y \(+q\) en \((+a,0)\), con \(q=4{,}0\ \mathrm{nC}\) y \(a=0{,}060\ \mathrm m\) (separación \(d=2a=0{,}12\ \mathrm m\)). Halla el campo en un punto \((0,y)\) de la mediatriz, su valor en \(y=0{,}080\ \mathrm m\) y su forma lejos del dipolo.</p>
+    <figure><svg role="img" viewBox="0 0 360 240" width="340" aria-label="Dipolo en el eje x y los campos en un punto de la mediatriz"><defs><marker id="ah4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="10" y1="190" x2="350" y2="190" stroke="var(--e10-line)"/><line x1="180" y1="225" x2="180" y2="10" stroke="var(--e10-line)"/>
+      <line x1="100" y1="190" x2="180" y2="85" stroke="var(--e10-muted)" stroke-dasharray="5 5"/><line x1="260" y1="190" x2="180" y2="85" stroke="var(--e10-muted)" stroke-dasharray="5 5"/>
+      <line x1="180" y1="85" x2="140" y2="32" stroke="var(--e10-accent)" stroke-width="3" marker-end="url(#ah4)"/><line x1="180" y1="85" x2="140" y2="138" stroke="var(--e10-accent)" stroke-width="3" marker-end="url(#ah4)"/>
+      <line x1="180" y1="85" x2="100" y2="85" stroke="var(--e10-vec-field)" stroke-width="4" marker-end="url(#ah4)"/>
+      <line x1="150" y1="214" x2="210" y2="214" stroke="var(--e10-primary)" stroke-width="3" marker-end="url(#ah4)"/><text x="214" y="219" font-size="13" fill="var(--e10-primary)">p</text>
+      <circle cx="100" cy="190" r="11" fill="var(--e10-q-neg)"/><circle cx="260" cy="190" r="11" fill="var(--e10-q-pos)"/><circle cx="180" cy="85" r="5" fill="var(--e10-ink)"/>
+      <text x="112" y="30" font-size="13" fill="var(--e10-accent-strong)">E₊</text><text x="112" y="152" font-size="13" fill="var(--e10-accent-strong)">E₋</text><text x="78" y="80" font-size="13" fill="var(--e10-vec-field)">E</text><text x="188" y="80" font-size="13">(0, y)</text><text x="84" y="214" font-size="13">−q</text><text x="268" y="214" font-size="13">+q</text></svg></figure>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Elemento</div><p>Cada carga está a \(r=\sqrt{a^2+y^2}\) del punto y produce un campo de módulo \(E_1=kq/(a^2+y^2)\).</p>
+      <div class="paso">2. Geometría y simetría</div><p>\(\vec E_+\) se aleja de \(+q\) y \(\vec E_-\) apunta hacia \(-q\). Las dos tienen la misma componente \(x\) (hacia \(-x\)) y componentes \(y\) opuestas, que se anulan.</p>
+      <div class="paso">3. Reemplazo</div><p>Con \(\cos\theta=a/r\): \(E_x=-2E_1\cos\theta=-2\,\dfrac{kq}{a^2+y^2}\cdot\dfrac{a}{\sqrt{a^2+y^2}}\).</p>
+      <div class="paso">4. Constantes fuera</div><p>Con el momento dipolar \(p=q\,(2a)\):</p>
+      <div class="eq">\[ \vec E=-\frac{k\,(2qa)}{(a^2+y^2)^{3/2}}\,\hat\imath=-\frac{k\,p}{(a^2+y^2)^{3/2}}\,\hat\imath. \]</div>
+      <div class="paso">5. Dos caminos</div><p><i>Camino A, vectorial</i>: \(\vec r-\vec r_\pm=\mp a\,\hat\imath+y\,\hat\jmath\) y</p>
+      <div class="eq">\[ \vec E=\frac{kq}{r^3}\left[(-a\,\hat\imath+y\,\hat\jmath)-(a\,\hat\imath+y\,\hat\jmath)\right]=-\frac{2kqa}{r^3}\,\hat\imath; \]</div>
+      <p>los términos en \(\hat\jmath\) se cancelan solos. <i>Camino B, simetría</i>: al reflejar la figura en el eje \(y\) y cambiar el signo de las cargas, el sistema queda igual, así que \(E_y\) debe ser cero sin calcularlo; solo hay que proyectar en \(x\), como en el paso 3.</p>
+      <div class="paso">6. Valor y límite</div><p>Con \(p=(4{,}0\times10^{-9})(0{,}12)=4{,}80\times10^{-10}\ \mathrm{C\,m}\) y \(y=0{,}080\ \mathrm m\):</p>
+      <div class="eq">\[ E=\frac{(8{,}988\times10^{9})(4{,}80\times10^{-10})}{(0{,}0036+0{,}0064)^{3/2}}=4314\ \mathrm{N/C}. \]</div>
+      <p>Lejos (\(y\gg a\)): \(E\approx kp/y^3\). El campo del dipolo decae como \(1/r^3\), más rápido que el de una carga, porque desde lejos las dos cargas casi se cancelan.</p>
+      <div class="paso">7. Preguntas</div><p>¿Por qué \(\vec E\) es antiparalelo a \(\vec p\) en la mediatriz? ¿Qué pasa con \(E\) si se acercan las cargas manteniendo \(p\) constante?</p>
+      <div class="result"><b>Resultado.</b> \(\vec E=-\dfrac{kp}{(a^2+y^2)^{3/2}}\,\hat\imath\); en \(y=0{,}080\ \mathrm m\), \(4314\ \mathrm{N/C}\) hacia \(-x\). Lejos, \(E\approx kp/y^3\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="9"><div class="rh">Reto 9<small>nivel medio</small></div><p>Con el dipolo del ejercicio 5, calcula el campo exacto en \(y=0{,}50\ \mathrm m\) y compáralo con la aproximación \(kp/y^3\). ¿Qué porcentaje de error tiene la aproximación?</p></div>
 
-                <div id="p2-path-a" class="path-content active">
-                    <p style="margin:6px 0;font-size:14px;color:var(--e10-muted)"><b>Camino A:</b> Suma directa de proyecciones angulares.</p>
-                    \[E_{2x} = -E_2 \frac{\sqrt{2}}{2} = -(249{,}7)(0{,}7071) = -176{,}6\ \text{N/C}\]
-                    \[E_{2y} = -E_2 \frac{\sqrt{2}}{2} = -(249{,}7)(0{,}7071) = -176{,}6\ \text{N/C}\]
-                    \[E_{\text{net},x} = E_{1x} + E_{2x} = 499{,}4 - 176{,}6 = +322{,}8\ \text{N/C}\]
-                    \[E_{\text{net},y} = E_{3y} + E_{2y} = 499{,}4 - 176{,}6 = +322{,}8\ \text{N/C}\]
-                </div>
+  <!-- 2.6 -->
+  <h2 id="s26"><span class="n">2.6</span>El dipolo en su eje</h2>
+  <div class="res" data-res="6"><div class="h">Ejercicio resuelto 6 · Campo en el eje, por dos caminos</div><div class="b">
+    <p>Con el mismo dipolo, halla el campo en el punto \((x,0)\) del eje, a la derecha de \(+q\), y evalúalo en \(x=0{,}30\ \mathrm m\).</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Superposición</div><p>Los dos campos están sobre el eje. \(\vec E_+\) se aleja de \(+q\) (hacia \(+x\)) y \(\vec E_-\) apunta hacia \(-q\) (hacia \(-x\)); \(+q\) está más cerca, así que gana:</p>
+      <div class="eq">\[ E_x=kq\left[\frac{1}{(x-a)^2}-\frac{1}{(x+a)^2}\right]. \]</div>
+      <div class="paso">2. Camino A · denominador común (exacto)</div><p>\(\dfrac{(x+a)^2-(x-a)^2}{(x^2-a^2)^2}=\dfrac{4ax}{(x^2-a^2)^2}\), así que</p>
+      <div class="eq">\[ E_x=\frac{2k\,p\,x}{(x^2-a^2)^2}=\frac{2(8{,}988\times10^{9})(4{,}80\times10^{-10})(0{,}30)}{(0{,}090-0{,}0036)^2}=346{,}8\ \mathrm{N/C}. \]</div>
+      <div class="paso">3. Camino B · expansión binomial (aproximado)</div><p>Con \((1\pm u)^{-2}\approx1\mp2u\) y \(u=a/x\ll1\):</p>
+      <div class="eq">\[ E_x=\frac{kq}{x^2}\left[\left(1-\frac{a}{x}\right)^{-2}-\left(1+\frac{a}{x}\right)^{-2}\right]\approx\frac{kq}{x^2}\cdot\frac{4a}{x}=\frac{2kp}{x^3}=319{,}6\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Comparación</div><p>En \(x=0{,}30\ \mathrm m=5a\) la aproximación se queda corta en 7,8 %; a \(x=20a\) el error baja a 0,5 % (programa 2 de la sección P). En el eje el campo es el doble que en la mediatriz a la misma distancia, y apunta en el sentido de \(\vec p\).</p>
+      <div class="result"><b>Resultado.</b> \(E_x=\dfrac{2kpx}{(x^2-a^2)^2}=346{,}8\ \mathrm{N/C}\) en \(x=0{,}30\ \mathrm m\), hacia \(+x\); lejos, \(E\approx2kp/x^3\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="10"><div class="rh">Reto 10<small>nivel avanzado</small></div><p>El momento dipolar de la molécula de agua es \(6{,}13\times10^{-30}\ \mathrm{C\,m}\). Un ion \(\mathrm{Na}^+\) (carga \(+e\)) está sobre el eje del dipolo, a \(2{,}5\times10^{-9}\ \mathrm m\) de la molécula, del lado hacia el que apunta \(\vec p\). Con la aproximación de gran distancia, ¿qué fuerza ejerce la molécula sobre el ion? ¿Lo atrae o lo repele?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.66.</p></div>
+  <div class="reto" data-reto="11"><div class="rh">Reto 11<small>nivel avanzado</small></div><p>Con el dipolo del ejercicio 5 (\(a=0{,}060\ \mathrm m\)), ¿a qué distancia \(x\) del centro, sobre el eje, la aproximación \(2kp/x^3\) se queda corta en exactamente 1 % respecto al valor exacto? Resuélvelo con Python o despejando.</p></div>
 
-                <div id="p2-path-b" class="path-content">
-                    <p style="margin:6px 0;font-size:14px;color:var(--e10-muted)"><b>Camino B:</b> Notación vectorial cúbica con vectores de posición relativos.</p>
-                    \[\vec{E}_2 = \frac{q_2}{4\pi\epsilon_0}\frac{\vec{r}_P - \vec{r}_2}{|\vec{r}_P - \vec{r}_2|^3} = (8{,}99\times 10^9)\frac{(-5\times 10^{-9})}{(0{,}30\sqrt{2})^3}(0{,}30\hat{\imath} + 0{,}30\hat{\jmath})\]
-                    Como $(0{,}30\sqrt{2})^3 = 0{,}027 \times 2\sqrt{2} = 0{,}07637\ \text{m}^3$:
-                    \[\vec{E}_2 = \frac{-44{,}95}{0{,}07637}(0{,}30\hat{\imath} + 0{,}30\hat{\jmath}) = -176{,}6\hat{\imath} - 176{,}6\hat{\jmath}\ \text{N/C}\]
-                    Sumando $\vec{E}_1 = 499{,}4\hat{\imath}$ y $\vec{E}_3 = 499{,}4\hat{\jmath}$: $\vec{E}_{\text{net}} = 322{,}8\hat{\imath} + 322{,}8\hat{\jmath}\ \text{N/C}$.
-                </div>
-            </div>
+  <!-- 2.7 -->
+  <h2 id="s27"><span class="n">2.7</span>El dipolo en un campo uniforme</h2>
+  <div class="res" data-res="7"><div class="h">Ejercicio resuelto 7 · Torque y energía, por dos caminos</div><div class="b">
+    <p>Una molécula de agua (\(p=6{,}13\times10^{-30}\ \mathrm{C\,m}\)) está en un campo uniforme de \(5{,}0\times10^{5}\ \mathrm{N/C}\), con \(\vec p\) a \(\phi=30^\circ\) de \(\vec E\). Calcula la fuerza neta, el torque y la energía potencial. ¿Cuánto trabajo hace falta para girarla de \(\phi=0\) a \(\phi=180^\circ\)?</p>
+    <figure><svg role="img" viewBox="0 0 360 160" width="340" aria-label="Dipolo inclinado en un campo uniforme horizontal con las fuerzas en sus extremos"><defs><marker id="ah5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <g opacity=".4"><line x1="10" y1="30" x2="350" y2="30" stroke="var(--e10-vec-field)" marker-end="url(#ah5)"/><line x1="10" y1="65" x2="350" y2="65" stroke="var(--e10-vec-field)" marker-end="url(#ah5)"/><line x1="10" y1="100" x2="350" y2="100" stroke="var(--e10-vec-field)" marker-end="url(#ah5)"/><line x1="10" y1="135" x2="350" y2="135" stroke="var(--e10-vec-field)" marker-end="url(#ah5)"/></g>
+      <line x1="122" y1="117" x2="238" y2="50" stroke="var(--e10-muted)" stroke-width="3"/>
+      <line x1="238" y1="50" x2="300" y2="50" stroke="var(--e10-accent)" stroke-width="4" marker-end="url(#ah5)"/><line x1="122" y1="117" x2="60" y2="117" stroke="var(--e10-accent)" stroke-width="4" marker-end="url(#ah5)"/>
+      <line x1="180" y1="83" x2="214" y2="64" stroke="var(--e10-primary)" stroke-width="3.5" marker-end="url(#ah5)"/>
+      <circle cx="238" cy="50" r="10" fill="var(--e10-q-pos)"/><circle cx="122" cy="117" r="10" fill="var(--e10-q-neg)"/>
+      <text x="300" y="44" font-size="13" fill="var(--e10-accent-strong)">qE</text><text x="40" y="140" font-size="13" fill="var(--e10-accent-strong)">−qE</text><text x="196" y="58" font-size="13" fill="var(--e10-primary)">p</text><text x="210" y="96" font-size="13" fill="var(--e10-muted)">φ = 30°</text><text x="336" y="20" font-size="13" fill="var(--e10-vec-field)">E</text></svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Hacia dónde gira la molécula? ¿Se mueve su centro?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Fuerza neta</div><p>Sobre \(+q\) actúa \(q\vec E\) y sobre \(-q\), \(-q\vec E\): suman cero. En un campo uniforme el dipolo no se traslada.</p>
+      <div class="paso">2. Camino A · torque de cada fuerza</div><p>Respecto al centro, cada fuerza \(qE\) tiene brazo \((d/2)\sin\phi\) y las dos giran en el mismo sentido:</p>
+      <div class="eq">\[ \tau=2\,(qE)\,\frac{d}{2}\sin\phi=pE\sin\phi=(6{,}13\times10^{-30})(5{,}0\times10^{5})\sin30^\circ=1{,}53\times10^{-24}\ \mathrm{N\,m}. \]</div>
+      <p>En forma vectorial \(\vec\tau=\vec p\times\vec E\): con \(\vec p\) arriba a la derecha y \(\vec E\) hacia \(+x\), \(\vec\tau\) entra en la página (giro horario), y lleva a \(\vec p\) hacia \(\vec E\).</p>
+      <div class="paso">3. Camino B · energía</div><p>El torque hace un trabajo \(dW=-pE\sin\phi\,d\phi\) (frena el aumento de \(\phi\)). Con \(W=U_1-U_2\):</p>
+      <div class="eq">\[ U(\phi)=-pE\cos\phi=-\vec p\cdot\vec E=-(6{,}13\times10^{-30})(5{,}0\times10^{5})\cos30^\circ=-2{,}65\times10^{-24}\ \mathrm J, \]</div>
+      <p>y al revés, \(\tau=-dU/d\phi=-pE\sin\phi\): el mismo módulo del camino A, con el signo que indica que el torque tiende a disminuir \(\phi\).</p>
+      <div class="paso">4. Trabajo para invertirla</div><p>\(W=U(180^\circ)-U(0)=pE-(-pE)=2pE=6{,}13\times10^{-24}\ \mathrm J\). En \(\phi=0\) el equilibrio es estable (mínimo de \(U\)) y en \(\phi=180^\circ\), inestable.</p>
+      <div class="result"><b>Resultado.</b> \(\vec F_{\text{neta}}=\vec 0\); \(\tau=1{,}53\times10^{-24}\ \mathrm{N\,m}\), horario; \(U=-2{,}65\times10^{-24}\ \mathrm J\); invertirla cuesta \(6{,}13\times10^{-24}\ \mathrm J\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="12"><div class="rh">Reto 12<small>nivel medio</small></div><p>Un dipolo formado por \(\pm3{,}0\ \mathrm{nC}\) separadas \(2{,}0\ \mathrm{mm}\) forma \(40^\circ\) con un campo uniforme y siente un torque de \(5{,}0\times10^{-9}\ \mathrm{N\,m}\). ¿Cuánto vale el campo?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), ejercicio 21.63.</p></div>
+  <div class="reto" data-reto="13"><div class="rh">Reto 13<small>nivel avanzado</small></div><p>Una varilla aislante de \(2{,}0\ \mathrm{cm}\) y masa despreciable tiene en sus extremos dos esferitas de \(1{,}0\ \mathrm g\) con \(+20\ \mathrm{nC}\) y \(-20\ \mathrm{nC}\). Puede girar sobre su centro en un campo uniforme de \(5{,}0\times10^{4}\ \mathrm{N/C}\). Para ángulos pequeños, \(\tau\approx-pE\,\phi\). ¿Cuál es la frecuencia angular \(\omega\) de sus oscilaciones?</p></div>
 
-            <div class="soft-box">
-                <span class="step-badge">6</span><b>Magnitud y Dirección Resultante:</b>
-                \[|\vec{E}_{\text{net}}| = \sqrt{(322{,}8)^2 + (322{,}8)^2} = 322{,}8\sqrt{2} \approx 456{,}5\ \text{N/C}\]
-                \[\theta = \arctan\left(\frac{322{,}8}{322{,}8}\right) = \arctan(1) = 45{,}0^\circ\]
-            </div>
+  <!-- 2.8 -->
+  <h2 id="s28"><span class="n">2.8</span>Una carga que cruza un campo uniforme</h2>
+  <div class="res" data-res="8"><div class="h">Ejercicio resuelto 8 · El electrón entre dos placas, por dos caminos</div><div class="b">
+    <p>Entre dos placas horizontales separadas \(3{,}0\ \mathrm{cm}\) hay un campo uniforme de \(1{,}5\times10^{3}\ \mathrm{N/C}\) dirigido hacia arriba; las placas miden \(L=4{,}0\ \mathrm{cm}\) de largo. Un electrón entra por el centro, en horizontal, a \(v_0=4{,}0\times10^{6}\ \mathrm{m/s}\). ¿Cuánto se desvía al salir? ¿Choca con una placa?</p>
+    <figure><svg role="img" viewBox="0 0 360 180" width="340" aria-label="Electrón entre dos placas con campo hacia arriba; su trayectoria se curva hacia abajo"><defs><marker id="ah6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <rect x="60" y="22" width="240" height="8" fill="var(--e10-q-neg)" opacity=".3"/><rect x="60" y="150" width="240" height="8" fill="var(--e10-q-pos)" opacity=".3"/>
+      <g opacity=".45"><line x1="100" y1="145" x2="100" y2="36" stroke="var(--e10-vec-field)" marker-end="url(#ah6)"/><line x1="180" y1="145" x2="180" y2="36" stroke="var(--e10-vec-field)" marker-end="url(#ah6)"/><line x1="260" y1="145" x2="260" y2="36" stroke="var(--e10-vec-field)" marker-end="url(#ah6)"/></g>
+      <path d="M60,90 Q180,90 300,142" fill="none" stroke="var(--e10-primary)" stroke-width="3"/>
+      <circle cx="60" cy="90" r="7" fill="var(--e10-q-neg)"/><line x1="10" y1="90" x2="48" y2="90" stroke="var(--e10-ink)" stroke-width="2" marker-end="url(#ah6)"/>
+      <text x="14" y="82" font-size="13">v₀</text><text x="310" y="40" font-size="13" fill="var(--e10-vec-field)">E</text><text x="140" y="16" font-size="12" fill="var(--e10-muted)">placa negativa</text><text x="140" y="175" font-size="12" fill="var(--e10-muted)">placa positiva</text></svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> El campo apunta hacia arriba. ¿Hacia dónde se curva el electrón?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Fuerza y aceleración</div><p>\(\vec F=(-e)\vec E\) apunta hacia abajo. El peso es despreciable:</p>
+      <div class="eq">\[ a=\frac{eE}{m_e}=\frac{(1{,}602\times10^{-19})(1{,}5\times10^{3})}{9{,}109\times10^{-31}}=2{,}64\times10^{14}\ \mathrm{m/s^2}. \]</div>
+      <div class="paso">2. Camino A · tiempo de vuelo</div><p>En \(x\) no hay fuerza: \(t=L/v_0=0{,}040/(4{,}0\times10^{6})=1{,}0\times10^{-8}\ \mathrm s\). En \(y\), \(y=\tfrac12at^2=\tfrac12(2{,}64\times10^{14})(1{,}0\times10^{-8})^2=1{,}32\times10^{-2}\ \mathrm m\).</p>
+      <div class="paso">3. Camino B · ecuación de la trayectoria</div><p>Eliminando \(t\) entre \(x=v_0t\) e \(y=-\tfrac12at^2\):</p>
+      <div class="eq">\[ y(x)=-\frac{eE}{2m_ev_0^2}\,x^2,\qquad |y(L)|=\frac{(1{,}602\times10^{-19})(1{,}5\times10^{3})(0{,}040)^2}{2(9{,}109\times10^{-31})(4{,}0\times10^{6})^2}=1{,}32\ \mathrm{cm}. \]</div>
+      <p>Es una parábola, como la de un proyectil, pero la «gravedad» es \(eE/m_e\), unas \(10^{13}\) veces mayor que \(g\).</p>
+      <div class="paso">4. ¿Choca?</div><p>Entró por el centro: le quedaban \(1{,}5\ \mathrm{cm}\) hasta la placa positiva. Sale sin tocarla, \(1{,}32\ \mathrm{cm}\) por debajo, a \(33{,}4^\circ\) de la horizontal. Un protón con la misma \(v_0\) se desviaría hacia arriba solo \(7{,}2\times10^{-6}\ \mathrm m\): tiene 1836 veces más masa.</p>
+      <div class="result"><b>Resultado.</b> Se desvía \(1{,}32\ \mathrm{cm}\) hacia abajo (opuesto a \(\vec E\)) y sale sin chocar. Así se dirigen los haces de electrones en un osciloscopio.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="14"><div class="rh">Reto 14<small>nivel avanzado</small></div><p>En una impresora de inyección de tinta, una gota de \(1{,}2\times10^{-11}\ \mathrm{kg}\) sale a \(18\ \mathrm{m/s}\) y pasa entre placas de \(1{,}5\ \mathrm{cm}\) de largo con un campo vertical de \(1{,}0\times10^{5}\ \mathrm{N/C}\). Para que se desvíe \(0{,}25\ \mathrm{mm}\) al final de las placas, ¿qué carga debe tener?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), problema 21.86.</p></div>
 
-            <div class="ok">
-                <span class="step-badge" style="background:var(--e10-success)">7</span><b>Resultado Final Verificado:</b>
-                El campo eléctrico en el vértice $P$ es $\vec{E}_{\text{net}} = (323\hat{\imath} + 323\hat{\jmath})\ \text{N/C}$, con magnitud de $457\ \text{N/C}$ apuntando exactamente a $45^\circ$ sobre la diagonal hacia el primer cuadrante.
-            </div>
-        </div>
-    </article>
+  <!-- Teoría -->
+  <h2 id="sT"><span class="n">T</span>Teoría</h2>
+  <details class="teo"><summary>¿Por qué el campo se define con una carga de prueba que tiende a cero?</summary><p>Porque una carga de prueba grande empuja a las cargas que crean el campo (sobre todo en un conductor) y cambia lo que se quiere medir. Con \(q_0\to0\) la perturbación desaparece y \(\vec F_0/q_0\) ya no depende de \(q_0\).</p></details>
+  <details class="teo"><summary>¿Pueden cruzarse dos líneas de campo?</summary><p>No. En cada punto el campo tiene una sola dirección; si dos líneas se cruzaran, habría dos direcciones en el punto de cruce.</p></details>
+  <details class="teo"><summary>¿Una carga que parte del reposo se mueve siempre sobre una línea de campo?</summary><p>No en general. La línea da la dirección de la fuerza, es decir, de la aceleración, no de la velocidad. Solo si las líneas son rectas la trayectoria coincide con una de ellas.</p></details>
+  <details class="teo"><summary>¿Por qué el campo del dipolo decae como \(1/r^3\) y no como \(1/r^2\)?</summary><p>Su carga neta es cero: desde lejos los campos de \(+q\) y \(-q\) casi se cancelan. Lo que queda es la pequeña diferencia por estar una carga un poco más cerca que la otra, proporcional a \(d/r\); por eso aparece una potencia más de \(r\).</p></details>
+  <details class="teo"><summary>Un dipolo en un campo uniforme no se traslada. ¿Por qué un peine cargado atrae papelitos neutros?</summary><p>Porque el campo del peine no es uniforme. El papel se polariza y queda como un dipolo; el extremo cercano siente un campo más intenso que el lejano, y la fuerza neta ya no es cero.</p></details>
+  <details class="teo"><summary>¿Por qué el agua es tan buen solvente de la sal?</summary><p>Porque cada molécula de agua es un dipolo. Sus extremos atraen a los iones \(\mathrm{Na}^+\) y \(\mathrm{Cl}^-\) y los mantienen separados en la solución.</p></details>
 
-    <!-- PROBLEMA 2: TORQUE Y OSCILACIÓN DE DIPOLO -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 2: Dinámica de un Dipolo Eléctrico en Campo Externo</h2>
-            <span class="badge badge-accent">Nivel Avanzado</span>
-        </div>
-        <p style="font-size:16px">
-            Un dipolo eléctrico está formado por cargas de $+3{,}0\ \text{nC}$ y $-3{,}0\ \text{nC}$ separadas por $d = 4{,}0\ \text{mm}$, con momento de inercia $I = 2{,}5\times 10^{-9}\ \text{kg}\cdot\text{m}^2$. Se encuentra sumergido en un campo uniforme $E_0 = 5{,}0\times 10^4\ \text{N/C}$.<br>
-            (a) Calcula el momento dipolar $\vec{p}$ y el torque máximo $\tau_{\max}$.<br>
-            (b) Determina la frecuencia angular $\omega$ de pequeñas oscilaciones armónicas cuando se perturba un ángulo pequeño $\theta \ll 1$.
-        </p>
+  <!-- Python -->
+  <h2 id="sP"><span class="n">P</span>Explora con Python</h2>
+  <p><b>1. Superposición.</b> El campo en el origen del ejercicio 4, carga por carga. Cambia la lista <code>cargas</code> y el punto \((x,y)\) para resolver los retos 6 a 8.</p>
+<pre id="py1"># Campo electrico en un punto por superposicion (ejercicio 4 del taller).
+from math import sqrt, atan2, degrees
+K = 8.988e9                       # N m2/C2
+cargas = [(+5.0e-9, 0.00, 0.30),  # (q en C, x en m, y en m)
+          (-4.0e-9, 0.40, 0.30)]
+x, y = 0.00, 0.00                 # punto P donde se mide el campo
+Ex = Ey = 0.0
+for j, (q, xq, yq) in enumerate(cargas):
+    dx, dy = x - xq, y - yq       # vector de la fuente al punto P
+    r = sqrt(dx*dx + dy*dy)
+    ex, ey = K*q*dx/r**3, K*q*dy/r**3   # E = k q (r_P - r_q)/|r_P - r_q|^3
+    print(f"Campo de la carga {j+1}: ({ex:+.2f}, {ey:+.2f}) N/C, modulo {sqrt(ex*ex + ey*ey):.2f}")
+    Ex += ex
+    Ey += ey
+print(f"Campo neto: ({Ex:+.2f}, {Ey:+.2f}) N/C")
+print(f"Modulo {sqrt(Ex*Ex + Ey*Ey):.2f} N/C, angulo {degrees(atan2(Ey, Ex)):.1f} grados")</pre>
+  <p class="muted">Salida al ejecutarlo:</p>
+<pre>Campo de la carga 1: (+0.00, -499.33) N/C, modulo 499.33
+Campo de la carga 2: (+115.05, +86.28) N/C, modulo 143.81
+Campo neto: (+115.05, -413.05) N/C
+Modulo 428.77 N/C, angulo -74.4 grados</pre>
+  <p><b>2. Exacto frente a aproximado.</b> El campo en el eje del dipolo de los ejercicios 5 y 6 y la distancia del reto 11, por bisección.</p>
+<pre id="py2"># Dipolo en su eje: campo exacto frente a la aproximacion 2kp/x^3 (ejercicio 6 y reto 11).
+K = 8.988e9
+q, a = 4.0e-9, 0.06               # carga y media separacion (d = 2a = 0,12 m)
+p = q*2*a                         # momento dipolar, C m
+exacto = lambda x: 2*K*p*x/(x*x - a*a)**2
+aprox = lambda x: 2*K*p/x**3
+print(" x (m)   exacto (N/C)   2kp/x^3 (N/C)   error %")
+for x in (0.10, 0.20, 0.30, 0.60, 1.20):
+    e, ap = exacto(x), aprox(x)
+    print(f"{x:5.2f}   {e:12.2f}   {ap:13.2f}   {(e - ap)/e*100:7.2f}")
+lo, hi = 0.07, 5.0                # biseccion: error del 1 %
+for _ in range(60):
+    c = (lo + hi)/2
+    if (exacto(c) - aprox(c))/exacto(c) &gt; 0.01:
+        lo = c
+    else:
+        hi = c
+print(f"Error del 1 % en x = {c:.3f} m ({c/a:.1f} veces a)")</pre>
+  <p class="muted">Salida al ejecutarlo:</p>
+<pre> x (m)   exacto (N/C)   2kp/x^3 (N/C)   error %
+ 0.10       21065.62         8628.48     59.04
+ 0.20        1302.45         1078.56     17.19
+ 0.30         346.76          319.57      7.84
+ 0.60          40.76           39.95      1.99
+ 1.20           5.02            4.99      0.50
+Error del 1 % en x = 0.847 m (14.1 veces a)</pre>
 
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <b>Momento Dipolar y Torque Pico:</b>
-                \[p = q d = (3{,}0\times 10^{-9}\ \text{C})(4{,}0\times 10^{-3}\ \text{m}) = 1{,}20\times 10^{-11}\ \text{C}\cdot\text{m}\]
-                \[\tau_{\max} = p E_0 = (1{,}20\times 10^{-11})(5{,}0\times 10^4) = 6{,}00\times 10^{-7}\ \text{N}\cdot\text{m}\]
-            </div>
-            <div class="tipbox">
-                <b>Ecuación Diferencial del Oscilador Armónico:</b>
-                Aplicando la 2.ª ley de Newton para rotación: $\sum \tau = I \alpha \implies -p E_0 \sin\theta = I \frac{d^2\theta}{dt^2}$.<br>
-                Para ángulos pequeños, $\sin\theta \approx \theta$:
-                \[\frac{d^2\theta}{dt^2} + \left(\frac{p E_0}{I}\right)\theta = 0 \implies \omega = \sqrt{\frac{p E_0}{I}} = \sqrt{\frac{6{,}00\times 10^{-7}}{2{,}5\times 10^{-9}}} = \sqrt{240} \approx 15{,}49\ \text{rad/s}\]
-                Frecuencia cíclica: $f = \frac{\omega}{2\pi} = \frac{15{,}49}{6{,}283} \approx 2{,}47\ \text{Hz}$.
-            </div>
-        </div>
-    </article>
+  <h2><span class="n">S</span>Practica en la plataforma</h2>
+  <div class="bar"><a class="btn" href="../presentaciones/M2_CampoElectrico/index.html" target="_blank" rel="noopener">Clase interactiva del capítulo 2</a><a class="btn" href="../simuladores/VectorField.html" target="_blank" rel="noopener">VectorFieldLab (ejercicios 4, 5, 7 y 8)</a><a class="btn" href="../desafios/desafio.html?m=2" target="_top">Desafío integral del módulo 2</a></div>
 
-    <!-- SECCIÓN DE ENTREGA CALIFICADA EN CLASE -->
-    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--e10-line);padding-bottom:10px">
-            <div>
-                <span class="badge badge-primary">Evaluación Sumativa de Clase</span>
-                <h2 style="margin:4px 0 0;font-size:24px;color:var(--e10-primary)">Hoja Oficial de Entrega: Taller No. 2</h2>
-            </div>
-            <span class="badge badge-accent">Calificación en Vivo</span>
-        </div>
+  <h2><span class="n">C</span>Conecta y consulta</h2>
+  <div class="tip"><b>Lo que sigue.</b> El trabajo que hace el campo al mover una carga no depende del camino: en el capítulo 3 eso da el potencial eléctrico, y la energía \(U=-\vec p\cdot\vec E\) del ejercicio 7 es su primer ejemplo. En el capítulo 4 la suma de la superposición se vuelve una integral sobre una distribución continua de carga.</div>
+  <p style="font-size:15px"><b>Bibliografía.</b> Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson Educación. Capítulo 21 «Carga eléctrica y campo eléctrico», secciones 21.4–21.7, pp. 721–739.<br><span class="muted">Los enunciados son originales de 10.Easy. Donde un reto se inspira en un ejercicio del libro, se indica cuál; los datos y la deducción son propios. El momento dipolar del agua es el de la sección 21.7.</span></p>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px">
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Nombre Completo del Estudiante:</label>
-                <input type="text" id="ent-nombre" placeholder="Ej: Santiago Mendoza Castro">
-            </div>
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Código Estudiantil / ID:</label>
-                <input type="text" id="ent-codigo" placeholder="Ej: 202610208">
-            </div>
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Grupo / Comisión:</label>
-                <input type="text" id="ent-grupo" placeholder="Ej: Grupo B2">
-            </div>
-        </div>
-
-        <div class="soft-box">
-            <h4 style="margin:0 0 8px;font-size:16px;color:var(--e10-primary)">Reto Práctico Numérico de Campo:</h4>
-            <p style="margin:0 0 10px;font-size:15px">
-                Un dipolo con momento $p = 4{,}0\times 10^{-11}\ \text{C}\cdot\text{m}$ se sitúa en el origen orientado a lo largo del eje $z$. Calcula la magnitud del campo eléctrico (en N/C) en un punto axial a una distancia $z = 0{,}20\ \text{m}$ ($20\ \text{cm}$). Usa $k_e = 8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$.
-            </p>
-            <div style="display:flex;gap:10px;align-items:center;max-width:400px" class="no-print">
-                <input type="number" id="inp-ef-axial" step="1" placeholder="Tu respuesta en N/C (ej. 90)">
-                <button class="btn btn-pri" id="btn-comp-ef">Comprobar</button>
-            </div>
-            <div id="fb-ef" style="margin-top:8px;font-weight:600;font-size:14px"></div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
-            <div class="card" style="margin:0;padding:14px">
-                <b>1. ¿Por qué el campo de un dipolo cae como $1/r^3$ mientras que el de una carga puntual cae como $1/r^2$?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-e1" value="cancel"> Porque las cargas $+q$ y $-q$ se cancelan casi por completo vistas desde distancias grandes.</label>
-                    <label><input type="radio" name="p-e1" value="absorb"> Porque el medio entre las cargas absorbe el flujo eléctrico.</label>
-                </div>
-            </div>
-
-            <div class="card" style="margin:0;padding:14px">
-                <b>2. ¿En qué orientación la energía potencial electrostática de un dipolo en campo uniforme es mínima ($U = -pE$)?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-e2" value="paralelo"> Cuando $\vec{p}$ está perfectamente alineado y paralelo al campo $\vec{E}$ ($\theta = 0^\circ$).</label>
-                    <label><input type="radio" name="p-e2" value="anti"> Cuando $\vec{p}$ es antiparalelo a $\vec{E}$ ($\theta = 180^\circ$).</label>
-                </div>
-            </div>
-
-            <div class="card" style="margin:0;padding:14px">
-                <b>3. Si se suelta un dipolo desde $\theta = 90^\circ$ en un campo uniforme sin fricción, ¿qué tipo de movimiento describe?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-e3" value="osc"> Oscilatorio armónico angular periódico alrededor de $\theta = 0^\circ$.</label>
-                    <label><input type="radio" name="p-e3" value="trans"> Traslación acelerada rectilínea continua en la dirección del campo.</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="no-print" style="margin-top:20px;display:flex;gap:12px;justify-content:flex-end">
-            <button class="btn btn-pri" id="btn-exportar-pdf" style="font-size:16px;padding:12px 24px">
-                Generar PDF de Entrega (Calificación)
-            </button>
-        </div>
-    </section>
-
+  <!-- Entrega -->
+  <h2 id="sE"><span class="n">E</span>Entrega de los retos</h2>
+  <div class="card entrega">
+    <p style="margin-top:0">Escribe tu nombre, responde los retos con su comprobador y guarda esta hoja en PDF para entregarla.</p>
+    <label for="est-nombre">Nombre completo</label><input type="text" id="est-nombre" autocomplete="name">
+    <label for="est-grupo">Grupo o código</label><input type="text" id="est-grupo">
+    <table class="sum" id="sum"><thead><tr><th>Reto</th><th>Tu respuesta</th><th>Estado</th></tr></thead><tbody></tbody></table>
+    <div class="bar no-print"><button type="button" class="btn pri" id="btn-print">Guardar la entrega en PDF</button><button type="button" class="btn" id="btn-reset">Borrar mis respuestas</button></div>
+  </div>
+  <p class="muted">© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
-            delimiters: [
-                { left: '\\[', right: '\\]', display: true },
-                { left: '\\(', right: '\\)', display: false }
-            ],
-            throwOnError: false
-        });
-    }
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  // Respuestas calculadas con .design/fase5/M02/python/calculos_campo.py. Cada pista nombra el error y te devuelve a la idea física.
+  const RETOS = {
+    1: { unit: 'N/C', ans: 5.5723e-11, hint: 'Vas bien si igualaste fuerzas: eE = m g. Despeja E = m_e g / e con la masa del electrón.', extra: 'Como el electrón es negativo, el campo debe apuntar hacia abajo para empujarlo hacia arriba. Es un campo diminuto: la gravedad sobre un electrón casi no cuenta.' },
+    2: { unit: 'electrones', ans: 4, tol: 0.02, hint: 'La gota está en equilibrio: |q| E = m g. Calcula |q| y divídela entre e: debe salir un número entero.', extra: 'La carga es negativa (la fuerza va contra el campo, hacia arriba) y vale 4e: así se descubrió que la carga está cuantizada.' },
+    3: { unit: 'm', ans: 0.67037, hint: 'Despeja r de E = k|q|/r²: r = √(k|q|/E), con q en coulombs.' },
+    4: { unit: 'N/C', ans: 8.6393e11, hint: 'La carga del núcleo es 6e = 6 × 1,602 × 10⁻¹⁹ C. Luego E = k(6e)/r².' },
+    5: { unit: 'm (posición x)', ans: 1.70711, tol: 0.01, hint: 'Con cargas de signo opuesto, entre ellas los campos se refuerzan. El punto está fuera, del lado de la carga de menor magnitud (x > 0,50 m): iguala 4/x² = 2/(x − 0,50)².' },
+    6: { unit: 'N/C', ans: 5392.8, hint: 'En el punto medio los dos campos apuntan hacia la carga negativa: se suman. Cada uno vale k(3,0 nC)/(0,10 m)².' },
+    7: { unit: 'N/C', ans: 1.01688e4, hint: 'Cada carga está a a/√2 del centro. Por simetría las componentes x se anulan y las cuatro componentes y se suman: E = 4 · (kq/(a²/2)) · (1/√2).', extra: 'Apunta hacia arriba: de las cargas positivas hacia las negativas.' },
+    8: { unit: 'N/C', ans: 343.745, hint: 'E₁ apunta hacia q₁ (hacia +y) y E₂ se aleja de q₂ (hacia −x). Son perpendiculares: usa Pitágoras.', extra: 'Ángulo con +x: 150,6° (segundo cuadrante).' },
+    9: { unit: 'N/C', ans: 33.7816, hint: 'Usa la fórmula exacta E = kp/(a² + y²)^{3/2} con p = 4,80 × 10⁻¹⁰ C·m y a = 0,060 m.', extra: 'La aproximación kp/y³ da 34,51 N/C: un 2,2 % de error.' },
+    10: { unit: 'N', ans: 1.12979e-12, hint: 'En el eje, lejos, E ≈ 2kp/x³. La fuerza sobre el ion es F = eE.', extra: 'Lo repele: del lado hacia el que apunta p el campo va en el sentido de p y empuja al ion positivo hacia afuera.' },
+    11: { unit: 'm', ans: 0.847464, tol: 0.01, hint: '(exacto − aprox)/exacto = 1 − (1 − a²/x²)² = 0,01. Despeja x, o corre el programa 2.' },
+    12: { unit: 'N/C', ans: 1296.44, hint: 'Despeja E de τ = pE sen φ, con p = q d y d en metros (2,0 mm = 2,0 × 10⁻³ m).' },
+    13: { unit: 'rad/s', ans: 10.0, hint: 'Es como un péndulo: I φ″ = −pE φ, así que ω = √(pE/I), con I = 2m(d/2)² y p = q d.' },
+    14: { unit: 'C', ans: 8.64e-14, hint: 'Con t = L/v e y = ½ (qE/m) t², despeja q = 2 m v² y / (E L²). Pasa mm y cm a metros.' },
+  };
+  const KEY = 'e10_taller2_respuestas';
+  let st = {}; try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { st = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1').replace(/[a-zA-Z/]+$/, (u) => (/^e/i.test(u) ? u : '')); return s === '' ? NaN : Number(s); };
+  const fmt = (x) => { if (!isFinite(x)) return '—'; const a = Math.abs(x); if (a !== 0 && (a < 1e-2 || a >= 1e4)) { const e = Math.floor(Math.log10(a)); return (x / 10 ** e).toFixed(2).replace('.', ',') + ' × 10^' + e; } return x.toFixed(3).replace('.', ','); };
 
-    window.switchPath = (prob, path, btn) => {
-        document.querySelectorAll(`#${prob}-path-a, #${prob}-path-b`).forEach(el => el.classList.remove('active'));
-        btn.parentElement.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-        document.getElementById(`${prob}-path-${path}`).classList.add('active');
-        btn.classList.add('active');
+  document.querySelectorAll('[data-reto]').forEach((box) => {
+    const n = +box.dataset.reto, R = RETOS[n];
+    const w = document.createElement('div'); w.className = 'ans no-print';
+    w.innerHTML = `<input aria-label="Tu respuesta al reto ${n}" inputmode="decimal" placeholder="p. ej. 2,5e-3"><span class="u">${R.unit}</span><button type="button" class="btn pri">Comprobar</button>`;
+    const fb = document.createElement('div'); fb.className = 'fb'; fb.setAttribute('aria-live', 'polite');
+    const pr = document.createElement('div'); pr.className = 'print-only'; pr.textContent = 'Respuesta: ______________________';
+    box.append(w, fb, pr);
+    const inp = w.querySelector('input'); let fails = 0;
+    if (st[n]) { inp.value = st[n].v; }
+    const check = () => {
+      const v = parseNum(inp.value);
+      if (!isFinite(v)) { fb.innerHTML = `<span style="color:var(--e10-muted)">Escribe un número en ${R.unit}.</span>`; return; }
+      const tol = R.tol ?? 0.02, ok = Math.abs(v - R.ans) <= tol * Math.abs(R.ans);
+      if (ok) fb.innerHTML = `<b style="color:var(--e10-success)">¡Correcto!</b> ${R.extra || ''}`;
+      else { fails++; fb.innerHTML = `<b style="color:var(--e10-danger)">Aún no, pero vas en camino.</b> ${fails < 2 ? R.hint : R.hint + ` La respuesta es ${fmt(R.ans)} ${R.unit}.`}`; }
+      st[n] = { v: inp.value, ok }; save(); table();
     };
+    w.querySelector('button').addEventListener('click', check);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
+  });
 
-    const btnComp = document.getElementById('btn-comp-ef');
-    const inpEf = document.getElementById('inp-ef-axial');
-    const fbEf = document.getElementById('fb-ef');
-
-    btnComp.addEventListener('click', () => {
-        const val = parseFloat(inpEf.value);
-        // E = 2 k p / z^3 = 2 * (8.99e9) * (4.0e-11) / (0.20)^3 = 0.7192 / 0.008 = 89.9 N/C ≈ 90 N/C
-        if (Math.abs(val - 89.9) <= 2.5 || Math.abs(val - 90) <= 2.5) {
-            fbEf.textContent = '¡Excelente! E = 2 k p / z³ ≈ 89,9 N/C (≈ 90 N/C). Cálculo asintótico exacto.';
-            fbEf.style.color = 'var(--e10-success)';
-        } else {
-            fbEf.textContent = 'Intento no exacto. Fórmula: E = (2 * 8.99e9 * 4.0e-11) / (0.20)³ N/C.';
-            fbEf.style.color = 'var(--e10-warning)';
-        }
-    });
-
-    document.getElementById('btn-print-top').addEventListener('click', () => window.print());
-
-    document.getElementById('btn-exportar-pdf').addEventListener('click', () => {
-        const nom = document.getElementById('ent-nombre').value.trim() || 'Estudiante';
-        const cod = document.getElementById('ent-codigo').value.trim() || 'ID';
-        const elemento = document.getElementById('seccion-entrega');
-        
-        const opt = {
-            margin: 10,
-            filename: `Entrega_Taller_2_CampoElectrico_${nom.replace(/\s+/g, '_')}_${cod}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(elemento).save();
-    });
-});
+  function table() {
+    const tb = $('sum').querySelector('tbody'); tb.innerHTML = '';
+    Object.keys(RETOS).forEach((n) => { const s = st[n]; const tr = document.createElement('tr');
+      tr.innerHTML = `<td>Reto ${n}</td><td class="mono">${s ? s.v.replace(/</g, '&lt;') : '—'}</td><td>${!s ? 'sin responder' : s.ok ? '<b style="color:var(--e10-success)">correcto</b>' : '<span style="color:var(--e10-danger)">por revisar</span>'}</td>`; tb.appendChild(tr); });
+  }
+  table();
+  ['est-nombre', 'est-grupo'].forEach((id) => { try { $(id).value = localStorage.getItem('e10_' + id) || ''; } catch (_) {} $(id).addEventListener('input', () => { try { localStorage.setItem('e10_' + id, $(id).value); } catch (_) {} }); });
+  $('btn-print').addEventListener('click', () => { document.querySelectorAll('details').forEach((d) => { d.open = true; }); setTimeout(() => window.print(), 100); });
+  $('btn-reset').addEventListener('click', () => { st = {}; save(); document.querySelectorAll('[data-reto] input').forEach((i) => { i.value = ''; }); document.querySelectorAll('[data-reto] .fb').forEach((f) => { f.textContent = ''; }); table(); });
+  window.addEventListener('load', () => { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); });
+  window.__taller2 = { RETOS, parseNum };
+})();
 </script>
 </body>
 </html>

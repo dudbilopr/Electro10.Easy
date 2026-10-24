@@ -12,6 +12,7 @@
     clase: '../presentaciones/M1_Coulomb/index.html',
     taller: '../talleres/Taller_1_Ley_de_Coulomb.html',
     juego: '../juegos/Juego_1.html',
+    juegoNombre: 'Charge Wars',
     lab: '../simuladores/Coulomb.html',
     fases: [
       {

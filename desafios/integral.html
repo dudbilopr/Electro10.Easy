@@ -122,7 +122,7 @@ table.res td,table.res th{border-bottom:1px solid var(--e10-line);padding:6px 8p
     const f = fase();
     if (st.q >= f.preguntas.length) return resumenFase();
     const q = f.preguntas[st.q], el = $('stage');
-    el.innerHTML = `${st.q === 0 ? `<div class="tip"><b>Fase ${st.f + 1} · ${f.nombre}.</b> ${f.intro}${st.f === 1 ? ` <a href="${D.juego}" target="_blank" rel="noopener">Abrir Charge Wars</a>.` : ''}</div>` : ''}
+    el.innerHTML = `${st.q === 0 ? `<div class="tip"><b>Fase ${st.f + 1} · ${f.nombre}.</b> ${f.intro}${st.f === 1 ? ` <a href="${D.juego}" target="_blank" rel="noopener">Abrir ${D.juegoNombre || "el juego"}</a>.` : ''}</div>` : ''}
       <div class="card"><div class="qhead"><span class="qtype">${TIPO[q.tipo]}</span><span class="qn">Pregunta ${st.q + 1} de ${f.preguntas.length}</span></div>
       <div class="enun">${q.enun || ''}</div><div id="qbody"></div>
       <div class="fb" id="fb"></div>
@@ -162,7 +162,7 @@ table.res td,table.res th{border-bottom:1px solid var(--e10-line);padding:6px 8p
     },
     dir(q, box) {
       const D8 = [['NO', '↖'], ['N', '↑'], ['NE', '↗'], ['O', '←'], ['0', '0'], ['E', '→'], ['SO', '↙'], ['S', '↓'], ['SE', '↘']]; let sel = null;
-      box.innerHTML = `<div class="figrow">${FIG[q.fig]()}<div class="dirs">${D8.map(([k, a]) => `<button type="button" class="op" data-k="${k}" aria-label="${k === '0' ? 'fuerza nula' : 'dirección ' + k}">${a}</button>`).join('')}</div></div>`;
+      box.innerHTML = `<div class="figrow">${FIG[q.fig] ? FIG[q.fig]() : q.fig}<div class="dirs">${D8.map(([k, a]) => `<button type="button" class="op" data-k="${k}" aria-label="${k === '0' ? 'fuerza nula' : 'dirección ' + k}">${a}</button>`).join('')}</div></div>`;
       box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = b.dataset.k; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
       return { check(silent) { if (silent) sel = q.ok; if (sel === null) return null; box.querySelectorAll('.op').forEach((x) => { x.classList.remove('sel'); if (x.dataset.k === q.ok) x.classList.add('right'); else if (x.dataset.k === sel) x.classList.add('wrong'); });
         return { ok: sel === q.ok, msg: sel === q.ok ? q.fb[q.ok] : (q.fb[sel] || q.fb._), code: `${q.id}_${sel}` }; } };
@@ -206,7 +206,7 @@ table.res td,table.res th{border-bottom:1px solid var(--e10-line);padding:6px 8p
       const ops = q.ops; let sel = null;
       const svg = (f) => { const P = []; let mx = 0; for (let k = 0; k <= 60; k++) { const r = 0.5 + k * 3.5 / 60; mx = Math.max(mx, Math.min(f(r), 4)); } for (let k = 0; k <= 60; k++) { const r = 0.5 + k * 3.5 / 60; P.push(`${(20 + (r - 0.5) / 3.5 * 170).toFixed(1)},${(120 - Math.min(f(r), 4) / mx * 100).toFixed(1)}`); }
         const pt = (r) => `<circle cx="${(20 + (r - 0.5) / 3.5 * 170).toFixed(1)}" cy="${(120 - Math.min(f(r), 4) / mx * 100).toFixed(1)}" r="4" fill="var(--e10-accent)"/>`;
-        return `<svg viewBox="0 0 200 140" role="img" aria-label="curva"><path d="M20 10V120H195" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/><polyline points="${P.join(' ')}" fill="none" stroke="var(--e10-primary)" stroke-width="3"/>${pt(1)}${pt(2)}<text x="150" y="136" font-size="11" fill="var(--e10-muted)">r</text><text x="4" y="16" font-size="11" fill="var(--e10-muted)">F</text><text x="44" y="136" font-size="10" fill="var(--e10-muted)">r₀</text><text x="92" y="136" font-size="10" fill="var(--e10-muted)">2r₀</text></svg>`; };
+        return `<svg viewBox="0 0 200 140" role="img" aria-label="curva"><path d="M20 10V120H195" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/><polyline points="${P.join(' ')}" fill="none" stroke="var(--e10-primary)" stroke-width="3"/>${pt(1)}${pt(2)}<text x="150" y="136" font-size="11" fill="var(--e10-muted)">r</text><text x="4" y="16" font-size="11" fill="var(--e10-muted)">${q.ylab || "F"}</text><text x="44" y="136" font-size="10" fill="var(--e10-muted)">r₀</text><text x="92" y="136" font-size="10" fill="var(--e10-muted)">2r₀</text></svg>`; };
       box.innerHTML = `<div class="graphs">${ops.map((o, i) => `<button type="button" class="op" data-i="${i}">${svg(o.f)}<b>${o.t}</b></button>`).join('')}</div>`;
       box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = +b.dataset.i; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
       return { check(silent) { if (silent) sel = ops.findIndex((o) => o.ok); if (sel === null) return null; box.querySelectorAll('.op').forEach((x, i) => { x.classList.remove('sel'); if (ops[i].ok) x.classList.add('right'); else if (i === sel) x.classList.add('wrong'); });

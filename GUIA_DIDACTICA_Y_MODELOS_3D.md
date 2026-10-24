@@ -95,6 +95,7 @@ Para enriquecer la enseñanza del electromagnetismo y conectar la teoría abstra
   - Conectores cilíndricos para insertar cargas fuente ($+q$ en rojo Plasma, $-q$ en azul/cian Plasma).
   - Flechas vectoriales modulares de longitud escalada (3 longitudes: $30\ \text{mm}$, $50\ \text{mm}$, $80\ \text{mm}$) montadas sobre rótulas esféricas de giro libre $360^\circ$ para orientar el campo resultante en cualquier punto del espacio.
 - **Parámetros de impresión:** PETG para flexibilidad de las rótulas, capa $0{,}20\ \text{mm}$, sin soportes.
+- **Implementado (2026-10-24) como *DipoloVectorial-3D*:** la rejilla anterior más el *Indicador Vectorial de Dipolo* del catálogo. Modelo paramétrico `recursos/modelos_3d/M02_DipoloVectorial.scad` (piezas `base` 220 × 220 mm con 10 × 10 orificios cada 20 mm, `carga`, `soporte` con rótula, `flecha` de 30/50/80 mm, `disco` angular con 0° en el sentido de $\vec E$, `dipolo` sobre pasador de 4 mm y `cubeta` para semillas en aceite) y ficha con protocolo en `recursos/modelos_3d/M02_DipoloVectorial.html`. Los ángulos coinciden con la diapositiva 7 y la escena «Dipolo en E uniforme» de VectorFieldLab. Es un modelo para razonar con vectores, no un instrumento de medida; la única demostración real (semillas en aceite, Young y Freedman, figura 21.30) es cualitativa y requiere alta tensión bajo control del docente.
 
 ---
 

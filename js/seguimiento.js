@@ -102,6 +102,22 @@ export const ERRORES = {
     coulomb_atraccion_repulsion: 'Confundió atracción y repulsión',
     coulomb_fuera_de_recta: 'Fuerza fuera de la recta que une las cargas',
     coulomb_falta_fuerza: 'Faltó una fuerza (superposición incompleta)',
+    // VectorFieldLab (capítulo 2)
+    campo_sentido_negativa: 'Campo en sentido invertido (debe ir hacia las cargas negativas)',
+    campo_una_carga: 'Contó el campo de una sola carga',
+    campo_suma_modulos: 'Sumó módulos de campo en vez de vectores',
+    campo_inverso_r: 'Usó 1/r en lugar de 1/r²',
+    campo_direccion: 'Dirección del campo neto mal estimada',
+    dipolo_direccion: 'Dirección del campo del dipolo respecto de p',
+    dipolo_aprox: 'Usó la aproximación lejana donde no vale',
+    dipolo_factor2: 'Confundió las fórmulas del eje y de la mediatriz',
+    dipolo_r2: 'Trató el dipolo como una carga puntual (1/r²)',
+    torque_sentido: 'Sentido de giro del dipolo',
+    torque_coseno: 'Usó cos φ en el torque (va con sen φ)',
+    torque_sin_d: 'Olvidó la separación en p = q d',
+    haz_sentido: 'Sentido de la desviación según el signo de la carga',
+    haz_medio: 'Olvidó el ½ en y = ½ a t²',
+    haz_masa: 'Usó la masa de otra partícula',
     otro: 'Otro error',
 };
 
@@ -174,9 +190,12 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     radio_por_diametro: 'Lorentz.html#selector', b_sobre_e: 'Lorentz.html#selector', selector_equilibrio: 'Lorentz.html#selector', par_nulo: 'Lorentz.html#conductor', sentido_par: 'Lorentz.html#conductor', cos_en_par: 'Lorentz.html#conductor',
     flujo_constante: 'Faraday.html#flujo', lenz_sentido: 'Faraday.html#iman', delta_b: 'Faraday.html#flujo', coseno_flujo: 'Faraday.html#flujo', flujo_vs_fem: 'Faraday.html#flujo',
     fem_vs_corriente: 'Faraday.html#barra', fem_max_posicion: 'Faraday.html#generador', omega_f: 'Faraday.html#generador', eficaz_pico: 'Faraday.html#generador',
-    coulomb_pocas_cargas: 'Coulomb.html', coulomb_sin_vectores: 'Coulomb.html', coulomb_sin_origen: 'Coulomb.html', coulomb_atraccion_repulsion: 'Coulomb.html', coulomb_fuera_de_recta: 'Coulomb.html', coulomb_falta_fuerza: 'Coulomb.html' };
+    coulomb_pocas_cargas: 'Coulomb.html', coulomb_sin_vectores: 'Coulomb.html', coulomb_sin_origen: 'Coulomb.html', coulomb_atraccion_repulsion: 'Coulomb.html', coulomb_fuera_de_recta: 'Coulomb.html', coulomb_falta_fuerza: 'Coulomb.html',
+    campo_sentido_negativa: 'VectorField.html#campo', campo_una_carga: 'VectorField.html#campo', campo_suma_modulos: 'VectorField.html#campo', campo_inverso_r: 'VectorField.html#campo', campo_direccion: 'VectorField.html#campo',
+    dipolo_direccion: 'VectorField.html#dipolo', dipolo_aprox: 'VectorField.html#dipolo', dipolo_factor2: 'VectorField.html#dipolo', dipolo_r2: 'VectorField.html#dipolo',
+    torque_sentido: 'VectorField.html#torque', torque_coseno: 'VectorField.html#torque', torque_sin_d: 'VectorField.html#torque', haz_sentido: 'VectorField.html#haz', haz_medio: 'VectorField.html#haz', haz_masa: 'VectorField.html#haz' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
-const LABS = { Coulomb: 'CoulombLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
+const LABS = { Coulomb: 'CoulombLab', VectorField: 'VectorFieldLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
 export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──

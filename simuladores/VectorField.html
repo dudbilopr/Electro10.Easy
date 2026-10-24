@@ -1,0 +1,767 @@
+<!DOCTYPE html><html lang="es"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>VectorFieldLab10.easy · Campo eléctrico y dipolos</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* VectorFieldLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap}
+header .e10-brand{font-size:1.1rem}
+.scene-tabs{display:flex;gap:2px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);margin-left:12px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:40px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn i{font-size:1.1em}
+.btn .sym{font:italic 600 1.05em/1 'Times New Roman',serif}
+.tog{min-height:34px;padding:0 12px;border-radius:999px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+.seg{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.seg .btn{min-height:34px;border:0;background:transparent;color:var(--e10-muted)}
+.seg .btn.active{background:var(--e10-surface);color:var(--e10-ink);box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:330px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:28px minmax(0,1fr) 78px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+.vnote{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.12em}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55}
+.reto-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reto-actions .btn{min-height:32px;font-size:var(--e10-text-xs)}
+#reto-note{font-size:var(--e10-text-xs);color:var(--e10-warning)}
+#reto-note:empty{display:none}
+.e10-chip--info{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:500 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#check-hint:empty{display:none}
+#explain{line-height:1.5}
+#explain:empty{display:none}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;line-height:1.6}
+#solution .katex-display{margin:.4em 0}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+/* Incrustado en una clase (?embed): solo escenas, herramientas y lienzo; la clase trae sus propias tareas */
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+body.e10-projector{font-size:17px}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  header .e10-brand{font-size:1rem}
+  .module-chip,#btn-projector{display:none}
+  .scene-tabs{order:5;margin:0;width:100%}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .h-menu{order:3;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px;border-top:1px solid var(--e10-line);border-bottom:0;flex-wrap:nowrap;overflow-x:auto}
+  .h-menu .tool-group__label,.h-menu .tool-sep{display:none}
+  .h-menu .btn{min-height:44px;font-size:12px;padding:0 10px}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:150px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px;min-height:44px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:.95em}
+  #values-body{min-width:220px}
+  #coords-indicator{display:none}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+// 10.Easy: tema claro por defecto, salvo que el estudiante haya elegido el oscuro.
+(function(){var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}document.addEventListener('DOMContentLoaded',function(){document.body.classList.toggle('dark-mode',t==='dark');document.body.classList.toggle('light-mode',t!=='dark');if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');});})();
+</script>
+</head>
+<body data-domain="electrostatica" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">VectorFieldLab<span>10.easy</span></a>
+  <span class="e10-chip module-chip">Módulo 2 · Campo eléctrico</span>
+  <nav class="scene-tabs" role="tablist" aria-label="Escenas">
+    <button type="button" role="tab" data-scene="campo" aria-selected="false">1 · Campo de cargas</button>
+    <button type="button" role="tab" data-scene="dipolo" aria-selected="false">2 · Dipolo</button>
+    <button type="button" role="tab" data-scene="torque" aria-selected="false">3 · Dipolo en E uniforme</button>
+    <button type="button" role="tab" data-scene="haz" aria-selected="false">4 · Carga entre placas</button>
+  </nav>
+  <div class="e10-header__spacer"></div>
+  <div class="header-actions">
+    <button class="btn" id="btn-projector" type="button"><i class="ph ph-projector-screen"></i>Modo proyector</button>
+    <button class="btn btn-icon" id="btn-theme" type="button" aria-label="Cambiar tema claro u oscuro"><i class="ph ph-moon"></i></button>
+    <button class="btn" id="user-info" type="button" style="color:var(--e10-primary);border-color:var(--e10-primary)">Iniciar sesión</button>
+  </div>
+</header>
+<div class="h-menu" id="toolbar" role="toolbar" aria-label="Herramientas de la escena"></div>
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Lienzo de la simulación"></canvas>
+    <details id="values" open><summary>Valores</summary><div id="values-body"></div></details>
+    <div id="coords-indicator"></div>
+    <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><div id="live-tex"></div></div>
+  </div>
+  <aside class="slide-panel" id="right-panel">
+    <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Abrir o cerrar el panel del reto"><span></span></button>
+    <div class="panel-scroll">
+      <section class="e10-step" id="st1" data-s="done">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto</div>
+          <div id="reto-text"></div>
+          <div id="reto-note"></div>
+          <div class="reto-actions"><span class="e10-chip e10-chip--info" id="reto-tag"></span><button class="btn" id="btn-new" type="button"><i class="ph ph-shuffle"></i>Nuevo reto con otros valores</button></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st2" data-s="now">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice</div>
+          <div id="pred-q"></div>
+          <div class="predict-row" id="pred-choices"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprueba</div>
+          <label class="ans"><span id="ans-label">Tu valor</span><input id="ans-val" type="text" inputmode="decimal" autocomplete="off" placeholder="ej. 0,40"></label>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" id="btn-check" type="button">Comprobar mi predicción</button>
+          <div id="check-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Explica</div>
+          <div class="e10-tip" id="explain"></div>
+          <button class="btn" id="btn-sol" type="button"><i class="ph ph-function"></i>Ver la solución paso a paso</button>
+          <div id="solution" hidden></div>
+          <a class="btn" id="btn-practice" hidden target="_self">Practicar este error</a>
+        </div>
+      </section>
+      <div id="continue-wrap"></div>
+    </div>
+    <div class="panel-progress"><span class="section-title">Progreso</span><div class="e10-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="prog-bar"><span id="prog" style="--e10-p:25%"></span></div><span class="section-title" id="prog-txt">1 de 4</span></div>
+  </aside>
+</div>
+<footer><span>© 2026 VectorFieldLab10.easy · 10.Easy</span><a href="../index.html">Volver a la plataforma</a></footer>
+
+<script type="module">
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+
+// ───────────────────────── utilidades ─────────────────────────
+const $ = s => document.querySelector(s);
+// Constantes de Young y Freedman (2009), sección 21.3 y apéndice, a 4 cifras (las mismas del taller del capítulo 2).
+const K = 8.988e9, QE = 1.602e-19, ME = 9.109e-31, MP = 1.673e-27, nC = 1e-9;
+const DEG = 180 / Math.PI, rad = d => d / DEG;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const cssv = n => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim();
+function sciParts(v, d) {
+  if (!isFinite(v) || v === 0) return null;
+  let e = Math.floor(Math.log10(Math.abs(v)));
+  let ms = (v / Math.pow(10, e)).toFixed(d - 1);
+  if (Math.abs(+ms) >= 10) { e += 1; ms = (v / Math.pow(10, e)).toFixed(d - 1); }
+  return [ms, e];
+}
+function sx(v, d = 3) { const p = sciParts(v, d); if (!p) return '0'; return p[0].replace('.', '{,}') + (p[1] === 0 ? '' : String.raw`\times10^{${p[1]}}`); }
+function sp(v, d = 3) {
+  const p = sciParts(v, d); if (!p) return '0';
+  const sup = String(p[1]).replace('-', '⁻').replace(/\d/g, c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  return p[0].replace('.', ',') + (p[1] === 0 ? '' : ' × 10' + sup);
+}
+const fx = (v, n) => v.toFixed(n).replace('.', '{,}');
+const fp = (v, n) => v.toFixed(n).replace('.', ',');
+const fE = E => (E >= 0.1 && E < 1e5 ? fp(E, E < 100 ? 2 : 1) : sp(E, 3)) + ' N/C';
+function parseNum(s) {
+  s = String(s ?? '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/(N\/C|N·m|Nm|mm|N|J|m)$/i, '');
+  s = s.replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1');
+  return s === '' ? NaN : Number(s);
+}
+const near = (a, b, tol = 0.03) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30);
+function K_(tex, display = false) { try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); } catch (_) { return tex; } }
+function mixed(el, html) {
+  el.innerHTML = html;
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+const adiff = (a, b) => ((a - b) % 360 + 540) % 360 - 180;
+const n360 = a => ((a % 360) + 360) % 360;
+
+// ───────────────────────── lienzo ─────────────────────────
+const area = $('#canvas-area'), cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, HU = 0;
+function resize() {
+  const r = area.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height; HU = H - (W < 600 ? 76 : 92);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+let COL = {};
+function readColors() {
+  COL = { ink: cssv('ink'), muted: cssv('muted'), line: cssv('line'), surface: cssv('surface'), primary: cssv('primary'), accent: cssv('accent'), accentStrong: cssv('accent-strong'),
+    field: cssv('vec-field'), force: cssv('vec-force'), qpos: cssv('q-pos'), qneg: cssv('q-neg'), ok: cssv('success'), danger: cssv('danger'), grid: cssv('grid') };
+}
+const FS = () => document.body.classList.contains('e10-projector') ? 1.25 : 1;
+function arrow(x1, y1, x2, y2, col, w = 2, head = 10, dash = null) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy); if (L < 2) return;
+  head = Math.min(head, L * 0.6);
+  const ux = dx / L, uy = dy / L, hx = x2 - ux * head, hy = y2 - uy * head;
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(hx - uy * head * 0.5, hy + ux * head * 0.5); ctx.lineTo(hx + uy * head * 0.5, hy - ux * head * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function text(t, x, y, col = COL.ink, size = 13, align = 'left', weight = 500) {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `${weight} ${size * FS()}px 'IBM Plex Sans', system-ui, sans-serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function charge(x, y, q, r = 13) {
+  ctx.save(); ctx.fillStyle = q > 0 ? COL.qpos : COL.qneg; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+  ctx.strokeStyle = COL.surface; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y);
+  if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke(); ctx.restore();
+}
+function panelBox(x, y, w, h) { ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.stroke(); ctx.restore(); }
+function plotAxes(pl, title) { panelBox(pl.x, pl.y, pl.w, pl.h); text(title, pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600); }
+function hint(pl, t) { text(t, pl.x + pl.w / 2, pl.y + pl.h / 2, COL.muted, 12, 'center'); }
+const logLen = (E, E0 = 20) => Math.max(0, 30 * Math.log10(1 + E / E0));
+// Campo de cargas puntuales [{q (C), x, y (m)}] en (x, y)
+function field(qs, x, y) { let Ex = 0, Ey = 0; qs.forEach(c => { const dx = x - c.x, dy = y - c.y, r = Math.hypot(dx, dy); if (r < 1e-9) return; Ex += K * c.q * dx / r ** 3; Ey += K * c.q * dy / r ** 3; }); return { Ex, Ey, E: Math.hypot(Ex, Ey), a: n360(Math.atan2(Ey, Ex) * DEG) }; }
+// Líneas de campo en coordenadas de pantalla (cargas con pesos de signo)
+function fieldLines(qs, n = 12, bounds = { x0: 0, y0: 0, x1: W, y1: HU }) {
+  const out = [], pos = qs.filter(c => c.q > 0), src = pos.length ? pos : qs, dir = pos.length ? 1 : -1, mx = Math.max(...src.map(s => Math.abs(s.q)));
+  const E = (x, y) => { let ex = 0, ey = 0; qs.forEach(c => { const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy, r = Math.sqrt(r2); ex += c.q * dx / (r2 * r); ey += c.q * dy / (r2 * r); }); return [ex, ey]; };
+  src.forEach(c => { const nn = Math.max(4, Math.round(n * Math.abs(c.q) / mx)); for (let k = 0; k < nn; k++) {
+    const a = (k + 0.5) / nn * 2 * Math.PI; let x = c.x + 15 * Math.cos(a), y = c.y + 15 * Math.sin(a); const pts = [[x, y]];
+    for (let s = 0; s < 700; s++) { const [ex, ey] = E(x, y), L = Math.hypot(ex, ey) || 1; const hx = x + dir * 2 * ex / L, hy = y + dir * 2 * ey / L; const [ex2, ey2] = E(hx, hy), L2 = Math.hypot(ex2, ey2) || 1; x += dir * 4 * ex2 / L2; y += dir * 4 * ey2 / L2; pts.push([x, y]);
+      if (x < bounds.x0 - 30 || y < bounds.y0 - 30 || x > bounds.x1 + 30 || y > bounds.y1 + 30) break; if (qs.some(o => o !== c && Math.hypot(x - o.x, y - o.y) < 12)) break; }
+    out.push({ pts, dir }); } });
+  return out;
+}
+function drawLines(ls, col, alpha = 0.5) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+  ls.forEach(({ pts, dir }) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+    const m = Math.floor(pts.length * 0.3); if (pts.length > 10) { const [a1, b1] = pts[m], [a2, b2] = pts[m + 2]; if (dir > 0) arrow(a1, b1, a2, b2, col, 1.4, 8); else arrow(a2, b2, a1, b1, col, 1.4, 8); } });
+  ctx.restore();
+}
+
+// ───────────────────────── estado ─────────────────────────
+const app = { scene: 'campo', checked: false, result: null, showSol: false };
+const pred = { choice: null, angle: null };
+function invalidate() { if (app.checked) { app.checked = false; app.result = null; app.showSol = false; } renderPanel(false); }
+function resetPred() { pred.choice = null; pred.angle = null; $('#ans-val').value = ''; app.checked = false; app.result = null; app.showSol = false; }
+const reveal = () => app.checked || sc().changed();
+const DIRW = a => { const k = Math.round(n360(a) / 45) % 8; return ['hacia la derecha', 'arriba a la derecha', 'hacia arriba', 'arriba a la izquierda', 'hacia la izquierda', 'abajo a la izquierda', 'hacia abajo', 'abajo a la derecha'][k]; };
+
+// ═════════════════════════ ESCENA 1 · CAMPO DE CARGAS ═════════════════════════
+const CA = { qs: [], P: { x: 0, y: 0 }, reto: null, drag: null, map: true };
+const caSnap = () => JSON.stringify(CA.qs.map(c => [c.q, c.x, c.y]));
+const caQs = () => CA.qs.map(c => ({ q: c.q * nC, x: c.x, y: c.y }));
+const caView = () => { const wide = W > 760, wv = wide ? W * 0.62 : W, S = Math.min(wv, HU) / 1.35; return { cx: wv * 0.56, cy: HU / 2 + 10, S, wv }; };
+const toScr = (v, p) => ({ x: v.cx + p.x * v.S, y: v.cy - p.y * v.S });
+const scCampo = {
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Ver</span>
+      <button class="btn tog ${CA.map ? 'active' : ''}" data-act="map" type="button">Mapa de flechas</button>
+      <button class="btn tog" data-act="lines" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}>Líneas de campo</button></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Cargas</span><button class="btn" data-act="add" type="button" ${CA.qs.length >= 4 ? 'disabled' : ''}><i class="ph ph-plus"></i>Añadir</button><button class="btn" data-act="sign" type="button">Cambiar el signo de q₁</button></div>`,
+  act(a) { if (a === 'map') CA.map = !CA.map; else if (a === 'lines') CA.lines = !CA.lines; else if (a === 'add') { CA.qs.push({ q: 2, x: 0.3, y: -0.3 }); invalidate(); } else if (a === 'sign') { CA.qs[0].q = -CA.qs[0].q; invalidate(); } buildToolbar(); buildValues(); },
+  values: () => CA.qs.map((c, i) => ({ sym: 'q', sub: String(i + 1), min: -8, max: 8, step: 1, get: () => c.q, set: x => { c.q = x || 1; }, fmt: x => (x > 0 ? '+' : '') + x + ' nC', label: `Carga ${i + 1}` })),
+  valuesNote: 'Arrastra las cargas en el lienzo. Para predecir, toca el lienzo cerca de P: la flecha punteada sale de P hacia donde tocas.',
+  newReto() {
+    let ok = false;
+    while (!ok) {
+      const n = pick([2, 2, 3]), spots = [[-0.3, 0.2], [0.3, 0.2], [-0.2, -0.3], [0.3, -0.2], [0, 0.35], [0.4, 0], [-0.4, 0], [0.2, 0.4], [-0.3, -0.1]];
+      const used = new Set(); CA.qs = [];
+      for (let i = 0; i < n; i++) { let s; do { s = pick(spots); } while (used.has(s)); used.add(s); CA.qs.push({ q: pick([2, 3, 4, 5, 6]) * pick([1, -1]), x: s[0], y: s[1] }); }
+      ok = CA.qs.some(c => c.q > 0) && CA.qs.some(c => c.q < 0) && field(caQs(), 0, 0).E > 50;
+    }
+    CA.P = { x: 0, y: 0 }; CA.lines = false; CA.reto = caSnap();
+  },
+  retoText() {
+    return `Hay ${CA.qs.length} cargas: ${CA.qs.map((c, i) => `\\(q_${i + 1}=${c.q > 0 ? '+' : ''}${c.q}{,}0\\) nC en \\((${fx(c.x, 2)};\\,${fx(c.y, 2)})\\) m`).join('; ')}. ¿Hacia dónde apunta el campo en \\(P\\), el origen, y cuánto vale?`;
+  },
+  retoTag: 'Resueltos 3–4 y retos 5–8 del taller',
+  changed() { return !!CA.reto && caSnap() !== CA.reto; },
+  predQ: 'Toca el lienzo para dibujar la dirección de \\(\\vec E\\) en \\(P\\).',
+  choices: [],
+  predHint: () => pred.angle === null ? 'Aún no dibujas la flecha.' : `Tu flecha apunta ${DIRW(pred.angle)} (${Math.round(pred.angle)}°).`,
+  ansLabel: 'Tu valor de \\(|\\vec E|\\) en \\(P\\), en N/C',
+  ansPh: 'ej. 428,8',
+  hasPred: () => pred.angle !== null,
+  check() {
+    const qs = caQs(), f = field(qs, 0, 0), v = parseNum($('#ans-val').value), rows = [], d = adiff(pred.angle, f.a), dOk = Math.abs(d) <= 12;
+    const singles = qs.map(c => field([c], 0, 0));
+    rows.push({ t: `Dirección: ${Math.round(pred.angle)}° (real ${Math.round(f.a)}°)`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(Math.abs(v), f.E, 0.03); rows.push({ t: `Tu \\(E\\): ${sp(v, 3)} N/C`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v), sumMod = singles.reduce((s, x) => s + x.E, 0);
+    const inv = (() => { let ex = 0, ey = 0; qs.forEach(c => { const r = Math.hypot(c.x, c.y); ex += K * c.q * (-c.x) / (r * r); ey += K * c.q * (-c.y) / (r * r); }); return Math.hypot(ex, ey); })();
+    let t, code = null;
+    if (!dOk && Math.abs(d) > 150) { code = 'campo_sentido_negativa'; t = 'Tu flecha va justo al revés. El campo apunta hacia donde se movería una carga <b>positiva</b>: se aleja de las cargas positivas y va <b>hacia</b> las negativas. Dibuja una flecha por carga con esa regla y súmalas.'; }
+    else if (!dOk && singles.some(s => Math.abs(adiff(pred.angle, s.a)) <= 12)) { code = 'campo_una_carga'; t = 'Tu flecha coincide con el campo de una sola carga. Te faltó sumar las demás: cada carga aporta su propio vector en \\(P\\).'; }
+    else if (!dOk) { code = 'campo_direccion'; t = 'Vas cerca, pero la dirección no cuadra. Calcula las componentes \\(E_x\\) y \\(E_y\\) de cada carga, súmalas y usa \\(\\theta=\\arctan(E_y/E_x)\\) cuidando el cuadrante.'; }
+    else if (vOk === false && near(av, sumMod, 0.03)) { code = 'campo_suma_modulos'; t = 'La dirección está bien: buena intuición. Pero sumaste los módulos. Los campos son vectores: suma \\(E_x\\) con \\(E_x\\) y \\(E_y\\) con \\(E_y\\), y luego saca el módulo.'; }
+    else if (vOk === false && near(av, inv, 0.03)) { code = 'campo_inverso_r'; t = 'Usaste \\(1/r\\) en lugar de \\(1/r^2\\). El campo de una carga puntual es \\(k|q|/r^2\\).'; }
+    else if (vOk === false && singles.some(s => near(av, s.E, 0.03))) { code = 'campo_una_carga'; t = 'Ese es el campo de una sola carga. Suma el aporte de todas.'; }
+    else if (vOk === false && (near(av, f.E * 1e9, 0.03) || near(av, f.E * 1e-9, 0.03) || near(av, f.E * 1e4, 0.03))) { code = 'unidades'; t = 'Revisa unidades: 1 nC = \\(10^{-9}\\) C y las distancias en metros.'; }
+    else if (vOk === false) { code = 'campo_suma_modulos'; t = 'Calcula cada \\(\\vec E_i=k\\,q_i\\,\\vec r_i/r_i^3\\) (con \\(\\vec r_i\\) de la carga a \\(P\\)), suma por componentes y saca el módulo.'; }
+    else if (vOk === null) t = 'La dirección está bien. Ahora escribe el módulo para comprobarlo.';
+    else t = `Muy bien: \\(E=${sx(f.E)}\\) N/C. Activa «Líneas de campo» y mira cómo pasan por \\(P\\) en la dirección que dibujaste.`;
+    return { rows, tip: t, allOk: dOk && vOk === true, code };
+  },
+  solution() {
+    const qs = caQs(), f = field(qs, 0, 0);
+    return `<p>Para cada carga, \\(\\vec E_i=k\\,q_i\\,(\\vec r_P-\\vec r_i)/|\\vec r_P-\\vec r_i|^3\\):</p>` + qs.map((c, i) => { const e = field([c], 0, 0); return `\\[\\vec E_${i + 1}=(${fx(e.Ex, 1)};\\ ${fx(e.Ey, 1)})\\ \\text{N/C}\\]`; }).join('') +
+      `\\[\\vec E=(${fx(f.Ex, 1)};\\ ${fx(f.Ey, 1)})\\ \\text{N/C},\\quad E=${sx(f.E)}\\ \\text{N/C},\\quad \\theta=${fx(f.a, 1)}^\\circ\\]`;
+  },
+  live() { const f = field(caQs(), 0, 0); return String.raw`\vec E_P=\sum_i k\,q_i\,\dfrac{\vec r_P-\vec r_i}{|\vec r_P-\vec r_i|^3}` + (reveal() ? String.raw`\;\Rightarrow\;E=${sx(f.E)}\ \text{N/C}` : String.raw`\;\Rightarrow\;E=\,?`); },
+  coords: () => `${CA.qs.length} cargas`,
+  draw() {
+    const v = caView(), qs = caQs(), rv = reveal(), P = toScr(v, CA.P);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, v.cy); ctx.lineTo(v.wv, v.cy); ctx.moveTo(v.cx, 0); ctx.lineTo(v.cx, HU); ctx.stroke(); ctx.restore();
+    for (let t = -0.6; t <= 0.61; t += 0.2) { if (Math.abs(t) < 0.01) continue; text(fp(t, 1), v.cx + t * v.S, v.cy + 12, COL.muted, 10, 'center'); }
+    if (CA.map) for (let gx = 20; gx < v.wv; gx += 34) for (let gy = 20; gy < HU; gy += 34) {
+      const X = (gx - v.cx) / v.S, Y = (v.cy - gy) / v.S; if (CA.qs.some(c => Math.hypot(toScr(v, c).x - gx, toScr(v, c).y - gy) < 24)) continue; const f = field(qs, X, Y), u = 11 / f.E;
+      ctx.save(); ctx.globalAlpha = Math.min(0.75, 0.08 + 0.13 * Math.log10(1 + f.E)); arrow(gx - f.Ex * u, gy + f.Ey * u, gx + f.Ex * u, gy - f.Ey * u, COL.field, 1.5, 6); ctx.restore(); }
+    if (rv && CA.lines) drawLines(fieldLines(CA.qs.map(c => ({ q: Math.sign(c.q) * Math.abs(c.q), ...toScr(v, c) })), 10, { x0: 0, y0: 0, x1: v.wv, y1: HU }), COL.field, 0.45);
+    CA.qs.forEach((c, i) => { const p = toScr(v, c); charge(p.x, p.y, c.q, 13); text(`q${i + 1} = ${c.q > 0 ? '+' : ''}${c.q} nC`, p.x + 17, p.y - 16, COL.ink, 12, 'left', 600); });
+    if (rv) { const f = field(qs, 0, 0); qs.forEach(c => { const e = field([c], 0, 0), L = logLen(e.E); arrow(P.x, P.y, P.x + e.Ex / e.E * L, P.y - e.Ey / e.E * L, COL.accent, 2.5, 9); }); const L = logLen(f.E); arrow(P.x, P.y, P.x + f.Ex / f.E * L, P.y - f.Ey / f.E * L, COL.primary, 4.5, 13); text('E', P.x + f.Ex / f.E * (L + 14), P.y - f.Ey / f.E * (L + 14), COL.primary, 15, 'center', 700); }
+    if (pred.angle !== null) { const a = rad(pred.angle); arrow(P.x, P.y, P.x + 70 * Math.cos(a), P.y - 70 * Math.sin(a), COL.ink, 2.5, 11, [6, 5]); }
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(P.x, P.y, 6, 0, 7); ctx.fill(); text('P', P.x - 14, P.y + 14, COL.ink, 14, 'center', 700);
+    text(rv ? 'Cian: campo de cada carga · magenta: campo neto (largo logarítmico)' : 'Flecha punteada: tu predicción', 14, HU - 12, COL.muted, 12);
+    if (W > 760) { const pl = { x: W * 0.64, y: 20, w: W * 0.36 - 20, h: Math.min(HU - 40, 300) }; plotAxes(pl, 'Aporte de cada carga en P');
+      if (!rv) { hint(pl, 'Comprueba tu predicción para ver los aportes.'); return; }
+      const f = field(qs, 0, 0); qs.forEach((c, i) => { const e = field([c], 0, 0); text(`E${i + 1} = ${fE(e.E)} a ${Math.round(e.a)}°`, pl.x + 16, pl.y + 54 + i * 24, COL.accentStrong, 13, 'left', 600); });
+      text(`Neto: ${fE(f.E)} a ${Math.round(f.a)}°`, pl.x + 16, pl.y + 62 + qs.length * 24, COL.primary, 14, 'left', 700);
+      text(`Suma de módulos (error típico): ${fE(qs.reduce((s, c) => s + field([c], 0, 0).E, 0))}`, pl.x + 16, pl.y + 92 + qs.length * 24, COL.muted, 12); }
+  },
+  down(x, y) { const v = caView(); const i = CA.qs.findIndex(c => { const p = toScr(v, c); return Math.hypot(p.x - x, p.y - y) < 20; }); if (i >= 0) { CA.drag = i; return; } const P = toScr(v, CA.P); if (x < v.wv) { pred.angle = n360(Math.atan2(P.y - y, x - P.x) * DEG); pred.choice = 'dibuja'; app.checked = false; app.result = null; renderPanel(); } },
+  move(x, y) { if (CA.drag === null || CA.drag === undefined) return; const v = caView(), c = CA.qs[CA.drag]; c.x = Math.round((x - v.cx) / v.S * 20) / 20; c.y = Math.round((v.cy - y) / v.S * 20) / 20; if (Math.hypot(c.x, c.y) < 0.1) { c.x = 0.1; } invalidate(); },
+  up() { CA.drag = null; },
+};
+
+// ═════════════════════════ ESCENA 2 · DIPOLO ═════════════════════════
+const DI = { q: 4, d: 0.12, r: 0.30, mode: 'eje', reto: null };
+const diP = () => DI.q * nC * DI.d, diA = () => DI.d / 2;
+const diExact = () => DI.mode === 'eje' ? 2 * K * diP() * DI.r / (DI.r ** 2 - diA() ** 2) ** 2 : K * diP() / (diA() ** 2 + DI.r ** 2) ** 1.5;
+const diApprox = () => (DI.mode === 'eje' ? 2 : 1) * K * diP() / DI.r ** 3;
+const diSnap = () => JSON.stringify([DI.q, DI.d, DI.r, DI.mode]);
+const DCHO = [{ id: 'par', label: 'En el sentido de p' }, { id: 'anti', label: 'Opuesto a p' }, { id: 'perp', label: 'Perpendicular a p' }];
+const scDipolo = {
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Punto P</span>
+      <div class="seg">${[['eje', 'En el eje'], ['med', 'En la mediatriz']].map(([k, l]) => `<button class="btn ${DI.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div></div>`,
+  act(a) { if (a.startsWith('mode:')) { DI.mode = a.slice(5); invalidate(); renderReto(); } buildToolbar(); },
+  values: () => [
+    { sym: 'q', min: 1, max: 8, step: 1, get: () => DI.q, set: x => DI.q = x, fmt: x => '±' + x + ' nC', label: 'Carga de cada polo' },
+    { sym: 'd', min: 0.02, max: 0.16, step: 0.01, get: () => DI.d, set: x => DI.d = x, fmt: x => fp(x, 2) + ' m', label: 'Separación' },
+    { sym: 'r', min: 0.10, max: 0.80, step: 0.01, get: () => DI.r, set: x => { DI.r = Math.max(x, DI.d / 2 + 0.03); }, fmt: x => fp(x, 2) + ' m', label: 'Distancia de P al centro' }],
+  valuesNote: 'p = q d va de −q hacia +q. Aleja P al doble de distancia y mira en qué factor cae el campo.',
+  newReto() { DI.q = pick([2, 3, 4, 5]); DI.d = pick([0.04, 0.06, 0.08, 0.10]); DI.r = pick([0.15, 0.20, 0.25, 0.30, 0.40]); DI.mode = pick(['eje', 'med']); DI.reto = diSnap(); },
+  retoText() { return `Un dipolo tiene \\(\\pm${DI.q}{,}0\\) nC separadas \\(${fx(DI.d, 2)}\\) m. El punto \\(P\\) está ${DI.mode === 'eje' ? 'sobre su eje' : 'sobre su mediatriz'}, a \\(${fx(DI.r, 2)}\\) m del centro. ¿Hacia dónde apunta \\(\\vec E\\) y cuánto vale (exacto)?`; },
+  retoTag: 'Resueltos 5–6 y retos 9–11 del taller',
+  changed() { return !!DI.reto && diSnap() !== DI.reto; },
+  predQ: 'En \\(P\\), el campo apunta…',
+  choices: DCHO,
+  ansLabel: 'Tu valor exacto de \\(E\\) en \\(P\\), en N/C',
+  ansPh: 'ej. 346,8',
+  hasPred: () => !!pred.choice,
+  check() {
+    const E = diExact(), Ea = diApprox(), v = parseNum($('#ans-val').value), rows = [], real = DI.mode === 'eje' ? 'par' : 'anti', dOk = pred.choice === real;
+    rows.push({ t: `Dirección: ${DCHO.find(c => c.id === pred.choice).label.toLowerCase()}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null; if (isFinite(v)) { vOk = near(Math.abs(v), E, 0.03); rows.push({ t: `Tu \\(E\\): ${sp(v, 3)} N/C`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); } else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v), other = DI.mode === 'eje' ? K * diP() / (diA() ** 2 + DI.r ** 2) ** 1.5 : 2 * K * diP() * DI.r / (DI.r ** 2 - diA() ** 2) ** 2;
+    let t, code = null;
+    if (!dOk) { code = 'dipolo_direccion'; t = DI.mode === 'eje' ? 'En el eje, la carga más cercana gana y su campo apunta en el sentido de \\(\\vec p\\) (de \\(-q\\) a \\(+q\\)). Dibuja \\(\\vec E_+\\) y \\(\\vec E_-\\) y compara sus largos.' : 'En la mediatriz, las componentes a lo largo de la mediatriz se anulan y queda una componente paralela al eje del dipolo, <b>opuesta</b> a \\(\\vec p\\): \\(\\vec E_+\\) se aleja de \\(+q\\) y \\(\\vec E_-\\) va hacia \\(-q\\).'; }
+    else if (vOk === false && near(av, Ea, 0.03) && !near(E, Ea, 0.03)) { code = 'dipolo_aprox'; t = `Usaste la aproximación de gran distancia. Aquí \\(r\\) es solo ${fp(DI.r / diA(), 1)} veces \\(a\\) y la aproximación falla un ${fp(Math.abs(E - Ea) / E * 100, 1)} %. Usa la fórmula exacta.`; }
+    else if (vOk === false && (near(av, other, 0.03) || near(av, 2 * E, 0.03) || near(av, E / 2, 0.03))) { code = 'dipolo_factor2'; t = 'Confundiste las fórmulas del eje y de la mediatriz: el factor 2 y el denominador cambian. Eje: \\(2kpx/(x^2-a^2)^2\\). Mediatriz: \\(kp/(a^2+y^2)^{3/2}\\).'; }
+    else if (vOk === false && (near(av, K * DI.q * nC / DI.r ** 2, 0.03) || near(av, K * diP() / DI.r ** 2, 0.03))) { code = 'dipolo_r2'; t = 'Lo trataste como una carga puntual (\\(1/r^2\\)). El dipolo tiene carga neta cero: su campo sale de restar dos campos casi iguales y cae como \\(1/r^3\\).'; }
+    else if (vOk === false && (near(av, E * 1e9, 0.03) || near(av, E * 1e-9, 0.03) || near(av, E * 16, 0.03))) { code = 'unidades'; t = 'Revisa unidades y que \\(a\\) es la mitad de la separación: \\(a=d/2\\).'; }
+    else if (vOk === false) { code = 'dipolo_factor2'; t = 'Recuerda \\(p=qd\\) y \\(a=d/2\\). ' + (DI.mode === 'eje' ? 'En el eje: \\(E=2kpx/(x^2-a^2)^2\\).' : 'En la mediatriz: \\(E=kp/(a^2+y^2)^{3/2}\\).'); }
+    else if (vOk === null) t = 'La dirección está bien. Escribe el valor para comprobarlo.';
+    else t = `Muy bien. La aproximación de gran distancia daría \\(${sx(Ea)}\\) N/C (${fp(Math.abs(E - Ea) / E * 100, 1)} % de error). Duplica \\(r\\): lejos, el campo cae casi 8 veces.`;
+    return { rows, tip: t, allOk: dOk && vOk === true, code };
+  },
+  solution() {
+    const p = diP(), a = diA();
+    return `<p>\\(p=qd=${sx(p)}\\) C·m y \\(a=d/2=${fx(a, 3)}\\) m.</p>` + (DI.mode === 'eje'
+      ? `\\[E=kq\\Big[\\tfrac{1}{(x-a)^2}-\\tfrac{1}{(x+a)^2}\\Big]=\\frac{2kpx}{(x^2-a^2)^2}=${sx(diExact())}\\ \\text{N/C}\\]<p>En el sentido de \\(\\vec p\\). Lejos: \\(2kp/x^3=${sx(diApprox())}\\) N/C.</p>`
+      : `\\[E=\\frac{kp}{(a^2+y^2)^{3/2}}=${sx(diExact())}\\ \\text{N/C}\\]<p>Opuesto a \\(\\vec p\\): las componentes a lo largo de la mediatriz se anulan. Lejos: \\(kp/y^3=${sx(diApprox())}\\) N/C.</p>`);
+  },
+  live() { const r = reveal(); return (DI.mode === 'eje' ? String.raw`E_{\text{eje}}=\dfrac{2kpx}{(x^2-a^2)^2}` : String.raw`E_{\text{med}}=\dfrac{kp}{(a^2+y^2)^{3/2}}`) + (r ? String.raw`=${sx(diExact())}\ \text{N/C}` : String.raw`=\,?`); },
+  coords: () => `p = ${sp(diP(), 3)} C·m`,
+  draw() {
+    const wide = W > 760, wv = wide ? W * 0.55 : W, cx = wv * (DI.mode === 'eje' ? 0.3 : 0.5), cy = DI.mode === 'eje' ? HU * 0.5 : HU * 0.82, S = Math.min(wv * (DI.mode === 'eje' ? 0.62 : 0.8), HU * 0.7) / 0.8, a = diA() * S, rv = reveal();
+    const P = DI.mode === 'eje' ? { x: cx + DI.r * S, y: cy } : { x: cx, y: cy - DI.r * S };
+    if (rv) drawLines(fieldLines([{ q: -1, x: cx - a, y: cy }, { q: 1, x: cx + a, y: cy }], 14, { x0: 0, y0: 0, x1: wv, y1: HU }), COL.field, 0.4);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(P.x, P.y); ctx.stroke(); ctx.restore();
+    arrow(cx - 24, cy + 30, cx + 24, cy + 30, COL.primary, 3, 10); text('p', cx + 30, cy + 31, COL.primary, 14, 'left', 700);
+    charge(cx - a, cy, -1, 12); charge(cx + a, cy, 1, 12);
+    if (rv) {
+      const qs = [{ q: -DI.q * nC, x: -diA(), y: 0 }, { q: DI.q * nC, x: diA(), y: 0 }], X = DI.mode === 'eje' ? DI.r : 0, Y = DI.mode === 'eje' ? 0 : DI.r;
+      qs.forEach(c => { const e = field([c], X, Y), L = logLen(e.E); arrow(P.x, P.y, P.x + e.Ex / e.E * L, P.y - e.Ey / e.E * L, COL.accent, 2.5, 9); });
+      const f = field(qs, X, Y), L = logLen(f.E); arrow(P.x, P.y, P.x + f.Ex / f.E * L, P.y - f.Ey / f.E * L, COL.primary, 4.5, 13);
+    }
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(P.x, P.y, 6, 0, 7); ctx.fill(); text('P', P.x + 10, P.y - 12, COL.ink, 14, 'left', 700);
+    text(`r = ${fp(DI.r, 2)} m`, (cx + P.x) / 2 + 8, (cy + P.y) / 2 - 10, COL.muted, 12);
+    const pl = wide ? { x: W * 0.57, y: 20, w: W * 0.43 - 20, h: Math.min(HU - 40, 320) } : null; if (!pl) return;
+    plotAxes(pl, 'E frente a r (escalas logarítmicas)');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la gráfica.'); return; }
+    const r0 = diA() * 1.4, r1 = 1.2, ex = r => (DI.mode === 'eje' ? 2 * K * diP() * r / (r * r - diA() ** 2) ** 2 : K * diP() / (diA() ** 2 + r * r) ** 1.5), ap = r => (DI.mode === 'eje' ? 2 : 1) * K * diP() / r ** 3;
+    const lo = Math.log10(ex(r1)) - 0.3, hi = Math.log10(ex(r0)) + 0.2, X = r => pl.x + 50 + (Math.log10(r) - Math.log10(r0)) / (Math.log10(r1) - Math.log10(r0)) * (pl.w - 70), Y = E => pl.y + pl.h - 34 - (Math.log10(E) - lo) / (hi - lo) * (pl.h - 80);
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.beginPath(); for (let k = 0; k <= 120; k++) { const r = r0 * (r1 / r0) ** (k / 120), y = Y(Math.min(ap(r), 10 ** hi)); k ? ctx.lineTo(X(r), y) : ctx.moveTo(X(r), y); } ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath(); for (let k = 0; k <= 120; k++) { const r = r0 * (r1 / r0) ** (k / 120); k ? ctx.lineTo(X(r), Y(ex(r))) : ctx.moveTo(X(r), Y(ex(r))); } ctx.stroke(); ctx.restore();
+    ctx.fillStyle = COL.accent; ctx.beginPath(); ctx.arc(X(DI.r), Y(diExact()), 6, 0, 7); ctx.fill();
+    text('— exacto   - - aproximación 1/r³', pl.x + 16, pl.y + 44, COL.muted, 12, 'left', 600);
+    [0.1, 0.2, 0.5, 1].forEach(r => { if (r >= r0 && r <= r1) text(fp(r, 1) + ' m', X(r), pl.y + pl.h - 16, COL.muted, 11, 'center'); });
+  },
+};
+
+// ═════════════════════════ ESCENA 3 · DIPOLO EN CAMPO UNIFORME ═════════════════════════
+const TQ = { q: 3, dmm: 2, E: 1e4, phi: 30, reto: null, w: 0, run: false, last: 0, drag: false };
+const tqP = () => TQ.q * nC * TQ.dmm * 1e-3, tqTau = () => tqP() * TQ.E * Math.sin(rad(TQ.phi)), tqU = () => -tqP() * TQ.E * Math.cos(rad(TQ.phi));
+const tqCat = () => Math.abs(Math.sin(rad(TQ.phi))) < 1e-6 ? 'none' : Math.sin(rad(TQ.phi)) > 0 ? 'cw' : 'ccw';
+const tqSnap = () => JSON.stringify([TQ.q, TQ.dmm, TQ.E, TQ.phi]);
+const TCHO = [{ id: 'cw', label: 'Horario ↻' }, { id: 'ccw', label: 'Antihorario ↺' }, { id: 'none', label: 'No gira' }];
+const scTorque = {
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Movimiento</span>
+      <button class="btn" data-act="run" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ${TQ.run ? 'ph-pause' : 'ph-play'}"></i>${TQ.run ? 'Detener' : 'Soltar el dipolo'}</button></div>`,
+  act(a) { if (a === 'run') { TQ.run = !TQ.run; TQ.w = 0; TQ.last = performance.now(); } buildToolbar(); },
+  values: () => [
+    { sym: 'q', min: 1, max: 9, step: 1, get: () => TQ.q, set: x => TQ.q = x, fmt: x => '±' + x + ' nC', label: 'Carga de cada polo' },
+    { sym: 'd', min: 1, max: 10, step: 0.5, get: () => TQ.dmm, set: x => TQ.dmm = x, fmt: x => fp(x, 1) + ' mm', label: 'Separación' },
+    { sym: 'E', min: 1000, max: 100000, step: 1000, get: () => TQ.E, set: x => TQ.E = x, fmt: x => sp(x, 2) + ' N/C', label: 'Campo uniforme' },
+    { sym: 'φ', min: 0, max: 345, step: 15, get: () => TQ.phi, set: x => TQ.phi = x, fmt: x => x + '°', label: 'Ángulo de p con E' }],
+  valuesNote: 'φ se mide desde E (hacia la derecha) en sentido antihorario. También puedes girar el dipolo arrastrando la carga positiva.',
+  newReto() { TQ.q = pick([1, 2, 3, 5]); TQ.dmm = pick([1, 2, 4, 5]); TQ.E = pick([2e3, 5e3, 1e4, 4e4]); TQ.phi = pick([30, 45, 60, 120, 150, 210, 240, 300, 330, 0, 180]); TQ.run = false; TQ.reto = tqSnap(); },
+  retoText() { return `Un dipolo de \\(\\pm${TQ.q}{,}0\\) nC separadas \\(${fx(TQ.dmm, 1)}\\) mm está en un campo uniforme de \\(${sx(TQ.E, 2)}\\) N/C hacia la derecha, con \\(\\vec p\\) a \\(${TQ.phi}^\\circ\\) de \\(\\vec E\\). ¿Hacia dónde gira y cuánto vale el torque?`; },
+  retoTag: 'Resuelto 7 y retos 12–13 del taller',
+  changed() { return !!TQ.reto && tqSnap() !== TQ.reto; },
+  predQ: 'Si lo sueltas, el dipolo empieza a girar en sentido…',
+  choices: TCHO,
+  ansLabel: 'Tu valor de \\(|\\tau|\\), en N·m',
+  ansPh: 'ej. 3,0e-7',
+  hasPred: () => !!pred.choice,
+  check() {
+    const tau = Math.abs(tqTau()), v = parseNum($('#ans-val').value), rows = [], real = tqCat(), dOk = pred.choice === real, NM = { cw: 'horario', ccw: 'antihorario', none: 'no gira' };
+    rows.push({ t: `Sentido: ${NM[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null; if (isFinite(v)) { vOk = tau < 1e-20 ? Math.abs(v) < 1e-15 : near(Math.abs(v), tau, 0.03); rows.push({ t: `Tu \\(\\tau\\): ${sp(v, 3)} N·m`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); } else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v), p = tqP(), s = Math.abs(Math.sin(rad(TQ.phi))), c = Math.abs(Math.cos(rad(TQ.phi)));
+    let t, code = null;
+    if (!dOk) { code = 'torque_sentido'; t = real === 'none' ? `Con \\(\\vec p\\) ${TQ.phi === 0 ? 'paralelo' : 'antiparalelo'} a \\(\\vec E\\), las dos fuerzas están sobre la misma recta: no hay torque. ${TQ.phi === 180 ? 'Es un equilibrio inestable: cualquier empujón lo hace girar.' : 'Es el equilibrio estable.'}` : 'Dibuja \\(q\\vec E\\) sobre la carga positiva (hacia la derecha) y \\(-q\\vec E\\) sobre la negativa (hacia la izquierda): el par de fuerzas lleva \\(\\vec p\\) hacia \\(\\vec E\\) por el camino más corto. Con la mano derecha, \\(\\vec\\tau=\\vec p\\times\\vec E\\).'; }
+    else if (vOk === false && c > 0.05 && near(av, p * TQ.E * c, 0.03)) { code = 'torque_coseno'; t = 'Usaste el coseno. El torque va con \\(\\sin\\phi\\): es máximo con \\(\\vec p\\perp\\vec E\\) y nulo si son paralelos. El coseno aparece en la energía, \\(U=-pE\\cos\\phi\\).'; }
+    else if (vOk === false && near(av, TQ.q * nC * TQ.E * s, 0.03)) { code = 'torque_sin_d'; t = 'Te faltó la separación: \\(p=qd\\), y el torque es \\(pE\\sin\\phi\\).'; }
+    else if (vOk === false && (near(av, tau * 1e3, 0.03) || near(av, tau * 1e9, 0.03))) { code = 'unidades'; t = 'Revisa unidades: la separación en metros (1 mm = \\(10^{-3}\\) m) y la carga en coulombs.'; }
+    else if (vOk === false) { code = 'torque_coseno'; t = '\\(\\tau=pE\\sin\\phi\\), con \\(p=qd\\) en C·m.'; }
+    else if (vOk === null) t = 'El sentido está bien. Escribe el valor del torque.';
+    else t = `Muy bien. Su energía es \\(U=-pE\\cos\\phi=${sx(tqU())}\\) J. Pulsa «Soltar el dipolo» y míralo oscilar alrededor de \\(\\vec E\\).`;
+    return { rows, tip: t, allOk: dOk && vOk === true, code };
+  },
+  solution() { return `<p>\\(p=qd=(${TQ.q}\\times10^{-9})(${fx(TQ.dmm, 1)}\\times10^{-3})=${sx(tqP())}\\) C·m. La fuerza neta es cero; el par de fuerzas da</p>\\[\\tau=pE\\sin\\phi=(${sx(tqP())})(${sx(TQ.E, 2)})\\sin${TQ.phi}^\\circ=${sx(Math.abs(tqTau()))}\\ \\text{N}\\cdot\\text{m}\\]\\[U=-pE\\cos\\phi=${sx(tqU())}\\ \\text{J}\\]`; },
+  live() { const r = reveal(); return String.raw`\tau=pE\sin\phi=${r ? sx(Math.abs(tqTau())) : '\\,?'}\ \text{N}\cdot\text{m},\quad U=-pE\cos\phi=${r ? sx(tqU()) : '\\,?'}\ \text{J}`; },
+  coords: () => `φ = ${Math.round(n360(TQ.phi))}°`,
+  animating: () => TQ.run,
+  draw() {
+    if (TQ.run) { const t = performance.now(), dt = Math.min(0.03, (t - TQ.last) / 1000); TQ.last = t; let th = rad(TQ.phi); TQ.w += -8 * Math.sin(th) * dt - 0.12 * TQ.w * dt; th += TQ.w * dt; TQ.phi = n360(th * DEG); }
+    const wide = W > 760, wv = wide ? W * 0.55 : W, cx = wv * 0.56, cy = HU / 2, L = Math.min(wv, HU) * 0.2, a = rad(TQ.phi), ux = Math.cos(a), uy = -Math.sin(a), rv = reveal();
+    ctx.save(); ctx.globalAlpha = 0.3; for (let y = 30; y < HU; y += 44) arrow(10, y, wv - 10, y, COL.field, 1.5, 8); ctx.restore(); text('E', wv - 22, 18, COL.field, 15, 'center', 700);
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx - L * ux, cy - L * uy); ctx.lineTo(cx + L * ux, cy + L * uy); ctx.stroke(); ctx.restore();
+    const FL = 55; arrow(cx + L * ux, cy + L * uy, cx + L * ux + FL, cy + L * uy, COL.force, 3.5, 11); arrow(cx - L * ux, cy - L * uy, cx - L * ux - FL, cy - L * uy, COL.force, 3.5, 11);
+    text('qE', cx + L * ux + FL + 6, cy + L * uy - 10, COL.accentStrong, 13, 'left', 600); text('−qE', cx - L * ux - FL - 6, cy - L * uy - 10, COL.accentStrong, 13, 'right', 600);
+    charge(cx + L * ux, cy + L * uy, 1, 13); charge(cx - L * ux, cy - L * uy, -1, 13);
+    arrow(cx, cy, cx + 40 * ux, cy + 40 * uy, COL.primary, 3.5, 11); text('p', cx + 50 * ux, cy + 50 * uy, COL.primary, 15, 'center', 700);
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, 26, 0, -a, Math.sin(a) > 0); ctx.stroke(); ctx.restore();
+    text(`φ = ${Math.round(n360(TQ.phi))}°`, cx + 30, cy + 22, COL.primary, 13, 'left', 600);
+    if (rv && tqCat() !== 'none') text(tqCat() === 'cw' ? 'gira ↻ (horario)' : 'gira ↺ (antihorario)', 16, HU - 14, COL.primary, 14, 'left', 700);
+    const pl = wide ? { x: W * 0.57, y: 20, w: W * 0.43 - 20, h: Math.min(HU - 40, 300) } : null; if (!pl) return;
+    plotAxes(pl, 'Torque y energía frente al ángulo');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver las curvas.'); return; }
+    const X = d => pl.x + 40 + d / 360 * (pl.w - 60), Y = v => pl.y + pl.h / 2 + 10 - v * (pl.h / 2 - 50);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(360), Y(0)); ctx.stroke(); ctx.restore();
+    [[d => Math.sin(rad(d)), COL.primary, 'τ / pE'], [d => -Math.cos(rad(d)), COL.accent, 'U / pE']].forEach(([f, c, l], i) => { ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = 2.5; ctx.beginPath(); for (let d = 0; d <= 360; d += 3) d ? ctx.lineTo(X(d), Y(f(d))) : ctx.moveTo(X(d), Y(f(d))); ctx.stroke(); ctx.restore(); ctx.fillStyle = c; ctx.beginPath(); ctx.arc(X(n360(TQ.phi)), Y(f(TQ.phi)), 5, 0, 7); ctx.fill(); text(l, pl.x + pl.w - 16, pl.y + 46 + i * 18, c, 13, 'right', 700); });
+    [0, 90, 180, 270, 360].forEach(d => text(d + '°', X(d), pl.y + pl.h - 16, COL.muted, 11, 'center'));
+    text('U mínima en 0°: equilibrio estable', pl.x + 16, pl.y + 46, COL.muted, 12);
+  },
+  down(x, y) { const wide = W > 760, wv = wide ? W * 0.55 : W, cx = wv * 0.56, cy = HU / 2, L = Math.min(wv, HU) * 0.2, a = rad(TQ.phi); if (Math.hypot(x - (cx + L * Math.cos(a)), y - (cy - L * Math.sin(a))) < 26) { TQ.drag = true; TQ.run = false; } },
+  move(x, y) { if (!TQ.drag) return; const wide = W > 760, wv = wide ? W * 0.55 : W; TQ.phi = Math.round(n360(Math.atan2(HU / 2 - y, x - wv * 0.56) * DEG) / 15) * 15 % 360; invalidate(); buildValues(); },
+  up() { TQ.drag = false; },
+};
+
+// ═════════════════════════ ESCENA 4 · CARGA ENTRE PLACAS ═════════════════════════
+const HZ = { part: 'electron', E: 1500, v: 4e6, L: 0.04, gap: 0.03, reto: null, t0: 0 };
+const PART = { electron: { n: 'electrón', q: -1, m: ME }, proton: { n: 'protón', q: 1, m: MP } };
+const hzY = (m = PART[HZ.part].m) => QE * Math.abs(HZ.E) * HZ.L ** 2 / (2 * m * HZ.v ** 2);
+const hzCat = () => HZ.E === 0 ? 'straight' : PART[HZ.part].q * HZ.E > 0 ? 'up' : 'down';
+const hzSnap = () => JSON.stringify([HZ.part, HZ.E, HZ.v, HZ.L]);
+const HCHO = [{ id: 'up', label: 'Hacia arriba' }, { id: 'down', label: 'Hacia abajo' }, { id: 'straight', label: 'Sigue recto' }];
+const scHaz = {
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Partícula</span>
+      <div class="seg">${[['electron', 'Electrón'], ['proton', 'Protón']].map(([k, l]) => `<button class="btn ${HZ.part === k ? 'active' : ''}" data-act="part:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><button class="btn" data-act="shoot" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-play"></i>Lanzar</button></div>`,
+  act(a) { if (a.startsWith('part:')) { HZ.part = a.slice(5); invalidate(); } else if (a === 'shoot') HZ.t0 = performance.now(); buildToolbar(); },
+  values: () => [
+    { sym: 'E', min: -3000, max: 3000, step: 100, get: () => HZ.E, set: x => HZ.E = x, fmt: x => (x > 0 ? '+' : '') + x + ' N/C', label: 'Campo vertical (positivo: hacia arriba)' },
+    { sym: 'v₀', min: 1e5, max: 8e6, step: 1e5, get: () => HZ.v, set: x => HZ.v = x, fmt: x => sp(x, 2) + ' m/s', label: 'Rapidez de entrada' },
+    { sym: 'L', min: 0.02, max: 0.08, step: 0.005, get: () => HZ.L, set: x => HZ.L = x, fmt: x => fp(x * 100, 1) + ' cm', label: 'Largo de las placas' }],
+  valuesNote: 'Placas separadas 3,0 cm; la partícula entra por el centro. El peso es despreciable.',
+  newReto() {
+    do {
+      HZ.part = Math.random() < 0.7 ? 'electron' : 'proton'; HZ.L = pick([0.03, 0.04, 0.05]);
+      if (HZ.part === 'electron') { HZ.E = pick([500, 800, 1000, 1200]) * pick([1, -1]); HZ.v = pick([4, 5, 6, 8]) * 1e6; } else { HZ.E = pick([2000, 2500, 3000]) * pick([1, -1]); HZ.v = pick([2, 3, 4]) * 1e5; }
+    } while (hzY() > 0.013 || hzY() < 0.002);
+    HZ.t0 = 0; HZ.reto = hzSnap();
+  },
+  retoText() { return `Un ${PART[HZ.part].n} entra horizontalmente a \\(${sx(HZ.v, 2)}\\) m/s entre placas de \\(${fx(HZ.L * 100, 1)}\\) cm con un campo de \\(${Math.abs(HZ.E)}\\) N/C dirigido hacia ${HZ.E > 0 ? 'arriba' : 'abajo'}. ¿Hacia dónde se desvía y cuántos milímetros al salir?`; },
+  retoTag: 'Resuelto 8 y reto 14 del taller',
+  changed() { return !!HZ.reto && hzSnap() !== HZ.reto; },
+  predQ: 'Al cruzar las placas, la partícula se desvía…',
+  choices: HCHO,
+  ansLabel: 'Tu desviación al salir, en mm',
+  ansPh: 'ej. 13,2',
+  hasPred: () => !!pred.choice,
+  check() {
+    const y = hzY() * 1000, v = parseNum($('#ans-val').value), rows = [], real = hzCat(), dOk = pred.choice === real;
+    rows.push({ t: `Desviación: ${HCHO.find(c => c.id === pred.choice).label.toLowerCase()}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null; if (isFinite(v)) { vOk = near(Math.abs(v), y, 0.03); rows.push({ t: `Tu \\(y\\): ${sp(v, 3)} mm`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); } else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v), other = hzY(HZ.part === 'electron' ? MP : ME) * 1000;
+    let t, code = null;
+    if (!dOk) { code = 'haz_sentido'; t = HZ.part === 'electron' ? 'El electrón es negativo: \\(\\vec F=-e\\vec E\\) apunta <b>contra</b> el campo. Si \\(\\vec E\\) va hacia arriba, el electrón se curva hacia abajo.' : 'El protón es positivo: \\(\\vec F=e\\vec E\\) va en el sentido del campo.'; }
+    else if (vOk === false && near(av, 2 * y, 0.03)) { code = 'haz_medio'; t = 'Te faltó el ½: con aceleración constante desde \\(v_y=0\\), \\(y=\\tfrac12at^2\\).'; }
+    else if (vOk === false && near(av, other, 0.03)) { code = 'haz_masa'; t = `Usaste la masa del ${HZ.part === 'electron' ? 'protón' : 'electrón'}. La aceleración es \\(eE/m\\) con la masa de la partícula del reto.`; }
+    else if (vOk === false && (near(av, y / 1000, 0.03) || near(av, y / 10, 0.03))) { code = 'unidades'; t = 'Tu número está bien, pero en otra unidad: el reto pide milímetros (1 m = 1000 mm).'; }
+    else if (vOk === false) { code = 'haz_medio'; t = 'Usa \\(t=L/v_0\\) (en \\(x\\) no hay fuerza) y \\(y=\\tfrac12(eE/m)t^2\\), con \\(L\\) en metros.'; }
+    else if (vOk === null) t = 'El sentido está bien. Escribe la desviación.';
+    else t = `Muy bien. Sale a ${fp(Math.atan(2 * hzY() / HZ.L) * DEG, 1)}° de la horizontal. Pulsa «Lanzar» para verla.`;
+    return { rows, tip: t, allOk: dOk && vOk === true, code };
+  },
+  solution() { const P_ = PART[HZ.part], a = QE * Math.abs(HZ.E) / P_.m, t = HZ.L / HZ.v; return `<p>\\(a=\\dfrac{eE}{m}=${sx(a)}\\) m/s² ${HZ.part === 'electron' ? '(opuesta a \\(\\vec E\\))' : '(como \\(\\vec E\\))'}; \\(t=\\dfrac{L}{v_0}=${sx(t)}\\) s.</p>\\[y=\\tfrac12at^2=\\frac{eEL^2}{2mv_0^2}=${fx(hzY() * 1000, 2)}\\ \\text{mm}\\]`; },
+  live() { const r = reveal(); return String.raw`y=\dfrac{|q|E\,L^2}{2mv_0^2}=${r ? fx(hzY() * 1000, 2) : '\\,?'}\ \text{mm}`; },
+  coords: () => `${PART[HZ.part].n}`,
+  animating: () => HZ.t0 > 0 && performance.now() - HZ.t0 < 2600,
+  draw() {
+    const S = Math.min(W * 0.8 / (HZ.L + 0.04), HU * 0.75 / HZ.gap), x0 = W * 0.18, cy = HU / 2, top = cy - HZ.gap / 2 * S, bot = cy + HZ.gap / 2 * S, xe = x0 + HZ.L * S, rv = reveal();
+    const sTop = HZ.E >= 0 ? -1 : 1; // placa positiva abajo si E apunta hacia arriba
+    ctx.save(); ctx.globalAlpha = 0.25; ctx.fillStyle = sTop < 0 ? COL.qneg : COL.qpos; ctx.fillRect(x0, top - 10, HZ.L * S, 10); ctx.fillStyle = sTop < 0 ? COL.qpos : COL.qneg; ctx.fillRect(x0, bot, HZ.L * S, 10); ctx.restore();
+    text(sTop < 0 ? 'placa negativa' : 'placa positiva', x0 + 6, top - 20, COL.muted, 12); text(sTop < 0 ? 'placa positiva' : 'placa negativa', x0 + 6, bot + 24, COL.muted, 12);
+    if (HZ.E !== 0) { ctx.save(); ctx.globalAlpha = 0.4; for (let x = x0 + 30; x < xe; x += 60) { if (HZ.E > 0) arrow(x, bot - 6, x, top + 6, COL.field, 1.6, 8); else arrow(x, top + 6, x, bot - 6, COL.field, 1.6, 8); } ctx.restore(); text('E', xe + 10, cy, COL.field, 15, 'left', 700); }
+    const P_ = PART[HZ.part], sgn = hzCat() === 'up' ? -1 : 1, yof = (x) => QE * Math.abs(HZ.E) * x * x / (2 * P_.m * HZ.v ** 2);
+    arrow(20, cy, x0 - 14, cy, COL.ink, 2, 9); text('v₀', 24, cy - 14, COL.ink, 13);
+    if (rv) {
+      ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0, cy); let hit = false;
+      for (let k = 0; k <= 200; k++) { const x = HZ.L * k / 200, y = yof(x); if (y > HZ.gap / 2) { hit = true; break; } ctx.lineTo(x0 + x * S, cy + sgn * y * S); }
+      if (!hit) { const sl = QE * Math.abs(HZ.E) * HZ.L / (P_.m * HZ.v ** 2); ctx.lineTo(W - 10, cy + sgn * (yof(HZ.L) + sl * (W - 10 - xe) / S) * S); }
+      ctx.stroke(); ctx.restore();
+      if (HZ.t0 > 0) { const f = Math.min(1, (performance.now() - HZ.t0) / 2000), x = HZ.L * f; charge(x0 + x * S, cy + sgn * Math.min(yof(x), HZ.gap / 2) * S, P_.q, 8); }
+      text(`y = ${fp(hzY() * 1000, 2)} mm`, xe + 10, cy + sgn * yof(HZ.L) * S + 18 * sgn, COL.primary, 14, 'left', 700);
+    }
+    charge(x0, cy, P_.q, 9);
+    text('Escala real · partícula entrando por el centro', 14, HU - 12, COL.muted, 12);
+  },
+};
+
+// ───────────────────────── orquestación ─────────────────────────
+const SC = { campo: scCampo, dipolo: scDipolo, torque: scTorque, haz: scHaz };
+const sc = () => SC[app.scene];
+function draw() { if (!W) return; readColors(); ctx.clearRect(0, 0, W, H); sc().draw(); $('#coords-indicator').textContent = sc().coords(); renderLive(); }
+let liveKey = '';
+function renderLive() { const t = sc().live(); if (t !== liveKey) { liveKey = t; $('#live-tex').innerHTML = K_(t); } }
+(function tick() { if (W && sc().animating && sc().animating() && !matchMedia('(prefers-reduced-motion: reduce)').matches) draw(); requestAnimationFrame(tick); })();
+function buildToolbar() { $('#toolbar').innerHTML = sc().tools(); draw(); }
+function buildValues() {
+  const box = $('#values-body'), vals = sc().values();
+  box.innerHTML = vals.map((v, i) => `<label class="vrange" title="${v.label || ''}"><span class="sym">${v.sym}${v.sub ? `<sub style="font-style:normal;font-size:.7em">${v.sub}</sub>` : ''}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.get()}" data-i="${i}" aria-label="${v.label || v.sym}"><output>${v.fmt(v.get())}</output></label>`).join('') + (sc().valuesNote ? `<div class="vnote">${sc().valuesNote}</div>` : '');
+  box.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => { const v = vals[+inp.dataset.i]; v.set(parseFloat(inp.value)); inp.nextElementSibling.textContent = v.fmt(v.get()); invalidate(); draw(); }));
+}
+function renderReto() {
+  mixed($('#reto-text'), sc().retoText()); $('#reto-tag').textContent = sc().retoTag;
+  $('#pred-choices').innerHTML = sc().choices.map(c => `<button class="btn ${pred.choice === c.id ? 'on' : ''}" data-choice="${c.id}" type="button">${c.label}</button>`).join('');
+  mixed($('#pred-q'), sc().predQ); $('#ans-val').placeholder = sc().ansPh;
+}
+let ansKey = '';
+function renderPanel(full = true) {
+  const s = sc(), hasP = s.hasPred();
+  const al = s.ansLabel; if (al !== ansKey) { ansKey = al; mixed($('#ans-label'), al); }
+  $('#pred-hint').textContent = s.predHint ? s.predHint() : '';
+  $('#reto-note').textContent = s.changed() ? 'Cambiaste el montaje del reto: se comprueba con lo que ves en el lienzo.' : '';
+  if (full) $('#pred-choices').querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('on', b.dataset.choice === pred.choice));
+  $('#st2').dataset.s = hasP ? 'done' : 'now';
+  $('#st3').dataset.s = app.checked ? 'done' : hasP ? 'now' : 'todo';
+  $('#st4').dataset.s = app.checked ? (app.result?.allOk ? 'done' : 'now') : 'todo';
+  const box = $('#validation-box');
+  if (app.checked && app.result) {
+    box.innerHTML = app.result.rows.map(r => `<div class="vrow"><span>${r.t}</span><span class="e10-chip ${r.ok === true ? 'e10-chip--ok' : r.ok === false ? 'e10-chip--bad' : 'e10-chip--warn'}">${r.chip}</span></div>`).join('');
+    if (window.renderMathInElement) renderMathInElement(box, { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    mixed($('#explain'), `<div class="e10-tip__title">${app.result.allOk ? 'Muy bien' : 'Recomendación'}</div>${app.result.tip}`);
+  } else { box.innerHTML = ''; $('#explain').innerHTML = ''; }
+  $('#btn-sol').hidden = !app.checked;
+  const pr = $('#btn-practice'), code = app.checked && app.result && app.result.code, dest = code && PRACTICA[code];
+  pr.hidden = !dest || dest === app.scene; if (dest) { pr.href = '#' + dest; pr.textContent = `Practicar en la escena «${{ campo: 'Campo de cargas', dipolo: 'Dipolo', torque: 'Dipolo en E uniforme', haz: 'Carga entre placas' }[dest]}»`; }
+  const sol = $('#solution'); sol.hidden = !(app.checked && app.showSol); if (!sol.hidden) mixed(sol, s.solution());
+  const n = 1 + (hasP ? 1 : 0) + (app.checked ? 1 : 0) + (app.result?.allOk ? 1 : 0);
+  $('#prog').style.setProperty('--e10-p', n * 25 + '%'); $('#prog-bar').setAttribute('aria-valuenow', n * 25); $('#prog-txt').textContent = `${n} de 4`;
+}
+// Escena donde se practica cada error (la misma lista que usa js/seguimiento.js para el botón «Practicar»)
+const PRACTICA = { campo_sentido_negativa: 'campo', campo_una_carga: 'campo', campo_suma_modulos: 'campo', campo_inverso_r: 'campo', campo_direccion: 'campo', dipolo_direccion: 'dipolo', dipolo_aprox: 'dipolo', dipolo_factor2: 'dipolo', dipolo_r2: 'dipolo', torque_sentido: 'torque', torque_coseno: 'torque', torque_sin_d: 'torque', haz_sentido: 'haz', haz_medio: 'haz', haz_masa: 'haz' };
+function newReto() { sc().newReto(); resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); draw(); }
+const seen = {};
+function setScene(id, push = true) {
+  if (!SC[id]) id = 'campo';
+  app.scene = id;
+  document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === id));
+  if (!seen[id]) { seen[id] = true; sc().newReto(); }
+  $('#values').open = window.innerWidth > 900;
+  resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); liveKey = ''; draw();
+  if (push && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+function comprobar() {
+  app.result = sc().check(); app.checked = true; app.showSol = false;
+  lab10Bus.emitTelemetry('comprobar', { escena: app.scene, ok: !!app.result.allOk, error: app.result.allOk ? null : (app.result.code || 'otro') });
+  renderPanel(); liveKey = ''; buildToolbar();
+  return app.result;
+}
+
+// ───────────────────────── eventos ─────────────────────────
+$('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) { sc().act(b.dataset.act); renderPanel(false); } });
+document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
+$('#pred-choices').addEventListener('click', e => { const b = e.target.closest('[data-choice]'); if (!b) return; pred.choice = b.dataset.choice; app.checked = false; app.result = null; app.showSol = false; renderPanel(); draw(); });
+$('#btn-check').addEventListener('click', () => {
+  if (!sc().hasPred()) { $('#check-hint').textContent = app.scene === 'campo' ? 'Primero dibuja la dirección del campo tocando el lienzo.' : 'Primero haz tu predicción en el paso 2.'; return; }
+  $('#check-hint').textContent = ''; comprobar();
+  if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
+});
+$('#ans-val').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-check').click(); });
+$('#btn-sol').addEventListener('click', () => { app.showSol = !app.showSol; renderPanel(false); });
+$('#btn-new').addEventListener('click', newReto);
+$('#sheet-handle').addEventListener('click', () => $('#right-panel').classList.toggle('open'));
+$('#btn-projector').addEventListener('click', () => { document.body.classList.toggle('e10-projector'); $('#btn-projector').classList.toggle('active'); draw(); });
+$('#btn-theme').addEventListener('click', () => { lab10Auth.toggleTheme(); try { localStorage.setItem('electro10_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch (_) {} });
+new MutationObserver(() => { const i = $('#btn-theme i'); if (i) i.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon'; draw(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+$('#user-info').addEventListener('click', () => { if (!lab10Auth.isAuthenticated) lab10Auth.loginGoogle(); });
+lab10Auth.onAuthChange((ok, user) => { $('#user-info').textContent = ok ? (user?.displayName || 'Estudiante') : 'Iniciar sesión'; });
+const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { if (!sc().down) return; cv.setPointerCapture(e.pointerId); sc().down(...pos(e)); draw(); });
+cv.addEventListener('pointermove', e => { if (!sc().move || !e.buttons) return; sc().move(...pos(e)); draw(); });
+cv.addEventListener('pointerup', e => { if (sc().up) sc().up(...pos(e)); draw(); });
+cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
+
+lab10Bus.injectContinueButton($('#continue-wrap'), 'Potencial_Electrico.html', 'Potencial eléctrico (capítulo 3)', () => ({
+  source: 'VectorFieldLab10', units: { length: 'm', field: 'N/C', charge: 'nC' },
+  entities: { cargas: CA.qs }, metrics: { campo_P: field(caQs(), 0, 0).E, dipolo_E: diExact(), torque: Math.abs(tqTau()), desviacion_mm: hzY() * 1000 }, timestamp: Date.now(),
+}));
+
+// ───────────────────────── autoprueba (scripts/prueba_cap2.cjs) ─────────────────────────
+// Monta casos fijos, responde bien y con cada error típico, y verifica el código que se registra.
+function autotest() {
+  const fallas = [], codigos = new Set(); let n = 0;
+  const run = (scene, setup, choice, val, want) => { setScene(scene, false); setup(); resetPred(); if (typeof choice === 'number') { pred.angle = choice; pred.choice = 'dibuja'; } else pred.choice = choice; $('#ans-val').value = val === null ? '' : String(val); const r = comprobar(); n++; const got = r.allOk ? 'ok' : r.code; if (got !== want) fallas.push(`${scene}: esperaba ${want}, salió ${got} (${val})`); if (r.code) codigos.add(r.code); };
+  const caFix = () => { CA.qs = [{ q: 5, x: 0, y: 0.3 }, { q: -4, x: 0.4, y: 0.3 }]; CA.reto = caSnap(); };
+  const f = field([{ q: 5e-9, x: 0, y: 0.3 }, { q: -4e-9, x: 0.4, y: 0.3 }], 0, 0);
+  if (Math.abs(f.E - 428.771) > 0.01) fallas.push('campo R4 ' + f.E);
+  run('campo', caFix, f.a, f.E, 'ok');
+  run('campo', caFix, f.a + 180, f.E, 'campo_sentido_negativa');
+  run('campo', caFix, 270, f.E, 'campo_una_carga');
+  run('campo', caFix, f.a, 643.141, 'campo_suma_modulos');
+  run('campo', caFix, f.a + 40, f.E, 'campo_direccion');
+  const diFix = (mode) => () => { DI.q = 4; DI.d = 0.12; DI.r = 0.30; DI.mode = mode; DI.reto = diSnap(); };
+  if (Math.abs(2 * K * 4.8e-10 * 0.3 / (0.09 - 0.0036) ** 2 - 346.759) > 0.01) fallas.push('dipolo eje');
+  run('dipolo', diFix('eje'), 'par', 346.759, 'ok');
+  run('dipolo', diFix('eje'), 'anti', 346.759, 'dipolo_direccion');
+  run('dipolo', diFix('eje'), 'par', 319.573, 'dipolo_aprox');
+  run('dipolo', diFix('eje'), 'par', 346.759 / 2, 'dipolo_factor2');
+  run('dipolo', diFix('eje'), 'par', K * 4e-9 / 0.09, 'dipolo_r2');
+  run('dipolo', () => { diFix('med')(); DI.r = 0.08; DI.reto = diSnap(); }, 'anti', 4314.24, 'ok');
+  const tqFix = (phi) => () => { TQ.q = 3; TQ.dmm = 2; TQ.E = 1e4; TQ.phi = phi; TQ.run = false; TQ.reto = tqSnap(); };
+  const tau30 = 6e-12 * 1e4 * 0.5;
+  run('torque', tqFix(30), 'cw', tau30, 'ok');
+  run('torque', tqFix(30), 'ccw', tau30, 'torque_sentido');
+  run('torque', tqFix(30), 'cw', 6e-12 * 1e4 * Math.cos(rad(30)), 'torque_coseno');
+  run('torque', tqFix(30), 'cw', 3e-9 * 1e4 * 0.5, 'torque_sin_d');
+  run('torque', tqFix(210), 'ccw', tau30, 'ok');
+  run('torque', tqFix(180), 'none', 0, 'ok');
+  const hzFix = (part) => () => { HZ.part = part; HZ.E = 1500; HZ.v = 4e6; HZ.L = 0.04; HZ.reto = hzSnap(); };
+  run('haz', hzFix('electron'), 'down', 13.1903, 'ok');
+  run('haz', hzFix('electron'), 'up', 13.1903, 'haz_sentido');
+  run('haz', hzFix('electron'), 'down', 26.3806, 'haz_medio');
+  run('haz', hzFix('electron'), 'down', 0.00718171, 'haz_masa');
+  run('haz', hzFix('electron'), 'down', 0.0131903, 'unidades');
+  setScene('campo', false);
+  return { n, fallas, codigos: [...codigos] };
+}
+
+// ───────────────────────── arranque ─────────────────────────
+new ResizeObserver(resize).observe(area);
+setScene((location.hash || '#campo').slice(1), false);
+window.__vfl = { app, pred, CA, DI, TQ, HZ, field, diExact, diApprox, tqTau, hzY, setScene, comprobar, autotest };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body></html>
