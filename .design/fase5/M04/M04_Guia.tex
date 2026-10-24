@@ -1,0 +1,175 @@
+% ==========================================================================
+%  Guía de Estudio · M04 · Distribuciones Continuas de Carga
+%  Electro10.Easy — 10.Easy
+%  Autor: Prof. Dudbil Olvasada Pabón Riaño · 4 páginas exactas
+%  Compilar:  pdflatex M04_Guia.tex   (desde .design/fase5/M04/)
+% ==========================================================================
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage[a4paper,margin=1.7cm]{geometry}
+\usepackage{e10}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tabularx}
+\usepackage{array}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+
+% ═══════════════════════════ PÁGINA 1 ═══════════════════════════
+\begin{center}
+  {\color{e10primary}\rule{\linewidth}{3.5pt}}\\[1.2em]
+  {\LARGE\bfseries Guía de Estudio · Módulo 04}\\[0.25em]
+  {\huge\bfseries Distribuciones Continuas de Carga}\\[0.6em]
+  {\color{e10muted}Electro10.Easy · Cátedra de Electromagnetismo · Prof. Dudbil Olvasada Pabón Riaño}\\[0.3em]
+  {\color{e10muted}\small Rigor: Sears--Zemansky, \emph{Física Universitaria} Vol.~2, Cap.~21 · $\vec E=\displaystyle\int\dfrac{k\,dq}{r^2}\,\hat r$}
+  \\[1em]
+  {\color{e10primary}\rule{\linewidth}{1pt}}
+\end{center}
+
+\esection{Ideas clave}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
+  \item \textbf{De cargas puntuales a continuas:} una varilla, un anillo o un disco se describen por su densidad ($\lambda=Q/L$, $\sigma=Q/A$, $\rho=Q/V$); el trocito $dq$ sustituye a la carga puntual.
+  \item \textbf{La suma se vuelve integral:} $\vec E=\int k\,dq/r^2\,\hat r$. Cada $dq$ aporta su $d\vec E$ y la integral los suma \textbf{como vectores}, no como escalares.
+  \item \textbf{La simetría hace el trabajo pesado:} antes de integrar decide qué componentes se cancelan. En anillo y disco solo sobrevive $E_z$; en la varilla, la componente perpendicular a la mediatriz.
+  \item \textbf{Los límites asintóticos son la verificación:} lejos ($z\gg R$ o $a\gg L$) toda distribución finita tiende a $kQ/r^2$, una carga puntual; un disco con $R\to\infty$ tiende a $\sigma/2\varepsilon_0$, el plano.
+  \item \textbf{La jerarquía de construcción:} un disco se arma apilando anillos; el plano es el disco sin borde. Dominar una geometría entrega las demás como casos límite.
+\end{itemize}
+
+\esection{Organizador gráfico}
+\begin{center}
+\begin{tikzpicture}[
+  hub/.style={draw=e10primary, line width=1.2pt, rounded corners=2pt,
+     fill=e10primarysoft, align=center, inner sep=5pt, text width=16.0cm, font=\small},
+  geo/.style={draw=e10primary, thick, rounded corners=2pt, fill=e10primarysoft,
+     align=center, inner sep=4pt, text width=3.4cm, minimum height=1.85cm, font=\small},
+  lim/.style={align=center, font=\footnotesize, text=e10accent, inner sep=1pt},
+  arr/.style={-{Stealth[length=2.2mm]}, thick, color=e10primary},
+  cnn/.style={-{Stealth[length=2.2mm]}, thick, color=e10accent}
+]
+\node[hub] (dq) at (0,0) {%
+  \textbf{Distribución continua de carga}\\[2pt]
+  $d\vec E=\dfrac{k\,dq}{r^2}\,\hat r \quad\Rightarrow\quad \vec E=\displaystyle\int d\vec E$\\[2pt]
+  {\footnotesize\textcolor{e10muted}{$dq=\lambda\,dl$ (línea) · $dq=\sigma\,dA$ (superficie) · $dq=\rho\,dV$ (volumen)}}};
+
+\node[geo] (var) at (-6.45,-2.15) {\textbf{Varilla finita}\\ {\footnotesize $E=\dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}$}};
+\node[geo] (ani) at (-2.15,-2.15) {\textbf{Anillo}\\ {\footnotesize $E_z=\dfrac{kQz}{(z^2+R^2)^{3/2}}$}};
+\node[geo] (dis) at (2.15,-2.15)  {\textbf{Disco}\\ {\footnotesize $E_z=\dfrac{\sigma}{2\varepsilon_0}\Big[1-\frac{z}{\sqrt{z^2+R^2}}\Big]$}};
+\node[geo] (pla) at (6.45,-2.15)  {\textbf{Plano infinito}\\ {\footnotesize $E=\dfrac{\sigma}{2\varepsilon_0}$}};
+
+\draw[arr] (dq.south) -- (var.north);
+\draw[arr] (dq.south) -- (ani.north);
+\draw[arr] (dq.south) -- (dis.north);
+\draw[arr] (dq.south) -- (pla.north);
+
+\node[lim] (varl) at (-6.45,-3.85) {$L\to\infty$: línea infinita\\ $2k\lambda/a=\lambda/2\pi\varepsilon_0 a$};
+\node[lim] (anil) at (-2.15,-3.85) {$z\gg R$: puntual $kQ/z^2$\\ máx. en $z=R/\sqrt2$};
+\node[lim] (disl) at (2.15,-3.85)  {$R\to\infty$: plano $\sigma/2\varepsilon_0$\\ $z\gg R$: puntual $kQ/z^2$};
+\node[lim] (plal) at (6.45,-3.85)  {constante:\\ independiente de $z$};
+
+\draw[cnn] (-0.22,-2.15) -- (0.22,-2.15);
+\draw[cnn] (4.08,-2.15) -- (4.52,-2.15);
+\node[font=\scriptsize\color{e10accent}, anchor=south] at (0.0,-2.12) {apilar};
+\node[font=\scriptsize\color{e10accent}, anchor=south] at (4.3,-2.12) {$R\to\infty$};
+\end{tikzpicture}
+\end{center}
+
+\etip{Método de 7 pasos}{Fija el $dq$ y su densidad; escribe el vector $\vec r$ y usa la simetría; plantea $d\vec E$; proyecta con $\cos\theta$ y cancela; integra (sustitución trigonométrica o $E=-dV/dz$); evalúa los límites $z\gg R$ y $R\to\infty$; y cierra con un reto numérico. Si el límite no cuadra, el error está en un paso anterior.}
+
+\newpage
+% ═══════════════════════════ PÁGINA 2 ═══════════════════════════
+\esection{Fórmulas maestras de las cuatro geometrías}
+\begin{center}
+\renewcommand{\arraystretch}{1.7}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{3.3cm} >{\centering\arraybackslash}X >{\raggedright\arraybackslash}p{5.6cm}}
+\hline
+\rowcolor{e10primarysoft} \textbf{Geometría} & \textbf{Campo} & \textbf{Límites asintóticos} \\
+\hline
+Varilla finita ($\lambda=Q/L$) & $E=\dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}$ \newline (mediatriz, $\perp$) & $a\gg L\to kQ/a^2$ (puntual). $L\to\infty\to 2k\lambda/a$. \\
+Anillo ($\lambda=Q/2\pi R$) & $E_z=\dfrac{kQz}{(z^2+R^2)^{3/2}}$ & $z\gg R\to kQ/z^2$. $E(0)=0$; máximo en $z=R/\sqrt2$. \\
+Disco ($\sigma$) & $E_z=\dfrac{\sigma}{2\varepsilon_0}\Bigl[1-\dfrac{z}{\sqrt{z^2+R^2}}\Bigr]$ & $z\gg R\to kQ/z^2$. $R\to\infty\to\sigma/2\varepsilon_0$. \\
+Plano infinito ($\sigma$) & $E=\dfrac{\sigma}{2\varepsilon_0}$ (independiente de $z$) & Constante: no decae con la distancia. \\
+\hline
+\end{tabularx}
+\end{center}
+
+\eformula{\small\textbf{Números de referencia (úsalos para el taller)}\\[0.4em]
+\begin{tabular}{@{}l l l@{}}
+Varilla: $Q{=}+12$ nC, $L{=}0{,}60$ m, $a{=}0{,}40$ m & $\Rightarrow$ & $539$ N/C \ (puntual: $674$ N/C) \\
+Anillo: $Q{=}+8{,}0$ nC, $R{=}0{,}050$ m, $z{=}0{,}12$ m & $\Rightarrow$ & $3{,}93\times10^3$ N/C \\
+Disco: $\sigma{=}6{,}0\times10^{-6}$ C/m$^2$, $R{=}0{,}25$ m, $z{=}0{,}30$ m & $\Rightarrow$ & $7{,}85\times10^4$ N/C \\
+Plano: $\sigma{=}6{,}0\times10^{-6}$ C/m$^2$ & $\Rightarrow$ & $3{,}39\times10^5$ N/C \\
+\end{tabular}}
+
+\esection{Cuatro errores comunes resueltos}
+
+\eerror{Error 1 · ``Usé la fórmula del plano infinito para un disco finito.''}{
+\textbf{La intuición correcta:} $\sigma/2\varepsilon_0$ es el límite $R\to\infty$. Un disco de radio $R$ deja cargas \emph{afuera}, así que su campo en el eje es menor; el factor $\bigl[1-z/\sqrt{z^2+R^2}\bigr]$ corrige ese faltante. Con $\sigma=6{,}0\times10^{-6}$ C/m$^2$, $R=0{,}25$ m y $z=0{,}30$ m el disco da $7{,}85\times10^4$ N/C; el plano daría $3{,}39\times10^5$ N/C, unas $4{,}3$ veces más.
+}
+
+\eerror{Error 2 · ``Apliqué la línea infinita $E=2k\lambda/a$ a una varilla corta.''}{
+\textbf{La intuición correcta:} $2k\lambda/a$ vale solo cuando $L\to\infty$. Una varilla finita decae más rápido porque sus extremos ``escapan'' del punto. Con $Q=+12$ nC, $L=0{,}60$ m y $a=0{,}40$ m el campo es $539$ N/C, no el de línea infinita; lejos de la varilla ($a\gg L$) tiende a la carga puntual $kQ/a^2=674$ N/C.
+}
+
+\newpage
+% ═══════════════════════════ PÁGINA 3 ═══════════════════════════
+\eerror{Error 3 · ``Sumé todos los $dE$ sin proyectar ni cancelar.''}{
+\textbf{La intuición correcta:} en anillo y disco, las componentes de $d\vec E$ en el plano se cancelan \emph{por pares} simétricos; solo sobrevive $E_z=dE\cos\theta$. Sumar módulos sin esa proyección infla el campo y apunta en una dirección que no existe. En el anillo, $\cos\theta=z/\sqrt{z^2+R^2}$ es justo lo que convierte $dE$ en $E_z$.
+}
+
+\eerror{Error 4 · ``No verifiqué el límite $z\gg R$ ni convertí las unidades.''}{
+\textbf{La intuición correcta:} lejos, toda distribución finita debe tender a $kQ/r^2$. Si tu resultado no da eso, hay un error algebraico o de unidades (centímetros sin pasar a metros). El límite asintótico es una prueba gratis: compruébalo siempre antes de dar el resultado por bueno.
+}
+
+\esection{Autoevaluación cuantitativa (5 preguntas)}
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item Varilla finita: $Q=+12$ nC, $L=0{,}60$ m. Campo en la mediatriz a $a=0{,}40$ m. \hfill ($k=8{,}99\times10^9\ \mathrm{N\,m^2/C^2}$)
+  \item Anillo: $Q=+8{,}0$ nC, $R=0{,}050$ m. Campo en el eje a $z=0{,}12$ m.
+  \item Disco: $\sigma=6{,}0\times10^{-6}$ C/m$^2$, $R=0{,}25$ m. Campo en el eje a $z=0{,}30$ m.
+  \item Plano infinito con $\sigma=6{,}0\times10^{-6}$ C/m$^2$. ¿Cuánto vale $E$ y cuántas veces supera al disco de la pregunta 3?
+  \item Límite $z\gg R$: la carga del anillo ($8{,}0$ nC) concentrada en un punto a $z=0{,}12$ m daría $kQ/z^2$. Calcúlala y compárala con el valor exacto $3{,}93\times10^3$ N/C.
+\end{enumerate}
+
+\etip{Camino B por potencial}{Mismo resultado, otra ruta: el anillo tiene $V(z)=kQ/\sqrt{z^2+R^2}$ y el disco $V(z)=\frac{\sigma}{2\varepsilon_0}\bigl(\sqrt{z^2+R^2}-z\bigr)$. Deriva $E=-dV/dz$ y recuperas las $E_z$ de arriba; el disco sale de apilar anillos y el plano del límite $R\to\infty$.}
+
+\etip{Cómo usarla}{Resuelve primero en papel, luego contrasta con el solucionario de la página 4. Si fallas, vuelve al error común correspondiente antes de mirar la fórmula.}
+
+\newpage
+% ═══════════════════════════ PÁGINA 4 ═══════════════════════════
+\esection{Solucionario numérico}
+
+\esol{1.}{$E=\dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}=\dfrac{(8{,}99\times10^9)(12\times10^{-9})}{(0{,}40)(0{,}50)}=539$ N/C (la carga puntual daría $674$ N/C).}
+\esol{2.}{$E_z=\dfrac{kQz}{(z^2+R^2)^{3/2}}=\dfrac{(8{,}99\times10^9)(8{,}0\times10^{-9})(0{,}12)}{(0{,}12^2+0{,}050^2)^{3/2}}=3{,}93\times10^3$ N/C.}
+\esol{3.}{$E_z=\dfrac{\sigma}{2\varepsilon_0}\Bigl[1-\dfrac{z}{\sqrt{z^2+R^2}}\Bigr]=\dfrac{6{,}0\times10^{-6}}{2(8{,}854\times10^{-12})}\Bigl[1-\dfrac{0{,}30}{\sqrt{0{,}30^2+0{,}25^2}}\Bigr]=7{,}85\times10^4$ N/C.}
+\esol{4.}{$E=\dfrac{\sigma}{2\varepsilon_0}=\dfrac{6{,}0\times10^{-6}}{2(8{,}854\times10^{-12})}=3{,}39\times10^5$ N/C; cociente $3{,}39\times10^5/7{,}85\times10^4\approx4{,}3$ veces mayor.}
+\esol{5.}{$E_{\text{puntual}}=\dfrac{kQ}{z^2}=\dfrac{(8{,}99\times10^9)(8{,}0\times10^{-9})}{0{,}12^2}=5{,}0\times10^3$ N/C, un $27\%$ mayor que $3{,}93\times10^3$: en el anillo las componentes laterales se cancelan.}
+
+\esection{Errores detectados por telemetría (ContinuousDistLab)}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \texttt{dq\_densidad} — elegir mal el diferencial ($\lambda\,dl$ vs $\sigma\,dA$).
+  \item \texttt{cancelacion} / \texttt{proyeccion} — no ver la cancelación por simetría u olvidar el $\cos\theta$.
+  \item \texttt{plano\_infinito\_disco} — usar el plano para un disco finito.
+  \item \texttt{varilla\_infinita} — usar la varilla infinita para una varilla finita.
+  \item \texttt{limite\_z\_R} — no comprobar el límite $z\gg R$ (carga puntual).
+  \item \texttt{unidades} — confundir centímetros con metros.
+\end{itemize}
+El botón «Practicar» del portal usa estos códigos para llevarte a la escena exacta de ContinuousDistLab donde se repite el error.
+
+\esection{Bibliografía y conexión}
+Young, H.~D. y Freedman, R.~A. (2009). \emph{Física universitaria con física moderna}, Vol.~2 (12.\textsuperscript{a} ed.). Pearson. Capítulo~21 ``Carga eléctrica y campo eléctrico'', sección 21.5, ejemplos 21.9--21.11 (anillo, disco y línea).
+
+\vspace{0.6em}
+\begin{center}
+  \fcolorbox{e10line}{e10accentsoft}{\parbox{0.92\linewidth}{\centering
+    \textbf{Conexión curricular:} $\ $ viene de M03 (Potencial eléctrico) $\ \rightarrow\ $ \textbf{M04 (Distribuciones continuas)} $\ \rightarrow\ $ lleva a M05 (Ley de Gauss) y M06 (Capacitancia).}}
+
+  \small\textcolor{e10muted}{Simulador: ContinuousDistLab · Taller: \texttt{recursos/Cap04\_Taller.pdf} · © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}
+\end{center}
+
+\end{document}

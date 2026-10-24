@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DistribucionGeometria-3D · Pieza del módulo 4 — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})"></script>
+<style>
+/* Ficha técnica de la maqueta 3D del módulo 4. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 16px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+.top{font-size:14px;color:var(--e10-muted)}.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1{font:700 clamp(28px,5vw,40px)/1.1 var(--e10-font-display);margin:14px 0 4px}
+h2{font:600 21px var(--e10-font-display);margin:28px 0 10px}
+.sub{color:var(--e10-muted);font-size:18px;margin:0 0 16px}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 18px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--e10-line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--e10-primary);font-weight:600}
+td.m{font-family:var(--e10-font-mono);white-space:nowrap}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}.tip b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px}.warn b{color:var(--e10-warning)}
+ol li,ul li{margin:4px 0}
+figure{margin:14px 0;text-align:center}figure img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>Electro<span>10.Easy</span></b> · Módulo 4 · Pieza 3D</div>
+  <h1>DistribucionGeometria-3D</h1>
+  <p class="sub">Segmentador mecánico de diferenciales \(dq\): aislar con las manos el elemento infinitesimal antes de integrar, sobre las cuatro geometrías canónicas de carga continua.</p>
+  <div class="bar">
+    <a class="btn pri" href="M04_DistribucionGeometria.stl" download>Descargar STL para imprimir (.stl)</a>
+    <a class="btn" href="M04_DistribucionGeometria.scad" download>Descargar código OpenSCAD (.scad)</a>
+    <a class="btn" href="../../presentaciones/M4_DistribucionesContinuas/index.html" target="_blank" rel="noopener">Clase interactiva M04</a>
+    <a class="btn" href="../../simuladores/ContinuousDistLab.html" target="_blank" rel="noopener">ContinuousDistLab</a>
+  </div>
+
+  <figure>
+    <img src="M04_DistribucionGeometria.png" alt="Renderizado OpenSCAD del segmentador M04: varilla segmentada, anillo de 16 sectores, disco con anillos apilados y plano cargado con bornes banana">
+  </figure>
+
+  <h2>Función pedagógica</h2>
+  <div class="card">
+    Materializar el paso 1 de la deducción de una distribución continua: elegir el elemento diferencial \(dq\) y su densidad antes de sumar. El tablero reúne las cuatro geometrías canónicas: la <b>varilla</b> segmentada en bloques \(dx\) (\(dq=\lambda\,dx\)), el <b>anillo</b> dividido en 16 sectores acoplables con microimanes de neodimio (\(dq=\lambda R\,d\theta\)), el <b>disco</b> apilado en anillos concéntricos (\(dq=\sigma\,dA=\sigma\,2\pi r\,dr\)) y el <b>plano</b> como límite \(R\to\infty\) del disco. Cada \(dq\) del anillo y de la varilla se une por magnetismo exactamente como se acoplan los términos en la integral, de modo que la suma \(\sum dq \to \int dq\) se convierte en un gesto físico.
+  </div>
+
+  <h2>Piezas y parámetros</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Elemento</th><th>Parámetro OpenSCAD</th><th>Medidas / Función</th></tr></thead>
+    <tbody>
+      <tr><td class="m">Base del tablero</td><td><code>base_l, base_a, base_h</code></td><td>\(250 \times 200 \times 8\text{ mm}\); soporta las cuatro zonas</td></tr>
+      <tr><td class="m">Varilla finita</td><td><code>var_l, var_w, var_h, var_n</code></td><td>\(108 \times 10 \times 12\text{ mm}\) en 9 segmentos \(dx\); \(dq=\lambda\,dx\), \(\lambda = Q/L\)</td></tr>
+      <tr><td class="m">Cursor deslizante</td><td><code>cursor()</code></td><td>Dos paredes que delimitan físicamente el elemento \(dx\) elegido</td></tr>
+      <tr><td class="m">Punto P y vector r</td><td><code>puntoP()</code></td><td>Marcador del punto de observación en la mediatriz y línea del vector de posición \(\vec r\)</td></tr>
+      <tr><td class="m">Anillo</td><td><code>anillo_R, anillo_r, anillo_n</code></td><td>Anillo de \(\varnothing 76\text{ mm}\) dividido en 16 sectores; \(dq=\lambda R\,d\theta\), \(d\theta = 22{,}5°\)</td></tr>
+      <tr><td class="m">Disco</td><td><code>disco_R, disco_h</code></td><td>Disco de \(\varnothing 68\text{ mm}\) con anillos apilados; \(dq=\sigma\,2\pi r\,dr\), \(\sigma = Q/(\pi R^2)\)</td></tr>
+      <tr><td class="m">Plano infinito</td><td><code>plano_R, plano_h</code></td><td>Placa delgada de \(\varnothing 68\text{ mm}\); límite \(R\to\infty\) del disco, \(E = \sigma/(2\varepsilon_0)\)</td></tr>
+      <tr><td class="m">Imanes de neodimio</td><td><code>iman_d, holgura_iman</code></td><td>Alojamientos de \(\varnothing 4\text{ mm}\) con holgura \(0{,}15\text{ mm}\) para acoplar los \(dq\)</td></tr>
+      <tr><td class="m">Bornes banana</td><td><code>banana_d, holgura_banana</code></td><td>Socket de \(\varnothing 4\text{ mm}\) estándar en disco y plano para cargarlos y medir \(E\) sobre el eje</td></tr>
+      <tr><td class="m">Rótulos en relieve</td><td><code>texto()</code></td><td>Densidades grabadas: \(\lambda\), \(\sigma\), \(\rho\) y las fórmulas \(dq\) de cada zona</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Impresión 3D</h2>
+  <div class="card"><ul>
+    <li><b>Material:</b> PLA+ (o PETG si se reutiliza mucho en el laboratorio).</li>
+    <li><b>Altura de capa:</b> \(0{,}16\text{ mm}\); los rótulos y ranuras salen nítidos a \(0{,}12\text{ mm}\).</li>
+    <li><b>Relleno:</b> \(20\%\) giroide o cuadrícula; 3 perímetros de pared.</li>
+    <li><b>Soportes:</b> No requiere (todo el relieve es autoportante).</li>
+    <li><b>Herrajes:</b> 25 microimanes de neodimio \(\varnothing 4\text{ mm}\times 2\text{ mm}\) (9 varilla + 16 anillo) y 3 bornes banana hembra de \(\varnothing 4\text{ mm}\).</li>
+  </ul></div>
+
+  <h2>Protocolo de aula</h2>
+  <ol class="card" style="padding-left:34px">
+    <li><b>Elegir el \(dq\):</b> El estudiante extrae un sector del anillo y dice en voz alta «\(dq = \lambda\,R\,d\theta\)»; lo vuelve a encajar por magnetismo. Repite con un segmento de la varilla (\(dq=\lambda\,dx\)).</li>
+    <li><b>Fijar el elemento:</b> Desliza el cursor de la varilla hasta el bloque que representa \(dx\) y apunta el brazo \(\vec r\) hacia el punto \(P\) de la mediatriz.</li>
+    <li><b>Anillos que forman un disco:</b> Recorre con el dedo las ranuras concéntricas del disco comprobando que apilar anillos de radio \(r\) (camino B) reconstruye el disco; el plano es ese disco con \(R\to\infty\).</li>
+    <li><b>Conectar y medir:</b> Inserta un banana en el socket del disco o del plano, conecta la fuente de carga y comprueba el campo sobre el eje en <code>ContinuousDistLab</code> (escenas «Anillo», «Disco» y «Plano»).</li>
+  </ol>
+  <div class="tip"><b>Conexión con el Taller y la Clase:</b> Cada zona del tablero corresponde a una fórmula canónica del taller: varilla \(E = \dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}\), anillo \(E_z = \dfrac{kQz}{(z^2+R^2)^{3/2}}\) y disco \(E_z = \dfrac{\sigma}{2\varepsilon_0}\left[1 - \dfrac{z}{\sqrt{z^2+R^2}}\right]\).</div>
+  <p style="font-size:14px;color:var(--e10-muted);margin-top:18px">Ficha técnica documentada en <code>GUIA_DIDACTICA_Y_MODELOS_3D.md</code> (módulo 4). © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+</div>
+</body>
+</html>

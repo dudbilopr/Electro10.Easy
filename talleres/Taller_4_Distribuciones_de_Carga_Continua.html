@@ -1,493 +1,374 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Práctico No. 4 · Distribuciones Continuas de Carga — Electro10.Easy</title>
-    <link rel="stylesheet" href="../css/tokens.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        :root {
-            --e10-primary: #B3246B;
-            --e10-primary-soft: rgba(179, 36, 107, 0.08);
-            --e10-accent: #0B8CA8;
-            --e10-accent-strong: #08758C;
-            --e10-accent-soft: rgba(11, 140, 168, 0.08);
-            --e10-ink: #0f172a;
-            --e10-muted: #64748b;
-            --e10-surface: #ffffff;
-            --e10-bg: #f8fafc;
-            --e10-line: #e2e8f0;
-            --e10-success: #10b981;
-            --e10-success-soft: rgba(16, 185, 129, 0.08);
-            --e10-warning: #f59e0b;
-            --e10-warning-soft: rgba(245, 158, 11, 0.08);
-        }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
-        .max-w-container { max-width: 1040px; margin: 0 auto; }
-        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
-        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
-        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
-        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
-        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
-        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .warnbox { background: var(--e10-warning-soft); border-left: 4px solid var(--e10-warning); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
-        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
-        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
-        .btn-pri:hover { background: #961b57; }
-        .btn-acc { background: var(--e10-accent); border-color: var(--e10-accent); color: #fff; }
-        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
-        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
-        .path-content { display: none; margin-top: 10px; }
-        .path-content.active { display: block; }
-        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
-        input:focus { border-color: var(--e10-primary); ring: 2px var(--e10-primary-soft); }
-        @media print {
-            .no-print { display: none !important; }
-            body { background: #fff; padding: 0; }
-            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller 4 · Distribuciones continuas de carga — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Taller 4 · espejo del PDF recursos/Cap04_Taller.pdf: mismos enunciados, constantes y dos caminos. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 17px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--e10-muted)}
+.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1,h2,h3{font-family:var(--e10-font-display);letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.08;margin:18px 0 6px}
+.sub{color:var(--e10-muted);font-size:19px;margin:0 0 18px}
+h2{font-size:23px;margin:34px 0 12px;display:flex;gap:10px;align-items:baseline}
+h2 .n{font:600 15px var(--e10-font-mono);color:var(--e10-primary)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 18px;margin:12px 0}
+.formula{background:var(--e10-primary-soft);border-radius:12px;padding:6px 14px;text-align:center;overflow-x:auto}
+.clave{background:var(--e10-primary-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.clave b{color:var(--e10-primary)}
+.muted{color:var(--e10-muted);font-size:15px}
+.res{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);margin:14px 0;overflow:hidden}
+.res>.h{background:var(--e10-primary-soft);color:var(--e10-primary);font:600 16px var(--e10-font-display);padding:9px 16px}
+.res>.b{padding:12px 18px}
+.pred{background:var(--e10-warning-soft);border-radius:10px;padding:8px 14px;font-size:16px}
+.pred b{color:var(--e10-warning)}
+.paso{font:600 15px var(--e10-font-body);color:var(--e10-primary);margin:12px 0 2px}
+.eq{overflow-x:auto;padding:2px 0}
+.result{background:var(--e10-success-soft);border-radius:10px;padding:9px 14px;margin-top:10px}
+.result b{color:var(--e10-success)}
+details.sol>summary{cursor:pointer;color:var(--e10-primary);font-weight:600;margin:8px 0;list-style:none}
+details.sol>summary::before{content:'▸ '}details.sol[open]>summary::before{content:'▾ '}
+.reto{border:1px solid var(--e10-line);border-radius:12px;background:var(--e10-surface);padding:12px 16px;margin:10px 0}
+.reto .rh{font:600 14px var(--e10-font-display);color:var(--e10-accent-strong)}
+.reto .rh small{font:500 12px var(--e10-font-mono);color:var(--e10-muted);margin-left:6px}
+.ans{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ans input{flex:1;min-width:140px;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.ans input:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.ans .u{font-size:14px;color:var(--e10-muted)}
+.fb{font-size:15px;min-height:1.2em;margin-top:6px}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.toc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.toc a{font:500 13px var(--e10-font-body);border:1px solid var(--e10-line);border-radius:999px;padding:5px 11px;color:var(--e10-ink);text-decoration:none;background:var(--e10-surface)}
+.toc a:hover{border-color:var(--e10-primary);color:var(--e10-primary)}
+.teo{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:12px;padding:10px 16px;margin:8px 0}
+.teo summary{cursor:pointer;font-weight:600}
+pre{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:10px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 var(--e10-font-mono)}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}
+.tip b{color:var(--e10-accent-strong)}
+.entrega{border:2px solid var(--e10-primary)}
+.entrega label{display:block;font-size:14px;color:var(--e10-muted);margin-top:8px}
+.entrega input[type=text]{width:100%;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:16px var(--e10-font-body);background:var(--e10-surface);color:var(--e10-ink)}
+table.sum{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+table.sum td,table.sum th{border-bottom:1px solid var(--e10-line);padding:6px 8px;text-align:left}
+.print-only{display:none}
+@media print{
+  body{background:#fff;font-size:12pt}.no-print{display:none!important}.print-only{display:block}
+  details{display:block}details>summary{display:none}details>*{display:block!important}
+  .res,.reto,.card{break-inside:avoid}
+}
+.cita{font-size:12px;color:var(--e10-muted);margin:6px 0 0}
+</style>
 </head>
 <body>
-<div class="max-w-container">
+<div class="wrap">
+  <div class="top"><span><b>Electro<span>10.Easy</span></b> · Capítulo 4 · Distribuciones continuas de carga</span><span class="mono">Taller</span></div>
+  <h1>Distribuciones continuas de carga</h1>
+  <p class="sub">Cuando la carga deja de ser un punto: varillas, anillos, discos y planos, y el arte de integrar \(d\vec E\).</p>
 
-    <!-- Encabezado Institucional 10.Easy -->
-    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
-        <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-                <span class="badge badge-primary">Capítulo 4 · Electrostática de Medios Continuos</span>
-                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
-            </div>
-            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 4: Distribuciones Continuas de Carga</h1>
-            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Deducción analítica rigurosa, descomposición diferencial en 3D, simetría de reflexión y campos de hilos y anillos axiales.</p>
-        </div>
-        <div class="no-print" style="display:flex;gap:8px">
-            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
-            <a href="../presentaciones/M4_DistribucionesContinuas/index.html" class="btn" style="text-decoration:none">Ver Clase 4 →</a>
-        </div>
-    </header>
+  <div class="bar no-print">
+    <a class="btn pri" href="../recursos/Cap04_Taller.pdf" download>Descargar este taller en PDF (espejo 1:1)</a>
+    <a class="btn" href="../recursos/Cap04_Guia.pdf" download>Guía de estudio (PDF)</a>
+    <a class="btn" href="../presentaciones/M4_DistribucionesContinuas/index.html" target="_blank" rel="noopener">Clase interactiva</a>
+    <a class="btn" href="../simuladores/ContinuousDistLab.html" target="_blank" rel="noopener">ContinuousDistLab</a>
+  </div>
 
-    <!-- Fórmulas Clave de Referencia -->
-    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
-        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Integración Continua</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Diferencial de Campo Integral</b>
-                \[d\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{dq}{\mathcal{R}^2}\hat{\mathcal{R}}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Hilo Finito (Mediatriz)</b>
-                \[E_y = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Anillo Circular (Eje Axial)</b>
-                \[E_x = \frac{k Q x}{(x^2 + R^2)^{3/2}}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Límite Hilo Infinito</b>
-                \[E = \frac{\lambda}{2\pi\epsilon_0 r}\]
-            </div>
-        </div>
-    </section>
+  <p><b>Qué vas a practicar.</b> Deduce el campo eléctrico de distribuciones continuas integrando elementos diferenciales \(dq = \lambda\,dl = \sigma\,dA\); identifica dónde la simetría anula componentes; resuelve la misma integral por dos caminos (sustitución trigonométrica frente a tablas o \(E=-dV/dz\)); comprueba los límites asintóticos de carga puntual y de plano infinito; y valida cada resultado numéricamente en Python.</p>
+  <div class="formula">$$ E=\frac{kQ}{a\sqrt{a^2+(L/2)^2}}\qquad E_z=\frac{kQz}{(z^2+R^2)^{3/2}}\qquad E_z=\frac{\sigma}{2\varepsilon_0}\!\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]\qquad E=\frac{\sigma}{2\varepsilon_0} $$</div>
+  <p class="muted">Cómo usar este taller: lee cada ejercicio resuelto, examina sus dos caminos analíticos y luego resuelve los retos con su comprobador. El campo de una distribución continua se obtiene sumando (integrando) la contribución de cada elemento \(dq\), pero antes debes mirar la simetría para saber qué componente sobrevive. Constantes (Young y Freedman, 2009): \(k=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}\), \(\varepsilon_0=8{,}854\times10^{-12}\ \mathrm{C^2/(N\,m^2)}\).</p>
+  <div class="clave"><b>Antes de empezar, repasa.</b> Trigonometría del triángulo rectángulo (\(\tan\theta\), \(\sec\theta\)); la primitiva \(\int\frac{du}{(u^2+a^2)^{3/2}}=\frac{u}{a^2\sqrt{u^2+a^2}}\); el concepto de densidad de carga (\(\lambda,\sigma,\rho\)); y la regla de la cadena para derivar el potencial (\(E=-dV/dz\)).</div>
 
-    <!-- PROBLEMA 1: HILO FINITO EN LA MEDIATRIZ CON 2 CAMINOS -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Campo Eléctrico en la Mediatriz de un Segmento Recto</h2>
-            <span class="badge badge-accent">Nivel Intermedio</span>
-        </div>
-        <p style="font-size:16px">
-            Una varilla delgada y no conductora de longitud $L = 0{,}60\ \text{m}$ descansa sobre el eje $x$ centrada en el origen (extendiéndose desde $x = -0{,}30\ \text{m}$ hasta $x = +0{,}30\ \text{m}$). La varilla posee una carga total uniforme $Q = +15{,}0\ \text{nC}$. Determina la magnitud y dirección del vector de campo eléctrico $\vec{E}$ en un punto $P(0, 0{,}20\ \text{m})$ sobre el eje $y$.
-        </p>
+  <nav class="toc no-print" aria-label="Secciones">
+    <a href="#s41">4.1 Varilla</a><a href="#s42">4.2 Límites varilla</a><a href="#s43">4.3 Anillo</a><a href="#s44">4.4 Máximo anillo</a><a href="#s45">4.5 Disco</a><a href="#s46">4.6 Límites disco</a><a href="#s47">4.7 Plano</a><a href="#s48">4.8 Potencial</a><a href="#sT">Teoría</a><a href="#sP">Python</a><a href="#sE">Entrega</a>
+  </nav>
 
-        <!-- 7 PASOS METODOLÓGICOS -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">1</span>
-                    <b>Identificación y Parametrización Geométrica de la Distribución:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Longitud $L = 0{,}60\ \text{m}$, carga $Q = 15{,}0\times 10^{-9}\ \text{C}$.<br>
-                    Densidad lineal uniforme: $\lambda = \frac{Q}{L} = \frac{15{,}0\times 10^{-9}\ \text{C}}{0{,}60\ \text{m}} = 25{,}0\times 10^{-9}\ \text{C/m} = 25{,}0\ \text{nC/m}$.<br>
-                    Elemento diferencial de carga ubicado en una coordenada fuente $x'$: $dq = \lambda dx'$.
-                </p>
-            </div>
+  <!-- 4.1 -->
+  <h2 id="s41"><span class="n">4.1</span>Campo de una varilla finita en la mediatriz</h2>
+  <div class="res" data-res="1"><div class="h">Ejercicio resuelto 1 · De la integral a la fórmula cerrada</div><div class="b">
+    <p>Una varilla delgada no conductora de longitud \(L=0{,}60\ \mathrm m\) está cargada uniformemente con \(Q=+12\ \mathrm{nC}\) y centrada en el origen sobre el eje \(x\). Deduzca el campo eléctrico en el punto \(P\) de la mediatriz a \(a=0{,}40\ \mathrm m\) del centro.</p>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Las componentes horizontales de los extremos se ayudan o se cancelan? ¿Y las verticales?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Pasos 1–2 · Elemento diferencial y geometría</div><p>La densidad lineal es \(\lambda=Q/L=12\times10^{-9}/0{,}60=2{,}0\times10^{-8}\ \mathrm{C/m}=20\ \mathrm{nC/m}\). Un elemento \(dq=\lambda\,dx'\) en \((x',0)\) dista \(r=\sqrt{x'^2+a^2}\) de \(P(0,a)\).</p>
+      <div class="paso">Paso 3 · Componentes del diferencial</div>
+      <div class="eq">$$ dE_x=-\frac{k\lambda\,x'\,dx'}{(x'^2+a^2)^{3/2}},\qquad dE_y=\frac{k\lambda\,a\,dx'}{(x'^2+a^2)^{3/2}}. $$</div>
+      <div class="paso">Paso 4 · Simetría</div><p>El integrando de \(E_x\) es impar sobre \([-L/2,L/2]\): \(E_x=0\). El de \(E_y\) es par, luego \(E_y=2\int_0^{L/2}dE_y\).</p>
+      <div class="paso">Camino A · Sustitución trigonométrica</div><p>Con \(x'=a\tan\theta\), \(dx'=a\sec^2\theta\,d\theta\) y \(x'^2+a^2=a^2\sec^2\theta\):</p>
+      <div class="eq">$$ \int\frac{dx'}{(x'^2+a^2)^{3/2}}=\int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{\sin\theta}{a^2}=\frac{x'}{a^2\sqrt{x'^2+a^2}}. $$</div>
+      <div class="eq">$$ E_y=2k\lambda a\left[\frac{x'}{a^2\sqrt{x'^2+a^2}}\right]_0^{L/2}=\frac{k\lambda L}{a\sqrt{a^2+(L/2)^2}}=\frac{kQ}{a\sqrt{a^2+(L/2)^2}}. $$</div>
+      <div class="paso">Camino B · Tabla de integrales</div><p>\(\int\frac{du}{(u^2+a^2)^{3/2}}=\frac{u}{a^2\sqrt{u^2+a^2}}+C\) conduce al mismo resultado exacto.</p>
+      <div class="paso">Paso 6 · Límites asintóticos</div><p>Si \(a\gg L\): \(E\to kQ/a^2\) (carga puntual). Si \(L\gg a\): \(E\to 2k\lambda/a=\lambda/(2\pi\varepsilon_0 a)\) (varilla infinita).</p>
+      <div class="paso">Paso 7 · Valor numérico</div><p>\(\sqrt{a^2+(L/2)^2}=\sqrt{0{,}40^2+0{,}30^2}=0{,}50\ \mathrm m\):</p>
+      <div class="eq">$$ E=\frac{(8{,}988\times10^9)(12\times10^{-9})}{(0{,}40)(0{,}50)}=\frac{107{,}9}{0{,}20}=539\ \mathrm{N/C}. $$</div>
+      <div class="result"><b>Resultado.</b> \(E=539\ \mathrm{N/C}\), perpendicular a la varilla y alejándose. La carga puntual habría dado \(674\ \mathrm{N/C}\): la extensión finita de la varilla reduce el campo en la mediatriz.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="1"><div class="rh">Reto 1<small>nivel básico</small></div><p>¿Cuánto vale la densidad lineal \(\lambda\) de una varilla con \(Q=+12\ \mathrm{nC}\) repartida en \(L=0{,}60\ \mathrm m\)?</p><p class="cita">Adaptado con deducción propia a partir de Sears-Zemansky Cap. 21.</p></div>
+  <div class="reto" data-reto="2"><div class="rh">Reto 2<small>nivel básico</small></div><p>¿Cuánto vale la densidad superficial \(\sigma\) de un disco con \(Q=+8{,}0\ \mathrm{nC}\) y radio \(R=0{,}050\ \mathrm m\)?</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">2</span>
-                    <b>Vector de Posición Relativa y Distancia Euclídea:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Punto fuente: $\vec{r}' = x'\hat{\imath} + 0\hat{\jmath}$. Punto de campo: $\vec{r} = 0\hat{\imath} + y\hat{\jmath}$ (donde $y = 0{,}20\ \text{m}$).<br>
-                    Vector de separación relativa: $\vec{\mathcal{R}} = \vec{r} - \vec{r}' = -x'\hat{\imath} + y\hat{\jmath}$.<br>
-                    Distancia euclídea al elemento: $\mathcal{R} = \sqrt{(-x')^2 + y^2} = \sqrt{x'^2 + y^2}$.
-                </p>
-            </div>
+  <!-- 4.2 -->
+  <h2 id="s42"><span class="n">4.2</span>Límites asintóticos de la varilla</h2>
+  <div class="res" data-res="2"><div class="h">Ejercicio resuelto 2 · Puntual frente a varilla infinita</div><div class="b">
+    <p>Con los datos del Problema 1 (\(Q=+12\ \mathrm{nC}\), \(L=0{,}60\ \mathrm m\), \(\lambda=20\ \mathrm{nC/m}\)), verifique numéricamente los dos límites de la fórmula cerrada.</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Expansión asintótica</div><p>En \(a\gg L\): \(\sqrt{a^2+(L/2)^2}\approx a\), luego \(E\approx kQ/a^2\). En \(L\gg a\): \(\sqrt{a^2+(L/2)^2}\approx L/2\), luego \(E\approx kQ/(a\cdot L/2)=2k\lambda/a\).</p>
+      <div class="paso">Camino B · Integración directa de la varilla infinita</div>
+      <div class="eq">$$ E=2k\lambda a\int_0^{\infty}\frac{dx'}{(x'^2+a^2)^{3/2}}=\frac{2k\lambda}{a}=\frac{\lambda}{2\pi\varepsilon_0 a}. $$</div>
+      <div class="result"><b>Resultado.</b> Puntual en \(a=0{,}40\ \mathrm m\): \(kQ/a^2=674\ \mathrm{N/C}\). Varilla infinita: \(2k\lambda/a=899\ \mathrm{N/C}\). La varilla finita da \(539\ \mathrm{N/C}\), entre ambos extremos.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="3"><div class="rh">Reto 3<small>nivel básico</small></div><p>¿Cuánto vale el campo eléctrico en el centro de un anillo cargado (\(z=0\))?</p></div>
+  <div class="reto" data-reto="4"><div class="rh">Reto 4<small>nivel básico</small></div><p>¿Cuánto vale el campo de un plano infinito con \(\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}\)?</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">3</span>
-                    <b>Diferencial Vectorial de Campo $d\vec{E}$ y Descomposición:</b>
-                </div>
-                \[d\vec{E} = \frac{1}{4\pi\epsilon_0}\frac{dq}{\mathcal{R}^3}\vec{\mathcal{R}} = \frac{k\lambda dx'}{(x'^2 + y^2)^{3/2}}(-x'\hat{\imath} + y\hat{\jmath})\]
-                \[dE_x = -\frac{k\lambda x' dx'}{(x'^2 + y^2)^{3/2}}, \quad dE_y = \frac{k\lambda y dx'}{(x'^2 + y^2)^{3/2}}\]
-            </div>
+  <!-- 4.3 -->
+  <h2 id="s43"><span class="n">4.3</span>Campo axial de un anillo cargado</h2>
+  <div class="res" data-res="3"><div class="h">Ejercicio resuelto 3 · Proyección por simetría frente al potencial</div><div class="b">
+    <p>Un anillo delgado de radio \(R=0{,}050\ \mathrm m\) tiene \(Q=+8{,}0\ \mathrm{nC}\) repartida uniformemente. Halle \(E_z\) en un punto del eje a \(z=0{,}12\ \mathrm m\) del plano del anillo.</p>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Qué pasa con las componentes transversales al sumar un punto del anillo y su diametralmente opuesto?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Integración y proyección</div><p>Cada \(dq\) dista \(r=\sqrt{z^2+R^2}\) del punto axial y su campo forma un ángulo \(\theta\) con el eje, con \(\cos\theta=z/\sqrt{z^2+R^2}\). Las componentes transversales se cancelan por pares diametrales:</p>
+      <div class="eq">$$ E_z=\int dE\cos\theta=\int\frac{k\,dq}{(z^2+R^2)}\cdot\frac{z}{\sqrt{z^2+R^2}}=\frac{kQz}{(z^2+R^2)^{3/2}}. $$</div>
+      <p>En el centro (\(z=0\)) la simetría da \(E=0\).</p>
+      <div class="paso">Camino B · Derivación por potencial \(E=-dV/dz\)</div><p>Con \(V(z)=kQ/\sqrt{z^2+R^2}=kQ(z^2+R^2)^{-1/2}\):</p>
+      <div class="eq">$$ \frac{dV}{dz}=kQ\left(-\tfrac12\right)(z^2+R^2)^{-3/2}(2z)=-\frac{kQz}{(z^2+R^2)^{3/2}}\ \Rightarrow\ E_z=\frac{kQz}{(z^2+R^2)^{3/2}}. $$</div>
+      <div class="result"><b>Resultado.</b> \(E_z=\frac{(8{,}988\times10^9)(8{,}0\times10^{-9})(0{,}12)}{(0{,}12^2+0{,}05^2)^{3/2}}=3{,}93\times10^3\ \mathrm{N/C}\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="5"><div class="rh">Reto 5<small>nivel medio</small></div><p>¿Cuánto vale la densidad lineal \(\lambda\) de un anillo con \(Q=+8{,}0\ \mathrm{nC}\) y \(R=0{,}050\ \mathrm m\)?</p></div>
+  <div class="reto" data-reto="6"><div class="rh">Reto 6<small>nivel medio</small></div><p>Límite puntual de la varilla del Problema 1 evaluado a \(a=3{,}0\ \mathrm m\): ¿cuánto vale \(E\approx kQ/a^2\)?</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">4</span>
-                    <b>Análisis de Simetría Especular (Cancelación de $E_x$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    El integrando de $E_x$ es una función <b>impar</b> respecto a $x'$ ($f(-x') = -f(x')$), mientras que el intervalo de integración $[-L/2, L/2]$ es simétrico alrededor del origen. Por simetría par/impar:
-                    \[E_x = \int_{-L/2}^{L/2} dE_x = 0\]
-                    El integrando de $E_y$ es estrictamente <b>par</b> ($f(-x') = f(x')$). Por ende:
-                    \[E_y = 2\int_0^{L/2} dE_y = 2 k\lambda y \int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}}\]
-                </p>
-            </div>
+  <!-- 4.4 -->
+  <h2 id="s44"><span class="n">4.4</span>Máximo axial del anillo y campo central nulo</h2>
+  <div class="res" data-res="4"><div class="h">Ejercicio resuelto 4 · Derivada e igualación a cero</div><div class="b">
+    <p>Para el anillo de \(R=0{,}050\ \mathrm m\) y \(Q=+8{,}0\ \mathrm{nC}\), halle la coordenada \(z\) donde \(E_z\) es máximo, el valor \(E_{\mathrm{max}}\), y justifique que \(E(0)=0\).</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Derivada e igualación a cero</div><p>Derivando \(E_z=kQ\,z(z^2+R^2)^{-3/2}\):</p>
+      <div class="eq">$$ \frac{dE_z}{dz}=kQ\left[(z^2+R^2)^{-3/2}-3z^2(z^2+R^2)^{-5/2}\right]=0\ \Rightarrow\ z=\frac{R}{\sqrt2}. $$</div>
+      <div class="eq">$$ E_{\mathrm{max}}=\frac{kQ(R/\sqrt2)}{(3R^2/2)^{3/2}}=\frac{2kQ}{3\sqrt3\,R^2}. $$</div>
+      <div class="paso">Camino B · Análisis del comportamiento</div><p>\(E_z\) parte de \(0\) en el centro (simetría), crece al alejarse, alcanza su pico en \(z=R/\sqrt2\) y luego decae como \(kQ/z^2\).</p>
+      <div class="result"><b>Resultado.</b> \(z_{\mathrm{max}}=0{,}050/\sqrt2=0{,}0354\ \mathrm m=3{,}54\ \mathrm{cm}\); \(E_{\mathrm{max}}=1{,}11\times10^4\ \mathrm{N/C}\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="7"><div class="rh">Reto 7<small>nivel medio</small></div><p>Límite de varilla infinita con \(\lambda=20\ \mathrm{nC/m}\) y \(a=0{,}40\ \mathrm m\): ¿cuánto vale \(E=2k\lambda/a\)?</p></div>
+  <div class="reto" data-reto="8"><div class="rh">Reto 8<small>nivel medio</small></div><p>\(E_z\) del anillo vía \(E=-dV/dz\) con \(Q=8{,}0\ \mathrm{nC}\), \(R=0{,}050\ \mathrm m\), \(z=0{,}12\ \mathrm m\): ¿cuánto vale?</p></div>
 
-            <!-- COMPARATIVA: 2 CAMINOS DE RESOLUCIÓN -->
-            <div class="card" style="border:1px solid var(--e10-primary);margin-top:4px">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-                    <b style="color:var(--e10-primary)">Paso 5: Resolución de la Integral — Elige el Camino Analítico:</b>
-                    <div style="display:flex;gap:6px">
-                        <button class="btn btn-tab active" id="btn-p1-camA">Camino A: Sustitución Trigonométrica</button>
-                        <button class="btn btn-tab" id="btn-p1-camB">Camino B: Integral Algebraica Directa</button>
-                    </div>
-                </div>
+  <!-- 4.5 -->
+  <h2 id="s45"><span class="n">4.5</span>Campo axial de un disco cargado</h2>
+  <div class="res" data-res="5"><div class="h">Ejercicio resuelto 5 · El disco como pila de anillos</div><div class="b">
+    <p>Un disco de radio \(R=0{,}25\ \mathrm m\) tiene densidad superficial \(\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}\). Halle \(E_z\) en el eje a \(z=0{,}30\ \mathrm m\).</p>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Un disco produce más o menos campo axial que un anillo de igual carga total y radio, en el mismo punto?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Apilado de anillos (sustitución \(u\))</div><p>Un anillo de radio \(r\) y grosor \(dr\) tiene \(dq=\sigma(2\pi r)\,dr\) y aporta:</p>
+      <div class="eq">$$ dE_z=\frac{k\,(dq)\,z}{(z^2+r^2)^{3/2}}=\frac{k\sigma 2\pi z\,r\,dr}{(z^2+r^2)^{3/2}}. $$</div>
+      <p>Con \(u=z^2+r^2\), \(du=2r\,dr\):</p>
+      <div class="eq">$$ E_z=k\sigma 2\pi z\int_0^R\frac{r\,dr}{(z^2+r^2)^{3/2}}=k\sigma 2\pi z\left[\frac1z-\frac1{\sqrt{z^2+R^2}}\right]=\frac{\sigma}{2\varepsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]. $$</div>
+      <div class="paso">Camino B · Derivación por potencial</div><p>Con \(V(z)=\frac{\sigma}{2\varepsilon_0}(\sqrt{z^2+R^2}-z)\), derivar da el mismo resultado.</p>
+      <div class="result"><b>Resultado.</b> Con \(\frac{\sigma}{2\varepsilon_0}=3{,}39\times10^5\) y \(\frac{z}{\sqrt{z^2+R^2}}=0{,}768\): \(E_z=7{,}85\times10^4\ \mathrm{N/C}\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="9"><div class="rh">Reto 9<small>nivel medio</small></div><p>\(E_z\) del disco con \(\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}\), \(R=0{,}25\ \mathrm m\), \(z=0{,}30\ \mathrm m\): ¿cuánto vale?</p></div>
+  <div class="reto" data-reto="10"><div class="rh">Reto 10<small>nivel medio</small></div><p>¿Cuál es la coordenada del máximo axial del anillo (\(R=0{,}050\ \mathrm m\)) en centímetros?</p></div>
 
-                <div id="content-p1-camA" class="path-content active">
-                    <div class="tipbox">
-                        <b>Camino A (Método Clásico Angular):</b><br>
-                        Hacemos el cambio de variable angular $x' = y\tan\theta \implies dx' = y\sec^2\theta d\theta$.<br>
-                        El denominador se transforma: $(x'^2 + y^2)^{3/2} = (y^2(\tan^2\theta + 1))^{3/2} = (y^2\sec^2\theta)^{3/2} = y^3\sec^3\theta$.<br>
-                        Sustituyendo en la integral indefinida:
-                        \[\int \frac{dx'}{(x'^2 + y^2)^{3/2}} = \int \frac{y\sec^2\theta d\theta}{y^3\sec^3\theta} = \frac{1}{y^2}\int \frac{d\theta}{\sec\theta} = \frac{1}{y^2}\int \cos\theta d\theta = \frac{\sin\theta}{y^2}\]
-                        Regresando a la variable cartesiana mediante el triángulo rectángulo asociado ($\sin\theta = \frac{x'}{\sqrt{x'^2 + y^2}}$):
-                        \[\left[ \frac{x'}{y^2\sqrt{x'^2 + y^2}} \right]_0^{L/2} = \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}} = \frac{L}{y^2\sqrt{4y^2 + L^2}}\]
-                    </div>
-                </div>
+  <!-- 4.6 -->
+  <h2 id="s46"><span class="n">4.6</span>Límites del disco: puntual y plano</h2>
+  <div class="res" data-res="6"><div class="h">Ejercicio resuelto 6 · Verificación de los dos límites</div><div class="b">
+    <p>Para el disco de \(\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}\) y \(R=0{,}25\ \mathrm m\), verifique el límite puntual (\(z\gg R\)) y el de plano infinito (\(R\to\infty\)).</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Carga total</div><p>\(Q=\sigma\pi R^2=(6{,}0\times10^{-6})\pi(0{,}25)^2=1{,}18\times10^{-6}\ \mathrm C\).</p>
+      <div class="paso">Camino A · Expansión asintótica</div><p>Para \(z\gg R\): \(1-\frac{z}{\sqrt{z^2+R^2}}\approx\frac{R^2}{2z^2}\), luego \(E_z\approx\frac{\sigma R^2}{4\varepsilon_0 z^2}=\frac{kQ}{z^2}\). Para \(R\to\infty\): \(E_z\to\frac{\sigma}{2\varepsilon_0}\).</p>
+      <div class="paso">Camino B · Verificación numérica</div><p>Puntual en \(z=1{,}0\ \mathrm m\): \(kQ/z^2=1{,}06\times10^4\ \mathrm{N/C}\). Plano: \(\sigma/(2\varepsilon_0)=3{,}39\times10^5\ \mathrm{N/C}\).</p>
+      <div class="result"><b>Resultado.</b> A \(z=0{,}30\ \mathrm m\) el disco finito da \(7{,}85\times10^4\ \mathrm{N/C}\): usar ahí el plano infinito sería un error de más de un factor 4.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="11"><div class="rh">Reto 11<small>nivel avanzado</small></div><p>Campo máximo del anillo (\(Q=8{,}0\ \mathrm{nC}\), \(R=0{,}050\ \mathrm m\)): ¿cuánto vale \(E_{\mathrm{max}}\)?</p></div>
+  <div class="reto" data-reto="12"><div class="rh">Reto 12<small>nivel avanzado</small></div><p>Límite puntual del disco a \(z=1{,}0\ \mathrm m\) (\(Q=1{,}18\times10^{-6}\ \mathrm C\)): ¿cuánto vale \(E\approx kQ/z^2\)?</p></div>
 
-                <div id="content-p1-camB" class="path-content">
-                    <div class="tipbox">
-                        <b>Camino B (Tabla de Primitivas Algebraicas):</b><br>
-                        Utilizando directamente la fórmula de integración de tablas estándar $\int \frac{du}{(u^2 + a^2)^{3/2}} = \frac{u}{a^2\sqrt{u^2 + a^2}} + C$ con $u=x'$ y $a=y$:
-                        \[\int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}} = \left[ \frac{x'}{y^2\sqrt{x'^2 + y^2}} \right]_0^{L/2} = \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}}\]
-                        Ambos caminos conducen a la misma expresión cerrada exacta.
-                    </div>
-                </div>
-            </div>
+  <!-- 4.7 -->
+  <h2 id="s47"><span class="n">4.7</span>El plano infinito uniforme</h2>
+  <div class="res" data-res="7"><div class="h">Ejercicio resuelto 7 · Campo independiente de la distancia</div><div class="b">
+    <p>Una lámina plana infinita tiene \(\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}\). Halle el campo a ambos lados y muestre que no depende de la distancia.</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Límite del disco</div>
+      <div class="eq">$$ E=\lim_{R\to\infty}\frac{\sigma}{2\varepsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]=\frac{\sigma}{2\varepsilon_0}. $$</div>
+      <div class="paso">Camino B · Superposición de anillos</div><p>Al agrandar el disco, cada anillo adicional aporta menos; la suma converge a \(\sigma/(2\varepsilon_0)\) y las líneas de campo quedan perpendiculares a la lámina: el módulo es el mismo a cualquier \(z\).</p>
+      <div class="result"><b>Resultado.</b> \(E=\frac{6{,}0\times10^{-6}}{2(8{,}854\times10^{-12})}=3{,}39\times10^5\ \mathrm{N/C}\), independiente de \(z\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="13"><div class="rh">Reto 13<small>nivel avanzado</small></div><p>¿Cuántas veces mayor es el plano infinito (\(3{,}39\times10^5\)) que el disco finito (\(7{,}85\times10^4\)) a \(z=0{,}30\ \mathrm m\)?</p></div>
+  <div class="reto" data-reto="14"><div class="rh">Reto 14<small>nivel avanzado</small></div><p>¿La derivada \(E_z=-dV/dz\) con \(V_{\mathrm{disco}}=\frac{\sigma}{2\varepsilon_0}(\sqrt{z^2+R^2}-z)\) reproduce \(E_z=\frac{\sigma}{2\varepsilon_0}(1-\frac{z}{\sqrt{z^2+R^2}})\)? (1 = sí, 0 = no).</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">6</span>
-                    <b>Expresión Analítica Final y Validación Asintótica:</b>
-                </div>
-                \[E_y = 2 k\lambda y \left( \frac{L/2}{y^2\sqrt{(L/2)^2 + y^2}} \right) = \frac{k\lambda L}{y\sqrt{y^2 + (L/2)^2}} = \frac{2k\lambda L}{y\sqrt{4y^2 + L^2}}\]
-                <p style="margin:6px 0 0;font-size:14px;color:var(--e10-muted)">
-                    <b>Comprobación de límites:</b><br>
-                    • Límite puntual ($y \gg L$): $\sqrt{4y^2+L^2} \approx 2y \implies E_y \approx \frac{2k\lambda L}{y(2y)} = \frac{k(\lambda L)}{y^2} = \frac{kQ}{y^2}$ (¡Correcto!).<br>
-                    • Límite alambre infinito ($L \gg y$): $\sqrt{4y^2+L^2} \approx L \implies E_y \approx \frac{2k\lambda L}{y L} = \frac{2k\lambda}{y} = \frac{\lambda}{2\pi\epsilon_0 y}$ (¡Correcto!).
-                </p>
-            </div>
+  <!-- 4.8 -->
+  <h2 id="s48"><span class="n">4.8</span>Síntesis: el método del potencial \(E=-dV/dz\)</h2>
+  <div class="res" data-res="8"><div class="h">Ejercicio resuelto 8 · Una derivada sustituye a toda la integral vectorial</div><div class="b">
+    <p>Verifique que derivar el potencial reproduce los campos axiales del anillo y del disco, y explique por qué el disco es una pila de anillos.</p>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">Camino A · Derivadas</div><p>Anillo: \(V=\frac{kQ}{\sqrt{z^2+R^2}}\Rightarrow E_z=\frac{kQz}{(z^2+R^2)^{3/2}}\). Disco: \(V=\frac{\sigma}{2\varepsilon_0}(\sqrt{z^2+R^2}-z)\Rightarrow E_z=\frac{\sigma}{2\varepsilon_0}(1-\frac{z}{\sqrt{z^2+R^2}})\).</p>
+      <div class="paso">Camino B · Superposición de potenciales</div><p>El potencial es escalar: el del disco se obtiene sumando los de anillos de radio \(r\), y el del plano es el límite \(R\to\infty\). Derivar \(V\) equivale a la integral vectorial del campo, con una sola derivada en lugar de proyectar cada \(d\vec E\).</p>
+      <div class="result"><b>Resultado.</b> Se reproducen \(3{,}93\times10^3\ \mathrm{N/C}\) (anillo) y \(7{,}85\times10^4\ \mathrm{N/C}\) (disco), como en los Problemas 3 y 5.</div>
+    </details>
+  </div></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">7</span>
-                    <b>Sustitución Numérica y Solución Vectorial Final:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Datos: $k = 8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$, $\lambda = 25{,}0\times 10^{-9}\ \text{C/m}$, $L = 0{,}60\ \text{m}$, $y = 0{,}20\ \text{m}$.
-                </p>
-                \[4y^2 + L^2 = 4(0{,}20)^2 + (0{,}60)^2 = 4(0{,}04) + 0{,}36 = 0{,}16 + 0{,}36 = 0{,}52\ \text{m}^2\]
-                \[\sqrt{4y^2 + L^2} = \sqrt{0{,}52} \approx 0{,}72111\ \text{m}\]
-                \[E_y = \frac{2(8{,}99\times 10^9)(25{,}0\times 10^{-9})(0{,}60)}{(0{,}20)(0{,}72111)} = \frac{269{,}7}{0{,}14422} \approx 1870{,}0\ \text{N/C}\]
-                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
-                    <b style="color:var(--e10-success)">Vector de Campo Eléctrico Neto:</b>
-                    \[\vec{E} = 0\hat{\imath} + 1{,}87\times 10^3\hat{\jmath}\ \text{N/C} = (1{,}87\ \text{kN/C})\hat{\jmath}\]
-                </div>
-            </div>
-        </div>
+  <!-- Teoría complementaria -->
+  <h2 id="sT"><span class="n">T</span>Teoría y preguntas conceptuales de examen</h2>
+  <div class="teo"><summary>1. ¿Por qué el campo de un anillo en su centro es nulo, si la carga está ahí alrededor?</summary><p>Porque cada elemento \(dq\) tiene un compañero diametralmente opuesto cuyo campo en el centro es igual en magnitud y de sentido contrario: la suma vectorial se anula de manera exacta por simetría, aunque \(V\neq0\) en el centro.</p></div>
+  <div class="teo"><summary>2. ¿Qué error cometes si usas \(E=\sigma/(2\varepsilon_0)\) para un disco finito?</summary><p>El campo del plano infinito es válido solo cuando el punto está muy cerca del centro (\(R\gg z\)). Lejos (\(z\gtrsim R\)) el disco se comporta como carga puntual: usar el plano sobrestima el campo (en el Problema 6, por un factor 4).</p></div>
+  <div class="teo"><summary>3. ¿Por qué conviene a veces el potencial (\(E=-dV/dz\)) en lugar de integrar el campo?</summary><p>Porque el potencial es escalar: se suma sin proyectar vectores. Se integra una sola función \(dV\) y luego se deriva; es el mismo resultado que integrar cada componente de \(d\vec E\), pero con menos álgebra vectorial.</p></div>
 
-        <!-- Calculadora Interactiva de Comprobación -->
-        <div class="card no-print" style="margin-top:16px;background:var(--e10-bg)">
-            <b style="color:var(--e10-primary)">Calculadora Paramétrica para Problema 1:</b>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px">
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Longitud $L$ [m]:</label>
-                    <input type="number" id="calc1-L" value="0.60" step="0.05">
-                </div>
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Carga $Q$ [nC]:</label>
-                    <input type="number" id="calc1-Q" value="15.0" step="1">
-                </div>
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Posición $y$ [m]:</label>
-                    <input type="number" id="calc1-y" value="0.20" step="0.02">
-                </div>
-                <div style="display:flex;align-items:flex-end">
-                    <button class="btn btn-pri" id="btn-calc1-eval" style="width:100%">Recalcular</button>
-                </div>
-            </div>
-            <div id="calc1-res" style="margin-top:10px;font-weight:600;color:var(--e10-ink)">
-                Resultado: $E_y = 1870{,}0\ \text{N/C}$ &nbsp;|&nbsp; $\vec{E} = 1870{,}0\hat{\jmath}\ \text{N/C}$
-            </div>
-        </div>
-    </article>
+  <!-- Python -->
+  <h2 id="sP"><span class="n">P</span>Validación numérica en Python</h2>
+  <p>Los dos programas oficiales que validan los cálculos del taller (integración numérica frente a la fórmula analítica):</p>
+  <pre><code># Programa 1: campo_varilla_anillo.py  (varilla y anillo)
+import sys, numpy as np
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8'); sys.stderr.reconfigure(encoding='utf-8')
+K = 8.988e9; EPS0 = 8.854e-12
+Qv, L, a = 12e-9, 0.60, 0.40
+lam = Qv / L
+E_rod_analytic = K*Qv/(a*np.sqrt(a**2+(L/2)**2))
+Ey_num = np.sum(K*(lam*dx)*a/(xs**2+a**2)**1.5)   # integración sobre x'
+Qr, R, z = 8e-9, 0.050, 0.12
+E_ring_analytic = K*Qr*z/(z**2+R**2)**1.5
+zmax = R/np.sqrt(2); E_ring_max = 2*K*Qr/(3*np.sqrt(3)*R**2)</code></pre>
 
-    <!-- PROBLEMA 2: ANILLO CARGADO Y MÁXIMO AXIAL -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 2: Campo Axial de un Anillo y Optimización del Máximo</h2>
-            <span class="badge badge-accent">Nivel Avanzado</span>
-        </div>
-        <p style="font-size:16px">
-            Un anillo delgado de plástico de radio $R = 0{,}15\ \text{m}$ se encuentra fijo en el plano $yz$ centrado en el origen. El anillo tiene una carga neta positiva $Q = +30{,}0\ \text{nC}$ distribuida homogéneamente a lo largo de su perímetro.<br>
-            <b>a)</b> Deduce analíticamente la expresión del campo eléctrico sobre el eje axial $x$ y evalúa su magnitud en $x = 0{,}20\ \text{m}$.<br>
-            <b>b)</b> Mediante cálculo diferencial ($dE_x/dx = 0$), demuestra la coordenada $x_{\text{máx}}$ donde el campo alcanza su valor máximo absoluto y calcula dicho campo pico.
-        </p>
+  <pre><code># Programa 2: campo_disco_plano.py  (disco, plano y Camino B E = -dV/dz)
+sigma, R, z = 6.0e-6, 0.25, 0.30
+Qd = sigma*np.pi*R**2
+E_disk_analytic = (sigma/(2*EPS0))*(1 - z/np.sqrt(z**2+R**2))
+E_plane = sigma/(2*EPS0)
+E_disk_num = np.sum(K*sigma*2*np.pi*r*z/(z**2+r**2)**1.5)*dr  # apilado de anillos
+def V_disk(zz): return (sigma/(2*EPS0))*(np.sqrt(zz**2+R**2)-zz)
+Ez_pot = -(V_disk(z+1e-6)-V_disk(z-1e-6))/(2e-6)   # E = -dV/dz</code></pre>
 
-        <!-- 7 PASOS METODOLÓGICOS -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">1</span>
-                    <b>Definición Geométrica y Simetría Azimutal:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Radio $R = 0{,}15\ \text{m}$, carga total $Q = 30{,}0\times 10^{-9}\ \text{C}$.<br>
-                    Elemento de arco en el anillo: $ds = R d\phi$. Diferencial de carga: $dq = \lambda ds = \frac{Q}{2\pi R}(R d\phi) = \frac{Q}{2\pi} d\phi$.
-                </p>
-            </div>
+  <p class="muted">Salida real de los dos programas (constantes de Young y Freedman, 2009):</p>
+  <pre><code>========================================================================
+Distribuciones continuas - constantes Young-Freedman (2009)
+k = 8.9880e+09 N*m^2/C^2     eps0 = 8.8540e-12 C^2/(N*m^2)
+========================================================================
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">2</span>
-                    <b>Invarianza de la Distancia Euclídea:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Para <b>cualquier</b> punto sobre el anillo, las coordenadas son $(0, R\cos\phi, R\sin\phi)$.<br>
-                    La distancia euclídea al punto de observación $P(x, 0, 0)$ es estrictamente constante para todo el anillo:
-                    \[\mathcal{R} = \sqrt{(x - 0)^2 + (0 - R\cos\phi)^2 + (0 - R\sin\phi)^2} = \sqrt{x^2 + R^2(\cos^2\phi + \sin^2\phi)} = \sqrt{x^2 + R^2}\]
-                </p>
-            </div>
+--- Varilla finita: Q=+12 nC, L=0,60 m, a=0,40 m ---
+  E_analitico =     539.3 N/C   (E = kQ/(a*sqrt(a^2+(L/2)^2)))
+  E_numerico  =     539.3 N/C   (integracion numerica de dE_y)
+  Limite puntual (a >> L) :     674.1 N/C   (kQ/a^2)
+  Limite infinito (L >> a):     898.8 N/C   (2*k*lambda/a)
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">3</span>
-                    <b>Cancelación de Componentes Perpendiculares al Eje:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Para cada elemento $dq$ ubicado en un ángulo $\phi$, existe un elemento idéntico situado en $\phi + \pi$ diametralmente opuesto. Sus componentes radiales en el plano $yz$ son iguales en módulo y con sentidos opuestos:
-                    \[\vec{E}_\perp = \int (dE_y\hat{\jmath} + dE_z\hat{k}) = \vec{0}\]
-                    Por tanto, el campo resultante es estrictamente unidireccional sobre el eje axial $x$.
-                </p>
-            </div>
+--- Anillo: Q=+8,0 nC, R=0,050 m, z=0,12 m ---
+  E_z analitico =    3927.4 N/C   (kQz/(z^2+R^2)^(3/2))
+  E_z numerico  =    3927.4 N/C   (suma sobre el perimetro)
+  Maximo en z=R/sqrt(2) = 0.0354 m  ->  E_max =   11070.3 N/C
+  E(z=0) = 0 N/C (las componentes opuestas se cancelan por simetria)</code></pre>
+  <pre><code>========================================================================
+Disco y plano infinito - constantes Young-Freedman (2009)
+k = 8.9880e+09 N*m^2/C^2     eps0 = 8.8540e-12 C^2/(N*m^2)
+========================================================================
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">4</span>
-                    <b>Proyección Axial e Integración:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    El ángulo $\theta$ entre el vector $\vec{\mathcal{R}}$ y el eje $x$ cumple $\cos\theta = \frac{x}{\sqrt{x^2 + R^2}}$.
-                </p>
-                \[dE_x = dE \cos\theta = \left(\frac{k\, dq}{x^2 + R^2}\right)\left(\frac{x}{\sqrt{x^2 + R^2}}\right) = \frac{k x\, dq}{(x^2 + R^2)^{3/2}}\]
-                \[E_x = \int dE_x = \frac{k x}{(x^2 + R^2)^{3/2}}\oint_{\text{anillo}} dq = \frac{k Q x}{(x^2 + R^2)^{3/2}}\]
-            </div>
+--- Disco: sigma=6,0e-6 C/m^2, R=0,25 m, z=0,30 m ---
+  Q_disco = sigma*pi*R^2 = 1.1781e-06 C
+  E_z analitico =   78533.6 N/C   ((sigma/2eps0)(1 - z/sqrt(z^2+R^2)))
+  E_z numerico  =   78546.5 N/C   (apilado numerico de anillos)
+  Limite puntual (z >> R, z=1,0 m):   10588.7 N/C   (kQ/z^2)
+  Plano infinito (R -> inf):  338829.9 N/C   (sigma/2eps0)
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">5</span>
-                    <b>Evaluación Numérica en $x = 0{,}20\ \text{m}$:</b>
-                </div>
-                \[x^2 + R^2 = (0{,}20)^2 + (0{,}15)^2 = 0{,}0400 + 0{,}0225 = 0{,}0625\ \text{m}^2\]
-                \[(x^2 + R^2)^{3/2} = (0{,}0625)^{3/2} = (\sqrt{0{,}0625})^3 = (0{,}25)^3 = 0{,}015625\ \text{m}^3\]
-                \[E_x = \frac{(8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2)(30{,}0\times 10^{-9}\ \text{C})(0{,}20\ \text{m})}{0{,}015625\ \text{m}^3} = \frac{53{,}94}{0{,}015625} = 3452{,}16\ \text{N/C} \approx 3{,}45\ \text{kN/C}\]
-            </div>
+--- Plano infinito: sigma=6,0e-6 C/m^2 ---
+  E = sigma/(2*eps0) =  338829.9 N/C   (independiente de la distancia z)
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">6</span>
-                    <b>Demostración Analítica del Punto de Campo Máximo ($x_{\text{máx}}$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Aplicando la regla del cociente o del producto a la función $E_x(x) = kQ \cdot x (x^2 + R^2)^{-3/2}$:
-                </p>
-                \[\frac{dE_x}{dx} = kQ \left[ 1\cdot (x^2 + R^2)^{-3/2} + x \cdot \left(-\frac{3}{2}\right)(x^2 + R^2)^{-5/2}(2x) \right] = 0\]
-                \[(x^2 + R^2)^{-3/2} - 3x^2(x^2 + R^2)^{-5/2} = 0\]
-                <p style="margin:4px 0 0;font-size:15px">Multiplicando ambos lados por $(x^2 + R^2)^{5/2}$:</p>
-                \[(x^2 + R^2) - 3x^2 = 0 \implies R^2 - 2x^2 = 0 \implies x^2 = \frac{R^2}{2}\]
-                <div class="tipbox">
-                    <b>Coordenada del Máximo Axial:</b>
-                    \[x_{\text{máx}} = \frac{R}{\sqrt{2}} = \frac{0{,}15\ \text{m}}{\sqrt{2}} \approx 0{,}10607\ \text{m} = 10{,}61\ \text{cm}\]
-                </div>
-            </div>
+--- Camino B: E = -dV/dz (derivada numerica del potencial) ---
+  Anillo: E_z =    3927.4 N/C   (coincide con la integral directa)
+  Disco : E_z =   78533.6 N/C   (coincide con la integral directa)</code></pre>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">7</span>
-                    <b>Cálculo del Campo Máximo Pico ($E_{\text{máx}}$):</b>
-                </div>
-                \[x_{\text{máx}}^2 + R^2 = \frac{R^2}{2} + R^2 = \frac{3}{2}R^2\]
-                \[(x_{\text{máx}}^2 + R^2)^{3/2} = \left(\frac{3}{2}\right)^{3/2} R^3 = \frac{3\sqrt{3}}{2\sqrt{2}} R^3\]
-                \[E_{\text{máx}} = \frac{k Q (R/\sqrt{2})}{(3\sqrt{3} / 2\sqrt{2}) R^3} = \frac{2 k Q}{3\sqrt{3} R^2} = \frac{2(8{,}99\times 10^9)(30{,}0\times 10^{-9})}{3\sqrt{3}(0{,}15)^2} = \frac{539{,}4}{3(1{,}73205)(0{,}0225)} = \frac{539{,}4}{0{,}11691} \approx 4613{,}7\ \text{N/C}\]
-                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
-                    <b style="color:var(--e10-success)">Conclusión del Problema 2:</b>
-                    \[E_x(0{,}20\ \text{m}) = 3{,}45\times 10^3\hat{\imath}\ \text{N/C}, \quad x_{\text{máx}} = 10{,}61\ \text{cm}, \quad E_{\text{máx}} = 4{,}61\times 10^3\ \text{N/C}\]
-                </div>
-            </div>
-        </div>
-    </article>
+  <h2><span class="n">S</span>Practica en la plataforma</h2>
+  <div class="bar"><a class="btn" href="../presentaciones/M4_DistribucionesContinuas/index.html" target="_blank" rel="noopener">Clase interactiva del capítulo 4</a><a class="btn" href="../simuladores/ContinuousDistLab.html" target="_blank" rel="noopener">ContinuousDistLab (varilla, anillo y disco)</a><a class="btn" href="../desafios/desafio.html?m=4" target="_top">Desafío integral del módulo 4</a></div>
 
-    <!-- FORMULARIO DE ENTREGA DEL ESTUDIANTE -->
-    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-            <div>
-                <span class="badge badge-primary">Evaluación Formal</span>
-                <h3 style="margin:4px 0 0;font-size:20px;color:var(--e10-ink)">Certificado Oficial de Entrega de Taller No. 4</h3>
-            </div>
-            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Plataforma Electro10.Easy</span>
-        </div>
+  <h2><span class="n">C</span>Conecta y consulta</h2>
+  <div class="tip"><b>Lo que sigue.</b> En el capítulo 5 usarás la ley de Gauss para recuperar estos mismos campos con mucha menos integración, eligiendo superficies que explotan la simetría de cada distribución.</div>
+  <p style="font-size:15px"><b>Bibliografía.</b> Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson Educación. Capítulo 21 «Carga eléctrica y campo eléctrico», secciones 21.5–21.7.<br><span class="muted">Los enunciados y esquemas son originales de 10.Easy. Los valores y constantes siguen estrictamente el texto guía oficial.</span></p>
 
-        <form id="form-entrega" onsubmit="return false;">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
-                <div>
-                    <label style="font-size:13px;font-weight:600">Nombre Completo del Estudiante:</label>
-                    <input type="text" id="ent-nombre" placeholder="Ej. Ana María Gómez" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Código Estudiantil / ID:</label>
-                    <input type="text" id="ent-codigo" placeholder="Ej. 20261045" required>
-                </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
-                <div>
-                    <label style="font-size:13px;font-weight:600">Valor de $E_y$ calculado para el Hilo [N/C]:</label>
-                    <input type="number" id="ent-p1" step="0.1" placeholder="Ej. 1870.0" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Coordenada $x_{\text{máx}}$ para el Anillo [cm]:</label>
-                    <input type="number" id="ent-p2-xmax" step="0.01" placeholder="Ej. 10.61" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Campo Máximo $E_{\text{máx}}$ del Anillo [N/C]:</label>
-                    <input type="number" id="ent-p2-emax" step="0.1" placeholder="Ej. 4613.7" required>
-                </div>
-            </div>
-
-            <div style="margin-top:12px">
-                <label style="font-size:13px;font-weight:600">Conclusiones Físicas del Estudiante:</label>
-                <textarea id="ent-obs" style="width:100%;border:1px solid var(--e10-line);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;height:70px" placeholder="Describe brevemente el comportamiento de los límites asintóticos analizados en la clase..."></textarea>
-            </div>
-
-            <div class="no-print" style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
-                <button type="button" class="btn" id="btn-validar-entrega">Verificar Resultados</button>
-                <button type="button" class="btn btn-pri" id="btn-descargar-pdf">Generar Certificado de Entrega en PDF</button>
-            </div>
-            <div id="msg-feedback" style="margin-top:10px;font-size:14px;font-weight:600;display:none"></div>
-        </form>
-    </section>
-
+  <!-- Entrega -->
+  <h2 id="sE"><span class="n">E</span>Entrega de los retos</h2>
+  <div class="card entrega">
+    <p style="margin-top:0">Escribe tu nombre, responde los 14 retos con su comprobador y guarda esta hoja en PDF para entregarla.</p>
+    <label for="est-nombre">Nombre completo</label><input type="text" id="est-nombre" autocomplete="name">
+    <label for="est-grupo">Grupo o código</label><input type="text" id="est-grupo">
+    <table class="sum" id="sum"><thead><tr><th>Reto</th><th>Tu respuesta</th><th>Estado</th></tr></thead><tbody></tbody></table>
+    <div class="bar no-print"><button type="button" class="btn pri" id="btn-print">Guardar la entrega en PDF</button><button type="button" class="btn" id="btn-reset">Borrar mis respuestas</button></div>
+  </div>
+  <p class="muted">© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
 </div>
 
 <script>
-// PESTAÑAS CAMINO A / CAMINO B
-const btnCamA = document.getElementById('btn-p1-camA');
-const btnCamB = document.getElementById('btn-p1-camB');
-const contCamA = document.getElementById('content-p1-camA');
-const contCamB = document.getElementById('content-p1-camB');
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  // Respuestas calculadas con .design/fase5/M04/python/campo_varilla_anillo.py y campo_disco_plano.py
+  const RETOS = {
+    1: { unit: 'nC/m', ans: 20.0, hint: 'λ = Q/L = 12 nC / 0,60 m = 20 nC/m.' },
+    2: { unit: 'μC/m²', ans: 1.02, hint: 'σ = Q/(πR²) = 8,0 nC / (π·0,050²) ≈ 1,02 μC/m².' },
+    3: { unit: 'N/C', ans: 0.0, hint: 'En el centro las contribuciones opuestas se cancelan exactamente: E = 0.' },
+    4: { unit: 'N/C', ans: 3.39e5, hint: 'E = σ/(2ε₀) = 6,0×10⁻⁶ / (2·8,854×10⁻¹²) = 3,39×10⁵ N/C.' },
+    5: { unit: 'nC/m', ans: 25.5, hint: 'λ = Q/(2πR) = 8,0 nC / (2π·0,050 m) ≈ 25,5 nC/m.' },
+    6: { unit: 'N/C', ans: 12.0, hint: 'E ≈ kQ/a² = (8,988×10⁹)(12×10⁻⁹)/3,0² ≈ 12 N/C.' },
+    7: { unit: 'N/C', ans: 898.8, hint: 'E ≈ 2kλ/a = 2(8,988×10⁹)(20×10⁻⁹)/0,40 ≈ 899 N/C.' },
+    8: { unit: 'N/C', ans: 3927.4, hint: 'E_z = kQz/(z²+R²)^(3/2) (o E = -dV/dz) = 3,93×10³ N/C.' },
+    9: { unit: 'N/C', ans: 7.85e4, hint: 'E_z = (σ/2ε₀)(1 − z/√(z²+R²)) = 7,85×10⁴ N/C.' },
+    10: { unit: 'cm', ans: 3.54, hint: 'z_máx = R/√2 = 0,050/1,414 ≈ 0,0354 m = 3,54 cm.' },
+    11: { unit: 'N/C', ans: 1.11e4, hint: 'E_máx = 2kQ/(3√3 R²) = 1,11×10⁴ N/C.' },
+    12: { unit: 'N/C', ans: 1.06e4, hint: 'E ≈ kQ/z² con Q = σπR² = 1,18×10⁻⁶ C → 1,06×10⁴ N/C.' },
+    13: { unit: 'factor', ans: 4.31, hint: '3,39×10⁵ / 7,85×10⁴ ≈ 4,3 veces mayor.' },
+    14: { unit: 'código (1=Sí, 0=No)', ans: 1.0, hint: 'Derivar V_disco = (σ/2ε₀)(√(z²+R²) − z) da exactamente E_z = (σ/2ε₀)(1 − z/√(z²+R²)).' }
+  };
+  const KEY = 'e10_taller4_respuestas';
+  let st = {}; try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { st = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+  const parseNum = (s) => {
+    s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1').replace(/[a-zA-Z/]+$/, (u) => (/^e/i.test(u) ? u : ''));
+    if (/constante/i.test(s)) return 1.0;
+    return s === '' ? NaN : Number(s);
+  };
+  const fmt = (x) => { if (!isFinite(x)) return '—'; const a = Math.abs(x); if (a !== 0 && (a < 1e-2 || a >= 1e4)) { const e = Math.floor(Math.log10(a)); return (x / 10 ** e).toFixed(2).replace('.', ',') + ' × 10^' + e; } return x.toFixed(3).replace('.', ','); };
 
-btnCamA.addEventListener('click', () => {
-    btnCamA.classList.add('active');
-    btnCamB.classList.remove('active');
-    contCamA.classList.add('active');
-    contCamB.classList.remove('active');
-});
-
-btnCamB.addEventListener('click', () => {
-    btnCamB.classList.add('active');
-    btnCamA.classList.remove('active');
-    contCamB.classList.add('active');
-    contCamA.classList.remove('active');
-});
-
-// CALCULADORA PROBLEMA 1
-const kConst = 8.98755e9;
-document.getElementById('btn-calc1-eval').addEventListener('click', () => {
-    const L = parseFloat(document.getElementById('calc1-L').value);
-    const Q = parseFloat(document.getElementById('calc1-Q').value) * 1e-9;
-    const y = parseFloat(document.getElementById('calc1-y').value);
-    const lam = Q / L;
-    const Ey = (2 * kConst * lam * L) / (y * Math.sqrt(4 * y * y + L * L));
-    document.getElementById('calc1-res').innerHTML = `Resultado: $E_y = ${Ey.toFixed(1)}\\ \\text{N/C}$ &nbsp;|&nbsp; $\\vec{E} = ${Ey.toFixed(1)}\\hat{\\jmath}\\ \\text{N/C}$`;
-    if (window.renderMathInElement) {
-        renderMathInElement(document.getElementById('calc1-res'), {
-            delimiters: [{left: '$', right: '$', display: false}]
-        });
-    }
-});
-
-// VALIDACIÓN DE RESULTADOS DEL ESTUDIANTE
-document.getElementById('btn-validar-entrega').addEventListener('click', () => {
-    const valP1 = parseFloat(document.getElementById('ent-p1').value);
-    const valXmax = parseFloat(document.getElementById('ent-p2-xmax').value);
-    const valEmax = parseFloat(document.getElementById('ent-p2-emax').value);
-    const fb = document.getElementById('msg-feedback');
-    fb.style.display = 'block';
-
-    const okP1 = Math.abs(valP1 - 1870.0) < 30.0;
-    const okXmax = Math.abs(valXmax - 10.61) < 0.5;
-    const okEmax = Math.abs(valEmax - 4613.7) < 60.0;
-
-    if (okP1 && okXmax && okEmax) {
-        fb.style.color = '#10b981';
-        fb.innerHTML = '✔ ¡Excelentes resultados analíticos! Todos los cálculos concuerdan con la deducción exacta de Sears-Zemansky. Ya puedes descargar tu certificado.';
-    } else {
-        fb.style.color = '#b3246b';
-        fb.innerHTML = '⚠ Revisa tus cálculos numéricos: verifica las unidades (m vs cm, nC vs C) y los radicales en el denominador.';
-    }
-});
-
-// EXPORTACIÓN A PDF CON HTML2PDF
-document.getElementById('btn-descargar-pdf').addEventListener('click', () => {
-    const nombre = document.getElementById('ent-nombre').value.trim() || 'Estudiante';
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: `Taller_4_Continuo_${nombre.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  document.querySelectorAll('[data-reto]').forEach((box) => {
+    const n = +box.dataset.reto, R = RETOS[n];
+    const w = document.createElement('div'); w.className = 'ans no-print';
+    w.innerHTML = `<input aria-label="Tu respuesta al reto ${n}" inputmode="decimal" placeholder="p. ej. 7,85e4"><span class="u">${R.unit}</span><button type="button" class="btn pri">Comprobar</button>`;
+    const fb = document.createElement('div'); fb.className = 'fb'; fb.setAttribute('aria-live', 'polite');
+    const pr = document.createElement('div'); pr.className = 'print-only'; pr.textContent = 'Respuesta: ______________________';
+    box.append(w, fb, pr);
+    const inp = w.querySelector('input'); let fails = 0;
+    if (st[n]) { inp.value = st[n].v; }
+    const check = () => {
+      const v = parseNum(inp.value);
+      if (!isFinite(v)) { fb.innerHTML = `<span style="color:var(--e10-muted)">Escribe un número en ${R.unit}.</span>`; return; }
+      const tol = R.tol ?? 0.03;
+      const ok = Math.abs(v - R.ans) <= (R.ans === 0 ? 0.05 : tol * Math.abs(R.ans));
+      if (ok) fb.innerHTML = `<b style="color:var(--e10-success)">¡Correcto!</b> ${R.hint}`;
+      else { fails++; fb.innerHTML = `<b style="color:var(--e10-danger)">Aún no, pero vas en camino.</b> ${fails < 2 ? R.hint : R.hint + ` La respuesta esperada es ${fmt(R.ans)} ${R.unit}.`}`; }
+      st[n] = { v: inp.value, ok }; save(); table();
     };
-    html2pdf().set(opt).from(document.getElementById('seccion-entrega')).save();
-});
+    w.querySelector('button').addEventListener('click', check);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
+  });
 
-document.getElementById('btn-print-top').addEventListener('click', () => window.print());
-
-// AUTO-RENDER KATEX
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '\\[', right: '\\]', display: true},
-                {left: '$', right: '$', display: false},
-                {left: '\\(', right: '\\)', display: false}
-            ],
-            throwOnError: false
-        });
-    }
-});
+  function table() {
+    const tb = $('sum').querySelector('tbody'); tb.innerHTML = '';
+    Object.keys(RETOS).forEach((n) => { const s = st[n]; const tr = document.createElement('tr');
+      tr.innerHTML = `<td>Reto ${n}</td><td class="mono">${s ? s.v.replace(/</g, '&lt;') : '—'}</td><td>${!s ? 'sin responder' : s.ok ? '<b style="color:var(--e10-success)">correcto</b>' : '<span style="color:var(--e10-danger)">por revisar</span>'}</td>`; tb.appendChild(tr); });
+  }
+  table();
+  ['est-nombre', 'est-grupo'].forEach((id) => { try { $(id).value = localStorage.getItem('e10_' + id) || ''; } catch (_) {} $(id).addEventListener('input', () => { try { localStorage.setItem('e10_' + id, $(id).value); } catch (_) {} }); });
+  $('btn-print').addEventListener('click', () => { document.querySelectorAll('details').forEach((d) => { d.open = true; }); setTimeout(() => window.print(), 100); });
+  $('btn-reset').addEventListener('click', () => { st = {}; save(); document.querySelectorAll('[data-reto] input').forEach((i) => { i.value = ''; }); document.querySelectorAll('[data-reto] .fb').forEach((f) => { f.textContent = ''; }); table(); });
+  window.addEventListener('load', () => { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); });
+  window.__taller4 = { RETOS, parseNum };
+})();
 </script>
 </body>
 </html>

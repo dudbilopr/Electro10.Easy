@@ -129,6 +129,17 @@ export const ERRORES = {
     potencial_equip_perp: 'Dibujó equipotenciales no perpendiculares a E',
     potencial_ev_vs_v: 'Confundió electrón-volt (energía) con volt (potencial)',
     potencial_r_distancia: 'Usó la distancia equivocada en la superposición',
+    // ContinuousDistLab (capítulo 4 · distribuciones continuas de carga)
+    m4_dq_densidad: 'Eligió mal el diferencial dq (λ dl vs σ dA)',
+    m4_limites: 'Límites de integración equivocados',
+    m4_distancia_r: 'Distancia r al punto mal calculada',
+    m4_cancelacion: 'No vio la cancelación por simetría',
+    m4_proyeccion: 'Olvidó la proyección cos θ de dE',
+    m4_trig: 'Error en la sustitución trigonométrica',
+    m4_plano_infinito_disco: 'Usó el plano infinito para un disco finito',
+    m4_varilla_infinita: 'Usó la varilla infinita para una varilla finita',
+    m4_limite_z_R: 'No comprobó el límite z≫R (carga puntual)',
+    m4_unidades: 'Unidades (cm → m)',
     otro: 'Otro error',
 };
 
@@ -207,9 +218,11 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     torque_sentido: 'VectorField.html#torque', torque_coseno: 'VectorField.html#torque', torque_sin_d: 'VectorField.html#torque', haz_sentido: 'VectorField.html#haz', haz_medio: 'VectorField.html#haz', haz_masa: 'VectorField.html#haz',
     potencial_v_vs_u: 'EquipotentialLab.html#puntual', potencial_r2: 'EquipotentialLab.html#puntual', potencial_suma_vectores: 'EquipotentialLab.html#puntual', potencial_signo_carga: 'EquipotentialLab.html#puntual', potencial_r_distancia: 'EquipotentialLab.html#puntual',
     potencial_v0_e0: 'EquipotentialLab.html#dipolo', potencial_signo: 'EquipotentialLab.html#gradiente', potencial_equip_perp: 'EquipotentialLab.html#gradiente',
-    potencial_ed_signo: 'EquipotentialLab.html#placas', potencial_ev_vs_v: 'EquipotentialLab.html#placas' };
+    potencial_ed_signo: 'EquipotentialLab.html#placas', potencial_ev_vs_v: 'EquipotentialLab.html#placas',
+    m4_dq_densidad: 'ContinuousDistLab.html#varilla', m4_limites: 'ContinuousDistLab.html#varilla', m4_distancia_r: 'ContinuousDistLab.html#anillo', m4_cancelacion: 'ContinuousDistLab.html#anillo', m4_proyeccion: 'ContinuousDistLab.html#varilla', m4_trig: 'ContinuousDistLab.html#varilla',
+    m4_plano_infinito_disco: 'ContinuousDistLab.html#disco', m4_varilla_infinita: 'ContinuousDistLab.html#varilla', m4_limite_z_R: 'ContinuousDistLab.html#disco', m4_unidades: 'ContinuousDistLab.html#varilla' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
-const LABS = { Coulomb: 'CoulombLab', VectorField: 'VectorFieldLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab', EquipotentialLab: 'EquipotentialLab' };
+const LABS = { Coulomb: 'CoulombLab', VectorField: 'VectorFieldLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab', EquipotentialLab: 'EquipotentialLab', ContinuousDistLab: 'ContinuousDistLab' };
 export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──

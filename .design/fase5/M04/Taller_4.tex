@@ -1,0 +1,285 @@
+% ==========================================================================
+%  Taller 4 · Distribuciones Continuas de Carga (Electro10.Easy)
+%  Espejo 1:1 del taller web (talleres/Taller_4_Distribuciones_de_Carga_Continua.html)
+%  en problemas, retos y programas Python. Compila a recursos/Cap04_Taller.pdf.
+%  Autor: Prof. Dudbil Olvasada Pabón Riaño · Rigor Sears--Zemansky Vol. 2 Cap. 21
+% ==========================================================================
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper,margin=1.7cm]{geometry}
+\usepackage{e10}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+
+% Caja compacta para un problema resuelto
+\newcommand{\prob}[1]{\noindent{\color{e10primary}\large\bfseries #1}\par\vspace{0.15em}}
+\newcommand{\camino}[1]{\noindent{\color{e10accent}\bfseries #1}\par\vspace{0.05em}}
+
+\begin{document}
+
+\begin{center}
+  {\color{e10primary}\rule{\linewidth}{3.5pt}}\\[1em]
+  {\LARGE\bfseries Taller 4: Distribuciones Continuas de Carga}\\[0.4em]
+  {\color{e10muted}Electro10.Easy · Módulo 04 · Prof. Dudbil Olvasada Pabón Riaño}\\[0.3em]
+  {\color{e10muted}\small 8 problemas resueltos por dos caminos · 14 retos graduados · 2 programas Python}\\[0.2em]
+  {\color{e10muted}\small $k=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}$ · $\varepsilon_0=8{,}854\times10^{-12}\ \mathrm{C^2/(N\,m^2)}$}
+  \\[0.8em]
+  {\color{e10primary}\rule{\linewidth}{1pt}}
+\end{center}
+
+\esection{El algoritmo universal de resolución (7 pasos)}
+\textbf{1. Elemento diferencial} ($dq=\lambda\,dl$, $\sigma\,dA$ o $\rho\,dV$) $\rightarrow$ \textbf{2. Vector de posición} $\vec r$ y simetría (dónde se cancela) $\rightarrow$ \textbf{3. Expresión diferencial} $d\vec E$ (o $dV$) $\rightarrow$ \textbf{4. Proyección trigonométrica} y cancelación de componentes $\rightarrow$ \textbf{5. Dos caminos} (A = sustitución trigonométrica; B = tablas/integración directa o $E=-dV/dz$) $\rightarrow$ \textbf{6. Límites asintóticos} ($z\gg R$ puntual; $R\gg z$ plano $\sigma/2\varepsilon_0$) $\rightarrow$ \textbf{7. Retos cuantitativos} con retroalimentación empática.
+
+\eformula{%
+  \textbf{Varilla:}\ $E=\dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}$\hfill
+  \textbf{Anillo:}\ $E_z=\dfrac{kQz}{(z^2+R^2)^{3/2}}$\hfill
+  \textbf{Disco:}\ $E_z=\dfrac{\sigma}{2\varepsilon_0}\!\left[1-\dfrac{z}{\sqrt{z^2+R^2}}\right]$\hfill
+  \textbf{Plano:}\ $E=\dfrac{\sigma}{2\varepsilon_0}$}
+
+% ════════════════════════ PROBLEMAS ════════════════════════
+\esection{Problemas resueltos por dos caminos}
+
+\prob{Problema 1 · Campo de una varilla finita en la mediatriz}
+\textbf{Enunciado.} Una varilla delgada no conductora de longitud $L=0{,}60\ \mathrm m$ está cargada uniformemente con $Q=+12\ \mathrm{nC}$ y centrada en el origen sobre el eje $x$. Deduzca el campo eléctrico en el punto $P$ de la mediatriz a distancia $a=0{,}40\ \mathrm m$ del centro.
+
+\textbf{Pasos 1--2.} La densidad lineal es $\lambda=Q/L=12\times10^{-9}/0{,}60=2{,}0\times10^{-8}\ \mathrm{C/m}=20\ \mathrm{nC/m}$. Un elemento $dq=\lambda\,dx'$ en $(x',0)$ dista $r=\sqrt{x'^2+a^2}$ de $P(0,a)$.
+
+\textbf{Paso 3.} El diferencial de campo tiene componentes
+\[ dE_x=-\frac{k\lambda\,x'\,dx'}{(x'^2+a^2)^{3/2}},\qquad dE_y=\frac{k\lambda\,a\,dx'}{(x'^2+a^2)^{3/2}}. \]
+
+\textbf{Paso 4.} El integrando de $E_x$ es \emph{impar} sobre un intervalo simétrico $[-L/2,L/2]$: $E_x=0$. El integrando de $E_y$ es \emph{par}, luego $E_y=2\int_0^{L/2}dE_y$.
+
+\camino{Camino A — sustitución trigonométrica.} Con $x'=a\tan\theta$, $dx'=a\sec^2\theta\,d\theta$ y $x'^2+a^2=a^2\sec^2\theta$:
+\[ \int\frac{dx'}{(x'^2+a^2)^{3/2}}=\int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{\sin\theta}{a^2}=\frac{x'}{a^2\sqrt{x'^2+a^2}}. \]
+Evaluando de $0$ a $L/2$ y duplicando:
+\[ E_y=2k\lambda a\left[\frac{x'}{a^2\sqrt{x'^2+a^2}}\right]_0^{L/2}=\frac{k\lambda L}{a\sqrt{a^2+(L/2)^2}}=\frac{kQ}{a\sqrt{a^2+(L/2)^2}}. \]
+
+\camino{Camino B — tabla de integrales.} $\int\frac{du}{(u^2+a^2)^{3/2}}=\frac{u}{a^2\sqrt{u^2+a^2}}+C$ conduce al mismo resultado exacto.
+
+\textbf{Paso 6 (límites).} Si $a\gg L$: $E\to kQ/a^2$ (carga puntual). Si $L\gg a$: $E\to 2k\lambda/a=\lambda/(2\pi\varepsilon_0 a)$ (varilla infinita).
+
+\textbf{Paso 7 (numérico).} $\sqrt{a^2+(L/2)^2}=\sqrt{0{,}40^2+0{,}30^2}=0{,}50\ \mathrm m$, así
+\[ E=\frac{(8{,}988\times10^9)(12\times10^{-9})}{(0{,}40)(0{,}50)}=\frac{107{,}9}{0{,}20}=539\ \mathrm{N/C}. \]
+La aproximación de carga puntual habría dado $kQ/a^2=674\ \mathrm{N/C}$: la extensión finita de la varilla \emph{reduce} el campo en la mediatriz.
+
+\prob{Problema 2 · Límites asintóticos de la varilla}
+\textbf{Enunciado.} Con los datos del Problema 1 ($Q=+12\ \mathrm{nC}$, $L=0{,}60\ \mathrm m$, $\lambda=20\ \mathrm{nC/m}$), verifique numéricamente los dos límites de la fórmula cerrada.
+
+\camino{Camino A — expansión asintótica.} En $a\gg L$, $\sqrt{a^2+(L/2)^2}\approx a$ y $E\approx kQ/a^2$. En $L\gg a$, $\sqrt{a^2+(L/2)^2}\approx L/2$ y $E\approx kQ/(a\cdot L/2)=2k\lambda/a$.
+
+\camino{Camino B — integración directa de la varilla infinita.} Integrando $dE_y$ entre $-\infty$ e $+\infty$:
+\[ E=2k\lambda a\int_0^{\infty}\frac{dx'}{(x'^2+a^2)^{3/2}}=\frac{2k\lambda}{a}=\frac{\lambda}{2\pi\varepsilon_0 a}. \]
+\textbf{Valores.} Puntual en $a=0{,}40\ \mathrm m$: $kQ/a^2=674\ \mathrm{N/C}$. Varilla infinita: $2k\lambda/a=2(8{,}988\times10^9)(20\times10^{-9})/0{,}40=899\ \mathrm{N/C}$. La varilla finita da $539\ \mathrm{N/C}$, entre ambos extremos.
+
+\prob{Problema 3 · Campo axial de un anillo cargado}
+\textbf{Enunciado.} Un anillo delgado de radio $R=0{,}050\ \mathrm m$ tiene $Q=+8{,}0\ \mathrm{nC}$ repartida uniformemente. Halle $E_z$ en un punto del eje a $z=0{,}12\ \mathrm m$ del plano del anillo.
+
+\camino{Camino A — integración y proyección por simetría.} Cada elemento $dq$ dista $r=\sqrt{z^2+R^2}$ del punto axial. Su campo $dE=k\,dq/(z^2+R^2)$ forma un ángulo $\theta$ con el eje, con $\cos\theta=z/\sqrt{z^2+R^2}$. Las componentes transversales se cancelan por pares diametrales; sobrevive
+\[ E_z=\int dE\cos\theta=\int\frac{k\,dq}{(z^2+R^2)}\cdot\frac{z}{\sqrt{z^2+R^2}}=\frac{kQz}{(z^2+R^2)^{3/2}}. \]
+En el centro ($z=0$) la simetría da $E=0$.
+
+\camino{Camino B — derivación por potencial $E=-dV/dz$.} Con $V(z)=kQ/\sqrt{z^2+R^2}=kQ(z^2+R^2)^{-1/2}$:
+\[ \frac{dV}{dz}=kQ\left(-\tfrac12\right)(z^2+R^2)^{-3/2}(2z)=-\frac{kQz}{(z^2+R^2)^{3/2}}\ \Rightarrow\ E_z=-\frac{dV}{dz}=\frac{kQz}{(z^2+R^2)^{3/2}}. \]
+\textbf{Resultado.} $E_z=\frac{(8{,}988\times10^9)(8{,}0\times10^{-9})(0{,}12)}{(0{,}12^2+0{,}05^2)^{3/2}}=\frac{8{,}63}{0{,}002197}=3{,}93\times10^3\ \mathrm{N/C}$.
+
+\prob{Problema 4 · Máximo axial del anillo y campo central nulo}
+\textbf{Enunciado.} Para el anillo de $R=0{,}050\ \mathrm m$ y $Q=+8{,}0\ \mathrm{nC}$, halle la coordenada $z$ donde $E_z$ es máximo, el valor $E_{\mathrm{max}}$, y justifique que $E(0)=0$.
+
+\camino{Camino A — derivada e igualación a cero.} Derivando $E_z=kQ\,z(z^2+R^2)^{-3/2}$:
+\[ \frac{dE_z}{dz}=kQ\left[(z^2+R^2)^{-3/2}-3z^2(z^2+R^2)^{-5/2}\right]=0\ \Rightarrow\ (z^2+R^2)-3z^2=0\ \Rightarrow\ z=\frac{R}{\sqrt2}. \]
+\[ E_{\mathrm{max}}=\frac{kQ(R/\sqrt2)}{(3R^2/2)^{3/2}}=\frac{2kQ}{3\sqrt3\,R^2}. \]
+
+\camino{Camino B — análisis del comportamiento.} $E_z$ parte de $0$ en el centro (simetría), crece al alejarse, alcanza su pico en $z=R/\sqrt2$ y luego decae como $kQ/z^2$ (carga puntual).
+\textbf{Resultado.} $z_{\mathrm{max}}=0{,}050/\sqrt2=0{,}0354\ \mathrm m=3{,}54\ \mathrm{cm}$; $E_{\mathrm{max}}=\frac{2(8{,}988\times10^9)(8{,}0\times10^{-9})}{3\sqrt3(0{,}050)^2}=1{,}11\times10^4\ \mathrm{N/C}$.
+
+\prob{Problema 5 · Campo axial de un disco cargado}
+\textbf{Enunciado.} Un disco de radio $R=0{,}25\ \mathrm m$ tiene densidad superficial $\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}$. Halle $E_z$ en el eje a $z=0{,}30\ \mathrm m$.
+
+\camino{Camino A — apilado de anillos (sustitución $u$).} El disco se construye con anillos de radio $r$ y grosor $dr$, de carga $dq=\sigma(2\pi r)\,dr$. Cada anillo aporta
+\[ dE_z=\frac{k\,(dq)\,z}{(z^2+r^2)^{3/2}}=\frac{k\sigma 2\pi z\,r\,dr}{(z^2+r^2)^{3/2}}. \]
+Con $u=z^2+r^2$, $du=2r\,dr$:
+\[ E_z=k\sigma 2\pi z\int_0^R\frac{r\,dr}{(z^2+r^2)^{3/2}}=k\sigma 2\pi z\left[\frac1z-\frac1{\sqrt{z^2+R^2}}\right]=\frac{\sigma}{2\varepsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]. \]
+
+\camino{Camino B — derivación por potencial.} Con $V(z)=\frac{\sigma}{2\varepsilon_0}\left(\sqrt{z^2+R^2}-z\right)$:
+\[ \frac{dV}{dz}=\frac{\sigma}{2\varepsilon_0}\left(\frac{z}{\sqrt{z^2+R^2}}-1\right)\ \Rightarrow\ E_z=-\frac{dV}{dz}=\frac{\sigma}{2\varepsilon_0}\left(1-\frac{z}{\sqrt{z^2+R^2}}\right). \]
+\textbf{Resultado.} $\frac{\sigma}{2\varepsilon_0}=\frac{6{,}0\times10^{-6}}{2(8{,}854\times10^{-12})}=3{,}39\times10^5$; con $\frac{z}{\sqrt{z^2+R^2}}=\frac{0{,}30}{\sqrt{0{,}30^2+0{,}25^2}}=0{,}768$:
+\[ E_z=(3{,}39\times10^5)(1-0{,}768)=7{,}85\times10^4\ \mathrm{N/C}. \]
+
+\prob{Problema 6 · Límites del disco: carga puntual y plano infinito}
+\textbf{Enunciado.} Para el disco de $\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}$ y $R=0{,}25\ \mathrm m$, verifique el límite puntual ($z\gg R$) y el de plano infinito ($R\to\infty$).
+
+\textbf{Carga total.} $Q=\sigma\pi R^2=(6{,}0\times10^{-6})\pi(0{,}25)^2=1{,}18\times10^{-6}\ \mathrm C$.
+
+\camino{Camino A — expansión asintótica.} Para $z\gg R$: $\sqrt{z^2+R^2}\approx z+\tfrac{R^2}{2z}$, de modo que $1-\frac{z}{\sqrt{z^2+R^2}}\approx\frac{R^2}{2z^2}$ y $E_z\approx\frac{\sigma R^2}{4\varepsilon_0 z^2}=\frac{kQ}{z^2}$. Para $R\to\infty$: $\frac{z}{\sqrt{z^2+R^2}}\to 0$ y $E_z\to\frac{\sigma}{2\varepsilon_0}$.
+
+\camino{Camino B — verificación numérica.} Puntual en $z=1{,}0\ \mathrm m$: $kQ/z^2=(8{,}988\times10^9)(1{,}18\times10^{-6})=1{,}06\times10^4\ \mathrm{N/C}$. Plano: $\sigma/(2\varepsilon_0)=3{,}39\times10^5\ \mathrm{N/C}$. A $z=0{,}30\ \mathrm m$ el disco finito da $7{,}85\times10^4\ \mathrm{N/C}$: usar el plano infinito ahí sería un error de más de un factor 4.
+
+\prob{Problema 7 · El plano infinito uniforme}
+\textbf{Enunciado.} Una lámina plana infinita tiene $\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}$. Halle el campo a ambos lados y muestre que no depende de la distancia.
+
+\camino{Camino A — límite del disco.} $E=\displaystyle\lim_{R\to\infty}\frac{\sigma}{2\varepsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]=\frac{\sigma}{2\varepsilon_0}$.
+
+\camino{Camino B — superposición de anillos.} Al agrandar el disco, cada anillo adicional aporta menos; la suma converge a $\sigma/(2\varepsilon_0)$ y las líneas de campo quedan perpendiculares a la lámina, paralelas entre sí: el módulo es el mismo a cualquier $z$.
+\textbf{Resultado.} $E=\frac{6{,}0\times10^{-6}}{2(8{,}854\times10^{-12})}=3{,}39\times10^5\ \mathrm{N/C}$, independiente de $z$.
+
+\prob{Problema 8 · Síntesis: el método del potencial $E=-dV/dz$}
+\textbf{Enunciado.} Verifique que derivar el potencial reproduce los campos axiales del anillo y del disco, y explique por qué el disco es una pila de anillos.
+
+\camino{Camino A — derivadas.} Anillo: $V=\frac{kQ}{\sqrt{z^2+R^2}}\Rightarrow E_z=\frac{kQz}{(z^2+R^2)^{3/2}}$. Disco: $V=\frac{\sigma}{2\varepsilon_0}(\sqrt{z^2+R^2}-z)\Rightarrow E_z=\frac{\sigma}{2\varepsilon_0}(1-\frac{z}{\sqrt{z^2+R^2}})$.
+
+\camino{Camino B — superposición de potenciales.} El potencial es escalar: el del disco se obtiene sumando los de anillos de radio $r$; el del plano es el límite $R\to\infty$. Derivar $V$ equivale a la integral vectorial del campo, pero con una sola derivada en lugar de proyectar cada $d\vec E$.
+\textbf{Resultado.} Se reproducen exactamente $3{,}93\times10^3\ \mathrm{N/C}$ (anillo) y $7{,}85\times10^4\ \mathrm{N/C}$ (disco), como en los Problemas 3 y 5.
+
+% ════════════════════════ RETOS ════════════════════════
+\esection{Banco de 14 retos graduados}
+\begin{description}[leftmargin=1.4em,itemsep=1pt]
+  \item[\textbf{B1.}] Densidad lineal de una varilla con $Q=+12\ \mathrm{nC}$ y $L=0{,}60\ \mathrm m$: \textbf{$20\ \mathrm{nC/m}$}.
+  \item[\textbf{B2.}] Densidad superficial de un disco con $Q=+8{,}0\ \mathrm{nC}$ y $R=0{,}050\ \mathrm m$: \textbf{$1{,}02\ \mu\mathrm{C/m^2}$}.
+  \item[\textbf{B3.}] Campo en el centro de un anillo cargado ($z=0$): \textbf{$0\ \mathrm{N/C}$}.
+  \item[\textbf{B4.}] Campo de un plano infinito con $\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}$: \textbf{$3{,}39\times10^5\ \mathrm{N/C}$}.
+  \item[\textbf{M1.}] Densidad lineal de un anillo con $Q=+8{,}0\ \mathrm{nC}$ y $R=0{,}050\ \mathrm m$: \textbf{$25{,}5\ \mathrm{nC/m}$}.
+  \item[\textbf{M2.}] Límite puntual de la varilla del Problema 1 evaluado a $a=3{,}0\ \mathrm m$: \textbf{$12\ \mathrm{N/C}$}.
+  \item[\textbf{M3.}] Límite de varilla infinita ($\lambda=20\ \mathrm{nC/m}$, $a=0{,}40\ \mathrm m$): \textbf{$8{,}99\times10^2\ \mathrm{N/C}$}.
+  \item[\textbf{M4.}] $E_z$ del anillo vía $E=-dV/dz$ ($Q=8{,}0\ \mathrm{nC}$, $R=0{,}050\ \mathrm m$, $z=0{,}12\ \mathrm m$): \textbf{$3{,}93\times10^3\ \mathrm{N/C}$}.
+  \item[\textbf{M5.}] $E_z$ del disco ($\sigma=6{,}0\times10^{-6}$, $R=0{,}25\ \mathrm m$, $z=0{,}30\ \mathrm m$): \textbf{$7{,}85\times10^4\ \mathrm{N/C}$}.
+  \item[\textbf{M6.}] Coordenada del máximo axial del anillo ($R=0{,}050\ \mathrm m$): \textbf{$3{,}54\ \mathrm{cm}$}.
+  \item[\textbf{A1.}] Campo máximo del anillo ($Q=8{,}0\ \mathrm{nC}$, $R=0{,}050\ \mathrm m$): \textbf{$1{,}11\times10^4\ \mathrm{N/C}$}.
+  \item[\textbf{A2.}] Límite puntual del disco a $z=1{,}0\ \mathrm m$ ($Q=1{,}18\times10^{-6}\ \mathrm C$): \textbf{$1{,}06\times10^4\ \mathrm{N/C}$}.
+  \item[\textbf{A3.}] ¿Cuántas veces mayor es el plano infinito ($3{,}39\times10^5$) que el disco finito ($7{,}85\times10^4$) a $z=0{,}30\ \mathrm m$?: \textbf{$\approx 4{,}3$}.
+  \item[\textbf{A4.}] ¿La derivada $E_z=-dV/dz$ con $V_{\mathrm{disco}}=\frac{\sigma}{2\varepsilon_0}(\sqrt{z^2+R^2}-z)$ reproduce $E_z=\frac{\sigma}{2\varepsilon_0}(1-\frac{z}{\sqrt{z^2+R^2}})$? (1 = sí): \textbf{1 (sí)}.
+\end{description}
+
+% ════════════════════════ PYTHON ════════════════════════
+\esection{Validación numérica en Python (2 programas)}
+
+\textbf{Programa 1 — \texttt{campo\_varilla\_anillo.py}.} Integración numérica frente a la fórmula cerrada de la varilla y del anillo.
+{\small\begin{verbatim}
+import sys
+import numpy as np
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+K = 8.988e9; EPS0 = 8.854e-12
+Qv, L, a = 12e-9, 0.60, 0.40
+lam = Qv / L
+E_rod_analytic = K * Qv / (a * np.sqrt(a**2 + (L/2)**2))
+E_rod_point = K * Qv / a**2
+E_rod_inf = 2.0 * K * lam / a
+N = 200000
+xs = np.linspace(-L/2, L/2, N); dx = xs[1] - xs[0]; dq = lam * dx
+Ey_num = np.sum(K * dq * a / (xs**2 + a**2)**1.5)
+
+Qr, R, z = 8e-9, 0.050, 0.12
+E_ring_analytic = K * Qr * z / (z**2 + R**2)**1.5
+zmax = R / np.sqrt(2.0)
+E_ring_max = 2.0 * K * Qr / (3.0 * np.sqrt(3.0) * R**2)
+phi = np.linspace(0, 2*np.pi, 200000, endpoint=False)
+dphi = phi[1] - phi[0]
+Ez_num = np.sum(K * (Qr*dphi/(2*np.pi)) * z / (z**2 + R**2)**1.5)
+print(f"E varilla analitico/numerico = {E_rod_analytic:.1f} / {Ey_num:.1f} N/C")
+print(f"Limites varilla: puntual {E_rod_point:.1f}  infinita {E_rod_inf:.1f} N/C")
+print(f"E_z anillo analitico/numerico = {E_ring_analytic:.1f} / {Ez_num:.1f} N/C")
+print(f"Maximo anillo: z={zmax:.4f} m  E_max={E_ring_max:.1f} N/C")
+\end{verbatim}}
+
+\textbf{Salida real:}
+{\small\begin{verbatim}
+========================================================================
+Distribuciones continuas - constantes Young-Freedman (2009)
+k = 8.9880e+09 N*m^2/C^2     eps0 = 8.8540e-12 C^2/(N*m^2)
+========================================================================
+
+--- Varilla finita: Q=+12 nC, L=0,60 m, a=0,40 m ---
+  E_analitico =     539.3 N/C   (E = kQ/(a*sqrt(a^2+(L/2)^2)))
+  E_numerico  =     539.3 N/C   (integracion numerica de dE_y)
+  Limite puntual (a >> L) :     674.1 N/C   (kQ/a^2)
+  Limite infinito (L >> a):     898.8 N/C   (2*k*lambda/a)
+
+--- Anillo: Q=+8,0 nC, R=0,050 m, z=0,12 m ---
+  E_z analitico =    3927.4 N/C   (kQz/(z^2+R^2)^(3/2))
+  E_z numerico  =    3927.4 N/C   (suma sobre el perimetro)
+  Maximo en z=R/sqrt(2) = 0.0354 m  ->  E_max =   11070.3 N/C
+  E(z=0) = 0 N/C (las componentes opuestas se cancelan por simetria)
+\end{verbatim}}
+
+\textbf{Programa 2 — \texttt{campo\_disco\_plano.py}.} Disco, plano infinito y el Camino B ($E=-dV/dz$).
+{\small\begin{verbatim}
+import sys
+import numpy as np
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+K = 8.988e9; EPS0 = 8.854e-12
+sigma, R, z = 6.0e-6, 0.25, 0.30
+Qd = sigma * np.pi * R**2
+E_disk_analytic = (sigma/(2*EPS0)) * (1 - z/np.sqrt(z**2 + R**2))
+E_plane = sigma / (2*EPS0)
+E_disk_point = K * Qd / 1.0**2
+r = np.linspace(0, R, 5000); dr = r[1] - r[0]
+E_disk_num = np.sum(K*sigma*2*np.pi*r*z/(z**2+r**2)**1.5) * dr
+
+def V_disk(zz): return (sigma/(2*EPS0)) * (np.sqrt(zz**2 + R**2) - zz)
+h = 1e-6
+Ez_pot = -(V_disk(z+h) - V_disk(z-h)) / (2*h)
+print(f"E disco analitico/numerico = {E_disk_analytic:.1f} / {E_disk_num:.1f} N/C")
+print(f"Plano infinito = {E_plane:.1f} N/C   puntual (z=1m) = {E_disk_point:.1f} N/C")
+print(f"Camino B E=-dV/dz del disco = {Ez_pot:.1f} N/C")
+\end{verbatim}}
+
+\textbf{Salida real:}
+{\small\begin{verbatim}
+========================================================================
+Disco y plano infinito - constantes Young-Freedman (2009)
+k = 8.9880e+09 N*m^2/C^2     eps0 = 8.8540e-12 C^2/(N*m^2)
+========================================================================
+
+--- Disco: sigma=6,0e-6 C/m^2, R=0,25 m, z=0,30 m ---
+  Q_disco = sigma*pi*R^2 = 1.1781e-06 C
+  E_z analitico =   78533.6 N/C   ((sigma/2eps0)(1 - z/sqrt(z^2+R^2)))
+  E_z numerico  =   78546.5 N/C   (apilado numerico de anillos)
+  Limite puntual (z >> R, z=1,0 m):   10588.7 N/C   (kQ/z^2)
+  Plano infinito (R -> inf):  338829.9 N/C   (sigma/2eps0)
+
+--- Plano infinito: sigma=6,0e-6 C/m^2 ---
+  E = sigma/(2*eps0) =  338829.9 N/C   (independiente de la distancia z)
+
+--- Camino B: E = -dV/dz (derivada numerica del potencial) ---
+  Anillo: E_z =    3927.4 N/C   (coincide con la integral directa)
+  Disco : E_z =   78533.6 N/C   (coincide con la integral directa)
+\end{verbatim}}
+\noindent\textcolor{e10muted}{\small La integración numérica ($539{,}3$, $3927{,}4$ y $78546{,}5$) coincide con la fórmula cerrada dentro del error de discretización, y $E=-dV/dz$ reproduce exactamente ambos campos axiales.}
+
+% ════════════════════════ SIMULADOR (QR) ════════════════════════
+\esection{Practica en el simulador}
+\noindent
+\begin{minipage}{0.72\linewidth}
+  \textbf{ContinuousDistLab} es el laboratorio interactivo del módulo: mueve el punto de observación sobre la varilla, el anillo y el disco, y observa cómo el campo converge a la carga puntual ($z\gg R$) o al plano infinito ($\sigma/2\varepsilon_0$). Escanea el código con tu teléfono o visita \texttt{simuladores/ContinuousDistLab.html} en el repositorio.
+\end{minipage}\hfill
+\begin{minipage}{0.22\linewidth}
+  \centering
+  \fbox{\includegraphics[height=2.1cm]{qr_continuousdistlab.png}}\\[0.3em]
+  {\footnotesize\textcolor{e10muted}{ContinuousDistLab}}
+\end{minipage}
+
+% ════════════════════════ ENTREGA ════════════════════════
+\esection{Actividad evaluativa autónoma (entrega de clase)}
+\textbf{Problema de aplicación.} Un anillo de radio $R=0{,}10\ \mathrm m$ tiene $Q=+5{,}0\ \mathrm{nC}$. (a) Halle $E_z$ en el eje a $z=0{,}15\ \mathrm m$. (b) Si la misma carga $Q$ se reparte en un disco del mismo radio, halle $\sigma$ y $E_z$ a $z=0{,}15\ \mathrm m$. (c) ¿Qué geometría produce mayor campo en ese punto y por qué?
+
+\textbf{Rúbrica:} campo del anillo (40\,\%), densidad y campo del disco (40\,\%), comparación conceptual por la distribución radial de la carga (20\,\%).
+
+\vspace{0.5em}
+\begin{center}
+  {\small\textcolor{e10muted}{Espejo 1:1 de \texttt{talleres/Taller\_4\_Distribuciones\_de\_Carga\_Continua.html} · Simulador: ContinuousDistLab · © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}}
+\end{center}
+
+\end{document}

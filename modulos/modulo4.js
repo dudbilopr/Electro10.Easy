@@ -67,6 +67,14 @@ export const modulo4 = {
                     "titulo": "3.4 Tablero Comparativo de Distribuciones",
                     "descripcion": "Panel unificado para comparar anillos, discos y cilindros cargados en tiempo real.",
                     "xp": 20
+                },
+                {
+                    "id": "m4-l3-e",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/ContinuousDistLab.html",
+                    "titulo": "3.5 ContinuousDistLab — Laboratorio Unificado",
+                    "descripcion": "Las cuatro geometrías canónicas (varilla, anillo, disco y plano) con validación, telemetría y límites asintóticos.",
+                    "xp": 25
                 }
             ]
         },

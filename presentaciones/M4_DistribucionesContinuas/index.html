@@ -79,12 +79,33 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .tline{position:relative;height:130px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
 .tline-axis{position:absolute;left:40px;right:40px;top:85px;height:3px;background:var(--e10-line)}
 .fcard{flex:1;min-height:140px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 20px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 22px var(--e10-font-display)}
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.stp-nav{display:flex;gap:5px;flex-wrap:wrap}
+.stp-nav button{font:500 12px/1 var(--e10-font-body);min-height:32px;padding:0 9px;border-radius:999px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.stp-nav button b{font:600 12px var(--e10-font-mono)}
+.stp-nav button.seen{border-color:var(--e10-primary);color:var(--e10-primary)}
+.stp-nav button.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.stp-nav button:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.stp-body{flex:1;min-height:0;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 22px;overflow:auto}
+.stp-p{display:none;flex-direction:column;gap:10px;font-size:18px;line-height:1.45}
+.stp-p.on{display:flex;animation:stpIn .25s ease}
+@keyframes stpIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stp-p h3{margin:0;font:600 21px/1.2 var(--e10-font-display);color:var(--e10-primary)}
+.stp-p p{margin:0}
+.stp-p .eq{text-align:center;padding:6px 14px;overflow-x:auto}
+.stp-p .eq .katex-display{margin:.35em 0}
+.stp-foot{display:flex;justify-content:space-between;align-items:center}
+.stp-count{font-size:13px;color:var(--e10-muted)}
+.seg2{display:flex;gap:6px}.seg2 .btn{flex:1;min-height:34px;font-size:13px;padding:0 8px}
+@media (prefers-reduced-motion:reduce){.stp-p.on{animation:none}}
+@page{size:1280px 720px;margin:0}
 @media print{
   html,body{overflow:visible!important;height:auto!important}
   .viewport{position:static!important;display:block!important}
   .stage{width:100%!important;height:auto!important;transform:none!important}
   .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
   .deck-ui,.progress,.no-print{display:none!important}
+  .stp-p{display:none!important}.stp-p[data-print]{display:flex!important;animation:none}
 }
 </style>
 </head>
@@ -200,16 +221,51 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
   <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 1</span></div>
   <h2>Segmento Rectilíneo Finito de Carga Uniforme</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="card" style="font-size:15px;line-height:1.45">
-        <b style="color:var(--e10-primary)">Deducción Rigurosa sobre la Mediatriz ($x=0$ a distancia $y$):</b>
-        <p style="margin:4px 0">Alambre sobre el eje $x$ desde $-L/2$ hasta $+L/2$, con $\lambda = Q/L$. Medimos en $P(0, y)$.</p>
-        <p style="margin:4px 0">Para un elemento $dq = \lambda dx'$ en $x'$: distancia $\mathcal{R} = \sqrt{x'^2 + y^2}$.</p>
-        \[dE = \frac{1}{4\pi\epsilon_0}\frac{\lambda dx'}{x'^2 + y^2}, \quad dE_y = dE \cos\theta = dE \frac{y}{\sqrt{x'^2 + y^2}}\]
-        <p style="margin:4px 0">Por simetría especular respecto al eje $y$, para cada elemento en $+x'$ existe un elemento idéntico en $-x'$ cuya componente horizontal se cancela: $E_x = \int_{-L/2}^{L/2} dE_x = 0$.</p>
-        \[E_y = \frac{2\lambda y}{4\pi\epsilon_0}\int_0^{L/2}\frac{dx'}{(x'^2 + y^2)^{3/2}}\]
-        <p style="margin:4px 0">Sustitución trigonométrica: $x' = y\tan\theta \implies dx' = y\sec^2\theta d\theta$:</p>
-        \[\int \frac{y\sec^2\theta\, d\theta}{(y^2\sec^2\theta)^{3/2}} = \frac{1}{y^2}\int \cos\theta\, d\theta = \frac{\sin\theta}{y^2} = \frac{x'}{y^2\sqrt{x'^2 + y^2}}\]
+    <div class="col" style="flex:1.2;gap:10px">
+      <div class="stp" data-stp>
+        <div class="stp-nav no-print"></div>
+        <div class="stp-body">
+          <div class="stp-p" data-t="dq y densidad">
+            <h3>1 · Elemento diferencial dq y densidad</h3>
+            <p>Se trocea la varilla en elementos de longitud $dx'$. Con densidad lineal uniforme $\lambda = Q/L$, cada diferencial aporta $dq = \lambda\, dx'$.</p>
+            <div class="eq">\[dq=\lambda\,dx',\qquad \lambda=\frac{Q}{L}\]</div>
+          </div>
+          <div class="stp-p" data-t="r y simetría">
+            <h3>2 · Vector de posición y simetría</h3>
+            <p>El elemento fuente vive en $(x',0)$ y el punto de campo en $P(0,y)$: la separación es $r=\sqrt{x'^2+y^2}$. La simetría especular respecto al eje $y$ empareja cada $+x'$ con su gemelo $-x'$.</p>
+            <div class="eq">\[r=\sqrt{x'^2+y^2}\]</div>
+          </div>
+          <div class="stp-p" data-t="dE">
+            <h3>3 · Expresión diferencial dE</h3>
+            <p>Por la ley de Coulomb, el campo del elemento es:</p>
+            <div class="eq">\[dE=k\frac{dq}{r^2}=k\frac{\lambda\,dx'}{x'^2+y^2}\]</div>
+          </div>
+          <div class="stp-p" data-t="Proyección">
+            <h3>4 · Proyección trigonométrica y cancelación</h3>
+            <p>El coseno del ángulo proyecta sobre el eje $y$: $\cos\theta = y/\sqrt{x'^2+y^2}$. Las componentes horizontales de cada par simétrico se cancelan: $E_x=\int dE_x=0$.</p>
+            <div class="eq">\[dE_y = dE\cos\theta = \frac{k\lambda y\,dx'}{(x'^2+y^2)^{3/2}}\]</div>
+          </div>
+          <div class="stp-p" data-t="Dos caminos">
+            <h3>5 · Dos caminos de integración</h3>
+            <p><b>Camino A</b> (sustitución trigonométrica): $x'=y\tan\theta \Rightarrow dx'=y\sec^2\theta\,d\theta$. <b>Camino B</b> (tabla): $\int dx/(x^2+a^2)^{3/2}=x/\big(a^2\sqrt{x^2+a^2}\big)$.</p>
+            <div class="eq">\[E_y = k\lambda y\int_{-L/2}^{L/2}\frac{dx'}{(x'^2+y^2)^{3/2}}\]</div>
+          </div>
+          <div class="stp-p" data-t="Solución" data-print>
+            <h3>6 · Solución analítica y límites asintóticos</h3>
+            <p>Con $Q=\lambda L$: si $y\gg L$ tiende a $kQ/y^2$ (carga puntual); si $L\to\infty$ tiende a $\lambda/(2\pi\varepsilon_0 y)$ (hilo infinito).</p>
+            <div class="eq">\[E_y=\frac{kQ}{y\sqrt{y^2+(L/2)^2}}\]</div>
+          </div>
+          <div class="stp-p" data-t="Reto">
+            <h3>7 · Reto conceptual cuantitativo</h3>
+            <p>Una varilla con $Q=+12\ \mathrm{nC}$ y $L=0{,}60\ \mathrm m$ se observa a $y=0{,}40\ \mathrm m$ de su centro. Calcula $E_y$ y confirma que es <b>menor</b> que el campo de una carga puntual a esa distancia ($674\ \mathrm{N/C}$).</p>
+            <div class="tipbox" style="font-size:15px"><b>Pista:</b> $y^2+(L/2)^2=0{,}40^2+0{,}30^2=0{,}25$, raíz $0{,}50\ \mathrm m$.</div>
+          </div>
+        </div>
+        <div class="stp-foot no-print">
+          <button type="button" class="btn" data-stp-prev>← Paso anterior</button>
+          <span class="mono stp-count"></span>
+          <button type="button" class="btn pri" data-stp-next>Paso siguiente →</button>
+        </div>
       </div>
     </div>
     <div class="col" style="flex:0.8;gap:12px">
@@ -333,7 +389,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
         <div>$dE_x \text{ neta}$<b id="lbl-dex">0.00 N/C</b></div>
       </div>
       <div class="tipbox" style="font-size:13px;line-height:1.4">
-        Arrastra el punto verde $P$ o usa los controles deslizantes para comprobar en tiempo real cómo las componentes horizontales del par simétrico se anulan exactamente ($dE_{1x} + dE_{2x} = 0$).
+        Arrastra el punto verde $P$ o usa los controles deslizantes para comprobar en tiempo real cómo las componentes horizontales del par simétrico se anulan exactamente ($dE_{1x} + dE_{2x} = 0$). Para las cuatro geometrías (varilla, anillo, disco y plano) abre <b>ContinuousDistLab</b>.
       </div>
     </div>
   </div>
@@ -386,15 +442,50 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
   <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 4</b><span class="tag c">Deducción Analítica 4</span></div>
   <h2>Disco Circular Uniformemente Cargado en su Eje Axial</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="card" style="font-size:15px;line-height:1.45">
-        <b style="color:var(--e10-primary)">Estrategia por Anillos Concéntricos:</b>
-        <p style="margin:4px 0">Disco de radio $R$ con densidad superficial uniforme $\sigma = Q/(\pi R^2)$. Descomponemos el disco en infinitos anillos coaxiales concéntricos de radio $r'$ y espesor diferencial $dr'$.</p>
-        <p style="margin:4px 0">Área diferencial: $dA = 2\pi r' dr'$. Carga diferencial del anillo: $dq = \sigma 2\pi r' dr'$.</p>
-        <p style="margin:4px 0">Usando el resultado exacto del anillo axial obtenido en la diapositiva anterior:</p>
-        \[dE_x = \frac{1}{4\pi\epsilon_0}\frac{x\, dq}{(x^2 + r'^2)^{3/2}} = \frac{1}{4\pi\epsilon_0}\frac{x(\sigma 2\pi r' dr')}{(x^2 + r'^2)^{3/2}} = \frac{\sigma x}{4\epsilon_0}\frac{2r' dr'}{(x^2 + r'^2)^{3/2}}\]
-        <p style="margin:4px 0">Cambiando variable $u = x^2 + r'^2 \implies du = 2r' dr'$, con límites $u(0)=x^2$ y $u(R)=x^2+R^2$:</p>
-        \[E_x = \frac{\sigma x}{4\epsilon_0}\int_{x^2}^{x^2+R^2} u^{-3/2} du = \frac{\sigma x}{4\epsilon_0}\left[ -2 u^{-1/2} \right]_{x^2}^{x^2+R^2} = \frac{\sigma x}{2\epsilon_0}\left[ \frac{1}{x} - \frac{1}{\sqrt{x^2+R^2}} \right]\]
+    <div class="col" style="flex:1.2;gap:10px">
+      <div class="stp" data-stp>
+        <div class="stp-nav no-print"></div>
+        <div class="stp-body">
+          <div class="stp-p" data-t="dq y densidad">
+            <h3>1 · Elemento diferencial dq y densidad</h3>
+            <p>Disco de radio $R$ con densidad superficial $\sigma=Q/(\pi R^2)$. Se parte en anillos concéntricos de radio $r'$ y grosor $dr'$: $dq=\sigma\,dA=\sigma\,2\pi r'\,dr'$.</p>
+            <div class="eq">\[dq=\sigma\,2\pi r'\,dr'\]</div>
+          </div>
+          <div class="stp-p" data-t="r y simetría">
+            <h3>2 · Vector de posición y simetría</h3>
+            <p>El punto $P$ está sobre el eje a distancia $z$; cada anillo dista $r=\sqrt{z^2+r'^2}$. La simetría azimutal cancela toda componente perpendicular al eje.</p>
+            <div class="eq">\[r=\sqrt{z^2+r'^2}\]</div>
+          </div>
+          <div class="stp-p" data-t="dE">
+            <h3>3 · Expresión diferencial dE</h3>
+            <p>Se reutiliza el campo del anillo sobre su eje (diapositiva 7) para cada anillo diferencial:</p>
+            <div class="eq">\[dE_z=k\frac{z\,dq}{(z^2+r'^2)^{3/2}}=k\frac{z\,\sigma\,2\pi r'\,dr'}{(z^2+r'^2)^{3/2}}\]</div>
+          </div>
+          <div class="stp-p" data-t="Proyección">
+            <h3>4 · Proyección y cancelación</h3>
+            <p>El factor $\cos\theta=z/\sqrt{z^2+r'^2}$ ya proyecta sobre el eje. Los pares diametrales cancelan $dE_\perp$; solo sobrevive $E_z$.</p>
+            <div class="eq">\[E_z=\frac{\sigma z}{2\varepsilon_0}\int_0^R\frac{2r'\,dr'}{(z^2+r'^2)^{3/2}}\]</div>
+          </div>
+          <div class="stp-p" data-t="Dos caminos">
+            <h3>5 · Dos caminos de integración</h3>
+            <p><b>Camino A</b> (directa): $u=z^2+r'^2\Rightarrow du=2r'\,dr'$. <b>Camino B</b> (potencial): $V(z)=\dfrac{\sigma}{2\varepsilon_0}\big(\sqrt{z^2+R^2}-z\big)$ y luego $E_z=-\dfrac{dV}{dz}$.</p>
+          </div>
+          <div class="stp-p" data-t="Solución" data-print>
+            <h3>6 · Solución analítica y límites asintóticos</h3>
+            <p>Si $z\gg R$ tiende a $kQ/z^2$ (carga puntual); si $R\to\infty$ tiende a $\sigma/(2\varepsilon_0)$ (plano infinito).</p>
+            <div class="eq">\[E_z=\frac{\sigma}{2\varepsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]\]</div>
+          </div>
+          <div class="stp-p" data-t="Reto">
+            <h3>7 · Reto conceptual cuantitativo</h3>
+            <p>Un disco de $\sigma=6{,}0\times10^{-6}\ \mathrm{C/m^2}$ y $R=0{,}25\ \mathrm m$ se observa a $z=0{,}30\ \mathrm m$. Calcula $E_z$ y compáralo con el plano infinito ($3{,}39\times10^{5}\ \mathrm{N/C}$).</p>
+            <div class="tipbox" style="font-size:15px"><b>Pista:</b> $z/\sqrt{z^2+R^2}=0{,}30/0{,}3905\approx0{,}768$; la respuesta ronda $7{,}85\times10^{4}\ \mathrm{N/C}$.</div>
+          </div>
+        </div>
+        <div class="stp-foot no-print">
+          <button type="button" class="btn" data-stp-prev>← Paso anterior</button>
+          <span class="mono stp-count"></span>
+          <button type="button" class="btn pri" data-stp-next>Paso siguiente →</button>
+        </div>
       </div>
     </div>
     <div class="col" style="flex:0.8;gap:12px">
@@ -679,6 +770,7 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
     </div>
     <div class="col" style="flex:0.8;gap:12px;justify-content:center">
       <a href="../../talleres/Taller_4_Distribuciones_de_Carga_Continua.html" class="btn pri" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:54px;font-size:17px">Abrir Taller Práctico No. 4 →</a>
+      <a href="../../simuladores/ContinuousDistLab.html" target="_blank" rel="noopener" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Abrir ContinuousDistLab →</a>
       <button class="btn" id="btn-print-deck" style="height:48px;font-size:16px">Exportar Diapositivas a PDF</button>
       <a href="../M5_Gauss/index.html" class="btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;height:44px;font-size:15px">Continuar al Módulo 5 (Gauss) →</a>
     </div>
@@ -1032,6 +1124,34 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// DEDUCCIÓN EN 7 PASOS (componente .stp): chips 1–7 autogenerados y navegables.
+document.querySelectorAll('[data-stp]').forEach((box) => {
+  const ps = [...box.querySelectorAll('.stp-p')], nav = box.querySelector('.stp-nav'), cnt = box.querySelector('.stp-count');
+  let k = 0;
+  ps.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<b>${i + 1}</b>${p.dataset.t}`;
+    b.addEventListener('click', () => show(i));
+    nav.appendChild(b);
+  });
+  const bs = [...nav.children];
+  function show(i) {
+    k = Math.max(0, Math.min(ps.length - 1, i));
+    ps.forEach((p, j) => p.classList.toggle('on', j === k));
+    bs.forEach((b, j) => { b.classList.toggle('on', j === k); if (j === k) b.classList.add('seen'); });
+    cnt.textContent = `paso ${k + 1} de ${ps.length}`;
+    box.querySelector('[data-stp-prev]').disabled = k === 0;
+    box.querySelector('[data-stp-next]').disabled = k === ps.length - 1;
+  }
+  box.querySelector('[data-stp-prev]').addEventListener('click', () => show(k - 1));
+  box.querySelector('[data-stp-next]').addEventListener('click', () => show(k + 1));
+  show(0);
+});
+
+// Objeto global de diagnóstico del capítulo (lo valida scripts/prueba_cap4.cjs).
+window.__c4 = { go: showSlide, totalSlides, k: kConst, lab: '../../simuladores/ContinuousDistLab.html' };
 </script>
 </body>
 </html>

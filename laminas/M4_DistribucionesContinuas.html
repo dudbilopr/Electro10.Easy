@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Póster · Distribuciones continuas de carga — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Póster del capítulo 4 (A3 horizontal). Idea rectora: la carga continua es un «fluido» que se trocea en dq
+   y se reintegra como ∫ dE. Línea de ensamblaje del campo: dq → dE → E. Carga en magenta, campo en cian.
+   Colores solo desde css/tokens.css. Visual diferenciado del capítulo 3. */
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--e10-surface-2);color:var(--e10-ink);font:400 15px/1.45 var(--e10-font-body)}
+.bar{position:sticky;top:0;z-index:5;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line)}
+.btn{font:600 14px/1 var(--e10-font-body);min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn.on{background:var(--e10-accent-soft);border-color:var(--e10-accent-strong);color:var(--e10-accent-strong)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.fit{width:100%;overflow:hidden;padding:16px 0}
+.poster{width:1600px;height:1131px;margin:0 auto;background:
+  radial-gradient(900px 500px at 8% -4%, var(--e10-primary-soft), transparent 60%),
+  radial-gradient(900px 560px at 100% 108%, var(--e10-accent-soft), transparent 60%),
+  var(--e10-bg);
+  position:relative;transform-origin:top left;display:grid;grid-template-columns:330px 1fr 412px;grid-template-rows:122px 1fr 196px;gap:14px;padding:26px 30px 22px;box-shadow:var(--e10-shadow)}
+/* franja superior de «arco de plasma» (marca) */
+.poster::before{content:'';position:absolute;left:0;top:0;right:0;height:7px;background:linear-gradient(90deg,var(--e10-primary) 0%,var(--e10-accent) 55%,var(--e10-accent-strong) 100%)}
+.poster::after{content:'';position:absolute;left:0;top:7px;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--e10-accent),transparent);opacity:.7}
+.head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--e10-line);padding:6px 0 12px}
+.eyebrow{font:500 13px var(--e10-font-mono);letter-spacing:.12em;color:var(--e10-muted)}
+h1{font:800 58px/0.98 var(--e10-font-display);margin:6px 0 0;letter-spacing:-.02em}
+h1 span{color:var(--e10-primary)}
+h1 em{font-style:normal;color:var(--e10-accent-strong)}
+.tagline{font:500 20px/1.3 var(--e10-font-display);color:var(--e10-muted);max-width:560px;text-align:right}
+.tagline b{color:var(--e10-accent-strong)}
+.tagline i{color:var(--e10-primary);font-style:normal}
+.col{display:flex;flex-direction:column;gap:12px;min-height:0}
+.panel{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:12px;padding:11px 15px;position:relative;min-height:0}
+.panel::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--e10-accent)}
+.panel.mg::before{background:var(--e10-primary)}
+.panel h2{font:700 17px var(--e10-font-display);margin:0 0 6px;display:flex;gap:8px;align-items:baseline}
+.panel h2 i{font:600 12.5px var(--e10-font-mono);font-style:normal;color:var(--e10-primary);background:var(--e10-primary-soft);border-radius:6px;padding:1px 6px}
+.panel h2 .a{color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.panel p{margin:4px 0}
+.small{font-size:13px;color:var(--e10-muted)}
+.hero{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:16px;padding:12px 18px;display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden}
+.formula{display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap}
+.formula .katex{font-size:1.9em}
+.formula .sep{width:44px;height:2px;background:var(--e10-line);position:relative}
+.formula .sep::after{content:'';position:absolute;right:-2px;top:-3px;width:0;height:0;border-left:7px solid var(--e10-accent);border-top:4px solid transparent;border-bottom:4px solid transparent}
+/* línea de ensamblaje (pasos verticales) */
+.recipe{display:flex;flex-direction:column;gap:0;position:relative;padding-left:8px}
+.recipe .rail{position:absolute;left:30px;top:18px;bottom:18px;width:2px;background:var(--e10-line)}
+.recipe .rail .flow{position:absolute;left:0;top:0;width:2px;height:100%;background:linear-gradient(var(--e10-primary),var(--e10-accent));stroke:none;animation:none}
+.step{position:relative;display:flex;gap:12px;padding:7px 0;align-items:flex-start}
+.step .num{flex:0 0 34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font:700 15px var(--e10-font-mono);background:var(--e10-primary);color:var(--e10-on-primary);box-shadow:var(--e10-shadow);z-index:1}
+.step:nth-child(2) .num{background:var(--e10-accent-strong)}
+.step .txt{flex:1;min-width:0}
+.step .txt b{font:600 14.5px var(--e10-font-display)}
+.step .txt .katex{font-size:1.05em}
+.step .txt p{font-size:12.5px;color:var(--e10-muted);margin:1px 0 0}
+/* flujo de fotones (animación CSS) */
+.ph{fill:none;stroke-linecap:round;animation:e10flux 1.25s linear infinite}
+.phc{stroke:var(--e10-accent);stroke-width:3;stroke-dasharray:3 19;filter:drop-shadow(0 0 3px rgba(11,140,168,.55))}
+.phm{stroke:var(--e10-primary);stroke-width:3.5;stroke-dasharray:2 20;filter:drop-shadow(0 0 3px rgba(179,36,107,.45))}
+@keyframes e10flux{to{stroke-dashoffset:-22}}
+@media (prefers-reduced-motion:reduce){.ph{animation:none}}
+/* menú de densidades */
+.dens{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dens div{border:1px solid var(--e10-line);border-radius:10px;padding:7px 8px;text-align:center;font-size:12px}
+.dens div b{display:block;font:700 14px var(--e10-font-display);color:var(--e10-primary)}
+.dens div:nth-child(2) b{color:var(--e10-accent-strong)}
+.dens div .katex{font-size:1.02em}
+.dens svg{width:100%;height:40px}
+/* árbol de límites */
+.lim{display:flex;flex-direction:column;gap:7px;font-size:12.5px}
+.lim .row{display:flex;align-items:center;gap:8px}
+.lim .arrow{font:700 15px var(--e10-font-mono);color:var(--e10-accent-strong)}
+.lim .arrow.m{color:var(--e10-primary)}
+.lim .katex{font-size:1.02em}
+/* selector de geometría */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font:600 13.5px var(--e10-font-body);min-height:32px;padding:0 13px;border-radius:9px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.tab.on{background:var(--e10-accent-soft);border-color:var(--e10-accent-strong);color:var(--e10-accent-strong)}
+#geo{flex:1;min-height:0}
+.geo-note{font-size:12.5px;color:var(--e10-muted)}
+.ctrl{display:flex;align-items:center;gap:10px;font:500 13px var(--e10-font-mono);flex-wrap:wrap}
+.ctrl input[type=range]{flex:1;min-width:120px;accent-color:var(--e10-primary)}
+.readout{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.readout .big{font:700 22px var(--e10-font-mono);color:var(--e10-accent-strong)}
+.readout .unit{font:600 13px var(--e10-font-mono);color:var(--e10-muted)}
+.formula-box{background:var(--e10-primary-soft);border:1px solid var(--e10-line);border-radius:10px;padding:7px 12px;overflow-x:auto}
+.formula-box .katex{font-size:1.15em}
+.formula-box .katex-display{margin:2px 0}
+/* geometrías compactas (columna derecha) */
+.geos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.geos div{border:1px solid var(--e10-line);border-radius:10px;padding:7px 9px;font-size:12px}
+.geos div b{font:700 13px var(--e10-font-display);color:var(--e10-primary);display:block;margin-bottom:2px}
+.geos div:nth-child(even) b{color:var(--e10-accent-strong)}
+.geos .katex{font-size:0.96em}
+/* errores */
+.err{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.err div{background:var(--e10-warning-soft);border-radius:10px;padding:7px 10px;font-size:12.5px}
+.err div b{color:var(--e10-warning);display:block;font-size:12.5px}
+.err div span{color:var(--e10-success)}
+/* escala de campos */
+.scale{display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.scale .row{display:flex;align-items:center;gap:8px}
+.scale .lbl{width:150px;color:var(--e10-muted);font-size:11.5px}
+.scale .b{height:13px;border-radius:7px;background:linear-gradient(90deg,var(--e10-primary),var(--e10-accent))}
+.scale .v{font:600 12px var(--e10-font-mono)}
+/* timeline de 7 pasos */
+.tl{position:relative;height:82px}
+.tl::before{content:'';position:absolute;left:10px;right:10px;top:19px;height:3px;background:var(--e10-line)}
+.ev{position:absolute;top:0;width:110px;transform:translateX(-50%);text-align:center;font-size:10.5px;line-height:1.22;color:var(--e10-muted)}
+.ev b{display:block;font:700 13px var(--e10-font-mono);color:var(--e10-accent-strong);margin-bottom:18px}
+.ev:nth-child(odd) b{color:var(--e10-primary)}
+.ev::after{content:'';position:absolute;left:50%;top:13px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--e10-accent);border:3px solid var(--e10-surface)}
+.ev:nth-child(odd)::after{background:var(--e10-primary)}
+.foot{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:14px;min-height:0}
+svg text{font-family:var(--e10-font-body)}
+@media print{
+  @page{size:A3 landscape;margin:0}
+  .bar{display:none}.fit{padding:0}html,body{background:#fff}
+  .poster{transform:none!important;box-shadow:none;width:420mm;height:297mm;zoom:.99}
+  .ph{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="bar"><a class="btn" href="index.html?cap=4">Otras láminas</a><a class="btn" href="../presentaciones/M4_DistribucionesContinuas/index.html" target="_blank" rel="noopener">Clase del capítulo 4</a><a class="btn" href="../simuladores/ContinuousDistLab.html" target="_blank" rel="noopener">ContinuousDistLab</a><button type="button" class="btn pri" id="btn-print">Imprimir en A3 / PDF</button></div>
+<div class="fit" id="fit"><article class="poster" id="poster" aria-label="Póster de las distribuciones continuas de carga">
+
+  <header class="head">
+    <div><span class="eyebrow">ELECTRO10.EASY · CAPÍTULO 4 · ELECTROSTÁTICA</span><h1>Distribuciones continuas <span>de carga</span> <em>· dq → E</em></h1></div>
+    <p class="tagline">¿Cómo sumas el campo de un anillo, un disco o una varilla con billones de electrones?<br><b>Trocea la carga en <i>dq</i>, aporta cada <i>dE = k·dq/r²</i> y deja que la simetría cancele lo que no suma.</b></p>
+  </header>
+
+  <section class="col">
+    <div class="panel mg">
+      <h2><i>01</i>La línea de ensamblaje del campo</h2>
+      <div class="recipe">
+        <div class="rail"></div>
+        <div class="step"><div class="num">1</div><div class="txt"><b>Trocear</b><p>Divide la carga en elementos \(dq\) con una densidad: \(\lambda\,d\ell\), \(\sigma\,dA\), \(\rho\,dV\).</p></div></div>
+        <div class="step"><div class="num">2</div><div class="txt"><b>Aportar</b><p>Cada \(dq\) produce \(d\vec E = k\,\frac{dq}{r^2}\,\hat r\).</p></div></div>
+        <div class="step"><div class="num">3</div><div class="txt"><b>Sumar (integrar)</b><p>\(\vec E = \int k\,\frac{dq}{r^2}\,\hat r\); la simetría cancela componentes transversales.</p></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><i class="a">02</i>El menú de densidades</h2>
+      <div class="dens">
+        <div><b>Lineal</b>\(\lambda = Q/L\)<svg viewBox="0 0 80 40"><line x1="40" y1="6" x2="40" y2="34" stroke="var(--e10-primary)" stroke-width="5" stroke-linecap="round"/><line x1="20" y1="6" x2="20" y2="10" stroke="var(--e10-primary)" stroke-width="2"/><line x1="20" y1="30" x2="20" y2="34" stroke="var(--e10-primary)" stroke-width="2"/></svg></div>
+        <div><b>Superficial</b>\(\sigma = Q/A\)<svg viewBox="0 0 80 40"><rect x="22" y="12" width="36" height="20" fill="var(--e10-accent-soft)" stroke="var(--e10-accent-strong)" stroke-width="2"/></svg></div>
+        <div><b>Volumétrica</b>\(\rho = Q/V\)<svg viewBox="0 0 80 40"><rect x="20" y="16" width="32" height="18" fill="var(--e10-accent-soft)" stroke="var(--e10-accent-strong)" stroke-width="2"/><path d="M20 16 L12 8 H44 L52 16 M52 16 V34 H44 L36 26 H12 L20 34" fill="none" stroke="var(--e10-accent-strong)" stroke-width="1.5"/></svg></div>
+      </div>
+      <p class="small">De 1D a 3D: la misma idea — cargar, trocear, integrar.</p>
+    </div>
+    <div class="panel">
+      <h2><i class="a">03</i>La simetría que ahorra trabajo</h2>
+      <svg viewBox="0 0 300 110" width="100%" style="max-height:104px" role="img" aria-label="Dos elementos dq opuestos aportan componentes transversales que se cancelan y axiales que se suman">
+        <circle cx="60" cy="55" r="7" fill="var(--e10-q-pos)"/><text x="60" y="32" font-size="11" fill="var(--e10-muted)" text-anchor="middle">+dq</text>
+        <circle cx="60" cy="55" r="0" fill="none"/>
+        <line x1="67" y1="55" x2="196" y2="55" stroke="var(--e10-accent)" stroke-width="2.5" marker-end="url(#aC)"/>
+        <line x1="60" y1="63" x2="172" y2="55" stroke="var(--e10-accent)" stroke-width="1.5" marker-end="url(#aC)" opacity=".55"/>
+        <line x1="60" y1="47" x2="172" y2="55" stroke="var(--e10-accent)" stroke-width="1.5" marker-end="url(#aC)" opacity=".55"/>
+        <text x="120" y="20" font-size="10.5" fill="var(--e10-muted)">dE⊥ (cancelan)</text>
+        <text x="150" y="80" font-size="10.5" fill="var(--e10-accent-strong)">dE∥ (suman)</text>
+        <line x1="196" y1="55" x2="268" y2="55" stroke="var(--e10-accent-strong)" stroke-width="3.5" marker-end="url(#aC)"/>
+        <text x="232" y="42" font-size="11" fill="var(--e10-accent-strong)" font-weight="700">E neto</text>
+      </svg>
+      <p class="small">Busca primero el par de \(dq\) opuestos: si sus componentes transversales se anulan, esa integral muere sola.</p>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="formula">
+      <span>\( d\vec E = k\,\dfrac{dq}{r^2}\,\hat r \)</span>
+      <span class="sep"></span>
+      <span>\( \vec E = \int k\,\dfrac{dq}{r^2}\,\hat r \)</span>
+    </div>
+    <div class="tabs" id="tabs">
+      <button type="button" class="tab on" data-g="varilla">Varilla</button>
+      <button type="button" class="tab" data-g="anillo">Anillo</button>
+      <button type="button" class="tab" data-g="disco">Disco</button>
+      <button type="button" class="tab" data-g="plano">Plano</button>
+    </div>
+    <svg id="geo" viewBox="0 0 760 430" width="100%" role="img" aria-label="Geometría continua animada con flujo de fotones"></svg>
+    <div class="formula-box" id="geo-formula"></div>
+    <div class="ctrl"><span id="geo-param-label">Distancia a (mediatriz)</span><input type="range" id="geo-slider"><span class="small" id="geo-param-val"></span></div>
+    <div class="readout"><span class="big" id="geo-e"></span><span class="unit">N/C</span><span class="small" id="geo-note"></span></div>
+    <p class="geo-note" id="geo-fixed"></p>
+  </section>
+
+  <section class="col">
+    <div class="panel">
+      <h2><i>04</i>Los límites cuentan</h2>
+      <div class="lim">
+        <div class="row"><span class="arrow">→</span><span>Varilla, \(L\to\infty\): <b>\(E = \lambda/2\pi\varepsilon_0 a = 2k\lambda/a\)</b></span></div>
+        <div class="row"><span class="arrow">→</span><span>Anillo \(\xrightarrow{\ \text{apilar}\ }\) disco \(\xrightarrow{R\to\infty}\) <b>plano: \(E=\sigma/2\varepsilon_0\)</b></span></div>
+        <div class="row"><span class="arrow m">→</span><span>Todos, \(z\gg R\): <b>carga puntual \(E=kQ/z^2\)</b></span></div>
+      </div>
+      <p class="small">El disco es un anillo «apilado» de radios \(0\to R\); el plano es el disco con \(R\to\infty\).</p>
+    </div>
+    <div class="panel">
+      <h2><i class="a">05</i>Las cuatro geometrías</h2>
+      <div class="geos">
+        <div><b>Varilla</b>\(E=\dfrac{kQ}{a\sqrt{a^2+(L/2)^2}}\)</div>
+        <div><b>Anillo</b>\(E_z=\dfrac{kQz}{(z^2+R^2)^{3/2}}\)</div>
+        <div><b>Disco</b>\(E_z=\dfrac{\sigma}{2\varepsilon_0}\!\left[1-\dfrac{z}{\sqrt{z^2+R^2}}\right]\)</div>
+        <div><b>Plano</b>\(E=\dfrac{\sigma}{2\varepsilon_0}\) (cte)</div>
+      </div>
+      <p class="small">Anillo: \(E(0)=0\), máximo en \(z=R/\sqrt2\). Plano: no depende de \(z\).</p>
+    </div>
+    <div class="panel">
+      <h2><i class="a">06</i>Camino B: por potencial</h2>
+      <p class="small">\(V_{\text{anillo}}=\dfrac{kQ}{\sqrt{z^2+R^2}},\; V_{\text{disco}}=\dfrac{\sigma}{2\varepsilon_0}\left(\sqrt{z^2+R^2}-z\right)\).</p>
+      <p class="small">Derivar es más corto que integrar: \(E_z = -dV/dz\).</p>
+      <p class="small">\(k=8{,}988\times10^9\ \mathrm{N\,m^2/C^2},\ \varepsilon_0=8{,}854\times10^{-12}\ \mathrm{C^2/(N\,m^2)}\).</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="panel">
+      <h2><i>07</i>La deducción en 7 pasos</h2>
+      <div class="tl">
+        <div class="ev" style="left:6%"><b>1</b>Trocear \(dq\)</div>
+        <div class="ev" style="left:21%"><b>2</b>Vector \(r\), simetría</div>
+        <div class="ev" style="left:36%"><b>3</b>\(dE\) (o \(dV\))</div>
+        <div class="ev" style="left:51%"><b>4</b>Proyección \(\cos\theta\)</div>
+        <div class="ev" style="left:66%"><b>5</b>Camino A o B</div>
+        <div class="ev" style="left:81%"><b>6</b>Límites \(z\!\gg\!R\), \(R\!\to\!\infty\)</div>
+        <div class="ev" style="left:95%"><b>7</b>Retos cuantitativos</div>
+      </div>
+      <p class="small">Fuente: Young y Freedman (2009), sección 21.5; ejemplos 21.9–21.12.</p>
+    </div>
+    <div class="panel">
+      <h2><i class="a">08</i>Cinco errores que cuestan</h2>
+      <div class="err">
+        <div><b>Plano para un disco</b><span>\(E=\sigma/2\varepsilon_0\) solo si \(R\to\infty\).</span></div>
+        <div><b>Varilla infinita</b><span>\(2k\lambda/a\) solo si \(L\to\infty\).</span></div>
+        <div><b>Olvidar \(\cos\theta\)</b><span>Solo sobrevive la componente axial.</span></div>
+        <div><b>No ver la cancelación</b><span>Las transversales se anulan por pares.</span></div>
+        <div><b>cm en vez de m</b><span>Convierte antes de integrar.</span></div>
+        <div><b>No comprobar \(z\gg R\)</b><span>Debería tender a \(kQ/z^2\).</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><i class="a">09</i>¿Cuánto campo es eso?</h2>
+      <div class="scale" id="scale"></div>
+      <p class="small" style="margin-top:6px">Valores de los ejemplos del capítulo 4. © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+    </div>
+  </footer>
+</article></div>
+
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><marker id="aC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs></svg>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const k = 8.988e9, eps0 = 8.854e-12;
+
+  function sup(n) { return '<sup>' + n + '</sup>'; }
+  function fmtE(v) {
+    if (!isFinite(v)) return '∞';
+    if (v === 0) return '0';
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const e = Math.floor(Math.log10(a));
+    if (e >= 0 && e <= 2) return s + Math.round(a).toLocaleString('es-ES');
+    const m = a / Math.pow(10, e);
+    return s + m.toFixed(2).replace('.', ',') + '×10' + sup(e);
+  }
+  function fmtNum(x, dec) { return x.toFixed(dec).replace('.', ','); }
+
+  const GEO = {
+    varilla: {
+      name: 'Varilla', param: 'Distancia a (mediatriz)',
+      slider: { min: 0.10, max: 2.00, step: 0.05, val: 0.40, unit: 'm' },
+      fixed: 'Q = +12 nC · L = 0,60 m · λ = Q/L',
+      formula: 'E = \\dfrac{kQ}{a\\sqrt{a^{2}+(L/2)^{2}}}',
+      compute(a) { const Q = 12e-9, L = 0.60; const E = k*Q/(a*Math.sqrt(a*a + (L/2)*(L/2))); const Ep = k*Q/(a*a); return { E, note: 'Puntual daría ' + fmtE(Ep) + ' N/C.' }; },
+      svg(a) {
+        const x0 = 200, Px = 200 + (90 + (a - 0.1) / 1.9 * 250), mid = 230, P = Px;
+        const top = 96, bot = 364, dq1 = 126, dq2 = 334;
+        return `<line x1="${x0}" y1="${top}" x2="${x0}" y2="${bot}" stroke="var(--e10-primary)" stroke-width="8" stroke-linecap="round"/>
+        <g font-size="12" fill="var(--e10-muted)"><text x="${x0-12}" y="${top-8}">+</text><text x="${x0-12}" y="${mid+4}">+</text><text x="${x0-12}" y="${bot+14}">+</text></g>
+        <text x="${x0-6}" y="${dq1-6}" font-size="12" fill="var(--e10-primary)">dq</text>
+        <circle cx="${x0}" cy="${dq1}" r="6" fill="var(--e10-q-pos)"/><circle cx="${x0}" cy="${dq2}" r="6" fill="var(--e10-q-pos)"/>
+        <line x1="${x0}" y1="${dq1}" x2="${P}" y2="${mid}" stroke="var(--e10-accent)" stroke-width="1.6" marker-end="url(#aC)" opacity=".75"/>
+        <line x1="${x0}" y1="${dq2}" x2="${P}" y2="${mid}" stroke="var(--e10-accent)" stroke-width="1.6" marker-end="url(#aC)" opacity=".75"/>
+        <line x1="${x0}" y1="${dq1}" x2="${P}" y2="${mid}" class="ph phc"/>
+        <line x1="${x0}" y1="${dq2}" x2="${P}" y2="${mid}" class="ph phc" style="animation-delay:-.6s"/>
+        <line x1="${P}" y1="${mid}" x2="${P}" y2="${mid-34}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="${P}" y1="${mid}" x2="${P}" y2="${mid+34}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="${P+6}" y="${mid-40}" font-size="11" fill="var(--e10-muted)">se cancelan</text>
+        <line x1="${P}" y1="${mid}" x2="${P+66}" y2="${mid}" stroke="var(--e10-accent-strong)" stroke-width="4" marker-end="url(#aC)"/>
+        <line x1="${P}" y1="${mid}" x2="${P+66}" y2="${mid}" class="ph phm"/>
+        <text x="${P+8}" y="${mid-8}" font-size="12" fill="var(--e10-accent-strong)" font-weight="700">E ⊥ varilla</text>
+        <line x1="${x0}" y1="${mid}" x2="${P}" y2="${mid}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="${(x0+P)/2-4}" y="${mid+16}" font-size="11" fill="var(--e10-muted)">a</text>
+        <text x="${x0+6}" y="${mid-8}" font-size="11" fill="var(--e10-muted)">L</text>
+        <circle cx="${P}" cy="${mid}" r="4" fill="var(--e10-ink)"/><text x="${P-14}" y="${mid+22}" font-size="11" fill="var(--e10-ink)">P</text>`;
+      }
+    },
+    anillo: {
+      name: 'Anillo', param: 'Posición z en el eje',
+      slider: { min: 0.01, max: 0.40, step: 0.01, val: 0.12, unit: 'm' },
+      fixed: 'Q = +8,0 nC · R = 0,050 m · λ = Q/(2πR)',
+      formula: 'E_z = \\dfrac{kQ\\,z}{(z^{2}+R^{2})^{3/2}}',
+      compute(z) { const Q = 8e-9, R = 0.050; const E = k*Q*z/Math.pow(z*z + R*R, 1.5); return { E, note: 'Máximo en z = R/√2 = 3,5 cm; en z=0, E=0.' }; },
+      svg(z) {
+        const cx = 250, cy = 230, P = 250 + (90 + (z - 0.01) / 0.39 * 210);
+        const top = [cx, cy - 138], bot = [cx, cy + 138], dq = top;
+        return `<ellipse cx="${cx}" cy="${cy}" rx="58" ry="138" fill="none" stroke="var(--e10-primary)" stroke-width="4"/>
+        <text x="${cx-120}" y="${cy-128}" font-size="12" fill="var(--e10-primary)">Q, R</text>
+        <circle cx="${dq[0]}" cy="${dq[1]}" r="7" fill="var(--e10-q-pos)"/>
+        <text x="${dq[0]-34}" y="${dq[1]-6}" font-size="12" fill="var(--e10-primary)">dq = λ dℓ</text>
+        <line x1="${cx}" y1="${cy}" x2="560" y2="${cy}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="566" y="${cy+4}" font-size="11" fill="var(--e10-muted)">eje z</text>
+        <line x1="${dq[0]}" y1="${dq[1]}" x2="${P}" y2="${cy}" stroke="var(--e10-accent)" stroke-width="1.8" marker-end="url(#aC)"/>
+        <line x1="${dq[0]}" y1="${dq[1]}" x2="${P}" y2="${cy}" class="ph phc"/>
+        <line x1="${bot[0]}" y1="${bot[1]}" x2="${P}" y2="${cy}" stroke="var(--e10-accent)" stroke-width="1.2" opacity=".4"/>
+        <line x1="${P}" y1="${cy}" x2="${P}" y2="${cy-30}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="${P}" y1="${cy}" x2="${P}" y2="${cy+30}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="${P+6}" y="${cy-36}" font-size="11" fill="var(--e10-muted)">radial: se cancela</text>
+        <line x1="${P}" y1="${cy}" x2="${P+70}" y2="${cy}" stroke="var(--e10-accent-strong)" stroke-width="4" marker-end="url(#aC)"/>
+        <line x1="${P}" y1="${cy}" x2="${P+70}" y2="${cy}" class="ph phm"/>
+        <text x="${P+8}" y="${cy-8}" font-size="12" fill="var(--e10-accent-strong)" font-weight="700">E_z</text>
+        <circle cx="${P}" cy="${cy}" r="4" fill="var(--e10-ink)"/><text x="${P-14}" y="${cy+20}" font-size="11" fill="var(--e10-ink)">P</text>
+        <text x="${cx-18}" y="${cy+14}" font-size="11" fill="var(--e10-muted)">E(0)=0</text>`;
+      }
+    },
+    disco: {
+      name: 'Disco', param: 'Posición z en el eje',
+      slider: { min: 0.05, max: 1.00, step: 0.05, val: 0.30, unit: 'm' },
+      fixed: 'σ = 6,0×10⁻⁶ C/m² · R = 0,25 m · Q = σπR²',
+      formula: 'E_z = \\dfrac{\\sigma}{2\\varepsilon_0}\\left[1 - \\dfrac{z}{\\sqrt{z^{2}+R^{2}}}\\right]',
+      compute(z) { const s = 6e-6, R = 0.25; const E = s/(2*eps0)*(1 - z/Math.sqrt(z*z + R*R)); const Ep = s/(2*eps0); return { E, note: 'Plano infinito daría ' + fmtE(Ep) + ' N/C.' }; },
+      svg(z) {
+        const cx = 250, cy = 230, P = 250 + (88 + (z - 0.05) / 0.95 * 215);
+        return `<ellipse cx="${cx}" cy="${cy}" rx="66" ry="150" fill="var(--e10-accent-soft)" stroke="var(--e10-accent-strong)" stroke-width="2"/>
+        <ellipse cx="${cx}" cy="${cy}" rx="38" ry="88" fill="none" stroke="var(--e10-accent)" stroke-width="1.2" opacity=".6"/>
+        <ellipse cx="${cx}" cy="${cy}" rx="16" ry="38" fill="none" stroke="var(--e10-accent)" stroke-width="1.2" opacity=".6"/>
+        <text x="${cx-138}" y="${cy-130}" font-size="12" fill="var(--e10-accent-strong)">σ = Q/(πR²)</text>
+        <text x="${cx+28}" y="${cy-64}" font-size="11" fill="var(--e10-accent-strong)">anillos</text>
+        <circle cx="${cx}" cy="${cy-88}" r="7" fill="var(--e10-q-pos)"/>
+        <text x="${cx-52}" y="${cy-96}" font-size="12" fill="var(--e10-primary)">dq = σ dA</text>
+        <line x1="${cx}" y1="${cy}" x2="560" y2="${cy}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="566" y="${cy+4}" font-size="11" fill="var(--e10-muted)">eje z</text>
+        <line x1="${cx}" y1="${cy-88}" x2="${P}" y2="${cy}" stroke="var(--e10-accent)" stroke-width="1.8" marker-end="url(#aC)"/>
+        <line x1="${cx}" y1="${cy-88}" x2="${P}" y2="${cy}" class="ph phc"/>
+        <line x1="${P}" y1="${cy}" x2="${P+70}" y2="${cy}" stroke="var(--e10-accent-strong)" stroke-width="4" marker-end="url(#aC)"/>
+        <line x1="${P}" y1="${cy}" x2="${P+70}" y2="${cy}" class="ph phm"/>
+        <text x="${P+8}" y="${cy-8}" font-size="12" fill="var(--e10-accent-strong)" font-weight="700">E_z</text>
+        <circle cx="${P}" cy="${cy}" r="4" fill="var(--e10-ink)"/><text x="${P-14}" y="${cy+20}" font-size="11" fill="var(--e10-ink)">P</text>`;
+      }
+    },
+    plano: {
+      name: 'Plano', param: 'Densidad σ',
+      slider: { min: 1, max: 12, step: 0.5, val: 6.0, unit: 'µC/m²' },
+      fixed: 'E = σ/(2ε₀) — independiente de la distancia z',
+      formula: 'E = \\dfrac{\\sigma}{2\\varepsilon_0}',
+      compute(sv) { const s = sv * 1e-6; const E = s/(2*eps0); return { E, note: 'Constante: no depende de z.' }; },
+      svg(sv) {
+        const sheet = 240, cy = 215;
+        let arrows = '';
+        const rows = [90, 150, 215, 280, 340];
+        rows.forEach((y) => {
+          for (let i = 0; i < 3; i++) {
+            const x = 330 + i * 110;
+            arrows += `<line x1="${sheet+10}" y1="${y}" x2="${x}" y2="${y}" stroke="var(--e10-accent-strong)" stroke-width="3" marker-end="url(#aC)"/>`;
+            arrows += `<line x1="${sheet-10}" y1="${y}" x2="${x-130}" y2="${y}" stroke="var(--e10-accent-strong)" stroke-width="3" marker-end="url(#aC)"/>`;
+            arrows += `<line x1="${sheet+10}" y1="${y}" x2="${x}" y2="${y}" class="ph phc" style="animation-delay:${(-i*.4).toFixed(2)}s"/>`;
+            arrows += `<line x1="${sheet-10}" y1="${y}" x2="${x-130}" y2="${y}" class="ph phc" style="animation-delay:${(-i*.4-.7).toFixed(2)}s"/>`;
+          }
+        });
+        return `<line x1="${sheet}" y1="40" x2="${sheet}" y2="390" stroke="var(--e10-primary)" stroke-width="9" stroke-linecap="round"/>
+        <text x="${sheet-40}" y="${cy}" font-size="13" fill="var(--e10-primary)" font-weight="700">σ = ${fmtNum(sv,1)} µC/m²</text>
+        <g font-size="12" fill="var(--e10-muted)"><text x="${sheet-12}" y="44">+</text><text x="${sheet-12}" y="${cy+4}">+</text><text x="${sheet-12}" y="384">+</text></g>
+        ${arrows}
+        <text x="640" y="52" font-size="11" fill="var(--e10-accent-strong)">E uniforme,</text>
+        <text x="640" y="68" font-size="11" fill="var(--e10-accent-strong)">sin importar z</text>`;
+      }
+    }
+  };
+
+  function renderGeo(g) {
+    const cfg = GEO[g];
+    document.querySelectorAll('[data-g]').forEach((b) => b.classList.toggle('on', b.dataset.g === g));
+    const s = $('geo-slider');
+    s.min = cfg.slider.min; s.max = cfg.slider.max; s.step = cfg.slider.step; s.value = cfg.slider.val;
+    $('geo-param-label').textContent = cfg.param;
+    $('geo-fixed').textContent = cfg.fixed;
+    updateGeo(g);
+  }
+  function updateGeo(g) {
+    const cfg = GEO[g];
+    const v = parseFloat($('geo-slider').value);
+    $('geo-param-val').textContent = fmtNum(v, cfg.slider.step < 0.1 ? 2 : 1) + ' ' + cfg.slider.unit;
+    $('geo').innerHTML = cfg.svg(v);
+    const r = cfg.compute(v);
+    $('geo-e').innerHTML = fmtE(r.E);
+    $('geo-note').textContent = r.note;
+    if (window.katex) katex.render(cfg.formula, $('geo-formula'), { displayMode: true, throwOnError: false });
+    else $('geo-formula').textContent = '$$' + cfg.formula + '$$';
+  }
+  document.querySelectorAll('[data-g]').forEach((b) => b.addEventListener('click', () => renderGeo(b.dataset.g)));
+  $('geo-slider').addEventListener('input', () => updateGeo(document.querySelector('.tab.on').dataset.g));
+
+  function scale() {
+    const R = [
+      ['Varilla (ejemplo)', 539, '539'],
+      ['Anillo (ejemplo)', 3.93e3, '3,93×10³'],
+      ['Disco (ejemplo)', 7.85e4, '7,85×10⁴'],
+      ['Plano infinito (ejemplo)', 3.39e5, '3,39×10⁵']
+    ];
+    $('scale').innerHTML = R.map(([l, v, t]) => `<div class="row"><span class="lbl">${l}</span><span class="b" style="width:${(34 + (Math.log10(v) - 2) / 4 * 190).toFixed(0)}px"></span><span class="v">${t} N/C</span></div>`).join('');
+  }
+
+  function fit() { const w = $('fit').clientWidth - 16, s = Math.min(1, w / 1600); $('poster').style.transform = `scale(${s})`; $('fit').style.height = (1131 * s + 32) + 'px'; $('poster').style.marginLeft = s < 1 ? '8px' : 'auto'; }
+  window.addEventListener('resize', fit); fit();
+  $('btn-print').addEventListener('click', () => window.print());
+  window.addEventListener('load', () => {
+    if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }], throwOnError: false });
+    scale();
+    renderGeo('varilla');
+    fit();
+  });
+})();
+</script>
+</body>
+</html>

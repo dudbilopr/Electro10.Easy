@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContinuousDistLab10.easy · Distribuciones Continuas de Carga</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* ContinuousDistLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select,textarea{font-family:inherit}
+canvas{user-select:none}
+.glass{background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn i{font-size:1.1em}
+header.e10-header{flex-shrink:0;z-index:100;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.e10-brand{font:700 1.1rem/1 var(--e10-font-display);color:var(--e10-ink);text-decoration:none}
+.e10-brand span{color:var(--e10-primary)}
+.e10-chip{font:500 12px/1 var(--e10-font-mono);padding:5px 12px;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary)}
+.e10-header__spacer{flex:1 1 auto}
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted)}
+.tool-sep{width:1px;height:26px;background:var(--e10-line)}
+.tool-spacer{flex:1 1 auto}
+.case-tabs{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);gap:2px}
+.case-tab{min-height:34px;display:flex;align-items:center;padding:0 13px;border-radius:var(--e10-radius-sm);cursor:pointer;font-weight:500;color:var(--e10-muted)}
+.case-tab.active{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto}
+#e10-live .katex{font-size:1.15em}
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#problem-statement{line-height:1.55;font-size:var(--e10-text-sm)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden;font-size:var(--e10-text-sm)}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.params{border:1px solid var(--e10-line);border-radius:var(--e10-radius-md)}
+.params>summary{cursor:pointer;padding:10px 12px;font-weight:500;color:var(--e10-muted)}
+.params>div{display:grid;gap:10px;padding:0 12px 12px}
+.params label{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.params input[type=range]{accent-color:var(--e10-primary)}
+.params .out{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink)}
+input[type="number"],input[type="text"]{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font-size:var(--e10-text-sm);outline:none}
+input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);padding:12px;margin-bottom:12px}
+#solution-overlay{position:absolute;top:16px;left:16px;width:min(520px,calc(100% - 32px));max-height:calc(100% - 32px);overflow-y:auto;display:none;z-index:75;padding:16px;border-radius:var(--e10-radius-lg)}
+.window-controls{display:flex;gap:8px;position:absolute;top:12px;right:12px;z-index:10}
+.win-btn{width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;justify-content:center;align-items:center;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted)}
+.win-btn::before{font:600 14px/1 var(--e10-font-body)}
+.win-close::before{content:"×"}
+.win-btn:hover{color:var(--e10-primary);border-color:var(--e10-primary)}
+#solution-conclusion,#theory-questions{margin-top:10px;padding:12px;border-radius:var(--e10-radius-md);font-size:var(--e10-text-sm);line-height:1.5}
+#solution-conclusion{background:var(--e10-success-soft)}
+#theory-questions{background:var(--e10-accent-soft)}
+#latex-result{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;min-height:80px}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.footer-links a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+@media (max-width:900px){
+  .slide-panel{width:100%;max-height:46%;border-left:0;border-top:1px solid var(--e10-line)}
+  .workspace{flex-direction:column}
+  footer{display:none}
+}
+</style>
+</head>
+<body data-domain="electro" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">ContinuousDist<span>Lab10.easy</span></a>
+  <span class="e10-chip">Módulo 4 · Distribuciones Continuas</span>
+  <span class="e10-header__spacer"></span>
+  <button type="button" class="btn btn-icon" onclick="toggleTheme()" title="Tema claro u oscuro" aria-label="Cambiar tema"><i class="ph ph-moon"></i></button>
+</header>
+
+<div class="h-menu" role="toolbar" aria-label="Geometrías">
+  <div class="tool-group"><span class="tool-group__label">GEOMETRÍA</span></div>
+  <div class="case-tabs" role="tablist" aria-label="Escenas">
+    <div class="case-tab active" data-scene="varilla" role="tab" tabindex="0">Varilla</div>
+    <div class="case-tab" data-scene="anillo" role="tab" tabindex="0">Anillo</div>
+    <div class="case-tab" data-scene="disco" role="tab" tabindex="0">Disco</div>
+    <div class="case-tab" data-scene="plano" role="tab" tabindex="0">Plano</div>
+  </div>
+  <span class="tool-spacer"></span>
+  <button type="button" class="btn btn-primary" onclick="comprobar()"><i class="ph ph-check"></i> Validar & Resolver</button>
+</div>
+
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="main-canvas" aria-label="Lienzo de la distribución de carga"></canvas>
+    <div id="coords-indicator">Escala automática</div>
+    <div id="e10-live" aria-live="polite"><span class="e10-chip" style="font-size:11px">Fórmula en vivo</span><span id="e10-live-math"></span></div>
+    <div id="solution-overlay" class="glass card">
+      <div class="window-controls"><button type="button" class="win-btn win-close" aria-label="Cerrar" onclick="document.getElementById('solution-overlay').style.display='none'"></button></div>
+      <div style="font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted);margin-bottom:8px">Solución paso a paso</div>
+      <div id="latex-result">—</div>
+      <div id="solution-conclusion"></div>
+      <div id="theory-questions"></div>
+    </div>
+  </div>
+
+  <aside class="slide-panel open" id="right-panel" aria-label="Pasos del reto">
+    <div class="panel-scroll">
+      <section class="e10-step" id="step-1" data-s="now">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body"><span class="e10-step__title">Reto</span><div id="problem-statement">Cargando reto…</div></div>
+      </section>
+      <section class="e10-step" id="step-2" data-s="todo">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <span class="e10-step__title">Predice</span>
+          <div id="predict-box"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="step-3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <span class="e10-step__title">Comprueba</span>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" type="button" onclick="comprobar()">Comprobar</button>
+        </div>
+      </section>
+      <section class="e10-step" id="step-4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <span class="e10-step__title">Explica</span>
+          <div id="explain-box" style="font-size:var(--e10-text-sm);color:var(--e10-muted)">Pulsa «Comprobar» para leer la explicación física.</div>
+        </div>
+      </section>
+      <details class="params" open>
+        <summary>Parámetros</summary>
+        <div id="params-box"></div>
+      </details>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div>&copy; 2026 ContinuousDistLab10.easy · 10.Easy</div>
+  <div class="footer-links"><a href="../talleres/Taller_4_Distribuciones_de_Carga_Continua.html" target="_blank" rel="noopener">Abrir Taller 4 →</a></div>
+</footer>
+
+<script>
+'use strict';
+const k = 8.988e9, eps0 = 8.854e-12;
+const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+const cvs = document.getElementById('main-canvas'), ctx = cvs.getContext('2d'), wrap = document.getElementById('canvas-area');
+const $ = (id) => document.getElementById(id);
+const sci = (x, d = 3) => { if (!isFinite(x)) return '—'; const e = Math.floor(Math.log10(Math.abs(x))); if (Math.abs(x) >= 1e4 || Math.abs(x) < 1e-3) return (x / Math.pow(10, e)).toFixed(2) + '×10^' + e; return x.toFixed(d); };
+const parseNum = (t) => { t = String(t || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return t === '' ? NaN : Number(t); };
+
+// ── Escenas ────────────────────────────────────────────────────────────
+const SCENES = {
+  varilla: {
+    nombre: 'Varilla finita', sub: 'Campo en la mediatriz',
+    reto: 'Una varilla de longitud L y carga Q = λL se observa en un punto P de su mediatriz, a distancia y. Calcula el módulo de E en P.',
+    params: [
+      { id: 'L', label: 'Longitud L', min: 0.1, max: 2, step: 0.05, val: 0.6, unit: 'm', fmt: (v) => v.toFixed(2) + ' m' },
+      { id: 'lam', label: 'Densidad λ', min: 1, max: 20, step: 0.5, val: 5, unit: 'nC/m', fmt: (v) => v.toFixed(1) + ' nC/m' },
+      { id: 'y', label: 'Distancia y', min: 0.05, max: 1.5, step: 0.05, val: 0.4, unit: 'm', fmt: (v) => v.toFixed(2) + ' m' },
+    ],
+    tex: (p) => `E_y=\\dfrac{kQ}{y\\sqrt{y^2+(L/2)^2}}`,
+    E: (p) => { const Q = p.lam * 1e-9 * p.L; return k * Q / (p.y * Math.sqrt(p.y * p.y + (p.L / 2) ** 2)); },
+    unidad: 'N/C', tol: 0.03,
+    errores: (p, E) => { const lam = p.lam * 1e-9; const inf = 2 * k * lam / p.y; return [
+      { v: inf, code: 'm4_varilla_infinita', fb: 'Usaste la fórmula del hilo infinito (2kλ/y). Aquí la varilla es finita: el resultado exacto es menor porque los extremos aportan menos.' },
+      { v: k * p.lam * 1e-9 * p.L / (p.y * p.y), code: 'm4_distancia_r', fb: 'Olvidaste la raíz de la hipotenusa: la distancia efectiva combina y con L/2, no es solo y.' },
+    ]; },
+    solucion: (p) => {
+      const Q = p.lam * 1e-9 * p.L, E = SCENES.varilla.E(p), inf = 2 * k * (p.lam * 1e-9) / p.y;
+      return { pasos: `\\(dq=\\lambda\\,dx'\\), \\(r=\\sqrt{x'^2+y^2}\\), \\(E_x=0\\) por simetría.\n\n\\(E_y=k\\lambda y\\int_{-L/2}^{L/2}\\dfrac{dx'}{(x'^2+y^2)^{3/2}}=\\dfrac{kQ}{y\\sqrt{y^2+(L/2)^2}}\\).`,
+        conc: `\\(Q=${sci(Q)} \\ \\mathrm{C}\\): \\(E_y=${sci(E)} \\ \\mathrm{N/C}\\). El hilo infinito daría \\(${sci(inf)} \\ \\mathrm{N/C}\\).` };
+    },
+    draw(p) {
+      const W = cvs.width, H = cvs.height, cx = W / 2, base = H * 0.72;
+      const sx = Math.min(W, H) / (p.L * 2.4); const x1 = cx - p.L / 2 * sx, x2 = cx + p.L / 2 * sx, py = base - p.y * sx;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, H - 20); ctx.stroke(); ctx.setLineDash([]);
+      ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.strokeStyle = col('primary');
+      ctx.beginPath(); ctx.moveTo(x1, base); ctx.lineTo(x2, base); ctx.stroke();
+      ctx.fillStyle = col('q-neg'); ctx.beginPath(); ctx.arc(cx, py, 7, 0, 7); ctx.fill();
+      ctx.fillStyle = col('ink'); ctx.font = '600 13px var(--e10-font-body)';
+      ctx.fillText('P', cx + 10, py - 8); ctx.fillText('L', (x1 + x2) / 2, base + 26);
+      const E = SCENES.varilla.E(p), sgn = p.lam >= 0 ? 1 : -1, Lv = 60;
+      ctx.strokeStyle = col('vec-field'); ctx.fillStyle = col('vec-field'); ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(cx, py + sgn * Lv); ctx.stroke();
+      arrow(ctx, cx, py + sgn * Lv, -Math.PI / 2 + (sgn > 0 ? 0 : Math.PI));
+      ctx.fillText('E', cx + 8, py + sgn * (Lv + 10));
+    },
+  },
+  anillo: {
+    nombre: 'Anillo circular', sub: 'Campo en el eje',
+    reto: 'Un anillo de radio R y carga Q se observa en un punto P de su eje, a distancia z. Calcula el módulo de E_z.',
+    params: [
+      { id: 'R', label: 'Radio R', min: 0.02, max: 0.3, step: 0.005, val: 0.05, unit: 'm', fmt: (v) => v.toFixed(3) + ' m' },
+      { id: 'Q', label: 'Carga Q', min: 1, max: 20, step: 0.5, val: 8, unit: 'nC', fmt: (v) => v.toFixed(1) + ' nC' },
+      { id: 'z', label: 'Distancia z', min: 0, max: 0.3, step: 0.005, val: 0.12, unit: 'm', fmt: (v) => v.toFixed(3) + ' m' },
+    ],
+    tex: (p) => `E_z=\\dfrac{kQz}{(z^2+R^2)^{3/2}}`,
+    E: (p) => { const Q = p.Q * 1e-9; return k * Q * p.z / Math.pow(p.z * p.z + p.R * p.R, 1.5); },
+    unidad: 'N/C', tol: 0.03,
+    errores: (p, E) => { const Q = p.Q * 1e-9; return [
+      { v: k * Q / (p.z * p.z), code: 'm4_distancia_r', fb: 'Usaste la distancia z sola (como carga puntual sin la raíz). La distancia real al anillo es √(z²+R²).' },
+      { v: 0, code: 'm4_cancelacion', fb: 'En el centro (z=0) sí hay cancelación total, pero aquí z≠0: solo se cancelan las componentes perpendiculares al eje, no la axial.' },
+    ]; },
+    solucion: (p) => {
+      const Q = p.Q * 1e-9, E = SCENES.anillo.E(p), zmax = p.R / Math.sqrt(2);
+      return { pasos: `\\(dq=\\lambda R\\,d\\phi\\), \\(r=\\sqrt{z^2+R^2}\\) constante, \\(E_\\perp=0\\) por pares diametrales.\n\n\\(E_z=k\\dfrac{z}{(z^2+R^2)^{3/2}}\\oint dq=\\dfrac{kQz}{(z^2+R^2)^{3/2}}\\).`,
+        conc: `\\(Q=${sci(Q)} \\ \\mathrm{C}\\): \\(E_z=${sci(E)} \\ \\mathrm{N/C}\\). El máximo ocurre en \\(z=R/\\sqrt2=${p.R / Math.sqrt(2).toFixed(3)} \\ \\mathrm m\\).` };
+    },
+    draw(p) {
+      const W = cvs.width, H = cvs.height, cx = W / 2, cy = H / 2;
+      const s = Math.min(W, H) / (p.R * 4 + 0.6); const R = p.R * s, py = cy - p.z * s;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, H - 20); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.32, 0, 0, 7); ctx.stroke();
+      ctx.fillStyle = col('q-neg'); ctx.beginPath(); ctx.arc(cx, py, 6, 0, 7); ctx.fill();
+      ctx.fillStyle = col('ink'); ctx.font = '600 13px var(--e10-font-body)'; ctx.fillText('P', cx + 8, py - 8);
+      const E = SCENES.anillo.E(p), sgn = p.Q >= 0 ? 1 : -1, Lv = 56;
+      ctx.strokeStyle = col('vec-field'); ctx.fillStyle = col('vec-field'); ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(cx, py + sgn * Lv); ctx.stroke();
+      arrow(ctx, cx, py + sgn * Lv, -Math.PI / 2 + (sgn > 0 ? 0 : Math.PI));
+    },
+  },
+  disco: {
+    nombre: 'Disco circular', sub: 'Campo en el eje',
+    reto: 'Un disco de radio R y densidad superficial σ se observa en un punto P de su eje, a distancia z. Calcula el módulo de E_z.',
+    params: [
+      { id: 'R', label: 'Radio R', min: 0.05, max: 0.5, step: 0.01, val: 0.25, unit: 'm', fmt: (v) => v.toFixed(2) + ' m' },
+      { id: 'sig', label: 'Densidad σ', min: 1, max: 12, step: 0.25, val: 6, unit: 'µC/m²', fmt: (v) => v.toFixed(2) + ' µC/m²' },
+      { id: 'z', label: 'Distancia z', min: 0, max: 0.6, step: 0.01, val: 0.3, unit: 'm', fmt: (v) => v.toFixed(2) + ' m' },
+    ],
+    tex: (p) => `E_z=\\dfrac{\\sigma}{2\\varepsilon_0}\\left[1-\\dfrac{z}{\\sqrt{z^2+R^2}}\\right]`,
+    E: (p) => { const s = p.sig * 1e-6; return s / (2 * eps0) * (1 - p.z / Math.sqrt(p.z * p.z + p.R * p.R)); },
+    unidad: 'N/C', tol: 0.03,
+    errores: (p, E) => { const s = p.sig * 1e-6; const plano = s / (2 * eps0); return [
+      { v: plano, code: 'm4_plano_infinito_disco', fb: 'Usaste la fórmula del plano infinito (σ/2ε₀). Aquí el disco es finito: el campo es menor, y solo tiende a σ/2ε₀ cuando R→∞.' },
+      { v: k * s * Math.PI * p.R * p.R / (p.z * p.z), code: 'm4_limite_z_R', fb: 'Aplicaste el límite de carga puntual kQ/z². Eso solo vale lejos (z≫R); aquí z es comparable a R.' },
+    ]; },
+    solucion: (p) => {
+      const s = p.sig * 1e-6, E = SCENES.disco.E(p), plano = s / (2 * eps0);
+      return { pasos: `Se apilan anillos: \\(dq=\\sigma\\,2\\pi r'\\,dr'\\).\n\n\\(E_z=\\dfrac{\\sigma}{2\\varepsilon_0}\\left[1-\\dfrac{z}{\\sqrt{z^2+R^2}}\\right]\\).`,
+        conc: `Con \\(\\sigma=${sci(s)} \\ \\mathrm{C/m^2}\\): \\(E_z=${sci(E)} \\ \\mathrm{N/C}\\). El plano infinito daría \\(${sci(plano)} \\ \\mathrm{N/C}\\).` };
+    },
+    draw(p) {
+      const W = cvs.width, H = cvs.height, cx = W / 2, cy = H * 0.62;
+      const s = Math.min(W, H) / (p.R * 4 + 0.5); const R = p.R * s, py = cy - p.z * s;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, H - 20); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col('primary'); ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.28, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = col('q-neg'); ctx.beginPath(); ctx.arc(cx, py, 6, 0, 7); ctx.fill();
+      ctx.fillStyle = col('ink'); ctx.font = '600 13px var(--e10-font-body)'; ctx.fillText('P', cx + 8, py - 8);
+      const E = SCENES.disco.E(p), sgn = p.sig >= 0 ? 1 : -1, Lv = 56;
+      ctx.strokeStyle = col('vec-field'); ctx.fillStyle = col('vec-field'); ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(cx, py + sgn * Lv); ctx.stroke();
+      arrow(ctx, cx, py + sgn * Lv, -Math.PI / 2 + (sgn > 0 ? 0 : Math.PI));
+    },
+  },
+  plano: {
+    nombre: 'Plano infinito', sub: 'Campo uniforme',
+    reto: 'Una lámina plana infinita con densidad σ crea un campo uniforme. ¿Cuánto vale E y de qué depende?',
+    params: [
+      { id: 'sig', label: 'Densidad σ', min: 1, max: 12, step: 0.25, val: 6, unit: 'µC/m²', fmt: (v) => v.toFixed(2) + ' µC/m²' },
+    ],
+    tex: (p) => `E=\\dfrac{\\sigma}{2\\varepsilon_0}`,
+    E: (p) => p.sig * 1e-6 / (2 * eps0),
+    unidad: 'N/C', tol: 0.03, conceptual: true,
+    opciones: [
+      { t: 'E = σ/2ε₀, no depende de la distancia', ok: true },
+      { t: 'E = σ/2ε₀, pero decae al alejarse', code: 'm4_plano_infinito_disco' },
+      { t: 'E = kQ/z² como una carga puntual', code: 'm4_limite_z_R' },
+    ],
+    solucion: (p) => {
+      const s = p.sig * 1e-6, E = s / (2 * eps0);
+      return { pasos: `El plano infinito es el límite del disco cuando \\(R\\to\\infty\\).\n\n\\(E=\\lim_{R\\to\\infty}\\dfrac{\\sigma}{2\\varepsilon_0}\\left[1-\\dfrac{z}{\\sqrt{z^2+R^2}}\\right]=\\dfrac{\\sigma}{2\\varepsilon_0}\\).`,
+        conc: `Con \\(\\sigma=${sci(s)} \\ \\mathrm{C/m^2}\\): \\(E=${sci(E)} \\ \\mathrm{N/C}\\), uniforme e independiente de la distancia.` };
+    },
+    draw(p) {
+      const W = cvs.width, H = cvs.height, cy = H * 0.6;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = col('primary'); ctx.fillRect(30, cy, W - 60, 12);
+      ctx.fillStyle = col('ink'); ctx.font = '600 13px var(--e10-font-body)'; ctx.fillText('plano ∞ (σ)', W / 2 - 40, cy + 32);
+      const sgn = p.sig >= 0 ? 1 : -1;
+      ctx.strokeStyle = col('vec-field'); ctx.fillStyle = col('vec-field'); ctx.lineWidth = 3;
+      for (const xs of [W * 0.25, W * 0.5, W * 0.75]) {
+        ctx.beginPath(); ctx.moveTo(xs, cy - 30); ctx.lineTo(xs, cy - 80); ctx.stroke(); arrow(ctx, xs, cy - 80, -Math.PI / 2 * sgn + (sgn > 0 ? -Math.PI / 2 : Math.PI / 2));
+        ctx.beginPath(); ctx.moveTo(xs, cy + 30); ctx.lineTo(xs, cy + 80); ctx.stroke(); arrow(ctx, xs, cy + 80, Math.PI / 2 * sgn + (sgn > 0 ? -Math.PI / 2 : Math.PI / 2));
+      }
+      ctx.fillText('E uniforme', W * 0.5 - 30, cy - 90);
+    },
+  },
+};
+
+function arrow(c, x, y, ang) {
+  const h = 10, s = Math.sin(ang), cs = Math.cos(ang);
+  c.beginPath(); c.moveTo(x, y); c.lineTo(x - h * cs - 5 * s, y - h * s + 5 * cs); c.lineTo(x - h * cs + 5 * s, y - h * s - 5 * cs); c.closePath(); c.fill();
+}
+
+let scene = 'varilla', P = {}, pred = null;
+function current() { return SCENES[scene]; }
+
+function buildParams() {
+  const box = $('params-box'); const sc = current(); box.innerHTML = '';
+  sc.params.forEach((pr) => {
+    const lab = document.createElement('label');
+    lab.innerHTML = `<span>${pr.label} <b class="out" id="out-${pr.id}"></b></span><input type="range" id="rng-${pr.id}" min="${pr.min}" max="${pr.max}" step="${pr.step}" value="${pr.val}">`;
+    box.appendChild(lab);
+    const r = lab.querySelector('input');
+    r.addEventListener('input', () => { P[pr.id] = parseFloat(r.value); lab.querySelector('.out').textContent = pr.fmt(P[pr.id]); draw(); updateLive(); });
+  });
+}
+
+function buildPredict() {
+  const box = $('predict-box'); const sc = current(); box.innerHTML = '';
+  if (sc.conceptual) {
+    const row = document.createElement('div'); row.className = 'predict-row';
+    sc.opciones.forEach((o, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'btn'; b.textContent = o.t;
+      b.addEventListener('click', () => { pred = i; row.querySelectorAll('.btn').forEach((x) => x.classList.toggle('on', x === b)); setStep(2, 'done'); });
+      row.appendChild(b);
+    });
+    box.appendChild(row);
+  } else {
+    box.innerHTML = `<input type="text" id="pred-in" inputmode="decimal" placeholder="Escribe E en N/C (p. ej. 539)" aria-label="Tu predicción"><div style="font-size:var(--e10-text-xs);color:var(--e10-muted);margin-top:4px">Unidad: ${sc.unidad}. Acepta notación 2,5e-3.</div>`;
+    $('pred-in').addEventListener('input', () => setStep(2, $('pred-in').value.trim() ? 'done' : 'now'));
+  }
+  setStep(1, 'now'); setStep(2, 'todo'); setStep(3, 'todo'); setStep(4, 'todo');
+  $('validation-box').innerHTML = ''; $('explain-box').textContent = 'Pulsa «Comprobar» para leer la explicación física.';
+}
+
+function setStep(n, s) { const el = $('step-' + n); if (el) el.dataset.s = s; }
+
+function draw() {
+  const sc = current(); sc.draw(P); $('problem-statement').textContent = sc.reto;
+}
+
+function updateLive() {
+  const sc = current(); const E = sc.E(P);
+  const el = $('e10-live'), m = $('e10-live-math');
+  const tex = `\\displaystyle ${sc.tex(P)} = ${sci(E)} \\ \\mathrm{${sc.unidad}}`;
+  if (window.katex) katex.render(tex, m, { throwOnError: false, displayMode: true }); else m.textContent = tex;
+  el.style.display = 'flex';
+}
+
+function emitirComprobacion(ok, error) {
+  try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'SIM_TELEMETRY', action: 'comprobar', details: { escena: scene, ok, error }, simulatorPath: 'simuladores/ContinuousDistLab.html' }, '*'); } catch (_) {}
+  try { if (window.lab10Bus && window.lab10Bus.emitTelemetry) window.lab10Bus.emitTelemetry('comprobar', { escena: scene, ok, error }); } catch (_) {}
+  window.__ultimaComprobacion = { ok, error };
+}
+
+function comprobar() {
+  const sc = current(); const E = sc.E(P); let ok = false, error = null, fb = '', conc = sc.solucion(P).conc;
+  const vb = $('validation-box');
+  if (sc.conceptual) {
+    if (pred === null) { vb.innerHTML = '<div class="vrow">Primero elige una predicción.</div>'; return; }
+    const o = sc.opciones[pred]; ok = !!o.ok; error = o.ok ? null : (o.code || 'm4_plano_infinito_disco');
+    fb = o.ok ? 'Correcto: el campo de un plano infinito es uniforme e independiente de la distancia.' : 'Revisa: el campo de un plano infinito es σ/2ε₀ y no decae con la distancia.';
+  } else {
+    const v = parseNum($('pred-in') && $('pred-in').value);
+    if (!isFinite(v)) { vb.innerHTML = '<div class="vrow">Escribe un número (acepta coma o punto).</div>'; return; }
+    ok = Math.abs(v - E) <= sc.tol * Math.abs(E);
+    if (ok) { fb = `Correcto: \\(E=${sci(E)} \\ \\mathrm{${sc.unidad}}\\).`; }
+    else { const e = (sc.errores(P, E) || []).find((x) => Math.abs(v - x.v) <= 0.05 * Math.abs(x.v)); error = e ? e.code : 'm4_distancia_r'; fb = e ? e.fb : 'No coincide. Revisa el diferencial dq, la distancia r y la proyección por simetría.'; }
+  }
+  vb.innerHTML = `<div class="vrow">${ok ? 'Correcto.' : 'Revisa esta idea.'}<span class="e10-chip ${ok ? '' : 'e10-chip--bad'}">${ok ? '✓' : '!'}</span></div>`;
+  $('explain-box').innerHTML = fb;
+  setStep(3, 'done'); setStep(4, 'now');
+  // Solución completa
+  $('latex-result').innerHTML = sc.solucion(P).pasos.replace(/\n\n/g, '<br><br>');
+  $('solution-conclusion').innerHTML = conc;
+  $('theory-questions').innerHTML = 'Límites asintóticos: lejos (z≫R) toda distribución finita tiende a una carga puntual kQ/z²; al agrandar R, el disco tiende al plano σ/2ε₀.';
+  if (window.katex) { ['latex-result', 'solution-conclusion', 'explain-box'].forEach((id) => { const el = $(id); if (el) katex.render(String(el.dataset.tex || ''), el, { throwOnError: false }); }); renderMath(); }
+  document.getElementById('solution-overlay').style.display = 'block';
+  emitirComprobacion(ok, error);
+}
+
+function renderMath() {
+  if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }, { left: '$$', right: '$$', display: true }], throwOnError: false });
+}
+
+function switchScene(name) {
+  scene = name; P = {};
+  document.querySelectorAll('.case-tab').forEach((t) => t.classList.toggle('active', t.dataset.scene === name));
+  buildParams(); buildPredict(); draw(); updateLive();
+}
+
+function toggleTheme() { const b = document.body.classList.toggle('dark-mode'); try { localStorage.setItem('electro10_theme', b ? 'dark' : 'light'); } catch (_) {} }
+
+function fit() {
+  const area = $('canvas-area'); const w = area.clientWidth, h = area.clientHeight;
+  cvs.width = Math.max(200, w); cvs.height = Math.max(200, h); draw();
+}
+
+document.querySelectorAll('.case-tab').forEach((t) => t.addEventListener('click', () => switchScene(t.dataset.scene)));
+window.addEventListener('resize', fit);
+window.addEventListener('load', () => { switchScene('varilla'); fit(); renderMath(); });
+window.__c4lab = { scene, SCENES, k, eps0 };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body>
+</html>
