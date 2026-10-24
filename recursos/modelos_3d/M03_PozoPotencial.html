@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PozoPotencial-3D · Pieza del módulo 3 — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})"></script>
+<style>
+/* Ficha técnica de la maqueta 3D del módulo 3. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 16px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+.top{font-size:14px;color:var(--e10-muted)}.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1{font:700 clamp(28px,5vw,40px)/1.1 var(--e10-font-display);margin:14px 0 4px}
+h2{font:600 21px var(--e10-font-display);margin:28px 0 10px}
+.sub{color:var(--e10-muted);font-size:18px;margin:0 0 16px}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 18px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--e10-line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--e10-primary);font-weight:600}
+td.m{font-family:var(--e10-font-mono);white-space:nowrap}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}.tip b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px}.warn b{color:var(--e10-warning)}
+ol li,ul li{margin:4px 0}
+figure{margin:14px 0;text-align:center}figure img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>Electro<span>10.Easy</span></b> · Módulo 3 · Pieza 3D</div>
+  <h1>PozoPotencial-3D</h1>
+  <p class="sub">Maqueta topográfica de relieve electrostático: sentir con las manos el gradiente \(\vec{E} = -\vec{\nabla}V\) y ver una canica rodar hacia el mínimo de potencial.</p>
+  <div class="bar">
+    <a class="btn pri" href="M03_PozoPotencial.stl" download>Descargar STL para imprimir (.stl)</a>
+    <a class="btn" href="M03_PozoPotencial.scad" download>Descargar código OpenSCAD (.scad)</a>
+    <a class="btn" href="../../presentaciones/M3_Potencial/index.html" target="_blank" rel="noopener">Clase interactiva M03</a>
+    <a class="btn" href="../../simuladores/EquipotentialLab.html" target="_blank" rel="noopener">EquipotentialLab</a>
+  </div>
+
+  <figure>
+    <img src="M03_PozoPotencial.png" alt="Renderizado OpenSCAD de la maqueta topográfica M03: pozo cónico escalonado, loma de barrera y canal de gradiente">
+  </figure>
+
+  <h2>Función pedagógica</h2>
+  <div class="card">
+    Transformar el concepto abstracto de potencial eléctrico escalar \(V(x,y)\) en un paisaje topográfico tangible. La altura \(z\) modela el voltaje: cada terraza de \(2\text{ mm}\) es una <b>superficie equipotencial física</b>. Al soltar una canica de acero de \(\varnothing 8\text{ mm}\) en la barrera (potencial alto, carga positiva), rueda espontáneamente por la pendiente de máxima inclinación hacia el pozo (potencial bajo, carga negativa), demostrando mecánicamente que el campo eléctrico \(\vec{E}\) apunta hacia donde el potencial disminuye con mayor rapidez: \(\vec{E} = -\vec{\nabla}V\).
+  </div>
+
+  <h2>Piezas y parámetros</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Elemento</th><th>Parámetro OpenSCAD</th><th>Medidas / Función</th></tr></thead>
+    <tbody>
+      <tr><td class="m">Base sólida</td><td><code>base_l, base_a, base_h</code></td><td>\(120 \times 80 \times 14\text{ mm}\); plano de referencia \(V = 0\)</td></tr>
+      <tr><td class="m">Pozo de potencial</td><td><code>pozo_R, pozo_n, paso</code></td><td>Depresión escalonada de 5 terrazas concéntricas (\(\varnothing 54\text{ mm}\), paso \(2\text{ mm}\)); modela carga negativa \(-q\)</td></tr>
+      <tr><td class="m">Barrera de potencial</td><td><code>barr_L, barr_W, barr_n</code></td><td>Loma piramidal escalonada de 5 terrazas (\(70 \times 24\text{ mm}\)); modela electrodo o carga positiva \(+q\)</td></tr>
+      <tr><td class="m">Canal de gradiente</td><td><code>canal_w, canal_d</code></td><td>Ranura guía de \(9\text{ mm}\) ancho y \(3\text{ mm}\) fondo; trayectoria de máxima pendiente \(\vec{E}\) para canica de \(\varnothing 8\text{ mm}\)</td></tr>
+      <tr><td class="m">Rótulos en relieve</td><td><code>rotulos()</code></td><td>Texto grabado: «POZO V baja», «BARRERA V alta» y «E = -grad V»</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Impresión 3D</h2>
+  <div class="card"><ul>
+    <li><b>Material:</b> PLA+ o PETG (para resistencia al impacto repetido de la canica de acero).</li>
+    <li><b>Altura de capa:</b> \(0{,}16\text{ mm}\) (o \(0{,}12\text{ mm}\) para curvas de nivel más nítidas).</li>
+    <li><b>Relleno:</b> \(20\%\) giroide o cuadrícula; 3 perímetros de pared.</li>
+    <li><b>Soportes:</b> No requiere (todas las pendientes y terrazas están diseñadas con ángulos autoportantes).</li>
+    <li><b>Tiempo de impresión:</b> Aprox. 3 h 40 min en impresoras FDM estándar (\(150\text{ mm/s}\)).</li>
+  </ul></div>
+
+  <h2>Protocolo de aula</h2>
+  <ol class="card" style="padding-left:34px">
+    <li><b>Mapeo de curvas de nivel:</b> Los estudiantes colocan un papel sobre la maqueta y calcan las terrazas con lápiz. Cada línea cerrada calcada es una línea equipotencial.</li>
+    <li><b>Verificación de ortogonalidad:</b> Trazan flechas perpendiculares a las curvas de nivel. Comprueban que todas las flechas apuntan hacia el centro del pozo.</li>
+    <li><b>Dinámica de la carga positiva:</b> Sueltan la canica en la loma. La canica se acelera hacia el pozo: una carga positiva se mueve espontáneamente hacia potenciales menores (\(\Delta U = q\Delta V < 0\)).</li>
+    <li><b>Contraste virtual:</b> Abren <code>EquipotentialLab</code> (escena «Dipolo») y confirman que las equipotenciales calculadas matemáticamente coinciden con las terrazas de la maqueta.</li>
+  </ol>
+  <div class="tip"><b>Conexión con el Taller y la Clase:</b> Las terrazas corresponden a saltos equipotenciales constantes \(\Delta V = \text{cte}\), exactamente como en el problema resuelto 4 del taller.</div>
+  <p style="font-size:14px;color:var(--e10-muted);margin-top:18px">Ficha técnica documentada en <code>GUIA_DIDACTICA_Y_MODELOS_3D.md</code> (módulo 3). © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+</div>
+</body>
+</html>

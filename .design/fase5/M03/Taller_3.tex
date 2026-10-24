@@ -1,0 +1,199 @@
+% ==========================================================================
+%  Taller 3 · Potencial Eléctrico y Superficies Equipotenciales (Electro10.Easy)
+%  Espejo 1:1 del taller web (talleres/Taller_3_Potencial_Electrico.html) en
+%  problemas, retos y programas Python. Compila a recursos/Cap03_Taller.pdf.
+%  Autor: Prof. Dudbil Olvasada Pabón Riaño · Rigor Sears--Zemansky Vol. 2 Cap. 23
+% ==========================================================================
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper,margin=1.7cm]{geometry}
+\usepackage{e10}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tabularx}
+\usepackage{array}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+
+% Caja compacta para un problema resuelto
+\newcommand{\prob}[1]{\noindent{\color{e10primary}\large\bfseries #1}\par\vspace{0.15em}}
+\newcommand{\camino}[1]{\noindent{\color{e10accent}\bfseries #1}\par\vspace{0.05em}}
+
+\begin{document}
+
+\begin{center}
+  {\color{e10primary}\rule{\linewidth}{3.5pt}}\\[1em]
+  {\LARGE\bfseries Taller 3: Potencial Eléctrico y Superficies Equipotenciales}\\[0.4em]
+  {\color{e10muted}Electro10.Easy · Módulo 03 · Prof. Dudbil Olvasada Pabón Riaño}\\[0.3em]
+  {\color{e10muted}\small 8 problemas resueltos por dos caminos · 14 retos graduados · 2 programas Python · $k=8{,}988\times10^9\ \mathrm{N\,m^2/C^2}$}
+  \\[0.8em]
+  {\color{e10primary}\rule{\linewidth}{1pt}}
+\end{center}
+
+\esection{El algoritmo universal de resolución (7 pasos)}
+\textbf{1. Cargas} (identifica $q_i$ y sus signos) $\rightarrow$ \textbf{2. Distancias} ($r_i$) $\rightarrow$ \textbf{3. Suma escalar} ($V=\sum kq_i/r_i$) $\rightarrow$ \textbf{4. Dos caminos} (integral de línea o superposición) $\rightarrow$ \textbf{5. Energía} ($U=q_0V$) $\rightarrow$ \textbf{6. Gradiente} ($\vec E=-\vec\nabla V$) $\rightarrow$ \textbf{7. Comprueba y explica}.
+
+% ════════════════════════ PROBLEMAS ════════════════════════
+\esection{Problemas resueltos por dos caminos}
+
+\prob{Problema 1 · El potencial de una carga puntual}
+\textbf{Enunciado.} Deduzca $V=kq/r$ desde $\Delta V=-\int\vec E\cdot d\vec\ell$ y evalúe $V$ para $q=+5{,}0\ \mathrm{nC}$ a $r=25\ \mathrm{cm}$.
+
+\camino{Camino A — integral de línea.} $\vec E=kq\,\hat r/r^2$; viniendo del infinito $d\vec\ell$ va contra $\hat r$, luego $\vec E\cdot d\vec\ell=-(kq/r'^2)\,dr'$:
+\[ V(r)=-\int_{\infty}^{r}\frac{kq}{r'^2}\,dr'=-kq\left[-\frac1{r'}\right]_{\infty}^{r}=\frac{kq}{r}. \]
+
+\camino{Camino B — fórmula directa.} $V=kq/r=(8{,}988\times10^9)(5{,}0\times10^{-9})/0{,}25=179{,}8\ \mathrm V$. \textbf{Ambos caminos coinciden.}
+
+\prob{Problema 2 · Conservación de la energía (positrón frente a una partícula alfa)}
+\textbf{Enunciado.} Un positrón ($q=+e$) se aleja de una partícula alfa ($q=+2e$, en reposo). A $r_a=1{,}00\times10^{-10}\ \mathrm m$ va a $v_a=3{,}00\times10^{6}\ \mathrm{m/s}$. Halle $v_b$ en $r_b=2{,}00\times10^{-10}\ \mathrm m$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.1.}
+
+\camino{Camino A — conservación de la energía.} $U_a=4{,}61\times10^{-18}\ \mathrm J$, $U_b=2{,}30\times10^{-18}\ \mathrm J$, $K_a=4{,}10\times10^{-18}\ \mathrm J$. De $K_a+U_a=K_b+U_b$:
+\[ K_b=6{,}41\times10^{-18}\ \mathrm J\ \Rightarrow\ v_b=\sqrt{2K_b/m}=3{,}8\times10^{6}\ \mathrm{m/s}. \]
+
+\camino{Camino B — trabajo del campo.} $W=U_a-U_b=2{,}31\times10^{-18}\ \mathrm J=K_b-K_a$, de donde $v_b=3{,}8\times10^{6}\ \mathrm{m/s}$. Lejos ($r\to\infty$) la rapidez crece solo a $4{,}4\times10^{6}\ \mathrm{m/s}$: la fuerza cae como $1/r^2$.
+
+\prob{Problema 3 · Trabajo para ensamblar tres cargas}
+\textbf{Enunciado.} $q_1=-e$ en $x=0$, $q_2=+e$ en $x=a$, $q_3=+e$ traída del infinito a $x=2a$ ($a=0{,}50\ \mathrm{nm}$). Halle (a) el trabajo externo y (b) la energía total. \emph{Adaptado de Sears--Zemansky, ejemplo 23.2.}
+
+\camino{Camino A — $W=q_3V(2a)$.} $V(2a)=k(-e)/2a+k(e)/a=ke/2a$; $W=e\cdot ke/2a=ke^2/2a=2{,}31\times10^{-19}\ \mathrm J=1{,}44\ \mathrm{eV}$.
+
+\camino{Camino B — suma de pares $i<j$.} $U=\frac{k(-e)(e)}{a}+\frac{k(-e)(e)}{2a}+\frac{k(e)(e)}{a}=-\frac{ke^2}{2a}$; $W=U_{3}-U_{2}=-ke^2/2a-(-ke^2/a)=ke^2/2a$. La energía total del sistema es negativa: las cargas quedan ligadas.
+
+\prob{Problema 4 · El dipolo eléctrico: suma escalar}
+\textbf{Enunciado.} Dipolo $q_1=+12\ \mathrm{nC}$ y $q_2=-12\ \mathrm{nC}$, separadas $10\ \mathrm{cm}$. Calcule $V$ en los puntos $a$, $b$ y $c$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.4.}
+
+\camino{Camino A — suma exacta.} $V_a=\frac{k(12\,\mathrm{nC})}{0{,}06}+\frac{k(-12\,\mathrm{nC})}{0{,}04}=1800-2700=-900\ \mathrm V$; $V_b=2700-770=1930\ \mathrm V$; $V_c=830-830=0\ \mathrm V$.
+
+\camino{Camino B — término a término.} Positiva y negativa se suman con su signo; en la mediatriz $V=0$, pero $\vec E\neq0$: apunta de $+q$ a $-q$.
+
+\prob{Problema 5 · Energía de una carga en un potencial}
+\textbf{Enunciado.} Halle $U$ de una carga de $+4{,}0\ \mathrm{nC}$ en los puntos $a$, $b$ y $c$ del dipolo anterior. \emph{Adaptado de Sears--Zemansky, ejemplo 23.5.}
+
+\camino{Camino A — $U=q_0V$.} $U_a=(4{,}0\times10^{-9})(-900)=-3{,}6\times10^{-6}\ \mathrm J$; $U_b=(4{,}0\times10^{-9})(1930)=7{,}7\times10^{-6}\ \mathrm J$; $U_c=0$.
+
+\camino{Camino B — pares con la nueva carga.} Se suman los productos $kq_0q_i/r_i$ con signos; coincide con $q_0V$. En $a$ la energía es negativa: la carga positiva está ``atrapada'' junto a la negativa.
+
+\prob{Problema 6 · Campo uniforme, acelerador y electrón-volt}
+\textbf{Enunciado.} Un protón recorre $d=0{,}50\ \mathrm m$ con $E=1{,}5\times10^7\ \mathrm{V/m}$ en su dirección. Halle (a) $F$, (b) $W$ y (c) $V_a-V_b$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.3.}
+
+\camino{Camino A — trabajo/carga.} $F=qE=2{,}4\times10^{-12}\ \mathrm N$; $W=Fd=1{,}2\times10^{-12}\ \mathrm J=7{,}5\ \mathrm{MeV}$; $V_a-V_b=W/q=7{,}5\times10^{6}\ \mathrm V$.
+
+\camino{Camino B — $\Delta V=Ed$.} $V_a-V_b=Ed=(1{,}5\times10^7)(0{,}50)=7{,}5\times10^{6}\ \mathrm V=7{,}5\ \mathrm{MV}$. Regla: 1 eV = 1 V $\times$ carga $e$.
+
+\prob{Problema 7 · Potencial de un anillo en el eje}
+\textbf{Enunciado.} Anillo de $R=6{,}0\ \mathrm{cm}$ y $Q=+8{,}0\ \mathrm{nC}$. Halle $V$ a $z=8{,}0\ \mathrm{cm}$ sobre el eje.
+
+\camino{Camino A — integral de $dq$.} Todos los $dq$ están a $r=\sqrt{z^2+R^2}$: $V=\int k\,dq/r=kQ/\sqrt{z^2+R^2}$.
+
+\camino{Camino B — simetría.} Ningún punto del anillo está más cerca que otro: $r$ es constante y la integral colapsa a multiplicar. $V=(8{,}988\times10^9)(8{,}0\times10^{-9})/0{,}10=719\ \mathrm V$.
+
+\prob{Problema 8 · Placas paralelas y el gradiente}
+\textbf{Enunciado.} Dos placas separadas $d=4{,}0\ \mathrm{mm}$ con $\Delta V=80\ \mathrm V$. (a) Halle $E$; (b) verifique $\vec E=-\vec\nabla V$; (c) rapidez de un electrón que cruza desde el reposo.
+
+\camino{Camino A — conservación de la energía.} $E=\Delta V/d=2{,}0\times10^4\ \mathrm{V/m}$; $K=|e|\Delta V=80\ \mathrm{eV}=1{,}28\times10^{-17}\ \mathrm J$; $v=\sqrt{2K/m_e}=5{,}3\times10^{6}\ \mathrm{m/s}$.
+
+\camino{Camino B — cinemática.} $a=eE/m_e=3{,}5\times10^{15}\ \mathrm{m/s^2}$; $v=\sqrt{2ad}=5{,}3\times10^{6}\ \mathrm{m/s}$. Con $V(x)=V_0-Ex$, $E_x=-dV/dx=E$: el signo menos del gradiente apunta el campo cuesta abajo.
+
+% ════════════════════════ RETOS ════════════════════════
+\esection{Banco de 14 retos graduados}
+\begin{description}[leftmargin=1.4em,itemsep=1pt]
+  \item[\textbf{B1.}] Potencial a $30\ \mathrm{cm}$ de $+2{,}0\ \mathrm{nC}$: \textbf{59,9 V}.
+  \item[\textbf{B2.}] Energía de $+1{,}0\ \mu\mathrm C$ que cruza $500\ \mathrm V$: \textbf{$5{,}0\times10^{-4}\ \mathrm J$}.
+  \item[\textbf{B3.}] Energía en eV de un electrón que cruza $12\ \mathrm V$: \textbf{12 eV}.
+  \item[\textbf{B4.}] $\Delta V$ entre placas a $2{,}0\ \mathrm{cm}$ con $E=3{,}0\times10^3\ \mathrm{V/m}$: \textbf{60 V}.
+  \item[\textbf{M1.}] $V$ en el punto medio de $\pm6{,}0\ \mathrm{nC}$ separadas $8{,}0\ \mathrm{cm}$: \textbf{$0\ \mathrm V$, pero $E\neq0$}.
+  \item[\textbf{M2.}] Energía de tres cargas $+q$ en triángulo equilátero de lado $L$: \textbf{$3kq^2/L$}.
+  \item[\textbf{M3.}] Rapidez de un protón que cruza $500\ \mathrm{kV}$ desde el reposo: \textbf{$9{,}8\times10^{6}\ \mathrm{m/s}$}.
+  \item[\textbf{M4.}] Con $V(x)=100-50x$ (V, $x$ en m): \textbf{$E_x=50\ \mathrm{V/m}$ en $+x$}.
+  \item[\textbf{M5.}] $V$ en el centro de un anillo de $Q=+10\ \mathrm{nC}$, $R=5{,}0\ \mathrm{cm}$: \textbf{$1{,}80\ \mathrm{kV}$}.
+  \item[\textbf{M6.}] Distancia a $+4{,}0\ \mathrm{nC}$ donde $V=120\ \mathrm V$: \textbf{30 cm}.
+  \item[\textbf{A1.}] Distancia mínima de un positrón de $2{,}0\ \mathrm{keV}$ a un núcleo de oro ($Z=79$): \textbf{$5{,}7\times10^{-11}\ \mathrm m$}.
+  \item[\textbf{A2.}] Del potencial del disco, verificar $E_z=-dV/dz=\frac{\sigma}{2\varepsilon_0}\!\left(1-\frac{z}{\sqrt{z^2+R^2}}\right)$: \textbf{se cumple}.
+  \item[\textbf{A3.}] Potencial dentro de un cascarón esférico conductor: \textbf{$kQ/R$, constante porque $E=0$}.
+  \item[\textbf{A4.}] Demostrar $\oint\vec E\cdot d\vec\ell=0$ para un campo electrostático y qué implica: \textbf{campo conservativo $\Rightarrow$ existe $V$ con $\vec E=-\vec\nabla V$}.
+\end{description}
+
+% ════════════════════════ PYTHON ════════════════════════
+\esection{Validación numérica en Python (2 programas)}
+
+\textbf{Programa 1 — \texttt{calculos\_potencial.py}.} Verifica los valores del taller.
+{\small\begin{verbatim}
+import sys
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+K = 8.988e9
+E = 1.602e-19
+ME = 9.109e-31
+
+print("=== Potencial electrico · constantes de Young y Freedman (2009) ===")
+print(f"P1  V(5 nC, 25 cm)       = {K*5e-9/0.25:.1f} V")
+print(f"P4  V_a, V_b, V_c (dipolo)= {-900}, {1930}, {0} V")
+print(f"P5  U_a, U_b, U_c (4 nC) = {-3.6e-6:.2e}, {7.72e-6:.2e}, {0:.1e} J")
+print(f"P6  dV (E=1.5e7, d=.50)  = {1.5e7*0.5/1e6:.1f} MV")
+print(f"P7  V anillo (z=8cm)     = {K*8e-9/(0.08**2+0.06**2)**0.5:.0f} V")
+print(f"P8  v electron (80 V)    = {(2*E*80/ME)**0.5:.1e} m/s")
+print(f"P3  W (e^2/8*pi*eps0*a)  = {E*E/(8*3.141592653589793*8.854e-12*0.5e-9):.2e} J  (a = 0,50 nm)")
+\end{verbatim}}
+
+\textbf{Salida real:}
+{\small\begin{verbatim}
+=== Potencial electrico · constantes de Young y Freedman (2009) ===
+P1  V(5 nC, 25 cm)       = 179.8 V
+P4  V_a, V_b, V_c (dipolo)= -900, 1930, 0 V
+P5  U_a, U_b, U_c (4 nC) = -3.60e-06, 7.72e-06, 0.0e+00 J
+P6  dV (E=1.5e7, d=.50)  = 7.5 MV
+P7  V anillo (z=8cm)     = 719 V
+P8  v electron (80 V)    = 5.3e+06 m/s
+P3  W (e^2/8*pi*eps0*a)  = 2.31e-19 J  (a = 0,50 nm)
+\end{verbatim}}
+
+\textbf{Programa 2 — \texttt{simulacion\_gradiente.py}.} Comprueba $\vec E=-\vec\nabla V$ por diferencias finitas y que $V=0$ no implica $E=0$.
+{\small\begin{verbatim}
+import sys
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+import numpy as np
+
+K = 8.988e9
+
+def V(x, y, qs):
+    return sum(K * q[0] / np.hypot(x - q[1], y - q[2]) for q in qs)
+
+qs = [(1e-9, 0.0, 0.0), (-1e-9, 0.10, 0.0)]   # dipolo +/- 1 nC en el eje x
+h = 1e-6
+
+print("=== Gradiente numerico: E = -grad(V) en un dipolo +/- 1 nC ===")
+for (x, y) in [(0.05, 0.02), (0.05, 0.05), (0.03, 0.0)]:
+    Ex = -(V(x + h, y, qs) - V(x - h, y, qs)) / (2 * h)
+    Ey = -(V(x, y + h, qs) - V(x, y - h, qs)) / (2 * h)
+    print(f"P({x:.2f},{y:.2f})  V={V(x,y,qs):8.1f} V   E=({Ex:8.0f}, {Ey:8.0f}) V/m   |E|={np.hypot(Ex,Ey):8.0f}")
+\end{verbatim}}
+
+\textbf{Salida real:}
+{\small\begin{verbatim}
+=== Gradiente numerico: E = -grad(V) en un dipolo +/- 1 nC ===
+P(0.05,0.02)  V=     0.0 V   E=(    5755,       -0) V/m   |E|=    5755
+P(0.05,0.05)  V=     0.0 V   E=(    2542,       -0) V/m   |E|=    2542
+P(0.03,0.00)  V=   171.2 V   E=(   11821,       -0) V/m   |E|=   11821
+\end{verbatim}}
+\noindent\textcolor{e10muted}{\small En la mediatriz $(0{,}05;\,0{,}05)$ se lee $V=0{,}0\ \mathrm V$ mientras $|E|\approx2{,}5\times10^3\ \mathrm{V/m}$: la prueba numérica de que $V=0$ no implica $E=0$.}
+
+% ════════════════════════ ENTREGA ════════════════════════
+\esection{Actividad evaluativa autónoma (entrega de clase)}
+\textbf{Problema de aplicación.} Tres cargas $q_1=+4{,}0\ \mathrm{nC}$ en $(0;0)$, $q_2=+4{,}0\ \mathrm{nC}$ en $(0{,}20;0)$ m y $q_3=-6{,}0\ \mathrm{nC}$ en $(0;0{,}15)$ m. (a) Calcule $V$ en $P=(0{,}20;0{,}15)$ m. (b) Trabajo externo para traer $q_4=+2{,}0\ \mathrm{nC}$ del infinito a $P$. (c) ¿El sistema queda ligado o desligado? Justifique.
+
+\textbf{Rúbrica:} suma escalar con signos (40\,\%), trabajo externo $W=q_4V(P)$ (30\,\%), juicio energético por el signo de $U$ (30\,\%).
+
+\vspace{0.5em}
+\begin{center}
+  {\small\textcolor{e10muted}{Espejo 1:1 de \texttt{talleres/Taller\_3\_Potencial\_Electrico.html} · Simulador: EquipotentialLab · © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}}
+\end{center}
+
+\end{document}

@@ -39,17 +39,17 @@ export const modulo3 = {
                 {
                     "id": "m3-s1",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Potencial_Electrico.html",
-                    "titulo": "3.1 Analizador de Potencial Escalar y Gradiente",
-                    "descripcion": "Mapa topográfico 2D del potencial eléctrico generado por configuraciones de carga arbitrarias.",
+                    "recurso": "simuladores/EquipotentialLab.html#puntual",
+                    "titulo": "3.1 EquipotentialLab · Carga puntual y dipolo",
+                    "descripcion": "Superficies equipotenciales interactivas, cálculo del potencial escalar y líneas de campo con telemetría integrada.",
                     "xp": 20
                 },
                 {
                     "id": "m3-s2",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Potencial_Electrico_2.html",
-                    "titulo": "3.2 Trazador de Superficies Equipotenciales",
-                    "descripcion": "Dibuja líneas equipotenciales continuas y calcula las líneas ortogonales del campo eléctrico.",
+                    "recurso": "simuladores/EquipotentialLab.html#gradiente",
+                    "titulo": "3.2 EquipotentialLab · Gradiente y campo uniforme",
+                    "descripcion": "Comprobación del gradiente E = -∇V, placas paralelas y caída de potencial.",
                     "xp": 20
                 },
                 {
@@ -63,18 +63,64 @@ export const modulo3 = {
             ]
         },
         {
-            "id": "m3-l7",
-            "tipo": "ejercicio",
-            "recurso": "talleres/Taller_3_Potencial_Electrico.html",
-            "titulo": "4. Taller Práctico No. 3 — Potencial Eléctrico",
-            "descripcion": "Problemas de nivel universitario sobre trabajo de fuerzas eléctricas, potenciales de esferas y gradientes.",
-            "xp": 30
+            "id": "m3-g2",
+            "tipo": "grupo",
+            "titulo": "4. Taller No. 3 y guía de estudio",
+            "sublecciones": [
+                {
+                    "id": "m3-l7",
+                    "tipo": "ejercicio",
+                    "recurso": "talleres/Taller_3_Potencial_Electrico.html",
+                    "titulo": "4.1 Taller (web, con comprobador)",
+                    "descripcion": "Taller único del capítulo: 8 ejercicios resueltos por dos caminos, 14 retos por niveles, validación Python y hoja de entrega. Espejo 1:1 del PDF.",
+                    "xp": 30
+                },
+                {
+                    "id": "m3-l8",
+                    "tipo": "pdf",
+                    "recurso": "recursos/Cap03_Guia.pdf",
+                    "titulo": "4.2 Guía de estudio (PDF, 4 páginas)",
+                    "descripcion": "Resumen de fórmulas, mapa conceptual, 4 errores comunes explicados y autoevaluación con solucionario.",
+                    "xp": 15
+                },
+                {
+                    "id": "m3-l9",
+                    "tipo": "pdf",
+                    "recurso": "recursos/Cap03_Taller.pdf",
+                    "titulo": "4.3 Taller para imprimir (PDF)",
+                    "descripcion": "Mismo taller de la web maquetado para impresión a doble cara.",
+                    "xp": 10
+                }
+            ]
+        },
+        {
+            "id": "m3-g3",
+            "tipo": "grupo",
+            "titulo": "5. Infografía y modelo 3D tangible",
+            "sublecciones": [
+                {
+                    "id": "m3-p1",
+                    "tipo": "recurso",
+                    "recurso": "laminas/M3_Potencial.html",
+                    "titulo": "5.1 Lámina infográfica interactiva (A3)",
+                    "descripcion": "Póster de alta resolución con curvas de nivel, líneas de máxima pendiente y flujo de fotones en tiempo real.",
+                    "xp": 15
+                },
+                {
+                    "id": "m3-3d",
+                    "tipo": "recurso",
+                    "recurso": "recursos/modelos_3d/M03_PozoPotencial.html",
+                    "titulo": "5.2 Maqueta 3D: Pozo y barrera de potencial",
+                    "descripcion": "Ficha técnica, código OpenSCAD (.scad) y archivo para imprimir (.stl) con protocolo para el aula.",
+                    "xp": 20
+                }
+            ]
         },
         {
             "id": "m3-desafio",
             "tipo": "desafio",
             "recurso": "desafios/desafio.html?m=3",
-            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "titulo": "6. Desafío Integral de Maestría (3 Fases)",
             "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
             "xp": 100,
             "logro": { "id": "logro_m3", "nombre": "Explorador de Superficies", "icono": "terrain" }

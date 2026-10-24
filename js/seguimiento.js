@@ -118,6 +118,17 @@ export const ERRORES = {
     haz_sentido: 'Sentido de la desviación según el signo de la carga',
     haz_medio: 'Olvidó el ½ en y = ½ a t²',
     haz_masa: 'Usó la masa de otra partícula',
+    // EquipotentialLab (capítulo 3 · potencial eléctrico)
+    potencial_v_vs_u: 'Confundió el potencial V con la energía potencial U',
+    potencial_signo: 'Signo de ΔV (integró el campo al revés)',
+    potencial_r2: 'Usó 1/r² en lugar de 1/r para el potencial',
+    potencial_suma_vectores: 'Sumó potenciales como vectores (es suma escalar)',
+    potencial_v0_e0: 'Creyó que V = 0 implica E = 0',
+    potencial_signo_carga: 'Ignoró el signo de la carga en V = kq/r',
+    potencial_ed_signo: 'Signo en ΔV = Ed (baja hacia donde apunta E)',
+    potencial_equip_perp: 'Dibujó equipotenciales no perpendiculares a E',
+    potencial_ev_vs_v: 'Confundió electrón-volt (energía) con volt (potencial)',
+    potencial_r_distancia: 'Usó la distancia equivocada en la superposición',
     otro: 'Otro error',
 };
 
@@ -193,9 +204,12 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     coulomb_pocas_cargas: 'Coulomb.html', coulomb_sin_vectores: 'Coulomb.html', coulomb_sin_origen: 'Coulomb.html', coulomb_atraccion_repulsion: 'Coulomb.html', coulomb_fuera_de_recta: 'Coulomb.html', coulomb_falta_fuerza: 'Coulomb.html',
     campo_sentido_negativa: 'VectorField.html#campo', campo_una_carga: 'VectorField.html#campo', campo_suma_modulos: 'VectorField.html#campo', campo_inverso_r: 'VectorField.html#campo', campo_direccion: 'VectorField.html#campo',
     dipolo_direccion: 'VectorField.html#dipolo', dipolo_aprox: 'VectorField.html#dipolo', dipolo_factor2: 'VectorField.html#dipolo', dipolo_r2: 'VectorField.html#dipolo',
-    torque_sentido: 'VectorField.html#torque', torque_coseno: 'VectorField.html#torque', torque_sin_d: 'VectorField.html#torque', haz_sentido: 'VectorField.html#haz', haz_medio: 'VectorField.html#haz', haz_masa: 'VectorField.html#haz' };
+    torque_sentido: 'VectorField.html#torque', torque_coseno: 'VectorField.html#torque', torque_sin_d: 'VectorField.html#torque', haz_sentido: 'VectorField.html#haz', haz_medio: 'VectorField.html#haz', haz_masa: 'VectorField.html#haz',
+    potencial_v_vs_u: 'EquipotentialLab.html#puntual', potencial_r2: 'EquipotentialLab.html#puntual', potencial_suma_vectores: 'EquipotentialLab.html#puntual', potencial_signo_carga: 'EquipotentialLab.html#puntual', potencial_r_distancia: 'EquipotentialLab.html#puntual',
+    potencial_v0_e0: 'EquipotentialLab.html#dipolo', potencial_signo: 'EquipotentialLab.html#gradiente', potencial_equip_perp: 'EquipotentialLab.html#gradiente',
+    potencial_ed_signo: 'EquipotentialLab.html#placas', potencial_ev_vs_v: 'EquipotentialLab.html#placas' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
-const LABS = { Coulomb: 'CoulombLab', VectorField: 'VectorFieldLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
+const LABS = { Coulomb: 'CoulombLab', VectorField: 'VectorFieldLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab', EquipotentialLab: 'EquipotentialLab' };
 export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──

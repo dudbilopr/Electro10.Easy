@@ -1,0 +1,51 @@
+% ==========================================================================
+%  e10.sty -- Plantilla de diseno Electro10.Easy para guias de estudio LaTeX.
+%  Paleta "Plasma" (magenta #B3246B + cian #0B8CA8), coincide con css/tokens.css.
+%  Uso: \usepackage{e10}  (compilar con pdflatex desde el directorio de la guia).
+% ==========================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{e10}[2026/10/24 Electro10.Easy design template]
+
+\RequirePackage[table]{xcolor}
+\RequirePackage{amsmath,amssymb}
+
+% --- Paleta Plasma ---------------------------------------------------------
+\definecolor{e10primary}{HTML}{B3246B}
+\definecolor{e10primarysoft}{HTML}{F8E6EF}
+\definecolor{e10accent}{HTML}{0B8CA8}
+\definecolor{e10accentsoft}{HTML}{E3F4F8}
+\definecolor{e10ink}{HTML}{22111B}
+\definecolor{e10muted}{HTML}{6A5562}
+\definecolor{e10line}{HTML}{ECDDE6}
+\definecolor{e10warn}{HTML}{9A5B00}
+\definecolor{e10warnsoft}{HTML}{FDF1DC}
+\definecolor{e10ok}{HTML}{1F7A52}
+\definecolor{e10oksoft}{HTML}{E3F3EA}
+
+% --- Cajas -----------------------------------------------------------------
+% Formula maestra resaltada
+\newcommand{\eformula}[1]{%
+  \begin{center}%
+    \fcolorbox{e10primary}{e10primarysoft}{%
+      \begin{minipage}{0.92\linewidth}\centering #1\end{minipage}}%
+  \end{center}}
+
+% Encabezado de seccion
+\newcommand{\esection}[1]{%
+  \vspace{1.1em}\noindent{\color{e10primary}\large\bfseries #1}\par\vspace{0.3em}%
+  \noindent{\color{e10primary}\hrule height 1.2pt}\par\vspace{0.5em}}
+
+% Caja de error comun
+\newcommand{\eerror}[2]{%
+  \noindent\fcolorbox{e10line}{e10warnsoft}{%
+    \begin{minipage}{0.95\linewidth}{\color{e10warn}\bfseries #1}\par\smallskip #2\end{minipage}}\par\vspace{0.5em}}
+
+% Caja de consejo
+\newcommand{\etip}[2]{%
+  \noindent\fcolorbox{e10accent}{e10accentsoft}{%
+    \begin{minipage}{0.95\linewidth}{\color{e10accent}\bfseries #1}\par\smallskip #2\end{minipage}}\par\vspace{0.5em}}
+
+% Solucion de la autoevaluacion
+\newcommand{\esol}[2]{\noindent{\color{e10ok}\bfseries #1.}\ #2\par}
+
+\endinput

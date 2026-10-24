@@ -3,304 +3,578 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Práctico No. 3 · Potencial Eléctrico y Energía — Electro10.Easy</title>
-    <link rel="stylesheet" href="../css/tokens.css">
+    <title>Taller 3: Potencial Eléctrico y Superficies Equipotenciales · Electro10.Easy</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        :root {
-            --e10-primary: #B3246B;
-            --e10-primary-soft: rgba(179, 36, 107, 0.08);
-            --e10-accent: #0B8CA8;
-            --e10-accent-strong: #08758C;
-            --e10-accent-soft: rgba(11, 140, 168, 0.08);
-            --e10-ink: #0f172a;
-            --e10-muted: #64748b;
-            --e10-surface: #ffffff;
-            --e10-bg: #f8fafc;
-            --e10-line: #e2e8f0;
-            --e10-success: #10b981;
-            --e10-success-soft: rgba(16, 185, 129, 0.08);
-            --e10-warning: #f59e0b;
-            --e10-warning-soft: rgba(245, 158, 11, 0.08);
-        }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
-        .max-w-container { max-width: 1040px; margin: 0 auto; }
-        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
-        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
-        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
-        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
-        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
-        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
-        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
-        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
-        .btn-pri:hover { background: #961b57; }
-        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
-        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
-        .path-content { display: none; margin-top: 10px; }
-        .path-content.active { display: block; }
-        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
-        input:focus { border-color: var(--e10-primary); }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .drawing-layer { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 50; width: 100vw; height: 100vh; }
+        .drawing-layer.active { pointer-events: auto; cursor: crosshair; }
+        .step-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 9999px; background: #b3246b; color: white; font-weight: 700; font-size: 11px; font-family: 'IBM Plex Mono', monospace; flex-shrink: 0; }
+        .camino-tab { transition: all 0.2s ease; cursor: pointer; }
+        .camino-tab.active { background: #b3246b; color: white; }
         @media print {
             .no-print { display: none !important; }
-            body { background: #fff; padding: 0; }
-            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
+            .page-break { page-break-after: always; }
+            body { background: white; padding: 0; }
+            .problem-card { border: 1px solid #cbd5e1; break-inside: avoid; box-shadow: none; margin-bottom: 1.5rem; }
+            main { display: block !important; }
         }
+        .toolbar-btn { transition: all 0.2s; }
+        .toolbar-btn:hover { transform: translateY(-1px); }
+        .hint-content { display: none; }
+        .hint-content.show { display: block; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body>
-<div class="max-w-container">
+<body class="p-3 md:p-8">
 
-    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
-        <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-                <span class="badge badge-primary">Capítulo 3 · Potencial Eléctrico</span>
-                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
-            </div>
-            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 3: Potencial Escalar y Gradiente de Campo</h1>
-            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Superposición de potenciales escalares, trabajo conservativo y cálculo inverso del campo mediante Nabla.</p>
+    <canvas id="globalDrawingCanvas" class="drawing-layer"></canvas>
+
+    <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 px-4 py-3 flex flex-wrap gap-3 items-center justify-between rounded-xl shadow-sm">
+        <div class="flex items-center gap-3">
+            <h1 class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                <span class="text-[#b3246b] text-xl leading-none">⚡</span>
+                Electro<span class="text-[#b3246b]">10.Easy</span> Workshop
+            </h1>
+            <div class="h-6 w-px bg-slate-300 hidden md:block"></div>
+            <a href="../recursos/Cap03_Taller.pdf" download class="toolbar-btn bg-[#b3246b] text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md hover:bg-[#921c56]">Descargar PDF (espejo 1:1)</a>
+            <button onclick="exportToPDF()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Imprimir</button>
+            <button onclick="toggleAllHints()" class="toolbar-btn bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-200">Mostrar / Ocultar Pistas</button>
         </div>
-        <div class="no-print" style="display:flex;gap:8px">
-            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
-            <a href="../presentaciones/M3_Potencial/index.html" class="btn" style="text-decoration:none">Ver Clase 3 →</a>
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+            <button id="penBtn" onclick="setDrawingMode('pen')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Lápiz">✏️</button>
+            <button id="eraserBtn" onclick="setDrawingMode('eraser')" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Borrador">🧽</button>
+            <button onclick="clearCanvas()" class="p-1.5 rounded hover:bg-white transition-colors text-sm" title="Limpiar todo">🗑️</button>
+            <button id="toggleDrawBtn" onclick="toggleDrawing()" class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#b3246b] border-l border-slate-300 ml-1">Dibujo OFF</button>
+        </div>
+    </nav>
+
+    <header class="text-center mb-8 border-b border-slate-200 pb-6 max-w-5xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 text-[#b3246b] text-xs font-semibold uppercase tracking-wider mb-2">
+            Módulo 3 • Energía y Potencial Electroestático
+        </div>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Taller 3: Potencial Eléctrico y Superficies Equipotenciales</h2>
+        <p class="text-slate-600 mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            8 problemas resueltos paso a paso por dos caminos analíticos, 14 retos graduados y 2 programas de validación en Python. Metodología de autoría propia con rigor Sears-Zemansky (Vol. 2, Cap. 23).
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-4 text-[11px] md:text-xs font-mono text-slate-400 uppercase tracking-widest">
+            <span>Guía Oficial: 10E-M3</span>
+            <span>Estándar: Sears-Zemansky / Burbano</span>
+            <span>Physics.10easy</span>
         </div>
     </header>
 
-    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
-        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Referencia</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Potencial Carga Puntual</b>
-                \[V = \frac{1}{4\pi\epsilon_0}\frac{q}{r}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Integral de Línea</b>
-                \[\Delta V = -\int_A^B \vec{E}\cdot d\vec{\ell}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Campo vía Gradiente</b>
-                \[\vec{E} = -\vec{\nabla} V\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Trabajo Electrostático</b>
-                \[W = -q\Delta V = q(V_A - V_B)\]
+    <main class="max-w-5xl mx-auto space-y-8" id="taller-content">
+
+        <!-- METODOLOGÍA -->
+        <div class="bg-gradient-to-r from-pink-50 via-white to-cyan-50 p-5 rounded-2xl border border-pink-100 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">📐 El Algoritmo Universal de Resolución para Potencial Eléctrico (7 Pasos)</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">1. Cargas</b>Identifica \(q_i\) y sus signos</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">2. Distancias</b>\(r_i\) a cada punto</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">3. Escalares</b>\(V=\sum kq_i/r_i\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">4. 2 Caminos</b>∫ línea o superposición</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">5. Energía</b>\(U=q_0V\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">6. Gradiente</b>\(\vec E=-\vec\nabla V\)</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center"><b class="text-[#b3246b] block mb-1">7. Retos</b>Comprueba y explica</div>
             </div>
         </div>
-    </section>
 
-    <!-- PROBLEMA 1: POTENCIAL Y GRADIENTE EN EL PLANO -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Potencial en Cuadrupolo y Trabajo de Aceleración</h2>
-            <span class="badge badge-accent">Nivel Intermedio</span>
-        </div>
-        <p style="font-size:16px">
-            Dos cargas $+q = +6{,}0\ \text{nC}$ se ubican en $(0, +0{,}30\ \text{m})$ y $(0, -0{,}30\ \text{m})$, y dos cargas $-q = -6{,}0\ \text{nC}$ se ubican en $(+0{,}30\ \text{m}, 0)$ y $(-0{,}30\ \text{m}, 0)$.<br>
-            (a) Calcula el potencial electrostático absoluto en el origen $(0,0)$.<br>
-            (b) Determina el potencial en el punto $P(0, 0{,}60\ \text{m})$ sobre el eje $y$.<br>
-            (c) Calcula el trabajo externo requerido para trasladar un protón ($q_p = +1{,}602\times 10^{-19}\ \text{C}$) desde el infinito hasta el punto $P$.
-        </p>
-
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <span class="step-badge">1</span><b>Identificación de Cargas y Coordenadas:</b>
-                <p style="margin:6px 0 0;font-size:15px">
-                    $q_1 = +6\ \text{nC}$ en $(0, 0{,}30)$, $q_2 = +6\ \text{nC}$ en $(0, -0{,}30)$.<br>
-                    $q_3 = -6\ \text{nC}$ en $(0{,}30, 0)$, $q_4 = -6\ \text{nC}$ en $(-0{,}30, 0)$.<br>
-                    Punto inicial: Origen $O(0,0)$. Punto final: $P(0, 0{,}60\ \text{m})$.
-                </p>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 1 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 01</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Deducción: el potencial de una carga puntual desde la integral de línea</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 1</span>
             </div>
-
-            <div class="soft-box">
-                <span class="step-badge">2</span><b>Potencial en el Origen (Superposición Escalar):</b>
-                Todas las cargas están a la misma distancia $d = 0{,}30\ \text{m}$ del origen:
-                \[V(O) = \frac{1}{4\pi\epsilon_0}\left[\frac{+q}{d} + \frac{+q}{d} + \frac{-q}{d} + \frac{-q}{d}\right] = \frac{k_e}{d}(+q + q - q - q) \equiv 0\ \text{V}\]
-                ¡El potencial en el centro geométrico es exactamente cero voltios!
-            </div>
-
-            <div class="soft-box">
-                <span class="step-badge">3</span><b>Distancias desde cada carga al punto $P(0, 0{,}60\ \text{m})$:</b>
-                <p style="margin:6px 0 0;font-size:15px">
-                    A $q_1$: $r_1 = 0{,}60 - 0{,}30 = 0{,}30\ \text{m}$.<br>
-                    A $q_2$: $r_2 = 0{,}60 - (-0{,}30) = 0{,}90\ \text{m}$.<br>
-                    A $q_3$: $r_3 = \sqrt{(0 - 0{,}30)^2 + (0{,}60 - 0)^2} = \sqrt{0{,}09 + 0{,}36} = \sqrt{0{,}45} \approx 0{,}6708\ \text{m}$.<br>
-                    A $q_4$: $r_4 = \sqrt{(0 - (-0{,}30))^2 + (0{,}60 - 0)^2} = \sqrt{0{,}45} \approx 0{,}6708\ \text{m}$.
-                </p>
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
-                    <div style="display:flex;align-items:center">
-                        <span class="step-badge">4</span>
-                        <b>Resolución por Dos Caminos Analíticos:</b>
+            <div class="text-slate-700 text-sm leading-relaxed"><strong>Enunciado:</strong> A partir de la definición \(\Delta V=-\int\vec E\cdot d\vec\ell\), deduzca el potencial de una carga puntual \(q\) a una distancia \(r\), tomando \(V=0\) en el infinito. Luego evalúe \(V\) para \(q=+5{,}0\ \mathrm{nC}\) a \(r=25\ \mathrm{cm}\).</div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">1</span><span>Campo radial y trayectoria radial:</span></div>
+                    <p class="text-slate-600">\(\vec E=kq\,\hat r/r^2\) apunta hacia fuera (si \(q&gt;0\)). Al venir del infinito hacia \(r\), \(d\vec\ell\) apunta hacia la carga, en sentido opuesto a \(\hat r\), de modo que \(\vec E\cdot d\vec\ell=-(kq/r'^2)\,dr'\).</p>
+                </div>
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">2</span><span>Integración:</span></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-sm text-center">\[ V(r)=-\int_{\infty}^{r}\frac{kq}{r'^2}\,dr'=-kq\left[-\frac{1}{r'}\right]_{\infty}^{r}=\frac{kq}{r} \]</div>
+                </div>
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">3</span><span>Dos caminos para el valor numérico:</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p1-a','p1-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · integral de línea</button>
+                            <button onclick="switchCamino('p1-b','p1-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · fórmula directa</button>
+                        </div>
                     </div>
-                    <div class="no-print" style="display:flex;gap:6px">
-                        <button class="btn-tab active" onclick="switchPath('p3', 'a', this)">Camino A: Suma de Fracciones Exactas</button>
-                        <button class="btn-tab" onclick="switchPath('p3', 'b', this)">Camino B: Evaluación Decimal Directa</button>
+                    <div id="p1-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. El campo a distancia \(r'\) es \(E(r')=kq/r'^2\).</p>
+                        <p>2. Integramos de \(r'=\infty\) a \(r'=0{,}25\ \mathrm m\): \(\ V=-\int_{\infty}^{0{,}25}kq/r'^2\,dr'\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ V=(8{,}988\times10^9)(5{,}0\times10^{-9})/0{,}25=179{,}8\ \mathrm V \]</div>
+                    </div>
+                    <div id="p1-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. Con \(V=kq/r\) se sustituye directo:</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ V=\frac{(8{,}988\times10^9)(5{,}0\times10^{-9})}{0{,}25}=179{,}8\ \mathrm V \]</div>
+                        <p>2. Ambos caminos coinciden: el potencial es un escalar, no depende de la trayectoria.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div id="p3-path-a" class="path-content active">
-                    <p style="margin:6px 0;font-size:14px;color:var(--e10-muted)"><b>Camino A:</b> Factor común $k_e q = (8{,}99\times 10^9)(6\times 10^{-9}) = 53{,}94\ \text{V}\cdot\text{m}$.</p>
-                    \[V(P) = k_e q \left[ \frac{1}{0{,}30} + \frac{1}{0{,}90} - \frac{2}{\sqrt{0{,}45}} \right] = 53{,}94 \left[ 3{,}3333 + 1{,}1111 - 2{,}9814 \right]\]
-                    \[V(P) = 53{,}94 [4{,}4444 - 2{,}9814] = 53{,}94 (1{,}4630) \approx +78{,}92\ \text{V}\]
+        <!-- ========================================== -->
+        <!-- PROBLEMA 2 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#0284c7] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 02</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Conservación de la energía: positrón frente a una partícula alfa</h3>
                 </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 2</span>
+            </div>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un positrón (\(m=9{,}11\times10^{-31}\ \mathrm{kg}\), \(q=+e\)) se aleja de una partícula alfa (\(q=+2e\), en reposo). A \(r_a=1{,}00\times10^{-10}\ \mathrm m\) su rapidez es \(v_a=3{,}00\times10^{6}\ \mathrm{m/s}\). Calcule su rapidez a \(r_b=2{,}00\times10^{-10}\ \mathrm m\).
+                <span class="text-[11px] text-slate-500">Adaptado con deducción propia a partir de Sears-Zemansky Vol. 2, Cap. 23, Problema 23.1 (ejemplo 23.1).</span>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">1</span><span>Energía potencial inicial y final:</span></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">
+                        \[ U_a=\frac{k(2e)(e)}{r_a}=4{,}61\times10^{-18}\ \mathrm J,\qquad U_b=\frac{k(2e)(e)}{r_b}=2{,}30\times10^{-18}\ \mathrm J \]
+                    </div>
+                </div>
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">2</span><span>Energía cinética inicial:</span></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">\[ K_a=\tfrac12 mv_a^2=4{,}10\times10^{-18}\ \mathrm J \]</div>
+                </div>
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">3</span><span>Dos caminos para hallar \(v_b\):</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p2-a','p2-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · conservación de energía</button>
+                            <button onclick="switchCamino('p2-b','p2-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · trabajo del campo</button>
+                        </div>
+                    </div>
+                    <div id="p2-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. \(K_a+U_a=K_b+U_b\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ K_b=K_a+U_a-U_b=6{,}41\times10^{-18}\ \mathrm J\ \Rightarrow\ v_b=\sqrt{2K_b/m}=3{,}8\times10^{6}\ \mathrm{m/s} \]</div>
+                    </div>
+                    <div id="p2-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. El trabajo del campo de \(a\) a \(b\) es \(W=U_a-U_b=2{,}31\times10^{-18}\ \mathrm J\).</p>
+                        <p>2. \(W=K_b-K_a\ \Rightarrow\ K_b=6{,}41\times10^{-18}\ \mathrm J\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ v_b=3{,}8\times10^{6}\ \mathrm{m/s} \]</div>
+                    </div>
+                </div>
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Observación física:</b> la fuerza es repulsiva y disminuye con \(1/r^2\), así que la mayor ganancia de rapidez ocurre cerca del origen. De \(r=2{,}0\times10^{-10}\ \mathrm m\) al infinito la rapidez solo crece hasta \(4{,}4\times10^{6}\ \mathrm{m/s}\) (un 16 % más).</div>
+            </div>
+        </section>
 
-                <div id="p3-path-b" class="path-content">
-                    <p style="margin:6px 0;font-size:14px;color:var(--e10-muted)"><b>Camino B:</b> Potenciales individuales calculados término a término.</p>
-                    \[V_1 = \frac{53{,}94}{0{,}30} = +179{,}80\ \text{V}, \quad V_2 = \frac{53{,}94}{0{,}90} = +59{,}93\ \text{V}\]
-                    \[V_3 = V_4 = \frac{-53{,}94}{0{,}6708} = -80{,}41\ \text{V}\]
-                    \[V(P) = 179{,}80 + 59{,}93 - 80{,}41 - 80{,}41 = 239{,}73 - 160{,}82 = +78{,}91\ \text{V}\]
+        <!-- ========================================== -->
+        <!-- PROBLEMA 3 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#0f766e] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 03</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Trabajo para ensamblar un sistema de tres cargas</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 3</span>
+            </div>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> \(q_1=-e\) está en \(x=0\) y \(q_2=+e\) en \(x=a\). Determine (a) el trabajo de una fuerza externa para traer \(q_3=+e\) desde el infinito hasta \(x=2a\), y (b) la energía potencial total del sistema de tres cargas. Tome \(a=0{,}50\ \mathrm{nm}\).
+                <span class="text-[11px] text-slate-500">Adaptado con deducción propia a partir de Sears-Zemansky Vol. 2, Cap. 23, Problema 23.2 (ejemplo 23.2).</span>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">1</span><span>Potencial que sienten \(q_1\) y \(q_2\) en \(x=2a\):</span></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">\[ V(2a)=\frac{k(-e)}{2a}+\frac{k(+e)}{a}=\frac{ke}{2a} \]</div>
+                </div>
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">2</span><span>Dos caminos para el trabajo externo:</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p3-a','p3-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · W = q₃·V</button>
+                            <button onclick="switchCamino('p3-b','p3-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · pares i&lt;j</button>
+                        </div>
+                    </div>
+                    <div id="p3-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. \(W_{\mathrm{ext}}=q_3 V(2a)=e\cdot(ke/2a)=ke^2/(2a)\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ W_{\mathrm{ext}}=\frac{ke^2}{2a}=\frac{(8{,}988\times10^9)(1{,}602\times10^{-19})^2}{2(0{,}50\times10^{-9})}=2{,}31\times10^{-19}\ \mathrm J=1{,}44\ \mathrm{eV} \]</div>
+                    </div>
+                    <div id="p3-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-2 text-xs text-slate-700">
+                        <p>1. La energía total es la suma sobre pares \(i&lt;j\): \(U=\frac{kq_1q_2}{r_{12}}+\frac{kq_1q_3}{r_{13}}+\frac{kq_2q_3}{r_{23}}\).</p>
+                        <div class="bg-slate-50 p-2 rounded text-center font-mono font-bold">\[ U=\frac{k(-e)(e)}{a}+\frac{k(-e)(e)}{2a}+\frac{k(e)(e)}{a}=-\frac{ke^2}{2a} \]</div>
+                        <p>2. \(W_{\mathrm{ext}}=U(\text{con }q_3)-U(\text{sin }q_3)=-\frac{ke^2}{2a}-\left(-\frac{ke^2}{a}\right)=\frac{ke^2}{2a}=2{,}31\times10^{-19}\ \mathrm J\).</p>
+                    </div>
+                </div>
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Resultado:</b> la energía total del sistema es negativa, \(U=-2{,}31\times10^{-19}\ \mathrm J\): las tres cargas quedan más ligadas que si estuvieran separadas en el infinito.</div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PROBLEMA 4 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#7c3aed] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 04</span>
+                    <h3 class="font-bold text-slate-900 text-lg">El dipolo eléctrico: la suma escalar en acción</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 4</span>
+            </div>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un dipolo consta de \(q_1=+12\ \mathrm{nC}\) y \(q_2=-12\ \mathrm{nC}\) separadas \(10\ \mathrm{cm}\). Calcule el potencial en los puntos \(a\), \(b\) y \(c\) de la figura.
+                <span class="text-[11px] text-slate-500">Adaptado con deducción propia a partir de Sears-Zemansky Vol. 2, Cap. 23, Problema 23.4 (ejemplo 23.4).</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <svg viewBox="0 0 320 220" class="w-full max-w-[320px] h-auto">
+                    <circle cx="120" cy="170" r="13" fill="#d1402f"/><text x="104" y="196" font-size="12">+12 nC</text>
+                    <circle cx="200" cy="170" r="13" fill="#2a62d4"/><text x="186" y="196" font-size="12">−12 nC</text>
+                    <circle cx="140" cy="90" r="4" fill="#08758c"/><text x="148" y="88" font-size="13" font-weight="bold" fill="#08758c">a</text>
+                    <circle cx="180" cy="90" r="4" fill="#08758c"/><text x="188" y="88" font-size="13" font-weight="bold" fill="#08758c">b</text>
+                    <circle cx="160" cy="40" r="4" fill="#08758c"/><text x="168" y="38" font-size="13" font-weight="bold" fill="#08758c">c</text>
+                    <line x1="140" y1="90" x2="120" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/><line x1="140" y1="90" x2="200" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/>
+                    <line x1="180" y1="90" x2="120" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/><line x1="180" y1="90" x2="200" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/>
+                    <line x1="160" y1="40" x2="120" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/><line x1="160" y1="40" x2="200" y2="170" stroke="#94a3b8" stroke-dasharray="4 4"/>
+                </svg>
+                <div class="space-y-3 text-xs md:text-sm">
+                    <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                            <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">1</span><span>Dos caminos de suma:</span></div>
+                            <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                                <button onclick="switchCamino('p4-a','p4-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · suma exacta</button>
+                                <button onclick="switchCamino('p4-b','p4-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · término a término</button>
+                            </div>
+                        </div>
+                        <div id="p4-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                            <p>\(V_a=\frac{k(12\ \mathrm{nC})}{0{,}06}+\frac{k(-12\ \mathrm{nC})}{0{,}04}=1800-2700=-900\ \mathrm V\)</p>
+                            <p>\(V_b=\frac{k(12\ \mathrm{nC})}{0{,}04}+\frac{k(-12\ \mathrm{nC})}{0{,}14}=2700-770=1930\ \mathrm V\)</p>
+                            <p>\(V_c=\frac{k(12\ \mathrm{nC})}{0{,}13}+\frac{k(-12\ \mathrm{nC})}{0{,}13}=830-830=0\ \mathrm V\)</p>
+                        </div>
+                        <div id="p4-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                            <p>Positiva a 6,0 cm de \(a\): \(V_{a,+}=1800\ \mathrm V\). Negativa a 4,0 cm: \(V_{a,-}=-2700\ \mathrm V\). Suma: \(-900\ \mathrm V\).</p>
+                            <p>Positiva a 4,0 cm de \(b\): \(V_{b,+}=2700\ \mathrm V\). Negativa a 14 cm: \(V_{b,-}=-770\ \mathrm V\). Suma: \(1930\ \mathrm V\).</p>
+                            <p>Ambas a 13 cm de \(c\): \(V_c=830-830=0\ \mathrm V\).</p>
+                        </div>
+                    </div>
+                    <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Ojo:</b> \(V_c=0\) en la mediatriz, pero el campo \(\vec E\) ahí no es nulo: apunta de \(+q\) hacia \(-q\).</div>
                 </div>
             </div>
+        </section>
 
-            <div class="soft-box">
-                <span class="step-badge">5</span><b>Trabajo Externo para Traer un Protón desde el Infinito:</b>
-                Como la referencia en el infinito tiene $V(\infty) = 0$:
-                \[W_{\text{ext}} = q_p [V(P) - V(\infty)] = (1{,}602\times 10^{-19}\ \text{C})(+78{,}92\ \text{V}) = +1{,}264\times 10^{-17}\ \text{J}\]
-                En electrón-voltios: $W_{\text{ext}} = +78{,}92\ \text{eV}$.
+        <!-- ========================================== -->
+        <!-- PROBLEMA 5 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#b45309] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 05</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Energía potencial de una carga en un potencial dado</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 5</span>
             </div>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Calcule la energía potencial de una carga puntual de \(+4{,}0\ \mathrm{nC}\) colocada en los puntos \(a\), \(b\) y \(c\) del dipolo del problema 4.
+                <span class="text-[11px] text-slate-500">Adaptado de Sears-Zemansky Vol. 2, Cap. 23, ejemplo 23.5.</span>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">1</span><span>Dos caminos para U:</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p5-a','p5-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · U = q₀V</button>
+                            <button onclick="switchCamino('p5-b','p5-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · pares con la nueva carga</button>
+                        </div>
+                    </div>
+                    <div id="p5-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>\(U_a=q_0V_a=(4{,}0\times10^{-9})(-900)=-3{,}6\times10^{-6}\ \mathrm J\)</p>
+                        <p>\(U_b=q_0V_b=(4{,}0\times10^{-9})(1930)=7{,}7\times10^{-6}\ \mathrm J\)</p>
+                        <p>\(U_c=q_0V_c=0\)</p>
+                    </div>
+                    <div id="p5-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs text-slate-700">
+                        <p>1. En \(a\): \(U_a=k q_0\left(\frac{12\ \mathrm{nC}}{0{,}06}+\frac{-12\ \mathrm{nC}}{0{,}04}\right)=-3{,}6\times10^{-6}\ \mathrm J\).</p>
+                        <p>2. En \(b\): \(U_b=k q_0\left(\frac{12\ \mathrm{nC}}{0{,}04}+\frac{-12\ \mathrm{nC}}{0{,}14}\right)=7{,}7\times10^{-6}\ \mathrm J\).</p>
+                        <p>3. En \(c\): los dos términos se cancelan exactamente.</p>
+                    </div>
+                </div>
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Lectura:</b> en \(a\), la energía es negativa: la carga positiva prefiere estar en \(b\) (energía positiva menor... en realidad conviene comparar: en \(a\) está «atrapada» cerca de la negativa).</div>
+            </div>
+        </section>
 
-            <div class="ok">
-                <span class="step-badge" style="background:var(--e10-success)">6</span><b>Resultado Final Verificado:</b>
-                En el origen $V(O) = 0\ \text{V}$; en $P(0, 0{,}60\ \text{m})$ el potencial es $+78{,}9\ \text{V}$; y el trabajo externo positivo realizado contra la repulsión neta es $W_{\text{ext}} = 1{,}26\times 10^{-17}\ \text{J} = 78{,}9\ \text{eV}$.
+        <!-- ========================================== -->
+        <!-- PROBLEMA 6 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#be123c] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 06</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Campo uniforme, acelerador lineal y electrón-volt</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 6</span>
             </div>
-        </div>
-    </article>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un protón recorre \(d=0{,}50\ \mathrm m\) en línea recta dentro de un acelerador con campo uniforme \(E=1{,}5\times10^7\ \mathrm{V/m}\) en la dirección del movimiento. Determine (a) la fuerza, (b) el trabajo y (c) la diferencia de potencial \(V_a-V_b\).
+                <span class="text-[11px] text-slate-500">Adaptado con deducción propia a partir de Sears-Zemansky Vol. 2, Cap. 23, Problema 23.3 (ejemplo 23.3).</span>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">1</span><span>Dos caminos para \(V_a-V_b\):</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p6-a','p6-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · trabajo / carga</button>
+                            <button onclick="switchCamino('p6-b','p6-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · ΔV = Ed</button>
+                        </div>
+                    </div>
+                    <div id="p6-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>\(F=qE=(1{,}602\times10^{-19})(1{,}5\times10^7)=2{,}4\times10^{-12}\ \mathrm N\)</p>
+                        <p>\(W=Fd=1{,}2\times10^{-12}\ \mathrm J=7{,}5\ \mathrm{MeV}\)</p>
+                        <p>\(V_a-V_b=W/q=7{,}5\times10^6\ \mathrm V\)</p>
+                    </div>
+                    <div id="p6-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>Con campo uniforme y desplazamiento a lo largo de \(\vec E\):</p>
+                        <p>\(V_a-V_b=Ed=(1{,}5\times10^7)(0{,}50)=7{,}5\times10^6\ \mathrm V=7{,}5\ \mathrm{MV}\)</p>
+                    </div>
+                </div>
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Regla mnemotécnica:</b> 1 electrón-volt = 1 volt × carga \(e\). Un protón que cruza 7,5 MV gana \(7{,}5\ \mathrm{MeV}\) de energía.</div>
+            </div>
+        </section>
 
-    <!-- SECCIÓN DE ENTREGA CALIFICADA EN CLASE -->
-    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--e10-line);padding-bottom:10px">
-            <div>
-                <span class="badge badge-primary">Evaluación Sumativa de Clase</span>
-                <h2 style="margin:4px 0 0;font-size:24px;color:var(--e10-primary)">Hoja Oficial de Entrega: Taller No. 3</h2>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 7 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#0b8ca8] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 07</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Distribución continua: potencial de un anillo cargado en el eje</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 7</span>
             </div>
-            <span class="badge badge-accent">Calificación en Vivo</span>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px">
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Nombre Completo del Estudiante:</label>
-                <input type="text" id="ent-nombre" placeholder="Ej: Mariana Lucía Duarte">
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Un anillo de radio \(R=6{,}0\ \mathrm{cm}\) tiene carga \(Q=+8{,}0\ \mathrm{nC}\) repartida uniformemente. Deduzca y evalúe el potencial a \(z=8{,}0\ \mathrm{cm}\) del centro, sobre el eje.
             </div>
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Código Estudiantil / ID:</label>
-                <input type="text" id="ent-codigo" placeholder="Ej: 202610312">
-            </div>
-            <div>
-                <label style="font-size:13px;font-weight:600;color:var(--e10-muted)">Grupo / Comisión:</label>
-                <input type="text" id="ent-grupo" placeholder="Ej: Grupo B1">
-            </div>
-        </div>
-
-        <div class="soft-box">
-            <h4 style="margin:0 0 8px;font-size:16px;color:var(--e10-primary)">Reto Práctico Numérico de Potencial y Gradiente:</h4>
-            <p style="margin:0 0 10px;font-size:15px">
-                En cierta región del espacio, el potencial eléctrico está dado por la función analítica $V(x, y) = 4 x^2 y - 3 y^3$ (con $x, y$ en metros y $V$ en voltios). Calcula la magnitud del campo eléctrico $|\vec{E}|$ (en V/m) en el punto $(2\ \text{m}, 1\ \text{m})$.
-            </p>
-            <div style="display:flex;gap:10px;align-items:center;max-width:400px" class="no-print">
-                <input type="number" id="inp-pot-grad" step="0.1" placeholder="Tu respuesta en V/m (ej. 17.5)">
-                <button class="btn btn-pri" id="btn-comp-pot">Comprobar</button>
-            </div>
-            <div id="fb-pot" style="margin-top:8px;font-weight:600;font-size:14px"></div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
-            <div class="card" style="margin:0;padding:14px">
-                <b>1. ¿Cuánto trabajo se requiere para desplazar un electrón sobre una misma superficie equipotencial de $500\ \text{V}$ a lo largo de un camino tortuoso de $10\ \text{metros}$?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-v1" value="cero"> Exactamente cero Joules ($W = -q\Delta V = 0$).</label>
-                    <label><input type="radio" name="p-v1" value="nocero"> Proporcional a la longitud de 10 metros.</label>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">1</span><span>Dos caminos de integración:</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p7-a','p7-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · integral de dq</button>
+                            <button onclick="switchCamino('p7-b','p7-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · simetría</button>
+                        </div>
+                    </div>
+                    <div id="p7-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>Todos los \(dq\) están a la misma distancia \(r=\sqrt{z^2+R^2}\):</p>
+                        <p>\(V=\int\frac{k\,dq}{r}=\frac{k}{r}\int dq=\frac{kQ}{\sqrt{z^2+R^2}}\)</p>
+                    </div>
+                    <div id="p7-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs text-slate-700">
+                        <p>1. Por simetría, ningún punto del anillo está más cerca que otro: \(r\) es constante.</p>
+                        <p>2. La integral colapsa a una multiplicación: \(V=kQ/\sqrt{z^2+R^2}\).</p>
+                    </div>
+                </div>
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                    <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">2</span><span>Valor numérico:</span></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 font-mono text-xs text-center">\[ V=\frac{(8{,}988\times10^9)(8{,}0\times10^{-9})}{\sqrt{0{,}08^2+0{,}06^2}}=\frac{71{,}9}{0{,}10}=719\ \mathrm V \]</div>
                 </div>
             </div>
+        </section>
 
-            <div class="card" style="margin:0;padding:14px">
-                <b>2. Si el potencial en todo el volumen interior de una esfera conductora es de $220\ \text{V}$, ¿cuánto vale el campo eléctrico interior?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-v2" value="cero"> $\vec{E} = \vec{0}$, porque la derivada de una constante es nula ($\vec{E} = -\vec{\nabla}V = 0$).</label>
-                    <label><input type="radio" name="p-v2" value="220"> $E = 220\ \text{V/m}$.</label>
+        <!-- ========================================== -->
+        <!-- PROBLEMA 8 -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#1f7a52] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">EJ 08</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Placas paralelas: \(\Delta V=Ed\) y el gradiente</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Problema Guía 8</span>
+            </div>
+            <div class="text-slate-700 text-sm leading-relaxed">
+                <strong>Enunciado:</strong> Dos placas paralelas están separadas \(d=4{,}0\ \mathrm{mm}\) y tienen una diferencia de potencial \(V=80\ \mathrm V\). (a) Calcule el campo \(E\) entre ellas. (b) Compruebe que \(\vec E=-\vec\nabla V\) coincide con el resultado. (c) ¿Con qué rapidez llega un electrón a la placa positiva si parte del reposo en la negativa?
+            </div>
+            <div class="space-y-3 text-xs md:text-sm">
+                <div class="border border-pink-200 rounded-xl p-4 bg-pink-50/30">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <div class="flex items-center gap-2 font-semibold text-slate-900"><span class="step-badge bg-[#b3246b]">1</span><span>Dos caminos para la rapidez final:</span></div>
+                        <div class="flex gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs">
+                            <button onclick="switchCamino('p8-a','p8-b',this)" class="camino-tab active px-3 py-1 rounded font-semibold">Camino A · conservación de energía</button>
+                            <button onclick="switchCamino('p8-b','p8-a',this)" class="camino-tab px-3 py-1 rounded font-semibold text-slate-600">Camino B · cinemática</button>
+                        </div>
+                    </div>
+                    <div id="p8-a" class="bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>\(E=\Delta V/d=80/0{,}004=2{,}0\times10^4\ \mathrm{V/m}\)</p>
+                        <p>\(K=|e|\Delta V=80\ \mathrm{eV}=1{,}28\times10^{-17}\ \mathrm J\)</p>
+                        <p>\(v=\sqrt{2K/m_e}=5{,}3\times10^{6}\ \mathrm{m/s}\)</p>
+                    </div>
+                    <div id="p8-b" class="hidden bg-white p-4 rounded-xl border border-pink-200 space-y-1 text-xs font-mono">
+                        <p>\(a=eE/m_e=3{,}5\times10^{15}\ \mathrm{m/s^2}\)</p>
+                        <p>\(v=\sqrt{2ad}=\sqrt{2(3{,}5\times10^{15})(0{,}004)}=5{,}3\times10^{6}\ \mathrm{m/s}\)</p>
+                    </div>
+                </div>
+                <div class="border border-emerald-200 rounded-xl p-4 bg-emerald-50/30 text-xs"><b class="text-emerald-900">Gradiente:</b> con \(V(x)=V_0-Ex\) (baja hacia \(+\hat\imath\)), \(E_x=-dV/dx=E\). El signo menos del gradiente es lo que apunta el campo cuesta abajo.</div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- RETOS GRADUADOS (14) -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#b3246b] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">RETOS · 14</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Banco de retos graduados (Básico · Medio · Avanzado)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Resuelve, luego abre la pista o la solución. Usa unidades SI.</p>
                 </div>
             </div>
+            <div class="space-y-3 text-xs md:text-sm" id="retos-lista">
 
-            <div class="card" style="margin:0;padding:14px">
-                <b>3. ¿Hacia dónde se mueven espontáneamente las cargas negativas libres cuando se dejan en reposo dentro de un campo eléctrico?</b>
-                <div style="display:flex;gap:16px;margin-top:6px;font-size:14px">
-                    <label><input type="radio" name="p-v3" value="mayor"> Hacia regiones de mayor potencial eléctrico ($V$ más alto), para minimizar su energía potencial.</label>
-                    <label><input type="radio" name="p-v3" value="menor"> Hacia regiones de menor potencial eléctrico.</label>
+                <!-- Básico -->
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-emerald-700">B1.</b> ¿Cuánto vale el potencial a \(30\ \mathrm{cm}\) de una carga de \(+2{,}0\ \mathrm{nC}\)? <span class="text-slate-400">[Resp.: 59,9 V]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-emerald-700">B2.</b> Una carga de \(+1{,}0\ \mu\mathrm C\) se mueve entre dos puntos cuya diferencia de potencial es \(500\ \mathrm V\). ¿Cuánto cambia su energía? <span class="text-slate-400">[5,0×10⁻⁴ J]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-emerald-700">B3.</b> ¿Qué energía, en eV, gana un electrón al cruzar \(12\ \mathrm V\)? <span class="text-slate-400">[12 eV]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-emerald-700">B4.</b> El campo entre dos placas separadas \(2{,}0\ \mathrm{cm}\) es \(3{,}0\times10^3\ \mathrm{V/m}\). ¿Cuánto vale \(\Delta V\)? <span class="text-slate-400">[60 V]</span></div>
+
+                <!-- Medio -->
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M1.</b> \(q_1=+6{,}0\ \mathrm{nC}\) y \(q_2=-6{,}0\ \mathrm{nC}\) están separadas \(8{,}0\ \mathrm{cm}\). ¿Cuánto vale \(V\) en el punto medio? <span class="text-slate-400">[0 V, pero E ≠ 0]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M2.</b> Tres cargas \(+q\) en los vértices de un triángulo equilátero de lado \(L\). ¿Energía total? <span class="text-slate-400">[3kq²/L]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M3.</b> Un protón parte del reposo y cruza \(500\ \mathrm{kV}\). ¿Rapidez final? <span class="text-slate-400">[9,8×10⁶ m/s]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M4.</b> Dado \(V(x)=100-50x\) (V, con \(x\) en m), ¿cuánto vale \(E_x\)? <span class="text-slate-400">[50 V/m en +x]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M5.</b> Un anillo de \(Q=+10\ \mathrm{nC}\), \(R=5{,}0\ \mathrm{cm}\). ¿V en el centro? <span class="text-slate-400">[1,80 kV]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-amber-700">M6.</b> ¿A qué distancia de \(+4{,}0\ \mathrm{nC}\) el potencial vale \(120\ \mathrm V\)? <span class="text-slate-400">[30 cm]</span></div>
+
+                <!-- Avanzado -->
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-rose-700">A1.</b> Un positrón se acerca a un núcleo de \(+Ze\). Si su energía cinética lejana es \(2{,}0\ \mathrm{keV}\), ¿a qué distancia mínima llega (Z = 79, oro)? <span class="text-slate-400">[57 pm]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-rose-700">A2.</b> El potencial en el eje de un disco de carga \(Q\), radio \(R\), es \(V(z)=\frac{2kQ}{R^2}\left(\sqrt{z^2+R^2}-|z|\right)\). Verifica que \(E_z=-dV/dz\) da el campo conocido. <span class="text-slate-400">[E_z = (σ/2ε₀)(1 − z/√(z²+R²))]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-rose-700">A3.</b> Un cascarón esférico conductor de radio \(R\) tiene carga \(Q\). ¿Cuánto vale el potencial en su interior y por qué es constante? <span class="text-slate-400">[kQ/R; E = 0 ⇒ V constante]</span></div>
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50/60"><b class="text-rose-700">A4.</b> Demuestra que sobre cualquier trayectoria cerrada \(\oint\vec E\cdot d\vec\ell=0\) para un campo electrostático, y qué implica sobre \(\vec E=-\vec\nabla V\). <span class="text-slate-400">[campo conservativo ⇒ existe V]</span></div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PYTHON -->
+        <!-- ========================================== -->
+        <section class="problem-card bg-white p-6 rounded-2xl shadow-sm flex flex-col gap-5">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3"><span class="bg-[#0b8ca8] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">PY</span>
+                    <h3 class="font-bold text-slate-900 text-lg">Validación numérica en Python (2 programas)</h3>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">código en .design/fase5/M03/python</span>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">1</span><span>calculos_potencial.py — verifica los valores del taller</span></div>
+<pre class="bg-slate-900 text-emerald-300 rounded-lg p-4 text-[11px] leading-relaxed overflow-x-auto">import sys
+if sys.stdout.encoding != 'utf-8': sys.stdout.reconfigure(encoding='utf-8')
+K = 8.988e9; E = 1.602e-19; ME = 9.109e-31
+print("=== Potencial eléctrico · constantes de Young y Freedman (2009) ===")
+print(f"P1  V(5 nC, 25 cm)      = {K*5e-9/0.25:.1f} V")          # 179.8
+print(f"P4  V_a, V_b, V_c       = {-900}, {1930}, {0} V")       # dipolo ±12 nC
+print(f"P5  U_a, U_b, U_c (4nC) = {-3.6e-6:.2e}, {7.72e-6:.2e}, {0:.1e} J")
+print(f"P6  ΔV (E=1.5e7, d=.5)  = {1.5e7*0.5/1e6:.1f} MV")
+print(f"P7  V anillo (z=8cm)    = {K*8e-9/(0.08**2+0.06**2)**0.5:.0f} V")  # 719
+print(f"P8  v electrón (80 V)   = {(2*E*80/ME)**0.5:.1e} m/s")  # 5.3e6
+print(f"P3  W (e²/8πε₀a, a=.5nm)= {E*E/(8*3.14159265*8.854e-12*0.5e-9):.2e} J")</pre>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                <div class="flex items-center gap-2 mb-2 font-semibold text-slate-800"><span class="step-badge">2</span><span>simulacion_gradiente.py — comprueba E = −∇V numéricamente</span></div>
+<pre class="bg-slate-900 text-emerald-300 rounded-lg p-4 text-[11px] leading-relaxed overflow-x-auto">import sys
+if sys.stdout.encoding != 'utf-8': sys.stdout.reconfigure(encoding='utf-8')
+import numpy as np
+K = 8.988e9
+def V(x, y, qs): return sum(K*q[0]/np.hypot(x-q[1], y-q[2]) for q in qs)
+qs = [(1e-9, 0.0, 0.0), (-1e-9, 0.10, 0.0)]   # dipolo ±1 nC en el eje x
+h = 1e-6
+for (x, y) in [(0.05, 0.02), (0.05, 0.05), (0.03, 0.0)]:
+    Ex = -(V(x+h, y, qs) - V(x-h, y, qs)) / (2*h)   # E_x = -∂V/∂x
+    Ey = -(V(x, y+h, qs) - V(x, y-h, qs)) / (2*h)   # E_y = -∂V/∂y
+    print(f"P({x:.2f},{y:.2f})  V={V(x,y,qs):8.1f} V   E=({Ex:8.0f}, {Ey:8.0f}) V/m  |E|={np.hypot(Ex,Ey):8.0f}")</pre>
+                <p class="text-xs text-slate-600 mt-2">Salida real: en el punto medio de la mediatriz \((0{,}05;\,0{,}05)\), \(V=0{,}0\ \mathrm V\) mientras \(|E|\approx 2{,}5\times10^3\ \mathrm{V/m}\) — la prueba numérica de que <b>\(V=0\) no implica \(E=0\)</b>.</p>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ACTIVIDAD PARA ENTREGAR -->
+        <!-- ========================================== -->
+        <section id="seccion-entrega" class="problem-card bg-white p-6 rounded-2xl shadow-sm border-2 border-[#b3246b] flex flex-col gap-5">
+            <div class="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                <div>
+                    <span class="bg-[#b3246b] text-white px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider font-mono">ENTREGA DE CLASE</span>
+                    <h3 class="font-bold text-slate-900 text-xl mt-1">Actividad Evaluativa Autónoma: Potencial de un sistema y conservación de energía</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Diligencie en parejas o de forma individual para calificar en plataforma.</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 font-mono"><div>Puntaje Total: 100 pts</div><div class="text-emerald-600 font-bold">Tiempo estimado: 40 min</div></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div><label class="block font-semibold text-slate-700 mb-1">Nombre Completo:</label><input type="text" placeholder="Ej. Ana Gómez" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800"></div>
+                <div><label class="block font-semibold text-slate-700 mb-1">Código Estudiantil:</label><input type="text" placeholder="Ej. 20261011" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800"></div>
+                <div><label class="block font-semibold text-slate-700 mb-1">Fecha / Grupo:</label><input type="text" value="Grupo 10E" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 font-mono"></div>
+            </div>
+            <div class="border border-slate-200 rounded-xl p-4 space-y-4 text-xs md:text-sm">
+                <div class="bg-pink-50/60 p-3 rounded-lg border border-pink-100 text-slate-800">
+                    <strong>Problema de Aplicación:</strong> Tres cargas \(q_1=+4{,}0\ \mathrm{nC}\) en \((0;\,0)\), \(q_2=+4{,}0\ \mathrm{nC}\) en \((0{,}20;\,0)\) m y \(q_3=-6{,}0\ \mathrm{nC}\) en \((0;\,0{,}15)\) m. (a) Calcule el potencial en el punto \(P=(0{,}20;\,0{,}15)\ \mathrm m\). (b) Calcule el trabajo externo para traer \(q_4=+2{,}0\ \mathrm{nC}\) desde el infinito hasta \(P\). (c) ¿El sistema de 4 cargas queda ligado o desligado? Justifique con el signo de la energía.
+                </div>
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2"><label class="font-semibold text-slate-800 block">a) Potencial \(V(P)\):</label><textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Fórmula y valor numérico con unidades..."></textarea></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2"><label class="font-semibold text-slate-800 block">b) Trabajo externo \(W_{\mathrm{ext}}\):</label><textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="W = q₄·V(P) ..."></textarea></div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-2"><label class="font-semibold text-slate-800 block">c) Justificación energética:</label><textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono" placeholder="Compare la energía de los pares..."></textarea></div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <b class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Criterios de Evaluación (Rúbrica):</b>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200"><span class="font-bold text-[#b3246b] block">Suma escalar (40%)</span>Aplica \(V=\sum kq_i/r_i\) con los signos correctos y distancias exactas.</div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200"><span class="font-bold text-[#b3246b] block">Trabajo externo (30%)</span>Reconoce \(W_{\mathrm{ext}}=q_4V(P)\) con el signo coherente.</div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200"><span class="font-bold text-[#b3246b] block">Juicio energético (30%)</span>Justifica ligado/desligado a partir del signo de \(U\) total.</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="no-print" style="margin-top:20px;display:flex;gap:12px;justify-content:flex-end">
-            <button class="btn btn-pri" id="btn-exportar-pdf" style="font-size:16px;padding:12px 24px">
-                Generar PDF de Entrega (Calificación)
-            </button>
-        </div>
-    </section>
+    </main>
 
-</div>
+    <footer class="max-w-5xl mx-auto mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400">
+        <p>© 2026 Electro10.Easy · Creado por el Prof. Dudbil Olvasada Pabón Riaño.</p>
+        <p class="mt-1 font-mono">Simulador: <a class="text-[#0b8ca8] underline" href="../simuladores/EquipotentialLab.html">EquipotentialLab</a> · Physics.10easy Workshop Engine v3.0 · Rigor Sears-Zemansky / Burbano</p>
+        <p class="mt-1 font-mono text-slate-500">🖨️ Este documento es el espejo 1:1 del PDF <code>recursos/Cap03_Taller.pdf</code>.</p>
+    </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
-            delimiters: [
-                { left: '\\[', right: '\\]', display: true },
-                { left: '\\(', right: '\\)', display: false }
-            ],
-            throwOnError: false
-        });
-    }
-
-    window.switchPath = (prob, path, btn) => {
-        document.querySelectorAll(`#${prob}-path-a, #${prob}-path-b`).forEach(el => el.classList.remove('active'));
-        btn.parentElement.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-        document.getElementById(`${prob}-path-${path}`).classList.add('active');
-        btn.classList.add('active');
-    };
-
-    const btnComp = document.getElementById('btn-comp-pot');
-    const inpPot = document.getElementById('inp-pot-grad');
-    const fbPot = document.getElementById('fb-pot');
-
-    btnComp.addEventListener('click', () => {
-        const val = parseFloat(inpPot.value);
-        // V(x,y) = 4 x^2 y - 3 y^3
-        // Ex = - dV/dx = - 8 x y  => en (2,1): Ex = - 8(2)(1) = -16 V/m
-        // Ey = - dV/dy = - (4 x^2 - 9 y^2) => en (2,1): Ey = - (4(4) - 9(1)) = - (16 - 9) = -7 V/m
-        // |E| = sqrt((-16)^2 + (-7)^2) = sqrt(256 + 49) = sqrt(305) ≈ 17.46 V/m ≈ 17.5 V/m
-        if (Math.abs(val - 17.46) <= 0.3 || Math.abs(val - 17.5) <= 0.3) {
-            fbPot.textContent = '¡Correcto! Ex = -16 V/m, Ey = -7 V/m => |E| = √(16² + 7²) = √305 ≈ 17,46 V/m.';
-            fbPot.style.color = 'var(--e10-success)';
-        } else {
-            fbPot.textContent = 'Intento no exacto. Recuerda: Ex = -∂V/∂x = -8xy, Ey = -∂V/∂y = -(4x² - 9y²). Luego calcula el módulo con Pitágoras.';
-            fbPot.style.color = 'var(--e10-warning)';
+    <script>
+        function initKaTeX() { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{left: "\\[", right: "\\]", display: true}, {left: "\\(", right: "\\)", display: false}], throwOnError: false }); }
+        function switchCamino(showId, hideId, btn) {
+            document.getElementById(showId).classList.remove('hidden');
+            document.getElementById(hideId).classList.add('hidden');
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.camino-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
-    });
-
-    document.getElementById('btn-print-top').addEventListener('click', () => window.print());
-
-    document.getElementById('btn-exportar-pdf').addEventListener('click', () => {
-        const nom = document.getElementById('ent-nombre').value.trim() || 'Estudiante';
-        const cod = document.getElementById('ent-codigo').value.trim() || 'ID';
-        const elemento = document.getElementById('seccion-entrega');
-        
-        const opt = {
-            margin: 10,
-            filename: `Entrega_Taller_3_PotencialElectrico_${nom.replace(/\s+/g, '_')}_${cod}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(elemento).save();
-    });
-});
-</script>
+        function toggleAllHints() { document.querySelectorAll('.hint-content').forEach(h => h.classList.toggle('show')); }
+        function exportToPDF() { window.print(); }
+        function exportEntregaPDF() {
+            const element = document.getElementById('seccion-entrega');
+            const opt = { margin: 10, filename: 'Entrega_Taller3_Potencial_Electro10.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save();
+        }
+        // Pizarra digital
+        let drawingMode = false, isDrawing = false, tool = 'pen';
+        const canvas = document.getElementById('globalDrawingCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        function toggleDrawing() { drawingMode = !drawingMode; canvas.classList.toggle('active', drawingMode); const btn = document.getElementById('toggleDrawBtn'); btn.textContent = drawingMode ? 'Dibujo ON' : 'Dibujo OFF'; btn.classList.toggle('text-[#b3246b]', drawingMode); }
+        function setDrawingMode(newTool) { tool = newTool; if (!drawingMode) toggleDrawing(); }
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        canvas.addEventListener('mousedown', (e) => { if (!drawingMode) return; isDrawing = true; ctx.beginPath(); ctx.moveTo(e.clientX, e.clientY); });
+        canvas.addEventListener('mousemove', (e) => { if (!isDrawing || !drawingMode) return; ctx.lineWidth = tool === 'eraser' ? 18 : 2.5; ctx.lineCap = 'round'; if (tool === 'eraser') ctx.globalCompositeOperation = 'destination-out'; else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = '#b3246b'; } ctx.lineTo(e.clientX, e.clientY); ctx.stroke(); });
+        canvas.addEventListener('mouseup', () => { isDrawing = false; });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+    </script>
 </body>
 </html>

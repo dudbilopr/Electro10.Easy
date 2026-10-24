@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clase 3 · Potencial Eléctrico y Energía — Electro10.Easy</title>
+<title>Clase 3 · Potencial Eléctrico y Superficies Equipotenciales — Electro10.Easy</title>
 <link rel="stylesheet" href="../../css/tokens.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <style>
-/* Clase 3 · deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+/* Clase 3 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
 .viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
@@ -24,8 +24,8 @@ html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);fon
 .tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
 .tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
 h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
-h2{font-size:36px;line-height:1.12}
-.row{display:flex;gap:24px;flex:1;min-height:0}
+h2{font-size:38px;line-height:1.12}
+.row{display:flex;gap:28px;flex:1;min-height:0}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
 .soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
@@ -46,45 +46,109 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
 .btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
 .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.vote{display:flex;flex-direction:column;gap:10px}
+.vote .btn{text-align:left;font-weight:500;font-size:18px;min-height:52px;padding:0 18px}
+.vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
+.vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
 .read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
 .read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.reto{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto .q{font-size:16px}
+.reto .ans{display:flex;gap:8px;align-items:center}
+.reto input{flex:1;min-height:40px;border-radius:10px;border:1px solid var(--e10-line);padding:0 10px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.reto .fb{font-size:15px;min-height:20px}
+.reto .sol{display:none;font-size:15px;background:var(--e10-bg);border-radius:10px;padding:8px 12px}
+.reto .sol.show{display:block}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:18px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
 .flip{perspective:900px;cursor:pointer}
 .flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
 .flip.open .in{transform:rotateY(180deg)}
 .flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px}
 .flip .f{background:var(--e10-warning-soft)}
 .flip .b{background:var(--e10-success-soft);transform:rotateY(180deg)}
+.lab-frame{flex:1;border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);width:100%}
 .deck-ui{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow)}
 .deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
 .deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
 .progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
+.print-only{display:none}
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
 .tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
-.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
 .tq-opts{display:flex;flex-direction:column;gap:7px}
 .opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
 .opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
 .tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
 .leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:96px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.55em}#cm-eq .katex{font-size:1.15em}
 .cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
 .cmap svg{position:absolute;inset:0}
-.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
 .cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
-@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
 .cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
 .cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
 .cnode.this{border-color:var(--e10-primary)}
-.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
 .cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
-.tline{position:relative;height:140px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
-.tline-axis{position:absolute;left:40px;right:40px;top:90px;height:3px;background:var(--e10-line)}
-.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 24px var(--e10-font-display)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.conn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.conn>span{font-size:13px;color:var(--e10-muted);width:70px}.conn .chip{font-size:13px;font-family:var(--e10-font-body)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+#tq1,#tq2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:44px;padding:6px 12px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
+@media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.stp-nav{display:flex;gap:5px;flex-wrap:wrap}
+.stp-nav button{font:500 12px/1 var(--e10-font-body);min-height:32px;padding:0 9px;border-radius:999px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.stp-nav button b{font:600 12px var(--e10-font-mono)}
+.stp-nav button.seen{border-color:var(--e10-primary);color:var(--e10-primary)}
+.stp-nav button.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.stp-nav button:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.stp-body{flex:1;min-height:0;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 22px;overflow:auto}
+.stp-p{display:none;flex-direction:column;gap:10px;font-size:18px;line-height:1.45}
+.stp-p.on{display:flex;animation:stpIn .25s ease}
+@keyframes stpIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stp-p h3{margin:0;font:600 21px/1.2 var(--e10-font-display);color:var(--e10-primary)}
+.stp-p p{margin:0}
+.stp-p .eq{text-align:center;padding:6px 14px;overflow-x:auto}
+.stp-p .eq .katex-display{margin:.35em 0}
+.stp-foot{display:flex;justify-content:space-between;align-items:center}
+.stp-count{font-size:13px;color:var(--e10-muted)}
+.seg2{display:flex;gap:6px}.seg2 .btn{flex:1;min-height:34px;font-size:13px;padding:0 8px}
+@media (prefers-reduced-motion:reduce){.stp-p.on{animation:none}}
+@page{size:1280px 720px;margin:0}
 @media print{
-  html,body{overflow:visible!important;height:auto!important}
-  .viewport{position:static!important;display:block!important}
-  .stage{width:100%!important;height:auto!important;transform:none!important}
-  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
   .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+  .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+  .stp-p{display:none!important}.stp-p[data-print]{display:flex!important;animation:none}
 }
 </style>
 </head>
@@ -92,751 +156,836 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 <div class="progress" id="progress"></div>
 <div class="viewport"><div class="stage" id="stage">
 
-<!-- 1 · PORTADA -->
-<section class="slide on" data-n="1">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 3</span></div>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
-    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 3 · Formulación Energética</span>
-    <h1 style="font-size:54px;line-height:1.05;margin:0">Potencial Eléctrico y Energía</h1>
-    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:880px">Trabajo conservativo, formulación integral de línea, gradiente espacial de potencial, superficies equipotenciales y equilibrio en conductores.</p>
-    <div style="display:flex;gap:12px;margin-top:14px">
-      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
-      <button class="btn" id="btn-to-lab" style="height:48px;padding:0 20px;font-size:16px">Ver simulador equipotencial</button>
+<section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 3</span></div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">ELECTROSTÁTICA · ENERGÍA Y VOLTAJE</span>
+        <h1 style="font-size:72px;line-height:1.02">Potencial<br>eléctrico</h1>
+        <p style="margin:0;font-size:24px;color:var(--e10-muted);max-width:560px">El voltaje es como la altura en un mapa de montaña: una carga «cae» de donde el potencial es alto a donde es bajo.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Calcular \(\Delta V=-\int\vec E\cdot d\vec\ell\) y \(V=kq/r\).</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Dibujar superficies equipotenciales y leerlas como un mapa.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Recuperar el campo con \(\vec E=-\vec\nabla V\) y usar el electrón-volt.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover" width="430" height="430" aria-label="Carga puntual positiva con superficies equipotenciales concéntricas y una carga de prueba rodando cuesta abajo"></canvas>
     </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o los botones de abajo</span></div>
   </div>
-  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 13</span></div>
 </section>
 
-<!-- 2 · NATURALEZA CONSERVATIVA Y TRABAJO -->
 <section class="slide" data-n="2">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Fundamento Energético</span></div>
-  <h2>Naturaleza Conservativa del Campo Electrostático</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag p">Predice</span></div>
+  <h2>Se suelta una carga positiva cerca de +Q. ¿Hacia dónde «cae»?</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:14px">
-      <p style="margin:0;font-size:17px">El campo electrostático producido por cargas en reposo es estrictamente <b>conservativo</b>: el trabajo realizado por la fuerza eléctrica sobre una carga móvil entre dos puntos $a$ y $b$ es completamente independiente de la trayectoria seguida:</p>
-      <div class="soft" style="font-size:20px;text-align:center;padding:14px">
-        \[\oint_C \vec{E}\cdot d\vec{\ell} \equiv 0 \iff \vec{\nabla}\times\vec{E} = \vec{0}\]
-      </div>
-      <div class="card" style="font-size:16px;line-height:1.5">
-        <b>Energía Potencial Electrostática $U$:</b>
-        El trabajo de la fuerza eléctrica es la disminución de la energía potencial:
-        \[W_{a \to b} = \int_a^b \vec{F}\cdot d\vec{\ell} = q_0 \int_a^b \vec{E}\cdot d\vec{\ell} = -\Delta U = -(U_b - U_a)\]
-        Para mover la carga a velocidad constante, el agente externo debe ejercer un trabajo opuesto: $W_{\text{ext}} = +\Delta U = q_0 \Delta V$.
-      </div>
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-pre" width="540" height="390" aria-label="Carga positiva fija con anillos equipotenciales; una carga de prueba puede soltarse para ver hacia dónde rueda"></canvas>
+      <div class="no-print seg2"><button type="button" class="btn" id="pre-q">Cambiar a carga negativa</button><button type="button" class="btn pri" id="pre-go">▶ Soltar</button></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="tipbox" style="font-size:15px">
-        <b>Diferencia con Faraday:</b> En electrostática $\oint \vec{E}\cdot d\vec{\ell} = 0$. En el Capítulo 11, un campo magnético dependiente del tiempo creará un campo eléctrico <i>no conservativo</i> inducido: $\oint \vec{E}\cdot d\vec{\ell} = -\frac{d\Phi_B}{dt} \neq 0$.
+    <div class="col" style="flex:1">
+      <span style="color:var(--e10-muted)" id="pre-txt">Una carga de prueba \(q_0=+e\) descansa cerca de una carga fija \(Q=+5{,}0\ \mathrm{nC}\). Los anillos son superficies equipotenciales. Vota antes de soltarla.</span>
+      <div class="vote" id="pre-vote">
+        <button type="button" class="btn" data-v="away"><b style="color:var(--e10-primary)">A</b>&nbsp; Se aleja: va hacia un potencial menor.</button>
+        <button type="button" class="btn" data-v="toward"><b style="color:var(--e10-primary)">B</b>&nbsp; Se acerca: va hacia un potencial mayor.</button>
+        <button type="button" class="btn" data-v="still"><b style="color:var(--e10-primary)">C</b>&nbsp; Se queda quieta: el potencial no empuja.</button>
       </div>
-      <div class="ok" style="font-size:15px">
-        <b>Conservación de la energía mecánica:</b> En un sistema electrostático aislado sin fricción: $\Delta K + \Delta U = 0 \implies \frac{1}{2}m v_a^2 + q V_a = \frac{1}{2}m v_b^2 + q V_b$.
-      </div>
+      <div class="tipbox" id="pre-fb" style="visibility:hidden"><b>Se aleja.</b> Una carga positiva siente \(\vec F=q_0\vec E\) hacia fuera y baja en energía: \(U=q_0V\) disminuye porque \(V=kQ/r\) cae al crecer \(r\). Igual que una masa rueda cuesta abajo, una carga positiva «cae» hacia el potencial menor. Con \(q_0&lt;0\), rueda al revés.</div>
+      <div class="read"><div>V en el punto<b id="pre-v">—</b></div><div>U = q₀V<b id="pre-u">—</b></div><div>ΔV al alejarse<b id="pre-dv">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Sears-Zemansky Cap. 23.1 · Teorema de Stokes</span><span class="mono">Diapositiva 2 / 13</span></div>
+  <div class="foot"><span>\(\vec E\) siempre apunta cuesta abajo en \(V\); la carga positiva cae en esa dirección.</span><span class="mono">2 / 14</span></div>
 </section>
 
-<!-- 3 · DEFINICIÓN FORMAL DE POTENCIAL -->
 <section class="slide" data-n="3">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Definición de Escalar</span></div>
-  <h2>El Potencial Eléctrico Escalar</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag c">Concepto</span></div>
+  <h2>El potencial es la energía por unidad de carga</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:16px">Se define el potencial eléctrico $V$ como la energía potencial por unidad de carga de prueba:</p>
-      <div class="soft" style="font-size:22px;text-align:center;padding:14px">
-        \[V \equiv \frac{U}{q_0}, \qquad \Delta V = V_b - V_a = -\int_a^b \vec{E}\cdot d\vec{\ell}\]
-      </div>
-      <div class="card" style="font-size:16px">
-        <b>Potencial de una carga puntual con referencia en el infinito ($V(\infty) = 0$):</b>
-        Integrando desde el infinito hasta la distancia $r$:
-        \[V(r) = -\int_\infty^r E(r')\,dr' = -\int_\infty^r \frac{q}{4\pi\epsilon_0 r'^2}\,dr' = \frac{1}{4\pi\epsilon_0}\frac{q}{r}\]
-        <ul style="margin:6px 0 0;padding-left:20px;font-size:15px">
-          <li>Si $q > 0$: $V(r) > 0$ (<b>cúspide o repulsión potencial</b>).</li>
-          <li>Si $q < 0$: $V(r) < 0$ (<b>pozo de potencial atractivo</b>).</li>
-          <li>Unidad en el SI: <b>Voltio</b> ($1\text{ V} \equiv 1\text{ J/C} \equiv 1\text{ N}\cdot\text{m/C}$).</li>
-        </ul>
+    <div class="col" style="flex:1.1">
+      <div class="soft" style="text-align:center;font-size:30px">\[ V=\frac{U}{q_0}\qquad \Delta V=V_b-V_a=-\int_a^b \vec E\cdot d\vec\ell \]</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px">
+        <div class="card"><b style="color:var(--e10-primary)">Escalar.</b> \(V\) no tiene dirección: varios potenciales se suman como números, no como vectores. Por eso suele ser más fácil que \(\vec E\).</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">Unidad.</b> \(1\ \mathrm V=1\ \mathrm{J/C}\). El voltio honra a Alessandro Volta (1745–1827).</div>
+        <div class="card"><b style="color:var(--e10-vec-force)">Independiente de \(q_0\).</b> \(V\) lo producen las cargas fuente, como \(\vec E\); la carga de prueba solo «lo mide».</div>
+        <div class="card"><b style="color:var(--e10-vec-field)">Pendiente.</b> \(\vec E=-\vec\nabla V\): el campo apunta hacia donde \(V\) baja más rápido.</div>
       </div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="soft" style="font-size:15px">
-        <b>Superposición Escalar (Ventaja Monumental):</b>
-        Para $N$ cargas discretas, el potencial es la suma algebraica directa:
-        \[V(\vec{r}) = \frac{1}{4\pi\epsilon_0}\sum_{i=1}^N \frac{q_i}{|\vec{r} - \vec{r}_i'|}\]
-        ¡No hay componentes, senos, cosenos ni vectores que descomponer!
-      </div>
-      <div class="warn" style="font-size:14px">
-        <b>El electrón-voltio:</b> Unidad práctica de energía en física atómica: $1\text{ eV} = (1{,}602\times 10^{-19}\text{ C})(1\text{ V}) = 1{,}602\times 10^{-19}\text{ J}$.
-      </div>
+    <div class="col" style="width:470px;flex:none">
+      <canvas class="sim" id="cv-cp" width="470" height="330" aria-label="Una carga de prueba en varios puntos; se muestra V y U en cada punto"></canvas>
+      <div class="ctrl no-print"><label for="cp-r">r</label><input id="cp-r" type="range" min="2" max="18" step="0.5" value="8"><output id="cp-r-o">8,0 cm</output></div>
+      <div class="read"><div>V = kQ/r<b id="cp-v">—</b></div><div>U (q₀ = +e)<b id="cp-u">—</b></div><div>E = −dV/dr<b id="cp-e">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Independencia de la trayectoria e integración escalar</span><span class="mono">Diapositiva 3 / 13</span></div>
+  <div class="foot"><span>\(U=q_0V\): la energía sí depende de \(q_0\); el potencial no.</span><span class="mono">3 / 14</span></div>
 </section>
 
-<!-- 4 · CANVAS INTERACTIVO DE EQUIPOTENCIALES -->
 <section class="slide" data-n="4">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag l">Topografía Escalar</span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>Superficies Equipotenciales y Líneas de Campo</h2>
-    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Mueve la sonda para medir el potencial V(x,y)</span>
-  </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag c">Deducción</span></div>
+  <h2>El potencial de una carga puntual: deducción en siete pasos</h2>
   <div class="row">
-    <div class="col" style="flex:1.4">
-      <canvas id="cv-pot" class="sim" width="700" height="390" style="width:100%;height:390px"></canvas>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-vq" width="440" height="330" aria-label="Carga puntual y su potencial en función de la distancia: la curva 1/r"></canvas>
+      <div class="ctrl no-print"><label for="vq-q">Q</label><input id="vq-q" type="range" min="-50" max="50" step="5" value="10"><output id="vq-q-o">+10 nC</output></div>
+      <div class="read"><div>V a 10 cm<b id="vq-v">—</b></div><div>Signo de V<b id="vq-s">—</b></div><div>E a 10 cm<b id="vq-e">—</b></div></div>
     </div>
-    <div class="col" style="flex:1;gap:10px">
-      <div class="ctrl">
-        <label for="pot-q1">Carga $q_1$</label>
-        <input id="pot-q1" type="range" min="-8" max="8" step="1" value="4">
-        <output id="pot-q1-o">+4 nC</output>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Trabajo">
+          <h3>1 · El trabajo del campo sobre \(q_0\)</h3>
+          <p>Al mover \(q_0\) de \(a\) a \(b\), el campo hace un trabajo que es una integral de línea:</p>
+          <div class="soft eq">\[ W_{a\to b}=\int_a^b \vec F\cdot d\vec\ell=q_0\int_a^b \vec E\cdot d\vec\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Delta V">
+          <h3>2 · Dividir entre \(q_0\): aparece \(\Delta V\)</h3>
+          <p>La fuerza eléctrica es conservativa, así que \(W=U_a-U_b\). Al dividir entre \(q_0\) nace el potencial:</p>
+          <div class="soft eq">\[ V_a-V_b=\int_a^b \vec E\cdot d\vec\ell \quad\Rightarrow\quad V_b-V_a=-\int_a^b \vec E\cdot d\vec\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Campo">
+          <h3>3 · El campo de una carga puntual</h3>
+          <p>Tomamos la referencia \(V=0\) en el infinito y evaluamos de \(\infty\) a un punto a distancia \(r\). El campo es radial: \(\vec E=k\,q\,\hat r/r^2\).</p>
+        </div>
+        <div class="stp-p" data-t="Integral">
+          <h3>4 · La integral de línea radial</h3>
+          <p>Al ir desde el infinito hasta \(r\), \(d\vec\ell\) apunta hacia dentro, contra \(\hat r\), así que \(\vec E\cdot d\vec\ell=-(kq/r'^2)\,dr'\):</p>
+          <div class="soft eq">\[ V(r)=-\int_{\infty}^{r}\frac{kq}{r'^2}\,dr'=\frac{kq}{r} \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para calcular V</h3>
+          <div class="seg2 no-print" style="max-width:520px"><button type="button" class="btn on" data-path="vq:a">Camino A · integral de línea</button><button type="button" class="btn" data-path="vq:b">Camino B · superposición escalar</button></div>
+          <div data-pathbox="vq:a"><p>Conocido \(\vec E\), se integra a lo largo de la trayectoria (aquí, radial):</p><div class="soft eq">\[ V(P)=-\int_{\infty}^{P}\vec E\cdot d\vec\ell \]</div></div>
+          <div data-pathbox="vq:b" hidden><p>Conocidas las cargas, se suman escalares sin integral ni vectores:</p><div class="soft eq">\[ V(P)=\sum_i \frac{k\,q_i}{r_i} \]</div></div>
+          <p>El <b>camino A</b> funciona cuando ya tienes \(\vec E\); el <b>camino B</b> es más corto cuando tienes las cargas.</p>
+        </div>
+        <div class="stp-p" data-t="Resultado" data-print>
+          <h3>6 · Resultado y lectura de signos</h3>
+          <div class="ok eq">\[ V(r)=\frac{k\,q}{r}\qquad V\to 0\ \text{cuando}\ r\to\infty \]</div>
+          <p>\(q&gt;0\) da \(V&gt;0\) en todas partes; \(q&lt;0\) da \(V&lt;0\). Para \(Q=10\ \mathrm{nC}\) a \(r=0{,}10\ \mathrm m\): \(V=899\ \mathrm V\).</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-vq">
+            <span class="q" id="vq-q2"></span>
+            <div class="ans"><input id="vq-in" inputmode="decimal" placeholder="V en voltios" aria-label="Tu respuesta en voltios"><button type="button" class="btn pri" id="vq-ck">Comprobar</button><button type="button" class="btn" id="vq-new">Nuevo</button></div>
+            <span class="fb" id="vq-fb"></span>
+            <button type="button" class="btn" id="vq-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="vq-sol"></div>
+          </div>
+        </div>
       </div>
-      <div class="ctrl">
-        <label for="pot-q2">Carga $q_2$</label>
-        <input id="pot-q2" type="range" min="-8" max="8" step="1" value="-4">
-        <output id="pot-q2-o">-4 nC</output>
-      </div>
-      <div class="read">
-        <div>Potencial $V$<b id="pot-v">+142 V</b></div>
-        <div>$|\vec{E}| = |\nabla V|$<b id="pot-e">310 V/m</b></div>
-        <div>Trabajo $W_{\text{sup}}$<b id="pot-w">0 J</b></div>
-      </div>
-      <div class="tipbox" style="font-size:14px">
-        <b>Regla de Oro:</b> Las líneas equipotenciales (círculos punteados) son siempre <b>perpendiculares</b> a las líneas de campo eléctrico en cualquier punto. Mover una carga sobre una equipotencial no cuesta ningún trabajo.
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Simulación de curvas de nivel de potencial y gradiente ortogonal</span><span class="mono">Diapositiva 4 / 13</span></div>
+  <div class="foot"><span>El signo de \(q\) decide el signo de \(V\); la referencia \(V=0\) está en el infinito.</span><span class="mono">4 / 14</span></div>
 </section>
 
-<!-- 5 · GRADIENTE DE POTENCIAL -->
 <section class="slide" data-n="5">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Relación Diferencial</span></div>
-  <h2>El Campo Eléctrico como Gradiente de Potencial</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag l">Simula</span></div>
+  <h2>Superficies equipotenciales: las curvas de nivel del voltaje</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:16px">Si conocemos el potencial escalar $V(x,y,z)$ en cada punto del espacio, el vector campo eléctrico se obtiene directamente calculando su <b>gradiente espacial negativo</b>:</p>
-      <div class="soft" style="font-size:22px;text-align:center;padding:14px">
-        \[\vec{E} = -\vec{\nabla} V = -\left(\frac{\partial V}{\partial x}\hat{\imath} + \frac{\partial V}{\partial y}\hat{\jmath} + \frac{\partial V}{\partial z}\hat{k}\right)\]
-      </div>
-      <div class="card" style="font-size:16px;line-height:1.5">
-        <b>Significado físico del signo negativo:</b>
-        <ul style="margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
-          <li>El vector $\vec{E}$ apunta siempre en la dirección en la que el potencial eléctrico <b>decrece más rápidamente</b> (hacia «cuesta abajo» del potencial).</li>
-          <li>Una carga positiva libre acelerará naturalmente hacia potenciales más bajos ($V$ menores).</li>
-          <li>Una carga negativa libre acelerará hacia potenciales más altos ($V$ mayores).</li>
-        </ul>
-      </div>
+    <div class="col" style="width:560px;flex:none">
+      <canvas class="sim" id="cv-eq" width="560" height="380" aria-label="Superficies equipotenciales de una carga y de un dipolo; el campo es perpendicular a ellas"></canvas>
+      <div class="no-print seg2"><button type="button" class="btn on" id="eq-1">Carga puntual</button><button type="button" class="btn" id="eq-dip">Dipolo</button><button type="button" class="btn" id="eq-2">Dos positivas</button></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="card">
-        <b style="color:var(--e10-primary)">En Coordenadas Esféricas y Cilíndricas:</b>
-        <p style="font-size:14px;margin:8px 0 0">
-          <b>Esféricas ($r$ simétrico):</b>
-          \[E_r = -\frac{\partial V}{\partial r}\]
-          <b>Cilíndricas ($s$ simétrico):</b>
-          \[E_s = -\frac{\partial V}{\partial s}\]
-        </p>
-      </div>
-      <div class="ok" style="font-size:15px">
-        <b>En campo uniforme:</b> Si $\vec{E} = \text{cte}$, la magnitud del campo es simplemente $E = \frac{\Delta V}{d}$.
-      </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="font-size:17px;padding:10px 16px">Una <b>superficie equipotencial</b> reúne todos los puntos con el mismo \(V\). Al mover una carga sobre ella no haces trabajo: \[ W=q_0\,\Delta V=q_0\cdot 0=0 \]</div>
+      <div class="read"><div>V en el punto marcado<b id="eq-v">—</b></div><div>Ángulo E vs. curva<b id="eq-a">90°</b></div><div>Densidad de curvas<b id="eq-d">—</b></div></div>
+      <div class="tipbox"><b>Regla de oro.</b> \(\vec E\) es siempre <b>perpendicular</b> a las equipotenciales y apunta de mayor a menor \(V\). Donde las curvas se aprietan, el campo es más intenso.</div>
     </div>
   </div>
-  <div class="foot"><span>Operador Nabla y derivadas direccionales</span><span class="mono">Diapositiva 5 / 13</span></div>
+  <div class="foot"><span>En un mapa topográfico las curvas de nivel son equipotenciales gravitatorias; aquí, de voltaje.</span><span class="mono">5 / 14</span></div>
 </section>
 
-<!-- 6 · POTENCIAL DEL DIPOLO -->
 <section class="slide" data-n="6">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag e">Deducción Analítica 1</span></div>
-  <h2>Potencial de un Dipolo Eléctrico</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag c">Deducción</span></div>
+  <h2>De V a E: el gradiente, deducción en siete pasos</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:10px;font-size:15px">
-      <div class="card">
-        <b>Configuración:</b> Cargas $+q$ en $z = +d/2$ y $-q$ en $z = -d/2$. Evaluamos el potencial en un punto arbitrario $P(r, \theta)$ con $r \gg d$.
-      </div>
-      <div class="soft">
-        <b>Paso 1 · Superposición escalar exacta:</b>
-        \[V(P) = \frac{q}{4\pi\epsilon_0}\left(\frac{1}{r_+} - \frac{1}{r_-}\right) = \frac{q}{4\pi\epsilon_0}\frac{r_- - r_+}{r_+ r_-}\]
-      </div>
-      <div class="soft">
-        <b>Paso 2 · Aproximación geométrica de campo lejano:</b>
-        Para $r \gg d$, los rayos son casi paralelos: $r_- - r_+ \approx d\cos\theta$ y $r_+ r_- \approx r^2$.
-        \[V(r, \theta) \approx \frac{1}{4\pi\epsilon_0}\frac{q d\cos\theta}{r^2} = \frac{1}{4\pi\epsilon_0}\frac{\vec{p}\cdot\hat{r}}{r^2}\]
-      </div>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-gr" width="440" height="330" aria-label="Campo eléctrico y superficies equipotenciales perpendiculares; un deslizador rota la dirección"></canvas>
+      <div class="ctrl no-print"><label for="gr-a">θ</label><input id="gr-a" type="range" min="0" max="180" step="5" value="0"><output id="gr-a-o">0°</output></div>
+      <div class="read"><div>dV/dℓ<b id="gr-dv">—</b></div><div>|E|<b id="gr-e">—</b></div><div>Dirección<b id="gr-s">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="soft" style="font-size:20px;text-align:center;padding:16px">
-        \[V_{\text{dipolo}}(r, \theta) = \frac{k p\cos\theta}{r^2}\]
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Diferencial">
+          <h3>1 · Del incremento finito al diferencial</h3>
+          <p>De \(\Delta V=-\int\vec E\cdot d\vec\ell\), para un desplazamiento muy pequeño:</p>
+          <div class="soft eq">\[ dV=-\vec E\cdot d\vec\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Equipotencial">
+          <h3>2 · Sobre una equipotencial, \(dV=0\)</h3>
+          <p>Si \(d\vec\ell\) es tangente a una superficie equipotencial, \(V\) no cambia:</p>
+          <div class="soft eq">\[ 0=-\vec E\cdot d\vec\ell\quad\Rightarrow\quad \vec E\perp d\vec\ell \]</div>
+          <p>El campo es <b>perpendicular</b> a las equipotenciales en todo punto.</p>
+        </div>
+        <div class="stp-p" data-t="Gradiente">
+          <h3>3 · La dirección de máxima caída</h3>
+          <p>\(dV=-\vec E\cdot d\vec\ell=-E\,d\ell\cos\theta\): la mayor caída ocurre con \(\theta=0\), a lo largo de \(\vec E\). Definimos el gradiente:</p>
+          <div class="soft eq">\[ \vec E=-\vec\nabla V \]</div>
+        </div>
+        <div class="stp-p" data-t="Componentes">
+          <h3>4 · En coordenadas cartesianas</h3>
+          <div class="soft eq">\[ \vec\nabla V=\frac{\partial V}{\partial x}\hat\imath+\frac{\partial V}{\partial y}\hat\jmath+\frac{\partial V}{\partial z}\hat k \]</div>
+          <p>Mueve \(\theta\) y mira cómo \(dV/d\ell=-E\cos\theta\) cambia con la dirección.</p>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para recuperar E</h3>
+          <div class="seg2 no-print" style="max-width:520px"><button type="button" class="btn on" data-path="gr:a">Camino A · gradiente</button><button type="button" class="btn" data-path="gr:b">Camino B · simetría radial</button></div>
+          <div data-pathbox="gr:a"><p>Derivada en las tres componentes:</p><div class="soft eq">\[ \vec E=-\Big(\frac{\partial V}{\partial x},\frac{\partial V}{\partial y},\frac{\partial V}{\partial z}\Big) \]</div></div>
+          <div data-pathbox="gr:b" hidden><p>Si \(V\) solo depende de \(r\): solo queda la componente radial.</p><div class="soft eq">\[ E_r=-\frac{dV}{dr} \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Resultado" data-print>
+          <h3>6 · Comprobación: se recupera Coulomb</h3>
+          <div class="ok eq">\[ V=\frac{kq}{r}\ \Rightarrow\ E_r=-\frac{dV}{dr}=-\frac{d}{dr}\Big(\frac{kq}{r}\Big)=\frac{kq}{r^2} \]</div>
+          <p>Derivar el potencial de una carga puntual devuelve el campo de Coulomb. El ciclo \(V\to E\) y \(E\to V\) cierra sin perder información (salvo una constante).</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-gr">
+            <span class="q" id="gr-q"></span>
+            <div class="ans"><input id="gr-in" inputmode="decimal" placeholder="E en V/m" aria-label="Tu respuesta en voltios por metro"><button type="button" class="btn pri" id="gr-ck">Comprobar</button><button type="button" class="btn" id="gr-new">Nuevo</button></div>
+            <span class="fb" id="gr-fb"></span>
+            <button type="button" class="btn" id="gr-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="gr-sol"></div>
+          </div>
+        </div>
       </div>
-      <div class="ok" style="font-size:15px">
-        <b>Análisis en los ejes principales:</b>
-        <ul style="margin:4px 0 0;padding-left:16px">
-          <li><b>Eje axial ($\theta = 0^\circ$):</b> $\cos(0^\circ) = 1 \implies V = \frac{kp}{r^2}$.</li>
-          <li><b>Plano ecuatorial ($\theta = 90^\circ$):</b> $\cos(90^\circ) = 0 \implies V \equiv 0$. ¡Todo el plano ecuatorial es una superficie equipotencial de cero voltios!</li>
-        </ul>
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Deducción analítica de orden multipolar</span><span class="mono">Diapositiva 6 / 13</span></div>
+  <div class="foot"><span>El gradiente apunta hacia donde \(V\) crece más rápido; el campo va al revés.</span><span class="mono">6 / 14</span></div>
 </section>
 
-<!-- 7 · CONDUCTORES EN EQUILIBRIO -->
 <section class="slide" data-n="7">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Electrostática de Materiales</span></div>
-  <h2>Conductores en Equilibrio Electrostático</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag e">Ejemplo resuelto</span></div>
+  <h2>El dipolo: sumar escalares es más fácil que sumar vectores</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:16px">En un conductor metálico en equilibrio electrostático (sin corrientes macroscópicas netas), las cargas libres se redistribuyen satisfaciendo 5 teoremas fundamentales:</p>
-      <div class="card" style="font-size:15px;line-height:1.5">
-        <ol style="margin:4px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:5px">
-          <li><b>Campo nulo en el interior:</b> $\vec{E}_{\text{int}} \equiv \vec{0}$ en toda la masa del metal.</li>
-          <li><b>Toda la masa es equipotencial:</b> Como $\vec{E} = -\vec{\nabla}V = 0 \implies V = \text{constante}$. Todos los puntos de la superficie y del interior están al mismo potencial.</li>
-          <li><b>La carga en exceso reside en la superficie:</b> Por Gauss, no puede haber carga neta encerrada en el volumen interior ($q_{\text{int}} = 0$).</li>
-          <li><b>Campo superficial perpendicular:</b> En la superficie exterior, $\vec{E} \perp \text{superficie}$ con magnitud $E = \frac{\sigma}{\epsilon_0}$.</li>
-          <li><b>Efecto de puntas:</b> La densidad superficial de carga $\sigma$ y el campo exterior $E$ son máximos en zonas de curvatura aguda (puntas afiladas).</li>
-        </ol>
-      </div>
+    <div class="col" style="width:480px;flex:none">
+      <canvas class="sim" id="cv-dp" width="480" height="330" aria-label="Dipolo con dos cargas y tres puntos a, b y c donde se evalúa el potencial"></canvas>
+      <div class="read"><div>V en a<b id="dp-a">—</b></div><div>V en b<b id="dp-b">—</b></div><div>V en c<b id="dp-c">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="tipbox" style="font-size:15px">
-        <b>Jaula de Faraday (Apantallamiento):</b> Si un conductor contiene una cavidad hueca sin cargas dentro, el campo dentro de la cavidad es estrictamente cero ($\vec{E} = \vec{0}$), bloqueando cualquier campo eléctrico exterior.
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:20px;padding:4px 18px">\[ V(P)=\frac{kq_1}{r_1}+\frac{kq_2}{r_2} \]</div>
+      <div class="steps" style="font-size:16px;gap:8px">
+        <div><span class="n">1</span><span>\(q_1=+12\ \mathrm{nC}\) y \(q_2=-12\ \mathrm{nC}\), separadas \(10\ \mathrm{cm}\) (Sears-Zemansky, ejemplo 23.4).</span></div>
+        <div><span class="n">2</span><span>En \(a\): \(V_a=1800+(-2700)=-900\ \mathrm V\).</span></div>
+        <div><span class="n">3</span><span>En \(b\): \(V_b=2700+(-770)=1930\ \mathrm V\). En \(c\): \(V_c=830+(-830)=0\ \mathrm V\).</span></div>
+        <div><span class="n">4</span><span>\(V_c=0\) en la mediatriz, ¡pero el campo ahí <b>no</b> es cero!</span></div>
       </div>
-      <div class="ok" style="font-size:14px">
-        <b>Pararrayos de Franklin:</b> El efecto de puntas ioniza el aire circundante descargando suavemente las nubes de tormenta antes de que ocurra una ruptura dieléctrica violenta.
+      <div class="reto" id="reto-dp">
+        <span class="q" id="dp-q"></span>
+        <div class="ans"><input id="dp-in" inputmode="decimal" placeholder="V en voltios" aria-label="Tu respuesta en voltios"><button type="button" class="btn pri" id="dp-ck">Comprobar</button><button type="button" class="btn" id="dp-new">Nuevo</button></div>
+        <span class="fb" id="dp-fb"></span>
+        <button type="button" class="btn" id="dp-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="dp-sol"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Teoremas de frontera en conductores</span><span class="mono">Diapositiva 7 / 13</span></div>
+  <div class="foot"><span>Suma algebraica, no vectorial: el signo de cada carga viaja con ella.</span><span class="mono">7 / 14</span></div>
 </section>
 
-<!-- 8 · ERRORES COMUNES -->
 <section class="slide" data-n="8">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag p">Diagnóstico de Errores</span></div>
-  <h2>Cuatro Errores Clásicos en Potencial Eléctrico</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag l">Simula</span></div>
+  <h2>Campo uniforme: \(\Delta V=Ed\) y el electrón-volt</h2>
+  <div class="row">
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-pl" width="540" height="330" aria-label="Dos placas paralelas con campo uniforme; una carga acelera entre ellas y se lee el voltaje"></canvas>
+      <div class="ctrl no-print"><label for="pl-d">d</label><input id="pl-d" type="range" min="2" max="10" step="0.5" value="5"><output id="pl-d-o">5,0 cm</output></div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:22px">\[ V_a-V_b=Ed\qquad 1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm J \]</div>
+      <div style="font-size:16px">Entre placas con campo \(E\), bajar la distancia \(d\) a lo largo de \(\vec E\) baja el potencial en \(Ed\). Una carga \(q\) que atraviesa \(\Delta V\) cambia su energía en \(q\,\Delta V\); si \(|q|=e\), ese cambio es \(1\ \mathrm{eV}\) por cada voltio.</div>
+      <div class="read"><div>ΔV = Ed<b id="pl-v">—</b></div><div>U ganada (protón)<b id="pl-u">—</b></div><div>En electrón-volt<b id="pl-ev">—</b></div></div>
+      <div class="tipbox"><b>Ojo con la unidad.</b> El <b>electrón-volt</b> (eV) es una unidad de <b>energía</b>, no de voltaje. No lo confundas con el volt (V).</div>
+    </div>
+  </div>
+  <div class="foot"><span>Protón a través de 7,5 MV gana 7,5 MeV (Sears-Zemansky, ejemplo 23.3).</span><span class="mono">8 / 14</span></div>
+</section>
+
+<section class="slide" data-n="9">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag p">Errores comunes</span></div>
+  <h2>Cuatro errores frecuentes (haz clic para voltear)</h2>
   <div class="row" style="gap:16px">
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Si V = 0, el campo E debe ser cero»</b><span>¿Es esto cierto?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Falso.</b><span>En el plano ecuatorial del dipolo, $V \equiv 0$, pero $\vec{E} \neq \vec{0}$. $\vec{E}$ depende de la <i>derivada</i> espacial del potencial, no de su valor puntual.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«V = 0 significa que no hay campo.»</b><span>¿En la mediatriz de un dipolo?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Hay campo.</b><span>El potencial es cero por cancelación de signos, pero \(\vec E\) es no nulo: apunta de \(+q\) a \(-q\). \(V=0\) solo dice que ahí la «altura» es la de referencia.</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Si E = 0, el potencial V debe ser cero»</b><span>¿Qué pasa en conductores?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Falso.</b><span>Dentro de una esfera conductora cargada a $100\ \text{V}$, $\vec{E} = \vec{0}$, pero el potencial es $V = 100\ \text{V}$ en todo su volumen.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Sumo los potenciales como vectores.»</b><span>¿Hace falta descomponer?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Son escalares.</b><span>\(V=\sum kq_i/r_i\) es una suma de números con su signo. Sin ángulos, sin componentes: esa es su gran ventaja frente a \(\vec E\).</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Confundir Energía U con Potencial V»</b><span>¿Cuál es la diferencia?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">La carga de prueba.</b><span>$U$ es energía (Joules) del sistema. $V = U/q_0$ es una propiedad espacial (Voltios) independiente de la carga que se introduzca.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«El electrón-volt es una unidad de voltaje.»</b><span>¿1 eV mide potencial?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Mide energía.</b><span>\(1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm J\). El voltaje se mide en volt (V); la energía que gana una carga \(e\) al cruzar 1 V es 1 eV.</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 4"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Olvidar el signo negativo en E = -∇V»</b><span>¿Hacia dónde apunta E?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Hacia menores potenciales.</b><span>Sin el signo menos, el campo apuntaría hacia potenciales crecientes, violando la conservación de energía.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«El potencial baja contra el campo.»</b><span>¿Hacia dónde cae V?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Cae a favor de \(\vec E\).</b><span>\(\Delta V=-\int\vec E\cdot d\vec\ell\): al movernos en la dirección de \(\vec E\), \(V\) disminuye. El signo menos es la clave.</span></div>
     </div></div>
   </div>
-  <div class="foot"><span>Haz clic o posa el cursor en cada tarjeta para voltearla</span><span class="mono">Diapositiva 8 / 13</span></div>
+  <div class="foot"><span>Antes de calcular, dibuja las equipotenciales y recuerda: \(\vec E\) baja de mayor a menor \(V\).</span><span class="mono">9 / 14</span></div>
 </section>
 
-<!-- 9 · ÁRBOL DE DECISIÓN -->
-<section class="slide" data-n="9">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag p">Estrategia de Resolución</span></div>
-  <h2>Árbol de Decisión: ¿Cómo Hallar el Potencial?</h2>
+<section class="slide" data-n="10">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag p">Árbol de decisión</span></div>
+  <h2>¿Qué fórmula uso? Responde y el árbol te lleva</h2>
   <div class="row" style="gap:18px">
-    <div class="col" style="width:420px;flex:none;gap:8px">
-      <div class="tq">
-        <div class="tqh"><span class="mono">1</span><b>¿Qué datos iniciales conoces?</b></div>
-        <div class="tq-opts" id="tq1">
-          <button class="opt on" data-val="charges">Distribución de cargas discretas</button>
-          <button class="opt" data-val="field">Campo eléctrico $\vec{E}(\vec{r})$ conocido</button>
-          <button class="opt" data-val="potfunc">Función escalar $V(x,y,z)$ conocida</button>
-        </div>
-      </div>
-      <span class="tq-down">↓</span>
-      <div class="tq">
-        <div class="tqh"><span class="mono">2</span><b>¿Qué deseas calcular?</b></div>
-        <div class="tq-opts" id="tq2">
-          <button class="opt on" data-val="vtot">Potencial escalar total $V$</button>
-          <button class="opt" data-val="evec">Vector campo eléctrico $\vec{E}$</button>
-        </div>
-      </div>
+    <div class="col" style="width:430px;flex:none;gap:6px">
+      <div class="tq"><div class="tqh"><span class="mono">1</span><b>¿Qué tienes enfrente?</b></div><div class="tq-opts" id="tq1"></div></div>
+      <span class="tq-down" aria-hidden="true">↓</span>
+      <div class="tq"><div class="tqh"><span class="mono">2</span><b>¿Qué buscas?</b></div><div class="tq-opts" id="tq2"></div></div>
     </div>
     <div class="leaf col">
-      <div style="display:flex;justify-content:space-between;align-items:baseline">
-        <b class="leaf-name" id="leaf-name">Suma Escalar Directa</b>
-        <span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">MÉTODO MÁS SENCILLO</span>
-      </div>
-      <div class="soft" id="leaf-eq" style="min-height:80px;display:flex;align-items:center;justify-content:center;font-size:22px">
-        \[V = \frac{1}{4\pi\epsilon_0}\sum_{i=1}^N \frac{q_i}{r_i}\]
-      </div>
-      <div class="col" style="gap:6px;font-size:16px">
-        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
-        <span id="leaf-p1">1. Suma algebraicamente respetando los signos positivos y negativos de cada carga.</span>
-        <span id="leaf-p2">2. Las distancias $r_i$ son siempre escalares positivos estrictos.</span>
-        <span id="leaf-p3">3. Una vez hallado $V$, puedes derivar para hallar $\vec{E} = -\vec{\nabla}V$.</span>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b class="leaf-name" id="leaf-name"></b><span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">USA ESTA FÓRMULA</span></div>
+      <div class="leaf-eq" id="leaf-eq"></div>
+      <div style="font-size:15px"><b>Cuándo vale.</b> <span id="leaf-when"></span></div>
+      <div style="font-size:15px"><b>Lectura.</b> <span id="leaf-dir"></span></div>
+      <div class="reto" style="margin-top:auto">
+        <div class="q"><b style="color:var(--e10-primary)">Reto rápido.</b> <span id="leaf-reto"></span></div>
+        <div class="ans no-print"><input id="leaf-in" type="text" inputmode="decimal" aria-label="Tu respuesta en unidades del SI" placeholder="en unidades SI, p. ej. 899"><button type="button" class="btn pri" id="leaf-check">Comprobar</button><a class="btn" id="leaf-lab" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Abrir en EquipotentialLab</a></div>
+        <div class="fb" id="leaf-fb"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Algoritmo de decisión para talleres y exámenes</span><span class="mono">Diapositiva 9 / 13</span></div>
+  <div class="foot"><span>Elige una respuesta en cada pregunta; el camino elegido queda resaltado</span><span class="mono">10 / 14</span></div>
 </section>
 
-<!-- 10 · LABORATORIO VIRTUAL -->
-<section class="slide" data-n="10">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag l">Laboratorio Virtual</span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>PhET Charges & Fields · Mapeo Equipotencial</h2>
-    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Exploración interactiva de curvas de nivel</span>
-  </div>
-  <div class="row" style="margin-top:4px">
-    <iframe id="lab-frame" class="lab-frame" src="https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_es.html" title="Simulador Charges and Fields"></iframe>
-  </div>
-  <div class="foot"><span>Traza superficies equipotenciales y comprueba su ortogonalidad a E</span><span class="mono">Diapositiva 10 / 13</span></div>
-</section>
-
-<!-- 11 · MAPA CONCEPTUAL -->
 <section class="slide" data-n="11">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Red de Conocimiento</span></div>
-  <h2>Mapa Conceptual: Potencial, Campo y Conservación</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag l">Laboratorio</span></div>
+  <h2>Comprueba en EquipotentialLab lo que acabas de deducir</h2>
   <div class="row">
-    <div class="cmap" id="cmap">
-      <svg width="780" height="520" id="cmap-svg"></svg>
-      <div style="position:absolute;left:14px;bottom:12px;display:flex;gap:8px">
-        <span class="tag past">Viene de E y Trabajo</span>
-        <span class="tag c">Capítulo 3</span>
-        <span class="tag l">Lleva a Capacitancia (Cap. 6)</span>
-      </div>
+    <div class="col" style="flex:1.4">
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn on" data-lab="../../simuladores/EquipotentialLab.html?embed#puntual">Carga puntual</button><button type="button" class="btn" data-lab="../../simuladores/EquipotentialLab.html?embed#dipolo">Dipolo</button><button type="button" class="btn" data-lab="../../simuladores/EquipotentialLab.html?embed#placas">Campo uniforme</button><button type="button" class="btn" data-lab="../../simuladores/EquipotentialLab.html?embed#gradiente">Gradiente</button></div>
+      <iframe class="lab-frame no-print" id="lab-frame" title="Simulador del laboratorio" loading="lazy"></iframe>
+      <div class="print-only card">Abre EquipotentialLab en la plataforma Electro10.Easy: escenas Carga puntual, Dipolo, Campo uniforme y Gradiente.</div>
     </div>
-    <div class="col card" style="flex:1;gap:10px">
-      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
-      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Potencial Eléctrico</b>
-      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[V = \frac{U}{q_0} = -\int \vec E\cdot d\vec\ell\]</div>
-      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Energía potencial por unidad de carga; función escalar fundamental de la electrostática.</p>
-      <div class="tipbox" id="cm-where">Permite calcular la capacitancia $C = Q/\Delta V$ en el Capítulo 6 y simplifica la resolución de campos complejos.</div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 1 · Puntual.</b> Mueve la sonda y mira cómo \(V=kq/r\) cae. ¿En qué dirección baja más rápido? Compárala con la flecha de \(\vec E\).</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 2 · Dipolo.</b> Busca la mediatriz: \(V=0\) en toda ella. ¿El campo también se anula ahí? Míralo con las flechas.</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 3 · Placas.</b> Duplica \(d\). ¿Qué pasa con \(\Delta V=Ed\)? Lanza un protón y lee su energía en eV.</div>
+      <div class="tipbox"><b>Consejo.</b> Escribe tu predicción antes de pulsar «Comprobar»: así ves qué idea tenías mal.</div>
     </div>
   </div>
-  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 11 / 13</span></div>
+  <div class="foot"><span></span><span class="mono">11 / 14</span></div>
 </section>
 
-<!-- 12 · LÍNEA DE TIEMPO Y GLOSARIO -->
 <section class="slide" data-n="12">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Historia y Terminología</span></div>
-  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
-  <div class="row" style="flex-direction:column;gap:16px">
-    <div class="tline" id="tline">
-      <div class="tline-axis"></div>
-      <div style="position:absolute;left:16px;bottom:8px;font-size:12px;color:var(--e10-muted)" id="tl-text">
-        <b style="color:var(--e10-primary)">Alessandro Volta, 1800.</b> Inventa la pila voltaica, demostrando la fuerza electromotriz y diferencia de potencial continua.
-      </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag l">Mapa de conceptos</span></div>
+  <h2>De dónde viene y a dónde lleva este capítulo</h2>
+  <div class="row" style="gap:24px">
+    <div class="cmap" id="cmap">
+      <svg width="780" height="520" viewBox="0 0 780 520" aria-hidden="true" id="cmap-svg"></svg>
+      <div class="cmap-legend"><span class="chip past">viene de</span><span class="chip this">este capítulo</span><span class="chip fut">lleva a</span></div>
     </div>
-    <div class="row" style="gap:20px;flex:1">
-      <button type="button" class="fcard" id="fc-card">
-        <span class="mono" id="fc-side">TÉRMINO</span>
-        <span id="fc-text">Potencial Eléctrico</span>
-      </button>
-      <div class="col" style="width:260px;justify-content:center;gap:10px">
-        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
-        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
-        <button class="btn" id="fc-next">Siguiente término</button>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="card col" style="gap:10px">
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)" id="cm-kind"></span>
+        <b style="font:600 22px var(--e10-font-display)" id="cm-label"></b>
+        <p style="margin:0;font-size:16px" id="cm-def"></p>
+        <div class="leaf-eq" id="cm-eq" style="min-height:70px"></div>
+        <div style="font-size:14px;color:var(--e10-muted)" id="cm-where"></div>
+        <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap" id="cm-actions"></div>
       </div>
+      <div class="tipbox"><b>Analogía.</b> El voltaje es la altura del mapa; el campo es la pendiente de la ladera. La carga positiva rueda cuesta abajo, la negativa cuesta arriba.</div>
     </div>
   </div>
-  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 12 / 13</span></div>
+  <div class="foot"><span>Toca un concepto para ver su definición, su fórmula y dónde se estudia</span><span class="mono">12 / 14</span></div>
 </section>
 
-<!-- 13 · RESUMEN Y EXPORTACIÓN -->
 <section class="slide" data-n="13">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 3</b><span class="tag c">Cierre y Evaluación</span></div>
-  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
-  <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="soft">
-          <b>Integral de Línea:</b>
-          \[\Delta V = -\int_a^b \vec{E}\cdot d\vec{\ell}\]
-        </div>
-        <div class="soft">
-          <b>Carga Puntual ($V_\infty = 0$):</b>
-          \[V = \frac{1}{4\pi\epsilon_0}\frac{q}{r}\]
-        </div>
-        <div class="soft">
-          <b>Gradiente de Potencial:</b>
-          \[\vec{E} = -\vec{\nabla} V\]
-        </div>
-        <div class="soft">
-          <b>Dipolo Lejano:</b>
-          \[V_{\text{dip}} \approx \frac{k p\cos\theta}{r^2}\]
-        </div>
-      </div>
-      <div class="ok">
-        <b>Regla de Oro:</b> El potencial eléctrico es una magnitud puramente escalar. Para sistemas de muchas cargas, siempre es preferible sumar potenciales y luego derivar el campo con $\vec{E} = -\vec{\nabla}V$.
-      </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag e">Repaso</span></div>
+  <h2>Historia, palabras clave y para leer más</h2>
+  <div class="tline" id="tline"><div class="tline-axis"></div><span class="tline-note">escala no proporcional</span></div>
+  <div class="soft" style="font-size:16px;padding:10px 16px" id="tl-text"></div>
+  <div class="row" style="gap:20px">
+    <div class="col" style="width:560px;flex:none;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font:600 18px var(--e10-font-display)">Glosario en tarjetas</b><span class="mono" style="font-size:12px;color:var(--e10-muted)" id="fc-count"></span></div>
+      <button type="button" class="fcard" id="fc-card" aria-live="polite"><span class="mono" id="fc-side"></span><span id="fc-text"></span></button>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fc-flip">Girar</button><button type="button" class="btn" id="fc-again">Repasar pronto</button><button type="button" class="btn pri" id="fc-ok">Ya la sé</button><button type="button" class="btn" id="fc-reset" style="margin-left:auto">Empezar de nuevo</button></div>
     </div>
-    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
-      <div class="card" style="text-align:center;padding:24px;gap:14px">
-        <b style="font-size:20px;color:var(--e10-ink)">Documentación y Práctica</b>
-        <p style="font-size:15px;color:var(--e10-muted);margin:0">Descarga los materiales oficiales en PDF o exporta esta clase completa en alta definición.</p>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap03_Taller_Potencial.pdf" download>Taller (PDF)</a>
-          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap03_Guia_Potencial.pdf" download>Guía de estudio (PDF)</a>
-        </div>
-        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
-        <a href="../../talleres/Taller_3_Potencial_Electrico.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 3</a>
+    <div class="col" style="flex:1;min-width:0;gap:10px">
+      <div class="card col" style="gap:8px">
+        <b style="font:600 16px var(--e10-font-display)">Conectores</b>
+        <div class="conn"><span>Viene de</span><a class="chip past" href="../../player.html?clase=2" target="_top">cap. 2 · Campo eléctrico</a></div>
+        <div class="conn"><span>Lleva a</span><a class="chip fut" href="../../player.html?clase=4" target="_top">cap. 4 · Distribuciones continuas</a><a class="chip fut" href="../../player.html?clase=6" target="_top">cap. 6 · Capacitancia</a></div>
+      </div>
+      <div class="card col" style="gap:6px;font-size:13px;line-height:1.45">
+        <b style="font:600 16px var(--e10-font-display)">Bibliografía</b>
+        <span>Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson. Capítulo 23 «Potencial eléctrico», secciones 23.1–23.5, pp. 780–805.</span>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 13 / 13</span></div>
+  <div class="foot"><span>Toca un hito de la línea de tiempo o gira la tarjeta; tu avance en el glosario se guarda en este navegador</span><span class="mono">13 / 14</span></div>
+</section>
+
+<section class="slide" data-n="14">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 3 · Potencial</span><span class="tag e">Resumen</span></div>
+  <h2>Lo que debes llevarte</h2>
+  <div class="row">
+    <div class="col" style="flex:1.3">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:17px">
+        <div class="card">Diferencia de potencial<br>\(\Delta V=-\displaystyle\int \vec E\cdot d\vec\ell\)</div>
+        <div class="card">Carga puntual<br>\(V=\dfrac{kq}{r}\)</div>
+        <div class="card">Energía<br>\(U=q_0V\)</div>
+        <div class="card">Campo uniforme<br>\(\Delta V=Ed\)</div>
+        <div class="card">Gradiente<br>\(\vec E=-\vec\nabla V\)</div>
+        <div class="card">Electrón-volt<br>\(1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm J\)</div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft col" style="gap:10px">
+        <b style="font:600 18px var(--e10-font-display)">Para practicar</b>
+        <a class="btn pri" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../recursos/Cap03_Taller.pdf" download>Taller (PDF)</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../recursos/Cap03_Guia.pdf" download>Guía de estudio (PDF)</a>
+        <button type="button" class="btn no-print" id="btn-print2">Esta clase en PDF</button>
+      </div>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../simuladores/EquipotentialLab.html" target="_blank" rel="noopener">Abrir EquipotentialLab</a>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../juegos/Juego_4.html" target="_blank" rel="noopener">Jugar Physics Quest · Potencial</a>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=4" target="_top">Siguiente capítulo: Distribuciones continuas →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">14 / 14</span></div>
 </section>
 
 </div></div>
 
-<!-- Barra inferior de navegación del deck -->
-<nav class="deck-ui" aria-label="Navegación del deck">
-  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
-  <span class="count" id="nav-count">1 / 13</span>
-  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
-  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
-  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+<nav class="deck-ui" aria-label="Navegación de la clase">
+  <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
+  <span class="count" id="nav-count">1 / 14</span>
+  <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
+  <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
+  <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
 </nav>
 
 <script>
 (() => {
+  'use strict';
+  const K = 8.988e9, QE = 1.602e-19, MP = 1.673e-27;
   const $ = (id) => document.getElementById(id);
-  const renderMath = (el) => {
-    if (window.renderMathInElement) {
-      renderMathInElement(el, {
-        delimiters: [
-          { left: '\\[', right: '\\]', display: true },
-          { left: '\\(', right: '\\)', display: false }
-        ],
-        throwOnError: false
-      });
-    }
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const sci = (x, d = 2) => {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(x))); let m = x / 10 ** e;
+    if (Math.abs(+m.toFixed(d)) >= 10) { e += 1; m = x / 10 ** e; }
+    const ms = m.toFixed(d).replace('.', ',');
+    return e === 0 ? ms : ms + '×10' + String(e).split('').map((c) => SUP[c]).join('');
   };
+  const dec = (x, d = 1) => x.toFixed(d).replace('.', ',');
+  const tdec = (x, d = 1) => dec(x, d).replace(',', '{,}');
+  const texSci = (x, d = 2) => { if (x === 0) return '0'; let e = Math.floor(Math.log10(Math.abs(x))); if (Math.abs(+(x / 10 ** e).toFixed(d)) >= 10) e += 1; const m = (x / 10 ** e).toFixed(d).replace('.', '{,}'); return e === 0 ? m : `${m}\\times10^{${e}}`; };
+  const renderMath = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/(N·?m|N|T|V|J|eV|cm|m\/s|V\/m)$/i, '').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return s === '' ? NaN : Number(s); };
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const rad = (d) => d * Math.PI / 180;
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const stage = $('stage');
-  const fitStage = () => {
-    const sw = window.innerWidth, sh = window.innerHeight;
-    const s = Math.min(sw / 1280, sh / 720);
-    stage.style.transform = `scale(${s})`;
-  };
-  window.addEventListener('resize', fitStage);
-  fitStage();
-
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const total = slides.length;
-  let cur = 1;
-
-  const showSlide = (n) => {
-    if (n < 1) n = 1;
-    if (n > total) n = total;
-    cur = n;
-    slides.forEach((sl, idx) => {
-      sl.classList.toggle('on', idx + 1 === cur);
+  function setup(cv) {
+    const dpr = window.devicePixelRatio || 1; const w = cv.width, h = cv.height;
+    if (!cv.dataset.w) { cv.dataset.w = w; cv.dataset.h = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.width = w * dpr; cv.height = h * dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: +cv.dataset.w, h: +cv.dataset.h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const hd = Math.min(14, L * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hd * 0.6 * Math.cos(a), y2 - hd * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function charge(ctx, x, y, q, r = 11) {
+    ctx.fillStyle = col(q > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = col('surface'); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y); if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke();
+  }
+  const text = (ctx, s, x, y, color, font = "italic 18px 'STIX Two Text', 'Times New Roman', serif") => { ctx.fillStyle = color; ctx.font = font; ctx.fillText(s, x, y); };
+  const SANS = (n, w = 500) => `${w} ${n}px 'IBM Plex Sans', sans-serif`;
+  const bind = (id, fmt, fn) => { const el = $(id), o = $(id + '-o'); const f = () => { if (o) o.textContent = fmt(+el.value); fn(); }; el.addEventListener('input', f); return f; };
+  function reto(p, gen) {
+    let R = null;
+    function nuevo() { R = gen(); $(p + '-q').textContent = R.q; $(p + '-in').value = ''; $(p + '-fb').textContent = ''; $(p + '-sol').classList.remove('show'); $(p + '-sol').innerHTML = R.sol; renderMath($(p + '-sol')); }
+    $(p + '-new').addEventListener('click', nuevo); $(p + '-sb').addEventListener('click', () => $(p + '-sol').classList.toggle('show'));
+    $(p + '-ck').addEventListener('click', () => {
+      const v = parseNum($(p + '-in').value); if (!isFinite(v)) { $(p + '-fb').textContent = `Escribe un número en ${R.unit}.`; return; }
+      const ok = Math.abs(v - R.ans) <= 0.03 * Math.abs(R.ans);
+      $(p + '-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : `<b style="color:var(--e10-danger)">Aún no.</b> ${R.hint}`;
     });
-    $('nav-count').textContent = `${cur} / ${total}`;
-    $('progress').style.width = `${(cur / total) * 100}%`;
-    location.hash = `#${cur}`;
+    $(p + '-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $(p + '-ck').click(); });
+    nuevo();
+    (window.__retos = window.__retos || {})[p] = () => R;
+  }
+  function anim(frame) { let raf = null; const loop = (t) => { frame(t); raf = reduced() ? null : requestAnimationFrame(loop); }; return { show() { if (!raf) raf = requestAnimationFrame(loop); }, hide() { if (raf) cancelAnimationFrame(raf); raf = null; }, draw() { frame(performance.now()); } }; }
 
-    const activeSlide = slides[cur - 1];
-    renderMath(activeSlide);
-  };
+  const sims = {};
 
-  $('nav-prev').addEventListener('click', () => showSlide(cur - 1));
-  $('nav-next').addEventListener('click', () => showSlide(cur + 1));
-  $('btn-start').addEventListener('click', () => showSlide(2));
-  $('btn-to-lab').addEventListener('click', () => showSlide(4));
+  sims.cover = anim((t) => {
+    const { ctx, w, h } = setup($('cv-cover')); ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2;
+    for (let r = 40; r <= 180; r += 28) { ctx.strokeStyle = col('equipotential'); ctx.globalAlpha = 0.75; ctx.lineWidth = 1.6; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    charge(ctx, cx, cy, 1, 18);
+    const R = 96 + 40 * Math.sin(t / 900), a = (t / 1400) * 2 * Math.PI;
+    const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+    arrow(ctx, x, y, x + 40 * Math.cos(a), y + 40 * Math.sin(a), col('vec-field'), 3);
+    charge(ctx, x, y, 1, 8);
+    text(ctx, 'E', x + 52 * Math.cos(a), y + 52 * Math.sin(a), col('vec-field'));
+    text(ctx, 'V baja →', 16, h - 14, col('equipotential'), SANS(13, 600));
+  });
 
-  window.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-      e.preventDefault();
-      showSlide(cur + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      e.preventDefault();
-      showSlide(cur - 1);
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      showSlide(1);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      showSlide(total);
+  sims.pre = (() => {
+    const cv = $('cv-pre'); let neg = false, t0 = null, raf = null; const Q = 5e-9;
+    const cx = 270, cy = 195, x0 = 80, y0 = 195, S = 2400;
+    function frame(t) {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      for (let r = 40; r <= 220; r += 30) { ctx.strokeStyle = col('equipotential'); ctx.globalAlpha = 0.7; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      charge(ctx, cx, cy, 1, 16);
+      const dist = Math.hypot(x0 - cx, y0 - cy) / S;
+      const V0 = K * Q / dist, U0 = V0 * (neg ? -QE : QE);
+      let px = x0, py = y0;
+      if (t0 !== null) { const s = (t - t0) * 0.12; px = Math.min(x0 + s, cx - 30); py = y0; }
+      const dir = neg ? -1 : 1;
+      if (t0 !== null) arrow(ctx, px, py, px + dir * 30, py, col('vec-force'), 3.5);
+      charge(ctx, px, py, neg ? -1 : 1, 9);
+      text(ctx, neg ? 'q₀ = −e' : 'q₀ = +e', px - 20, py - 16, col('ink'), SANS(12, 600));
+      text(ctx, '+Q', cx - 8, cy + 6, col('surface'), SANS(13, 700));
+      $('pre-v').textContent = sci(V0, 1) + ' V'; $('pre-u').textContent = sci(U0, 2) + ' J'; $('pre-dv').textContent = dir > 0 ? 'disminuye' : 'aumenta (para q₀<0)';
     }
-  });
+    function stop() { if (raf) cancelAnimationFrame(raf); raf = null; }
+    function launch() { stop(); t0 = performance.now(); if (reduced()) { t0 = performance.now() - 1e5; frame(performance.now()); return; } const loop = (t) => { frame(t); if (raf !== null) raf = requestAnimationFrame(loop); }; raf = requestAnimationFrame(loop); }
+    function txt() { $('pre-txt').textContent = `Una carga de prueba ${neg ? 'negativa' : 'positiva'} \(q_0=${neg ? '-e' : '+e'}\) descansa cerca de \(Q=+5{,}0\ \mathrm{nC}\). Los anillos son equipotenciales. Vota antes de soltarla.`; }
+    $('pre-q').addEventListener('click', () => { neg = !neg; $('pre-q').textContent = neg ? 'Cambiar a carga positiva' : 'Cambiar a carga negativa'; t0 = null; stop(); txt(); frame(0); });
+    $('pre-go').addEventListener('click', launch);
+    document.querySelectorAll('#pre-vote .btn').forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll('#pre-vote .btn').forEach((x) => x.classList.remove('right', 'wrong'));
+      if (b.dataset.v === 'away') b.classList.add('right'); else b.classList.add('wrong');
+      $('pre-fb').style.visibility = 'visible'; txt(); launch();
+    }));
+    return { draw() { txt(); frame(performance.now()); }, hide: stop };
+  })();
 
-  $('nav-fs').addEventListener('click', () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  });
+  sims.cp = (() => {
+    const cv = $('cv-cp'), Q = 10e-9;
+    function draw() {
+      const r = +$('cp-r').value / 100; const V = K * Q / r, U = V * QE, E = V / r;
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cx = 90, cy = h / 2, px = 90 + (+$('cp-r').value) * 17;
+      for (let rr = 30; rr <= 250; rr += 28) { ctx.strokeStyle = col('equipotential'); ctx.globalAlpha = 0.7; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      charge(ctx, cx, cy, 1, 15);
+      arrow(ctx, px, cy, px + 34, cy, col('vec-field'), 3);
+      charge(ctx, px, cy, 1, 8); text(ctx, 'q₀', px + 4, cy - 14, col('ink'), SANS(12, 600));
+      $('cp-v').textContent = dec(V, 0) + ' V'; $('cp-u').textContent = sci(U, 2) + ' J'; $('cp-e').textContent = dec(E, 0) + ' V/m';
+    }
+    bind('cp-r', (x) => dec(x, 1) + ' cm', draw);
+    return { draw };
+  })();
 
-  const printDeck = () => { window.print(); };
-  $('nav-print').addEventListener('click', printDeck);
-  $('btn-print2').addEventListener('click', printDeck);
+  sims.vq = (() => {
+    const cv = $('cv-vq');
+    function draw() {
+      const Q = +$('vq-q').value * 1e-9, r = 0.10, V = K * Q / r, E = K * Math.abs(Q) / r / r;
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const X = 40, Y0 = h - 40, W = w - 70, H = h - 80;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X, 20); ctx.lineTo(X, Y0); ctx.lineTo(X + W, Y0); ctx.stroke();
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 3; ctx.beginPath();
+      for (let k = 0; k <= 80; k++) { const rr = 0.02 + k * (0.18 - 0.02) / 80; const vv = K * Q / rr; const sy = Math.max(-1, Math.min(1, vv / 4000)); const x = X + k / 80 * W, y = Y0 - (sy * 0.5 + 0.5) * H; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke();
+      ctx.strokeStyle = col('accent'); ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X, Y0); ctx.lineTo(X + W, Y0); ctx.stroke(); ctx.setLineDash([]);
+      text(ctx, 'V (r) ∝ 1/r', X + 10, 24, col('primary'), SANS(13, 600));
+      text(ctx, '0 V', X - 8, Y0 + 18, col('muted'), SANS(11));
+      text(ctx, 'r', X + W - 12, Y0 - 8, col('muted'), SANS(12));
+      $('vq-v').textContent = dec(V, 0) + ' V'; $('vq-s').textContent = Q > 0 ? 'positivo' : (Q < 0 ? 'negativo' : 'cero'); $('vq-e').textContent = sci(E, 1) + ' V/m';
+    }
+    bind('vq-q', (x) => (x > 0 ? '+' : '') + x + ' nC', draw);
+    reto('vq', () => {
+      const Q2 = pick([2, 4, 5, 8, 12, 15, 20]) * (pick([1, 1, -1])), r2 = pick([2, 4, 5, 8, 10, 15, 20]);
+      const V = K * Q2 * 1e-9 / (r2 / 100);
+      return { q: `Una carga ${Q2 > 0 ? 'positiva' : 'negativa'} de ${Math.abs(Q2)} nC. ¿Cuánto vale el potencial a ${r2} cm de ella?`, ans: V, unit: 'voltios', hint: 'V = kq/r con q en coulombs y r en metros; respeta el signo de q.',
+        sol: `\\(V=\\dfrac{kq}{r}=\\dfrac{(8{,}988\\times10^9)(${Q2}\\times10^{-9})}{${tdec(r2 / 100, 2)}}=${tdec(V, 0)}\\ \\mathrm V\\).` };
+    });
+    return { draw };
+  })();
 
-  // Simulación Canvas de Curvas Equipotenciales (Slide 4)
-  const cv = $('cv-pot');
-  if (cv) {
-    const ctx = cv.getContext('2d');
-    let q1 = 4, q2 = -4;
-    let p1 = { x: 260, y: 195 }, p2 = { x: 440, y: 195 };
-    let probe = { x: 350, y: 110 };
-    let drag = null;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, cv.width, cv.height);
-      const k = 8.99e9;
-
-      // Dibujar curvas equipotenciales concéntricas
-      const levels = [-300, -180, -90, -40, 40, 90, 180, 300];
-      levels.forEach(vTarget => {
-        ctx.strokeStyle = vTarget > 0 ? 'rgba(179,36,107,0.35)' : 'rgba(11,140,168,0.35)';
-        ctx.lineWidth = 1.4;
-        ctx.setLineDash([4, 4]);
-
-        const center = vTarget > 0 ? p1 : p2;
-        const qVal = Math.abs(vTarget > 0 ? q1 : q2) * 1e-9;
-        const rEquip = (k * qVal) / Math.abs(vTarget) * 400;
-
-        if (rEquip > 10 && rEquip < 350) {
-          ctx.beginPath();
-          ctx.arc(center.x, center.y, rEquip, 0, Math.PI * 2);
-          ctx.stroke();
+  sims.eq = (() => {
+    const cv = $('cv-eq'); let mode = 'carga';
+    function V(x, y) {
+      if (mode === 'carga') { const d = Math.hypot(x - 280, y - 190); return d < 1e-6 ? 5 : 1 / d; }
+      const d1 = Math.hypot(x - 230, y - 190), d2 = Math.hypot(x - 330, y - 190);
+      if (mode === 'dipolo') return (d1 < 1e-6 ? 5 : 1 / d1) - (d2 < 1e-6 ? 5 : 1 / d2);
+      return (d1 < 1e-6 ? 5 : 1 / d1) + (d2 < 1e-6 ? 5 : 1 / d2);
+    }
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const levels = mode === 'dipolo' ? [-0.08, -0.045, -0.02, 0, 0.02, 0.045, 0.08] : [0.012, 0.02, 0.035, 0.06, 0.1];
+      for (let y = 0; y < h; y += 4) for (let x = 0; x < w; x += 4) {
+        const v = V(x, y);
+        for (const L of levels) {
+          if (Math.abs(v - L) < (mode === 'dipolo' ? 0.004 : 0.0016)) { ctx.fillStyle = col('equipotential'); ctx.globalAlpha = 0.85; ctx.fillRect(x, y, 4, 4); ctx.globalAlpha = 1; }
         }
+      }
+      if (mode === 'carga') { charge(ctx, 280, 190, 1, 16); }
+      else { charge(ctx, 230, 190, 1, 14); charge(ctx, 330, 190, mode === 'dipolo' ? -1 : 1, 14); }
+      const pts = [[150, 190], [410, 190], [280, 100], [280, 280]];
+      pts.forEach(([x, y]) => {
+        const d = Math.hypot(x - 280, y - 190); const ex = d < 1 ? 0 : (x - 280) / d, ey = d < 1 ? 0 : (y - 190) / d;
+        arrow(ctx, x, y, x + ex * 34, y + ey * 34, col('vec-field'), 2.2);
       });
-      ctx.setLineDash([]);
-
-      // Carga 1
-      ctx.fillStyle = q1 >= 0 ? '#b3246b' : '#0b8ca8';
-      ctx.beginPath();
-      ctx.arc(p1.x, p1.y, 16, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(`${q1 > 0 ? '+' : ''}${q1}`, p1.x, p1.y);
-
-      // Carga 2
-      ctx.fillStyle = q2 >= 0 ? '#b3246b' : '#0b8ca8';
-      ctx.beginPath();
-      ctx.arc(p2.x, p2.y, 16, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.fillText(`${q2 > 0 ? '+' : ''}${q2}`, p2.x, p2.y);
-
-      // Sonda de medición
-      const r1 = Math.max(0.02, Math.hypot(probe.x - p1.x, probe.y - p1.y) / 400);
-      const r2 = Math.max(0.02, Math.hypot(probe.x - p2.x, probe.y - p2.y) / 400);
-      const V1 = (k * q1 * 1e-9) / r1;
-      const V2 = (k * q2 * 1e-9) / r2;
-      const Vtot = V1 + V2;
-
-      const ex1 = (k * q1 * 1e-9 * (probe.x - p1.x)) / Math.pow(r1, 3);
-      const ey1 = (k * q1 * 1e-9 * (probe.y - p1.y)) / Math.pow(r1, 3);
-      const ex2 = (k * q2 * 1e-9 * (probe.x - p2.x)) / Math.pow(r2, 3);
-      const ey2 = (k * q2 * 1e-9 * (probe.y - p2.y)) / Math.pow(r2, 3);
-      const Emag = Math.hypot(ex1 + ex2, ey1 + ey2);
-
-      ctx.fillStyle = '#10b981';
-      ctx.beginPath();
-      ctx.arc(probe.x, probe.y, 10, 0, Math.PI * 2);
-      ctx.fill();
-
-      $('pot-v').textContent = `${Vtot > 0 ? '+' : ''}${Vtot.toFixed(0)} V`;
-      $('pot-e').textContent = `${Emag.toFixed(0)} V/m`;
-      $('pot-w').textContent = '0 J (en curva)';
-    };
-
-    $('pot-q1').addEventListener('input', (e) => {
-      q1 = parseFloat(e.target.value);
-      $('pot-q1-o').textContent = `${q1 > 0 ? '+' : ''}${q1} nC`;
-      draw();
-    });
-    $('pot-q2').addEventListener('input', (e) => {
-      q2 = parseFloat(e.target.value);
-      $('pot-q2-o').textContent = `${q2 > 0 ? '+' : ''}${q2} nC`;
-      draw();
-    });
-
-    const getPos = (e) => {
-      const r = cv.getBoundingClientRect();
-      return { x: (e.clientX - r.left) * (cv.width / r.width), y: (e.clientY - r.top) * (cv.height / r.height) };
-    };
-
-    cv.addEventListener('pointerdown', (e) => {
-      const p = getPos(e);
-      if (Math.hypot(p.x - probe.x, p.y - probe.y) < 22) drag = 'probe';
-      else if (Math.hypot(p.x - p1.x, p.y - p1.y) < 22) drag = 'p1';
-      else if (Math.hypot(p.x - p2.x, p.y - p2.y) < 22) drag = 'p2';
-    });
-    window.addEventListener('pointermove', (e) => {
-      if (!drag) return;
-      const p = getPos(e);
-      if (drag === 'probe') { probe.x = Math.max(20, Math.min(680, p.x)); probe.y = Math.max(20, Math.min(370, p.y)); }
-      else if (drag === 'p1') { p1.x = Math.max(30, Math.min(670, p.x)); p1.y = Math.max(30, Math.min(360, p.y)); }
-      else if (drag === 'p2') { p2.x = Math.max(30, Math.min(670, p.x)); p2.y = Math.max(30, Math.min(360, p.y)); }
-      draw();
-    });
-    window.addEventListener('pointerup', () => { drag = null; });
-    draw();
-  }
-
-  // Árbol de Decisión (Slide 9)
-  const treeConfig = {
-    charges: {
-      vtot: {
-        name: 'Suma Escalar Directa de Cargas Puntuales',
-        eq: '\\[V(P) = \\frac{1}{4\\pi\\epsilon_0}\\sum_{i=1}^N \\frac{q_i}{r_i}\\]',
-        p1: '1. Suma algebraica sin vectores ni ángulos.',
-        p2: '2. Respeta los signos de las cargas (+ o -).',
-        p3: '3. Las distancias euclídeas son siempre valores positivos estrictos.'
-      },
-      evec: {
-        name: 'Cálculo de Campo vía Gradiente del Potencial',
-        eq: '\\[\\vec{E} = -\\vec{\\nabla} V = -\\left(\\frac{\\partial V}{\\partial x}\\hat{\\imath} + \\frac{\\partial V}{\\partial y}\\hat{\\jmath}\\right)\\]',
-        p1: '1. Expresa $V(x,y,z)$ como función continua de las variables espaciales.',
-        p2: '2. Deriva parcialmente respecto a cada coordenada.',
-        p3: '3. Multiplica por el signo negativo fundamental.'
-      }
-    },
-    field: {
-      vtot: {
-        name: 'Integral de Línea de Campo Eléctrico',
-        eq: '\\[\\Delta V = -\\int_A^B \\vec{E}\\cdot d\\vec{\\ell}\\]',
-        p1: '1. Elige una trayectoria arbitraria conveniente (la integral es conservativa).',
-        p2: '2. En campo uniforme: $\\Delta V = -E d \\cos\\theta$.',
-        p3: '3. En simetría radial: $V(r) = -\\int_\\infty^r E(r\')dr\'.'
-      },
-      evec: {
-        name: 'Campo Conocido',
-        eq: '\\[\\vec{E} = \\text{Dato provisto}\\]',
-        p1: '1. Si ya se conoce $\\vec{E}$, no es necesario calcularlo de nuevo.',
-        p2: '2. Recuerda que la fuerza es $\\vec{F} = q\\vec{E}$.',
-        p3: '3. Si el campo es uniforme, las equipotenciales son planos paralelos.'
-      }
-    },
-    potfunc: {
-      vtot: {
-        name: 'Evaluación Numérica Directa',
-        eq: '\\[V(x_0, y_0, z_0) = V_{\\text{función}}(x_0, y_0, z_0)\\]',
-        p1: '1. Sustituye directamente las coordenadas en la función $V(x,y,z)$.',
-        p2: '2. Unidad resultante en Voltios (V).',
-        p3: '3. La energía de una carga insertada allí es $U = q_0 V$.'
-      },
-      evec: {
-        name: 'Deducción de Campo por Derivación Parcial',
-        eq: '\\[E_x = -\\frac{\\partial V}{\\partial x}, \\quad E_y = -\\frac{\\partial V}{\\partial y}, \\quad E_z = -\\frac{\\partial V}{\\partial z}\\]',
-        p1: '1. Aplica derivadas parciales tratando las demás variables como constantes.',
-        p2: '2. Evalúa en el punto específico.',
-        p3: '3. El vector resultante apunta en la dirección de máximo descenso de $V$.'
-      }
+      text(ctx, mode === 'dipolo' ? 'V = 0 en la mediatriz' : 'curvas de V constante', 12, h - 12, col('equipotential'), SANS(12, 600));
+      $('eq-v').textContent = '1/r (en unidades de kQ)'; $('eq-a').textContent = '90°'; $('eq-d').textContent = mode === 'carga' ? 'más densas cerca de la carga' : 'campo más intenso entre las cargas';
     }
-  };
+    const modeSet = (m, onBtn) => { mode = m; ['eq-1', 'eq-dip', 'eq-2'].forEach((id) => $(id).classList.toggle('on', id === onBtn)); draw(); };
+    $('eq-1').addEventListener('click', () => modeSet('carga', 'eq-1'));
+    $('eq-dip').addEventListener('click', () => modeSet('dipolo', 'eq-dip'));
+    $('eq-2').addEventListener('click', () => modeSet('dos', 'eq-2'));
+    return { draw };
+  })();
 
-  let tq1Val = 'charges', tq2Val = 'vtot';
-  const updateTree = () => {
-    const data = treeConfig[tq1Val][tq2Val];
-    $('leaf-name').textContent = data.name;
-    $('leaf-eq').innerHTML = data.eq;
-    $('leaf-p1').textContent = data.p1;
-    $('leaf-p2').textContent = data.p2;
-    $('leaf-p3').textContent = data.p3;
-    renderMath($('leaf-eq'));
-  };
-
-  document.querySelectorAll('#tq1 .opt').forEach((b) => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#tq1 .opt').forEach((x) => x.classList.remove('on'));
-      b.classList.add('on');
-      tq1Val = b.dataset.val;
-      updateTree();
+  sims.gr = (() => {
+    const cv = $('cv-gr'), E0 = 1000;
+    function draw() {
+      const th = +$('gr-a').value, dv = -E0 * Math.cos(rad(th)), E = Math.abs(E0 * Math.cos(rad(th)));
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2;
+      for (let x = 60; x <= w - 40; x += 34) { ctx.strokeStyle = col('equipotential'); ctx.globalAlpha = 0.75; ctx.lineWidth = 1.4; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, h - 40); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      arrow(ctx, cx, cy, cx + 90, cy, col('vec-field'), 4); text(ctx, 'E', cx + 100, cy + 6, col('vec-field'));
+      const dx = 70 * Math.cos(rad(th)), dy = -70 * Math.sin(rad(th));
+      arrow(ctx, cx, cy, cx + dx, cy + dy, col('primary'), 3.5);
+      ctx.strokeStyle = col('muted'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, -rad(th), true); ctx.stroke();
+      text(ctx, `θ = ${th}°`, cx + 48 * Math.cos(rad(th / 2)), cy - 48 * Math.sin(rad(th / 2)) - 4, col('muted'), SANS(12, 600));
+      text(ctx, 'dℓ', cx + dx + 8, cy + dy + 6, col('primary'));
+      $('gr-dv').textContent = dec(dv, 0) + ' V/m'; $('gr-e').textContent = dec(E, 0) + ' V/m'; $('gr-s').textContent = th === 0 ? 'máxima caída' : th === 180 ? 'máxima subida' : th === 90 ? 'sobre equipotencial' : 'intermedia';
+    }
+    bind('gr-a', (x) => x + '°', draw);
+    reto('gr', () => {
+      const V = pick([200, 500, 1000, 2000]), d = pick([2, 4, 5, 8, 10]);
+      const E = V / (d / 100);
+      return { q: `Entre dos puntos separados ${d} cm, el potencial baja ${V} V. Si el campo es uniforme, ¿cuánto vale su módulo?`, ans: E, unit: 'V/m', hint: 'ΔV = E d, con d en metros.',
+        sol: `\\(E=\\dfrac{\\Delta V}{d}=\\dfrac{${V}}{${tdec(d / 100, 2)}}=${tdec(E, 0)}\\ \\mathrm{V/m}\\).` };
     });
-  });
-  document.querySelectorAll('#tq2 .opt').forEach((b) => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#tq2 .opt').forEach((x) => x.classList.remove('on'));
-      b.classList.add('on');
-      tq2Val = b.dataset.val;
-      updateTree();
+    return { draw };
+  })();
+
+  sims.dp = (() => {
+    const cv = $('cv-dp'), q = 12e-9;
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const cy = 250, xp = 180 - 60, xn = 180 + 60;
+      charge(ctx, xp, cy, 1, 15); charge(ctx, xn, cy, -1, 15);
+      text(ctx, '+12 nC', xp - 20, cy - 22, col('q-pos'), SANS(11, 600)); text(ctx, '−12 nC', xn - 20, cy - 22, col('q-neg'), SANS(11, 600));
+      const pts = { a: [180 - 40, cy - 70], b: [180 + 40, cy - 70], c: [180, cy - 120] };
+      const Va = K * q / 0.06 - K * q / 0.04, Vb = K * q / 0.04 - K * q / 0.14, Vc = 0;
+      Object.entries(pts).forEach(([k, [x, y]]) => { ctx.fillStyle = col('accent-strong'); ctx.beginPath(); ctx.arc(x, y, 5, 0, 2 * Math.PI); ctx.fill(); text(ctx, k, x + 8, y - 6, col('accent-strong'), SANS(13, 700)); });
+      $('dp-a').textContent = dec(Va, 0) + ' V'; $('dp-b').textContent = dec(Vb, 0) + ' V'; $('dp-c').textContent = dec(Vc, 0) + ' V';
+    }
+    reto('dp', () => {
+      const qq = pick([3, 5, 8, 10, 15]) * 1e-9, dd = pick([5, 8, 10, 12, 16]) / 100;
+      const r1 = dd / 2, V = K * qq / r1 + K * (-qq) / (dd * 1.5);
+      return { q: `Un dipolo de ±${Math.abs(qq * 1e9)} nC separadas ${dec(dd * 100, 0)} cm. ¿Cuánto vale V en un punto a ${dec(dd / 2 * 100, 1)} cm de la carga positiva, sobre la recta que las une y del lado de la positiva?`, ans: V, unit: 'voltios', hint: 'V = kq₁/r₁ + kq₂/r₂, suma escalar con signos.',
+        sol: `\\(V=\\dfrac{kq}{r_1}+\\dfrac{k(-q)}{r_2}=(8{,}988\\times10^9)\\Big(\\dfrac{${texSci(qq)}}{${tdec(r1, 2)}}-\\dfrac{${texSci(qq)}}{${tdec(dd * 1.5, 2)}}\\Big)=${tdec(V, 0)}\\ \\mathrm V\\).` };
     });
+    return { draw };
+  })();
+
+  sims.pl = (() => {
+    const cv = $('cv-pl'), E = 1.5e5;
+    function draw() {
+      const d = +$('pl-d').value / 100, DV = E * d, U = QE * DV;
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const x0 = 70, x1 = w - 70, y0 = 60, y1 = h - 60;
+      ctx.fillStyle = col('q-pos'); ctx.globalAlpha = 0.4; ctx.fillRect(x0, y0, x1 - x0, 8); ctx.globalAlpha = 1;
+      ctx.fillStyle = col('q-neg'); ctx.globalAlpha = 0.4; ctx.fillRect(x0, y1 - 8, x1 - x0, 8); ctx.globalAlpha = 1;
+      text(ctx, '+ + + +', x0 + 20, y0 - 8, col('q-pos'), SANS(12, 600)); text(ctx, '− − − −', x0 + 20, y1 + 22, col('q-neg'), SANS(12, 600));
+      for (let x = x0 + 30; x < x1; x += 40) arrow(ctx, x, y0 + 18, x, y1 - 18, col('vec-field'), 1.6);
+      const py = (y0 + y1) / 2; charge(ctx, x0 + 26, py, 1, 9); arrow(ctx, x0 + 40, py, x0 + 90, py, col('vec-force'), 3);
+      text(ctx, 'q₀ = +e', x0 + 24, py - 16, col('ink'), SANS(11, 600));
+      text(ctx, 'E →', x1 - 70, py - 16, col('vec-field'), SANS(12, 600));
+      $('pl-v').textContent = sci(DV, 2) + ' V'; $('pl-u').textContent = sci(U, 2) + ' J'; $('pl-ev').textContent = dec(DV / 1e6, 2) + ' MeV';
+    }
+    bind('pl-d', (x) => dec(x, 1) + ' cm', draw);
+    return { draw };
+  })();
+
+  document.querySelectorAll('.flip').forEach((c) => { const t = () => c.classList.toggle('open'); c.addEventListener('click', t); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); });
+
+  const labBtns = document.querySelectorAll('[data-lab]');
+  labBtns.forEach((b) => b.addEventListener('click', () => { labBtns.forEach((x) => x.classList.toggle('on', x === b)); $('lab-frame').src = b.dataset.lab; }));
+
+  document.querySelectorAll('[data-stp]').forEach((box) => {
+    const ps = [...box.querySelectorAll('.stp-p')], nav = box.querySelector('.stp-nav'), cnt = box.querySelector('.stp-count'); let k = 0;
+    ps.forEach((p, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<b>${i + 1}</b>${p.dataset.t}`; b.addEventListener('click', () => show(i)); nav.appendChild(b); });
+    const bs = [...nav.children];
+    function show(i) { k = Math.max(0, Math.min(ps.length - 1, i)); ps.forEach((p, j) => p.classList.toggle('on', j === k)); bs.forEach((b, j) => { b.classList.toggle('on', j === k); if (j === k) b.classList.add('seen'); }); cnt.textContent = `paso ${k + 1} de ${ps.length}`; box.querySelector('[data-stp-prev]').disabled = k === 0; box.querySelector('[data-stp-next]').disabled = k === ps.length - 1; }
+    box.querySelector('[data-stp-prev]').addEventListener('click', () => show(k - 1)); box.querySelector('[data-stp-next]').addEventListener('click', () => show(k + 1));
+    show(0);
   });
+  document.querySelectorAll('[data-path]').forEach((b) => b.addEventListener('click', () => {
+    const [g] = b.dataset.path.split(':');
+    document.querySelectorAll(`[data-path^="${g}:"]`).forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll(`[data-pathbox^="${g}:"]`).forEach((x) => { x.hidden = x.dataset.pathbox !== b.dataset.path; });
+  }));
 
-  document.querySelectorAll('.flip').forEach((f) => {
-    f.addEventListener('click', () => f.classList.toggle('open'));
-  });
+  const katexTo = (el, tex) => { if (window.katex) katex.render(tex, el, { throwOnError: false, displayMode: true }); else el.textContent = tex; };
+  const LAB = '../../simuladores/EquipotentialLab.html#';
 
-  // Mapa Conceptual SVG
-  const cmapNodes = [
-    { id: 'campo', label: 'Campo Eléctrico', eq: '\\[\\vec E\\]', def: 'Fuerza por unidad de carga.', kind: 'past', x: 200, y: 150 },
-    { id: 'trabajo', label: 'Trabajo y Energía', eq: '\\[W = -\\Delta U\\]', def: 'Trabajo conservativo independiente de la ruta.', kind: 'this', x: 390, y: 150 },
-    { id: 'potencial', label: 'Potencial V', eq: '\\[V = U/q_0\\]', def: 'Escalar electrostático fundamental.', kind: 'this', x: 580, y: 150 },
-    { id: 'gradiente', label: 'Gradiente (-∇V)', eq: '\\[\\vec E = -\\nabla V\\]', def: 'Relación inversa entre campo y potencial.', kind: 'this', x: 280, y: 290 },
-    { id: 'equipot', label: 'Equipotenciales', eq: '\\[V = \\text{cte}\\]', def: 'Superficies ortogonales a las líneas de campo.', kind: 'this', x: 490, y: 290 },
-    { id: 'cap', label: 'Capacitancia (C)', eq: '\\[C = Q/\\Delta V\\]', def: 'Almacenamiento de energía (Cap. 6).', kind: 'fut', x: 390, y: 420 }
-  ];
-
-  const cmapEdges = [
-    { from: 'campo', to: 'trabajo' },
-    { from: 'trabajo', to: 'potencial' },
-    { from: 'potencial', to: 'gradiente' },
-    { from: 'potencial', to: 'equipot' },
-    { from: 'gradiente', to: 'cap' },
-    { from: 'equipot', to: 'cap' }
-  ];
-
-  const svg = $('cmap-svg');
-  if (svg) {
-    let svgHtml = '';
-    cmapEdges.forEach((e) => {
-      const n1 = cmapNodes.find((x) => x.id === e.from);
-      const n2 = cmapNodes.find((x) => x.id === e.to);
-      svgHtml += `<line class="edge" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
-      svgHtml += `<line class="flow" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
+  sims.tree = (() => {
+    const Q1 = [['puntual', 'Una carga puntual'], ['conjunto', 'Varias cargas puntuales'], ['uniforme', 'Un campo uniforme (placas)'], ['radial', 'Una distribución con simetría radial']];
+    const Q2 = {
+      puntual: [['v', 'El potencial V'], ['e', 'El campo E'], ['u', 'La energía U de una carga']],
+      conjunto: [['v', 'El potencial V total'], ['u', 'El trabajo para traer una carga']],
+      uniforme: [['dv', 'La diferencia de potencial ΔV'], ['ev', 'La energía en electrón-volt']],
+      radial: [['g', 'El campo E a partir de V'], ['v', 'El potencial V(r)']],
+    };
+    const L = {
+      v: { name: 'Potencial de una carga', tex: String.raw`V=\dfrac{kq}{r}`, when: 'Una sola carga puntual, con V = 0 en el infinito.', dir: 'Positivo si q > 0; el signo viaja con la carga.', reto: 'q = +8,0 nC. ¿V a 20 cm, en V?', ans: K * 8e-9 / 0.2, lab: LAB + 'puntual' },
+      e: { name: 'Campo desde V', tex: String.raw`\vec E=-\vec\nabla V\quad(E_r=-\tfrac{dV}{dr})`, when: 'Cuando ya conoces V(r).', dir: 'El campo apunta hacia donde V baja.', reto: 'V(r)=kq/r con q=+10 nC. ¿E a 10 cm, en V/m?', ans: K * 10e-9 / 0.01, lab: LAB + 'gradiente' },
+      u: { name: 'Energía de una carga', tex: String.raw`U=q_0V`, when: 'Para una carga de prueba q₀ en un potencial V.', dir: 'Negativa si q₀ y la fuente tienen signos opuestos.', reto: 'q₀ = +2,0 nC en V = 1500 V. ¿U en J?', ans: 2e-9 * 1500, lab: LAB + 'puntual' },
+      g: { name: 'Gradiente radial', tex: String.raw`E_r=-\dfrac{dV}{dr}`, when: 'V solo depende de r (esfera, carga puntual).', dir: 'Derivar y evaluar en el punto.', reto: 'V(r)=900/r (r en m). ¿E a r=1,0 m?', ans: 900, lab: LAB + 'gradiente' },
+      dv: { name: 'Campo uniforme', tex: String.raw`\Delta V=Ed`, when: 'Entre placas paralelas con E constante.', dir: 'V baja en la dirección de E.', reto: 'E = 2,0×10⁵ V/m y d = 4,0 cm. ¿ΔV?', ans: 2e5 * 0.04, lab: LAB + 'placas' },
+      ev: { name: 'Electrón-volt', tex: String.raw`\Delta U=q\,\Delta V,\quad 1\,\mathrm{eV}=1{,}602\times10^{-19}\,\mathrm J`, when: 'Para energías de partículas (eV, keV, MeV).', dir: 'El eV es energía, no voltaje.', reto: 'Un protón cruza 3,0 MV. ¿Energía en MeV?', ans: 3, lab: LAB + 'placas' },
+    };
+    let a = 'puntual', b = 'v', fails = 0;
+    const opts = (box, list, val, pickF) => { box.innerHTML = ''; list.forEach(([id, label]) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'opt' + (id === val ? ' on' : ''); el.textContent = label; el.addEventListener('click', () => pickF(id)); box.appendChild(el); }); };
+    function draw() {
+      opts($('tq1'), Q1, a, (id) => { a = id; b = Q2[id][0][0]; reset(); });
+      opts($('tq2'), Q2[a], b, (id) => { b = id; reset(); });
+      const leaf = L[b];
+      $('leaf-name').textContent = leaf.name; katexTo($('leaf-eq'), leaf.tex);
+      $('leaf-when').textContent = leaf.when; $('leaf-dir').textContent = leaf.dir; $('leaf-reto').textContent = leaf.reto;
+      const lab = $('leaf-lab'); lab.hidden = !leaf.lab; if (leaf.lab) lab.href = leaf.lab;
+    }
+    function reset() { fails = 0; $('leaf-in').value = ''; $('leaf-fb').textContent = ''; draw(); }
+    $('leaf-check').addEventListener('click', () => {
+      const leaf = L[b], v = parseNum($('leaf-in').value), fb = $('leaf-fb');
+      if (!isFinite(v)) { fb.textContent = 'Escribe un número, por ejemplo 899.'; fb.style.color = 'var(--e10-muted)'; return; }
+      if (Math.abs(v - leaf.ans) <= 0.02 * leaf.ans) { fb.textContent = `Correcto: ${sci(leaf.ans, 3)}.`; fb.style.color = 'var(--e10-success)'; return; }
+      fails++; fb.style.color = 'var(--e10-danger)';
+      fb.textContent = fails < 2 ? 'No coincide. Pasa todo a unidades SI (nC → C, cm → m) y revisa el signo de la carga.' : `No coincide. La respuesta es ${sci(leaf.ans, 3)}: compárala con la fórmula.`;
     });
-    svg.innerHTML = svgHtml;
+    $('leaf-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('leaf-check').click(); });
+    window.__arbol = L;
+    return { draw };
+  })();
 
-    const cmapDiv = $('cmap');
-    cmapNodes.forEach((n) => {
-      const nodeEl = document.createElement('div');
-      nodeEl.className = `cnode ${n.kind}`;
-      nodeEl.style.left = `${n.x}px`;
-      nodeEl.style.top = `${n.y}px`;
-      nodeEl.textContent = n.label;
-      nodeEl.addEventListener('click', () => {
-        document.querySelectorAll('.cnode').forEach((x) => x.classList.remove('on'));
-        nodeEl.classList.add('on');
-        $('cm-label').textContent = n.label;
-        $('cm-def').textContent = n.def;
-        $('cm-eq').innerHTML = n.eq;
-        renderMath($('cm-eq'));
+  sims.cmap = (() => {
+    const KK = { past: 'Viene de un capítulo anterior', this: 'Este capítulo', fut: 'Lleva a un capítulo siguiente' };
+    const N = [
+      { id: 'TR', x: 80, y: 90, k: 'past', label: 'Trabajo y energía', sub: 'mecánica', def: 'El trabajo de una fuerza conservativa no depende de la trayectoria: W = U_a − U_b.', tex: String.raw`W=\int\vec F\cdot d\vec\ell`, where: 'Física I (mecánica)' },
+      { id: 'CE', x: 80, y: 300, k: 'past', label: 'Campo eléctrico', sub: 'cap. 2', def: 'La fuerza por unidad de carga; se integra para obtener el potencial.', tex: String.raw`\vec E=\dfrac{\vec F}{q_0}`, where: 'Repaso: capítulo 2', clase: 2 },
+      { id: 'UP', x: 290, y: 90, k: 'this', label: 'Energía potencial', sub: 'U', def: 'La energía que comparten las cargas por su posición relativa.', tex: String.raw`U=\sum_{i<j}\dfrac{k q_i q_j}{r_{ij}}`, where: 'Diapositiva 3' },
+      { id: 'PT', x: 290, y: 260, k: 'this', big: true, label: 'Potencial eléctrico', sub: 'idea central', def: 'La energía por unidad de carga: un campo escalar.', tex: String.raw`V=\dfrac{U}{q_0}=\sum_i\dfrac{k q_i}{r_i}`, where: 'Diapositivas 3 y 4', slide: 4 },
+      { id: 'EQ', x: 290, y: 430, k: 'this', label: 'Equipotenciales', sub: 'curvas de nivel', def: 'Superficies de V constante; el campo es perpendicular a ellas.', tex: String.raw`W=q_0\Delta V=0`, where: 'Diapositiva 5', slide: 5 },
+      { id: 'GR', x: 510, y: 180, k: 'this', label: 'Gradiente', sub: 'E = −∇V', def: 'La pendiente del paisaje de voltaje da el campo.', tex: String.raw`\vec E=-\vec\nabla V`, where: 'Diapositiva 6', slide: 6, lab: 'gradiente' },
+      { id: 'EV', x: 510, y: 350, k: 'this', label: 'Electrón-volt', sub: 'energía', def: 'La energía que gana una carga e al cruzar 1 V.', tex: String.raw`1\,\mathrm{eV}=1{,}602\times10^{-19}\,\mathrm J`, where: 'Diapositiva 8', slide: 8 },
+      { id: 'DC', x: 710, y: 100, k: 'fut', label: 'Distribuciones continuas', sub: 'cap. 4', def: 'El potencial de un anillo, disco o varilla se obtiene integrando dq.', tex: String.raw`V=\int\dfrac{k\,dq}{r}`, where: 'Capítulo 4', clase: 4 },
+      { id: 'CP', x: 710, y: 300, k: 'fut', label: 'Capacitancia', sub: 'cap. 6', def: 'Dos conductores con una diferencia de potencial guardan carga y energía.', tex: String.raw`C=\dfrac{Q}{V_{ab}}`, where: 'Capítulo 6', clase: 6 },
+    ];
+    const E = [['TR', 'UP', 'conservativa'], ['CE', 'PT', 'integral'], ['UP', 'PT', '÷ q₀'], ['PT', 'EQ', 'V constante'], ['PT', 'GR', 'derivar'], ['EQ', 'GR', 'perpendicular'], ['GR', 'EV', 'ΔV'], ['PT', 'DC', 'integrar dq'], ['PT', 'CP', 'diferencia V']];
+    const by = {}; N.forEach((n) => { by[n.id] = n; });
+    let sel = 'PT', hov = null, built = false;
+    const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg', lines = [];
+    function build() {
+      E.forEach((e) => {
+        const p = by[e[0]], q = by[e[1]];
+        const base = document.createElementNS(NS, 'line'), flow = document.createElementNS(NS, 'line');
+        [base, flow].forEach((l) => { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); l.setAttribute('x2', q.x); l.setAttribute('y2', q.y); svg.appendChild(l); });
+        if (e[2]) { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'elab'); t.setAttribute('x', (p.x + q.x) / 2); t.setAttribute('y', (p.y + q.y) / 2 - 4); t.textContent = e[2]; svg.appendChild(t); }
+        lines.push({ e, base, flow });
       });
-      cmapDiv.appendChild(nodeEl);
-    });
-  }
+      N.forEach((n) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `cnode ${n.k}${n.big ? ' big' : ''}`; b.style.left = n.x + 'px'; b.style.top = n.y + 'px';
+        b.innerHTML = `${n.label}<small>${n.sub}</small>`; b.dataset.id = n.id;
+        b.addEventListener('click', () => { sel = n.id; paint(); });
+        b.addEventListener('mouseenter', () => { hov = n.id; paint(); }); b.addEventListener('mouseleave', () => { hov = null; paint(); });
+        $('cmap').appendChild(b);
+      });
+      built = true;
+    }
+    function paint() {
+      lines.forEach(({ e, base, flow }) => {
+        const hot = [sel, hov].includes(e[0]) || [sel, hov].includes(e[1]);
+        base.setAttribute('class', 'edge' + (hot ? ' hot' : '')); flow.setAttribute('class', 'flow' + (hot ? ' hot' : ''));
+      });
+      $('cmap').querySelectorAll('.cnode').forEach((b) => b.classList.toggle('on', b.dataset.id === sel));
+      const n = by[sel];
+      $('cm-kind').textContent = KK[n.k]; $('cm-label').textContent = n.label; $('cm-def').textContent = n.def; $('cm-where').textContent = n.where; katexTo($('cm-eq'), n.tex);
+      const act = $('cm-actions'); act.innerHTML = '';
+      const add = (label, pri, fn, href) => { const el = document.createElement(href ? 'a' : 'button'); el.className = 'btn' + (pri ? ' pri' : ''); el.textContent = label; if (href) { el.href = href; el.target = href.startsWith('../../player') ? '_top' : '_blank'; el.style.cssText = 'display:inline-flex;align-items:center;text-decoration:none'; } else { el.type = 'button'; el.addEventListener('click', fn); } act.appendChild(el); };
+      if (n.slide) add(`Ir a la diapositiva ${n.slide}`, true, () => go(n.slide - 1));
+      if (n.clase) add(`Abrir el capítulo ${n.clase}`, true, null, `../../player.html?clase=${n.clase}`);
+      if (n.lab) add('Abrir en EquipotentialLab', false, null, LAB + n.lab);
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
 
-  // Flashcards Glosario
-  const fcards = [
-    { term: 'Potencial Eléctrico (V)', def: 'Energía potencial electrostática por unidad de carga: V = U/q₀ (en Voltios).' },
-    { term: 'Voltio (V)', def: 'Unidad SI de potencial: 1 V = 1 Joule por Coulomb (1 J/C).' },
-    { term: 'Superficie Equipotencial', def: 'Lugar geométrico donde el potencial es idéntico en todos sus puntos; siempre ortogonal a E.' },
-    { term: 'Gradiente de Potencial', def: 'Operador diferencial vectorial que relaciona el campo con la pendiente de V: E = -∇V.' },
-    { term: 'Equilibrio en Conductores', def: 'Estado electrostático donde el campo interior es nulo y todo el conductor es equipotencial.' },
-    { term: 'Jaula de Faraday', def: 'Efecto de apantallamiento en cavidades conductoras cerradas donde E = 0 independientemente de campos externos.' }
-  ];
-  let fcIndex = 0, fcIsFront = true;
-  const updateFc = () => {
-    $('fc-side').textContent = fcIsFront ? 'TÉRMINO' : 'DEFINICIÓN';
-    $('fc-text').textContent = fcIsFront ? fcards[fcIndex].term : fcards[fcIndex].def;
-    $('fc-count').textContent = `Tarjeta ${fcIndex + 1} de ${fcards.length}`;
-  };
-  $('fc-card').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
-  $('fc-flip').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
-  $('fc-next').addEventListener('click', () => {
-    fcIndex = (fcIndex + 1) % fcards.length;
-    fcIsFront = true;
-    updateFc();
-  });
-  updateFc();
+  sims.hist = (() => {
+    const EV = [
+      { y: 1785, x: 150, who: 'Coulomb', what: 'Mide la fuerza entre cargas con la balanza de torsión; su ley 1/r² es la base de todo.', link: 'Capítulo 1.' },
+      { y: 1800, x: 400, who: 'Volta', what: 'Inventa la pila: la primera fuente estable de diferencia de potencial, medida en voltios.', link: 'Diapositiva 3.' },
+      { y: 1830, x: 650, who: 'Faraday', what: 'Introduce la idea de campo y visualiza líneas de fuerza; más tarde, las equipotenciales.', link: 'Capítulo 2.' },
+      { y: 1909, x: 900, who: 'Millikan', what: 'Equilibra gotas de aceite con qE = mg y confirma la cuantización de la carga.', link: 'Capítulo 2.' },
+    ];
+    const G = [
+      ['Potencial eléctrico V', 'Energía potencial por unidad de carga: V = U/q₀, en volt (J/C).'],
+      ['Voltio', 'Unidad de potencial: 1 V = 1 J/C, en honor de Alessandro Volta.'],
+      ['Diferencia de potencial', 'ΔV = V_b − V_a = −∫ E·dl: el trabajo por unidad de carga.'],
+      ['Electrón-volt', 'Unidad de energía: 1 eV = 1,602×10⁻¹⁹ J.'],
+      ['Superficie equipotencial', 'Lugar de puntos con el mismo V; mover carga sobre ella no requiere trabajo.'],
+      ['Gradiente', '∇V = (∂V/∂x, ∂V/∂y, ∂V/∂z): apunta hacia donde V crece más rápido.'],
+      ['Energía potencial eléctrica', 'U = q₀V o U = Σ kq_iq_j/r_ij para un sistema de cargas.'],
+      ['Campo uniforme', 'Entre placas paralelas: ΔV = Ed.'],
+    ];
+    const KEY = 'e10_c3_glosario';
+    let ev = 0, back = false, st = null, built = false;
+    const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.queue)) return s; } catch (_) {} return { queue: G.map((_, i) => i), known: [] }; };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+    function build() {
+      const tl = $('tline');
+      EV.forEach((e, i) => {
+        const d = document.createElement('span'); d.className = 'tdot'; d.style.left = e.x + 'px'; tl.appendChild(d);
+        const t = document.createElement('span'); t.className = 'tyear'; t.style.left = e.x + 'px'; t.textContent = e.y; tl.appendChild(t);
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'tev'; b.style.left = e.x + 'px'; b.innerHTML = `<b>${e.y}</b>${e.who}`; b.addEventListener('click', () => { ev = i; paint(); }); tl.appendChild(b);
+      });
+      st = load();
+      $('fc-card').addEventListener('click', () => { back = !back; paint(); }); $('fc-flip').addEventListener('click', () => { back = !back; paint(); });
+      $('fc-again').addEventListener('click', () => { if (!st.queue.length) return; const c = st.queue.shift(); st.queue.splice(Math.min(3, st.queue.length), 0, c); back = false; save(); paint(); });
+      $('fc-ok').addEventListener('click', () => { if (!st.queue.length) return; st.known.push(st.queue.shift()); back = false; save(); paint(); });
+      $('fc-reset').addEventListener('click', () => { st = { queue: G.map((_, i) => i), known: [] }; back = false; save(); paint(); });
+      built = true;
+    }
+    function paint() {
+      $('tline').querySelectorAll('.tev').forEach((b, i) => b.classList.toggle('on', i === ev));
+      const e = EV[ev]; $('tl-text').innerHTML = `<b style="color:var(--e10-primary)">${e.who}, ${e.y}.</b> ${e.what} <span style="color:var(--e10-muted)">${e.link}</span>`;
+      const card = $('fc-card');
+      if (!st.queue.length) { card.className = 'fcard back'; $('fc-side').textContent = 'GLOSARIO COMPLETO'; $('fc-text').textContent = 'Dominaste las 8 palabras clave. Pulsa «Empezar de nuevo» para repasar.'; }
+      else { const c = G[st.queue[0]]; card.className = 'fcard' + (back ? ' back' : ''); $('fc-side').textContent = back ? 'DEFINICIÓN' : 'TÉRMINO'; $('fc-text').textContent = back ? c[1] : c[0]; }
+      $('fc-count').textContent = `por repasar ${st.queue.length} · dominadas ${st.known.length} de ${G.length}`;
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
 
-  if (location.hash) {
-    const h = parseInt(location.hash.replace('#', ''), 10);
-    if (!isNaN(h) && h >= 1 && h <= total) cur = h;
+  const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
+  const onShow = { 1: () => sims.cover.show(), 2: sims.pre.draw, 3: sims.cp.draw, 4: sims.vq.draw, 5: sims.eq.draw, 6: sims.gr.draw, 7: sims.dp.draw, 8: sims.pl.draw, 10: sims.tree.draw, 11: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; }, 12: sims.cmap.draw, 13: sims.hist.draw };
+  const onHide = { 1: () => sims.cover.hide(), 2: () => sims.pre.hide() };
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); (onHide[cur + 1] || (() => {}))();
+    cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`; $('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
   }
-  showSlide(cur);
+  $('nav-prev').addEventListener('click', () => go(cur - 1)); $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1); });
+  $('nav-fs').addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {}); else document.exitFullscreen?.(); });
+  const drawAll = () => Object.values(sims).forEach((s) => s.draw && s.draw());
+  const print = () => { drawAll(); setTimeout(() => window.print(), 150); };
+  $('nav-print').addEventListener('click', print); $('btn-print2').addEventListener('click', print);
+  window.addEventListener('beforeprint', drawAll);
+  function fit() { const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720); $('stage').style.transform = `scale(${s})`; }
+  window.addEventListener('resize', fit); fit();
+  window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  window.addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1)); if (isFinite(n) && n - 1 !== cur) go(n - 1); });
+  slides[0].classList.add('on');
+  window.__c3 = { sims, go, K, QE, MP };
 })();
 </script>
 </body>
