@@ -9,13 +9,14 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <style>
-/* Póster del capítulo 3 (A3 horizontal). Idea rectora: el voltaje es un mapa topográfico y el campo es su pendiente. Colores solo desde css/tokens.css. */
+/* Póster del capítulo 3 (A3 horizontal). Idea rectora: el voltaje es el mapa topográfico del espacio electrostático y el campo es su pendiente ortogonal cuesta abajo. Colores solo desde css/tokens.css. */
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--e10-surface-2);color:var(--e10-ink);font:400 15px/1.45 var(--e10-font-body)}
 .bar{position:sticky;top:0;z-index:5;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line)}
-.btn{font:600 14px/1 var(--e10-font-body);min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.btn{font:600 14px/1 var(--e10-font-body);min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;text-decoration:none;transition:border-color .15s,background-color .15s}
+.btn:hover{border-color:var(--e10-primary)}
 .btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
-.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:700}
 .btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
 .fit{width:100%;overflow:hidden;padding:16px 0}
 .poster{width:1600px;height:1131px;margin:0 auto;background:var(--e10-bg);position:relative;transform-origin:top left;display:grid;grid-template-columns:360px 1fr 400px;grid-template-rows:128px 1fr 200px;gap:18px;padding:30px 34px 26px;box-shadow:var(--e10-shadow)}
@@ -38,14 +39,19 @@ h1 span{color:var(--e10-primary)}
 .callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;font-size:14px}
 .callouts div{border-top:3px solid var(--e10-primary);padding-top:6px}
 .callouts div:nth-child(2){border-color:var(--e10-accent)}.callouts div:nth-child(3){border-color:var(--e10-equipotential)}
-.ctrl{display:flex;align-items:center;gap:10px;font:500 14px var(--e10-font-mono);flex-wrap:wrap}
+.ctrl{display:flex;align-items:center;gap:8px;font:500 14px var(--e10-font-mono);flex-wrap:wrap}
 .ctrl .btn{min-height:32px;font-size:13px}
 #hero{flex:1;min-height:0}
-.eqpath{fill:none;stroke:var(--e10-equipotential);stroke-width:2}
-/* flujo de «fotones» cayendo cuesta abajo */
-#hero .ph{fill:none;stroke:var(--e10-primary);stroke-width:3;stroke-linecap:round;stroke-dasharray:2 38;animation:e10ph 2.2s linear infinite;opacity:.85}
-@keyframes e10ph{to{stroke-dashoffset:-40}}
-@media (prefers-reduced-motion:reduce){#hero .ph{animation:none}}
+/* Curvas equipotenciales vectoriales */
+.eq-curve{fill:none;stroke:var(--e10-equipotential);stroke-width:2;stroke-dasharray:6 4;opacity:.9}
+.eq-zero{fill:none;stroke:var(--e10-accent);stroke-width:2.5;stroke-dasharray:8 3;opacity:.95}
+.eq-badge{font:600 11px var(--e10-font-mono);fill:var(--e10-ink);paint-order:stroke;stroke:var(--e10-surface);stroke-width:3px;text-anchor:middle}
+/* Líneas de campo ortogonales continuas */
+.field-line{fill:none;stroke:var(--e10-vec-field);stroke-width:1.8;opacity:.65}
+/* Pulsos fotónicos cuesta abajo */
+.ph{fill:none;stroke:var(--e10-primary);stroke-width:3.2;stroke-linecap:round;stroke-dasharray:3 42;animation:e10ph 2.4s linear infinite;opacity:.9}
+@keyframes e10ph{to{stroke-dashoffset:-45}}
+@media (prefers-reduced-motion:reduce){.ph{animation:none}}
 .foot{grid-column:1/-1;display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px;min-height:0}
 .tl{position:relative;height:96px}
 .tl::before{content:'';position:absolute;left:8px;right:8px;top:27px;height:3px;background:var(--e10-line)}
@@ -65,157 +71,521 @@ svg text{font-family:var(--e10-font-body)}
   @page{size:A3 landscape;margin:0}
   .bar{display:none}.fit{padding:0}html,body{background:#fff}
   .poster{transform:none!important;box-shadow:none;width:420mm;height:297mm;zoom:.99}
-  #hero .ph{display:none}
+  .ph{display:none}
 }
 </style>
 </head>
 <body>
-<div class="bar"><a class="btn" href="index.html?cap=3">Otras láminas</a><a class="btn" href="../presentaciones/M3_Potencial/index.html" target="_blank" rel="noopener">Clase del capítulo 3</a><a class="btn" href="../simuladores/EquipotentialLab.html" target="_blank" rel="noopener">EquipotentialLab</a><button type="button" class="btn pri" id="btn-print">Imprimir en A3 / PDF</button></div>
-<div class="fit" id="fit"><article class="poster" id="poster" aria-label="Póster del potencial eléctrico y las superficies equipotenciales">
+<div class="bar">
+  <a class="btn" href="index.html?cap=3">Otras láminas</a>
+  <a class="btn" href="../presentaciones/M3_Potencial/index.html" target="_blank" rel="noopener">Clase del capítulo 3</a>
+  <a class="btn" href="../simuladores/EquipotentialLab.html" target="_blank" rel="noopener">EquipotentialLab</a>
+  <a class="btn" href="../talleres/Taller_3_Potencial_Electrico.html" target="_blank" rel="noopener">Taller 3</a>
+  <button type="button" class="btn pri" id="btn-print">Imprimir en A3 / PDF</button>
+</div>
+
+<div class="fit" id="fit">
+<article class="poster" id="poster" aria-label="Póster del potencial eléctrico y las superficies equipotenciales">
 
   <header class="head">
-    <div><span class="eyebrow">ELECTRO10.EASY · CAPÍTULO 3 · ELECTROSTÁTICA</span><h1>Potencial eléctrico <span>y equipotenciales</span></h1></div>
-    <p class="tagline">¿Por qué un pájaro se posa en un cable de 13 200 V sin daño?<br><b>Porque lo que mata es la diferencia de potencial entre sus patas, no el voltaje absoluto.</b></p>
+    <div>
+      <span class="eyebrow">ELECTRO10.EASY · CAPÍTULO 3 · ELECTROSTÁTICA</span>
+      <h1>Potencial eléctrico <span>y equipotenciales</span></h1>
+    </div>
+    <p class="tagline">¿Por qué un pájaro se posa en un cable de 13 200 V sin daño?<br><b>Porque lo que mata es la diferencia de potencial \(\Delta V\) entre sus patas, no el voltaje absoluto.</b></p>
   </header>
 
+  <!-- Columna izquierda: Fundamentos teóricos -->
   <section class="col">
     <div class="box">
-      <h2><i>01</i>La altura del mapa: V</h2>
-      <svg viewBox="0 0 320 120" width="100%" style="max-height:84px" role="img" aria-label="Una montaña de voltaje: la altura representa V y la pendiente el campo">
-        <path d="M10 110 Q120 20 250 110" fill="none" stroke="var(--e10-equipotential)" stroke-width="3"/>
-        <line x1="120" y1="42" x2="120" y2="110" stroke="var(--e10-muted)" stroke-dasharray="4 4"/>
-        <circle cx="120" cy="42" r="5" fill="var(--e10-vec-field)"/>
-        <text x="96" y="30" font-size="12" fill="var(--e10-vec-field)">E = −∇V (cuesta abajo)</text>
-        <text x="24" y="118" font-size="12" fill="var(--e10-muted)">V alto (cima)</text><text x="230" y="118" font-size="12" fill="var(--e10-muted)">V bajo</text>
+      <h2><i>01</i>Topografía del espacio electrostático</h2>
+      <svg viewBox="0 0 320 120" width="100%" style="max-height:86px" role="img" aria-label="Relieve topográfico en 3D con líneas de nivel de voltaje y gradiente descendente">
+        <defs>
+          <linearGradient id="gtopo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--e10-primary)" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="var(--e10-equipotential)" stop-opacity="0.05"/>
+          </linearGradient>
+          <marker id="mkr-down" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0L10 5L0 10z" fill="var(--e10-vec-field)"/>
+          </marker>
+        </defs>
+        <!-- Colina potencial -->
+        <path d="M20 105 Q120 15 220 105 Z" fill="url(#gtopo)"/>
+        <path d="M20 105 Q120 15 220 105" fill="none" stroke="var(--e10-primary)" stroke-width="2.5"/>
+        <!-- Curvas de nivel elípticas en la montaña -->
+        <ellipse cx="120" cy="40" rx="30" ry="8" fill="none" stroke="var(--e10-equipotential)" stroke-width="1.8" stroke-dasharray="4 2"/>
+        <ellipse cx="120" cy="65" rx="55" ry="12" fill="none" stroke="var(--e10-equipotential)" stroke-width="1.8" stroke-dasharray="4 2"/>
+        <ellipse cx="120" cy="90" rx="80" ry="15" fill="none" stroke="var(--e10-equipotential)" stroke-width="1.8" stroke-dasharray="4 2"/>
+        <!-- Vector campo pendiente abajo -->
+        <circle cx="140" cy="52" r="4.5" fill="var(--e10-q-pos)"/>
+        <line x1="140" y1="52" x2="185" y2="82" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#mkr-down)"/>
+        <text x="188" y="78" font-size="12" fill="var(--e10-vec-field)" font-weight="700">\(\vec E = -\vec\nabla V\)</text>
+        <text x="105" y="28" font-size="11" fill="var(--e10-primary)" font-weight="700">Cima (+V)</text>
+        <text x="230" y="108" font-size="11" fill="var(--e10-muted)">Base (0 V)</text>
       </svg>
-      <p>\(V=U/q_0\), en volt \((1\ \mathrm V=1\ \mathrm{J/C})\). Escalar: se suma como número, no como vector. El campo es la pendiente de la ladera.</p>
+      <p>\(V = U/q_0\) en volts \((1\ \mathrm{V} = 1\ \mathrm{J/C})\). Escalar con signo algebraico. El campo eléctrico apunta exactamente en la dirección de máxima caída de potencial.</p>
     </div>
+
     <div class="box">
-      <h2><i>02</i>De una carga puntual</h2>
-      <p>\(V=kq/r\), con \(V=0\) en el infinito. Signo de \(q\) = signo de \(V\).</p>
-      <svg viewBox="0 0 320 110" width="100%" style="max-height:80px" role="img" aria-label="Curva de V = kq/r que cae al alejarse de la carga">
-        <path d="M30 20 V95 H310" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/>
-        <path d="M40 92 Q120 88 300 80" fill="none" stroke="var(--e10-primary)" stroke-width="3"/>
-        <text x="250" y="70" font-size="12" fill="var(--e10-primary)" font-weight="700">V ∝ 1/r</text>
-        <text x="300" y="108" font-size="11" fill="var(--e10-muted)">r</text>
+      <h2><i>02</i>Decaimiento: Carga puntual vs Campo</h2>
+      <svg viewBox="0 0 320 110" width="100%" style="max-height:84px" role="img" aria-label="Comparación de decaimiento: V proporcional a 1/r frente a E proporcional a 1/r cuadrado">
+        <path d="M30 15 V98 H305" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/>
+        <!-- Curva V ~ 1/r -->
+        <path d="M42 22 Q55 60 120 78 T300 90" fill="none" stroke="var(--e10-primary)" stroke-width="2.5"/>
+        <!-- Curva E ~ 1/r^2 -->
+        <path d="M42 20 Q48 76 100 89 T300 96" fill="none" stroke="var(--e10-vec-field)" stroke-width="2" stroke-dasharray="5 3"/>
+        <text x="180" y="68" font-size="12" fill="var(--e10-primary)" font-weight="700">V ∝ 1/r</text>
+        <text x="180" y="86" font-size="12" fill="var(--e10-vec-field)">E ∝ 1/r²</text>
+        <text x="295" y="108" font-size="11" fill="var(--e10-muted)">r</text>
+        <text x="8" y="20" font-size="11" fill="var(--e10-muted)">V, E</text>
       </svg>
+      <p class="small">El potencial cae más despacio que el campo: duplicar \(r\) reduce \(V\) a la mitad (\(\times 1/2\)), pero reduce \(E\) a la cuarta parte (\(\times 1/4\)).</p>
     </div>
+
     <div class="box">
-      <h2><i>03</i>Las reglas de las equipotenciales</h2>
-      <p class="small">· Cada curva une puntos de igual \(V\).<br>· \(\vec E\) es <b>perpendicular</b> a ellas en todo punto.<br>· \(\vec E\) apunta de mayor a menor \(V\).<br>· Más juntas ⇒ campo más intenso.<br>· Mover carga sobre una no cuesta trabajo \((W=q\,\Delta V=0)\).</p>
+      <h2><i>03</i>Las cinco reglas de oro de las equipotenciales</h2>
+      <p class="small">
+        <b>1.</b> Unen puntos con idéntico valor de \(V(x,y,z)\).<br>
+        <b>2.</b> \(\vec E\) es rigurosamente <b>perpendicular</b> a ellas en cada punto.<br>
+        <b>3.</b> Las líneas de campo van de mayor a menor potencial.<br>
+        <b>4.</b> Densidad de líneas \(\propto\) intensidad del campo \(|\vec E| = |dV/dn|\).<br>
+        <b>5.</b> Desplazar una carga sobre una equipotencial no consume trabajo: \(W_{A\to B} = -q\,\Delta V = 0\).
+      </p>
     </div>
   </section>
 
+  <!-- Centro: Mapa Vectorial Interactivo Hero -->
   <section class="hero">
-    <div class="formula"><span>\( \vec E=-\vec\nabla V \)</span></div>
-    <div class="callouts">
-      <div><b>Escalar</b><br>\(V=\sum kq_i/r_i\)</div>
-      <div><b>Pendiente</b><br>\(\vec E=-dV/d\ell\)</div>
-      <div><b>Energía</b><br>\(U=q_0V\)</div>
+    <div class="formula">
+      <span>\( \vec E = -\vec\nabla V = -\left(\frac{\partial V}{\partial x}\hat\imath + \frac{\partial V}{\partial y}\hat\jmath + \frac{\partial V}{\partial z}\hat k\right) \)</span>
     </div>
-    <svg id="hero" viewBox="0 0 760 470" width="100%" role="img" aria-label="Mapa de equipotenciales de una carga o de un dipolo; las líneas de campo caen perpendicularmente cuesta abajo"></svg>
-    <div class="ctrl"><span>Configuración</span><button type="button" class="btn on" data-r="carga">Carga puntual</button><button type="button" class="btn" data-r="dipolo">Dipolo</button><span class="small" id="hero-note"></span></div>
+    <div class="callouts">
+      <div><b>Suma escalar</b><br>\(V = \sum_i \frac{k\,q_i}{r_i}\) sin vectores</div>
+      <div><b>Relación integral</b><br>\(V_B - V_A = -\int_A^B \vec E\cdot d\vec\ell\)</div>
+      <div><b>Energía en eV</b><br>\(1\ \mathrm{eV} = 1{,}602\times 10^{-19}\ \mathrm{J}\)</div>
+    </div>
+    <svg id="hero" viewBox="0 0 760 460" width="100%" role="img" aria-label="Mapa vectorial continuo de superficies equipotenciales y líneas de campo ortogonales trazadas analíticamente con pulsos fotónicos"></svg>
+    <div class="ctrl">
+      <span>Configuración analítica:</span>
+      <button type="button" class="btn on" data-cfg="puntual">Carga puntual (+q)</button>
+      <button type="button" class="btn" data-cfg="dipolo">Dipolo (+q, −q)</button>
+      <button type="button" class="btn" data-cfg="placas">Placas paralelas</button>
+      <button type="button" class="btn" data-cfg="cuadrupolo">Cargas iguales (+q, +q)</button>
+      <span class="small" id="hero-note" style="margin-left:auto;font-weight:600"></span>
+    </div>
   </section>
 
+  <!-- Columna derecha: Propiedades y aplicaciones -->
   <section class="col">
     <div class="box">
-      <h2><i>04</i>El dipolo cae como 1/r²</h2>
-      <svg id="dip" viewBox="0 0 360 150" width="100%" style="max-height:122px" role="img" aria-label="Gráfica logarítmica: el potencial de un dipolo cae como uno sobre r al cuadrado"></svg>
-      <p class="small">\(V\approx kp\cos\theta/r^2\) lejos. En la mediatriz \(V=0\), pero \(E\ne0\): apunta de \(+q\) a \(-q\).</p>
+      <h2><i>04</i>Dipolo: Decaimiento como 1/r²</h2>
+      <svg id="dip" viewBox="0 0 360 140" width="100%" style="max-height:115px" role="img" aria-label="Gráfica logarítmica: V de dipolo cae como 1/r cuadrado frente a 1/r de carga puntual"></svg>
+      <p class="small">\(V \approx \frac{k\,p\cos\theta}{r^2}\) a gran distancia. En el plano mediatriz (\(\theta = 90^\circ\)), \(V = 0\ \mathrm{V}\) exacto en todo punto, pero \(\vec E \ne \vec 0\) (apunta de \(+q\) a \(-q\)).</p>
     </div>
+
     <div class="box">
-      <h2><i>05</i>Dos caminos para E</h2>
-      <p class="small"><b>Camino A (gradiente):</b> \(\vec E=-\left(\frac{\partial V}{\partial x},\frac{\partial V}{\partial y},\frac{\partial V}{\partial z}\right)\).</p>
-      <p class="small"><b>Camino B (radial):</b> si \(V=kq/r\), \(E_r=-dV/dr=kq/r^2\).</p>
-      <p class="small">El gradiente apunta donde \(V\) crece; el campo, al revés.</p>
-    </div>
-    <div class="box">
-      <h2><i>06</i>Campo uniforme y eV</h2>
-      <svg viewBox="0 0 360 110" width="100%" style="max-height:92px" role="img" aria-label="Un protón entre dos placas gana energía q por delta V">
-        <rect x="70" y="8" width="210" height="8" fill="var(--e10-q-pos)"/><rect x="70" y="96" width="210" height="8" fill="var(--e10-q-neg)"/>
-        <g stroke="var(--e10-vec-field)" opacity=".45"><line x1="120" y1="92" x2="120" y2="20" marker-end="url(#pa3)"/><line x1="200" y1="92" x2="200" y2="20" marker-end="url(#pa3)"/></g>
-        <circle cx="120" cy="52" r="6" fill="var(--e10-q-pos)"/><text x="200" y="40" font-size="12" fill="var(--e10-muted)">ΔV = Ed</text>
-        <text x="200" y="58" font-size="12" fill="var(--e10-muted)">1 eV = 1,602×10⁻¹⁹ J</text>
+      <h2><i>05</i>Dos vías de cálculo de E</h2>
+      <svg viewBox="0 0 360 100" width="100%" style="max-height:85px" role="img" aria-label="Diagrama de los vectores gradiente V y campo eléctrico opuesto">
+        <line x1="30" y1="50" x2="330" y2="50" stroke="var(--e10-line)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <ellipse cx="90" cy="50" rx="35" ry="32" fill="none" stroke="var(--e10-equipotential)" stroke-width="2"/>
+        <ellipse cx="200" cy="50" rx="35" ry="32" fill="none" stroke="var(--e10-equipotential)" stroke-width="2"/>
+        <circle cx="145" cy="50" r="5" fill="var(--e10-primary)"/>
+        <!-- Vector gradiente -->
+        <line x1="145" y1="50" x2="85" y2="50" stroke="var(--e10-accent)" stroke-width="3" marker-end="url(#mkr-grad)"/>
+        <text x="65" y="38" font-size="12" fill="var(--e10-accent-strong)" font-weight="700">\(\vec\nabla V\)</text>
+        <!-- Vector campo opuesto -->
+        <line x1="145" y1="50" x2="215" y2="50" stroke="var(--e10-vec-field)" stroke-width="3.5" marker-end="url(#mkr-down)"/>
+        <text x="220" y="38" font-size="12" fill="var(--e10-vec-field)" font-weight="700">\(\vec E = -\vec\nabla V\)</text>
+        <text x="80" y="70" font-size="11" fill="var(--e10-muted)">+100 V</text>
+        <text x="195" y="70" font-size="11" fill="var(--e10-muted)">+50 V</text>
       </svg>
-      <p class="small">Protón a través de \(7{,}5\ \mathrm{MV}\) gana \(7{,}5\ \mathrm{MeV}\).</p>
+      <p class="small"><b>Vía A (Gradiente):</b> \(\vec E = -(\partial V/\partial x, \partial V/\partial y)\). El gradiente apunta a donde sube el voltaje; \(\vec E\) apunta en sentido opuesto.</p>
+    </div>
+
+    <div class="box">
+      <h2><i>06</i>Aceleración en campo uniforme: eV</h2>
+      <svg viewBox="0 0 360 110" width="100%" style="max-height:86px" role="img" aria-label="Aceleración de una partícula cargada entre dos placas paralelas y ganancia de energía cinética">
+        <!-- Placa positiva -->
+        <rect x="50" y="10" width="12" height="85" rx="3" fill="var(--e10-q-pos)"/>
+        <text x="56" y="56" font-size="14" fill="#fff" font-weight="700" text-anchor="middle">+</text>
+        <!-- Placa negativa -->
+        <rect x="280" y="10" width="12" height="85" rx="3" fill="var(--e10-q-neg)"/>
+        <text x="286" y="56" font-size="14" fill="#fff" font-weight="700" text-anchor="middle">−</text>
+        <!-- Líneas de campo horizontal -->
+        <g stroke="var(--e10-vec-field)" opacity=".5" stroke-width="2">
+          <line x1="65" y1="26" x2="275" y2="26" marker-end="url(#mkr-down)"/>
+          <line x1="65" y1="52" x2="275" y2="52" marker-end="url(#mkr-down)"/>
+          <line x1="65" y1="78" x2="275" y2="78" marker-end="url(#mkr-down)"/>
+        </g>
+        <!-- Trayectoria protón -->
+        <circle cx="95" cy="52" r="6" fill="var(--e10-primary)"/>
+        <path d="M102 52 H260" stroke="var(--e10-accent)" stroke-width="2.5" stroke-dasharray="4 2"/>
+        <text x="135" y="44" font-size="12" fill="var(--e10-ink)" font-weight="600">ΔK = q·ΔV</text>
+        <text x="135" y="70" font-size="11" fill="var(--e10-muted)">1 eV = 1,602×10⁻¹⁹ J</text>
+      </svg>
+      <p class="small">Un protón que cruza \(\Delta V = 7{,}5\ \mathrm{MV}\) adquiere exactamente \(K = 7{,}5\ \mathrm{MeV}\) (\(1{,}20\times 10^{-12}\ \mathrm{J}\)), alcanzando \(v = 3{,}79\times 10^7\ \mathrm{m/s}\).</p>
     </div>
   </section>
 
+  <!-- Franja inferior: Cronología, Errores típicos y Escala de órdenes de magnitud -->
   <footer class="foot">
     <div class="box">
-      <h2><i>07</i>Línea de tiempo</h2>
+      <h2><i>07</i>Evolución histórica del concepto de voltaje</h2>
       <div class="tl">
-        <div class="ev" style="left:9%"><b>1785</b>Coulomb: fuerza 1/r²</div>
-        <div class="ev" style="left:30%"><b>1800</b>Volta: la pila y el voltio</div>
-        <div class="ev" style="left:51%"><b>1830s</b>Faraday: líneas y equipotenciales</div>
-        <div class="ev" style="left:73%"><b>1909</b>Millikan: gotas, qE = mg</div>
-        <div class="ev" style="left:94%"><b>Hoy</b>radioterapia, aceleradores</div>
+        <div class="ev" style="left:8%"><b>1785</b>Coulomb: Ley de fuerzas 1/r²</div>
+        <div class="ev" style="left:30%"><b>1800</b>Alessandro Volta: Pila química y potencial</div>
+        <div class="ev" style="left:52%"><b>1828</b>George Green: Función potencial escalar</div>
+        <div class="ev" style="left:74%"><b>1873</b>Maxwell: Ecuaciones electrodinámicas</div>
+        <div class="ev" style="left:93%"><b>Hoy</b>Aceleradores y microelectrónica de 3 nm</div>
       </div>
-      <p class="small">Fuente: Young y Freedman (2009), secciones 23.1–23.5; ejemplos 23.1–23.5.</p>
+      <p class="small">Fuente: Young y Freedman (Sears-Zemansky, 12.ª ed.), Cap. 23; problemas 23.63, 23.75 y 23.88.</p>
     </div>
+
     <div class="box">
-      <h2><i>08</i>Cuatro errores que cuestan</h2>
+      <h2><i>08</i>Cuatro trampas conceptuales de examen</h2>
       <div class="err">
-        <div><b>V = 0 ⇒ E = 0</b><span>En la mediatriz hay campo.</span></div>
-        <div><b>Sumar V como vectores</b><span>Es suma escalar con signos.</span></div>
-        <div><b>eV es voltaje</b><span>Es energía: 1,602×10⁻¹⁹ J.</span></div>
-        <div><b>V cae contra E</b><span>Cae a favor de \(\vec E\).</span></div>
+        <div><b>V = 0 implica E = 0</b><span>En la mediatriz del dipolo V = 0 pero E ≠ 0.</span></div>
+        <div><b>Sumar potenciales con vectores</b><span>V es un escalar: suma algebraica directa con signos.</span></div>
+        <div><b>El electrón-volt es voltaje</b><span>Es unidad de energía cinética (Joule), no de potencial.</span></div>
+        <div><b>V sube a favor del campo</b><span>El potencial cae estrictamente en la dirección de \(\vec E\).</span></div>
       </div>
     </div>
+
     <div class="box">
-      <h2><i>09</i>¿Cuánto voltaje es eso?</h2>
+      <h2><i>09</i>Escala de voltajes en el Universo (V)</h2>
       <div class="scale" id="scale"></div>
-      <p class="small" style="margin-top:6px">Escala logarítmica. Valores del taller del capítulo 3. © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+      <p class="small" style="margin-top:6px">Escala logarítmica de 10⁻¹ a 10⁸ V. Datos del taller 3. © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
     </div>
   </footer>
-</article></div>
 
-<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><marker id="pa3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs></svg>
+</article>
+</div>
+
+<!-- Marcadores SVG reutilizables -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <marker id="mkr-down" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="var(--e10-vec-field)"/>
+    </marker>
+    <marker id="mkr-grad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="var(--e10-accent)"/>
+    </marker>
+  </defs>
+</svg>
 
 <script>
 (() => {
   'use strict';
-  const NS = 'http://www.w3.org/2000/svg', $ = (id) => document.getElementById(id);
-  const el = (tag, at, parent) => { const e = document.createElementNS(NS, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (parent) parent.appendChild(e); return e; };
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, at, parent) => {
+    const e = document.createElementNS(NS, tag);
+    Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v));
+    if (parent) parent.appendChild(e);
+    return e;
+  };
 
-  function hero(r) {
-    const svg = $('hero'); svg.innerHTML = ''; const W = 760, H = 470;
-    const qs = r === 'carga' ? [{ q: 1, x: 380, y: 235 }] : [{ q: 1, x: 330, y: 235 }, { q: -1, x: 430, y: 235 }];
-    const V = (x, y) => qs.reduce((s, c) => { const d = Math.hypot(x - c.x, y - c.y); return s + (d < 1e-6 ? 0 : c.q / d); }, 0);
-    const levels = r === 'carga' ? [0.012, 0.02, 0.035, 0.06, 0.1] : [-0.05, -0.025, 0, 0.025, 0.05];
-    for (let y = 0; y < H; y += 4) for (let x = 0; x < W; x += 4) {
-      const v = V(x, y);
-      for (const L of levels) if (Math.abs(v - L) < (r === 'carga' ? 0.002 : 0.004)) { el('rect', { x: x, y: y, width: 4, height: 4, fill: 'var(--e10-equipotential)', opacity: 0.9 }, svg); }
+  // Traza el mapa vectorial central con curvas suaves analíticas y líneas de campo ortogonales
+  function hero(cfg) {
+    const svg = $('hero');
+    svg.innerHTML = '';
+    const W = 760, H = 460;
+
+    if (cfg === 'puntual') {
+      const cx = 380, cy = 230;
+      // 1. Equipotenciales concéntricas circulares analíticas perfectas
+      const rings = [
+        { r: 42,  v: '+120 V' },
+        { r: 70,  v: '+80 V' },
+        { r: 110, v: '+50 V' },
+        { r: 165, v: '+30 V' },
+        { r: 235, v: '+20 V' }
+      ];
+      rings.forEach(ring => {
+        el('circle', { cx, cy, r: ring.r, class: 'eq-curve' }, svg);
+        const txt = el('text', { x: cx, y: cy - ring.r - 4, class: 'eq-badge' }, svg);
+        txt.textContent = ring.v;
+      });
+
+      // 2. Líneas de campo radiales ortogonales con pulsos fotónicos
+      const numLines = 16;
+      for (let i = 0; i < numLines; i++) {
+        const ang = (i / numLines) * 2 * Math.PI;
+        const x1 = cx + 22 * Math.cos(ang), y1 = cy + 22 * Math.sin(ang);
+        const x2 = cx + 260 * Math.cos(ang), y2 = cy + 260 * Math.sin(ang);
+        const d = `M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`;
+        el('path', { d, class: 'field-line', 'marker-end': 'url(#mkr-down)' }, svg);
+        el('path', { d, class: 'ph', style: `animation-delay:${(-i * 0.22).toFixed(2)}s` }, svg);
+      }
+
+      // Carga central
+      el('circle', { cx, cy, r: 18, fill: 'var(--e10-q-pos)' }, svg);
+      el('path', { d: `M${cx-8} ${cy}h16 M${cx} ${cy-8}v16`, stroke: 'var(--e10-on-primary)', 'stroke-width': 3.5, 'stroke-linecap': 'round' }, svg);
+      $('hero-note').textContent = 'Simetría esférica: superficies esféricas concéntricas V = kq/r. Líneas radiales a 90°.';
+
+    } else if (cfg === 'dipolo') {
+      const q1 = { x: 260, y: 230, q: +1 };
+      const q2 = { x: 500, y: 230, q: -1 };
+
+      // 1. Línea mediatriz recta analítica V = 0 V
+      const dZero = `M380 30 L380 430`;
+      el('path', { d: dZero, class: 'eq-zero' }, svg);
+      const tz = el('text', { x: 380, y: 24, class: 'eq-badge', fill: 'var(--e10-accent-strong)' }, svg);
+      tz.textContent = 'V = 0 V (Plano mediatriz)';
+
+      // 2. Equipotenciales cerradas deformadas analíticamente
+      const levels = [
+        { v: +80, r0: 32, center: q1, sign: +1, label: '+80 V' },
+        { v: +50, r0: 55, center: q1, sign: +1, label: '+50 V' },
+        { v: +25, r0: 88, center: q1, sign: +1, label: '+25 V' },
+        { v: -25, r0: 88, center: q2, sign: -1, label: '−25 V' },
+        { v: -50, r0: 55, center: q2, sign: -1, label: '−50 V' },
+        { v: -80, r0: 32, center: q2, sign: -1, label: '−80 V' }
+      ];
+
+      levels.forEach(lvl => {
+        let pts = [];
+        const nSteps = 72;
+        for (let i = 0; i <= nSteps; i++) {
+          const theta = (i / nSteps) * 2 * Math.PI;
+          // Perturbación dipolar de primer orden
+          const dist12 = 240;
+          const cosT = Math.cos(theta);
+          const r = lvl.r0 * (1 + (lvl.sign * (lvl.r0 / dist12) * cosT * 0.85));
+          const px = lvl.center.x + r * Math.cos(theta);
+          const py = lvl.center.y + r * Math.sin(theta);
+          pts.push((i === 0 ? 'M' : 'L') + px.toFixed(1) + ' ' + py.toFixed(1));
+        }
+        pts.push('Z');
+        el('path', { d: pts.join(' '), class: 'eq-curve' }, svg);
+        const tb = el('text', { x: lvl.center.x, y: lvl.center.y - lvl.r0 - 5, class: 'eq-badge' }, svg);
+        tb.textContent = lvl.label;
+      });
+
+      // 3. Líneas de campo de dipolo con Runge-Kutta de 2.° orden ortogonales
+      const qs = [q1, q2];
+      const E = (x, y) => {
+        let ex = 0, ey = 0;
+        qs.forEach(c => {
+          const dx = x - c.x, dy = y - c.y, d2 = dx*dx + dy*dy, d = Math.sqrt(d2);
+          if (d > 4) { ex += c.q * dx / (d2 * d); ey += c.q * dy / (d2 * d); }
+        });
+        return [ex, ey];
+      };
+
+      const nLines = 18;
+      for (let k = 0; k < nLines; k++) {
+        const ang = (k + 0.5) / nLines * 2 * Math.PI;
+        let x = q1.x + 20 * Math.cos(ang), y = q1.y + 20 * Math.sin(ang);
+        let pathStr = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+        for (let s = 0; s < 400; s++) {
+          const [ex, ey] = E(x, y);
+          const L = Math.hypot(ex, ey) || 1;
+          const hx = x + 2.5 * ex / L, hy = y + 2.5 * ey / L;
+          const [e2, f2] = E(hx, hy);
+          const L2 = Math.hypot(e2, f2) || 1;
+          x += 5 * e2 / L2;
+          y += 5 * f2 / L2;
+          pathStr += `L${x.toFixed(1)} ${y.toFixed(1)}`;
+          if (x < 15 || x > W - 15 || y < 15 || y > H - 15) break;
+          if (Math.hypot(x - q2.x, y - q2.y) < 18) break;
+        }
+        el('path', { d: pathStr, class: 'field-line' }, svg);
+        el('path', { d: pathStr, class: 'ph', style: `animation-delay:${(-k * 0.28).toFixed(2)}s` }, svg);
+      }
+
+      // Dibujar cargas
+      [q1, q2].forEach(c => {
+        el('circle', { cx: c.x, cy: c.y, r: 18, fill: c.q > 0 ? 'var(--e10-q-pos)' : 'var(--e10-q-neg)' }, svg);
+        const s = 7;
+        el('path', { d: `M${c.x - s} ${c.y}h${2*s}` + (c.q > 0 ? `M${c.x} ${c.y - s}v${2*s}` : ''), stroke: 'var(--e10-on-primary)', 'stroke-width': 3.5, 'stroke-linecap': 'round' }, svg);
+      });
+
+      $('hero-note').textContent = 'Dipolo: V = 0 en el plano mediatriz, pero el campo es máximo hacia la derecha (ortogonal).';
+
+    } else if (cfg === 'placas') {
+      // 1. Placas paralelas en los bordes
+      el('rect', { x: 100, y: 50, width: 22, height: 360, rx: 6, fill: 'var(--e10-q-pos)' }, svg);
+      el('text', { x: 111, y: 236, 'font-size': 22, fill: '#fff', 'font-weight': 700, 'text-anchor': 'middle' }, svg).textContent = '+';
+      el('rect', { x: 638, y: 50, width: 22, height: 360, rx: 6, fill: 'var(--e10-q-neg)' }, svg);
+      el('text', { x: 649, y: 236, 'font-size': 22, fill: '#fff', 'font-weight': 700, 'text-anchor': 'middle' }, svg).textContent = '−';
+
+      // 2. Equipotenciales paralelas verticales equiespaciadas
+      const vPlates = [
+        { x: 186, v: '+80 V' },
+        { x: 272, v: '+60 V' },
+        { x: 358, v: '+40 V' },
+        { x: 444, v: '+20 V' },
+        { x: 530, v: '0 V' },
+        { x: 600, v: '−15 V' }
+      ];
+
+      vPlates.forEach(vp => {
+        el('line', { x1: vp.x, y1: 50, x2: vp.x, y2: 410, class: 'eq-curve' }, svg);
+        const tv = el('text', { x: vp.x, y: 40, class: 'eq-badge' }, svg);
+        tv.textContent = vp.v;
+      });
+
+      // 3. Líneas de campo uniformes horizontales
+      const numLines = 9;
+      for (let i = 0; i < numLines; i++) {
+        const y = 80 + i * 38;
+        const d = `M124 ${y} L636 ${y}`;
+        el('path', { d, class: 'field-line', 'marker-end': 'url(#mkr-down)' }, svg);
+        el('path', { d, class: 'ph', style: `animation-delay:${(-i * 0.3).toFixed(2)}s` }, svg);
+      }
+
+      $('hero-note').textContent = 'Campo uniforme E = ΔV/d: equipotenciales paralelas equiespaciadas cortadas a 90°.';
+
+    } else if (cfg === 'cuadrupolo') {
+      const q1 = { x: 270, y: 230, q: +1 };
+      const q2 = { x: 490, y: 230, q: +1 };
+
+      // 1. Curvas equipotenciales para dos cargas del mismo signo
+      const levels = [
+        { r0: 36, label: '+100 V' },
+        { r0: 64, label: '+70 V' }
+      ];
+
+      [q1, q2].forEach(c => {
+        levels.forEach(lvl => {
+          let pts = [];
+          for (let i = 0; i <= 60; i++) {
+            const th = (i / 60) * 2 * Math.PI;
+            const px = c.x + lvl.r0 * Math.cos(th);
+            const py = c.y + lvl.r0 * Math.sin(th);
+            pts.push((i === 0 ? 'M' : 'L') + px.toFixed(1) + ' ' + py.toFixed(1));
+          }
+          pts.push('Z');
+          el('path', { d: pts.join(' '), class: 'eq-curve' }, svg);
+        });
+      });
+
+      // Curva en forma de reloj de arena / lemniscata alrededor de ambas
+      const outerCurves = [
+        { a: 170, b: 90, label: '+45 V' },
+        { a: 220, b: 135, label: '+30 V' }
+      ];
+      outerCurves.forEach(oc => {
+        el('ellipse', { cx: 380, cy: 230, rx: oc.a, ry: oc.b, class: 'eq-curve' }, svg);
+        const t = el('text', { x: 380, y: 230 - oc.b - 4, class: 'eq-badge' }, svg);
+        t.textContent = oc.label;
+      });
+
+      // Punto sillín en el centro
+      el('circle', { cx: 380, cy: 230, r: 6, fill: 'var(--e10-accent)' }, svg);
+      el('text', { x: 380, y: 218, class: 'eq-badge', fill: 'var(--e10-accent-strong)' }, svg).textContent = 'E = 0, V > 0 (Silla)';
+
+      // Líneas de campo repulsivas
+      const qs = [q1, q2];
+      const E = (x, y) => {
+        let ex = 0, ey = 0;
+        qs.forEach(c => {
+          const dx = x - c.x, dy = y - c.y, d2 = dx*dx + dy*dy, d = Math.sqrt(d2);
+          if (d > 4) { ex += c.q * dx / (d2 * d); ey += c.q * dy / (d2 * d); }
+        });
+        return [ex, ey];
+      };
+
+      [q1, q2].forEach((c, idx) => {
+        const nL = 14;
+        for (let k = 0; k < nL; k++) {
+          const ang = (k / nL) * 2 * Math.PI;
+          let x = c.x + 20 * Math.cos(ang), y = c.y + 20 * Math.sin(ang);
+          let pathStr = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+          for (let s = 0; s < 300; s++) {
+            const [ex, ey] = E(x, y);
+            const L = Math.hypot(ex, ey) || 1;
+            x += 4 * ex / L;
+            y += 4 * ey / L;
+            pathStr += `L${x.toFixed(1)} ${y.toFixed(1)}`;
+            if (x < 15 || x > W - 15 || y < 15 || y > H - 15) break;
+          }
+          el('path', { d: pathStr, class: 'field-line' }, svg);
+          el('path', { d: pathStr, class: 'ph', style: `animation-delay:${(-(k + idx*7) * 0.2).toFixed(2)}s` }, svg);
+        }
+      });
+
+      [q1, q2].forEach(c => {
+        el('circle', { cx: c.x, cy: c.y, r: 18, fill: 'var(--e10-q-pos)' }, svg);
+        el('path', { d: `M${c.x - 7} ${c.y}h14 M${c.x} ${c.y - 7}v14`, stroke: 'var(--e10-on-primary)', 'stroke-width': 3.5, 'stroke-linecap': 'round' }, svg);
+      });
+
+      $('hero-note').textContent = 'Cargas iguales (+q, +q): en el centro el campo es cero (E = 0), pero el potencial V es positivo y finito.';
     }
-    // líneas de campo (fotones) cayendo cuesta abajo desde las positivas
-    const src = qs.filter((c) => c.q > 0);
-    src.forEach((c) => { const n = 10; for (let k = 0; k < n; k++) {
-      const a = (k + 0.5) / n * 2 * Math.PI; let x = c.x + 14 * Math.cos(a), y = c.y + 14 * Math.sin(a); let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
-      for (let s = 0; s < 300; s++) { const dx = x - c.x, dy = y - c.y, dd = Math.hypot(dx, dy) || 1; let ex = 0, ey = 0; qs.forEach((o) => { const ox = x - o.x, oy = y - o.y, o2 = ox * ox + oy * oy, od = Math.sqrt(o2); ex += o.q * ox / (o2 * od); ey += o.q * oy / (o2 * od); }); const L = Math.hypot(ex, ey) || 1; x += 3 * ex / L; y += 3 * ey / L; d += `L${x.toFixed(1)} ${y.toFixed(1)}`; if (x < 6 || y < 6 || x > W - 6 || y > H - 6) break; if (qs.some((o) => o !== c && Math.hypot(x - o.x, y - o.y) < 13)) break; }
-      el('path', { d, class: 'eqpath' }, svg); el('path', { d, class: 'ph', style: `animation-delay:${(-k * 0.33).toFixed(2)}s` }, svg); } });
-    qs.forEach((c) => { el('circle', { cx: c.x, cy: c.y, r: 13, fill: c.q > 0 ? 'var(--e10-q-pos)' : 'var(--e10-q-neg)' }, svg); el('path', { d: `M${c.x - 6} ${c.y}h12` + (c.q > 0 ? `M${c.x} ${c.y - 6}v12` : ''), stroke: 'var(--e10-on-primary)', 'stroke-width': 4 }, svg); });
-    $('hero-note').textContent = r === 'carga' ? 'Equipotenciales concéntricas; el campo cae radial.' : 'V = 0 en la mediatriz (recta entre las cargas), pero el campo no se anula.';
-    document.querySelectorAll('[data-r]').forEach((b) => b.classList.toggle('on', b.dataset.r === r));
+
+    // Actualizar botones de configuración
+    document.querySelectorAll('[data-cfg]').forEach(b => b.classList.toggle('on', b.dataset.cfg === cfg));
   }
+
+  // Gráfica de decaimiento logarítmico del potencial dipolar (1/r²) vs carga (1/r)
   function dip() {
-    const svg = $('dip'), X = (lr) => 40 + lr / 1.3 * 300, Y = (lV) => 12 + (0 - lV) / 3.6 * 110;
-    svg.innerHTML = `<path d="M40 6V128H350" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/>
-      <line x1="${X(0)}" y1="${Y(0)}" x2="${X(1.3)}" y2="${Y(-1.3)}" stroke="var(--e10-muted)" stroke-width="2.5" stroke-dasharray="6 5"/>
-      <line x1="${X(0)}" y1="${Y(0)}" x2="${X(1.1)}" y2="${Y(-2.2)}" stroke="var(--e10-primary)" stroke-width="3"/>
-      <text x="${X(1.3) - 64}" y="${Y(-1.3) - 10}" font-size="12" fill="var(--e10-muted)">carga: 1/r</text>
-      <text x="${X(1.1) + 6}" y="${Y(-2.2) + 4}" font-size="12" fill="var(--e10-primary)" font-weight="700">dipolo: 1/r²</text>
-      <text x="300" y="144" font-size="11" fill="var(--e10-muted)">log r</text><text x="4" y="16" font-size="11" fill="var(--e10-muted)">log V</text>`;
+    const svg = $('dip');
+    const X = (lr) => 40 + (lr / 1.3) * 300;
+    const Y = (lV) => 12 + (0 - lV) / 2.8 * 100;
+    svg.innerHTML = `
+      <path d="M40 8 V118 H350" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/>
+      <line x1="${X(0)}" y1="${Y(0)}" x2="${X(1.3)}" y2="${Y(-1.3)}" stroke="var(--e10-muted)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <line x1="${X(0)}" y1="${Y(0)}" x2="${X(1.15)}" y2="${Y(-2.3)}" stroke="var(--e10-primary)" stroke-width="3"/>
+      <text x="${X(1.3) - 72}" y="${Y(-1.3) - 8}" font-size="12" fill="var(--e10-muted)">Carga: 1/r (pendiente −1)</text>
+      <text x="${X(1.15) - 60}" y="${Y(-2.3) + 16}" font-size="12" fill="var(--e10-primary)" font-weight="700">Dipolo: 1/r² (pendiente −2)</text>
+      <text x="310" y="132" font-size="11" fill="var(--e10-muted)">log r</text>
+      <text x="6" y="18" font-size="11" fill="var(--e10-muted)">log V</text>
+      <text x="50" y="${Y(-2.45)}" font-size="11" fill="var(--e10-muted)">Al duplicar r: ÷2 (carga) vs ÷4 (dipolo)</text>
+    `;
   }
+
+  // Escala de órdenes de magnitud del potencial en voltios
   function scale() {
-    const R = [['Potencial de 1 pC a 1,0 cm', 0.9, '0,90'], ['V en el origen (3 cargas, taller)', 77.9, '77,9'], ['Anillo cargado, en el eje', 719, '719'], ['Salida de la pila de Volta', 1.2, '1,2'], ['Acelerador lineal (ΔV)', 7.5e6, '7,5×10⁶']];
-    $('scale').innerHTML = R.map(([l, v, t]) => `<div class="row"><span class="lbl">${l}</span><span class="b" style="width:${(4 + (Math.log10(v) + 0.2) / 8 * 120).toFixed(0)}px"></span><span>${t} V</span></div>`).join('');
+    const R = [
+      ['Membrana celular biológica', 0.07, '70 mV'],
+      ['Pila alcalina estándar (AA/AAA)', 1.5, '1,5 V'],
+      ['Red domiciliaria eléctrica', 120, '120 V'],
+      ['Línea de transmisión de alta tensión', 13200, '13,2 kV'],
+      ['Acelerador electrostático Van de Graaff', 7.5e6, '7,5 MV'],
+      ['Rayo en tormenta eléctrica severa', 1.0e8, '100 MV']
+    ];
+    $('scale').innerHTML = R.map(([label, val, txt]) => {
+      const w = Math.min(130, Math.max(8, (Math.log10(val) + 1.5) / 9.5 * 130)).toFixed(0);
+      return `<div class="row"><span class="lbl">${label}</span><span class="b" style="width:${w}px"></span><span>${txt}</span></div>`;
+    }).join('');
   }
-  document.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => hero(b.dataset.r)));
-  hero('carga'); dip(); scale();
-  function fit() { const w = $('fit').clientWidth - 16, s = Math.min(1, w / 1600); $('poster').style.transform = `scale(${s})`; $('fit').style.height = (1131 * s + 32) + 'px'; $('poster').style.marginLeft = s < 1 ? '8px' : 'auto'; }
-  window.addEventListener('resize', fit); fit();
+
+  // Interacción de botones de configuración
+  document.querySelectorAll('[data-cfg]').forEach(b => {
+    b.addEventListener('click', () => hero(b.dataset.cfg));
+  });
+
+  // Ajuste de zoom responsivo para A3 landscape
+  function fit() {
+    const w = $('fit').clientWidth - 16;
+    const s = Math.min(1, w / 1600);
+    $('poster').style.transform = `scale(${s})`;
+    $('fit').style.height = (1131 * s + 32) + 'px';
+    $('poster').style.marginLeft = s < 1 ? '8px' : 'auto';
+  }
+
+  window.addEventListener('resize', fit);
   $('btn-print').addEventListener('click', () => window.print());
-  window.addEventListener('load', () => { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }], throwOnError: false }); fit(); });
+
+  // Inicialización
+  hero('puntual');
+  dip();
+  scale();
+  fit();
+
+  window.addEventListener('load', () => {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ],
+        throwOnError: false
+      });
+    }
+    fit();
+  });
 })();
 </script>
 </body>

@@ -45,13 +45,20 @@ ok(!deckContent.includes('UNAB'), 'Deck no menciona a la UNAB');
 ok(deckContent.includes('katex.min.js'), 'Deck carga KaTeX');
 ok(deckContent.includes('EquipotentialLab'), 'Deck referencia a EquipotentialLab');
 ok(deckContent.includes('window.__c3'), 'Deck exporta el objeto global __c3');
+ok(deckContent.includes('data-n="14"'), 'Deck contiene 14 diapositivas completas');
 
 // 3. Verificar Taller 3
 const tallerPath = path.join(baseDir, 'talleres/Taller_3_Potencial_Electrico.html');
 const tallerContent = fs.readFileSync(tallerPath, 'utf8');
 ok(!tallerContent.includes('UNAB'), 'Taller no menciona a la UNAB');
+ok(!tallerContent.includes('cdn.tailwindcss.com'), 'Taller 3 libre de Tailwind CDN');
+ok(!tallerContent.includes('html2pdf'), 'Taller 3 libre de librerías externas de PDF');
+ok(!tallerContent.includes('globalDrawingCanvas'), 'Taller 3 libre de pizarra canvas inventada');
+ok(tallerContent.includes('css/tokens.css'), 'Taller 3 utiliza tokens.css estándar');
 ok(tallerContent.includes('Cap03_Taller.pdf'), 'Taller referencia a Cap03_Taller.pdf');
 ok(tallerContent.includes('EquipotentialLab.html'), 'Taller referencia a EquipotentialLab');
+ok(tallerContent.includes('window.__taller3'), 'Taller 3 exporta motor de validación tolerante');
+ok(tallerContent.includes('data-reto="14"'), 'Taller 3 contiene los 14 retos numéricos completos');
 
 // 4. Verificar banco de Desafío Integral
 const bancoPath = path.join(baseDir, 'desafios/bancos/m3.js');
@@ -60,17 +67,28 @@ ok(bancoContent.includes('modulo: 3'), 'Banco registra módulo 3');
 ok(bancoContent.includes('Calentamiento conceptual'), 'Banco incluye fase 1 conceptual');
 ok(bancoContent.includes('EquipotentialLab'), 'Banco referencia el simulador de potencial');
 
-// 5. Verificar simulador EquipotentialLab
+// 5. Verificar simulador EquipotentialLab (Estándar Flagship Lab10.easy)
 const simPath = path.join(baseDir, 'simuladores/EquipotentialLab.html');
 const simContent = fs.readFileSync(simPath, 'utf8');
-ok(simContent.includes('puntual') && simContent.includes('dipolo') && simContent.includes('gradiente'), 'Simulador contiene las escenas requeridas');
+ok(!simContent.includes('UNAB'), 'Simulador no menciona a la UNAB');
 ok(simContent.includes('tokens.css'), 'Simulador utiliza tokens.css');
+ok(simContent.includes('puntual') && simContent.includes('dipolo') && simContent.includes('placas') && simContent.includes('gradiente'), 'Simulador contiene las 4 escenas requeridas');
+ok(simContent.includes('e10-live'), 'Simulador incluye barra flotante KaTeX #e10-live');
+ok(simContent.includes('slide-panel'), 'Simulador incluye panel lateral guiado .slide-panel');
+ok(simContent.includes('values'), 'Simulador incluye gaveta colapsable de parámetros #values');
+ok(simContent.includes('probe'), 'Simulador cuenta con sonda voltímetro interactiva');
+ok(simContent.includes('katex.min.js'), 'Simulador renderiza KaTeX');
 
-// 6. Verificar lámina infográfica
+// 6. Verificar lámina infográfica (Estándar A3 Vectorial de Alta Definición)
 const lamPath = path.join(baseDir, 'laminas/M3_Potencial.html');
 const lamContent = fs.readFileSync(lamPath, 'utf8');
-ok(lamContent.includes('Potencial eléctrico'), 'Lámina contiene título del capítulo');
+ok(!lamContent.includes('UNAB'), 'Lámina no menciona a la UNAB');
 ok(lamContent.includes('tokens.css'), 'Lámina utiliza tokens.css');
+ok(lamContent.includes('Potencial eléctrico'), 'Lámina contiene título del capítulo');
+ok(lamContent.includes('eq-curve'), 'Lámina renderiza curvas equipotenciales vectoriales suaves');
+ok(lamContent.includes('ph'), 'Lámina contiene pulsos fotónicos animados en líneas de campo');
+ok(!lamContent.includes("el('rect', { x: x"), 'Lámina erradica el loop de píxeles 4x4');
+ok(lamContent.includes('puntual') && lamContent.includes('dipolo') && lamContent.includes('placas') && lamContent.includes('cuadrupolo'), 'Lámina contiene las 4 configuraciones vectoriales');
 
 // 7. Verificar modelo 3D
 const stlPath = path.join(baseDir, 'recursos/modelos_3d/M03_PozoPotencial.stl');

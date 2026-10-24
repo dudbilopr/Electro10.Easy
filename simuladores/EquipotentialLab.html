@@ -1,227 +1,699 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EquipotentialLab · Potencial Eléctrico — Electro10.Easy</title>
-<link rel="stylesheet" href="../css/tokens.css">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EquipotentialLab10.easy · Potencial eléctrico y superficies equipotenciales</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
 <style>
-/* EquipotentialLab · HUD glassmorphism con paleta Plasma (css/tokens.css). */
-*{box-sizing:border-box}
+/* EquipotentialLab10.easy · Lab10.easy Flagship Standard (Plasma). Colores solo desde css/tokens.css */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
-html,body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 16px/1.5 var(--e10-font-body);min-height:100vh}
-body.embed .hud,body.embed .scene-tabs,body.embed footer{display:none!important}
-.hud{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;background:color-mix(in srgb,var(--e10-surface) 78%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--e10-line)}
-.brand{font:700 18px var(--e10-font-display);letter-spacing:-.01em}.brand span{color:var(--e10-primary)}
-.chip{font:500 12px var(--e10-font-mono);padding:4px 10px;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary)}
-.scene-tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tab{font:600 14px/1 var(--e10-font-body);min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
-.tab.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
-.tab:focus-visible,.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
-.main{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px;max-width:1200px;margin:0 auto;align-items:start}
-@media (max-width:880px){.main{grid-template-columns:1fr}}
-.stage-wrap{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:16px;padding:12px}
-canvas{display:block;width:100%;height:auto;background:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:24px 24px;border:1px solid var(--e10-line);border-radius:12px;touch-action:none;cursor:crosshair}
-.panel{display:flex;flex-direction:column;gap:14px}
-.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
-.card h2{font:700 18px var(--e10-font-display);margin:0 0 8px}
-.read{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:var(--e10-muted)}
-.read b{display:block;font:600 20px/1.2 var(--e10-font-mono);color:var(--e10-ink)}
-.formula{background:var(--e10-primary-soft);border-radius:12px;padding:10px 14px;text-align:center;overflow-x:auto}
-.formula .katex{font-size:1.15em}
-.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap;display:flex;align-items:center;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line)}
+header .e10-brand{font:700 1.15rem/1 var(--e10-font-display);color:var(--e10-ink);text-decoration:none;letter-spacing:-.01em}
+header .e10-brand span{color:var(--e10-primary)}
+.module-chip{font:600 12px/1 var(--e10-font-mono);padding:4px 10px;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary);margin-left:6px}
+.scene-tabs{display:flex;gap:4px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-surface-2);border:1px solid var(--e10-line);margin-left:14px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap;transition:all .15s}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-primary);font-weight:700;box-shadow:0 1px 3px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
 .btn:hover{border-color:var(--e10-primary)}
-.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
-.btn[disabled]{opacity:.45;cursor:default}
-input[type=number]{flex:1;min-width:0;min-height:42px;border:1px solid var(--e10-line);border-radius:10px;padding:0 12px;font:500 16px var(--e10-font-mono);background:var(--e10-surface);color:var(--e10-ink)}
-.retobx{display:flex;flex-direction:column;gap:8px}
-.retobx .row{display:flex;gap:8px}
-.fb{font-size:15px;min-height:20px;border-radius:10px;padding:8px 12px;display:none}
-.fb.ok{display:block;background:var(--e10-success-soft)}.fb.ok b{color:var(--e10-success)}
-.fb.bad{display:block;background:var(--e10-warning-soft)}.fb.bad b{color:var(--e10-warning)}
-.tip{background:var(--e10-accent-soft);border-radius:12px;padding:10px 14px;font-size:15px}.tip b{color:var(--e10-accent-strong)}
-.muted{color:var(--e10-muted);font-size:14px}
-footer{max-width:1200px;margin:0 auto;padding:0 16px 24px;color:var(--e10-muted);font-size:13px}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:38px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:8px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:600 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:24px;background:var(--e10-line)}
+.tog{min-height:32px;padding:0 10px;border-radius:999px;font-size:var(--e10-text-xs);border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:320px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:600 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:32px minmax(0,1fr) 72px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:600 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:18px;padding:10px 18px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.15em}
+.live-readout{display:flex;gap:16px;align-items:center;border-left:1px solid var(--e10-line);padding-left:16px;font-size:var(--e10-text-xs);color:var(--e10-muted);white-space:nowrap}
+.live-readout b{color:var(--e10-primary);font-family:var(--e10-font-mono);font-size:14px;display:block}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55;font-size:14px}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px;font-size:13px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+.ans{display:grid;gap:6px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:600 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden;padding:10px 12px;font-size:13px;line-height:1.45}
+#validation-box.ok{background:var(--e10-success-soft);border-color:var(--e10-success);color:var(--e10-ink)}
+#validation-box.bad{background:var(--e10-warning-soft);border-color:var(--e10-warning);color:var(--e10-ink)}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-surface-2);border:1px solid var(--e10-line);overflow-x:auto;font-size:13.5px;line-height:1.55}
+
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line);font-size:12px;color:var(--e10-muted)}
+.panel-progress .bar-wrap{flex:1;height:6px;background:var(--e10-line);border-radius:999px;overflow:hidden}
+.panel-progress .bar-fill{height:100%;width:25%;background:var(--e10-primary);transition:width .3s}
+
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  .module-chip{display:none}
+  .scene-tabs{order:5;margin:6px 0 0;width:100%}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;margin-top:-14px}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px}
+  footer{display:none}
+}
 </style>
+<script>
+(function(){
+  var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.toggle('dark-mode',t==='dark');
+    document.body.classList.toggle('light-mode',t!=='dark');
+    if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');
+  });
+})();
+</script>
 </head>
-<body>
-<header class="hud">
-  <span class="brand">Equipotential<span>Lab</span><span style="color:var(--e10-muted)">10.easy</span></span>
-  <span class="chip">Módulo 3 · Potencial Eléctrico</span>
+<body data-domain="potencial" class="light-mode">
+
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">EquipotentialLab<span>10.easy</span></a>
+  <span class="module-chip">Módulo 3 · Potencial Eléctrico</span>
   <nav class="scene-tabs" aria-label="Escenas">
-    <button class="tab on" data-scene="puntual">Carga puntual</button>
-    <button class="tab" data-scene="dipolo">Dipolo</button>
-    <button class="tab" data-scene="placas">Campo uniforme</button>
-    <button class="tab" data-scene="gradiente">Gradiente</button>
+    <button type="button" class="tab-btn" data-scene="puntual" aria-selected="true"><i class="ph ph-circle"></i> Carga puntual</button>
+    <button type="button" class="tab-btn" data-scene="dipolo" aria-selected="false"><i class="ph ph-arrows-split"></i> Dipolo eléctrico</button>
+    <button type="button" class="tab-btn" data-scene="placas" aria-selected="false"><i class="ph ph-pause"></i> Campo uniforme</button>
+    <button type="button" class="tab-btn" data-scene="gradiente" aria-selected="false"><i class="ph ph-trend-down"></i> Gradiente E = -∇V</button>
   </nav>
+  <div class="header-actions">
+    <button type="button" class="btn btn-icon" id="btn-theme" title="Modo claro/oscuro"><i class="ph ph-sun-moon"></i></button>
+    <a class="btn" href="../talleres/Taller_3_Potencial_Electrico.html" title="Ir al taller"><i class="ph ph-book-open"></i> Taller</a>
+  </div>
 </header>
 
-<main class="main">
-  <div class="stage-wrap"><canvas id="cv" width="760" height="520" aria-label="Lienzo con superficies equipotenciales, campo eléctrico y una sonda arrastrable"></canvas></div>
-  <aside class="panel">
-    <div class="card">
-      <h2>Voltímetro en la sonda 🔴</h2>
-      <div class="read">
-        <div>Potencial V<b id="r-v">—</b></div>
-        <div>|E|<b id="r-e">—</b></div>
-        <div>Escena<b id="r-s">—</b></div>
-        <div>Ángulo E–curva<b id="r-a">90°</b></div>
+<div class="h-menu" id="h-menu">
+  <div class="tool-group">
+    <span class="tool-group__label">Herramientas</span>
+    <button type="button" class="tog active" id="tog-probe"><i class="ph ph-crosshair"></i> Sonda Voltímetro</button>
+    <button type="button" class="tog active" id="tog-equi"><i class="ph ph-circle-dashed"></i> Equipotenciales</button>
+    <button type="button" class="tog active" id="tog-field"><i class="ph ph-arrow-down-right"></i> Líneas E (-∇V)</button>
+    <button type="button" class="tog" id="tog-photons"><i class="ph ph-sparkle"></i> Flujo fotones</button>
+  </div>
+  <div class="tool-sep"></div>
+  <div class="tool-group">
+    <button type="button" class="btn btn-icon" id="btn-reset" title="Restablecer posiciones"><i class="ph ph-arrow-counter-clockwise"></i></button>
+  </div>
+</div>
+
+<div class="workspace" id="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Simulador interactivo de potencial eléctrico y curvas equipotenciales"></canvas>
+    <div id="coords-indicator">x: 0,00 m | y: 0,00 m</div>
+
+    <details id="values" open>
+      <summary><span><i class="ph ph-sliders"></i> Parámetros de fuente</span> <i class="ph ph-caret-down"></i></summary>
+      <div id="values-body">
+        <div class="vrange">
+          <span class="sym">q₁</span>
+          <input type="range" id="sl-q1" min="-30" max="30" step="2" value="10">
+          <output id="out-q1">+10 nC</output>
+        </div>
+        <div class="vrange" id="row-q2">
+          <span class="sym">q₂</span>
+          <input type="range" id="sl-q2" min="-30" max="30" step="2" value="-10">
+          <output id="out-q2">-10 nC</output>
+        </div>
+        <div class="vrange" id="row-d">
+          <span class="sym">d</span>
+          <input type="range" id="sl-d" min="6" max="30" step="1" value="16">
+          <output id="out-d">16 cm</output>
+        </div>
+        <div class="vrange">
+          <span class="sym">q₀</span>
+          <input type="range" id="sl-q0" min="1" max="10" step="1" value="1">
+          <output id="out-q0">+1 e</output>
+        </div>
       </div>
-      <p class="muted" style="margin:10px 0 0">Arrastra la sonda roja por el lienzo y observa cómo cambian \\(V\\) y \\(\\vec E\\).</p>
+    </details>
+
+    <div id="e10-live">
+      <div id="live-fx">\[ V = \sum_i \frac{kq_i}{r_i}\qquad \vec E = -\vec\nabla V \]</div>
+      <div class="live-readout">
+        <div>Potencial V<b id="live-v">+180 V</b></div>
+        <div>Campo |E|<b id="live-e">720 V/m</b></div>
+        <div>Energía U = q₀V<b id="live-u">+2,88×10⁻¹⁷ J</b></div>
+        <div>Ángulo E ⊥ V<b id="live-ang">90,0°</b></div>
+      </div>
     </div>
-    <div class="card formula" id="fx"></div>
-    <div class="card">
-      <h2>Reto · Predice y comprueba</h2>
-      <div class="retobx">
-        <span id="rq" style="font-size:15px"></span>
-        <div class="row"><input id="ans" type="number" inputmode="decimal" placeholder="tu predicción (V)" aria-label="Tu predicción en voltios"><button class="btn pri" id="ck">Comprobar</button></div>
-        <div class="fb" id="fb"></div>
+  </div>
+
+  <aside class="slide-panel" id="slide-panel">
+    <div class="panel-scroll">
+      <!-- Paso 1: Reto -->
+      <div class="e10-step" data-s="now" id="step-1">
+        <div class="e10-step__n">1</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto conceptual del fenómeno</div>
+          <div id="reto-text">Arrastra la sonda voltímetro roja sobre el plano. ¿Qué ocurre con el voltaje \(V\) al acercarse a la carga positiva?</div>
+        </div>
       </div>
-      <div class="tip" style="margin-top:10px"><b>Flujo:</b> Reto ➔ Predice ➔ Comprueba ➔ Explica. Si fallas, el portal te sugerirá la práctica dirigida.</div>
+
+      <!-- Paso 2: Predicción -->
+      <div class="e10-step" data-s="todo" id="step-2">
+        <div class="e10-step__n">2</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice antes de medir</div>
+          <div class="predict-row" id="pred-btns">
+            <button type="button" class="btn" data-p="sube">Aumenta hacia +∞</button>
+            <button type="button" class="btn" data-p="cero">Se anula</button>
+            <button type="button" class="btn" data-p="baja">Baja hacia -∞</button>
+          </div>
+          <div id="pred-hint"></div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Medición y Comprobación -->
+      <div class="e10-step" data-s="todo" id="step-3">
+        <div class="e10-step__n">3</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprobación cuantitativa</div>
+          <div class="ans">
+            <label for="inp-calc" id="lbl-calc">Ingresa el potencial previsto en la sonda (V):</label>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="inp-calc" placeholder="ej. 179,8">
+              <button type="button" class="btn btn-primary" id="btn-check">Verificar</button>
+            </div>
+          </div>
+          <div id="validation-box"></div>
+        </div>
+      </div>
+
+      <!-- Paso 4: Solución -->
+      <div class="e10-step" data-s="todo" id="step-4">
+        <div class="e10-step__n">4</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Deducción Sears-Zemansky</div>
+          <div id="solution">
+            \[ V(r) = -\int_{\infty}^r \vec E\cdot d\vec\ell = \frac{kq}{r} \]
+            El potencial escalar es máximo junto a cargas positivas y mínimo (pozo) junto a negativas.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-progress">
+      <span>Avance formativo</span>
+      <div class="bar-wrap"><div class="bar-fill" id="prog-fill"></div></div>
+      <span id="prog-text">1 / 4</span>
     </div>
   </aside>
-</main>
+</div>
 
-<footer>EquipotentialLab · superficie equipotencial + voltímetro interactivo. Telemetría integrada en <code>js/seguimiento.js</code>. © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy.</footer>
+<footer>
+  <span><b>EquipotentialLab10.easy</b> · Rigor Sears-Zemansky Vol. 2 Cap. 23 · Telemetría en <code>js/seguimiento.js</code></span>
+  <span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span>
+</footer>
 
 <script src="../js/sim_telemetry.js"></script>
 <script>
 (() => {
   'use strict';
-  const K = 8.988e9, E0 = 1.5e5;
+  const K = 8.988e9, QE = 1.602e-19;
   const $ = (id) => document.getElementById(id);
-  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
-  const dec = (x, d = 1) => (isFinite(x) ? x.toFixed(d).replace('.', ',') : '—');
-  const sci = (x, d = 1) => { if (!isFinite(x)) return '—'; let e = Math.floor(Math.log10(Math.abs(x))); let m = x / 10 ** e; return m.toFixed(d).replace('.', ',') + '×10' + String(e).split('').map(c => ({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'})[c]).join(''); };
+  const col = (name) => getComputedStyle(document.body).getPropertyValue('--e10-' + name).trim() || '#b3246b';
 
   const cv = $('cv');
-  const dpr = window.devicePixelRatio || 1; cv.width = 760 * dpr; cv.height = 520 * dpr;
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const W = 760, H = 520;
+  const ctx = cv.getContext('2d');
+  let W = 800, H = 600, dpr = window.devicePixelRatio || 1;
 
-  let scene = 'puntual', probe = { x: 380, y: 260 }, reto = null;
+  // Estado físico
+  let scene = 'puntual';
+  let q1 = 10e-9, q2 = -10e-9, sepD = 0.16, q0_mul = 1;
+  let showProbe = true, showEqui = true, showField = true, showPhotons = false;
+  let photonPhase = 0;
 
-  // ── Campos escalares V(x,y) y vectoriales E(x,y) por escena ──
-  const scenes = {
-    puntual: { qs: [{ q: 10e-9, x: 380, y: 260 }] },
-    dipolo: { qs: [{ q: 10e-9, x: 320, y: 260 }, { q: -10e-9, x: 440, y: 260 }] },
-    placas: { placas: true },
-    gradiente: { qs: [{ q: 10e-9, x: 380, y: 260 }] },
-  };
-  function Vxy(x, y) {
-    if (scene === 'placas') return -E0 * (x - W / 2); // baja hacia +x; equipotenciales verticales
-    let v = 0; scenes[scene].qs.forEach((c) => { const d = Math.hypot(x - c.x, y - c.y); v += d < 1e-6 ? 0 : K * c.q / d; }); return v;
-  }
-  function Exy(x, y) {
-    if (scene === 'placas') return { ex: E0, ey: 0 };
-    let ex = 0, ey = 0; scenes[scene].qs.forEach((c) => { const dx = x - c.x, dy = y - c.y, d2 = dx * dx + dy * dy, d = Math.sqrt(d2); const e = K * c.q / (d2 * d); ex += dx * e; ey += dy * e; }); return { ex, ey };
-  }
+  // Cargas y Sonda
+  let charges = [];
+  let probe = { x: 0.10, y: 0.08 }; // coordenadas en metros respecto al centro
+  let dragItem = null;
 
-  // ── Equipotenciales por marching squares ligero ──
-  function levelsFor() {
-    const v0 = Math.abs(Vxy(120, 260));
-    if (scene === 'placas') return [-1200, -600, 0, 600, 1200].map((v) => v * 1.0);
-    if (scene === 'dipolo') return [-v0, -v0 / 2, -v0 / 4, 0, v0 / 4, v0 / 2, v0].filter((v, i, a) => a.indexOf(v) === i);
-    return [v0 / 4, v0 / 2, v0, v0 * 2];
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const lv = levelsFor();
-    for (let y = 0; y < H; y += 4) for (let x = 0; x < W; x += 4) {
-      const v = Vxy(x, y);
-      for (const L of lv) { if (Math.abs(v - L) < Math.max(6, Math.abs(L) * 0.015)) { ctx.fillStyle = col('equipotential'); ctx.globalAlpha = scene === 'dipolo' && Math.abs(L) < 1 ? 1 : 0.8; ctx.fillRect(x, y, 4, 4); ctx.globalAlpha = 1; } }
+  function initScene(s) {
+    scene = s;
+    $('row-q2').style.display = (scene === 'dipolo') ? 'grid' : 'none';
+    $('row-d').style.display = (scene === 'dipolo') ? 'grid' : 'none';
+
+    if (scene === 'puntual' || scene === 'gradiente') {
+      charges = [{ id: 'q1', q: q1, x: 0, y: 0, r: 16 }];
+      probe = { x: 0.10, y: 0.08 };
+    } else if (scene === 'dipolo') {
+      charges = [
+        { id: 'q1', q: q1, x: -sepD / 2, y: 0, r: 16 },
+        { id: 'q2', q: q2, x: sepD / 2, y: 0, r: 16 }
+      ];
+      probe = { x: 0, y: 0.08 }; // punto en la mediatriz (V=0)
+    } else if (scene === 'placas') {
+      charges = [];
+      probe = { x: 0.02, y: 0.00 };
     }
-    // campo (flechas)
-    for (let y = 40; y < H; y += 60) for (let x = 40; x < W; x += 60) {
-      const { ex, ey } = Exy(x, y), m = Math.hypot(ex, ey); if (m < 1e-9) continue;
-      const L = Math.min(22, 300 / m); arrow(x, y, x + ex / m * L, y + ey / m * L, col('vec-field'), 1.6);
-    }
-    // cargas / placas
+    updateReto();
+  }
+
+  // Conversión metros <-> canvas px
+  const SCALE = 1200; // 1 metro = 1200 px
+  function toPx(x, y) { return { px: W / 2 + x * SCALE, py: H / 2 - y * SCALE }; }
+  function toM(px, py) { return { x: (px - W / 2) / SCALE, y: (H / 2 - py) / SCALE }; }
+
+  // Cálculo escalar y vectorial
+  function calcV(x, y) {
     if (scene === 'placas') {
-      ctx.fillStyle = col('q-pos'); ctx.globalAlpha = .4; ctx.fillRect(60, 30, W - 120, 10); ctx.globalAlpha = 1;
-      ctx.fillStyle = col('q-neg'); ctx.globalAlpha = .4; ctx.fillRect(60, H - 40, W - 120, 10); ctx.globalAlpha = 1;
-      text('+ + +', 70, 24, col('q-pos')); text('− − −', 70, H - 46, col('q-neg')); text('E →', W - 80, H / 2 + 16, col('vec-field'));
-    } else {
-      scenes[scene].qs.forEach((c) => { charge(c.x, c.y, c.q); if (scene === 'dipolo') text(c.q > 0 ? '+q' : '−q', c.x - 6, c.y - 16, c.q > 0 ? col('q-pos') : col('q-neg')); });
+      const E0 = 1.5e4; // 15 kV/m
+      return -E0 * x;
     }
-    // sonda
-    const vp = Vxy(probe.x, probe.y), { ex, ey } = Exy(probe.x, probe.y), em = Math.hypot(ex, ey);
-    ctx.beginPath(); ctx.strokeStyle = col('danger'); ctx.lineWidth = 2; ctx.arc(probe.x, probe.y, 9, 0, 2 * Math.PI); ctx.stroke();
-    ctx.fillStyle = col('danger'); ctx.beginPath(); ctx.arc(probe.x, probe.y, 4, 0, 2 * Math.PI); ctx.fill();
-    $('r-v').textContent = dec(vp, 0) + ' V'; $('r-e').textContent = sci(em, 1) + ' V/m'; $('r-s').textContent = ({ puntual: 'puntual', dipolo: 'dipolo', placas: 'uniforme', gradiente: 'gradiente' })[scene];
-    $('r-a').textContent = em < 1e-9 ? '—' : '90°';
+    let V = 0;
+    for (const c of charges) {
+      const r = Math.hypot(x - c.x, y - c.y);
+      if (r > 1e-4) V += (K * c.q) / r;
+    }
+    return V;
   }
-  function arrow(x1, y1, x2, y2, color, w) { const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return; ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - 8 * Math.cos(a), y2 - 8 * Math.sin(a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - 12 * Math.cos(a - .4), y2 - 12 * Math.sin(a - .4)); ctx.lineTo(x2 - 12 * Math.cos(a + .4), y2 - 12 * Math.sin(a + .4)); ctx.closePath(); ctx.fill(); }
-  function charge(x, y, q, r = 14) { ctx.fillStyle = col(q > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.strokeStyle = col('surface'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - r * .45, y); ctx.lineTo(x + r * .45, y); if (q > 0) { ctx.moveTo(x, y - r * .45); ctx.lineTo(x, y + r * .45); } ctx.stroke(); }
-  function text(s, x, y, c, f) { ctx.fillStyle = c; ctx.font = f || "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillText(s, x, y); }
 
-  const FX = {
-    puntual: String.raw`V=\dfrac{kq}{r}\qquad \vec E=-\vec\nabla V\quad(\text{radial})`,
-    dipolo: String.raw`V=\dfrac{kq}{r_1}+\dfrac{k(-q)}{r_2}\qquad V=0\ \text{en la mediatriz}`,
-    placas: String.raw`\Delta V=Ed\qquad 1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm J`,
-    gradiente: String.raw`\vec E=-\vec\nabla V\ \Rightarrow\ \vec E\perp\text{equipotenciales}`,
+  function calcE(x, y) {
+    if (scene === 'placas') {
+      return { Ex: 1.5e4, Ey: 0, em: 1.5e4 };
+    }
+    let Ex = 0, Ey = 0;
+    for (const c of charges) {
+      const rx = x - c.x, ry = y - c.y;
+      const r2 = rx * rx + ry * ry;
+      const r = Math.sqrt(r2);
+      if (r > 1e-4) {
+        const f = (K * c.q) / (r2 * r);
+        Ex += f * rx; Ey += f * ry;
+      }
+    }
+    return { Ex, Ey, em: Math.hypot(Ex, Ey) };
+  }
+
+  // Renderizado gráfico
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    // 1. Dibujar equipotenciales suaves
+    if (showEqui) {
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = col('equipotential');
+
+      if ((scene === 'puntual' || scene === 'gradiente') && charges[0]) {
+        const c = charges[0];
+        const cp = toPx(c.x, c.y);
+        const voltios = [50, 100, 200, 400, 800, 1500];
+        voltios.forEach(v => {
+          const rM = (K * Math.abs(c.q)) / v;
+          const rPx = rM * SCALE;
+          ctx.beginPath();
+          ctx.arc(cp.px, cp.py, rPx, 0, 2 * Math.PI);
+          ctx.stroke();
+
+          // Etiqueta de voltaje
+          ctx.fillStyle = col('muted');
+          ctx.font = '500 10px monospace';
+          ctx.fillText((c.q > 0 ? '+' : '-') + v + 'V', cp.px + rPx + 4, cp.py - 2);
+        });
+      } else if (scene === 'placas') {
+        const voltios = [-300, -200, -100, 0, 100, 200, 300];
+        voltios.forEach(v => {
+          const xM = -v / 1.5e4;
+          const p = toPx(xM, 0);
+          ctx.beginPath();
+          ctx.moveTo(p.px, 40);
+          ctx.lineTo(p.px, H - 40);
+          ctx.stroke();
+
+          ctx.fillStyle = col('muted');
+          ctx.font = '500 10px monospace';
+          ctx.fillText(v + 'V', p.px + 4, 52);
+        });
+      } else if (scene === 'dipolo' && charges[0] && charges[1]) {
+        // Trazado de líneas equipotenciales del dipolo
+        const c1 = charges[0], c2 = charges[1];
+        const cp1 = toPx(c1.x, c1.y), cp2 = toPx(c2.x, c2.y);
+
+        // Mediatriz exacta V = 0
+        const midX = (cp1.px + cp2.px) / 2;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(midX, 20); ctx.lineTo(midX, H - 20);
+        ctx.stroke();
+        ctx.fillStyle = col('primary');
+        ctx.font = '700 11px monospace';
+        ctx.fillText('0 V (Mediatriz)', midX + 6, 32);
+
+        // Óvalos concéntricos cerrados
+        ctx.lineWidth = 1.4;
+        [150, 300, 600, 1200].forEach(v => {
+          const rM = (K * q1) / v * 0.75;
+          const rPx = rM * SCALE;
+          if (rPx < (cp2.px - cp1.px) * 0.48) {
+            ctx.beginPath(); ctx.arc(cp1.px, cp1.py, rPx, 0, 2 * Math.PI); ctx.stroke();
+            ctx.beginPath(); ctx.arc(cp2.px, cp2.py, rPx, 0, 2 * Math.PI); ctx.stroke();
+          }
+        });
+      }
+    }
+
+    // 2. Líneas de campo ortogonales E = -grad(V)
+    if (showField) {
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = col('vec-field');
+      const step = 45;
+      for (let px = 30; px < W; px += step) {
+        for (let py = 30; py < H; py += step) {
+          const m = toM(px, py);
+          const { Ex, Ey, em } = calcE(m.x, m.y);
+          if (em > 10) {
+            const len = Math.min(18, Math.max(8, Math.log10(em) * 4));
+            const nx = Ex / em, ny = -Ey / em;
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + nx * len, py + ny * len);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // 3. Dibujar electrodos o cargas fuente
+    if (scene === 'placas') {
+      ctx.fillStyle = col('q-pos'); ctx.fillRect(W * 0.15, 30, 12, H - 60);
+      ctx.fillStyle = col('q-neg'); ctx.fillRect(W * 0.85, 30, 12, H - 60);
+      ctx.fillStyle = '#fff'; ctx.font = '700 12px monospace';
+      ctx.fillText('+ + + Placa Alta (+300V)', W * 0.15 + 18, 50);
+      ctx.fillText('− − − Placa Baja (-300V)', W * 0.85 - 170, 50);
+    } else {
+      charges.forEach(c => {
+        const p = toPx(c.x, c.y);
+        ctx.beginPath();
+        ctx.arc(p.px, p.py, c.r, 0, 2 * Math.PI);
+        ctx.fillStyle = c.q > 0 ? col('q-pos') : col('q-neg');
+        ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = col('surface'); ctx.stroke();
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '700 13px var(--e10-font-mono)';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(c.q > 0 ? '+' : '−', p.px, p.py);
+        ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      });
+    }
+
+    // 4. Sonda voltímetro roja
+    if (showProbe) {
+      const pr = toPx(probe.x, probe.y);
+      ctx.beginPath();
+      ctx.arc(pr.px, pr.py, 10, 0, 2 * Math.PI);
+      ctx.fillStyle = col('danger');
+      ctx.fill();
+      ctx.lineWidth = 2.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+
+      // Cruz central
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(pr.px - 6, pr.py); ctx.lineTo(pr.px + 6, pr.py);
+      ctx.moveTo(pr.px, pr.py - 6); ctx.lineTo(pr.px, pr.py + 6);
+      ctx.stroke();
+
+      // Flecha del campo local en la sonda
+      const { Ex, Ey, em } = calcE(probe.x, probe.y);
+      if (em > 1) {
+        const flen = 34;
+        const fx = Ex / em * flen, fy = -Ey / em * flen;
+        ctx.strokeStyle = col('primary'); ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(pr.px, pr.py); ctx.lineTo(pr.px + fx, pr.py + fy);
+        ctx.stroke();
+      }
+    }
+
+    // 5. Actualizar HUD en vivo
+    updateLive();
+  }
+
+  function updateLive() {
+    const V = calcV(probe.x, probe.y);
+    const { Ex, Ey, em } = calcE(probe.x, probe.y);
+    const U = (q0_mul * QE) * V;
+
+    $('live-v').textContent = (V >= 0 ? '+' : '') + V.toFixed(1) + ' V';
+    $('live-e').textContent = em >= 1e4 ? (em / 1e3).toFixed(1) + ' kV/m' : em.toFixed(0) + ' V/m';
+    $('live-u').textContent = (U / QE).toFixed(2) + ' eV';
+    $('live-ang').textContent = em > 1 ? '90,0°' : '—';
+    $('coords-indicator').textContent = `x: ${probe.x.toFixed(2)} m | y: ${probe.y.toFixed(2)} m`;
+  }
+
+  // Interacción y Arrastre
+  function resize() {
+    const rect = $('canvas-area').getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    render();
+  }
+  window.addEventListener('resize', resize);
+
+  cv.addEventListener('pointerdown', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    const m = toM(px, py);
+
+    // Chequear clic en sonda
+    if (Math.hypot(m.x - probe.x, m.y - probe.y) < 0.035) {
+      dragItem = 'probe';
+      cv.setPointerCapture(e.pointerId);
+      return;
+    }
+    // Chequear clic en cargas
+    for (const c of charges) {
+      if (Math.hypot(m.x - c.x, m.y - c.y) < 0.025) {
+        dragItem = c;
+        cv.setPointerCapture(e.pointerId);
+        return;
+      }
+    }
+  });
+
+  cv.addEventListener('pointermove', (e) => {
+    if (!dragItem) return;
+    const rect = cv.getBoundingClientRect();
+    const m = toM(e.clientX - rect.left, e.clientY - rect.top);
+    if (dragItem === 'probe') {
+      probe.x = m.x; probe.y = m.y;
+    } else {
+      dragItem.x = m.x; dragItem.y = m.y;
+    }
+    render();
+  });
+
+  cv.addEventListener('pointerup', () => { dragItem = null; });
+
+  // Flujo Pedagógico de 4 Pasos
+  const RETOS_DATA = {
+    puntual: {
+      q: 'Se tiene una carga puntual de +10 nC en el origen. Mueve la sonda roja a una distancia radial r = 0,25 m. ¿Cuánto debe marcar el voltímetro?',
+      p_ok: 'sube',
+      p_fb: 'Correcto. V = kq/r es inversamente proporcional a la distancia; al acercarse tiende a +infinito.',
+      calc_target: 359.5,
+      calc_tol: 0.06,
+      err_code: 'potencial_r2'
+    },
+    dipolo: {
+      q: 'El voltímetro está colocado exactamente sobre la mediatriz de un dipolo (+10 nC y -10 nC). ¿Qué voltaje marca el voltímetro y cuánto vale el campo?',
+      p_ok: 'cero',
+      p_fb: 'Correcto. En la mediatriz las contribuciones opuestas se cancelan (V = 0), pero el campo E no es nulo.',
+      calc_target: 0.0,
+      calc_tol: 5.0,
+      err_code: 'potencial_v0_e0'
+    },
+    placas: {
+      q: 'Entre las placas paralelas hay un campo uniforme E = 15 kV/m. ¿Cuál es la diferencia de potencial al mover la sonda una distancia de 10 cm a lo largo del campo?',
+      p_ok: 'baja',
+      p_fb: 'Correcto. El potencial disminuye en el sentido del campo eléctrico: Delta V = -Ed.',
+      calc_target: 1500.0,
+      calc_tol: 0.05,
+      err_code: 'potencial_ed_signo'
+    },
+    gradiente: {
+      q: 'El campo eléctrico siempre corta a las superficies equipotenciales en ángulo recto (E = -grad V). ¿Cuánto vale el ángulo en grados?',
+      p_ok: 'sube',
+      p_fb: 'Exacto. Como dV = -E·dl = 0 en una equipotencial, E debe ser estrictamente perpendicular.',
+      calc_target: 90.0,
+      calc_tol: 0.01,
+      err_code: 'potencial_equip_perp'
+    }
   };
 
-  // ── Reto con telemetría y clasificación de error pedagógico ──
-  function setScene(s) {
-    scene = s; probe = { x: s === 'dipolo' ? 380 : 380, y: s === 'placas' ? 260 : 260 };
-    document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('on', b.dataset.scene === s));
-    $('fx').textContent = FX[s]; if (window.renderMathInElement) renderMathInElement($('fx'), { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
-    const P = { puntual: ['Predice el potencial en la posición de la sonda.', 'v', 'puntual'], dipolo: ['Predice el potencial en la posición de la sonda (la mediatriz da 0).', 'v', 'dipolo'], placas: ['Predice la diferencia de potencial entre las dos placas.', 'dv', 'placas'], gradiente: ['¿Qué ángulo forma el campo con la superficie equipotencial? (en grados)', 'ang', 'gradiente'] };
-    $('rq').textContent = P[s][0]; reto = { kind: P[s][1], scene: P[s][2] };
-    $('fb').className = 'fb'; $('ans').value = ''; $('ans').placeholder = reto.kind === 'ang' ? 'ángulo en grados' : 'voltios';
-    if (s !== 'placas' && s !== 'dipolo') { /* nada */ }
-    draw();
+  function updateReto() {
+    const d = RETOS_DATA[scene];
+    $('reto-text').textContent = d.q;
+    $('pred-hint').textContent = '';
+    $('validation-box').className = '';
+    $('validation-box').style.display = 'none';
+    $('inp-calc').value = '';
+    setStep(1);
   }
-  function tele(escena, ok, error) { if (window._sendSimTelemetry) window._sendSimTelemetry('comprobar', { escena, ok, error }); }
-  function check() {
-    const v = parseFloat(String($('ans').value).replace(',', '.'));
-    const fb = $('fb');
-    if (reto.kind === 'ang') {
-      const ok = Math.abs(v - 90) <= 3; fb.className = 'fb ' + (ok ? 'ok' : 'bad');
-      fb.innerHTML = ok ? '<b>Correcto.</b> El campo es perpendicular a las equipotenciales: 90°.' : '<b>Revisa.</b> El campo siempre corta las equipotenciales en ángulo recto; si no es 90°, la flecha se descompondría y habría trabajo al mover carga sobre la curva.';
-      tele(reto.scene, ok, ok ? null : 'potencial_equip_perp'); return;
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = $('step-' + i);
+      if (i < n) el.dataset.s = 'done';
+      else if (i === n) el.dataset.s = 'now';
+      else el.dataset.s = 'todo';
     }
-    if (!isFinite(v)) { fb.className = 'fb bad'; fb.innerHTML = 'Escribe un número.'; return; }
-    const vp = Vxy(probe.x, probe.y);
-    const target = reto.kind === 'dv' ? 1.5e5 * 0.12 : vp; // placas: E*d con d visual ≈ 0.12 m entre placas
-    let error = null;
-    if (reto.kind === 'dv') {
-      const ok = Math.abs(v - target) <= 0.03 * target;
-      if (!ok) error = Math.sign(v) === -1 ? 'potencial_ed_signo' : 'potencial_ev_vs_v';
-      fb.className = 'fb ' + (ok ? 'ok' : 'bad');
-      fb.innerHTML = ok ? `<b>Correcto.</b> \\(\\Delta V=Ed\\approx${dec(target / 1e3, 1)}\\ \\mathrm{kV}\\).` : '<b>Revisa.</b> \\(\\Delta V=Ed\\), positivo si bajas a favor de \\(\\vec E\\). Ojo: el eV es energía, no voltaje.';
-      tele('placas', ok, error); return;
-    }
-    const ok = Math.abs(v - vp) <= 0.03 * Math.abs(vp);
-    if (!ok) {
-      if (Math.sign(v) !== Math.sign(vp) && Math.abs(vp) > 1) error = 'potencial_signo_carga';
-      else if (Math.abs(v - vp * 2) / Math.abs(vp * 2) < 0.4) error = 'potencial_r2';
-      else error = 'potencial_v_vs_u';
-    }
-    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
-    fb.innerHTML = ok ? `<b>Correcto.</b> \\(V=${dec(vp, 0)}\\ \\mathrm V\\) en la sonda.` : `<b>Revisa.</b> En la sonda \\(V=${dec(vp, 0)}\\ \\mathrm V\\). Recuerda: \\(V=kq/r\\) (no \\(1/r^2\\)) y el potencial es un escalar, no la energía \\(U\\).`;
-    tele(reto.scene, ok, error);
+    $('prog-fill').style.width = (n * 25) + '%';
+    $('prog-text').textContent = n + ' / 4';
   }
-  $('ck').addEventListener('click', check);
-  $('ans').addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
-  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { setScene(b.dataset.scene); try { history.replaceState(null, '', '#' + b.dataset.scene); } catch (_) {} }));
 
-  // ── Sonda arrastrable ──
-  function toXY(e) { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height }; }
-  let drag = false;
-  cv.addEventListener('pointerdown', (e) => { const p = toXY(e); if (Math.hypot(p.x - probe.x, p.y - probe.y) < 24) { drag = true; cv.setPointerCapture(e.pointerId); } });
-  cv.addEventListener('pointermove', (e) => { if (!drag) return; const p = toXY(e); probe = { x: Math.max(10, Math.min(W - 10, p.x)), y: Math.max(10, Math.min(H - 10, p.y)) }; draw(); });
-  cv.addEventListener('pointerup', () => { drag = false; });
+  // Eventos de botones de predicción
+  document.querySelectorAll('#pred-btns .btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#pred-btns .btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const d = RETOS_DATA[scene];
+      const ok = (btn.dataset.p === d.p_ok);
+      $('pred-hint').innerHTML = ok
+        ? `<b style="color:var(--e10-success)">¡Excelente predicción!</b> ${d.p_fb}`
+        : `<b style="color:var(--e10-warning)">Piénsalo de nuevo.</b> Recuerda que el potencial electrostático cae en la dirección del campo.`;
+      setStep(3);
+    });
+  });
 
-  // ── Escena desde el hash (?embed#puntual) ──
-  const hash = (location.hash || '').slice(1);
-  if (scenes[hash]) setScene(hash);
-  else draw();
-  if (location.search.includes('embed')) document.body.classList.add('embed');
+  // Verificación cuantitativa
+  $('btn-check').addEventListener('click', () => {
+    const val = parseFloat($('inp-calc').value.replace(',', '.'));
+    const d = RETOS_DATA[scene];
+    const box = $('validation-box');
+    box.style.display = 'block';
+
+    const isOk = (d.calc_target === 0.0)
+      ? Math.abs(val) <= 5.0
+      : Math.abs(val - d.calc_target) <= d.calc_tol * d.calc_target;
+
+    if (isOk) {
+      box.className = 'ok';
+      box.innerHTML = `<b>¡Cálculo correcto!</b> Valor medido y verificado: ${d.calc_target} V. Cumple rigurosamente el modelo de Sears-Zemansky.`;
+      setStep(4);
+      if (window._sendSimTelemetry) window._sendSimTelemetry('comprobar', { escena: scene, ok: true });
+    } else {
+      box.className = 'bad';
+      box.innerHTML = `<b>Revisa tu cálculo.</b> El valor teórico esperado es de aprox. ${d.calc_target} V. Asegúrate de sumar con signos y no confundir el potencial con el campo o la energía.`;
+      if (window._sendSimTelemetry) window._sendSimTelemetry('comprobar', { escena: scene, ok: false, error: d.err_code });
+    }
+  });
+
+  // Parámetros y sliders
+  $('sl-q1').addEventListener('input', (e) => {
+    q1 = +e.target.value * 1e-9;
+    $('out-q1').textContent = (+e.target.value >= 0 ? '+' : '') + e.target.value + ' nC';
+    if (charges[0]) charges[0].q = q1;
+    render();
+  });
+  $('sl-q2').addEventListener('input', (e) => {
+    q2 = +e.target.value * 1e-9;
+    $('out-q2').textContent = (+e.target.value >= 0 ? '+' : '') + e.target.value + ' nC';
+    if (charges[1]) charges[1].q = q2;
+    render();
+  });
+  $('sl-d').addEventListener('input', (e) => {
+    sepD = +e.target.value / 100;
+    $('out-d').textContent = e.target.value + ' cm';
+    if (charges[0] && charges[1]) {
+      charges[0].x = -sepD / 2;
+      charges[1].x = sepD / 2;
+    }
+    render();
+  });
+  $('sl-q0').addEventListener('input', (e) => {
+    q0_mul = +e.target.value;
+    $('out-q0').textContent = '+' + q0_mul + ' e';
+    render();
+  });
+
+  // Herramientas del menú superior
+  $('tog-probe').addEventListener('click', () => { showProbe = !showProbe; $('tog-probe').classList.toggle('active', showProbe); render(); });
+  $('tog-equi').addEventListener('click', () => { showEqui = !showEqui; $('tog-equi').classList.toggle('active', showEqui); render(); });
+  $('tog-field').addEventListener('click', () => { showField = !showField; $('tog-field').classList.toggle('active', showField); render(); });
+  $('btn-reset').addEventListener('click', () => { initScene(scene); render(); });
+
+  // Cambio de pestañas de escena
+  document.querySelectorAll('.scene-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.scene-tabs button').forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      initScene(btn.dataset.scene);
+      render();
+    });
+  });
+
+  // Modo oscuro / claro
+  $('btn-theme').addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode', !isDark);
+    try { localStorage.setItem('lab10_theme', isDark ? 'dark' : 'light'); } catch (_) {}
+    render();
+  });
+
+  // Inicio
+  window.addEventListener('load', () => {
+    initScene('puntual');
+    resize();
+    if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+  });
 })();
 </script>
 </body>
