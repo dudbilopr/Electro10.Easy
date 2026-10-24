@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clase 1 · Ley de Coulomb y Carga Eléctrica — Electro10.Easy</title>
+<title>Clase 1 · Ley de Coulomb — Electro10.Easy</title>
 <link rel="stylesheet" href="../../css/tokens.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <style>
-/* Clase 1 · deck 16:9 de 10.Easy. Tokens en css/tokens.css */
+/* Clase 1 · deck 16:9 de 10.Easy. Colores solo desde css/tokens.css. */
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);font:400 18px/1.45 var(--e10-font-body);overflow:hidden}
 .viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
@@ -24,8 +24,8 @@ html,body{margin:0;height:100%;background:var(--e10-bg);color:var(--e10-ink);fon
 .tag.e{background:var(--e10-success-soft);color:var(--e10-success)}
 .tag.l{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
 h1,h2{font-family:var(--e10-font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
-h2{font-size:36px;line-height:1.12}
-.row{display:flex;gap:24px;flex:1;min-height:0}
+h2{font-size:38px;line-height:1.12}
+.row{display:flex;gap:28px;flex:1;min-height:0}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 16px}
 .soft{background:var(--e10-primary-soft);border-radius:14px;padding:14px 18px}
@@ -46,9 +46,23 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
 .btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
 .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary)}
+.vote{display:flex;flex-direction:column;gap:10px}
+.vote .btn{text-align:left;font-weight:500;font-size:18px;min-height:52px;padding:0 18px}
+.vote .btn.right{background:var(--e10-success-soft);border-color:var(--e10-success)}
+.vote .btn.wrong{background:var(--e10-danger-soft);border-color:var(--e10-danger)}
 .read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .read div{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--e10-muted)}
 .read b{display:block;font:600 18px/1.3 var(--e10-font-mono);color:var(--e10-ink)}
+.reto{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.reto .q{font-size:16px}
+.reto .ans{display:flex;gap:8px;align-items:center}
+.reto input{flex:1;min-height:40px;border-radius:10px;border:1px solid var(--e10-line);padding:0 10px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.reto .fb{font-size:15px;min-height:20px}
+.reto .sol{display:none;font-size:15px;background:var(--e10-bg);border-radius:10px;padding:8px 12px}
+.reto .sol.show{display:block}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:18px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--e10-primary);color:var(--e10-on-primary);font:600 14px var(--e10-font-mono);margin-right:10px;flex-shrink:0}
+.steps>div{display:flex;align-items:baseline}
 .flip{perspective:900px;cursor:pointer}
 .flip .in{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}
 .flip.open .in{transform:rotateY(180deg)}
@@ -60,34 +74,94 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 .deck-ui .btn{min-height:36px;padding:0 12px;font-size:14px}
 .deck-ui .count{font:500 13px var(--e10-font-mono);color:var(--e10-muted);min-width:56px;text-align:center}
 .progress{position:fixed;top:0;left:0;height:4px;background:var(--e10-primary);transition:width .3s;z-index:60}
-/* Árbol de decisión y mapa conceptual */
+.print-only{display:none}
+/* Árbol de decisión, mapa de conceptos, línea de tiempo y tarjetas (diapositivas 9, 11 y 12) */
+body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surface))}
 .tq{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
-.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}
+.tqh{display:flex;align-items:baseline;gap:10px;font:600 17px var(--e10-font-display)}.tqh .mono{font-size:11px;color:var(--e10-muted);font-weight:400}
 .tq-opts{display:flex;flex-direction:column;gap:7px}
 .opt{font:400 15px var(--e10-font-body);text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
 .opt:hover{border-color:var(--e10-primary)}.opt.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
 .tq-down{align-self:center;font:20px/1 var(--e10-font-mono);color:var(--e10-primary)}
 .leaf{flex:1;min-width:0;background:var(--e10-surface);border:2px solid var(--e10-primary);border-radius:16px;padding:16px 20px;gap:10px}
+.leaf-name{font:600 22px var(--e10-font-display)}
+.leaf-eq{background:var(--e10-primary-soft);border-radius:12px;padding:8px 14px;display:flex;align-items:center;justify-content:center;min-height:96px;overflow-x:auto}
+.leaf-eq .katex{font-size:1.55em}#cm-eq .katex{font-size:1.15em}
 .cmap{position:relative;width:780px;height:520px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
 .cmap svg{position:absolute;inset:0}
-.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}
+.cmap .edge{stroke:var(--e10-line);stroke-width:1.6}.cmap .edge.dash{stroke-dasharray:6 5}.cmap .edge.hot{stroke:var(--e10-primary-soft);stroke-width:2.6}
+.cmap .elab{text-anchor:middle;font:11px var(--e10-font-body);fill:var(--e10-muted);paint-order:stroke;stroke:var(--e10-surface);stroke-width:4px}
+/* Luz que viaja por cada conexión, del concepto de origen al de destino */
 .cmap .flow{fill:none;stroke:var(--e10-accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:3 44;animation:e10flow 2.6s linear infinite;filter:drop-shadow(0 0 3px var(--e10-accent));opacity:.85}
-@keyframes e10flow{to{stroke-dashoffset:-47}}
+.cmap .flow.hot{stroke:var(--e10-primary);stroke-width:4.5;stroke-dasharray:6 30;animation:e10flowhot 1.1s linear infinite;filter:drop-shadow(0 0 6px var(--e10-primary));opacity:1}
+@keyframes e10flow{to{stroke-dashoffset:-47}}@keyframes e10flowhot{to{stroke-dashoffset:-36}}
 .cnode{position:absolute;transform:translate(-50%,-50%);width:140px;border-radius:12px;border:1.5px solid;padding:6px 10px;text-align:center;font:500 13px/1.25 var(--e10-font-body);cursor:pointer;background:var(--e10-surface);color:var(--e10-ink);transition:box-shadow .2s}
+.cnode small{display:block;font:10px var(--e10-font-mono);opacity:.85}
+.cnode.big{width:180px;font-weight:600;font-size:15px;padding:10px 12px}
 .cnode.past{border-color:var(--e10-accent);background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
 .cnode.this{border-color:var(--e10-primary)}
-.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-primary-soft);color:var(--e10-primary)}
+.cnode.fut{border-color:var(--e10-vec-field);background:var(--e10-violet-soft);color:var(--e10-vec-field)}
 .cnode.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
-.tline{position:relative;height:140px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
-.tline-axis{position:absolute;left:40px;right:40px;top:90px;height:3px;background:var(--e10-line)}
-.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 24px var(--e10-font-display)}
+.cnode:hover,.cnode:focus-visible{outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--e10-primary) 20%,transparent),0 0 18px color-mix(in srgb,var(--e10-primary) 45%,transparent)}
+.cmap-legend{position:absolute;left:14px;bottom:12px;display:flex;gap:8px}
+.chip{font:11px var(--e10-font-mono);border-radius:999px;padding:3px 10px;border:1.5px solid;text-decoration:none}
+.chip.past{border-color:var(--e10-accent);color:var(--e10-accent-strong);background:var(--e10-accent-soft)}
+.chip.this{border-color:var(--e10-primary);color:var(--e10-primary);background:var(--e10-primary-soft)}
+.chip.fut{border-color:var(--e10-vec-field);color:var(--e10-vec-field);background:var(--e10-violet-soft)}
+.conn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.conn>span{font-size:13px;color:var(--e10-muted);width:70px}.conn .chip{font-size:13px;font-family:var(--e10-font-body)}
+.tline{position:relative;height:150px;flex:none;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px}
+.tline-axis{position:absolute;left:40px;right:40px;top:96px;height:3px;background:var(--e10-line)}
+.tline-note{position:absolute;left:16px;bottom:8px;font-size:11px;color:var(--e10-muted)}
+.tdot{position:absolute;top:90px;width:14px;height:14px;border-radius:50%;background:var(--e10-primary);transform:translateX(-50%)}
+.tyear{position:absolute;top:114px;transform:translateX(-50%);font:12px var(--e10-font-mono);color:var(--e10-muted)}
+.tev{position:absolute;top:12px;transform:translateX(-50%);width:150px;min-height:58px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);padding:6px 8px;font:13px/1.25 var(--e10-font-body);text-align:center;cursor:pointer;color:var(--e10-ink)}
+.tev b{display:block;font:12px var(--e10-font-mono);color:var(--e10-primary)}.tev.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}.tev.on b{color:var(--e10-on-primary)}
+.fcard{flex:1;min-height:150px;border-radius:16px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px 26px;text-align:center;background:var(--e10-warning-soft);color:var(--e10-ink);font:600 26px var(--e10-font-display)}
+.fcard .mono{font-size:11px;letter-spacing:.08em;opacity:.8;font-weight:400}
+.fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
+/* Las dos preguntas del árbol en dos columnas para que quepan */
+#tq1,#tq2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tq1 .opt,#tq2 .opt{min-height:44px;padding:6px 12px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
+@media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+/* Deducción en pasos: un paso a la vez, en letra legible desde el fondo del aula */
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.stp-nav{display:flex;gap:5px;flex-wrap:wrap}
+.stp-nav button{font:500 12px/1 var(--e10-font-body);min-height:32px;padding:0 9px;border-radius:999px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.stp-nav button b{font:600 12px var(--e10-font-mono)}
+.stp-nav button.seen{border-color:var(--e10-primary);color:var(--e10-primary)}
+.stp-nav button.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.stp-nav button:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.stp-body{flex:1;min-height:0;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 22px;overflow:auto}
+.stp-p{display:none;flex-direction:column;gap:10px;font-size:18px;line-height:1.45}
+.stp-p.on{display:flex;animation:stpIn .25s ease}
+@keyframes stpIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stp-p h3{margin:0;font:600 21px/1.2 var(--e10-font-display);color:var(--e10-primary)}
+.stp-p p{margin:0}
+.stp-p .eq{text-align:center;padding:6px 14px;overflow-x:auto}
+.stp-p .eq .katex-display{margin:.35em 0}
+.stp-p .card.live{font-size:15px;border-left:3px solid var(--e10-primary)}
+.stp-p .card.live:empty{display:none}
+.stp-foot{display:flex;justify-content:space-between;align-items:center}
+.stp-count{font-size:13px;color:var(--e10-muted)}
+.seg2{display:flex;gap:6px}.seg2 .btn{flex:1;min-height:34px;font-size:13px;padding:0 8px}
+.ans-d summary{cursor:pointer;color:var(--e10-primary);font-weight:600}
+.ans-d[open] summary{margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){.stp-p.on{animation:none}}
+@page{size:1280px 720px;margin:0}
 @media print{
-  html,body{overflow:visible!important;height:auto!important}
-  .viewport{position:static!important;display:block!important}
-  .stage{width:100%!important;height:auto!important;transform:none!important}
-  .slide{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;page-break-after:always!important;min-height:100vh!important;padding:24px 30px!important}
+  html,body{overflow:visible;height:auto;background:#fff}
+  .viewport{position:static;display:block}
+  .stage{transform:none!important;width:1280px;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;page-break-after:always;break-after:page}
   .deck-ui,.progress,.no-print{display:none!important}
+  .print-only{display:block}
+  .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+  .stp-p{display:none!important}.stp-p[data-print]{display:flex!important;animation:none}
 }
+/* Clase 1: tarjetas del concepto de carga y lectura de la gráfica */
+.mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px}
+.graph-note{font-size:13px;color:var(--e10-muted)}
+.conn .chip{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -95,764 +169,912 @@ canvas.sim{background-color:var(--e10-surface-2);background-image:linear-gradien
 <div class="viewport"><div class="stage" id="stage">
 
 <!-- 1 · PORTADA -->
-<section class="slide on" data-n="1">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Física Universitaria</b><span class="tag c">Capítulo 1</span></div>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
-    <span class="mono" style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--e10-primary)">Módulo 1 · Electrostática Fundamental</span>
-    <h1 style="font-size:54px;line-height:1.05;margin:0">Ley de Coulomb y Carga Eléctrica</h1>
-    <p style="font-size:22px;color:var(--e10-muted);margin:0;max-width:880px">Cuantización, conservación, formulación vectorial exacta en 3D y principio de superposición lineal de fuerzas electrostáticas.</p>
-    <div style="display:flex;gap:12px;margin-top:14px">
-      <button class="btn pri" id="btn-start" style="height:48px;padding:0 24px;font-size:17px">Iniciar clase interactiva →</button>
-      <button class="btn" id="btn-to-lab" style="height:48px;padding:0 20px;font-size:16px">Ver CoulombLab 3D</button>
+<section class="slide" data-n="1" style="flex-direction:row;padding:0;gap:0">
+  <div style="width:14px;background:var(--e10-primary)"></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px">
+    <div style="display:flex;gap:12px;align-items:center"><b style="font:700 20px var(--e10-font-display)">Electro<span style="color:var(--e10-primary)">10.Easy</span></b><span class="tag c">Capítulo 1</span></div>
+    <div style="display:flex;gap:40px;align-items:center">
+      <div class="col" style="flex:1;gap:16px">
+        <span class="mono" style="font-size:14px;letter-spacing:.1em;color:var(--e10-muted)">ELECTROSTÁTICA · CARGA Y FUERZA ELÉCTRICA</span>
+        <h1 style="font-size:74px;line-height:1.02">Ley de<br>Coulomb</h1>
+        <p style="margin:0;font-size:24px;color:var(--e10-muted);max-width:560px">Duplica la distancia y la fuerza queda en la cuarta parte.</p>
+        <div class="col" style="gap:8px;font-size:19px;margin-top:6px">
+          <span><b style="color:var(--e10-primary)">1</b>&nbsp; Explicar la carga: cuantizada, conservada, en conductores y aislantes.</span>
+          <span><b style="color:var(--e10-primary)">2</b>&nbsp; Calcular \(F=k\,|q_1q_2|/r^2\) con su dirección y sentido.</span>
+          <span><b style="color:var(--e10-primary)">3</b>&nbsp; Sumar fuerzas por superposición y resolver equilibrios.</span>
+        </div>
+      </div>
+      <canvas id="cv-cover" width="440" height="440" aria-label="Una carga positiva y una negativa que se atraen; las flechas de fuerza crecen cuando se acercan"></canvas>
     </div>
+    <div class="foot"><span>Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Usa ← → o los botones de abajo</span></div>
   </div>
-  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">Diapositiva 1 / 13</span></div>
 </section>
 
-<!-- 2 · NATURALEZA DE LA CARGA -->
+<!-- 2 · PREDICE -->
 <section class="slide" data-n="2">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Fundamentos Físicos</span></div>
-  <h2>La Carga Eléctrica en la Materia</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag p">Predice</span></div>
+  <h2>Una carga tiene el triple que la otra. ¿Cuál siente más fuerza?</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:14px">
-      <div class="card" style="font-size:17px;line-height:1.5">
-        <b style="color:var(--e10-primary)">Propiedades Fundamentales de la Carga:</b>
-        <ul style="margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
-          <li><b>Dualidad cualitativa:</b> Existen únicamente dos tipos de carga, denominadas convencionalmente <i>positiva</i> ($+$) y <i>negativa</i> ($-$).</li>
-          <li><b>Cuantización intrínseca:</b> Cualquier carga neta medible es un múltiplo entero de la carga elemental del electrón:
-            \[q = \pm N e, \quad e = 1{,}602176634 \times 10^{-19}\text{ C}\]
-          </li>
-          <li><b>Conservación universal:</b> La suma algebraica de todas las cargas en un sistema físicamente aislado permanece constante: $\sum q = \text{cte}$.</li>
-        </ul>
-      </div>
-      <div class="tipbox">
-        <b>Conductores vs. Aislantes:</b> En metales, los electrones de valencia se deslocalizan formando un «mar de Fermi» con movilidad casi libre. En dieléctricos, están ligados atómicamente y solo experimentan polarización elástica.
-      </div>
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-pre" width="540" height="330" aria-label="Dos esferas cargadas separadas 30 centímetros; tras votar aparecen las fuerzas sobre cada una"></canvas>
+      <div class="no-print seg2"><button type="button" class="btn" id="pre-s">Cambiar el signo de q₂</button><button type="button" class="btn" id="pre-x">Triplicar q₂ otra vez</button><button type="button" class="btn" id="pre-r">Volver a empezar</button></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="soft" style="text-align:center">
-        <b style="font-size:16px;color:var(--e10-primary)">Masa y Carga de Partículas Subatómicas</b>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;text-align:left;font-size:14px">
-          <div class="card"><b>Electrón:</b><br>$q = -e$<br>$m_e \approx 9{,}109\times 10^{-31}\text{ kg}$</div>
-          <div class="card"><b>Protón:</b><br>$q = +e$<br>$m_p \approx 1{,}673\times 10^{-27}\text{ kg}$</div>
-        </div>
+    <div class="col" style="flex:1">
+      <span style="color:var(--e10-muted)" id="pre-txt">q₁ = +2,0 µC y q₂ = +6,0 µC están a 0,30 m. Vota antes de ver las fuerzas.</span>
+      <div class="vote" id="pre-vote">
+        <button type="button" class="btn" data-v="big"><b style="color:var(--e10-primary)">A</b>&nbsp; q₂: tiene tres veces más carga.</button>
+        <button type="button" class="btn" data-v="small"><b style="color:var(--e10-primary)">B</b>&nbsp; q₁: es más pequeña y se mueve más fácil.</button>
+        <button type="button" class="btn" data-v="same"><b style="color:var(--e10-primary)">C</b>&nbsp; Las dos sienten la misma fuerza.</button>
       </div>
-      <div class="ok" style="font-size:15px">
-        <b>Dato clave:</b> A nivel atómico, la repulsión electrostática supera a la atracción gravitatoria en un factor de $10^{39}$. La gravedad es despreciable en física atómica.
-      </div>
+      <div class="tipbox" id="pre-fb" style="visibility:hidden"><b>La misma.</b> En \(F=k|q_1q_2|/r^2\) aparece el producto de las cargas, igual para las dos; y por la tercera ley de Newton, \(\vec F_{1\to2}=-\vec F_{2\to1}\). Lo que cambia con la masa es la aceleración, no la fuerza. Cambia el signo de \(q_2\): el módulo no cambia, solo el sentido.</div>
+      <div class="read"><div>Fuerza sobre q₁<b id="pre-f1">—</b></div><div>Fuerza sobre q₂<b id="pre-f2">—</b></div><div>Interacción<b id="pre-t" style="font-size:15px">—</b></div></div>
     </div>
   </div>
-  <div class="foot"><span>Sears-Zemansky Cap. 21.1–21.2</span><span class="mono">Diapositiva 2 / 13</span></div>
+  <div class="foot"><span>Las flechas se dibujan a la misma escala: su largo es proporcional al módulo de la fuerza.</span><span class="mono">2 / 14</span></div>
 </section>
 
-<!-- 3 · FORMULACIÓN VECTORIAL EXACTA -->
+<!-- 3 · LA CARGA -->
 <section class="slide" data-n="3">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Ley Cuantitativa</span></div>
-  <h2>Formulación Vectorial de la Ley de Coulomb</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag c">Concepto</span></div>
+  <h2>La carga se transfiere en electrones enteros y nunca se pierde</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="soft" style="font-size:22px;text-align:center;padding:16px">
-        \[\vec{F}_{12} = \frac{1}{4\pi\epsilon_0}\frac{q_1 q_2}{r_{12}^2}\hat{r}_{12} = \frac{1}{4\pi\epsilon_0}\frac{q_1 q_2}{|\vec{r}_2 - \vec{r}_1|^3}(\vec{r}_2 - \vec{r}_1)\]
+    <div class="col" style="width:520px;flex:none">
+      <canvas class="sim" id="cv-ca" width="520" height="300" aria-label="Dos esferas conductoras idénticas que se tocan; los electrones pasan de una a otra hasta igualar las cargas"></canvas>
+      <div class="ctrl no-print">
+        <label for="ca-a">q_A</label><input id="ca-a" type="range" min="-8" max="8" step="1" value="6"><output id="ca-a-o">+6 µC</output>
+        <label for="ca-b">q_B</label><input id="ca-b" type="range" min="-8" max="8" step="1" value="-2"><output id="ca-b-o">−2 µC</output>
       </div>
-      <div class="card" style="font-size:16px;line-height:1.5">
-        <b>Análisis de la ecuación vectorial:</b>
-        <ul style="margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
-          <li>$\vec{F}_{12}$ representa la fuerza ejercida <b>por</b> la carga $q_1$ <b>sobre</b> la carga $q_2$.</li>
-          <li>El vector unitario de posición es $\hat{r}_{12} = \frac{\vec{r}_2 - \vec{r}_1}{|\vec{r}_2 - \vec{r}_1|}$, apuntando de la fuente al punto de acción.</li>
-          <li>Si $q_1 q_2 > 0$ (mismo signo), $\vec{F}_{12} \parallel +\hat{r}_{12}$ (<b>repulsión</b>).</li>
-          <li>Si $q_1 q_2 < 0$ (signos opuestos), $\vec{F}_{12} \parallel -\hat{r}_{12}$ (<b>atracción</b>).</li>
-          <li>Cumple estrictamente la 3.ª Ley de Newton: $\vec{F}_{21} = -\vec{F}_{12}$.</li>
-        </ul>
+      <div class="no-print seg2"><button type="button" class="btn pri" id="ca-go">▶ Tocar y separar</button></div>
+      <div class="read"><div>Carga total<b id="ca-q">—</b></div><div>Al final, cada una<b id="ca-f">—</b></div><div>Electrones que pasan<b id="ca-n">—</b></div></div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="mini">
+        <div class="card"><b style="color:var(--e10-primary)">Dos clases.</b> Cargas del mismo signo se repelen; de signo opuesto se atraen. Los nombres «positiva» y «negativa» los propuso Benjamín Franklin.</div>
+        <div class="card"><b style="color:var(--e10-primary)">Se conserva.</b> En un sistema cerrado la suma algebraica de las cargas es constante: al frotar o tocar solo se mueven electrones.</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">Está cuantizada.</b> Toda carga es un múltiplo entero de \(e=1{,}602\times10^{-19}\) C: \(q=\pm Ne\).</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">Conductores y aislantes.</b> En un metal algunos electrones se mueven libres; en un aislante, no. Un cuerpo neutro cerca de una carga se <i>polariza</i>.</div>
+      </div>
+      <div class="tipbox"><b>Ojo con los signos.</b> \(1\ \mu\mathrm C\) son \(6{,}24\times10^{12}\) electrones: una carga «pequeña» mueve billones de electrones.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Esferas idénticas: al tocarse, la carga total se reparte por igual (Young y Freedman, sección 21.3).</span><span class="mono">3 / 14</span></div>
+</section>
+
+<!-- 4 · LEY DE COULOMB -->
+<section class="slide" data-n="4">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag c">Concepto</span></div>
+  <h2>La fuerza va sobre la recta que une las cargas y decae como 1/r²</h2>
+  <div class="row">
+    <div class="col" style="width:560px;flex:none;gap:8px">
+      <canvas class="sim" id="cv-co" width="560" height="190" aria-label="Dos cargas con sus fuerzas; la separación se controla con un deslizador"></canvas>
+      <canvas class="sim" id="cv-cog" width="560" height="170" aria-label="Gráfica de la fuerza en función de la distancia, con el punto actual"></canvas>
+      <div class="ctrl no-print">
+        <label for="co-r">r</label><input id="co-r" type="range" min="0.05" max="0.5" step="0.01" value="0.2"><output id="co-r-o">0,20 m</output>
+        <label for="co-q2">q₂</label><input id="co-q2" type="range" min="-6" max="6" step="1" value="-5"><output id="co-q2-o">−5 µC</output>
       </div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="card">
-        <b style="color:var(--e10-primary)">Constantes Fundamentales:</b>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:15px">
-          <div class="soft" style="padding:8px 12px">
-            <b>Permitividad del vacío:</b><br>
-            $\epsilon_0 \approx 8{,}854187 \times 10^{-12}\ \text{F/m}\ (\text{C}^2/\text{N}\cdot\text{m}^2)$
-          </div>
-          <div class="soft" style="padding:8px 12px">
-            <b>Constante de Coulomb:</b><br>
-            $k_e = \frac{1}{4\pi\epsilon_0} \approx 8{,}98755 \times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2$
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:24px;padding:6px 18px">\[ F=k\,\frac{|q_1q_2|}{r^2}\qquad \vec F_{1\to2}=k\,\frac{q_1q_2}{r^2}\,\hat r_{12} \]</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:16px">
+        <div class="card"><b style="color:var(--e10-primary)">Constante.</b> \(k=\dfrac{1}{4\pi\epsilon_0}=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}\).</div>
+        <div class="card"><b style="color:var(--e10-accent-strong)">Sentido.</b> Si \(q_1q_2&gt;0\), \(\vec F_{1\to2}\) va como \(\hat r_{12}\): repulsión. Si es negativo, atracción.</div>
+      </div>
+      <div class="read"><div>F (q₁ = +3 µC)<b id="co-f">—</b></div><div>F con el doble de r<b id="co-f2">—</b></div><div>Interacción<b id="co-t" style="font-size:15px">—</b></div></div>
+      <div class="tipbox"><b>Pruébalo.</b> Pon \(r=0{,}20\) m y luego \(0{,}40\) m: la fuerza pasa de 3,37 N a 0,843 N, la cuarta parte.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Vale para cargas puntuales en reposo, en el vacío. \(\hat r_{12}\) va de \(q_1\) hacia \(q_2\).</span><span class="mono">4 / 14</span></div>
+</section>
+
+<!-- 5 · SUPERPOSICIÓN: DEDUCCIÓN EN PASOS -->
+<section class="slide" data-n="5">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag c">Deducción</span></div>
+  <h2>Superposición en el plano: siete pasos</h2>
+  <div class="row">
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-su" width="440" height="340" aria-label="Tres cargas en el plano; las cargas 1 y 2 se pueden arrastrar y se ven las fuerzas sobre la carga 3"></canvas>
+      <div class="no-print seg2"><button type="button" class="btn" id="su-s">Cambiar el signo de q₂</button><button type="button" class="btn" id="su-0">Volver al ejemplo</button></div>
+      <div class="read"><div>F neta<b id="su-f">—</b></div><div>Ángulo con +x<b id="su-a">—</b></div><div>Suma de módulos<b id="su-m">—</b></div></div>
+    </div>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Dibujo">
+          <h3>1 · Dibuja cada fuerza por separado</h3>
+          <p>\(q_3=+4{,}0\ \mu\)C en el origen; \(q_1=+2{,}0\ \mu\)C en \((0;\,0{,}30)\) m y \(q_2=-3{,}0\ \mu\)C en \((0{,}40;\,0{,}30)\) m. Cada par interactúa como si las demás cargas no estuvieran.</p>
+          <div class="soft eq">\[ \vec F_3=\vec F_{1\to3}+\vec F_{2\to3} \]</div>
+          <p>Arrastra \(q_1\) o \(q_2\) en la figura.</p>
+        </div>
+        <div class="stp-p" data-t="Distancias">
+          <h3>2 · Vector de cada fuente al objetivo</h3>
+          <div class="soft eq">\[ \vec r_3-\vec r_1=-0{,}30\,\hat\jmath\ \mathrm m,\qquad \vec r_3-\vec r_2=(-0{,}40\,\hat\imath-0{,}30\,\hat\jmath)\ \mathrm m \]</div>
+          <p>Distancias: \(r_{13}=0{,}30\) m y \(r_{23}=\sqrt{0{,}40^2+0{,}30^2}=0{,}50\) m.</p>
+        </div>
+        <div class="stp-p" data-t="Módulos">
+          <h3>3 · Módulo de cada fuerza</h3>
+          <div class="soft eq">\[ F_{13}=k\frac{(2{,}0)(4{,}0)\times10^{-12}}{0{,}30^2}=0{,}799\ \mathrm N\qquad F_{23}=k\frac{(3{,}0)(4{,}0)\times10^{-12}}{0{,}50^2}=0{,}431\ \mathrm N \]</div>
+        </div>
+        <div class="stp-p" data-t="Sentidos">
+          <h3>4 · Sentido de cada una</h3>
+          <p>\(q_1\) y \(q_3\) son positivas: \(\vec F_{13}\) se aleja de \(q_1\), hacia \(-y\). \(q_2\) es negativa: \(\vec F_{23}\) apunta hacia \(q_2\).</p>
+          <div class="card live" id="su-live"></div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para las componentes</h3>
+          <div class="seg2 no-print" style="max-width:540px"><button type="button" class="btn on" data-path="su:a">Camino A · ángulos</button><button type="button" class="btn" data-path="su:b">Camino B · vector unitario</button></div>
+          <div data-pathbox="su:a"><p>Con \(\cos\alpha=0{,}40/0{,}50=0{,}80\) y \(\sin\alpha=0{,}60\):</p><div class="soft eq">\[ \vec F_{23}=0{,}431\,(0{,}80\,\hat\imath+0{,}60\,\hat\jmath)=(0{,}345\,\hat\imath+0{,}259\,\hat\jmath)\ \mathrm N \]</div></div>
+          <div data-pathbox="su:b" hidden><p>El signo del producto de las cargas da el sentido solo:</p><div class="soft eq">\[ \vec F_{2\to3}=k\,q_2q_3\,\frac{\vec r_3-\vec r_2}{r_{23}^3}=k\frac{(-12\times10^{-12})}{0{,}125}(-0{,}40\,\hat\imath-0{,}30\,\hat\jmath)=(0{,}345\,\hat\imath+0{,}259\,\hat\jmath)\ \mathrm N \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Resultado" data-print>
+          <h3>6 · Suma por componentes</h3>
+          <div class="ok eq">\[ \vec F_3=(0{,}345\,\hat\imath-0{,}540\,\hat\jmath)\ \mathrm N\qquad F_3=0{,}641\ \mathrm N\qquad \theta=-57{,}4^\circ \]</div>
+          <p>Sumar los módulos daría 1,23 N: un error. Las fuerzas son vectores. Es el ejercicio resuelto 5 del taller.</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-su">
+            <span class="q" id="su-q"></span>
+            <div class="ans"><input id="su-in" inputmode="decimal" placeholder="F en N" aria-label="Tu respuesta en newtons"><button type="button" class="btn pri" id="su-ck">Comprobar</button><button type="button" class="btn" id="su-new">Nuevo</button></div>
+            <span class="fb" id="su-fb"></span>
+            <button type="button" class="btn" id="su-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="su-sol"></div>
           </div>
         </div>
       </div>
-      <div class="warn" style="font-size:14px">
-        <b>¡Atención!</b> Al usar la forma cúbica en el denominador ($|\vec{r}|^3$), el numerador lleva el vector posición completo $(\vec{r}_2 - \vec{r}_1)$, no el unitario.
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Tercera ley de Newton y acción a distancia</span><span class="mono">Diapositiva 3 / 13</span></div>
+  <div class="foot"><span>Flechas a escala: 1 N ≈ 120 px. La flecha magenta es la suma.</span><span class="mono">5 / 14</span></div>
 </section>
 
-<!-- 4 · SIMULADOR INTERACTIVO CANVAS -->
-<section class="slide" data-n="4">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag l">Laboratorio en Vivo</span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>Interacción Dinámica entre Dos Cargas</h2>
-    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Arrastra las cargas o mueve los controles</span>
-  </div>
-  <div class="row">
-    <div class="col" style="flex:1.4">
-      <canvas id="cv-coulomb" class="sim" width="700" height="390" style="width:100%;height:390px"></canvas>
-    </div>
-    <div class="col" style="flex:1;gap:10px">
-      <div class="ctrl">
-        <label for="c-q1">Carga $q_1$</label>
-        <input id="c-q1" type="range" min="-10" max="10" step="1" value="4">
-        <output id="c-q1-o">+4 μC</output>
-      </div>
-      <div class="ctrl">
-        <label for="c-q2">Carga $q_2$</label>
-        <input id="c-q2" type="range" min="-10" max="10" step="1" value="-3">
-        <output id="c-q2-o">-3 μC</output>
-      </div>
-      <div class="read">
-        <div>Distancia $r$<b id="c-r">0,25 m</b></div>
-        <div>Fuerza $|\vec{F}|$<b id="c-f">1,73 N</b></div>
-        <div>Tipo<b id="c-tipo" style="color:var(--e10-primary)">Atracción</b></div>
-      </div>
-      <div class="tipbox" style="font-size:14px">
-        <b>Observación analítica:</b> Al duplicar la distancia ($2r$), la fuerza se reduce a la cuarta parte ($F/4$). La fuerza apunta siempre en la línea que une los centros.
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>Simulación canvas de vectores de Coulomb en tiempo real</span><span class="mono">Diapositiva 4 / 13</span></div>
-</section>
-
-<!-- 5 · SUPERPOSICIÓN DE FUERZAS -->
-<section class="slide" data-n="5">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Principio Fundamental</span></div>
-  <h2>Principio de Superposición Lineal</h2>
-  <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <p style="margin:0;font-size:17px">Cuando múltiples cargas puntuales $q_1, q_2, \dots, q_N$ actúan simultáneamente sobre una carga de prueba $q_0$, la fuerza electrostática neta es la <b>suma vectorial directa</b> de cada una de las interacciones individuales independientes:</p>
-      <div class="soft" style="font-size:20px;text-align:center;padding:14px">
-        \[\vec{F}_{\text{net}} = \sum_{i=1}^N \vec{F}_{i0} = \frac{q_0}{4\pi\epsilon_0} \sum_{i=1}^N \frac{q_i}{|\vec{r}_0 - \vec{r}_i|^3} (\vec{r}_0 - \vec{r}_i)\]
-      </div>
-      <div class="card" style="font-size:16px">
-        <b>Descomposición por componentes ortogonales en el plano:</b>
-        \[F_{\text{net},x} = \sum_{i=1}^N F_{i0,x} = \sum_{i=1}^N F_{i0} \cos\theta_i\]
-        \[F_{\text{net},y} = \sum_{i=1}^N F_{i0,y} = \sum_{i=1}^N F_{i0} \sin\theta_i\]
-        \[|\vec{F}_{\text{net}}| = \sqrt{F_{\text{net},x}^2 + F_{\text{net},y}^2}, \quad \theta_{\text{net}} = \arctan\left(\frac{F_{\text{net},y}}{F_{\text{net},x}}\right)\]
-      </div>
-    </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="ok" style="font-size:15px">
-        <b>Linealidad del medio:</b> La presencia de una tercera o cuarta carga no altera en absoluto la interacción mutua entre las dos primeras. Las fuerzas no se apantallan en el vacío.
-      </div>
-      <div class="warn" style="font-size:15px">
-        <b>¡Error común!</b> Sumar algebraicamente las magnitudes de las fuerzas sin descomponer en vectores cartesianos $(\hat{\imath}, \hat{\jmath})$ arruina todo el cálculo.
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>Suma vectorial rigurosa en 2D y 3D</span><span class="mono">Diapositiva 5 / 13</span></div>
-</section>
-
-<!-- 6 · EJEMPLO RESUELTO 1: CONFIGURACIÓN SIMÉTRICA -->
+<!-- 6 · EJE DE SIMETRÍA: DEDUCCIÓN EN PASOS -->
 <section class="slide" data-n="6">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag e">Problema Resuelto 1</span></div>
-  <h2>Fuerza sobre Carga en Eje de Simetría</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag c">Deducción</span></div>
+  <h2>Eje de simetría de dos cargas iguales: siete pasos</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:10px;font-size:15px">
-      <div class="card">
-        <b>Enunciado:</b> Dos cargas idénticas $+q$ están fijas en el eje $x$ en $(\pm a, 0)$. Una tercera carga $+q_0$ se sitúa sobre el eje $y$ en $(0, y)$. Determina la fuerza neta $\vec{F}_{\text{net}}(y)$ y evalúa su comportamiento límite.
-      </div>
-      <div class="soft">
-        <b>Paso 1 · Geometría y distancia:</b>
-        $r = \sqrt{a^2 + y^2}$, $\cos\theta = \frac{a}{r}$, $\sin\theta = \frac{y}{r}$.
-      </div>
-      <div class="soft">
-        <b>Paso 2 · Simetría vectorial:</b>
-        Las componentes en el eje $x$ son iguales en magnitud y de sentido opuesto:
-        \[F_{1x} = -F_1 \cos\theta, \quad F_{2x} = +F_2 \cos\theta \implies F_{\text{net},x} \equiv 0\]
-      </div>
-      <div class="soft">
-        <b>Paso 3 · Suma en el eje $y$:</b>
-        \[F_{\text{net},y} = 2 F \sin\theta = 2\left(\frac{1}{4\pi\epsilon_0}\frac{q q_0}{a^2 + y^2}\right)\frac{y}{\sqrt{a^2 + y^2}} = \frac{1}{4\pi\epsilon_0} \frac{2 q q_0 y}{(a^2 + y^2)^{3/2}}\]
-      </div>
+    <div class="col" style="width:440px;flex:none;gap:8px">
+      <canvas class="sim" id="cv-ej" width="440" height="190" aria-label="Dos cargas iguales sobre el eje x y una carga de prueba que sube por el eje y"></canvas>
+      <canvas class="sim" id="cv-ejg" width="440" height="150" aria-label="Gráfica de la fuerza sobre el eje y con su máximo"></canvas>
+      <div class="ctrl no-print"><label for="ej-y">y</label><input id="ej-y" type="range" min="0" max="0.6" step="0.005" value="0.106"><output id="ej-y-o">0,106 m</output></div>
+      <div class="read"><div>F(y)<b id="ej-f">—</b></div><div>F máxima<b id="ej-m">—</b></div><div>Una sola carga 2q<b id="ej-a">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="ok" style="font-size:15px">
-        <b>Límite lejano ($y \gg a$):</b>
-        Si la carga está muy distante, $(a^2 + y^2)^{3/2} \approx y^3$:
-        \[\vec{F}_{\text{net}} \approx \frac{1}{4\pi\epsilon_0} \frac{2 q q_0}{y^2}\hat{\jmath}\]
-        ¡El par de cargas se comporta exactamente como una sola carga concentrada $Q = 2q$!
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Elemento">
+          <h3>1 · Una fuente a la vez</h3>
+          <p>\(q=+4{,}0\ \mu\)C en \((\pm a,0)\), \(a=0{,}15\) m; \(q_0=+1{,}0\ \mu\)C en \((0,y)\). Cada fuente está a \(r=\sqrt{a^2+y^2}\):</p>
+          <div class="soft eq">\[ F_1=\frac{k\,q\,q_0}{a^2+y^2} \]</div>
+        </div>
+        <div class="stp-p" data-t="Simetría">
+          <h3>2 · Geometría y simetría</h3>
+          <p>Cada fuerza forma un ángulo \(\theta\) con el eje \(x\), con \(\sin\theta=y/r\). Las componentes en \(x\) son iguales y opuestas: <b>se anulan</b>. Las componentes en \(y\) se suman.</p>
+          <div class="soft eq">\[ F_x=F_1\cos\theta-F_1\cos\theta=0 \]</div>
+        </div>
+        <div class="stp-p" data-t="Reemplazo">
+          <h3>3 · Reemplazo</h3>
+          <div class="soft eq">\[ F=2F_1\sin\theta=2\,\frac{kqq_0}{a^2+y^2}\cdot\frac{y}{\sqrt{a^2+y^2}} \]</div>
+        </div>
+        <div class="stp-p" data-t="Constantes">
+          <h3>4 · Constantes fuera</h3>
+          <div class="soft eq">\[ F(y)=2kqq_0\,\frac{y}{(a^2+y^2)^{3/2}} \]</div>
+          <p>Solo queda una función de \(y\): mira la gráfica de la izquierda.</p>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos, el mismo resultado</h3>
+          <div class="seg2 no-print" style="max-width:540px"><button type="button" class="btn on" data-path="ej:a">Camino A · ángulos</button><button type="button" class="btn" data-path="ej:b">Camino B · vectores unitarios</button></div>
+          <div data-pathbox="ej:a"><p>Es el resultado del paso 4: se proyecta cada fuerza con \(\sin\theta\) y se usa la simetría para anular \(x\).</p><div class="soft eq">\[ F_y=2F_1\sin\theta \]</div></div>
+          <div data-pathbox="ej:b" hidden><p>Sin ángulos: \(\vec r_0-\vec r_\pm=\mp a\,\hat\imath+y\,\hat\jmath\) y</p><div class="soft eq">\[ \vec F=kqq_0\left[\frac{-a\hat\imath+y\hat\jmath}{r^3}+\frac{a\hat\imath+y\hat\jmath}{r^3}\right]=\frac{2kqq_0\,y}{r^3}\,\hat\jmath \]</div><p>Los términos en \(\hat\imath\) se cancelan solos.</p></div>
+        </div>
+        <div class="stp-p" data-t="Máximo" data-print>
+          <h3>6 · Máximo y casos límite</h3>
+          <div class="ok eq">\[ \frac{dF}{dy}=0\Rightarrow y_{\text{máx}}=\frac{a}{\sqrt2}\qquad F_{\text{máx}}=\frac{4}{3\sqrt3}\frac{kqq_0}{a^2}=1{,}23\ \mathrm N \]</div>
+          <p>Lejos (\(y\gg a\)): \(F\approx k(2q)q_0/y^2\), una sola carga \(2q\). Cerca (\(y\ll a\)): \(F\approx2kqq_0\,y/a^3\), lineal. En el origen, \(F=0\).</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto con valores nuevos</h3>
+          <div class="reto" id="reto-ej">
+            <span class="q" id="ej-q"></span>
+            <div class="ans"><input id="ej-in" inputmode="decimal" placeholder="F máxima en N" aria-label="Tu respuesta en newtons"><button type="button" class="btn pri" id="ej-ck">Comprobar</button><button type="button" class="btn" id="ej-new">Nuevo</button></div>
+            <span class="fb" id="ej-fb"></span>
+            <button type="button" class="btn" id="ej-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="ej-sol"></div>
+          </div>
+        </div>
       </div>
-      <div class="tipbox" style="font-size:14px">
-        <b>Máximo de la fuerza:</b> Derivando respecto a $y$ e igualando a cero: $\frac{dF_y}{dy} = 0 \implies y = \frac{a}{\sqrt{2}}$. En este punto, la repulsión vertical alcanza su pico.
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Deducción analítica rigurosa y límites asintóticos</span><span class="mono">Diapositiva 6 / 13</span></div>
+  <div class="foot"><span>La línea punteada de la gráfica es la aproximación de una sola carga 2q: coincide lejos y falla cerca.</span><span class="mono">6 / 14</span></div>
 </section>
 
-<!-- 7 · EJEMPLO RESUELTO 2: BALANZA DE TORSIÓN Y EQUILIBRIO -->
+<!-- 7 · PÉNDULOS -->
 <section class="slide" data-n="7">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag e">Problema Resuelto 2</span></div>
-  <h2>Equilibrio Mecánico en Péndulos Electrostáticos</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag e">Ejemplo resuelto</span></div>
+  <h2>Dos esferas cargadas que cuelgan: equilibrio de tres fuerzas</h2>
   <div class="row">
-    <div class="col" style="flex:1.2;gap:10px;font-size:15px">
-      <div class="card">
-        <b>Enunciado:</b> Dos pequeñas esferas idénticas de masa $m$ y carga $q$ cuelgan de hilos aislantes de longitud $L$ desde un punto común. Si el ángulo de separación $\theta$ es muy pequeño, demuestra analíticamente que la distancia de separación en equilibrio es:
-        \[d = \left(\frac{q^2 L}{2\pi\epsilon_0 m g}\right)^{1/3}\]
-      </div>
-      <div class="soft">
-        <b>Paso 1 · Diagrama de cuerpo libre:</b>
-        Tensión $T$, peso $mg$ hacia abajo, fuerza de Coulomb $F_e = \frac{q^2}{4\pi\epsilon_0 d^2}$ horizontal.
-      </div>
-      <div class="soft">
-        <b>Paso 2 · Condiciones de equilibrio estático ($\sum \vec{F} = 0$):</b>
-        \[T \sin(\theta/2) = F_e, \qquad T \cos(\theta/2) = m g\]
-        Dividiendo ambas ecuaciones: $\tan(\theta/2) = \frac{F_e}{m g} = \frac{q^2}{4\pi\epsilon_0 d^2 m g}$.
-      </div>
+    <div class="col" style="width:460px;flex:none">
+      <canvas class="sim" id="cv-pe" width="460" height="330" aria-label="Dos péndulos cargados que se separan al aumentar la carga, con tensión, peso y fuerza eléctrica"></canvas>
+      <div class="ctrl no-print"><label for="pe-q">q</label><input id="pe-q" type="range" min="0" max="0.6" step="0.01" value="0.25"><output id="pe-q-o">0,25 µC</output></div>
+      <div class="read"><div>d exacta<b id="pe-d">—</b></div><div>d con ángulo pequeño<b id="pe-da">—</b></div><div>Ángulo de cada hilo<b id="pe-t">—</b></div></div>
     </div>
-    <div class="col" style="flex:0.8;gap:12px">
-      <div class="soft" style="font-size:15px">
-        <b>Paso 3 · Aproximación de ángulo pequeño:</b>
-        Para $\theta \ll 1$, $\tan(\theta/2) \approx \sin(\theta/2) = \frac{d/2}{L} = \frac{d}{2L}$.
-        \[\frac{d}{2L} = \frac{q^2}{4\pi\epsilon_0 d^2 m g} \implies d^3 = \frac{2 L q^2}{4\pi\epsilon_0 m g} = \frac{q^2 L}{2\pi\epsilon_0 m g}\]
-        Extrayendo raíz cúbica:
-        \[d = \left(\frac{q^2 L}{2\pi\epsilon_0 m g}\right)^{1/3}\]
+    <div class="col" style="flex:1">
+      <div class="soft" style="text-align:center;font-size:20px;padding:4px 18px">\[ \tan\theta=\frac{kq^2}{mg\,d^2}\qquad d=2L\sin\theta\qquad d\approx\left(\frac{2kq^2L}{mg}\right)^{1/3} \]</div>
+      <div class="steps" style="font-size:16px;gap:8px">
+        <div><span class="n">1</span><span>Esferas de 5,0 g con hilos de 1,20 m. Sobre cada una: \(T\), \(mg\) y \(F_e\). Equilibrio: \(T\sin\theta=F_e\), \(T\cos\theta=mg\).</span></div>
+        <div><span class="n">2</span><span>Camino A, ángulo pequeño (\(\tan\theta\approx d/2L\)): con 0,25 µC, \(d=0{,}302\) m.</span></div>
+        <div><span class="n">3</span><span>Camino B, sin aproximar (bisección): \(\theta=7{,}21^\circ\), \(d=0{,}301\) m. Difieren en 0,26 %.</span></div>
       </div>
-      <div class="ok" style="font-size:14px">
-        <b>Comprobación dimensional:</b> $[d] = (\text{C}^2 \cdot \text{m} / (\text{C}^2/\text{N}\cdot\text{m}^2 \cdot \text{N}))^{1/3} = (\text{m}^3)^{1/3} = \text{m}$.
+      <div class="reto" id="reto-pe">
+        <span class="q" id="pe-qq"></span>
+        <div class="ans"><input id="pe-in" inputmode="decimal" placeholder="d en cm" aria-label="Tu respuesta en centímetros"><button type="button" class="btn pri" id="pe-ck">Comprobar</button><button type="button" class="btn" id="pe-new">Nuevo</button></div>
+        <span class="fb" id="pe-fb"></span>
+        <button type="button" class="btn" id="pe-sb" style="align-self:flex-start">Ver solución</button>
+        <div class="sol" id="pe-sol"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Balanza de Coulomb histórica modelada matemáticamente</span><span class="mono">Diapositiva 7 / 13</span></div>
+  <div class="foot"><span>Sube la carga: con ángulos grandes la aproximación se separa de la solución exacta.</span><span class="mono">7 / 14</span></div>
 </section>
 
-<!-- 8 · ERRORES COMUNES -->
+<!-- 8 · BALANZA DE TORSIÓN -->
 <section class="slide" data-n="8">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag p">Diagnóstico de Errores</span></div>
-  <h2>Cuatro Errores Clásicos en Ley de Coulomb</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag l">Simula</span></div>
+  <h2>La balanza de torsión: medir una fuerza con un hilo que se tuerce</h2>
+  <div class="row">
+    <div class="col" style="width:540px;flex:none">
+      <canvas class="sim" id="cv-ba" width="540" height="320" aria-label="Balanza de torsión vista desde arriba; el brazo gira según la fuerza entre las esferas"></canvas>
+      <div class="ctrl no-print">
+        <label for="ba-r">r</label><input id="ba-r" type="range" min="3" max="12" step="0.5" value="5"><output id="ba-r-o">5,0 cm</output>
+        <label for="ba-q">q</label><input id="ba-q" type="range" min="0.25" max="2" step="0.25" value="1"><output id="ba-q-o">1,00 nC</output>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft" style="font-size:17px;padding:10px 16px">El hilo se tuerce hasta que su torque iguala al de la fuerza eléctrica: \[ \kappa\,\phi=F\,b\quad\Rightarrow\quad \phi=\frac{k\,q^2\,b}{\kappa\,r^2} \] Con \(\kappa=1{,}0\times10^{-6}\ \mathrm{N\,m/rad}\) y \(b=5{,}0\) cm.</div>
+      <div class="read"><div>Fuerza<b id="ba-f">—</b></div><div>Giro φ<b id="ba-p">—</b></div><div>φ con el doble de r<b id="ba-p2">—</b></div></div>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="ba-2r">Duplicar r</button><button type="button" class="btn" id="ba-half">Tocar con una esfera neutra (q/2)</button></div>
+      <div class="tipbox"><b>Así lo hizo Coulomb (1784).</b> Midió cómo cambia la fuerza con la distancia y, tocando una esfera cargada con otra idéntica sin carga, obtuvo la mitad, la cuarta parte… de la carga. Es el ejercicio resuelto 8 del taller.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Modelo de ángulo pequeño: se supone que r casi no cambia al girar el brazo.</span><span class="mono">8 / 14</span></div>
+</section>
+
+<!-- 9 · ERRORES -->
+<section class="slide" data-n="9">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag p">Errores comunes</span></div>
+  <h2>Cuatro errores frecuentes (haz clic para voltear)</h2>
   <div class="row" style="gap:16px">
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 1"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Sumar escalares sin dirección»</b><span>¿Por qué está mal?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Las fuerzas son vectores.</b><span>Dos fuerzas de $5\ \text{N}$ opuestas dan fuerza neta cero, no $10\ \text{N}$. Es obligatorio descomponer en $\hat{\imath}, \hat{\jmath}, \hat{k}$.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Sumo los módulos de las fuerzas.»</b><span>¿Y la dirección de cada una?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Se suman como vectores.</b><span>Descompón en \(x\) e \(y\). En la diapositiva 5, 0,799 N y 0,431 N dan 0,641 N, no 1,23 N.</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 2"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Duplicar los signos negativos»</b><span>¿Qué signo usar?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Define magnitud y vector.</b><span>O usas la fórmula vectorial con signos de $q_i$, o calculas la magnitud $|F| = k|q_1 q_2|/r^2$ y asignas la dirección por inspección geométrica.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«La carga mayor siente más fuerza.»</b><span>¿Qué dice la tercera ley?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Las dos sienten la misma.</b><span>La fuerza depende del producto \(q_1q_2\); \(\vec F_{1\to2}=-\vec F_{2\to1}\).</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 3"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Aplicar Coulomb a varillas largas»</b><span>¿Cuándo vale directamente?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Solo para cargas puntuales.</b><span>Para conductores extensos, la distancia $r$ varía de un punto a otro. Se requiere cálculo integral (Capítulo 4).</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Duplico r y la fuerza queda a la mitad.»</b><span>¿Con qué potencia de r?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Queda en la cuarta parte.</b><span>\(F\propto1/r^2\). Y pasa los centímetros a metros antes de elevar al cuadrado.</span></div>
     </div></div>
     <div class="flip" style="flex:1" tabindex="0" role="button" aria-label="Error 4"><div class="in">
-      <div class="f"><b style="font:600 20px var(--e10-font-display);color:var(--e10-warning)">«Olvidar el inverso al cuadrado»</b><span>¿Qué le pasa a F?</span></div>
-      <div class="b"><b style="font:600 18px var(--e10-font-display);color:var(--e10-success)">Dependencia cuadrática.</b><span>Si la distancia se triplica ($3r$), la fuerza se divide por $9$. Un error común es dividirla por $3$.</span></div>
+      <div class="f"><b style="font:600 21px var(--e10-font-display);color:var(--e10-warning)">«Meto el signo de las cargas en F = k|q₁q₂|/r².»</b><span>¿Puede un módulo ser negativo?</span></div>
+      <div class="b"><b style="font:600 19px var(--e10-font-display);color:var(--e10-success)">Módulo con valores absolutos.</b><span>El sentido (atracción o repulsión) se decide con el dibujo, o con la forma vectorial \(k\,q_1q_2\,\hat r_{12}/r^2\).</span></div>
     </div></div>
   </div>
-  <div class="foot"><span>Haz clic o posa el cursor en cada tarjeta para voltearla</span><span class="mono">Diapositiva 8 / 13</span></div>
+  <div class="foot"><span>Antes de calcular, dibuja cada fuerza sobre la recta que une el par de cargas.</span><span class="mono">9 / 14</span></div>
 </section>
 
-<!-- 9 · ÁRBOL DE DECISIÓN -->
-<section class="slide" data-n="9">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag p">Estrategia de Resolución</span></div>
-  <h2>Árbol de Decisión: ¿Cómo Resolver un Problema de Fuerzas?</h2>
+<!-- 10 · ÁRBOL DE DECISIÓN -->
+<section class="slide" data-n="10">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag p">Árbol de decisión</span></div>
+  <h2>¿Qué fórmula uso? Responde y el árbol te lleva</h2>
   <div class="row" style="gap:18px">
-    <div class="col" style="width:420px;flex:none;gap:8px">
-      <div class="tq">
-        <div class="tqh"><span class="mono">1</span><b>¿Cuántas cargas fuente interactúan?</b></div>
-        <div class="tq-opts" id="tq1">
-          <button class="opt on" data-val="two">Solo dos cargas puntuales</button>
-          <button class="opt" data-val="multi">Tres o más cargas discretas</button>
-          <button class="opt" data-val="cont">Distribución continua (varilla/anillo)</button>
-        </div>
-      </div>
-      <span class="tq-down">↓</span>
-      <div class="tq">
-        <div class="tqh"><span class="mono">2</span><b>¿Hay simetría espacial evidente?</b></div>
-        <div class="tq-opts" id="tq2">
-          <button class="opt on" data-val="sym">Sí (eje de simetría / componentes opuestas)</button>
-          <button class="opt" data-val="nosym">No (geometría asimétrica general)</button>
-        </div>
-      </div>
+    <div class="col" style="width:430px;flex:none;gap:6px">
+      <div class="tq"><div class="tqh"><span class="mono">1</span><b>¿Qué tienes?</b></div><div class="tq-opts" id="tq1"></div></div>
+      <span class="tq-down" aria-hidden="true">↓</span>
+      <div class="tq"><div class="tqh"><span class="mono">2</span><b>¿Qué buscas?</b></div><div class="tq-opts" id="tq2"></div></div>
     </div>
     <div class="leaf col">
-      <div style="display:flex;justify-content:space-between;align-items:baseline">
-        <b class="leaf-name" id="leaf-name">Ley de Coulomb Directa</b>
-        <span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">ALGORITMO RECOMENDADO</span>
-      </div>
-      <div class="soft" id="leaf-eq" style="min-height:80px;display:flex;align-items:center;justify-content:center;font-size:22px">
-        \[\vec{F} = \frac{1}{4\pi\epsilon_0}\frac{|q_1 q_2|}{r^2}\hat{r}\]
-      </div>
-      <div class="col" style="gap:6px;font-size:16px">
-        <b style="color:var(--e10-ink)">Pautas de Resolución:</b>
-        <span id="leaf-p1">1. Calcula la magnitud escalar con las cargas en valor absoluto.</span>
-        <span id="leaf-p2">2. Determina visualmente la dirección en la recta de unión (atracción si signos opuestos, repulsión si iguales).</span>
-        <span id="leaf-p3">3. Escribe el vector final multiplicando la magnitud por el vector unitario $\hat{r}$.</span>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b class="leaf-name" id="leaf-name"></b><span class="mono" style="font-size:11px;letter-spacing:.08em;color:var(--e10-primary)">USA ESTA FÓRMULA</span></div>
+      <div class="leaf-eq" id="leaf-eq"></div>
+      <div style="font-size:15px"><b>Cuándo vale.</b> <span id="leaf-when"></span></div>
+      <div style="font-size:15px"><b>Sentido.</b> <span id="leaf-dir"></span></div>
+      <div class="reto" style="margin-top:auto">
+        <div class="q"><b style="color:var(--e10-primary)">Reto rápido.</b> <span id="leaf-reto"></span></div>
+        <div class="ans no-print"><input id="leaf-in" type="text" inputmode="decimal" aria-label="Tu respuesta en unidades del SI" placeholder="en unidades SI, p. ej. 8,99e-3"><button type="button" class="btn pri" id="leaf-check">Comprobar</button><a class="btn" id="leaf-lab" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Abrir en CoulombLab</a></div>
+        <div class="fb" id="leaf-fb"></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Selecciona las condiciones de tu problema</span><span class="mono">Diapositiva 9 / 13</span></div>
+  <div class="foot"><span>Elige una respuesta en cada pregunta; el camino elegido queda resaltado</span><span class="mono">10 / 14</span></div>
 </section>
 
-<!-- 10 · LABORATORIO VIRTUAL -->
-<section class="slide" data-n="10">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag l">Laboratorio Virtual</span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>CoulombLab · Exploración Experimental</h2>
-    <span class="mono" style="font-size:13px;color:var(--e10-muted)">Simulador interactivo oficial</span>
-  </div>
-  <div class="row" style="margin-top:4px">
-    <iframe id="lab-frame" class="lab-frame" src="../../simuladores/Coulomb.html" title="Simulador CoulombLab"></iframe>
-  </div>
-  <div class="foot"><span>Telemetría en tiempo real y verificación de la ley del inverso del cuadrado</span><span class="mono">Diapositiva 10 / 13</span></div>
-</section>
-
-<!-- 11 · MAPA CONCEPTUAL -->
+<!-- 11 · LABORATORIO -->
 <section class="slide" data-n="11">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Red de Conocimiento</span></div>
-  <h2>Mapa Conceptual: De Coulomb al Campo Eléctrico</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag l">Laboratorio</span></div>
+  <h2>Comprueba en CoulombLab lo que acabas de deducir</h2>
   <div class="row">
-    <div class="cmap" id="cmap">
-      <svg width="780" height="520" id="cmap-svg"></svg>
-      <div style="position:absolute;left:14px;bottom:12px;display:flex;gap:8px">
-        <span class="tag c">Capítulo 1</span>
-        <span class="tag l">Lleva a Cap. 2–5</span>
-      </div>
+    <div class="col" style="flex:1.4">
+      <iframe class="lab-frame no-print" id="lab-frame" title="CoulombLab, simulador del laboratorio" loading="lazy" data-src="../../simuladores/Coulomb.html?embed"></iframe>
+      <div class="print-only card">Abre CoulombLab en la plataforma Electro10.Easy: coloca cargas, dibuja las fuerzas y pulsa «Comprobar».</div>
     </div>
-    <div class="col card" style="flex:1;gap:10px">
-      <div style="font-size:12px;color:var(--e10-muted);text-transform:uppercase;letter-spacing:.08em" id="cm-kind">Concepto Central</div>
-      <b style="font-size:22px;color:var(--e10-ink)" id="cm-label">Ley de Coulomb</b>
-      <div class="soft" id="cm-eq" style="padding:10px;text-align:center">\[\vec F = \frac{1}{4\pi\epsilon_0}\frac{q_1 q_2}{r^2}\hat r\]</div>
-      <p style="margin:0;font-size:15px;line-height:1.45" id="cm-def">Fuerza electrostática fundamental entre dos cargas puntuales en reposo en el vacío.</p>
-      <div class="tipbox" id="cm-where">Punto de partida de todo el electromagnetismo clásico. Al dividir por la carga de prueba $q_0$, engendra el concepto de campo eléctrico $\vec{E}$.</div>
+    <div class="col" style="flex:1">
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 1 · Dos cargas.</b> Dibuja una carga positiva y otra negativa. Traza la fuerza sobre cada una y comprueba. ¿Tienen el mismo largo?</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 2 · Superposición.</b> Monta las tres cargas de la diapositiva 5 y dibuja las dos fuerzas sobre \(q_3\). Abre su diagrama de cuerpo libre.</div>
+      <div class="card" style="font-size:16px"><b style="color:var(--e10-primary)">Tarea 3 · Distancia.</b> Aleja una carga al doble de distancia. ¿En qué factor cambió la fuerza que muestra el panel?</div>
+      <div class="tipbox"><b>Consejo.</b> Dibuja tu flecha antes de pulsar «Comprobar»: así ves qué idea tenías mal.</div>
     </div>
   </div>
-  <div class="foot"><span>Haz clic o posa el cursor sobre los nodos del mapa</span><span class="mono">Diapositiva 11 / 13</span></div>
+  <div class="foot"><span></span><span class="mono">11 / 14</span></div>
 </section>
 
-<!-- 12 · LÍNEA DE TIEMPO Y GLOSARIO -->
+<!-- 12 · MAPA DE CONCEPTOS -->
 <section class="slide" data-n="12">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Historia y Terminología</span></div>
-  <h2>Línea de Tiempo y Glosario en Tarjetas</h2>
-  <div class="row" style="flex-direction:column;gap:16px">
-    <div class="tline" id="tline">
-      <div class="tline-axis"></div>
-      <div style="position:absolute;left:16px;bottom:8px;font-size:12px;color:var(--e10-muted)" id="tl-text">
-        <b style="color:var(--e10-primary)">Charles-Augustin de Coulomb, 1785.</b> Publica sus memorias demostrando la balanza de torsión experimental.
-      </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag l">Mapa de conceptos</span></div>
+  <h2>De dónde viene y a dónde lleva este capítulo</h2>
+  <div class="row" style="gap:24px">
+    <div class="cmap" id="cmap">
+      <svg width="780" height="520" viewBox="0 0 780 520" aria-hidden="true" id="cmap-svg"></svg>
+      <div class="cmap-legend"><span class="chip past">viene de</span><span class="chip this">este capítulo</span><span class="chip fut">lleva a</span></div>
     </div>
-    <div class="row" style="gap:20px;flex:1">
-      <button type="button" class="fcard" id="fc-card">
-        <span class="mono" id="fc-side">TÉRMINO</span>
-        <span id="fc-text">Ley de Coulomb</span>
-      </button>
-      <div class="col" style="width:260px;justify-content:center;gap:10px">
-        <div class="mono" style="font-size:13px;color:var(--e10-muted)" id="fc-count">Tarjeta 1 de 8</div>
-        <button class="btn pri" id="fc-flip">Girar tarjeta</button>
-        <button class="btn" id="fc-next">Siguiente término</button>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="card col" style="gap:10px">
+        <span class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)" id="cm-kind"></span>
+        <b style="font:600 22px var(--e10-font-display)" id="cm-label"></b>
+        <p style="margin:0;font-size:16px" id="cm-def"></p>
+        <div class="leaf-eq" id="cm-eq" style="min-height:70px"></div>
+        <div style="font-size:14px;color:var(--e10-muted)" id="cm-where"></div>
+        <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap" id="cm-actions"></div>
       </div>
+      <div class="tipbox"><b>Analogía.</b> \(F=Gm_1m_2/r^2\) y \(F=k|q_1q_2|/r^2\) tienen la misma forma; pero la masa siempre atrae y la carga, según su signo, atrae o repele.</div>
     </div>
   </div>
-  <div class="foot"><span>Glosario interactivo para consolidación nemotécnica</span><span class="mono">Diapositiva 12 / 13</span></div>
+  <div class="foot"><span>Toca un concepto para ver su definición, su fórmula y dónde se estudia</span><span class="mono">12 / 14</span></div>
 </section>
 
-<!-- 13 · RESUMEN Y EXPORTACIÓN -->
+<!-- 13 · HISTORIA, GLOSARIO Y BIBLIOGRAFÍA -->
 <section class="slide" data-n="13">
-  <div class="topbar"><b>Electro<span>10.Easy</span> · Capítulo 1</b><span class="tag c">Cierre y Evaluación</span></div>
-  <h2>Resumen Ejecutivo y Fórmulas Maestras</h2>
-  <div class="row">
-    <div class="col" style="flex:1.2;gap:12px">
-      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="soft">
-          <b>Ley Vectorial de Coulomb:</b>
-          \[\vec{F}_{12} = \frac{1}{4\pi\epsilon_0}\frac{q_1 q_2}{r^2}\hat{r}_{12}\]
-        </div>
-        <div class="soft">
-          <b>Forma Cartesiana Cúbica:</b>
-          \[\vec{F}_{12} = \frac{q_1 q_2}{4\pi\epsilon_0}\frac{\vec{r}_2 - \vec{r}_1}{|\vec{r}_2 - \vec{r}_1|^3}\]
-        </div>
-        <div class="soft">
-          <b>Superposición Lineal:</b>
-          \[\vec{F}_{\text{net}} = \sum_{i=1}^N \vec{F}_{i0}\]
-        </div>
-        <div class="soft">
-          <b>Cuantización de Carga:</b>
-          \[q = \pm N e, \quad e \approx 1{,}602\times 10^{-19}\text{ C}\]
-        </div>
-      </div>
-      <div class="ok">
-        <b>Regla de Oro:</b> Las fuerzas electrostáticas son pares acción-reacción centrales dirigidos estrictamente a lo largo de la recta imaginaria que conecta ambas cargas.
-      </div>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag e">Repaso</span></div>
+  <h2>Historia, palabras clave y para leer más</h2>
+  <div class="tline" id="tline"><div class="tline-axis"></div><span class="tline-note">escala no proporcional</span></div>
+  <div class="soft" style="font-size:16px;padding:10px 16px" id="tl-text"></div>
+  <div class="row" style="gap:20px">
+    <div class="col" style="width:560px;flex:none;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font:600 18px var(--e10-font-display)">Glosario en tarjetas</b><span class="mono" style="font-size:12px;color:var(--e10-muted)" id="fc-count"></span></div>
+      <button type="button" class="fcard" id="fc-card" aria-live="polite"><span class="mono" id="fc-side"></span><span id="fc-text"></span></button>
+      <div class="no-print" style="display:flex;gap:8px"><button type="button" class="btn" id="fc-flip">Girar</button><button type="button" class="btn" id="fc-again">Repasar pronto</button><button type="button" class="btn pri" id="fc-ok">Ya la sé</button><button type="button" class="btn" id="fc-reset" style="margin-left:auto">Empezar de nuevo</button></div>
     </div>
-    <div class="col" style="flex:0.8;justify-content:center;gap:14px">
-      <div class="card" style="text-align:center;padding:24px;gap:14px">
-        <b style="font-size:20px;color:var(--e10-ink)">Documentación y Práctica</b>
-        <p style="font-size:15px;color:var(--e10-muted);margin:0">Descarga los materiales oficiales en PDF o exporta esta clase completa en alta definición.</p>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <a class="btn pri" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap01_Taller_Coulomb.pdf" download>Taller (PDF)</a>
-          <a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="recursos/Cap01_Guia_Coulomb.pdf" download>Guía de estudio (PDF)</a>
-        </div>
-        <button class="btn" id="btn-print2" style="height:44px;font-size:15px">Esta clase en PDF</button>
-        <a href="../../talleres/Taller_1_Ley_de_Coulomb.html" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Ir al Taller Práctico No. 1</a>
+    <div class="col" style="flex:1;min-width:0;gap:10px">
+      <div class="card col" style="gap:8px">
+        <b style="font:600 16px var(--e10-font-display)">Conectores</b>
+        <div class="conn"><span>Viene de</span><span class="chip past">Gravitación</span><span class="chip past">Leyes de Newton</span><span class="chip past">Vectores</span></div>
+        <div class="conn"><span>Lleva a</span><a class="chip fut" href="../../player.html?clase=2" target="_top">cap. 2 · Campo eléctrico</a><a class="chip fut" href="../../player.html?clase=3" target="_top">cap. 3 · Potencial</a><a class="chip fut" href="../../player.html?clase=4" target="_top">cap. 4 · Distribuciones</a></div>
+      </div>
+      <div class="card col" style="gap:6px;font-size:13px;line-height:1.45">
+        <b style="font:600 16px var(--e10-font-display)">Bibliografía</b>
+        <span>Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna</i>, vol. 2 (12.ª ed.). Pearson. Capítulo 21 «Carga eléctrica y campo eléctrico», secciones 21.1–21.3, pp. 709–721.</span>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Electro10.Easy · Física Universitaria</span><span class="mono">Diapositiva 13 / 13</span></div>
+  <div class="foot"><span>Toca un hito de la línea de tiempo o gira la tarjeta; tu avance en el glosario se guarda en este navegador</span><span class="mono">13 / 14</span></div>
+</section>
+
+<!-- 14 · CIERRE -->
+<section class="slide" data-n="14">
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 1 · Coulomb</span><span class="tag e">Resumen</span></div>
+  <h2>Lo que debes llevarte</h2>
+  <div class="row">
+    <div class="col" style="flex:1.3">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:17px">
+        <div class="card">Carga cuantizada<br>\(q=\pm Ne,\ \ e=1{,}602\times10^{-19}\ \mathrm C\)</div>
+        <div class="card">Ley de Coulomb<br>\(F=k\dfrac{|q_1q_2|}{r^2}\)</div>
+        <div class="card">Forma vectorial<br>\(\vec F_{1\to2}=k\dfrac{q_1q_2}{r^2}\hat r_{12}\)</div>
+        <div class="card">Superposición<br>\(\vec F=\sum_i\vec F_i\) (por componentes)</div>
+        <div class="card">Eje de dos cargas iguales<br>\(F=\dfrac{2kqq_0y}{(a^2+y^2)^{3/2}},\ y_{\text{máx}}=\dfrac{a}{\sqrt2}\)</div>
+        <div class="card">Balanza de torsión<br>\(\kappa\phi=Fb\), \(\phi\propto1/r^2\)</div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="soft col" style="gap:10px">
+        <b style="font:600 18px var(--e10-font-display)">Para practicar</b>
+        <a class="btn pri" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap01_Taller_Coulomb.pdf" download>Taller (PDF)</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../talleres/Taller_1_Ley_de_Coulomb.html" target="_blank" rel="noopener">El mismo taller en la web, con comprobador</a>
+        <a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="recursos/Cap01_Guia_Coulomb.pdf" download>Guía de estudio (PDF)</a>
+        <button type="button" class="btn no-print" id="btn-print2">Esta clase en PDF</button>
+      </div>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../desafios/desafio.html?m=1" target="_top">Desafío integral del módulo 1</a>
+      <a class="btn no-print" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="../../player.html?clase=2" target="_top">Siguiente capítulo: campo eléctrico →</a>
+    </div>
+  </div>
+  <div class="foot"><span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span><span class="mono">14 / 14</span></div>
 </section>
 
 </div></div>
 
-<!-- Barra inferior de navegación del deck -->
-<nav class="deck-ui" aria-label="Navegación del deck">
-  <button class="btn" id="nav-prev" title="Anterior (←)">←</button>
-  <span class="count" id="nav-count">1 / 13</span>
-  <button class="btn" id="nav-next" title="Siguiente (→)">→</button>
-  <button class="btn" id="nav-fs" title="Pantalla completa">⛶</button>
-  <button class="btn" id="nav-print" title="Imprimir / Guardar como PDF">PDF</button>
+<nav class="deck-ui" aria-label="Navegación de la clase">
+  <button type="button" class="btn" id="nav-prev" aria-label="Anterior">←</button>
+  <span class="count" id="nav-count">1 / 14</span>
+  <button type="button" class="btn" id="nav-next" aria-label="Siguiente">→</button>
+  <button type="button" class="btn" id="nav-fs" aria-label="Pantalla completa">⛶</button>
+  <button type="button" class="btn pri" id="nav-print">Descargar PDF</button>
 </nav>
 
 <script>
 (() => {
+  'use strict';
+  // Constantes de Young y Freedman (2009), sección 21.3, a 4 cifras. Mismos valores que el taller.
+  const K = 8.988e9, QE = 1.602e-19, G0 = 9.80, uC = 1e-6, nC = 1e-9;
   const $ = (id) => document.getElementById(id);
-  const renderMath = (el) => {
-    if (window.renderMathInElement) {
-      renderMathInElement(el, {
-        delimiters: [
-          { left: '\\[', right: '\\]', display: true },
-          { left: '\\(', right: '\\)', display: false }
-        ],
-        throwOnError: false
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const sci = (x, d = 2) => {
+    if (!isFinite(x)) return '—'; if (x === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(x))); let m = x / 10 ** e;
+    if (Math.abs(+m.toFixed(d)) >= 10) { e += 1; m = x / 10 ** e; }
+    const ms = m.toFixed(d).replace('.', ',').replace('-', '−');
+    return e === 0 ? ms : ms + '×10' + String(e).split('').map((c) => SUP[c]).join('');
+  };
+  const dec = (x, d = 1) => x.toFixed(d).replace('.', ',').replace('-', '−');
+  const sg = (x, d = 0) => (x > 0 ? '+' : '') + dec(x, d);
+  const tdec = (x, d = 1) => x.toFixed(d).replace('.', '{,}');
+  const texSci = (x, d = 2) => { if (x === 0) return '0'; let e = Math.floor(Math.log10(Math.abs(x))); if (Math.abs(+(x / 10 ** e).toFixed(d)) >= 10) e += 1; const m = (x / 10 ** e).toFixed(d).replace('.', '{,}'); return e === 0 ? m : `${m}\\times10^{${e}}`; };
+  const fN = (F) => (Math.abs(F) >= 0.01 && Math.abs(F) < 1000 ? dec(F, 3) : sci(F)) + ' N';
+  const renderMath = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/(N|C|cm|m|rad|°|grados)$/i, '').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1'); return s === '' ? NaN : Number(s); };
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setup(cv) {
+    const dpr = window.devicePixelRatio || 1; const w = cv.width, h = cv.height;
+    if (!cv.dataset.w) { cv.dataset.w = w; cv.dataset.h = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.width = w * dpr; cv.height = h * dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: +cv.dataset.w, h: +cv.dataset.h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const hd = Math.min(14, L * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hd * 0.6 * Math.cos(a), y2 - hd * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function charge(ctx, x, y, q, r = 11) {
+    ctx.fillStyle = q === 0 ? col('muted') : col(q > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    if (q === 0) return;
+    ctx.strokeStyle = col('surface'); ctx.lineWidth = Math.max(2, r / 5); ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y); if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke();
+  }
+  const text = (ctx, s, x, y, color, font = "italic 20px 'STIX Two Text', 'Times New Roman', serif") => { ctx.fillStyle = color; ctx.font = font; ctx.fillText(s, x, y); };
+  const SANS = (n, w = 500) => `${w} ${n}px 'IBM Plex Sans', sans-serif`;
+  const dashed = (ctx, x1, y1, x2, y2, color, w = 1.5) => { ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore(); };
+  const bind = (id, fmt, fn) => { const el = $(id), o = $(id + '-o'); const f = () => { if (o) o.textContent = fmt(+el.value); fn(); }; el.addEventListener('input', f); f(); return f; };
+  function reto(p, gen, qid) {
+    let R = null; const qEl = $(qid || p + '-q');
+    function nuevo() { R = gen(); qEl.textContent = R.q; $(p + '-in').value = ''; $(p + '-fb').textContent = ''; $(p + '-sol').classList.remove('show'); $(p + '-sol').innerHTML = R.sol; renderMath($(p + '-sol')); }
+    $(p + '-new').addEventListener('click', nuevo); $(p + '-sb').addEventListener('click', () => $(p + '-sol').classList.toggle('show'));
+    $(p + '-ck').addEventListener('click', () => {
+      const v = parseNum($(p + '-in').value); if (!isFinite(v)) { $(p + '-fb').textContent = `Escribe un número en ${R.unit}.`; return; }
+      const ok = Math.abs(v - R.ans) <= 0.03 * Math.abs(R.ans);
+      $(p + '-fb').innerHTML = ok ? '<b style="color:var(--e10-success)">¡Correcto!</b> Prueba con un reto nuevo.' : `<b style="color:var(--e10-danger)">Aún no.</b> ${R.hint}`;
+    });
+    $(p + '-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $(p + '-ck').click(); });
+    nuevo();
+    (window.__retos = window.__retos || {})[p] = () => R;
+  }
+  function anim(frame) { let raf = null; const loop = (t) => { frame(t); raf = reduced() ? null : requestAnimationFrame(loop); }; return { show() { if (!raf) raf = requestAnimationFrame(loop); }, hide() { if (raf) cancelAnimationFrame(raf); raf = null; }, draw() { frame(performance.now()); } }; }
+  // Fuerza neta sobre la carga i de una lista [{q, x, y}] (SI)
+  function net(qs, i) { let Fx = 0, Fy = 0; const parts = []; qs.forEach((s, j) => { if (j === i) return; const dx = qs[i].x - s.x, dy = qs[i].y - s.y, r = Math.hypot(dx, dy); const f = K * qs[i].q * s.q / (r * r); parts.push({ j, fx: f * dx / r, fy: f * dy / r, r, F: Math.abs(f) }); Fx += f * dx / r; Fy += f * dy / r; }); return { Fx, Fy, F: Math.hypot(Fx, Fy), parts }; }
+
+  const sims = {};
+  // ── 1 · Portada ──
+  sims.cover = anim((t) => {
+    const { ctx, w, h } = setup($('cv-cover')); ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2, d = 110 + 60 * Math.sin(t / 1400), F = 5200 / (d * d) * 60;
+    ctx.save(); ctx.strokeStyle = col('line'); ctx.setLineDash([7, 7]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, cy); ctx.lineTo(w - 20, cy); ctx.stroke(); ctx.restore();
+    const x1 = cx - d, x2 = cx + d;
+    arrow(ctx, x1 + 22, cy, x1 + 22 + F, cy, col('vec-force'), 5); arrow(ctx, x2 - 22, cy, x2 - 22 - F, cy, col('vec-force'), 5);
+    charge(ctx, x1, cy, 1, 22); charge(ctx, x2, cy, -1, 22);
+    text(ctx, 'F ∝ 1/r²', cx - 40, cy - 60, col('vec-force'), SANS(20, 600));
+    text(ctx, `r = ${dec(2 * d / 400, 2)} m`, cx - 46, cy + 70, col('muted'), SANS(15, 500));
+  });
+
+  // ── 2 · Predice ──
+  sims.pre = (() => {
+    const cv = $('cv-pre'); let q2 = 6, voted = false;
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const y = h / 2, xa = 140, xb = 400, q1 = 2, F = K * q1 * Math.abs(q2) * uC * uC / 0.09, L = Math.min(110, F * 70), rep = q2 > 0;
+      dashed(ctx, 40, y, w - 40, y, col('line'));
+      if (voted) { const s = rep ? 1 : -1; arrow(ctx, xa - s * 26, y, xa - s * (26 + L), y, col('vec-force'), 5); arrow(ctx, xb + s * 26, y, xb + s * (26 + L), y, col('vec-force'), 5); }
+      ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = col('q-pos'); ctx.beginPath(); ctx.arc(xa, y, 20, 0, 7); ctx.fill(); ctx.fillStyle = col(q2 > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(xb, y, 20 + Math.abs(q2) * 1.2, 0, 7); ctx.fill(); ctx.restore();
+      charge(ctx, xa, y, 1, 20); charge(ctx, xb, y, q2, 20);
+      text(ctx, 'q₁ = +2,0 µC', xa - 50, y + 60, col('ink'), SANS(15, 600)); text(ctx, `q₂ = ${sg(q2, 1)} µC`, xb - 50, y + 60, col('ink'), SANS(15, 600));
+      text(ctx, '0,30 m', (xa + xb) / 2 - 24, y - 30, col('muted'), SANS(14));
+      if (voted) { $('pre-f1').textContent = fN(F); $('pre-f2').textContent = fN(F); $('pre-t').textContent = rep ? 'repulsión' : 'atracción'; }
+      $('pre-txt').textContent = `q₁ = +2,0 µC y q₂ = ${sg(q2, 1)} µC están a 0,30 m.` + (voted ? '' : ' Vota antes de ver las fuerzas.');
+    }
+    $('pre-s').addEventListener('click', () => { q2 = -q2; draw(); });
+    $('pre-x').addEventListener('click', () => { q2 = Math.abs(q2) >= 18 ? Math.sign(q2) * 2 : q2 * 3; draw(); });
+    $('pre-r').addEventListener('click', () => { q2 = 6; voted = false; document.querySelectorAll('#pre-vote .btn').forEach((x) => x.classList.remove('right', 'wrong')); $('pre-fb').style.visibility = 'hidden'; ['pre-f1', 'pre-f2', 'pre-t'].forEach((i) => { $(i).textContent = '—'; }); draw(); });
+    document.querySelectorAll('#pre-vote .btn').forEach((b) => b.addEventListener('click', () => {
+      if (voted) return; voted = true;
+      document.querySelectorAll('#pre-vote .btn').forEach((x) => { if (x.dataset.v === 'same') x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+      $('pre-fb').style.visibility = 'visible'; draw();
+    }));
+    return { draw };
+  })();
+
+  // ── 3 · Contacto entre esferas ──
+  sims.ca = (() => {
+    const cv = $('cv-ca'); let qa = 6, qb = -2, t0 = null, raf = null, done = false;
+    function frame(t) {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      const p = t0 === null ? 0 : Math.min(1, (t - t0) / 1800), meet = Math.min(1, p * 3), sep = Math.max(0, (p - 0.66) * 3);
+      const gap = 150 * (1 - meet) + 150 * sep, cy = h / 2 - 10, R = 52, xa = w / 2 - R - gap / 2, xb = w / 2 + R + gap / 2;
+      const qf = (qa + qb) / 2, tr = Math.min(1, Math.max(0, (p - 0.33) * 3)), qA = qa + (qf - qa) * tr, qB = qb + (qf - qb) * tr;
+      [[xa, qA, 'A'], [xb, qB, 'B']].forEach(([x, q, n]) => {
+        ctx.fillStyle = col('surface-2'); ctx.strokeStyle = col(q > 0.01 ? 'q-pos' : q < -0.01 ? 'q-neg' : 'muted'); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, cy, R, 0, 7); ctx.fill(); ctx.stroke();
+        const n0 = Math.round(Math.abs(q) * 2); for (let k = 0; k < n0; k++) { const a = k / Math.max(1, n0) * 2 * Math.PI; charge(ctx, x + (R - 12) * Math.cos(a), cy + (R - 12) * Math.sin(a), Math.sign(q), 6); }
+        text(ctx, n, x - 6, cy + 7, col('ink'), SANS(20, 700)); text(ctx, `${sg(q, 1)} µC`, x - 30, cy + R + 28, col('ink'), SANS(15, 600));
       });
+      if (tr > 0 && tr < 1) { const dir = qa > qb ? -1 : 1; for (let k = 0; k < 4; k++) { const f = ((t / 400) + k / 4) % 1; charge(ctx, w / 2 + dir * (f - 0.5) * 60, cy - 20 + k * 13, -1, 5); } text(ctx, 'pasan electrones', w / 2 - 56, 26, col('q-neg'), SANS(14, 600)); }
+      if (p >= 1 && raf) { cancelAnimationFrame(raf); raf = null; done = true; }
+      $('ca-q').textContent = `${sg(qa + qb, 1)} µC`; $('ca-f').textContent = done || tr >= 1 ? `${sg(qf, 1)} µC` : '—';
+      $('ca-n').textContent = done || tr >= 1 ? sci(Math.abs(qa - qf) * uC / QE, 2) + (qa > qf ? ' de B a A' : qa < qf ? ' de A a B' : '') : '—';
     }
-  };
+    function go() { if (raf) cancelAnimationFrame(raf); done = false; t0 = performance.now(); if (reduced()) { t0 = -1e6; frame(0); done = true; frame(0); return; } const loop = (t) => { frame(t); if (raf !== null) raf = requestAnimationFrame(loop); }; raf = requestAnimationFrame(loop); }
+    const reset = () => { if (raf) cancelAnimationFrame(raf); raf = null; t0 = null; done = false; qa = +$('ca-a').value; qb = +$('ca-b').value; frame(0); };
+    bind('ca-a', (v) => `${sg(v)} µC`, reset); bind('ca-b', (v) => `${sg(v)} µC`, reset);
+    $('ca-go').addEventListener('click', go);
+    return { draw: () => frame(performance.now()), hide() { if (raf) cancelAnimationFrame(raf); raf = null; } };
+  })();
 
-  // 1. Manejo del Stage 16:9 responsive
-  const stage = $('stage');
-  const fitStage = () => {
-    const sw = window.innerWidth, sh = window.innerHeight;
-    const s = Math.min(sw / 1280, sh / 720);
-    stage.style.transform = `scale(${s})`;
-  };
-  window.addEventListener('resize', fitStage);
-  fitStage();
+  // ── 4 · F(r) ──
+  sims.co = (() => {
+    function draw() {
+      const r = +$('co-r').value, q1 = 3, q2 = +$('co-q2').value, F = K * q1 * Math.abs(q2) * uC * uC / (r * r);
+      let { ctx, w, h } = setup($('cv-co')); ctx.clearRect(0, 0, w, h);
+      const y = h / 2 + 6, x1 = 60, x2 = 60 + r * 900, L = Math.min(150, 34 * Math.sqrt(F)), rep = q1 * q2 > 0;
+      dashed(ctx, 20, y, w - 20, y, col('line'));
+      if (q2 !== 0) { const s = rep ? 1 : -1; arrow(ctx, x1 - s * 16, y, x1 - s * (16 + L), y, col('vec-force'), 4); arrow(ctx, x2 + s * 16, y, x2 + s * (16 + L), y, col('vec-force'), 4); }
+      charge(ctx, x1, y, 1, 14); charge(ctx, x2, y, q2, 14);
+      text(ctx, `r = ${dec(r, 2)} m`, (x1 + x2) / 2 - 30, y - 26, col('muted'), SANS(14, 600));
+      text(ctx, 'Largo de la flecha ∝ √F (para que quepa)', 14, h - 10, col('muted'), SANS(11));
+      ({ ctx, w, h } = setup($('cv-cog'))); ctx.clearRect(0, 0, w, h);
+      const X = (rr) => 50 + (rr - 0.05) / 0.45 * (w - 70), Fm = K * 3 * 6 * uC * uC / 0.0025, Y = (f) => h - 26 - Math.min(1, f / Fm) * (h - 44);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(50, 12); ctx.lineTo(50, h - 26); ctx.lineTo(w - 14, h - 26); ctx.stroke();
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 2.5; ctx.beginPath(); for (let rr = 0.05; rr <= 0.5001; rr += 0.0025) { const f = K * 3 * Math.abs(q2 || 0.0001) * uC * uC / (rr * rr), px = X(rr), py = Y(f); rr === 0.05 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); } ctx.stroke();
+      ctx.fillStyle = col('accent'); ctx.beginPath(); ctx.arc(X(r), Y(F), 6, 0, 7); ctx.fill();
+      if (2 * r <= 0.5) { ctx.fillStyle = col('muted'); ctx.beginPath(); ctx.arc(X(2 * r), Y(F / 4), 5, 0, 7); ctx.fill(); text(ctx, 'F/4 en 2r', X(2 * r) + 8, Y(F / 4) - 8, col('muted'), SANS(12, 600)); }
+      text(ctx, 'F', 30, 22, col('ink'), SANS(13, 600)); text(ctx, 'r (m)', w - 50, h - 8, col('ink'), SANS(12, 600));
+      [0.1, 0.2, 0.3, 0.4, 0.5].forEach((v) => text(ctx, dec(v, 1), X(v) - 10, h - 10, col('muted'), SANS(11)));
+      $('co-f').textContent = q2 ? fN(F) : '0 N'; $('co-f2').textContent = q2 ? fN(F / 4) : '0 N'; $('co-t').textContent = q2 === 0 ? 'sin fuerza' : rep ? 'repulsión' : 'atracción';
+    }
+    bind('co-r', (v) => dec(v, 2) + ' m', draw); bind('co-q2', (v) => sg(v) + ' µC', draw);
+    return { draw };
+  })();
 
-  // 2. Navegación del Deck
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const total = slides.length;
-  let cur = 1;
-
-  const showSlide = (n) => {
-    if (n < 1) n = 1;
-    if (n > total) n = total;
-    cur = n;
-    slides.forEach((sl, idx) => {
-      sl.classList.toggle('on', idx + 1 === cur);
+  // ── 5 · Superposición en el plano ──
+  sims.su = (() => {
+    const cv = $('cv-su'), S = 500, O = { x: 90, y: 225 }, FS = 120; let drag = null;
+    const DEF = () => [{ q: 2 * uC, x: 0, y: 0.30 }, { q: -3 * uC, x: 0.40, y: 0.30 }, { q: 4 * uC, x: 0, y: 0 }];
+    let qs = DEF();
+    const P = (c) => ({ x: O.x + c.x * S, y: O.y - c.y * S });
+    function draw() {
+      const { ctx, w, h } = setup(cv); ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(10, O.y); ctx.lineTo(w - 10, O.y); ctx.moveTo(O.x, h - 6); ctx.lineTo(O.x, 6); ctx.stroke();
+      text(ctx, 'x', w - 22, O.y - 8, col('muted'), SANS(13)); text(ctx, 'y', O.x + 8, 18, col('muted'), SANS(13));
+      const n = net(qs, 2), p3 = P(qs[2]);
+      qs.slice(0, 2).forEach((c) => { const p = P(c); dashed(ctx, p.x, p.y, p3.x, p3.y, col('line')); });
+      n.parts.forEach((pt) => { arrow(ctx, p3.x, p3.y, p3.x + pt.fx * FS, p3.y - pt.fy * FS, col('vec-force'), 3.5); text(ctx, `F${pt.j + 1}3`, p3.x + pt.fx * FS + 6, p3.y - pt.fy * FS + (pt.fy > 0 ? -6 : 16), col('accent-strong'), SANS(13, 600)); });
+      arrow(ctx, p3.x, p3.y, p3.x + n.Fx * FS, p3.y - n.Fy * FS, col('primary'), 5); text(ctx, 'F neta', p3.x + n.Fx * FS + 8, p3.y - n.Fy * FS + 4, col('primary'), SANS(13, 700));
+      qs.forEach((c, i) => { const p = P(c); charge(ctx, p.x, p.y, c.q, 13); text(ctx, `q${i + 1}`, p.x + 15, p.y - 12, col('ink'), SANS(13, 600)); });
+      text(ctx, 'Arrastra q₁ o q₂', w - 120, h - 12, col('muted'), SANS(12));
+      $('su-f').textContent = fN(n.F); $('su-a').textContent = dec(Math.atan2(n.Fy, n.Fx) * 180 / Math.PI, 1) + '°'; $('su-m').textContent = fN(n.parts.reduce((s, p) => s + p.F, 0));
+      $('su-live').innerHTML = `Con tu montaje actual: ` + n.parts.map((p) => `F${p.j + 1}3 = ${fN(p.F)} (${qs[p.j].q * qs[2].q > 0 ? 'repulsión' : 'atracción'})`).join(' · ');
+    }
+    const pos = (e) => { const r = cv.getBoundingClientRect(), sx = +cv.dataset.w / r.width; return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sx }; };
+    cv.addEventListener('pointerdown', (e) => { const m = pos(e); [0, 1].forEach((i) => { const p = P(qs[i]); if (Math.hypot(p.x - m.x, p.y - m.y) < 22) drag = i; }); if (drag !== null) cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener('pointermove', (e) => { if (drag === null) return; const m = pos(e); let x = Math.round((m.x - O.x) / S / 0.05) * 0.05, y = Math.round((O.y - m.y) / S / 0.05) * 0.05; x = Math.max(-0.15, Math.min(0.65, x)); y = Math.max(-0.1, Math.min(0.5, y)); if (Math.hypot(x, y) < 0.09) return; qs[drag].x = x; qs[drag].y = y; draw(); });
+    cv.addEventListener('pointerup', () => { drag = null; });
+    $('su-s').addEventListener('click', () => { qs[1].q = -qs[1].q; draw(); });
+    $('su-0').addEventListener('click', () => { qs = DEF(); draw(); });
+    reto('su', () => {
+      const q1 = pick([1, 2, 3, -2]) , q2 = pick([-4, -3, -2, 2, 3]), y1 = pick([0.2, 0.3, 0.4]), x2 = pick([0.3, 0.4, 0.6]), y2 = pick([0, 0.3, 0.4]);
+      const n = net([{ q: q1 * uC, x: 0, y: y1 }, { q: q2 * uC, x: x2, y: y2 }, { q: 4 * uC, x: 0, y: 0 }], 2);
+      return { q: `q₃ = +4,0 µC está en el origen; q₁ = ${sg(q1, 1)} µC en (0; ${dec(y1, 2)}) m y q₂ = ${sg(q2, 1)} µC en (${dec(x2, 2)}; ${dec(y2, 2)}) m. ¿Cuánto vale la fuerza neta sobre q₃?`, ans: n.F, unit: 'newtons', hint: 'Calcula cada fuerza, decide su sentido (atracción hacia la fuente, repulsión lejos de ella), descompón en x e y y suma por componentes.',
+        sol: n.parts.map((p) => `\\(\\vec F_{${p.j + 1}3}=(${tdec(p.fx, 3)};\\ ${tdec(p.fy, 3)})\\) N`).join('; ') + `. Suma: \\((${tdec(n.Fx, 3)};\\ ${tdec(n.Fy, 3)})\\) N, \\(F=${tdec(n.F, 3)}\\) N.` };
     });
-    $('nav-count').textContent = `${cur} / ${total}`;
-    $('progress').style.width = `${(cur / total) * 100}%`;
-    location.hash = `#${cur}`;
+    return { draw };
+  })();
 
-    const activeSlide = slides[cur - 1];
-    renderMath(activeSlide);
-  };
-
-  $('nav-prev').addEventListener('click', () => showSlide(cur - 1));
-  $('nav-next').addEventListener('click', () => showSlide(cur + 1));
-  $('btn-start').addEventListener('click', () => showSlide(2));
-  $('btn-to-lab').addEventListener('click', () => showSlide(10));
-
-  window.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-      e.preventDefault();
-      showSlide(cur + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      e.preventDefault();
-      showSlide(cur - 1);
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      showSlide(1);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      showSlide(total);
+  // ── 6 · Eje de simetría ──
+  sims.ej = (() => {
+    const a = 0.15, q = 4 * uC, q0 = 1 * uC, Fy = (y) => 2 * K * q * q0 * y / (a * a + y * y) ** 1.5, ym = a / Math.SQRT2, Fm = Fy(ym);
+    function draw() {
+      const y = +$('ej-y').value; let { ctx, w, h } = setup($('cv-ej')); ctx.clearRect(0, 0, w, h);
+      const S = 260, ox = w / 2, oy = h - 22, X = (x) => ox + x * S, Y = (yy) => oy - yy * S * 0.42;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(10, oy); ctx.lineTo(w - 10, oy); ctx.moveTo(ox, h - 4); ctx.lineTo(ox, 6); ctx.stroke();
+      const py = Y(y), F1 = K * q * q0 / (a * a + y * y), r = Math.hypot(a, y), sc = 55;
+      dashed(ctx, X(-a), oy, ox, py, col('line')); dashed(ctx, X(a), oy, ox, py, col('line'));
+      [-1, 1].forEach((s) => { const ux = -s * a / r, uy = y / r; arrow(ctx, ox, py, ox + ux * F1 * sc, py - uy * F1 * sc * 0.42 * 2.4, col('vec-force'), 2.5); });
+      arrow(ctx, ox, py, ox, py - Fy(y) * sc, col('primary'), 4.5);
+      charge(ctx, X(-a), oy, 1, 12); charge(ctx, X(a), oy, 1, 12); charge(ctx, ox, py, 1, 9);
+      text(ctx, '−a', X(-a) - 10, oy + 18, col('muted'), SANS(12)); text(ctx, '+a', X(a) - 8, oy + 18, col('muted'), SANS(12)); text(ctx, 'q₀', ox + 12, py + 5, col('ink'), SANS(13, 600));
+      text(ctx, 'Escala vertical comprimida', 10, 16, col('muted'), SANS(11));
+      ({ ctx, w, h } = setup($('cv-ejg'))); ctx.clearRect(0, 0, w, h);
+      const GX = (yy) => 40 + yy / 0.6 * (w - 56), GY = (f) => h - 22 - f / (Fm * 1.15) * (h - 36);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(40, 8); ctx.lineTo(40, h - 22); ctx.lineTo(w - 10, h - 22); ctx.stroke();
+      ctx.save(); ctx.strokeStyle = col('muted'); ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); let st = false; for (let yy = 0.12; yy <= 0.6; yy += 0.005) { const f = K * 2 * q * q0 / (yy * yy); if (f > Fm * 1.15) continue; st ? ctx.lineTo(GX(yy), GY(f)) : ctx.moveTo(GX(yy), GY(f)); st = true; } ctx.stroke(); ctx.restore();
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 2.5; ctx.beginPath(); for (let yy = 0; yy <= 0.6; yy += 0.003) { yy === 0 ? ctx.moveTo(GX(yy), GY(Fy(yy))) : ctx.lineTo(GX(yy), GY(Fy(yy))); } ctx.stroke();
+      dashed(ctx, GX(ym), GY(Fm), GX(ym), h - 22, col('accent'));
+      text(ctx, 'a/√2', GX(ym) - 12, h - 6, col('accent-strong'), SANS(11, 600));
+      ctx.fillStyle = col('accent'); ctx.beginPath(); ctx.arc(GX(y), GY(Fy(y)), 5.5, 0, 7); ctx.fill();
+      text(ctx, 'F (N)', 4, 16, col('ink'), SANS(11, 600)); text(ctx, 'y (m)', w - 44, h - 6, col('ink'), SANS(11, 600));
+      $('ej-f').textContent = fN(Fy(y)); $('ej-m').textContent = `${fN(Fm)} en ${dec(ym, 3)} m`; $('ej-a').textContent = y > 0 ? fN(K * 2 * q * q0 / (y * y)) : '∞';
     }
+    bind('ej-y', (v) => dec(v, 3) + ' m', draw);
+    reto('ej', () => {
+      const aa = pick([0.10, 0.12, 0.20, 0.25, 0.30]), qq = pick([2, 3, 5, 6]), q00 = pick([0.5, 1, 2]), Fmx = 4 / (3 * Math.sqrt(3)) * K * qq * q00 * uC * uC / (aa * aa);
+      return { q: `Dos cargas de +${dec(qq, 1)} µC están en (±${dec(aa, 2)} m; 0). ¿Cuánto vale la fuerza máxima sobre una carga de +${dec(q00, 1)} µC que se mueve por el eje y?`, ans: Fmx, unit: 'newtons', hint: 'La fuerza es máxima en y = a/√2; ahí F = (4/(3√3)) k q q₀ / a².',
+        sol: `\\(y_{\\text{máx}}=a/\\sqrt2=${tdec(aa / Math.SQRT2, 3)}\\) m; \\(F_{\\text{máx}}=\\dfrac{4}{3\\sqrt3}\\dfrac{(8{,}988\\times10^9)(${tdec(qq, 1)}\\times10^{-6})(${tdec(q00, 1)}\\times10^{-6})}{(${tdec(aa, 2)})^2}=${tdec(Fmx, 3)}\\) N.` };
+    });
+    return { draw };
+  })();
+
+  // ── 7 · Péndulos ──
+  sims.pe = (() => {
+    const m = 5e-3, L = 1.2;
+    const exact = (q) => { if (q <= 0) return 0; const f = (t) => Math.tan(t) - K * q * q / (m * G0 * (2 * L * Math.sin(t)) ** 2); let lo = 1e-5, hi = 1.5; for (let i = 0; i < 70; i++) { const c = (lo + hi) / 2; if (f(lo) * f(c) <= 0) hi = c; else lo = c; } return (lo + hi) / 2; };
+    function draw() {
+      const q = +$('pe-q').value * uC, th = exact(q), d = 2 * L * Math.sin(th), da = q > 0 ? (2 * K * q * q * L / (m * G0)) ** (1 / 3) : 0;
+      const { ctx, w, h } = setup($('cv-pe')); ctx.clearRect(0, 0, w, h);
+      const S = 230, px = w / 2, py = 22;
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(px - 70, py); ctx.lineTo(px + 70, py); ctx.stroke();
+      dashed(ctx, px, py, px, py + L * S + 20, col('line'));
+      [-1, 1].forEach((s) => { const bx = px + s * L * S * Math.sin(th), by = py + L * S * Math.cos(th); ctx.strokeStyle = col('muted'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); charge(ctx, bx, by, q > 0 ? 1 : 0, 11);
+        if (s > 0 && q > 0) { const Fe = K * q * q / (d * d), sc = 2400; arrow(ctx, bx, by, bx + Fe * sc, by, col('vec-force'), 3); arrow(ctx, bx, by, bx, by + m * G0 * sc, col('ink'), 3); const T = m * G0 / Math.cos(th); arrow(ctx, bx, by, bx - T * Math.sin(th) * sc, by - T * Math.cos(th) * sc, col('muted'), 3);
+          text(ctx, 'Fₑ', bx + Fe * sc + 4, by + 5, col('accent-strong'), SANS(13, 600)); text(ctx, 'mg', bx + 6, by + m * G0 * sc + 4, col('ink'), SANS(13, 600)); text(ctx, 'T', bx - T * Math.sin(th) * sc - 16, by - T * Math.cos(th) * sc, col('muted'), SANS(13, 600)); } });
+      text(ctx, 'Dibujo a escala; m = 5,0 g, L = 1,20 m', 12, h - 10, col('muted'), SANS(12));
+      $('pe-d').textContent = dec(d, 3) + ' m'; $('pe-da').textContent = dec(da, 3) + ' m'; $('pe-t').textContent = dec(th * 180 / Math.PI, 2) + '°';
+    }
+    bind('pe-q', (v) => dec(v, 2) + ' µC', draw);
+    reto('pe', () => {
+      const mm = pick([2, 4, 5, 8]) * 1e-3, LL = pick([0.5, 0.8, 1.0, 1.5]), qq = pick([0.05, 0.10, 0.15, 0.20]) * uC, d = (2 * K * qq * qq * LL / (mm * G0)) ** (1 / 3);
+      return { q: `Dos esferas iguales de ${dec(mm * 1e3, 1)} g y ${dec(qq / uC, 2)} µC cuelgan de hilos de ${dec(LL, 2)} m. Con ángulo pequeño, ¿a qué distancia quedan?`, ans: d * 100, unit: 'centímetros', hint: 'd = (2 k q² L / (m g))^(1/3), con m en kg; al final pasa a centímetros.',
+        sol: `\\(d=\\left(\\dfrac{2(8{,}988\\times10^9)(${texSci(qq)})^2(${tdec(LL, 2)})}{(${texSci(mm)})(9{,}80)}\\right)^{1/3}=${tdec(d, 4)}\\) m \\(=${tdec(d * 100, 2)}\\) cm.` };
+    }, 'pe-qq');
+    return { draw };
+  })();
+
+  // ── 8 · Balanza de torsión ──
+  sims.ba = (() => {
+    const kap = 1e-6, b = 0.05;
+    const phi = (q, r) => K * q * q * b / (kap * r * r);
+    function draw() {
+      const r = +$('ba-r').value / 100, q = +$('ba-q').value * nC, F = K * q * q / (r * r), ph = phi(q, r);
+      const { ctx, w, h } = setup($('cv-ba')); ctx.clearRect(0, 0, w, h);
+      const cx = 200, cy = 140, S = 2200, arm = b * S, ang = Math.min(ph, Math.PI / 2);
+      ctx.strokeStyle = col('line'); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, arm + 26, -0.2, Math.PI / 2 + 0.2); ctx.stroke();
+      for (let d = 0; d <= 90; d += 10) { const a = d * Math.PI / 180; ctx.beginPath(); ctx.moveTo(cx + (arm + 20) * Math.cos(a), cy + (arm + 20) * Math.sin(a)); ctx.lineTo(cx + (arm + 30) * Math.cos(a), cy + (arm + 30) * Math.sin(a)); ctx.stroke(); }
+      dashed(ctx, cx, cy, cx + arm + 40, cy, col('line'));
+      const ex = cx + arm * Math.cos(ang), ey = cy + arm * Math.sin(ang);
+      ctx.strokeStyle = col('ink'); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx - arm * Math.cos(ang), cy - arm * Math.sin(ang)); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.fillStyle = col('muted'); ctx.beginPath(); ctx.arc(cx - arm * Math.cos(ang), cy - arm * Math.sin(ang), 9, 0, 7); ctx.fill();
+      ctx.fillStyle = col('line'); ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 7); ctx.fill();
+      const fx = cx + arm, fy = cy - r * S; charge(ctx, fx, fy, 1, 11); text(ctx, 'esfera fija', fx + 16, fy + 5, col('q-pos'), SANS(13, 600));
+      charge(ctx, ex, ey, 1, 11); arrow(ctx, ex, ey, ex, ey + Math.min(80, 14 + F * 1.2e7), col('vec-force'), 3.5);
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 46, 0, ang); ctx.stroke(); text(ctx, 'φ', cx + 52, cy + 22, col('primary'), SANS(15, 700));
+      text(ctx, 'Vista desde arriba · hilo de torsión en el centro', 12, h - 12, col('muted'), SANS(12));
+      if (ph > 0.35) text(ctx, 'Giro grande: el modelo de ángulo pequeño ya no es fiable', 12, 22, col('danger'), SANS(13, 600));
+      $('ba-f').textContent = sci(F, 2) + ' N'; $('ba-p').textContent = `${dec(ph, 3)} rad = ${dec(ph * 180 / Math.PI, 1)}°`; $('ba-p2').textContent = `${dec(ph * 180 / Math.PI / 4, 2)}° (÷ 4)`;
+    }
+    bind('ba-r', (v) => dec(v, 1) + ' cm', draw); bind('ba-q', (v) => dec(v, 2) + ' nC', draw);
+    $('ba-2r').addEventListener('click', () => { const e = $('ba-r'); e.value = Math.min(12, +e.value * 2); e.dispatchEvent(new Event('input')); });
+    $('ba-half').addEventListener('click', () => { const e = $('ba-q'); e.value = Math.max(0.25, +e.value / 2); e.dispatchEvent(new Event('input')); });
+    return { draw };
+  })();
+
+  // ── Errores: tarjetas ──
+  document.querySelectorAll('.flip').forEach((c) => { const t = () => c.classList.toggle('open'); c.addEventListener('click', t); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); });
+
+  // ── Deducciones en pasos y «dos caminos» ──
+  document.querySelectorAll('[data-stp]').forEach((box) => {
+    const ps = [...box.querySelectorAll('.stp-p')], nav = box.querySelector('.stp-nav'), cnt = box.querySelector('.stp-count'); let k = 0;
+    ps.forEach((p, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<b>${i + 1}</b>${p.dataset.t}`; b.addEventListener('click', () => show(i)); nav.appendChild(b); });
+    const bs = [...nav.children];
+    function show(i) { k = Math.max(0, Math.min(ps.length - 1, i)); ps.forEach((p, j) => p.classList.toggle('on', j === k)); bs.forEach((b, j) => { b.classList.toggle('on', j === k); if (j === k) b.classList.add('seen'); }); cnt.textContent = `paso ${k + 1} de ${ps.length}`; box.querySelector('[data-stp-prev]').disabled = k === 0; box.querySelector('[data-stp-next]').disabled = k === ps.length - 1; }
+    box.querySelector('[data-stp-prev]').addEventListener('click', () => show(k - 1)); box.querySelector('[data-stp-next]').addEventListener('click', () => show(k + 1));
+    show(0); box.__show = show;
   });
+  document.querySelectorAll('[data-path]').forEach((b) => b.addEventListener('click', () => {
+    const [g] = b.dataset.path.split(':');
+    document.querySelectorAll(`[data-path^="${g}:"]`).forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll(`[data-pathbox^="${g}:"]`).forEach((x) => { x.hidden = x.dataset.pathbox !== b.dataset.path; });
+  }));
 
-  $('nav-fs').addEventListener('click', () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  });
+  const katexTo = (el, tex) => { if (window.katex) katex.render(tex, el, { throwOnError: false, displayMode: true }); else el.textContent = tex; };
+  const LAB = '../../simuladores/Coulomb.html';
 
-  const printDeck = () => { window.print(); };
-  $('nav-print').addEventListener('click', printDeck);
-  $('btn-print2').addEventListener('click', printDeck);
-
-  // 3. Simulación Canvas de Cargas (Slide 4)
-  const cv = $('cv-coulomb');
-  if (cv) {
-    const ctx = cv.getContext('2d');
-    let q1 = 4, q2 = -3;
-    let p1 = { x: 230, y: 195 }, p2 = { x: 470, y: 195 };
-    let drag = null;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, cv.width, cv.height);
-      const dx = p2.x - p1.x, dy = p2.y - p1.y;
-      const dpx = Math.hypot(dx, dy);
-      const rM = Math.max(0.05, (dpx / 700) * 0.8);
-      const k = 8.99e9;
-      const F = (k * Math.abs(q1 * 1e-6 * q2 * 1e-6)) / (rM * rM);
-      const isRepulsive = (q1 * q2) > 0;
-
-      // Línea de acción
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Vectores de fuerza
-      const angle = Math.atan2(dy, dx);
-      const fLen = Math.min(100, Math.max(20, Math.sqrt(F) * 35));
-      const dir1 = isRepulsive ? angle + Math.PI : angle;
-      const dir2 = isRepulsive ? angle : angle + Math.PI;
-
-      // Flecha sobre q1
-      ctx.strokeStyle = '#b3246b';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p1.x + Math.cos(dir1) * fLen, p1.y + Math.sin(dir1) * fLen);
-      ctx.stroke();
-
-      // Flecha sobre q2
-      ctx.beginPath();
-      ctx.moveTo(p2.x, p2.y);
-      ctx.lineTo(p2.x + Math.cos(dir2) * fLen, p2.y + Math.sin(dir2) * fLen);
-      ctx.stroke();
-
-      // Carga 1
-      ctx.fillStyle = q1 >= 0 ? '#b3246b' : '#0b8ca8';
-      ctx.beginPath();
-      ctx.arc(p1.x, p1.y, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(`q1: ${q1 > 0 ? '+' : ''}${q1}`, p1.x, p1.y);
-
-      // Carga 2
-      ctx.fillStyle = q2 >= 0 ? '#b3246b' : '#0b8ca8';
-      ctx.beginPath();
-      ctx.arc(p2.x, p2.y, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.fillText(`q2: ${q2 > 0 ? '+' : ''}${q2}`, p2.x, p2.y);
-
-      // Actualizar lecturas
-      $('c-r').textContent = `${rM.toFixed(2)} m`;
-      $('c-f').textContent = `${F.toFixed(2)} N`;
-      $('c-tipo').textContent = isRepulsive ? 'Repulsión' : 'Atracción';
-      $('c-tipo').style.color = isRepulsive ? '#d97706' : '#b3246b';
+  // ── 10 · Árbol de decisión ──
+  sims.tree = (() => {
+    const Q1 = [['dos', 'Dos cargas puntuales'], ['recta', 'Varias cargas en una recta'], ['plano', 'Varias cargas en un plano'], ['equi', 'Cargas y otras fuerzas (equilibrio)']];
+    const Q2 = {
+      dos: [['F', 'El módulo de la fuerza'], ['vec', 'La fuerza como vector'], ['grav', 'Compararla con la gravedad'], ['N', 'Cuántos electrones hay']],
+      recta: [['neta1', 'La fuerza neta sobre una'], ['eq', 'Dónde la fuerza es nula']],
+      plano: [['neta2', 'La fuerza neta por componentes'], ['eje', 'La fuerza sobre un eje de simetría']],
+      equi: [['pen', 'Dos esferas colgadas'], ['tor', 'Una balanza de torsión']],
     };
-
-    $('c-q1').addEventListener('input', (e) => {
-      q1 = parseFloat(e.target.value);
-      $('c-q1-o').textContent = `${q1 > 0 ? '+' : ''}${q1} μC`;
-      draw();
-    });
-    $('c-q2').addEventListener('input', (e) => {
-      q2 = parseFloat(e.target.value);
-      $('c-q2-o').textContent = `${q2 > 0 ? '+' : ''}${q2} μC`;
-      draw();
-    });
-
-    const getPos = (e) => {
-      const r = cv.getBoundingClientRect();
-      const scaleX = cv.width / r.width;
-      const scaleY = cv.height / r.height;
-      return { x: (e.clientX - r.left) * scaleX, y: (e.clientY - r.top) * scaleY };
+    // Las respuestas de los retos se calculan con la misma fórmula que se muestra.
+    const L = {
+      F: { name: 'Ley de Coulomb', tex: String.raw`F=k\dfrac{|q_1q_2|}{r^2}`, when: 'Cargas puntuales en reposo; r en metros.', dir: 'Sobre la recta que las une: repulsión si los signos son iguales.', reto: '+1,0 µC y +1,0 µC a 1,0 m. ¿F en N?', ans: K * uC * uC },
+      vec: { name: 'Forma vectorial', tex: String.raw`\vec F_{1\to2}=k\dfrac{q_1q_2}{r^2}\,\hat r_{12}`, when: 'r̂₁₂ va de q₁ hacia q₂; el signo de q₁q₂ da el sentido.', dir: 'q₁q₂ > 0: a lo largo de r̂₁₂ (repulsión).', reto: '+5,0 nC en el origen y −2,0 nC en x = 3,0 cm. ¿Componente x de la fuerza sobre la segunda, en N?', ans: -K * 5 * 2 * nC * nC / 0.03 ** 2 },
+      grav: { name: 'Eléctrica / gravitatoria', tex: String.raw`\dfrac{F_e}{F_g}=\dfrac{k\,q_1q_2}{G\,m_1m_2}`, when: 'La distancia se cancela: vale a cualquier r.', dir: 'La gravedad siempre atrae.', reto: 'Dos protones (m = 1,673×10⁻²⁷ kg, G = 6,674×10⁻¹¹). ¿Cociente Fe/Fg?', ans: K * QE * QE / (6.674e-11 * 1.673e-27 ** 2) },
+      N: { name: 'Cuantización', tex: String.raw`N=\dfrac{|q|}{e}`, when: 'Siempre: toda carga es un múltiplo entero de e.', dir: 'q < 0: electrones de más; q > 0: de menos.', reto: '¿Cuántos electrones de más hay en −3,2 µC?', ans: 3.2 * uC / QE },
+      neta1: { name: 'Superposición en una recta', tex: String.raw`F_x=\sum_i k\dfrac{q_iq_0}{r_{i0}^2}\,(\pm1)`, when: 'Todas las cargas sobre un eje; cada signo según el lado.', dir: 'Repulsión: alejándose de la fuente.', reto: '+2,0 µC en x = 0 y +2,0 µC en x = 0,40 m. ¿F sobre 1,0 µC en x = 0,20 m, en N?', ans: 0 },
+      eq: { name: 'Punto de equilibrio', tex: String.raw`\dfrac{|q_1|}{x^2}=\dfrac{|q_2|}{(L-x)^2}`, when: 'Entre las cargas si tienen el mismo signo; fuera, del lado de la menor, si no.', dir: 'Comprueba que las fuerzas son opuestas.', reto: '+2,0 µC en x = 0 y +8,0 µC en x = 0,60 m. ¿x del equilibrio, en m?', ans: 0.2 },
+      neta2: { name: 'Superposición por componentes', tex: String.raw`\vec F=\sum_i k\,q_iq_0\,\dfrac{\vec r_0-\vec r_i}{|\vec r_0-\vec r_i|^3}`, when: 'Cualquier arreglo de cargas puntuales.', dir: 'Suma x con x, y con y; nunca los módulos.', reto: 'Tres cargas de +1,0 µC en un triángulo equilátero de 0,10 m. ¿F sobre una, en N?', ans: Math.sqrt(3) * K * uC * uC / 0.01, lab: LAB },
+      eje: { name: 'Eje de dos cargas iguales', tex: String.raw`F=\dfrac{2kqq_0\,y}{(a^2+y^2)^{3/2}}`, when: 'Cargas iguales en (±a, 0); máxima en y = a/√2.', dir: 'A lo largo del eje y.', reto: 'a = 20 cm. ¿y de la fuerza máxima, en m?', ans: 0.2 / Math.SQRT2 },
+      pen: { name: 'Péndulos cargados', tex: String.raw`\tan\theta=\dfrac{kq^2}{mg\,d^2},\quad d\approx\left(\dfrac{2kq^2L}{mg}\right)^{1/3}`, when: 'La aproximación vale para ángulos pequeños.', dir: 'Fₑ horizontal, mg hacia abajo, T por el hilo.', reto: 'm = 5,0 g, q = 0,25 µC, L = 1,20 m. ¿d con ángulo pequeño, en m?', ans: (2 * K * (0.25 * uC) ** 2 * 1.2 / (5e-3 * G0)) ** (1 / 3) },
+      tor: { name: 'Balanza de torsión', tex: String.raw`\kappa\,\phi=F\,b`, when: 'Giro pequeño (r casi constante).', dir: 'El brazo gira hasta que el hilo equilibra el torque.', reto: 'κ = 1,0×10⁻⁶ N·m/rad, b = 5,0 cm, q = 1,0 nC en cada esfera, r = 5,0 cm. ¿φ en rad?', ans: K * nC * nC / 0.0025 * 0.05 / 1e-6 },
     };
-
-    cv.addEventListener('pointerdown', (e) => {
-      const p = getPos(e);
-      if (Math.hypot(p.x - p1.x, p.y - p1.y) < 25) drag = 'p1';
-      else if (Math.hypot(p.x - p2.x, p.y - p2.y) < 25) drag = 'p2';
-    });
-    window.addEventListener('pointermove', (e) => {
-      if (!drag) return;
-      const p = getPos(e);
-      if (drag === 'p1') { p1.x = Math.max(30, Math.min(670, p.x)); p1.y = Math.max(30, Math.min(360, p.y)); }
-      else if (drag === 'p2') { p2.x = Math.max(30, Math.min(670, p.x)); p2.y = Math.max(30, Math.min(360, p.y)); }
-      draw();
-    });
-    window.addEventListener('pointerup', () => { drag = null; });
-    draw();
-  }
-
-  // 4. Árbol de Decisión (Slide 9)
-  const treeConfig = {
-    two: {
-      sym: {
-        name: 'Ley de Coulomb Directa (Simétrica)',
-        eq: '\\[\\vec{F}_{12} = \\frac{1}{4\\pi\\epsilon_0}\\frac{q_1 q_2}{r^2}\\hat{r}_{12}\\]',
-        p1: '1. Ambas cargas experimentan fuerzas de igual magnitud y sentido opuesto.',
-        p2: '2. Aplica la tercera ley de Newton: \\(\\vec{F}_{21} = -\\vec{F}_{12}\\).',
-        p3: '3. En el punto medio, una carga de prueba experimenta fuerza resultante nula.'
-      },
-      nosym: {
-        name: 'Ley de Coulomb General 2D / 3D',
-        eq: '\\[\\vec{F}_{12} = \\frac{q_1 q_2}{4\\pi\\epsilon_0}\\frac{\\vec{r}_2 - \\vec{r}_1}{|\\vec{r}_2 - \\vec{r}_1|^3}\\]',
-        p1: '1. Escribe los vectores de posición de ambas cargas en coordenadas cartesianas.',
-        p2: '2. Obtén el vector desplazamiento relativo \\(\\vec{r}_{12} = \\vec{r}_2 - \\vec{r}_1\\).',
-        p3: '3. Divide por el cubo del módulo de la distancia euclídea.'
-      }
-    },
-    multi: {
-      sym: {
-        name: 'Superposición con Cancelación por Simetría',
-        eq: '\\[F_{\\text{net},y} = \\sum F_i \\sin\\theta_i, \\quad F_{\\text{net},x} = 0\\]',
-        p1: '1. Identifica qué componentes vectoriales se anulan de forma idéntica por simetría.',
-        p2: '2. Suma únicamente las componentes colineales supervivientes.',
-        p3: '3. Evalúa los límites asintóticos en el origen y a distancias lejanas.'
-      },
-      nosym: {
-        name: 'Superposición Vectorial General (Fuerza Neta)',
-        eq: '\\[\\vec{F}_{\\text{net}} = \\sum_{i=1}^N \\vec{F}_{i0}\\]',
-        p1: '1. Descompón cada fuerza individual en sus componentes cartesianas \\(F_x\\) y \\(F_y\\).',
-        p2: '2. Suma algebraicamente todas las componentes \\(F_x\\) y todas las componentes \\(F_y\\).',
-        p3: '3. Calcula el módulo con Pitágoras y el ángulo con arcotangente.'
-      }
-    },
-    cont: {
-      sym: {
-        name: 'Integración de Carga Continua (Paso al Capítulo 4)',
-        eq: '\\[d\\vec{F} = \\frac{q_0 dq}{4\\pi\\epsilon_0 r^2}\\hat{r} \\implies \\vec{F} = \\int d\\vec{F}\\]',
-        p1: '1. La ley de Coulomb puntual no se puede aplicar directamente; requiere integración.',
-        p2: '2. Define la densidad de carga (\\(\\lambda, \\sigma, \\rho\\)) y el diferencial \\(dq\\).',
-        p3: '3. Resuelve por los dos caminos analíticos detallados en el Capítulo 4.'
-      },
-      nosym: {
-        name: 'Integración Numérica Multidimensional',
-        eq: '\\[\\vec{F} = \\frac{q_0}{4\\pi\\epsilon_0} \\iiint \\frac{\\rho(\\vec{r}\')(\\vec{r} - \\vec{r}\')}{|\\vec{r} - \\vec{r}\'|^3} dV\'\\]',
-        p1: '1. Sin simetría analítica, la integral vectorial no tiene primitiva elemental.',
-        p2: '2. Se resuelve mediante cuadratura de Gauss o métodos numéricos de elementos finitos.',
-        p3: '3. Explora la simulación en el Módulo 4 de la plataforma.'
-      }
+    let a = 'dos', b = 'F', fails = 0;
+    const opts = (box, list, val, pickF) => { box.innerHTML = ''; list.forEach(([id, label]) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'opt' + (id === val ? ' on' : ''); el.textContent = label; el.addEventListener('click', () => pickF(id)); box.appendChild(el); }); };
+    function draw() {
+      opts($('tq1'), Q1, a, (id) => { a = id; b = Q2[id][0][0]; reset(); });
+      opts($('tq2'), Q2[a], b, (id) => { b = id; reset(); });
+      const leaf = L[b];
+      $('leaf-name').textContent = leaf.name; katexTo($('leaf-eq'), leaf.tex);
+      $('leaf-when').textContent = leaf.when; $('leaf-dir').textContent = leaf.dir; $('leaf-reto').textContent = leaf.reto;
+      $('leaf-lab').href = leaf.lab || LAB;
     }
-  };
-
-  let tq1Val = 'two', tq2Val = 'sym';
-  const updateTree = () => {
-    const data = treeConfig[tq1Val][tq2Val];
-    $('leaf-name').textContent = data.name;
-    $('leaf-eq').innerHTML = data.eq;
-    $('leaf-p1').textContent = data.p1;
-    $('leaf-p2').textContent = data.p2;
-    $('leaf-p3').textContent = data.p3;
-    renderMath($('leaf-eq'));
-  };
-
-  document.querySelectorAll('#tq1 .opt').forEach((b) => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#tq1 .opt').forEach((x) => x.classList.remove('on'));
-      b.classList.add('on');
-      tq1Val = b.dataset.val;
-      updateTree();
+    function reset() { fails = 0; $('leaf-in').value = ''; $('leaf-fb').textContent = ''; draw(); }
+    $('leaf-check').addEventListener('click', () => {
+      const leaf = L[b], v = parseNum($('leaf-in').value), fb = $('leaf-fb');
+      if (!isFinite(v)) { fb.textContent = 'Escribe un número, por ejemplo 8,99e-3.'; fb.style.color = 'var(--e10-muted)'; return; }
+      const ok = leaf.ans === 0 ? Math.abs(v) < 1e-9 : Math.abs(v - leaf.ans) <= 0.02 * Math.abs(leaf.ans);
+      if (ok) { fb.textContent = `Correcto: ${sci(leaf.ans, 3)}.`; fb.style.color = 'var(--e10-success)'; return; }
+      fails++; fb.style.color = 'var(--e10-danger)';
+      fb.textContent = fails < 2 ? 'No coincide. Pasa todo a unidades SI (µC → 10⁻⁶ C, cm → m) y revisa el signo.' : `No coincide. La respuesta es ${sci(leaf.ans, 3)}: compárala paso a paso con la fórmula.`;
     });
-  });
-  document.querySelectorAll('#tq2 .opt').forEach((b) => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#tq2 .opt').forEach((x) => x.classList.remove('on'));
-      b.classList.add('on');
-      tq2Val = b.dataset.val;
-      updateTree();
-    });
-  });
+    $('leaf-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('leaf-check').click(); });
+    window.__arbol = L;
+    return { draw };
+  })();
 
-  // 5. Flip Cards Errores
-  document.querySelectorAll('.flip').forEach((f) => {
-    f.addEventListener('click', () => f.classList.toggle('open'));
-  });
-
-  // 6. Mapa Conceptual SVG Dinámico (Slide 11)
-  const cmapNodes = [
-    { id: 'coulomb', label: 'Ley de Coulomb', eq: '\\[\\vec F = \\frac{kq_1 q_2}{r^2}\\hat r\\]', def: 'Fuerza electrostática fundamental entre cargas puntuales.', kind: 'this', x: 390, y: 150 },
-    { id: 'superpos', label: 'Superposición', eq: '\\[\\vec F_{\\text{net}} = \\sum \\vec F_i\\]', def: 'Suma vectorial lineal de todas las interacciones.', kind: 'this', x: 190, y: 270 },
-    { id: 'carga', label: 'Cuantización', eq: '\\[q = \\pm Ne\\]', def: 'Carga elemental discreta conservada en el universo.', kind: 'this', x: 590, y: 270 },
-    { id: 'campo', label: 'Campo Eléctrico', eq: '\\[\\vec E = \\frac{\\vec F}{q_0}\\]', def: 'Perturbación espacial creada por las cargas (Cap. 2).', kind: 'fut', x: 260, y: 410 },
-    { id: 'gauss', label: 'Ley de Gauss', eq: '\\[\\oint \\vec E\\cdot d\\vec A = \\frac{q_{\\text{enc}}}{\\epsilon_0}\\]', def: 'Flujo y simetría electrostática (Cap. 5).', kind: 'fut', x: 520, y: 410 }
-  ];
-
-  const cmapEdges = [
-    { from: 'coulomb', to: 'superpos' },
-    { from: 'coulomb', to: 'carga' },
-    { from: 'superpos', to: 'campo' },
-    { from: 'carga', to: 'gauss' },
-    { from: 'campo', to: 'gauss' }
-  ];
-
-  const svg = $('cmap-svg');
-  if (svg) {
-    let svgHtml = '';
-    cmapEdges.forEach((e) => {
-      const n1 = cmapNodes.find((x) => x.id === e.from);
-      const n2 = cmapNodes.find((x) => x.id === e.to);
-      svgHtml += `<line class="edge" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
-      svgHtml += `<line class="flow" x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}"/>`;
-    });
-    svg.innerHTML = svgHtml;
-
-    const cmapDiv = $('cmap');
-    cmapNodes.forEach((n) => {
-      const nodeEl = document.createElement('div');
-      nodeEl.className = `cnode ${n.kind}`;
-      nodeEl.style.left = `${n.x}px`;
-      nodeEl.style.top = `${n.y}px`;
-      nodeEl.textContent = n.label;
-      nodeEl.addEventListener('click', () => {
-        document.querySelectorAll('.cnode').forEach((x) => x.classList.remove('on'));
-        nodeEl.classList.add('on');
-        $('cm-label').textContent = n.label;
-        $('cm-def').textContent = n.def;
-        $('cm-eq').innerHTML = n.eq;
-        renderMath($('cm-eq'));
+  // ── 12 · Mapa de conceptos ──
+  sims.cmap = (() => {
+    const K2 = { past: 'Viene de antes', this: 'Este capítulo', fut: 'Lleva a un capítulo siguiente' };
+    const N = [
+      { id: 'GR', x: 80, y: 80, k: 'past', label: 'Gravitación', sub: 'mecánica', def: 'La otra ley del inverso del cuadrado; la masa siempre atrae.', tex: String.raw`F=G\dfrac{m_1m_2}{r^2}`, where: 'Física I (mecánica)' },
+      { id: 'NW', x: 80, y: 260, k: 'past', label: 'Leyes de Newton', sub: 'equilibrio', def: 'Equilibrio de fuerzas y acción y reacción: las dos cargas sienten fuerzas opuestas.', tex: String.raw`\sum\vec F=\vec 0,\quad \vec F_{12}=-\vec F_{21}`, where: 'Física I (mecánica)' },
+      { id: 'VE', x: 80, y: 440, k: 'past', label: 'Vectores', sub: 'componentes', def: 'Componentes, vectores unitarios y suma vectorial: la base de la superposición.', tex: String.raw`\hat r=\dfrac{\vec r}{|\vec r|}`, where: 'Matemáticas' },
+      { id: 'CA', x: 290, y: 70, k: 'this', label: 'Carga eléctrica', sub: 'cuantizada y conservada', def: 'Dos clases de carga; toda carga es un múltiplo de e y la total de un sistema cerrado no cambia.', tex: String.raw`q=\pm Ne`, where: 'Diapositiva 3', slide: 3 },
+      { id: 'CO', x: 290, y: 245, k: 'this', big: true, label: 'Ley de Coulomb', sub: 'idea central', def: 'Fuerza entre dos cargas puntuales, sobre la recta que las une, proporcional al producto e inversa al cuadrado de la distancia.', tex: String.raw`F=k\dfrac{|q_1q_2|}{r^2}`, where: 'Diapositivas 2 y 4', slide: 4, lab: true },
+      { id: 'SU', x: 290, y: 425, k: 'this', label: 'Superposición', sub: 'suma vectorial', def: 'La fuerza neta es la suma vectorial de las fuerzas de cada carga.', tex: String.raw`\vec F=\sum_i\vec F_i`, where: 'Diapositivas 5 y 6', slide: 5, lab: true },
+      { id: 'CD', x: 510, y: 60, k: 'this', label: 'Conductores y aislantes', sub: 'polarización', def: 'En un conductor algunos electrones se mueven libres; un cuerpo neutro se polariza cerca de una carga.', tex: String.raw`\text{inducción}`, where: 'Diapositiva 3', slide: 3 },
+      { id: 'EQ', x: 510, y: 200, k: 'this', label: 'Equilibrio', sub: 'péndulos', def: 'La fuerza eléctrica se equilibra con el peso y la tensión.', tex: String.raw`\tan\theta=\dfrac{F_e}{mg}`, where: 'Diapositiva 7', slide: 7 },
+      { id: 'BT', x: 510, y: 330, k: 'this', label: 'Balanza de torsión', sub: 'Coulomb, 1784', def: 'El torque del hilo equilibra el de la fuerza eléctrica; así se comprobó el 1/r².', tex: String.raw`\kappa\phi=Fb`, where: 'Diapositiva 8', slide: 8 },
+      { id: 'EE', x: 710, y: 80, k: 'fut', label: 'Campo eléctrico', sub: 'cap. 2', def: 'La fuerza por unidad de carga de prueba: ya no depende de q₀.', tex: String.raw`\vec E=\dfrac{\vec F}{q_0}`, where: 'Capítulo 2', clase: 2 },
+      { id: 'PO', x: 710, y: 250, k: 'fut', label: 'Potencial', sub: 'cap. 3', def: 'La fuerza de Coulomb es conservativa: tiene una energía potencial.', tex: String.raw`U=k\dfrac{q_1q_2}{r}`, where: 'Capítulo 3', clase: 3 },
+      { id: 'DC', x: 710, y: 420, k: 'fut', label: 'Distribuciones continuas', sub: 'cap. 4', def: 'La suma de la superposición se vuelve una integral sobre dq.', tex: String.raw`\vec F=\int k\dfrac{q_0\,dq}{r^2}\hat r`, where: 'Capítulo 4', clase: 4 },
+    ];
+    const E = [['GR', 'CO', 'misma forma'], ['NW', 'CO', 'acción y reacción'], ['NW', 'EQ', ''], ['VE', 'SU', 'componentes'], ['CA', 'CO', 'q₁ q₂'], ['CO', 'SU', ''], ['CA', 'CD', ''],
+      ['CO', 'EQ', ''], ['CO', 'BT', '1/r²'], ['CO', 'EE', 'F/q₀'], ['CO', 'PO', 'conservativa', 1], ['SU', 'DC', 'suma → integral'], ['SU', 'EE', '']];
+    const by = {}; N.forEach((n) => { by[n.id] = n; });
+    let sel = 'CO', hov = null, built = false;
+    const svg = $('cmap-svg'), NS = 'http://www.w3.org/2000/svg', lines = [];
+    function build() {
+      E.forEach((e) => {
+        const p = by[e[0]], q = by[e[1]];
+        const base = document.createElementNS(NS, 'line'), flow = document.createElementNS(NS, 'line');
+        [base, flow].forEach((l) => { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); l.setAttribute('x2', q.x); l.setAttribute('y2', q.y); svg.appendChild(l); });
+        if (e[2]) { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'elab'); t.setAttribute('x', (p.x + q.x) / 2); t.setAttribute('y', (p.y + q.y) / 2 - 4); t.textContent = e[2]; svg.appendChild(t); }
+        lines.push({ e, base, flow });
       });
-      cmapDiv.appendChild(nodeEl);
-    });
-  }
+      N.forEach((n) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `cnode ${n.k}${n.big ? ' big' : ''}`; b.style.left = n.x + 'px'; b.style.top = n.y + 'px';
+        b.innerHTML = `${n.label}<small>${n.sub}</small>`; b.dataset.id = n.id;
+        b.addEventListener('click', () => { sel = n.id; paint(); });
+        b.addEventListener('mouseenter', () => { hov = n.id; paint(); }); b.addEventListener('mouseleave', () => { hov = null; paint(); });
+        b.addEventListener('focus', () => { hov = n.id; paint(); }); b.addEventListener('blur', () => { hov = null; paint(); });
+        $('cmap').appendChild(b);
+      });
+      built = true;
+    }
+    function paint() {
+      lines.forEach(({ e, base, flow }) => {
+        const hot = [sel, hov].includes(e[0]) || [sel, hov].includes(e[1]);
+        base.setAttribute('class', 'edge' + (e[3] ? ' dash' : '') + (hot ? ' hot' : '')); flow.setAttribute('class', 'flow' + (hot ? ' hot' : ''));
+      });
+      $('cmap').querySelectorAll('.cnode').forEach((b) => b.classList.toggle('on', b.dataset.id === sel));
+      const n = by[sel];
+      $('cm-kind').textContent = K2[n.k]; $('cm-label').textContent = n.label; $('cm-def').textContent = n.def; $('cm-where').textContent = n.where; katexTo($('cm-eq'), n.tex);
+      const act = $('cm-actions'); act.innerHTML = '';
+      const add = (label, pri, fn, href) => { const el = document.createElement(href ? 'a' : 'button'); el.className = 'btn' + (pri ? ' pri' : ''); el.textContent = label; if (href) { el.href = href; el.target = href.startsWith('../../player') ? '_top' : '_blank'; el.style.cssText = 'display:inline-flex;align-items:center;text-decoration:none'; } else { el.type = 'button'; el.addEventListener('click', fn); } act.appendChild(el); };
+      if (n.slide) add(`Ir a la diapositiva ${n.slide}`, true, () => go(n.slide - 1));
+      if (n.clase) add(`Abrir el capítulo ${n.clase}`, true, null, `../../player.html?clase=${n.clase}`);
+      if (n.lab) add('Abrir en CoulombLab', false, null, LAB);
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
 
-  // 7. Flashcards Glosario (Slide 12)
-  const fcards = [
-    { term: 'Ley de Coulomb', def: 'Fuerza electrostática central que varía con el inverso del cuadrado de la distancia: F ∝ 1/r².' },
-    { term: 'Carga Elemental (e)', def: 'Magnitud de carga de un protón o electrón: 1.602 × 10⁻¹⁹ C.' },
-    { term: 'Superposición Lineal', def: 'La fuerza resultante sobre una carga es la suma vectorial de cada interacción individual independiente.' },
-    { term: 'Permitividad del Vacío (ε₀)', def: 'Constante física que cuantifica la oposición del espacio al campo eléctrico: 8.854 × 10⁻¹² F/m.' },
-    { term: 'Balanza de Torsión', def: 'Instrumento inventado por Coulomb en 1785 para medir fuerzas minúsculas de atracción y repulsión.' },
-    { term: 'Conservación de Carga', def: 'Principio que establece que la carga eléctrica neta en un sistema cerrado permanece invariable.' }
-  ];
-  let fcIndex = 0, fcIsFront = true;
-  const updateFc = () => {
-    $('fc-side').textContent = fcIsFront ? 'TÉRMINO' : 'DEFINICIÓN';
-    $('fc-text').textContent = fcIsFront ? fcards[fcIndex].term : fcards[fcIndex].def;
-    $('fc-count').textContent = `Tarjeta ${fcIndex + 1} de ${fcards.length}`;
-  };
-  $('fc-card').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
-  $('fc-flip').addEventListener('click', () => { fcIsFront = !fcIsFront; updateFc(); });
-  $('fc-next').addEventListener('click', () => {
-    fcIndex = (fcIndex + 1) % fcards.length;
-    fcIsFront = true;
-    updateFc();
-  });
-  updateFc();
+  // ── 13 · Línea de tiempo y glosario ──
+  sims.hist = (() => {
+    // Hechos y fechas de Young y Freedman (2009): secciones 21.1 y 21.3 y problema 23.91.
+    const EV = [
+      { y: '600 a. C.', x: 170, who: 'Griegos', what: 'Al frotar ámbar con lana, el ámbar atrae otros objetos. «Eléctrico» viene de elektron, ámbar en griego.', link: 'Diapositiva 3.' },
+      { y: 'Siglo XVIII', x: 370, who: 'B. Franklin', what: 'Benjamín Franklin (1706-1790) propone llamar negativa y positiva a las dos clases de carga.', link: 'Diapositiva 3.' },
+      { y: '1784', x: 610, who: 'C. A. de Coulomb', what: 'Con una balanza de torsión mide la fuerza entre cargas: proporcional a 1/r² y al producto de las cargas.', link: 'Diapositiva 8 · resuelto 8 del taller.' },
+      { y: '1797', x: 850, who: 'Cavendish', what: 'Trece años después, una balanza similar a la de Coulomb mide la interacción gravitacional, mucho más débil.', link: 'Diapositiva 12 (analogía).' },
+      { y: '1909–1913', x: 1080, who: 'R. Millikan', what: 'Con gotas de aceite cargadas entre dos placas mide por primera vez la carga del electrón: la carga está cuantizada.', link: 'Diapositiva 3.' },
+    ];
+    const Gl = [
+      ['Carga eléctrica', 'Propiedad de la materia que produce las interacciones eléctricas; su unidad es el coulomb (C).'],
+      ['Carga elemental e', 'Magnitud de la carga del electrón o del protón: 1,602 × 10⁻¹⁹ C.'],
+      ['Cuantización', 'Toda carga observable es un múltiplo entero de e.'],
+      ['Conservación de la carga', 'En un sistema cerrado, la suma algebraica de las cargas no cambia.'],
+      ['Conductor', 'Material en el que algunos electrones se mueven con libertad, como los metales.'],
+      ['Aislante', 'Material en el que las cargas casi no pueden moverse, como el vidrio o el plástico.'],
+      ['Carga por inducción', 'Cargar un conductor sin tocarlo, acercando un cuerpo cargado y conectándolo a tierra.'],
+      ['Polarización', 'Desplazamiento de las cargas dentro de un cuerpo neutro por la cercanía de otra carga.'],
+      ['Carga puntual', 'Cuerpo cargado muy pequeño frente a las distancias del problema.'],
+      ['Ley de Coulomb', 'F = k|q₁q₂|/r², sobre la recta que une las dos cargas.'],
+      ['Constante eléctrica ε₀', 'Permitividad del vacío: 8,854 × 10⁻¹² C²/(N·m²); k = 1/(4πε₀).'],
+      ['Superposición', 'La fuerza neta es la suma vectorial de las fuerzas de cada carga.'],
+    ];
+    const KEY = 'e10_c1_glosario';
+    let ev = 2, back = false, st = null, built = false;
+    const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.queue)) return s; } catch (_) {} return { queue: Gl.map((_, i) => i), known: [] }; };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+    function build() {
+      const tl = $('tline');
+      EV.forEach((e, i) => {
+        const d = document.createElement('span'); d.className = 'tdot'; d.style.left = e.x + 'px'; tl.appendChild(d);
+        const t = document.createElement('span'); t.className = 'tyear'; t.style.left = e.x + 'px'; t.textContent = e.y; tl.appendChild(t);
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'tev'; b.style.left = e.x + 'px'; b.innerHTML = `<b>${e.y}</b>${e.who}`; b.addEventListener('click', () => { ev = i; paint(); }); tl.appendChild(b);
+      });
+      st = load();
+      $('fc-card').addEventListener('click', () => { back = !back; paint(); }); $('fc-flip').addEventListener('click', () => { back = !back; paint(); });
+      $('fc-again').addEventListener('click', () => { if (!st.queue.length) return; const c = st.queue.shift(); st.queue.splice(Math.min(3, st.queue.length), 0, c); back = false; save(); paint(); });
+      $('fc-ok').addEventListener('click', () => { if (!st.queue.length) return; st.known.push(st.queue.shift()); back = false; save(); paint(); });
+      $('fc-reset').addEventListener('click', () => { st = { queue: Gl.map((_, i) => i), known: [] }; back = false; save(); paint(); });
+      built = true;
+    }
+    function paint() {
+      $('tline').querySelectorAll('.tev').forEach((b, i) => b.classList.toggle('on', i === ev));
+      const e = EV[ev]; $('tl-text').innerHTML = `<b style="color:var(--e10-primary)">${e.who}, ${e.y}.</b> ${e.what} <span style="color:var(--e10-muted)">${e.link}</span>`;
+      const card = $('fc-card');
+      if (!st.queue.length) { card.className = 'fcard back'; $('fc-side').textContent = 'GLOSARIO COMPLETO'; $('fc-text').textContent = 'Dominaste las 12 palabras clave. Pulsa «Empezar de nuevo» para repasar.'; }
+      else { const c = Gl[st.queue[0]]; card.className = 'fcard' + (back ? ' back' : ''); $('fc-side').textContent = back ? 'DEFINICIÓN' : 'TÉRMINO'; $('fc-text').textContent = back ? c[1] : c[0]; }
+      $('fc-count').textContent = `por repasar ${st.queue.length} · dominadas ${st.known.length} de ${Gl.length}`;
+    }
+    return { draw() { if (!built) build(); paint(); } };
+  })();
 
-  // Inicializar hash
-  if (location.hash) {
-    const h = parseInt(location.hash.replace('#', ''), 10);
-    if (!isNaN(h) && h >= 1 && h <= total) cur = h;
+  // ── Navegación ──
+  const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
+  const onShow = { 1: () => sims.cover.show(), 2: sims.pre.draw, 3: sims.ca.draw, 4: sims.co.draw, 5: sims.su.draw, 6: sims.ej.draw, 7: sims.pe.draw, 8: sims.ba.draw, 10: sims.tree.draw, 11: () => { const f = $('lab-frame'); if (!f.src) f.src = f.dataset.src; }, 12: sims.cmap.draw, 13: sims.hist.draw };
+  const onHide = { 1: () => sims.cover.hide(), 3: () => sims.ca.hide() };
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i)); slides[cur].classList.remove('on'); (onHide[cur + 1] || (() => {}))();
+    cur = i; slides[cur].classList.add('on'); (onShow[cur + 1] || (() => {}))();
+    $('nav-count').textContent = `${cur + 1} / ${slides.length}`; $('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (_) {}
   }
-  showSlide(cur);
+  $('nav-prev').addEventListener('click', () => go(cur - 1)); $('nav-next').addEventListener('click', () => go(cur + 1));
+  document.addEventListener('keydown', (e) => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') go(cur + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1); });
+  $('nav-fs').addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) d.requestFullscreen?.().catch(() => {}); else document.exitFullscreen?.(); });
+  const drawAll = () => Object.values(sims).forEach((s) => s.draw && s.draw());
+  const print = () => { drawAll(); setTimeout(() => window.print(), 150); };
+  $('nav-print').addEventListener('click', print); $('btn-print2').addEventListener('click', print);
+  window.addEventListener('beforeprint', drawAll);
+
+  function fit() { const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 64) / 720); $('stage').style.transform = `scale(${s})`; }
+  window.addEventListener('resize', fit); fit();
+
+  window.addEventListener('load', () => { renderMath(document.body); const n = parseInt(location.hash.slice(1)); go(isFinite(n) ? n - 1 : 0); });
+  window.addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1)); if (isFinite(n) && n - 1 !== cur) go(n - 1); });
+  slides[0].classList.add('on');
+  window.__c1 = { sims, go, net, K, QE };
 })();
 </script>
 </body>
