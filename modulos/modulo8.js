@@ -40,85 +40,127 @@ export const modulo8 = {
         "$$v = \\frac{E}{B} \\quad \\text{(Condición de paso sin desviación en el selector de velocidades)}$$",
         "$$\\vec{F} = I(\\vec{L} \\times \\vec{B}), \\quad d\\vec{F} = I(d\\vec{l} \\times \\vec{B})$$",
         "$$\\vec{\\tau} = \\vec{\\mu} \\times \\vec{B}, \\quad U = -\\vec{\\mu} \\cdot \\vec{B}, \\quad \\vec{\\mu} = N I \\vec{A}$$",
-        "$$\\Delta V_H = \\frac{I B}{n q d} = R_H \\frac{I B}{d} \\quad \\text{(Voltaje de Hall transversal)}$$"
+        "$$\\Delta V_H = \\frac{I B}{n |q| t} \\quad \\text{(t: espesor en la dirección de B)}$$"
     ],
     "historia": {
-        "experimentoClave": "El Experimento de Oersted (1820), la Electrodinámica de Ampère (1826) y la Fuerza de Lorentz (1895)",
-        "hallazgo": "En abril de 1820, Hans Christian Ørsted descubrió accidentalmente que una corriente eléctrica desvía una brújula magnética, unificando por primera vez en la historia la electricidad y el magnetismo. Pocas semanas después, André-Marie Ampère formuló la ley de atracción entre corrientes paralelas y concibió las 'corrientes moleculares' (el origen microscópico del magnetismo sin monopolos). Finalmente, Hendrik Antoon Lorentz (1895, Premio Nobel 1902) derivó la fuerza fundamental F = q(E + v×B) sobre partículas cargadas individuales, formulando las transformaciones de Lorentz que sirvieron de cimiento a la Teoría de la Relatividad de Einstein."
+        "experimentoClave": "De la brújula de Ørsted (1820) al espectrómetro de masas de Aston (1919)",
+        "hallazgo": "En 1820 Hans Christian Ørsted observó que una corriente eléctrica desvía la aguja de una brújula. En 1897, en el laboratorio Cavendish, J. J. Thomson usó un campo eléctrico y otro magnético cruzados para medir la razón carga/masa del electrón. En 1919 Francis Aston, discípulo de Thomson, construyó el primero de los espectrómetros de masas. En 1958 los instrumentos del satélite Explorer I revelaron los cinturones de Van Allen: partículas cargadas atrapadas en hélices por el campo magnético terrestre. (Young y Freedman, 2009, secciones 27.1, 27.4 y 27.5.)"
     },
     "bibliografia": [
-        "Sears, F. W., Zemansky, M. W., Young, H. D., & Freedman, R. A. Física Universitaria con Física Moderna (Vol. 2), Cap. 27: Campo Magnético y Fuerzas Magnéticas.",
-        "Griffiths, D. J. Introduction to Electrodynamics (4th ed.), Cap. 5: Magnetostatics & The Lorentz Force Law.",
-        "Halliday, D., Resnick, R., & Walker, J. Fundamentos de Física (Vol. 2), Cap. 28: Campos Magnéticos.",
-        "Serway, R. A., & Jewett, J. W. Física para Ciencias e Ingeniería (Vol. 2), Cap. 29: Campos Magnéticos y Fuerza de Lorentz."
+        "Young, H. D., y Freedman, R. A. (2009). Física universitaria con física moderna, vol. 2 (12.ª ed.). Pearson Educación. Capítulo 27 «Campo magnético y fuerzas magnéticas», secciones 27.1–27.9, pp. 916–944."
     ],
     "lecciones": [
         {
             "id": "m8-l1",
             "tipo": "multivideo",
-            "recurso": "N_1yLphLoWQ|A8MWFEGuJXg|rp0-YdIva7o|IDVghi_IjsE|EHW5kFlU1cQ|zTqRtjjeze4|efBTzmpKvac|wvejixeN838",
-            "titulo": "1. Colección Magistral: De Oersted y Ampère a la Fuerza de Lorentz",
-            "descripcion": "8 lecciones audiovisuales completas: Experimento de Oersted, producto vectorial v×B, fuerza sobre cargas y corrientes, ciclotrón, selector de velocidades y efecto Hall.",
+            "recurso": "N_1yLphLoWQ|A8MWFEGuJXg|rp0-YdIva7o|IDVghi_IjsE|EHW5kFlU1cQ|6pqADZ3bQls|5vBIawads9Y|09ODpPKRTMs|1aZXXoKE5ac|0IDhnjX2lWA|zTqRtjjeze4|efBTzmpKvac|wvejixeN838",
+            "titulo": "1. Videos: Fuerza de Lorentz",
+            "descripcion": "Trece videos verificados: la fuerza sobre una carga y la regla de la mano derecha, órbitas, selector de velocidades y espectrómetro, fuerza sobre conductores, par sobre una bobina y efecto Hall.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
-            "xp": 10
+            "xp": 10,
+            "titulosRecursos": [
+                {"titulo": "Ley de Lorentz explicación Campo magnético ejercicios", "canal": "profesor10demates"},
+                {"titulo": "Ley de LORENTZ Fuerza MAGNETICA", "canal": "Ingeniosos"},
+                {"titulo": "Física: Ley de Lorentz. Fuerzas magnéticas sobre cargas en movimiento - Utemvirtual Traful", "canal": "traful"},
+                {"titulo": "Fuerza magnética, Ley de Lorentz", "canal": "Academia Internet"},
+                {"titulo": "Campo Magnético 2 Fuerza de Lorentz", "canal": "marcos vazquez"},
+                {"titulo": "Problema 9: Movimiento de partículas cargadas en un campo magnético", "canal": "Hernando Granados"},
+                {"titulo": "Selector de Velocidades - Espectrómetro de Masa", "canal": "Cátedra de Física FFyB UBA"},
+                {"titulo": "Fuerza Magnética Sobre Un Conductor", "canal": "Armando Aburto"},
+                {"titulo": "Momento de torsión sobre una bobina", "canal": "De físico poeta y loco"},
+                {"titulo": "EL EFECTO HALL, bien explicado.", "canal": "CANAL ELECTRICO"},
+                {"titulo": "El Campo Electromagnético, cómo surgen las fuerzas Eléctricas y Magnéticas", "canal": "ScienceClic Español"},
+                {"titulo": "¿De dónde viene el campo magnético? | Electromagnetismo", "canal": "Armónicos Esféricos"},
+                {"titulo": "El Campo Magnético (Universo Mecánico 35)", "canal": "Ciencias TV"}
+            ]
         },
         {
             "id": "m8-l2",
             "tipo": "presentacion",
             "recurso": "./player.html?clase=8",
-            "titulo": "2. Diapositivas Pedagógicas — Fuerza de Lorentz y Electrodinámica",
-            "descripcion": "Diapositivas detalladas con ejercicios resueltos paso a paso: producto cruz vectorial, frecuencia de ciclotrón, conductores con corriente y motores DC, selector de Wien, espectrómetro y laboratorio 3D con tips de examen.",
+            "titulo": "2. Clase interactiva: Fuerza de Lorentz",
+            "descripcion": "14 diapositivas con simulaciones, deducciones en siete pasos (órbita y conductor curvo), retos con valores nuevos, árbol de decisión, mapa de conceptos, glosario y PDF descargable.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
             "xp": 15
         },
         {
             "id": "m8-g1",
             "tipo": "grupo",
-            "titulo": "3. Laboratorio Virtual (Simuladores Científicos)",
+            "titulo": "3. Laboratorio Virtual (Simuladores)",
             "sublecciones": [
                 {
                     "id": "m8-s1",
                     "tipo": "simulador",
-                    "recurso": "simuladores/LorentzLab10easy.html",
-                    "titulo": "3.1 LorentzLab10.easy — Laboratorio 3D de Fuerza de Lorentz",
-                    "descripcion": "Controla velocidad v, carga q y campo vectorial B en tiempo real. Analiza trayectorias helicoidales, radios de giro y desarrollo analítico paso a paso.",
-                    "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
-                    "xp": 25
+                    "recurso": "simuladores/Lorentz.html#fuerza",
+                    "titulo": "3.1 LorentzLab · Fuerza sobre una carga",
+                    "descripcion": "Predice hacia dónde apunta la fuerza (dibújala o elige ⊙/⊗) y compruébalo; cambia el ángulo entre v y B y el signo de la carga.",
+                    "xp": 20
                 },
                 {
                     "id": "m8-s2",
                     "tipo": "simulador",
-                    "recurso": "simuladores/Sim_M10_FEM_Movimiento.html",
-                    "titulo": "3.2 Fuerza sobre Conductor y FEM por Movimiento",
-                    "descripcion": "Visualiza la acción de la fuerza magnética F = I(L×B) y la generación de fuerza electromotriz inducida en conductores móviles.",
+                    "recurso": "simuladores/Lorentz.html#orbita",
+                    "titulo": "3.2 LorentzLab · Órbita y hélice",
+                    "descripcion": "Predice el sentido de giro y el radio; con v oblicua mira la hélice en la vista lateral.",
                     "xp": 20
                 },
                 {
                     "id": "m8-s3",
                     "tipo": "simulador",
-                    "recurso": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_es.html",
-                    "titulo": "3.3 PhET: Dinámica de Cargas y Líneas de Campo",
-                    "descripcion": "Simulador de la Universidad de Colorado para contrastar campos electrostáticos conservativos frente a la acción del campo magnético.",
+                    "recurso": "simuladores/Lorentz.html#selector",
+                    "titulo": "3.3 LorentzLab · Selector y espectrómetro",
+                    "descripcion": "Ajusta E y B para que el haz pase y mide dónde impacta cada isótopo.",
                     "xp": 20
                 },
                 {
                     "id": "m8-s4",
                     "tipo": "simulador",
-                    "recurso": "https://www.falstad.com/cyclotron/",
-                    "titulo": "3.4 Falstad: Simulación de Ciclotrón en Tiempo Real",
-                    "descripcion": "Observa la sincronización entre el período de revolución magnético y la aceleración periódica de alta frecuencia en las 'D' del ciclotrón.",
+                    "recurso": "simuladores/Lorentz.html#conductor",
+                    "titulo": "3.4 LorentzLab · Conductor y espira",
+                    "descripcion": "Fuerza sobre un hilo y par sobre una bobina; suelta la espira y mira cómo se alinea con el campo.",
                     "xp": 20
+                },
+                {
+                    "id": "m8-s5",
+                    "tipo": "simulador",
+                    "recurso": "simuladores/LorentzLab10easy.html",
+                    "titulo": "3.5 Trayectorias en 3D",
+                    "descripcion": "Vista tridimensional de la hélice de una partícula en campos eléctrico y magnético combinados.",
+                    "xp": 10
                 }
             ]
         },
         {
-            "id": "m8-l7",
-            "tipo": "ejercicio",
-            "recurso": "talleres/Taller_8_Ley_de_Lorentz.html",
-            "titulo": "4. Taller Práctico No. 8 — Ley de Lorentz y Trayectorias",
-            "descripcion": "Resolución analítica de problemas: cálculo de radio de órbita, ciclotrones, espectrómetros de masas y fuerzas sobre conductores rectilíneos.",
-            "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
-            "xp": 30
+            "id": "m8-g2",
+            "tipo": "grupo",
+            "titulo": "4. Taller No. 8 — Fuerza de Lorentz",
+            "sublecciones": [
+                {
+                    "id": "m8-l7",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M8_Lorentz/recursos/Cap08_Taller_Lorentz.pdf",
+                    "titulo": "4.1 Taller (PDF)",
+                    "descripcion": "8 ejercicios resueltos (uno por dos caminos), 14 retos por niveles, preguntas de teoría, dos programas de Python y códigos QR al simulador.",
+                    "xp": 30
+                },
+                {
+                    "id": "m8-l8",
+                    "tipo": "ejercicio",
+                    "recurso": "presentaciones/M8_Lorentz/recursos/Cap08_Guia_Lorentz.pdf",
+                    "titulo": "4.2 Guía de estudio (PDF)",
+                    "descripcion": "Ideas clave, fórmulas, errores comunes, autoevaluación con respuestas, conectores, glosario y bibliografía.",
+                    "xp": 15
+                },
+                {
+                    "id": "m8-l9",
+                    "tipo": "ejercicio",
+                    "recurso": "talleres/Taller_8_Ley_de_Lorentz.html",
+                    "titulo": "4.3 Taller de práctica (versión web)",
+                    "descripcion": "Problemas de radio de órbita, ciclotrones, espectrómetros y fuerzas sobre conductores, con hoja de entrega.",
+                    "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
+                    "xp": 20
+                }
+            ]
         },
         {
             "id": "m8-desafio",

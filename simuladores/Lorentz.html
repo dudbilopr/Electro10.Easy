@@ -214,7 +214,7 @@ import { lab10Bus } from '../js/lab10-bus.js';
 // ───────────────────────── utilidades ─────────────────────────
 const $ = s => document.querySelector(s);
 const MU0 = 4e-7 * Math.PI;
-// Constantes de Young y Freedman (2009), apéndice F, a 4 cifras.
+// Constantes de la tabla de constantes fundamentales de Young y Freedman (2009), a 4 cifras.
 const QE = 1.602e-19, MP = 1.673e-27, ME = 9.109e-31, UMA = 1.661e-27;
 const DEG = 180 / Math.PI;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -474,9 +474,9 @@ const scFuerza = {
       text(`θ = ${f1Theta()}°`, tx, ty, COL.muted, 12, 'center', 600);
     } else text(`B ${F1.mode === 'sale' ? 'sale de la página ⊙' : 'entra en la página ⊗'} · θ = 90°`, 16, 24, COL.field, 13, 'left', 600);
     const [vx, vy] = tip(cx, cy, F1.av, R);
-    arrow(cx, cy, vx, vy, COL.accent, 4, 14); sym('v', vx + 10, vy - 12, COL.accentStrong, 20);
-    ctx.save(); ctx.fillStyle = COL.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(vx, vy, 9, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
-    if (pred.choice === 'plano' && pred.angle !== null) { const [px, py] = tip(cx, cy, pred.angle, R * 0.8); arrow(cx, cy, px, py, COL.ink, 2.5, 12, [7, 6]); text('tu predicción', px + 8, py + 14, COL.muted, 11); }
+    arrow(cx, cy, vx, vy, COL.ink, 4, 14); sym('v', vx + 10, vy - 12, COL.ink, 20);
+    ctx.save(); ctx.fillStyle = COL.ink; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(vx, vy, 9, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    if (pred.choice === 'plano' && pred.angle !== null) { const [px, py] = tip(cx, cy, pred.angle, R * 0.8); arrow(cx, cy, px, py, COL.muted, 2.5, 12, [7, 6]); text('tu predicción', px + 8, py + 14, COL.muted, 11); }
     charge(cx, cy, P.q, 14); text(P.sym, cx - 16, cy + 26, COL.muted, 12, 'center');
     if (rv) {
       if (c.cat === 'plano') { const [fx2, fy2] = tip(cx, cy, c.a, R * 0.8); arrow(cx, cy, fx2, fy2, COL.force, 4.5, 15); sym('F', fx2 + 10, fy2 + 14, COL.force, 20); }
@@ -596,15 +596,15 @@ const scOrbita = {
       const upto = Math.min(O.ph, 2 * Math.PI);
       ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 120; i++) { const [x, y] = pos(upto * i / 120); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); ctx.restore();
       const [px, py] = pos(O.ph), tx = Math.cos(O.ph), ty = ccw ? -Math.sin(O.ph) : Math.sin(O.ph);
-      arrow(px, py, px + tx * 52, py + ty * 52, COL.accent, 3.5, 12);
+      arrow(px, py, px + tx * 52, py + ty * 52, COL.ink, 3.5, 12);
       arrow(px, py, px + (cx - px) * 0.42, py + (ccy - py) * 0.42, COL.force, 3.5, 12);
       charge(px, py, P.q, 12);
       ctx.save(); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(cx, ccy); ctx.lineTo(cx + Rpx, ccy); ctx.stroke(); ctx.restore();
       text(`R = ${fp(oR() * 100, 2)} cm`, cx + Rpx / 2, ccy - 12, COL.primary, 13, 'center', 600);
-      text('v', px + tx * 52 + 8, py + ty * 52, COL.accentStrong, 13, 'left', 600);
+      text('v', px + tx * 52 + 8, py + ty * 52, COL.ink, 13, 'left', 600);
     } else {
       O.t0 = 0;
-      arrow(cx, cy, cx + 60, cy, COL.accent, 4, 14); sym('v⊥', cx + 66, cy - 12, COL.accentStrong, 18);
+      arrow(cx, cy, cx + 60, cy, COL.ink, 4, 14); sym('v⊥', cx + 66, cy - 12, COL.ink, 18);
       charge(cx, cy, P.q, 13);
     }
     text(`${P.sym} · B ${O.sense === 'sale' ? 'sale ⊙' : 'entra ⊗'} · vista de frente`, 16, 24, COL.field, 13, 'left', 600);
@@ -743,7 +743,7 @@ const scSelector = {
     const sh = Math.max(3, SLIT / 2 * s1);
     ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(xs, by - gp - 7); ctx.lineTo(xs, by - sh); ctx.moveTo(xs, by + sh); ctx.lineTo(xs, by + gp + 7); ctx.stroke(); ctx.restore();
     // haz de entrada
-    arrow(x0 - 18, by, x0 + 4, by, COL.accent, 3, 10);
+    arrow(x0 - 18, by, x0 + 4, by, COL.ink, 3, 10);
     if (!rv) { charge(x0 + 14, by, 1, 8); text('Comprueba para lanzar el haz', xs + 14, by - 18, COL.muted, 12); }
     else {
       ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 3; ctx.beginPath(); p.pts.forEach(([x, y], i) => { const X = x0 + x * s1, Y = by - y * s1; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke(); ctx.restore();
@@ -751,8 +751,8 @@ const scSelector = {
       if (p.hit || !p.pass) text(p.hit ? 'El haz choca con una placa del selector.' : 'El haz no sale por la rendija.', x0, by + gp + 60, COL.danger, 12, 'left', 600);
       // fuerzas a mitad del selector
       const xm = x0 + Lpx * 0.5, FE = QE * Se.E, FB = QE * Se.vb * Se.B1, Fm = Math.max(FE, FB), L = gp * 0.85;
-      arrow(xm, by, xm, by + L * FE / Fm, COL.accentStrong, 3, 10); arrow(xm, by, xm, by - L * FB / Fm, COL.force, 3, 10);
-      text('qE', xm + 8, by + L * FE / Fm - 4, COL.accentStrong, 12, 'left', 600); text('qvB', xm + 8, by - L * FB / Fm + 4, COL.force, 12, 'left', 600);
+      arrow(xm, by, xm, by + L * FE / Fm, COL.warn, 3, 10); arrow(xm, by, xm, by - L * FB / Fm, COL.force, 3, 10);
+      text('qE', xm + 8, by + L * FE / Fm - 4, COL.warn, 12, 'left', 600); text('qvB', xm + 8, by - L * FB / Fm + 4, COL.force, 12, 'left', 600);
       // impactos posibles de todos los isótopos a esta rapidez (marcas tenues)
       Object.entries(IONS).forEach(([k, o]) => { const d = 2 * seR(o.A, p.v) * s2; if (d < by - 16) { ctx.save(); ctx.globalAlpha = k === Se.ion ? 1 : 0.35; ctx.fillStyle = COL.field; ctx.fillRect(xs, by - d - 1.5, 12, 3); ctx.restore(); if (k !== Se.ion) text(o.sym, xs + 56, by - d, COL.muted, 10, 'left'); } });
       if (p.pass) {
@@ -917,8 +917,8 @@ const scConductor = {
     ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ux, uy); ctx.lineTo(dx, dy); ctx.stroke(); ctx.restore();
     wireSym(ux, uy, 1, 12, COL.primary); wireSym(dx, dy, -1, 12, COL.primary);
     const [mx, my] = tip(cx, cy, Co.phi, R * 0.75);
-    arrow(cx, cy, mx, my, COL.accent, 4, 14); sym('μ', mx + 10, my - 12, COL.accentStrong, 20);
-    ctx.save(); ctx.fillStyle = COL.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(mx, my, 10, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    arrow(cx, cy, mx, my, COL.ink, 4, 14); sym('μ', mx + 10, my - 12, COL.ink, 20);
+    ctx.save(); ctx.fillStyle = COL.ink; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(mx, my, 10, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
     arc(cx, cy, R * 0.3, 0, Co.phi, COL.muted); text(`φ = ${Math.round(Co.phi)}°`, cx + R * 0.36, cy + 16, COL.muted, 12, 'left', 600);
     if (rv) {
       const Fl = 50; arrow(ux, uy, ux, uy - Fl, COL.force, 3.5, 12); arrow(dx, dy, dx, dy + Fl, COL.force, 3.5, 12);
