@@ -1,0 +1,867 @@
+<!DOCTYPE html><html lang="es"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FaradayLab10.easy · Ley de Faraday</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* FaradayLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap}
+header .e10-brand{font-size:1.1rem}
+.scene-tabs{display:flex;gap:2px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid);margin-left:12px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-ink);font-weight:600;box-shadow:0 1px 2px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:40px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn i{font-size:1.1em}
+.btn .sym{font:italic 600 1.05em/1 'Times New Roman',serif}
+.tog{min-height:34px;padding:0 12px;border-radius:999px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+.seg{display:flex;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-grid)}
+.seg .btn{min-height:34px;border:0;background:transparent;color:var(--e10-muted)}
+.seg .btn.active{background:var(--e10-surface);color:var(--e10-ink);box-shadow:0 1px 2px rgba(34,17,27,.08)}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:500 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:28px;background:var(--e10-line)}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:330px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:28px minmax(0,1fr) 78px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:500 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+.vnote{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:16px;padding:10px 16px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.12em}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55}
+.reto-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reto-actions .btn{min-height:32px;font-size:var(--e10-text-xs)}
+#reto-note{font-size:var(--e10-text-xs);color:var(--e10-warning)}
+#reto-note:empty{display:none}
+.e10-chip--info{background:var(--e10-accent-soft);color:var(--e10-accent-strong)}
+.e10-chip--bad{background:var(--e10-danger-soft);color:var(--e10-danger)}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans{display:grid;gap:4px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:500 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden}
+#validation-box:empty{display:none}
+.vrow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-top:1px solid var(--e10-line)}
+.vrow:first-child{border-top:0}
+.vrow .e10-chip{margin-left:auto}
+#check-hint{font-size:var(--e10-text-xs);color:var(--e10-muted)}
+#check-hint:empty{display:none}
+#explain{line-height:1.5}
+#explain:empty{display:none}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-bg);overflow-x:auto;line-height:1.6}
+#solution .katex-display{margin:.4em 0}
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line)}
+.panel-progress .e10-progress{flex:1}
+.section-title{font:500 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted)}
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+/* Incrustado en una clase (?embed): solo escenas, herramientas y lienzo; la clase trae sus propias tareas */
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+body.e10-projector{font-size:17px}
+body.e10-projector #e10-live .katex{font-size:1.5em}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  header .e10-brand{font-size:1rem}
+  .module-chip,#btn-projector{display:none}
+  .scene-tabs{order:5;margin:0;width:100%}
+  .header-actions .btn{min-height:38px;padding:0 10px}
+  .h-menu{order:3;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px;border-top:1px solid var(--e10-line);border-bottom:0;flex-wrap:nowrap;overflow-x:auto}
+  .h-menu .tool-group__label,.h-menu .tool-sep{display:none}
+  .h-menu .btn{min-height:44px;font-size:12px;padding:0 10px}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(34,17,27,.08);margin-top:-14px;position:relative}
+  .slide-panel:not(.open){max-height:150px}
+  .sheet-handle{display:flex;justify-content:center;padding:8px 0 2px;border:0;background:none;cursor:pointer;width:100%}
+  .sheet-handle span{width:40px;height:4px;border-radius:2px;background:var(--e10-line)}
+  .panel-scroll{padding:8px 16px 16px}
+  .panel-progress{display:none}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px;min-height:44px}
+  #e10-live .e10-eyebrow{display:none}
+  #e10-live .katex{font-size:.95em}
+  #values-body{min-width:220px}
+  #coords-indicator{display:none}
+  footer{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>
+// 10.Easy: tema claro por defecto, salvo que el estudiante haya elegido el oscuro.
+(function(){var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}document.addEventListener('DOMContentLoaded',function(){document.body.classList.toggle('dark-mode',t==='dark');document.body.classList.toggle('light-mode',t!=='dark');if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');});})();
+</script>
+</head>
+<body data-domain="magnetismo" class="light-mode">
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">FaradayLab<span>10.easy</span></a>
+  <span class="e10-chip module-chip">Módulo 11 · Ley de Faraday</span>
+  <nav class="scene-tabs" role="tablist" aria-label="Escenas">
+    <button type="button" role="tab" data-scene="flujo" aria-selected="false">1 · Flujo que cambia</button>
+    <button type="button" role="tab" data-scene="iman" aria-selected="false">2 · Imán y bobina</button>
+    <button type="button" role="tab" data-scene="barra" aria-selected="false">3 · Barra sobre rieles</button>
+    <button type="button" role="tab" data-scene="generador" aria-selected="false">4 · Generador</button>
+  </nav>
+  <div class="e10-header__spacer"></div>
+  <div class="header-actions">
+    <button class="btn" id="btn-projector" type="button"><i class="ph ph-projector-screen"></i>Modo proyector</button>
+    <button class="btn btn-icon" id="btn-theme" type="button" aria-label="Cambiar tema claro u oscuro"><i class="ph ph-moon"></i></button>
+    <button class="btn" id="user-info" type="button" style="color:var(--e10-primary);border-color:var(--e10-primary)">Iniciar sesión</button>
+  </div>
+</header>
+<div class="h-menu" id="toolbar" role="toolbar" aria-label="Herramientas de la escena"></div>
+<div class="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Lienzo de la simulación"></canvas>
+    <details id="values" open><summary>Valores</summary><div id="values-body"></div></details>
+    <div id="coords-indicator"></div>
+    <div id="e10-live" aria-live="polite"><span class="e10-eyebrow">Fórmula en vivo</span><div id="live-tex"></div></div>
+  </div>
+  <aside class="slide-panel" id="right-panel">
+    <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Abrir o cerrar el panel del reto"><span></span></button>
+    <div class="panel-scroll">
+      <section class="e10-step" id="st1" data-s="done">
+        <span class="e10-step__n">1</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto</div>
+          <div id="reto-text"></div>
+          <div id="reto-note"></div>
+          <div class="reto-actions"><span class="e10-chip e10-chip--info" id="reto-tag"></span><button class="btn" id="btn-new" type="button"><i class="ph ph-shuffle"></i>Nuevo reto con otros valores</button></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st2" data-s="now">
+        <span class="e10-step__n">2</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice</div>
+          <div id="pred-q"></div>
+          <div class="predict-row" id="pred-choices"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st3" data-s="todo">
+        <span class="e10-step__n">3</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprueba</div>
+          <label class="ans"><span id="ans-label">Tu valor</span><input id="ans-val" type="text" inputmode="decimal" autocomplete="off" placeholder="ej. 0,40"></label>
+          <div id="validation-box"></div>
+          <button class="btn btn-primary" id="btn-check" type="button">Comprobar mi predicción</button>
+          <div id="check-hint"></div>
+        </div>
+      </section>
+      <section class="e10-step" id="st4" data-s="todo">
+        <span class="e10-step__n">4</span>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Explica</div>
+          <div class="e10-tip" id="explain"></div>
+          <button class="btn" id="btn-sol" type="button"><i class="ph ph-function"></i>Ver la solución paso a paso</button>
+          <div id="solution" hidden></div>
+        </div>
+      </section>
+      <div id="continue-wrap"></div>
+    </div>
+    <div class="panel-progress"><span class="section-title">Progreso</span><div class="e10-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="prog-bar"><span id="prog" style="--e10-p:25%"></span></div><span class="section-title" id="prog-txt">1 de 4</span></div>
+  </aside>
+</div>
+<footer><span>© 2026 FaradayLab10.easy · 10.Easy</span><a href="../index.html">Volver a la plataforma</a></footer>
+
+<script type="module">
+import { lab10Auth } from '../js/lab10-auth.js';
+import { lab10Bus } from '../js/lab10-bus.js';
+
+// ───────────────────────── utilidades ─────────────────────────
+const $ = s => document.querySelector(s);
+const MU0 = 4e-7 * Math.PI;
+// Constantes de la tabla de constantes fundamentales de Young y Freedman (2009), a 4 cifras.
+const QE = 1.602e-19, MP = 1.673e-27, ME = 9.109e-31, UMA = 1.661e-27;
+const DEG = 180 / Math.PI;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const cssv = n => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim();
+
+function sciParts(v, d) {
+  if (!isFinite(v) || v === 0) return null;
+  let e = Math.floor(Math.log10(Math.abs(v)));
+  let ms = (v / Math.pow(10, e)).toFixed(d - 1);
+  if (Math.abs(+ms) >= 10) { e += 1; ms = (v / Math.pow(10, e)).toFixed(d - 1); }
+  return [ms, e];
+}
+// LaTeX: 4{,}00\times10^{-5}
+function sx(v, d = 3) { const p = sciParts(v, d); if (!p) return '0'; return p[0].replace('.', '{,}') + (p[1] === 0 ? '' : String.raw`\times10^{${p[1]}}`); }
+// Texto plano: 4,00 × 10⁻⁵
+function sp(v, d = 3) {
+  const p = sciParts(v, d); if (!p) return '0';
+  const sup = String(p[1]).replace('-', '⁻').replace(/\d/g, c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  return p[0].replace('.', ',') + (p[1] === 0 ? '' : ' × 10' + sup);
+}
+const fx = (v, n) => v.toFixed(n).replace('.', '{,}');
+const fp = (v, n) => v.toFixed(n).replace('.', ',');
+function parseNum(s) {
+  s = String(s ?? '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/T$/i, '');
+  s = s.replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1');
+  return s === '' ? NaN : Number(s);
+}
+const near = (a, b, tol = 0.03) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30);
+function K(tex, display = false) { try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); } catch (_) { return tex; } }
+function mixed(el, html) {
+  el.innerHTML = html;
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+const angDiff = (a, b) => { let d = (a - b) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
+
+// ───────────────────────── lienzo ─────────────────────────
+const area = $('#canvas-area'), cv = $('#cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, HU = 0; // HU: alto útil (sin la barra de fórmula)
+function resize() {
+  const r = area.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height; HU = H - (W < 600 ? 76 : 92);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+let COL = {};
+function readColors() {
+  COL = { ink: cssv('ink'), muted: cssv('muted'), line: cssv('line'), surface: cssv('surface'), primary: cssv('primary'), primarySoft: cssv('primary-soft'),
+    accent: cssv('accent'), accentStrong: cssv('accent-strong'), field: cssv('vec-field'), force: cssv('vec-force'), qpos: cssv('q-pos'), qneg: cssv('q-neg'), ok: cssv('success'), danger: cssv('danger'), warn: cssv('warning'), grid: cssv('grid') };
+}
+const FS = () => document.body.classList.contains('e10-projector') ? 1.25 : 1;
+function arrow(x1, y1, x2, y2, col, w = 2, head = 10, dash = null) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy); if (L < 2) return;
+  head = Math.min(head, L * 0.6);
+  const ux = dx / L, uy = dy / L, hx = x2 - ux * head, hy = y2 - uy * head;
+  ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(hx - uy * head * 0.5, hy + ux * head * 0.5); ctx.lineTo(hx + uy * head * 0.5, hy - ux * head * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function wireSym(x, y, sign, r, col) { // sign > 0: sale (⊙); < 0: entra (⊗)
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  if (sign > 0) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * 0.28, 0, 2 * Math.PI); ctx.fill(); }
+  else if (sign < 0) { const k = r * 0.52; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - k, y - k); ctx.lineTo(x + k, y + k); ctx.moveTo(x + k, y - k); ctx.lineTo(x - k, y + k); ctx.stroke(); }
+  ctx.restore();
+}
+function text(t, x, y, col = COL.ink, size = 13, align = 'left', weight = 500) {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `${weight} ${size * FS()}px 'IBM Plex Sans', system-ui, sans-serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function sym(t, x, y, col = COL.ink, size = 17, align = 'left') {
+  ctx.save(); ctx.fillStyle = col; ctx.font = `italic ${size * FS()}px 'Times New Roman', serif`; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y); ctx.restore();
+}
+function panelBox(x, y, w, h) {
+  ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+// ───────────────────────── ayudas de dibujo ─────────────────────────
+const adiff = (a, b) => ((a - b) % 360 + 540) % 360 - 180;    // diferencia de ángulos en grados, en [−180, 180)
+const n360 = a => ((a % 360) + 360) % 360;
+const snapA = (a, k = 15) => n360(Math.round(a / k) * k);
+const rad = d => d / DEG;
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const scrA = (cx, cy, px, py) => n360(Math.atan2(cy - py, px - cx) * DEG); // ángulo matemático (antihorario) de un punto de la pantalla
+function charge(x, y, q, r = 13) {
+  ctx.save(); ctx.fillStyle = q > 0 ? COL.qpos : COL.qneg; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+  ctx.strokeStyle = COL.surface; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - r * 0.45, y); ctx.lineTo(x + r * 0.45, y);
+  if (q > 0) { ctx.moveTo(x, y - r * 0.45); ctx.lineTo(x, y + r * 0.45); } ctx.stroke(); ctx.restore();
+}
+function bPerp(sign, x0, y0, x1, y1, gap) { // campo perpendicular a la página: ⊙ sale, ⊗ entra
+  ctx.save(); ctx.globalAlpha = 0.32;
+  for (let x = x0 + gap / 2; x < x1; x += gap) for (let y = y0 + gap / 2; y < y1; y += gap) wireSym(x, y, sign, 5, COL.field);
+  ctx.restore();
+}
+function bPlane(a, x0, y0, x1, y1, gap) { // campo en el plano de la página, en la dirección a (grados)
+  const c = Math.cos(rad(a)), s = -Math.sin(rad(a)), L = gap * 0.28;
+  ctx.save(); ctx.globalAlpha = 0.3;
+  for (let x = x0 + gap / 2; x < x1; x += gap) for (let y = y0 + gap / 2; y < y1; y += gap) arrow(x - c * L, y - s * L, x + c * L, y + s * L, COL.field, 1.6, 6);
+  ctx.restore();
+}
+function bigSym(x, y, sign, col, label) { wireSym(x, y, sign, 15, col); if (label) text(label, x + 22, y, col, 13, 'left', 600); }
+function arc(cx, cy, r, a1, a2, col) { // arco del ángulo a1 → a2 (grados, antihorario)
+  let d = adiff(a2, a1); ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r, -rad(a1), -rad(a1 + d), d > 0); ctx.stroke(); ctx.restore();
+}
+function plotCurve(pl, f, x0, x1, xv, yMax, xLabel, tickEvery, signed = false) {
+  const X = x => pl.x + 50 + (x - x0) / (x1 - x0) * (pl.w - 70);
+  const Y = signed ? (y => pl.y + 46 + (pl.h - 92) / 2 - y / yMax * (pl.h - 110) / 2) : (y => pl.y + pl.h - 46 - y / yMax * (pl.h - 100));
+  ctx.save(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(x0), Y(0)); ctx.lineTo(X(x1), Y(0)); ctx.moveTo(X(x0), Y(signed ? -yMax : 0)); ctx.lineTo(X(x0), Y(yMax)); ctx.stroke(); ctx.restore();
+  for (let t = x0; t <= x1 + 1e-9; t += tickEvery) text(t + '°', X(t), pl.y + pl.h - 22, COL.muted, 11, 'center');
+  text(xLabel, X(x1), Y(0) - 12, COL.muted, 11, 'right');
+  ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath();
+  for (let i = 0; i <= 240; i++) { const x = x0 + (x1 - x0) * i / 240; i ? ctx.lineTo(X(x), Y(f(x))) : ctx.moveTo(X(x), Y(f(x))); }
+  ctx.stroke(); ctx.restore();
+  ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(xv), Y(f(xv)), 6, 0, 2 * Math.PI); ctx.fill();
+  return { X, Y };
+}
+const PART = {
+  proton: { n: 'protón', q: 1, m: MP, sym: 'p⁺' },
+  electron: { n: 'electrón', q: -1, m: ME, sym: 'e⁻' },
+  c12: { n: 'ion de carbono-12 (¹²C⁺)', q: 1, m: 12 * UMA, sym: '¹²C⁺' },
+};
+const DIRW = { 0: 'hacia la derecha', 90: 'hacia arriba', 180: 'hacia la izquierda', 270: 'hacia abajo' };
+const dirWord = a => DIRW[n360(Math.round(a))] || `a ${Math.round(n360(a))}° de la horizontal (medido en sentido antihorario)`;
+
+// ───────────────────────── estado de la app ─────────────────────────
+const app = { scene: 'fuerza', checked: false, result: null, showSol: false };
+const pred = { choice: null, angle: null };   // predicción del paso 2
+// Todo cambio de física invalida la comprobación anterior.
+function invalidate() { if (app.checked) { app.checked = false; app.result = null; app.showSol = false; } renderPanel(false); }
+function resetPred() { pred.choice = null; pred.angle = null; $('#ans-val').value = ''; app.checked = false; app.result = null; app.showSol = false; }
+function plotAxes(pl, title) { panelBox(pl.x, pl.y, pl.w, pl.h); text(title, pl.x + 16, pl.y + 22, COL.ink, 13, 'left', 600); }
+function hint(pl, t) { text(t, pl.x + pl.w / 2, pl.y + pl.h / 2, COL.muted, 12, 'center'); }
+// El valor que se pide en el reto solo se muestra después de comprobar, o si el estudiante ya cambió el montaje.
+const reveal = () => app.checked || sc().changed();
+
+// Sentido de la corriente inducida visto desde el frente (+z hacia el observador):
+// si el flujo hacia el observador aumenta, la corriente va en sentido horario (Lenz).
+const CHO = [{ id: 'cw', label: 'Horario ↻' }, { id: 'ccw', label: 'Antihorario ↺' }, { id: 'none', label: 'No hay corriente' }];
+const NAMES = { cw: 'horario', ccw: 'antihorario', none: 'no hay corriente' };
+const fmtV = v => Math.abs(v) >= 1 ? fp(v, 2) + ' V' : Math.abs(v) >= 1e-3 ? fp(v * 1e3, 2) + ' mV' : sp(v, 3) + ' V';
+function loopArrows(cx, cy, rx, ry, sense, col, t = 0) { // flechas de corriente sobre una espira elíptica; sense: +1 horario, −1 antihorario
+  for (let k = 0; k < 4; k++) {
+    const a = k * Math.PI / 2 + Math.PI / 4 + sense * t, x = cx + rx * Math.cos(a), y = cy + ry * Math.sin(a), tx = -Math.sin(a) * rx, ty = Math.cos(a) * ry, L = Math.hypot(tx, ty) || 1;
+    arrow(x - sense * tx / L * 11, y - sense * ty / L * 11, x + sense * tx / L * 11, y + sense * ty / L * 11, col, 3.2, 11);
+  }
+}
+function senseIcon(x, y, sense, label) { // círculo con flecha curva: «visto desde …»
+  ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath(); const a0 = -Math.PI / 2, a1 = a0 + sense * 1.6 * Math.PI; ctx.arc(x, y, 22, a0, a1, sense < 0); ctx.stroke(); ctx.restore();
+  const ex = x + 22 * Math.cos(a1), ey = y + 22 * Math.sin(a1), tx = -Math.sin(a1) * sense, ty = Math.cos(a1) * sense;
+  arrow(ex - tx * 6, ey - ty * 6, ex + tx * 6, ey + ty * 6, COL.primary, 2.5, 10);
+  text(label, x, y + 38, COL.muted, 11, 'center');
+}
+
+// ═════════════════════════ ESCENA 1 · FLUJO QUE CAMBIA ═════════════════════════
+const FL = { N: 50, A: 20e-4, mode: 'sale', B1: 0, B2: 0.6, dt: 0.15, phi: 0, R: 8, play: false, t0: 0, tv: 1, reto: null };
+const flBz = B => FL.mode === 'sale' ? B : -B;
+const flDphi = () => FL.N * FL.A * Math.cos(rad(FL.phi)) * (flBz(FL.B2) - flBz(FL.B1));  // variación del flujo total N Φ (con signo, +z hacia el observador)
+const flEps = () => Math.abs(flDphi()) / FL.dt;
+const flCat = () => Math.abs(flDphi()) < 1e-15 ? 'none' : flDphi() > 0 ? 'cw' : 'ccw';
+const flSnap = () => JSON.stringify([FL.N, FL.A, FL.mode, FL.B1, FL.B2, FL.dt, FL.phi, FL.R]);
+const scFlujo = {
+  title: 'Flujo',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Campo B</span>
+      <div class="seg">${[['sale', 'Sale ⊙'], ['entra', 'Entra ⊗']].map(([k, l]) => `<button class="btn ${FL.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Tiempo</span>
+      <button class="btn" data-act="play" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-play"></i>Reproducir el cambio</button></div>`,
+  act(a) { if (a.startsWith('mode:')) { FL.mode = a.slice(5); invalidate(); } else if (a === 'play') { FL.play = true; FL.t0 = performance.now(); } buildToolbar(); },
+  values: () => [
+    { k: 'N', sym: 'N', min: 1, max: 500, step: 1, get: () => FL.N, set: x => FL.N = x, fmt: x => x + ' vueltas' },
+    { k: 'A', sym: 'A', min: 1, max: 400, step: 1, get: () => FL.A * 1e4, set: x => FL.A = x * 1e-4, fmt: x => x + ' cm²', label: 'Área de cada vuelta' },
+    { k: 'B1', sym: 'B', sub: '1', min: 0, max: 1, step: 0.05, get: () => FL.B1, set: x => FL.B1 = x, fmt: x => fp(x, 2) + ' T', label: 'Campo al principio' },
+    { k: 'B2', sym: 'B', sub: '2', min: 0, max: 1, step: 0.05, get: () => FL.B2, set: x => FL.B2 = x, fmt: x => fp(x, 2) + ' T', label: 'Campo al final' },
+    { k: 'dt', sym: 'Δt', min: 0.01, max: 2, step: 0.01, get: () => FL.dt, set: x => FL.dt = x, fmt: x => fp(x, 2) + ' s', label: 'Duración del cambio' },
+    { k: 'phi', sym: 'φ', min: 0, max: 85, step: 5, get: () => FL.phi, set: x => FL.phi = x, fmt: x => x + '°', label: 'Ángulo entre la normal de la bobina y B' },
+    { k: 'R', sym: 'R', min: 0.5, max: 50, step: 0.5, get: () => FL.R, set: x => FL.R = x, fmt: x => fp(x, 1) + ' Ω', label: 'Resistencia del circuito' }],
+  valuesNote: 'El campo cambia de B₁ a B₂ de manera uniforme durante Δt. Con φ > 0 la bobina está inclinada y se ve como una elipse.',
+  newReto() {
+    FL.N = pick([10, 20, 50, 100, 200]); FL.A = pick([10, 20, 25, 50, 100]) * 1e-4; FL.mode = pick(['sale', 'entra']); FL.phi = pick([0, 0, 0, 30, 60]);
+    FL.dt = pick([0.05, 0.1, 0.15, 0.2, 0.5]); FL.R = pick([2, 4, 5, 8, 10]);
+    const Bs = [0, 0.1, 0.2, 0.3, 0.5, 0.6, 0.8]; FL.B1 = pick(Bs); FL.B2 = Math.random() < 0.12 ? FL.B1 : pick(Bs.filter(b => b !== FL.B1));
+    FL.play = false; FL.reto = flSnap();
+  },
+  retoText() {
+    const cambio = FL.B1 === FL.B2 ? `se mantiene en ${fp(FL.B1, 2)} T durante ${fp(FL.dt, 2)} s` : `pasa de ${fp(FL.B1, 2)} T a ${fp(FL.B2, 2)} T en ${fp(FL.dt, 2)} s, de manera uniforme`;
+    return `Una bobina de ${FL.N} vueltas, de ${fp(FL.A * 1e4, 0)} cm² cada una, ${FL.phi ? `tiene su normal a ${FL.phi}° de` : 'es perpendicular a'} un campo uniforme que ${FL.mode === 'sale' ? 'sale de' : 'entra en'} la página. El campo ${cambio}. Visto desde aquí, ¿en qué sentido circula la corriente inducida y cuánto vale la fem?`;
+  },
+  retoTag: 'Resueltos 1–2 y retos 1–4 del taller',
+  changed() { return !!FL.reto && flSnap() !== FL.reto; },
+  predQ: 'Visto desde aquí, ¿en qué sentido circula la corriente inducida?',
+  choices: CHO,
+  ansLabel: 'Tu valor de la fem \\(\\varepsilon\\), en voltios',
+  ansPh: 'ej. 0,40',
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = flCat(), e = flEps(), v = parseNum($('#ans-val').value), rows = [], c = Math.cos(rad(FL.phi));
+    const dOk = pred.choice === real;
+    rows.push({ t: `Sentido: ${NAMES[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = real === 'none' ? Math.abs(v) < 1e-12 : near(Math.abs(v), e, 0.03); rows.push({ t: `Tu \\(\\varepsilon\\): ${sp(v, 3)} V`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v); let t;
+    if (!dOk && real === 'none') t = 'El flujo no cambia: sin cambio de flujo no hay fem inducida, por intenso que sea el campo.';
+    else if (!dOk && pred.choice === 'none') t = 'El campo cambia, así que el flujo cambia: hay fem y corriente inducidas.';
+    else if (!dOk) t = 'Ley de Lenz: la corriente inducida crea un campo que se opone al <b>cambio</b> del flujo. Si aumenta el flujo que sale hacia ti, el campo inducido entra, y eso pide corriente en sentido horario.';
+    else if (vOk === false && near(av, e / FL.N, 0.03) && FL.N > 1) t = `Te faltó multiplicar por las ${FL.N} vueltas.`;
+    else if (vOk === false && FL.B1 !== FL.B2 && near(av, FL.N * FL.A * c * Math.max(FL.B1, FL.B2) / FL.dt, 0.03) && Math.min(FL.B1, FL.B2) > 0) t = 'Usa el cambio del campo, \\(\\Delta B=B_2-B_1\\), no su valor final.';
+    else if (vOk === false && (near(av, e * 1e4, 0.03) || near(av, e * 100, 0.03))) t = 'Revisa unidades: el área va en m² (1 cm² = 10⁻⁴ m²).';
+    else if (vOk === false && FL.phi && (near(av, e / c, 0.03) || near(av, e / c * Math.sin(rad(FL.phi)), 0.03))) t = 'El flujo usa \\(\\cos\\phi\\), con \\(\\phi\\) el ángulo entre la normal de la bobina y \\(\\vec B\\).';
+    else if (vOk === false && near(av, e * FL.dt, 0.03)) t = 'Ese es el cambio del flujo. La fem es su <b>ritmo</b> de cambio: divide por \\(\\Delta t\\).';
+    else if (vOk === false) t = '\\(\\varepsilon=N\\,\\dfrac{|\\Delta\\Phi|}{\\Delta t}\\), con \\(\\Phi=BA\\cos\\phi\\) y el área en m².';
+    else t = 'Bien. Pulsa «Reproducir el cambio»: la fem y la corriente solo existen mientras el campo cambia.';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const c = Math.cos(rad(FL.phi)), dPhi = FL.A * c * (FL.B2 - FL.B1), e = flEps(), real = flCat();
+    return `\\[\\Delta\\Phi=A\\cos\\phi\\,(B_2-B_1)=(${sx(FL.A)})(${fx(c, 3)})(${fx(FL.B2 - FL.B1, 2)})=${sx(dPhi)}\\ \\text{Wb}\\]\\[\\varepsilon=N\\,\\frac{|\\Delta\\Phi|}{\\Delta t}=\\frac{(${FL.N})(${sx(Math.abs(dPhi))})}{${fx(FL.dt, 2)}}=${sx(e)}\\ \\text{V}\\qquad I=\\frac{\\varepsilon}{R}=${sx(e / FL.R)}\\ \\text{A}\\]<p>${real === 'none' ? 'El flujo no cambia: no hay corriente.' : `El flujo hacia ti ${real === 'cw' ? 'aumenta' : 'disminuye'}; el campo inducido se opone a ese cambio, así que la corriente va en sentido <b>${NAMES[real]}</b>.`}</p>`;
+  },
+  live() { const r = reveal(); return String.raw`\varepsilon=N\,\dfrac{A\cos\phi\,|\Delta B|}{\Delta t}=\dfrac{(${FL.N})(${sx(FL.A)})(${fx(Math.cos(rad(FL.phi)), 3)})(${fx(Math.abs(FL.B2 - FL.B1), 2)})}{${fx(FL.dt, 2)}}=${r ? sx(flEps()) : '\\,?'}\,\text{V}`; },
+  coords: () => `${FL.N} vueltas · ${fp(FL.A * 1e4, 0)} cm²`,
+  animating: () => FL.play,
+  draw() {
+    const wide = W > 760, wv = wide ? W * 0.56 : W, rv = reveal(), cx = wide ? wv * 0.62 + 30 : wv * 0.5, cy = HU * (wide ? 0.62 : 0.55), real = flCat();
+    let tt = 1; if (FL.play) { const el = (performance.now() - FL.t0) / 1000; tt = Math.min(1.3, el / 2.5 * 1.3); if (tt >= 1.3) FL.play = false; } // 2,5 s de animación para todo el cambio
+    const frac = Math.min(1, tt), B = FL.B1 + (FL.B2 - FL.B1) * (FL.play || tt < 1 ? frac : 1);
+    ctx.save(); ctx.globalAlpha = 0.25 + 0.75 * B / Math.max(1e-9, Math.max(FL.B1, FL.B2, 0.05)); bPerp(FL.mode === 'sale' ? 1 : -1, 0, 0, wv, HU, W < 600 ? 38 : 46); ctx.restore();
+    const side = Math.min(wv, HU) * (wide ? 0.36 : 0.42), rx = side / 2, ry = side / 2 * Math.cos(rad(FL.phi));
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(cx, cy, rx, Math.max(ry, 3), 0, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    // resistencia en la parte inferior
+    ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(cx - 22, cy + Math.max(ry, 3) - 9, 44, 18, 4); ctx.fill(); ctx.stroke(); ctx.restore();
+    text('R', cx, cy + Math.max(ry, 3), COL.ink, 12, 'center', 600);
+    text(`B = ${fp(B, 2)} T ${FL.mode === 'sale' ? '⊙' : '⊗'}`, 16, 24, COL.field, 13, 'left', 600);
+    if (FL.phi) text(`normal a ${FL.phi}° de B`, cx, cy - Math.max(ry, 3) - 16, COL.muted, 12, 'center');
+    if (rv && real !== 'none') {
+      const changing = FL.play ? tt < 1 : true, s = real === 'cw' ? 1 : -1;
+      if (changing) { loopArrows(cx, cy, rx, Math.max(ry, 3), s, COL.accent, (performance.now() / 600) % (2 * Math.PI)); bigSym(cx, cy, real === 'cw' ? -1 : 1, COL.accentStrong, 'B inducido'); }
+      else text('Sin cambio de flujo: no hay corriente', cx, cy, COL.muted, 13, 'center', 600);
+    } else if (rv) text('Sin cambio de flujo: no hay corriente', cx, cy, COL.muted, 13, 'center', 600);
+    text('Vista de frente: la corriente se ve horaria o antihoraria desde aquí', 16, HU - 12, COL.muted, 12);
+    const pl = wide ? { x: W * 0.58, y: 20, w: W * 0.42 - 20, h: Math.min(HU - 40, 360) } : null; if (!pl) return;
+    plotAxes(pl, 'Flujo total NΦ y fem en el tiempo');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver las gráficas.'); return; }
+    const X = u => pl.x + 50 + u / 1.3 * (pl.w - 70), Phi = u => FL.N * FL.A * Math.cos(rad(FL.phi)) * flBz(FL.B1 + (FL.B2 - FL.B1) * Math.min(1, u));
+    const pm = Math.max(1e-12, Math.abs(Phi(0)), Math.abs(Phi(1))), mid = pl.y + 40 + (pl.h - 90) * 0.32, hh = (pl.h - 90) * 0.28;
+    const midE = pl.y + 40 + (pl.h - 90) * 0.8;
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(X(0), mid); ctx.lineTo(X(1.3), mid); ctx.moveTo(X(0), midE); ctx.lineTo(X(1.3), midE); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.field; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 130; i++) { const u = i / 100, y = mid - Phi(u) / pm * hh; i ? ctx.lineTo(X(u), y) : ctx.moveTo(X(u), y); } ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath(); const eh = real === 'none' ? 0 : hh * 0.8; ctx.moveTo(X(0), midE - eh); ctx.lineTo(X(1), midE - eh); ctx.lineTo(X(1), midE); ctx.lineTo(X(1.3), midE); ctx.stroke(); ctx.restore();
+    text('NΦ', pl.x + 16, mid - hh - 6, COL.field, 12, 'left', 600); text(`ε = ${fmtV(flEps())}`, pl.x + 16, midE - hh * 0.8 - 14, COL.primary, 12, 'left', 600);
+    text('0', X(0), pl.y + pl.h - 24, COL.muted, 11, 'center'); text('Δt', X(1), pl.y + pl.h - 24, COL.muted, 11, 'center');
+    if (FL.play || tt < 1.3) { const u = Math.min(tt, 1.3); ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(u), pl.y + 40); ctx.lineTo(X(u), pl.y + pl.h - 40); ctx.stroke(); ctx.restore(); }
+  },
+};
+
+// ═════════════════════════ ESCENA 2 · IMÁN Y BOBINA ═════════════════════════
+const IM = { m: 1.0, a: 0.02, N: 100, v: 0.5, z: 0.03, dir: 'acerca', pole: 'N', reto: null };
+const imPhi = z => MU0 * IM.m * IM.a ** 2 / (2 * (IM.a ** 2 + z * z) ** 1.5);
+const imDphi = z => 3 * MU0 * IM.m * IM.a ** 2 * z / (2 * (IM.a ** 2 + z * z) ** 2.5); // −dΦ/dz, positivo para z > 0
+const imEps = (z = IM.z) => IM.N * imDphi(z) * IM.v;
+// Visto desde el imán: si se acerca el polo norte, la bobina «responde» con un norte hacia él: antihorario.
+const imCat = () => IM.v === 0 || IM.z === 0 ? 'none' : ((IM.dir === 'acerca') === (IM.pole === 'N') ? 'ccw' : 'cw');
+const imSnap = () => JSON.stringify([IM.m, IM.a, IM.N, IM.v, IM.z, IM.dir, IM.pole]);
+const scIman = {
+  title: 'Imán',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Polo hacia la bobina</span>
+      <div class="seg">${[['N', 'Norte'], ['S', 'Sur']].map(([k, l]) => `<button class="btn ${IM.pole === k ? 'active' : ''}" data-act="pole:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Movimiento</span>
+      <div class="seg">${[['acerca', 'Se acerca'], ['aleja', 'Se aleja']].map(([k, l]) => `<button class="btn ${IM.dir === k ? 'active' : ''}" data-act="dir:${k}" type="button">${l}</button>`).join('')}</div></div>`,
+  act(a) { if (a.startsWith('pole:')) IM.pole = a.slice(5); else if (a.startsWith('dir:')) IM.dir = a.slice(4); invalidate(); buildToolbar(); },
+  values: () => [
+    { k: 'z', sym: 'z', min: 0, max: 8, step: 0.25, get: () => IM.z * 100, set: x => IM.z = x / 100, fmt: x => fp(x, 2) + ' cm', label: 'Distancia del imán a la bobina' },
+    { k: 'v', sym: 'v', min: 0, max: 2, step: 0.05, get: () => IM.v, set: x => IM.v = x, fmt: x => fp(x, 2) + ' m/s', label: 'Rapidez del imán' },
+    { k: 'N', sym: 'N', min: 1, max: 500, step: 1, get: () => IM.N, set: x => IM.N = x, fmt: x => x + ' vueltas' },
+    { k: 'a', sym: 'a', min: 0.5, max: 5, step: 0.25, get: () => IM.a * 100, set: x => IM.a = x / 100, fmt: x => fp(x, 2) + ' cm', label: 'Radio de la bobina' },
+    { k: 'm', sym: 'm', min: 0.1, max: 5, step: 0.1, get: () => IM.m, set: x => IM.m = x, fmt: x => fp(x, 1) + ' A·m²', label: 'Momento magnético del imán' }],
+  valuesNote: 'El imán es un dipolo sobre el eje de la bobina. Arrastra el imán para cambiar la distancia z.',
+  newReto() {
+    IM.N = pick([50, 100, 200]); IM.a = pick([1, 1.5, 2, 3]) / 100; IM.m = pick([0.5, 1, 2]); IM.dir = pick(['acerca', 'aleja']); IM.pole = pick(['N', 'S']);
+    IM.v = Math.random() < 0.12 ? 0 : pick([0.2, 0.5, 1.0]); IM.z = pick([1, 2, 3, 4]) / 100; IM.reto = imSnap();
+  },
+  retoText() {
+    const mov = IM.v === 0 ? 'está quieto' : `${IM.dir === 'acerca' ? 'se acerca' : 'se aleja'} a ${fp(IM.v, 2)} m/s`;
+    return `Un imán (dipolo de ${fp(IM.m, 1)} A·m²) está sobre el eje de una bobina de ${IM.N} vueltas y ${fp(IM.a * 100, 1)} cm de radio, con su polo ${IM.pole === 'N' ? 'norte' : 'sur'} hacia ella. Cuando está a ${fp(IM.z * 100, 1)} cm, ${mov}. Vista desde el imán, ¿en qué sentido circula la corriente inducida y cuánto vale la fem?`;
+  },
+  retoTag: 'Resuelto 3 y reto 5 del taller',
+  changed() { return !!IM.reto && imSnap() !== IM.reto; },
+  predQ: 'Vista <b>desde el imán</b>, ¿en qué sentido circula la corriente en la bobina?',
+  choices: CHO,
+  ansLabel: 'Tu valor de la fem, en milivoltios',
+  ansPh: 'ej. 18,6',
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = imCat(), e = real === 'none' ? 0 : imEps() * 1e3, v = parseNum($('#ans-val').value), rows = [];
+    const dOk = pred.choice === real;
+    rows.push({ t: `Sentido: ${NAMES[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = real === 'none' ? Math.abs(v) < 1e-9 : near(Math.abs(v), e, 0.03); rows.push({ t: `Tu fem: ${sp(v, 3)} mV`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v); let t;
+    if (!dOk && real === 'none') t = 'El imán está quieto: el flujo por la bobina no cambia y no hay fem, aunque esté muy cerca.';
+    else if (!dOk && pred.choice === 'none') t = 'El imán se mueve, así que el flujo por la bobina cambia: hay fem inducida.';
+    else if (!dOk) t = `Ley de Lenz: la bobina se opone al cambio. ${IM.dir === 'acerca' ? 'Si se acerca un polo, la bobina presenta el mismo polo para repelerlo' : 'Si se aleja un polo, la bobina presenta el polo opuesto para atraerlo'}. Un norte que mira hacia ti corresponde a corriente antihoraria vista desde ese lado.`;
+    else if (vOk === false && near(av, e / IM.N, 0.03)) t = `Te faltó multiplicar por las ${IM.N} vueltas.`;
+    else if (vOk === false && (near(av, e / 1e3, 0.03) || near(av, e * 1e3, 0.03))) t = 'Revisa unidades: el reto pide milivoltios (1 V = 1000 mV).';
+    else if (vOk === false && near(av, IM.N * imPhi(IM.z) * 1e3, 0.03)) t = 'Ese es el flujo, no la fem. La fem es \\(N\\,|d\\Phi/dz|\\,v\\).';
+    else if (vOk === false) t = 'Con \\(\\Phi(z)=\\dfrac{\\mu_0 m a^2}{2(a^2+z^2)^{3/2}}\\): \\(\\varepsilon=N\\left|\\dfrac{d\\Phi}{dz}\\right|v=N\\,\\dfrac{3\\mu_0 m a^2 z}{2(a^2+z^2)^{5/2}}\\,v\\).';
+    else t = 'Bien. Mueve el imán por el eje: la fem es máxima a \\(z=a/2\\) y nula justo en el centro de la bobina, donde el flujo pasa por su máximo.';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const real = imCat(), d = imDphi(IM.z);
+    return `\\[\\Phi(z)=\\frac{\\mu_0 m a^2}{2(a^2+z^2)^{3/2}}=${sx(imPhi(IM.z))}\\ \\text{Wb}\\qquad \\left|\\frac{d\\Phi}{dz}\\right|=\\frac{3\\mu_0 m a^2 z}{2(a^2+z^2)^{5/2}}=${sx(d)}\\ \\text{Wb/m}\\]\\[\\varepsilon=N\\left|\\frac{d\\Phi}{dz}\\right|v=(${IM.N})(${sx(d)})(${fx(IM.v, 2)})=${real === 'none' ? '0' : sx(imEps())}\\ \\text{V}\\]<p>${real === 'none' ? 'No hay movimiento: no hay fem.' : `La corriente es <b>${NAMES[real]}</b> vista desde el imán: la bobina ${IM.dir === 'acerca' ? 'repele' : 'atrae'} al imán, oponiéndose al movimiento.`}</p>`;
+  },
+  live() { const r = reveal(); return String.raw`\varepsilon=N\left|\dfrac{d\Phi}{dz}\right|v=(${IM.N})(${sx(imDphi(IM.z))})(${fx(IM.v, 2)})=${r ? (imCat() === 'none' ? '0' : sx(imEps())) : '\\,?'}\,\text{V}`; },
+  coords: () => `z = ${fp(IM.z * 100, 2)} cm · ${IM.dir === 'acerca' ? 'se acerca' : 'se aleja'}`,
+  view() { const wide = W > 760, wv = wide ? W * 0.56 : W; return { wv, ay: HU * (wide ? 0.6 : 0.5), xc: wv * 0.8, s: (wv * 0.55) / 0.09, wide }; },
+  down(px, py) { const { xc, s, ay } = this.view(), xm = xc - IM.z * s; if (Math.abs(px - (xm - 50)) < 70 && Math.abs(py - ay) < 40) IM.drag = true; },
+  move(px) { if (!IM.drag) return; const { xc, s } = this.view(); IM.z = clamp(Math.round((xc - (px + 50)) / s * 400) / 400, 0, 0.08); invalidate(); buildValues(); },
+  up() { IM.drag = false; },
+  draw() {
+    const { wv, ay, xc, s, wide } = this.view(), rv = reveal(), real = imCat(), R = Math.max(10, IM.a * s);
+    // eje y líneas tenues del campo del imán
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.moveTo(16, ay); ctx.lineTo(wv - 16, ay); ctx.stroke(); ctx.restore();
+    const xm = xc - IM.z * s; // cara del imán que mira a la bobina
+    const north = IM.pole === 'N';
+    ctx.save(); ctx.fillStyle = north ? COL.qneg : COL.qpos; ctx.fillRect(xm - 100, ay - 22, 50, 44); ctx.fillStyle = north ? COL.qpos : COL.qneg; ctx.fillRect(xm - 50, ay - 22, 50, 44); ctx.restore();
+    text(north ? 'S' : 'N', xm - 75, ay, '#fff', 18, 'center', 700); text(north ? 'N' : 'S', xm - 25, ay, '#fff', 18, 'center', 700);
+    if (IM.v > 0) arrow(xm - 50, ay - 40, xm - 50 + (IM.dir === 'acerca' ? 46 : -46), ay - 40, COL.ink, 3, 11);
+    text(IM.v > 0 ? `v = ${fp(IM.v, 2)} m/s` : 'quieto', xm - 50, ay - 58, COL.ink, 12, 'center', 600);
+    // campo del imán en la bobina: sale del norte
+    const bdir = north ? 1 : -1; arrow(xc - 30 * bdir, ay - R - 44, xc + 30 * bdir, ay - R - 44, COL.field, 2.5, 10); text('B del imán en la bobina', xc, ay - R - 60, COL.field, 11, 'center', 600);
+    // bobina (vista de lado: elipse estrecha)
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 5; for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.ellipse(xc + k * 6, ay, 9, R, 0, 0, 2 * Math.PI); ctx.stroke(); } ctx.restore();
+    text(`${IM.N} vueltas`, xc, ay - R - 14, COL.primary, 12, 'center', 600);
+    // distancia
+    ctx.save(); ctx.strokeStyle = COL.muted; ctx.beginPath(); ctx.moveTo(xm, ay + R + 24); ctx.lineTo(xc, ay + R + 24); ctx.moveTo(xm, ay + R + 18); ctx.lineTo(xm, ay + R + 30); ctx.moveTo(xc, ay + R + 18); ctx.lineTo(xc, ay + R + 30); ctx.stroke(); ctx.restore(); text(`z = ${fp(IM.z * 100, 2)} cm`, (xm + xc) / 2, ay + R + 40, COL.muted, 11, 'center');
+    if (rv) {
+      if (real === 'none') text('Sin movimiento no hay fem', xc, ay - R - 34, COL.muted, 13, 'center', 600);
+      else {
+        // campo inducido y fuerza sobre el imán
+        const ind = (IM.dir === 'acerca' ? -1 : 1) * bdir; arrow(xc - ind * 22, ay, xc + ind * 22, ay, COL.accentStrong, 3.5, 12); text('B inducido', xc + 34, ay + R + 62, COL.accentStrong, 11, 'left', 600); arrow(xc + 32, ay + R + 56, xc + 14, ay + 8, COL.accentStrong, 1, 6);
+        arrow(xm - 50, ay + 40, xm - 50 + (IM.dir === 'acerca' ? -40 : 40), ay + 40, COL.force, 3.5, 12); text(IM.dir === 'acerca' ? 'la bobina lo repele' : 'la bobina lo atrae', xm - 50, ay + 60, COL.force, 11, 'center', 600);
+        senseIcon(wv - 60, 70, real === 'cw' ? 1 : -1, 'visto desde el imán');
+      }
+    }
+    text('Vista lateral; arrastra el imán a lo largo del eje', 16, HU - 12, COL.muted, 12);
+    const pl = wide ? { x: W * 0.58, y: 20, w: W * 0.42 - 20, h: Math.min(HU - 40, 340) } : null; if (!pl) return;
+    plotAxes(pl, 'fem según la distancia z (misma rapidez)');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver la curva.'); return; }
+    const zmax = 0.08, emax = imEps(IM.a / 2) * 1.15 || 1;
+    const X = z => pl.x + 50 + z / zmax * (pl.w - 70), Y = e => pl.y + pl.h - 46 - e / emax * (pl.h - 100);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(zmax), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(emax)); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const z = zmax * i / 200, y = Y(imEps(z)); i ? ctx.lineTo(X(z), y) : ctx.moveTo(X(z), y); } ctx.stroke(); ctx.restore();
+    ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(IM.z), Y(real === 'none' ? 0 : imEps()), 6, 0, 2 * Math.PI); ctx.fill();
+    text(`${fmtV(real === 'none' ? 0 : imEps())}`, X(IM.z) + 10, Y(real === 'none' ? 0 : imEps()) - 12, COL.primary, 12, 'left', 600);
+    text('máximo en z = a/2', X(IM.a / 2) + 14, Y(imEps(IM.a / 2)) - 4, COL.muted, 11, 'left');
+    for (let z = 0; z <= zmax + 1e-9; z += 0.02) text(`${fp(z * 100, 0)} cm`, X(z), pl.y + pl.h - 22, COL.muted, 11, 'center');
+  },
+};
+
+// ═════════════════════════ ESCENA 3 · BARRA SOBRE RIELES ═════════════════════════
+const BA = { B: 0.8, L: 0.5, v: 4, R: 2, m: 0.1, mode: 'entra', dir: 1, run: false, t0: 0, reto: null };
+const baEps = () => BA.B * BA.L * BA.v, baI = () => baEps() / BA.R, baF = () => baI() * BA.L * BA.B, baTau = () => BA.m * BA.R / (BA.B * BA.L) ** 2;
+// Campo entrante y barra hacia la derecha: el flujo entrante aumenta y la corriente es antihoraria.
+const baCat = () => BA.v === 0 ? 'none' : ((BA.mode === 'entra') === (BA.dir > 0) ? 'ccw' : 'cw');
+const baSnap = () => JSON.stringify([BA.B, BA.L, BA.v, BA.R, BA.mode, BA.dir]);
+const scBarra = {
+  title: 'Barra',
+  tools: () => `
+    <div class="tool-group"><span class="tool-group__label">Campo B</span>
+      <div class="seg">${[['entra', 'Entra ⊗'], ['sale', 'Sale ⊙']].map(([k, l]) => `<button class="btn ${BA.mode === k ? 'active' : ''}" data-act="mode:${k}" type="button">${l}</button>`).join('')}</div></div>
+    <span class="tool-sep"></span>
+    <div class="tool-group"><span class="tool-group__label">Barra</span>
+      <div class="seg">${[[1, 'Hacia la derecha'], [-1, 'Hacia la izquierda']].map(([k, l]) => `<button class="btn ${BA.dir === k ? 'active' : ''}" data-act="dir:${k}" type="button">${l}</button>`).join('')}</div>
+      <button class="btn ${BA.run ? 'active' : ''}" data-act="run" type="button" ${reveal() ? '' : 'disabled title="Comprueba tu predicción primero"'}><i class="ph ph-play"></i>Soltarla sin empujar</button></div>`,
+  act(a) {
+    if (a.startsWith('mode:')) { BA.mode = a.slice(5); invalidate(); } else if (a.startsWith('dir:')) { BA.dir = +a.slice(4); invalidate(); }
+    else if (a === 'run') { BA.run = !BA.run; BA.t0 = performance.now(); }
+    buildToolbar();
+  },
+  values: () => [
+    { k: 'B', sym: 'B', min: 0.05, max: 1.5, step: 0.05, get: () => BA.B, set: x => BA.B = x, fmt: x => fp(x, 2) + ' T' },
+    { k: 'L', sym: 'L', min: 0.1, max: 1, step: 0.05, get: () => BA.L, set: x => BA.L = x, fmt: x => fp(x, 2) + ' m', label: 'Separación de los rieles' },
+    { k: 'v', sym: 'v', min: 0, max: 10, step: 0.5, get: () => BA.v, set: x => BA.v = x, fmt: x => fp(x, 1) + ' m/s', label: 'Rapidez de la barra' },
+    { k: 'R', sym: 'R', min: 0.5, max: 20, step: 0.5, get: () => BA.R, set: x => BA.R = x, fmt: x => fp(x, 1) + ' Ω' },
+    { k: 'm', sym: 'm', min: 0.02, max: 1, step: 0.02, get: () => BA.m, set: x => BA.m = x, fmt: x => fp(x, 2) + ' kg', label: 'Masa de la barra (para «Soltarla»)' }],
+  valuesNote: 'Con «Soltarla sin empujar», la barra parte con la rapidez v y la fuerza magnética la frena: v(t) = v₀ e^(−t/τ), con τ = mR/(BL)².',
+  newReto() { BA.B = pick([0.2, 0.4, 0.5, 0.8, 1.0]); BA.L = pick([0.2, 0.3, 0.5, 1.0]); BA.v = pick([1, 2, 4, 5, 10]); BA.R = pick([0.5, 1, 2, 4, 5]); BA.mode = pick(['entra', 'sale']); BA.dir = pick([1, -1]); BA.run = false; BA.reto = baSnap(); },
+  retoText() { return `Una barra conductora de ${fp(BA.L * 100, 0)} cm se desliza ${BA.dir > 0 ? 'hacia la derecha' : 'hacia la izquierda'} a ${fp(BA.v, 1)} m/s sobre dos rieles unidos por una resistencia de ${fp(BA.R, 1)} Ω, en un campo de ${fp(BA.B, 2)} T que ${BA.mode === 'entra' ? 'entra en' : 'sale de'} la página. Visto desde aquí, ¿en qué sentido circula la corriente y cuánto vale?`; },
+  retoTag: 'Resuelto 4 y retos 6–7 del taller',
+  changed() { return !!BA.reto && baSnap() !== BA.reto; },
+  predQ: 'Visto desde aquí, ¿en qué sentido circula la corriente por el circuito?',
+  choices: CHO,
+  ansLabel: 'Tu valor de la corriente \\(I\\), en amperios',
+  ansPh: 'ej. 0,80',
+  hasPred: () => !!pred.choice,
+  check() {
+    const real = baCat(), I = real === 'none' ? 0 : baI(), v = parseNum($('#ans-val').value), rows = [];
+    const dOk = pred.choice === real;
+    rows.push({ t: `Sentido: ${NAMES[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = real === 'none' ? Math.abs(v) < 1e-9 : near(Math.abs(v), I, 0.03); rows.push({ t: `Tu \\(I\\): ${sp(v, 3)} A`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v); let t;
+    if (!dOk && real === 'none') t = 'La barra está quieta: el área del circuito no cambia y no hay corriente.';
+    else if (!dOk && pred.choice === 'none') t = 'La barra se mueve: el área del circuito, y con ella el flujo, cambia. Hay corriente.';
+    else if (!dOk) t = 'Dos formas de verlo: (1) Lenz, el campo inducido se opone al cambio del flujo; (2) Lorentz, \\(q\\vec v\\times\\vec B\\) empuja las cargas positivas a lo largo de la barra.';
+    else if (vOk === false && near(av, baEps(), 0.03)) t = 'Esa es la fem. La corriente es \\(I=\\varepsilon/R\\).';
+    else if (vOk === false && (near(av, I * 100, 0.03) || near(av, I / 100, 0.03))) t = 'Revisa unidades: L va en metros.';
+    else if (vOk === false) t = '\\(\\varepsilon=BLv\\) e \\(I=\\varepsilon/R\\).';
+    else t = 'Bien. Pulsa «Soltarla sin empujar»: la fuerza magnética \\(ILB\\) se opone al movimiento y la barra se frena. La energía cinética termina como calor en la resistencia.';
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() {
+    const real = baCat();
+    return `<p>Camino A (Faraday): el área crece a ritmo \\(Lv\\), así que \\(|d\\Phi/dt|=BLv\\). Camino B (Lorentz): sobre cada carga de la barra actúa \\(qvB\\) a lo largo de ella; el trabajo por unidad de carga en el largo \\(L\\) es \\(vBL\\).</p>\\[\\varepsilon=BLv=(${fx(BA.B, 2)})(${fx(BA.L, 2)})(${fx(BA.v, 1)})=${sx(baEps())}\\ \\text{V}\\qquad I=\\frac{\\varepsilon}{R}=${sx(baI())}\\ \\text{A}\\]\\[F=ILB=${sx(baF())}\\ \\text{N}\\qquad P=Fv=I^2R=${sx(baF() * BA.v)}\\ \\text{W}\\]<p>${real === 'none' ? 'Sin movimiento no hay corriente.' : `La corriente es <b>${NAMES[real]}</b>.`}</p>`;
+  },
+  live() { const r = reveal(); return String.raw`I=\dfrac{BLv}{R}=\dfrac{(${fx(BA.B, 2)})(${fx(BA.L, 2)})(${fx(BA.v, 1)})}{${fx(BA.R, 1)}}=${r ? (baCat() === 'none' ? '0' : sx(baI())) : '\\,?'}\,\text{A}`; },
+  coords: () => `ε = BLv = ${fp(baEps(), 2)} V`,
+  animating: () => BA.run || (reveal() && BA.v > 0),
+  draw() {
+    const wide = W > 760, wv = wide ? W * 0.58 : W, rv = reveal(), real = baCat();
+    bPerp(BA.mode === 'sale' ? 1 : -1, 0, 0, wv, HU, W < 600 ? 38 : 46);
+    const yT = HU * (wide ? 0.5 : 0.3), yB = yT + Math.max(90, Math.min(HU * (wide ? 0.36 : 0.45), BA.L * 260)), xR = 50, x0 = wv * (wide ? 0.68 : 0.55);
+    let vt = BA.v, tt = 0;
+    if (BA.run) { tt = (performance.now() - BA.t0) / 1000; vt = BA.v * Math.exp(-tt / baTau()); if (tt > 6 * baTau() + 0.5) BA.run = false; }
+    const xb = BA.run ? clamp(x0 + BA.dir * BA.v * baTau() * (1 - Math.exp(-tt / baTau())) * 60, 90, wv - 30) : x0;
+    ctx.save(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(xR, yT); ctx.lineTo(wv - 20, yT); ctx.moveTo(xR, yB); ctx.lineTo(wv - 20, yB); ctx.moveTo(xR, yT); ctx.lineTo(xR, yB); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.fillStyle = COL.surface; ctx.strokeStyle = COL.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(xR - 11, (yT + yB) / 2 - 26, 22, 52, 4); ctx.fill(); ctx.stroke(); ctx.restore(); text('R', xR - 22, (yT + yB) / 2, COL.ink, 13, 'right', 600);
+    ctx.save(); ctx.fillStyle = COL.primary; ctx.globalAlpha = 0.12; ctx.fillRect(xR, yT, xb - xR, yB - yT); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(xb, yT - 14); ctx.lineTo(xb, yB + 14); ctx.stroke(); ctx.restore();
+    if (vt > 1e-3) arrow(xb, yT - 34, xb + BA.dir * (20 + 40 * vt / Math.max(BA.v, 1e-9)), yT - 34, COL.ink, 3, 11);
+    text(`v = ${fp(vt, 2)} m/s`, xb, yT - 52, COL.ink, 12, 'center', 600);
+    text(`L = ${fp(BA.L, 2)} m`, xb + 16, (yT + yB) / 2, COL.primary, 12, 'left', 600);
+    if (rv && real !== 'none' && vt > 1e-3) {
+      const s = real === 'cw' ? 1 : -1, ph = (performance.now() / 400) % 1;
+      // corriente por los cuatro lados del circuito (horario: arriba hacia la derecha)
+      const pts = [[xR, yT], [xb, yT], [xb, yB], [xR, yB]];
+      for (let k = 0; k < 4; k++) { const [a1, b1] = pts[k], [a2, b2] = pts[(k + 1) % 4], f = (ph + 0.5) % 1, sx0 = s > 0 ? a1 + (a2 - a1) * f : a2 + (a1 - a2) * f, sy0 = s > 0 ? b1 + (b2 - b1) * f : b2 + (b1 - b2) * f, ux = (s > 0 ? a2 - a1 : a1 - a2), uy = (s > 0 ? b2 - b1 : b1 - b2), L = Math.hypot(ux, uy) || 1; arrow(sx0 - ux / L * 10, sy0 - uy / L * 10, sx0 + ux / L * 10, sy0 + uy / L * 10, COL.accent, 3, 10); }
+      arrow(xb, (yT + yB) / 2 + 30, xb - BA.dir * 50, (yT + yB) / 2 + 30, COL.force, 3.5, 12); text('F = ILB', xb - BA.dir * 56, (yT + yB) / 2 + 48, COL.force, 12, BA.dir > 0 ? 'right' : 'left', 600);
+      bigSym((xR + xb) / 2, (yT + yB) / 2, real === 'cw' ? -1 : 1, COL.accentStrong, 'B inducido');
+    }
+    text('Vista de frente · los rieles se unen por la resistencia R', 16, HU - 12, COL.muted, 12);
+    const pl = wide ? { x: W * 0.6, y: 20, w: W * 0.4 - 20, h: Math.min(HU - 40, 320) } : null; if (!pl) return;
+    plotAxes(pl, 'Si se suelta la barra: rapidez en el tiempo');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver el balance.'); return; }
+    const T = baTau(), tm = 5 * T, X = t => pl.x + 50 + t / tm * (pl.w - 70), Y = u => pl.y + pl.h - 46 - u / (BA.v || 1) * (pl.h - 110);
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(tm), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(BA.v)); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const t = tm * i / 200, y = Y(BA.v * Math.exp(-t / T)); i ? ctx.lineTo(X(t), y) : ctx.moveTo(X(t), y); } ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(T), Y(0)); ctx.lineTo(X(T), Y(BA.v)); ctx.stroke(); ctx.restore();
+    text(`τ = mR/(BL)² = ${fp(T, 3)} s`, X(T) + 6, Y(BA.v) + 6, COL.accentStrong, 12, 'left', 600);
+    if (BA.run) { ctx.fillStyle = COL.primary; ctx.beginPath(); ctx.arc(X(Math.min(tt, tm)), Y(vt), 6, 0, 2 * Math.PI); ctx.fill(); }
+    text(`Fv = ${fp(baF() * BA.v, 3)} W  ·  I²R = ${fp(baI() ** 2 * BA.R, 3)} W`, pl.x + 16, pl.y + 44, COL.ink, 12, 'left', 600);
+  },
+};
+
+// ═════════════════════════ ESCENA 4 · GENERADOR ═════════════════════════
+const GE = { N: 100, a: 0.10, b: 0.20, B: 0.3, f: 60, t0: performance.now(), reto: null };
+const geW = () => 2 * Math.PI * GE.f, geMax = () => GE.N * GE.B * GE.a * GE.b * geW();
+const geSnap = () => JSON.stringify([GE.N, GE.a, GE.b, GE.B, GE.f]);
+const scGenerador = {
+  title: 'Generador',
+  tools: () => `<div class="tool-group"><span class="tool-group__label">Bobina</span><button class="btn tog active" type="button" tabindex="-1">Gira con rapidez angular ω = 2πf</button></div>`,
+  act() {},
+  values: () => [
+    { k: 'N', sym: 'N', min: 1, max: 500, step: 1, get: () => GE.N, set: x => GE.N = x, fmt: x => x + ' vueltas' },
+    { k: 'a', sym: 'a', min: 2, max: 30, step: 1, get: () => GE.a * 100, set: x => GE.a = x / 100, fmt: x => x + ' cm' },
+    { k: 'b', sym: 'b', min: 2, max: 30, step: 1, get: () => GE.b * 100, set: x => GE.b = x / 100, fmt: x => x + ' cm' },
+    { k: 'B', sym: 'B', min: 0.05, max: 1, step: 0.05, get: () => GE.B, set: x => GE.B = x, fmt: x => fp(x, 2) + ' T' },
+    { k: 'f', sym: 'f', min: 1, max: 120, step: 1, get: () => GE.f, set: x => GE.f = x, fmt: x => x + ' Hz', label: 'Frecuencia de giro' }],
+  valuesNote: 'La animación va más lenta que la frecuencia real: una vuelta cada 3 s.',
+  newReto() { GE.N = pick([50, 100, 200, 500]); GE.a = pick([5, 10, 15, 20]) / 100; GE.b = pick([10, 20, 25]) / 100; GE.B = pick([0.1, 0.2, 0.3, 0.5]); GE.f = pick([10, 25, 50, 60]); GE.reto = geSnap(); },
+  retoText() { return `Una bobina de ${GE.N} vueltas, de ${fp(GE.a * 100, 0)} cm × ${fp(GE.b * 100, 0)} cm, gira a ${GE.f} Hz en un campo uniforme de ${fp(GE.B, 2)} T. ¿En qué posición de la bobina es máxima la fem y cuánto vale ese máximo?`; },
+  retoTag: 'Resuelto 5 y retos 8–9 del taller',
+  changed() { return !!GE.reto && geSnap() !== GE.reto; },
+  predQ: '¿En qué posición de la bobina es máxima la fem?',
+  choices: [{ id: 'par', label: 'Plano paralelo a B' }, { id: 'perp', label: 'Plano perpendicular a B' }, { id: 'igual', label: 'Es igual siempre' }],
+  ansLabel: 'Tu valor de la fem máxima, en voltios',
+  ansPh: 'ej. 226',
+  hasPred: () => !!pred.choice,
+  check() {
+    const e = geMax(), v = parseNum($('#ans-val').value), rows = [], dOk = pred.choice === 'par', lab = { par: 'plano paralelo a B', perp: 'plano perpendicular a B', igual: 'igual siempre' };
+    rows.push({ t: `Posición: ${lab[pred.choice]}`, ok: dOk, chip: dOk ? 'correcto' : 'incorrecto' });
+    let vOk = null;
+    if (isFinite(v)) { vOk = near(Math.abs(v), e, 0.03); rows.push({ t: `Tu \\(\\varepsilon_{\\max}\\): ${sp(v, 3)} V`, ok: vOk, chip: vOk ? 'correcto' : 'revisa' }); }
+    else rows.push({ t: 'Valor: sin respuesta', ok: null, chip: 'escribe un número' });
+    const av = Math.abs(v); let t;
+    if (!dOk && pred.choice === 'perp') t = 'Con el plano perpendicular a \\(\\vec B\\) el flujo es máximo, pero en ese instante no cambia: la fem es cero. Es máxima cuando el flujo pasa por cero, que es cuando cambia más rápido.';
+    else if (!dOk) t = 'La fem sigue \\(\\varepsilon=NBA\\omega\\sin\\omega t\\): oscila. Es máxima cuando el flujo \\(NBA\\cos\\omega t\\) pasa por cero, con el plano de la bobina paralelo a \\(\\vec B\\).';
+    else if (vOk === false && near(av, e / (2 * Math.PI), 0.03)) t = 'Usa la frecuencia angular, \\(\\omega=2\\pi f\\), no \\(f\\).';
+    else if (vOk === false && near(av, e / Math.SQRT2, 0.03)) t = 'Ese es el valor eficaz. El pico es \\(\\sqrt2\\) veces mayor.';
+    else if (vOk === false && near(av, e / GE.N, 0.03)) t = `Te faltó multiplicar por las ${GE.N} vueltas.`;
+    else if (vOk === false && (near(av, e * 1e4, 0.03) || near(av, e * 100, 0.03))) t = 'Revisa unidades: el área va en m².';
+    else if (vOk === false) t = '\\(\\varepsilon_{\\max}=NBA\\omega\\), con \\(\\omega=2\\pi f\\) y el área en m².';
+    else t = `Bien. Su valor eficaz es \\(\\varepsilon_{\\max}/\\sqrt2=${sx(e / Math.SQRT2)}\\) V. Mira en la gráfica cómo la fem es máxima cuando el flujo cruza el cero.`;
+    return { rows, tip: t, allOk: dOk && vOk === true };
+  },
+  solution() { return `<p>Con el ángulo \\(\\omega t\\) entre la normal y \\(\\vec B\\): \\(\\Phi=NBA\\cos\\omega t\\) y \\(\\varepsilon=-d\\Phi/dt=NBA\\omega\\sin\\omega t\\). Es máxima con \\(\\omega t=90^\\circ\\): normal perpendicular a \\(\\vec B\\), plano de la bobina paralelo a \\(\\vec B\\).</p>\\[\\varepsilon_{\\max}=NBA\\omega=(${GE.N})(${fx(GE.B, 2)})(${fx(GE.a * GE.b, 4)})(2\\pi\\cdot${GE.f})=${sx(geMax())}\\ \\text{V}\\]`; },
+  live() { const r = reveal(); return String.raw`\varepsilon_{\max}=NBA\omega=(${GE.N})(${fx(GE.B, 2)})(${fx(GE.a * GE.b, 4)})(2\pi\cdot${GE.f})=${r ? sx(geMax()) : '\\,?'}\,\text{V}`; },
+  coords: () => `ω = ${fp(geW(), 1)} rad/s`,
+  animating: () => true,
+  draw() {
+    const wide = W > 760, wv = wide ? W * 0.5 : W, rv = reveal(), cx = wide ? wv * 0.62 + 20 : wv * 0.5, cy = HU * (wide ? 0.6 : 0.5), R = Math.min(wv, HU) * (wide ? 0.26 : 0.3), th = ((performance.now() - GE.t0) / 3000) * 2 * Math.PI;
+    bPlane(0, 0, 0, wv, HU, W < 600 ? 40 : 48); text('B → (uniforme)', 16, 24, COL.field, 13, 'left', 600);
+    // bobina de canto: su normal forma el ángulo th con B
+    const ux = cx + R * Math.cos(th + Math.PI / 2), uy = cy - R * Math.sin(th + Math.PI / 2), dx = cx - R * Math.cos(th + Math.PI / 2), dy = cy + R * Math.sin(th + Math.PI / 2);
+    ctx.save(); ctx.strokeStyle = COL.primary; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ux, uy); ctx.lineTo(dx, dy); ctx.stroke(); ctx.restore();
+    arrow(cx, cy, cx + R * 0.7 * Math.cos(th), cy - R * 0.7 * Math.sin(th), COL.ink, 3, 11); sym('n̂', cx + R * 0.8 * Math.cos(th), cy - R * 0.8 * Math.sin(th), COL.ink, 17);
+    const e = Math.sin(th);
+    if (rv) { wireSym(ux, uy, e >= 0 ? 1 : -1, 10, COL.accent); wireSym(dx, dy, e >= 0 ? -1 : 1, 10, COL.accent); }
+    text(rv ? `ε = ${fp(geMax() * e, 1)} V` : 'ε = ?', cx, cy + R + 32, COL.primary, 15, 'center', 700);
+    text('Vista de canto: el eje de giro sale de la página', 16, HU - 12, COL.muted, 12);
+    const pl = wide ? { x: W * 0.52, y: 20, w: W * 0.48 - 20, h: Math.min(HU - 40, 340) } : null; if (!pl) return;
+    plotAxes(pl, 'Flujo NΦ y fem durante dos vueltas');
+    if (!rv) { hint(pl, 'Comprueba tu predicción para ver las curvas.'); return; }
+    const X = u => pl.x + 30 + u / (4 * Math.PI) * (pl.w - 50), mid = pl.y + pl.h / 2 + 8, hh = (pl.h - 110) / 2;
+    ctx.save(); ctx.strokeStyle = COL.line; ctx.beginPath(); ctx.moveTo(X(0), mid); ctx.lineTo(X(4 * Math.PI), mid); ctx.stroke(); ctx.restore();
+    [[Math.cos, COL.field, 'NΦ'], [Math.sin, COL.primary, 'ε']].forEach(([f, c, l], i) => { ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = 2.5; ctx.beginPath(); for (let k = 0; k <= 240; k++) { const u = 4 * Math.PI * k / 240, y = mid - f(u) * hh; k ? ctx.lineTo(X(u), y) : ctx.moveTo(X(u), y); } ctx.stroke(); ctx.restore(); text(l, pl.x + pl.w - 20, pl.y + 46 + i * 18, c, 13, 'right', 700); });
+    const u = th % (4 * Math.PI); ctx.save(); ctx.strokeStyle = COL.accent; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(u), pl.y + 36); ctx.lineTo(X(u), pl.y + pl.h - 30); ctx.stroke(); ctx.restore();
+    text(`pico ${fp(geMax(), 1)} V · eficaz ${fp(geMax() / Math.SQRT2, 1)} V`, pl.x + 16, pl.y + 46, COL.ink, 12, 'left', 600);
+  },
+};
+
+// ───────────────────────── orquestación ─────────────────────────
+const SC = { flujo: scFlujo, iman: scIman, barra: scBarra, generador: scGenerador };
+
+const sc = () => SC[app.scene];
+
+function draw() {
+  if (!W) return;
+  readColors();
+  ctx.clearRect(0, 0, W, H);
+  sc().draw();
+  $('#coords-indicator').textContent = sc().coords();
+  renderLive();
+}
+let liveKey = '';
+function renderLive() { const t = sc().live(); if (t !== liveKey) { liveKey = t; $('#live-tex').innerHTML = K(t); } }
+// Escenas animadas (órbita y espira soltada): se redibujan en cada cuadro.
+(function tick() { if (W && sc().animating && sc().animating() && !matchMedia('(prefers-reduced-motion: reduce)').matches) draw(); requestAnimationFrame(tick); })();
+
+function buildToolbar() { $('#toolbar').innerHTML = sc().tools(); draw(); }
+function buildValues() {
+  const box = $('#values-body'), vals = sc().values();
+  box.innerHTML = vals.map((v, i) => `<label class="vrange" title="${v.label || ''}"><span class="sym">${v.sym}${v.sub ? `<sub style="font-style:normal;font-size:.7em">${v.sub}</sub>` : ''}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.get()}" data-i="${i}" aria-label="${v.label || v.sym}"><output>${v.fmt(v.get())}</output></label>`).join('') + (sc().valuesNote ? `<div class="vnote">${sc().valuesNote}</div>` : '');
+  box.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+    const v = vals[+inp.dataset.i]; v.set(parseFloat(inp.value)); inp.nextElementSibling.textContent = v.fmt(v.get()); invalidate(); draw(); renderPanel(false);
+  }));
+}
+function renderReto() {
+  mixed($('#reto-text'), sc().retoText());
+  $('#reto-tag').textContent = sc().retoTag;
+  const ch = $('#pred-choices'); ch.innerHTML = sc().choices.map(c => `<button class="btn ${pred.choice === c.id ? 'on' : ''}" data-choice="${c.id}" type="button">${c.label}</button>`).join('');
+  mixed($('#pred-q'), sc().predQ);
+  $('#ans-val').placeholder = sc().ansPh;
+}
+let ansKey = '';
+function renderPanel(full = true) {
+  const s = sc(), hasP = s.hasPred();
+  const al = s.ansLabel; if (al !== ansKey) { ansKey = al; mixed($('#ans-label'), al); }
+  $('#pred-hint').textContent = s.predHint ? s.predHint() : '';
+  $('#reto-note').textContent = s.changed() ? 'Cambiaste el montaje del reto: se comprueba con lo que ves en el lienzo.' : '';
+  if (full) $('#pred-choices').querySelectorAll('[data-choice]').forEach(b => b.classList.toggle('on', b.dataset.choice === pred.choice));
+  $('#st2').dataset.s = hasP ? 'done' : 'now';
+  $('#st3').dataset.s = app.checked ? 'done' : hasP ? 'now' : 'todo';
+  $('#st4').dataset.s = app.checked ? (app.result?.allOk ? 'done' : 'now') : 'todo';
+  const box = $('#validation-box');
+  if (app.checked && app.result) {
+    box.innerHTML = app.result.rows.map(r => `<div class="vrow"><span>${r.t}</span><span class="e10-chip ${r.ok === true ? 'e10-chip--ok' : r.ok === false ? 'e10-chip--bad' : 'e10-chip--warn'}">${r.chip}</span></div>`).join('');
+    if (window.renderMathInElement) renderMathInElement(box, { delimiters: [{ left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    mixed($('#explain'), `<div class="e10-tip__title">${app.result.allOk ? 'Muy bien' : 'Recomendación'}</div>${app.result.tip}`);
+  } else { box.innerHTML = ''; $('#explain').innerHTML = ''; }
+  $('#btn-sol').hidden = !app.checked;
+  const sol = $('#solution'); sol.hidden = !(app.checked && app.showSol);
+  if (!sol.hidden) mixed(sol, s.solution());
+  const n = 1 + (hasP ? 1 : 0) + (app.checked ? 1 : 0) + (app.result?.allOk ? 1 : 0);
+  $('#prog').style.setProperty('--e10-p', n * 25 + '%'); $('#prog-bar').setAttribute('aria-valuenow', n * 25); $('#prog-txt').textContent = `${n} de 4`;
+}
+function newReto() { sc().newReto(); resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); draw(); }
+const seen = {};
+function setScene(id, push = true) {
+  if (!SC[id]) id = 'flujo';
+  app.scene = id;
+  document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.setAttribute('aria-selected', b.dataset.scene === id));
+  if (!seen[id]) { seen[id] = true; sc().newReto(); }
+  $('#values').open = window.innerWidth > 900;
+  resetPred(); buildToolbar(); buildValues(); renderReto(); renderPanel(); liveKey = ''; draw();
+  if (push && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+
+// Clasifica la recomendación en un código estable para las métricas del portal (js/seguimiento.js · ERRORES).
+function codigoError(tip) {
+  const R = [[/Esa es la fem/, 'fem_vs_corriente'], [/Ese es el flujo, no la fem|ritmo/, 'flujo_vs_fem'], [/frecuencia angular/, 'omega_f'], [/valor eficaz\. El pico/, 'eficaz_pico'],
+    [/flujo es máximo, pero|Es máxima cuando el flujo/, 'fem_max_posicion'], [/no hay fem|no hay corriente|no hay fem inducida|Hay corriente|hay fem/, 'flujo_constante'],
+    [/Ley de Lenz|Dos formas de verlo/, 'lenz_sentido'], [/normal de la bobina/, 'coseno_flujo'], [/\Delta B=B_2-B_1/, 'delta_b'], [/vueltas\./, 'faltan_vueltas'], [/unidades/, 'unidades']];
+  for (const [re, c] of R) if (re.test(tip || '')) return c;
+  return 'otro';
+}
+
+// ───────────────────────── eventos ─────────────────────────
+$('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) { sc().act(b.dataset.act); renderPanel(false); } });
+document.querySelectorAll('.scene-tabs [data-scene]').forEach(b => b.addEventListener('click', () => setScene(b.dataset.scene)));
+$('#pred-choices').addEventListener('click', e => {
+  const b = e.target.closest('[data-choice]'); if (!b) return;
+  pred.choice = b.dataset.choice; if (pred.choice !== 'plano') pred.angle = null; app.checked = false; app.result = null; app.showSol = false; renderPanel(); draw();
+});
+$('#btn-check').addEventListener('click', () => {
+  if (!sc().hasPred()) { $('#check-hint').textContent = pred.choice === 'plano' ? 'Dibuja la dirección de la fuerza tocando el lienzo.' : 'Primero haz tu predicción en el paso 2.'; return; }
+  $('#check-hint').textContent = '';
+  app.result = sc().check(); app.checked = true; app.showSol = false;
+  lab10Bus.emitTelemetry('comprobar', { escena: app.scene, ok: !!app.result.allOk, error: app.result.allOk ? null : codigoError(app.result.tip) });
+  renderPanel(); liveKey = ''; buildToolbar();
+  if (window.innerWidth <= 900) $('#right-panel').classList.add('open');
+});
+$('#ans-val').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-check').click(); });
+$('#btn-sol').addEventListener('click', () => { app.showSol = !app.showSol; renderPanel(false); });
+$('#btn-new').addEventListener('click', newReto);
+$('#sheet-handle').addEventListener('click', () => $('#right-panel').classList.toggle('open'));
+$('#btn-projector').addEventListener('click', () => { document.body.classList.toggle('e10-projector'); $('#btn-projector').classList.toggle('active'); draw(); });
+$('#btn-theme').addEventListener('click', () => { lab10Auth.toggleTheme(); try { localStorage.setItem('electro10_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch (_) {} });
+new MutationObserver(() => { const i = $('#btn-theme i'); if (i) i.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon'; draw(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+$('#user-info').addEventListener('click', () => { if (!lab10Auth.isAuthenticated) lab10Auth.loginGoogle(); });
+lab10Auth.onAuthChange((ok, user) => { $('#user-info').textContent = ok ? (user?.displayName || 'Estudiante') : 'Iniciar sesión'; });
+
+const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { if (!sc().down) return; cv.setPointerCapture(e.pointerId); sc().down(...pos(e)); draw(); });
+cv.addEventListener('pointermove', e => { if (!sc().move) return; sc().move(...pos(e)); if (e.buttons) draw(); });
+cv.addEventListener('pointerup', e => { if (sc().up) sc().up(...pos(e)); draw(); });
+cv.addEventListener('pointercancel', () => { if (sc().up) sc().up(); });
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (SC[id] && id !== app.scene) setScene(id, false); });
+
+// ───────────────────────── Lab10 Bus ─────────────────────────
+lab10Bus.injectContinueButton($('#continue-wrap'), 'Sim_M11_EcuacionesMaxwell.html', 'Ecuaciones de Maxwell (capítulo 12)', () => ({
+  source: 'FaradayLab10', units: { length: 'm', field: 'T', emf: 'V' },
+  entities: {}, metrics: { fem_flujo: flEps(), fem_barra: baEps(), fem_generador: geMax() }, timestamp: Date.now(),
+}));
+
+// ───────────────────────── arranque ─────────────────────────
+new ResizeObserver(resize).observe(area);
+setScene((location.hash || '#flujo').slice(1), false);
+window.__far = { app, pred, FL, IM, BA, GE, flEps, flCat, flDphi, imPhi, imDphi, imEps, imCat, baEps, baI, baF, baTau, baCat, geMax, setScene, codigoError };
+</script>
+<script src="../js/sim_telemetry.js"></script>
+</body></html>

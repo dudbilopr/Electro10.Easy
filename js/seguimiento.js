@@ -85,6 +85,16 @@ export const ERRORES = {
     par_nulo: 'Par nulo con μ paralelo a B',
     sentido_par: 'Sentido de giro de la espira',
     cos_en_par: 'Usó cos φ en el par de la espira',
+    // FaradayLab (capítulo 11)
+    flujo_constante: 'Confundió flujo grande con flujo que cambia',
+    lenz_sentido: 'Sentido de la corriente inducida (Lenz)',
+    delta_b: 'Usó B final en lugar de ΔB',
+    coseno_flujo: 'Ángulo del flujo (cos φ con la normal)',
+    flujo_vs_fem: 'Dio el flujo en lugar de la fem',
+    fem_vs_corriente: 'Dio la fem en lugar de la corriente',
+    fem_max_posicion: 'Posición de la fem máxima del generador',
+    omega_f: 'Usó f en lugar de ω = 2πf',
+    eficaz_pico: 'Dio el valor eficaz en lugar del pico',
     otro: 'Otro error',
 };
 
@@ -154,7 +164,9 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     n_por_N: 'Ampere.html#solenoide', ideal_en_extremo: 'Ampere.html#solenoide', campo_fuera_solenoide: 'Ampere.html#solenoide', toroide_radio_medio: 'Ampere.html#toroide', toroide_fuera: 'Ampere.html#toroide',
     lorentz_paralelo: 'Lorentz.html#fuerza', lorentz_fuerza_nula: 'Lorentz.html#fuerza', lorentz_perpendicular: 'Lorentz.html#fuerza', lorentz_paralela_v: 'Lorentz.html#fuerza', signo_carga: 'Lorentz.html#fuerza',
     mano_derecha_lorentz: 'Lorentz.html#fuerza', falta_seno: 'Lorentz.html#fuerza', falta_carga: 'Lorentz.html#fuerza', sentido_giro: 'Lorentz.html#orbita', v_perp: 'Lorentz.html#orbita',
-    radio_por_diametro: 'Lorentz.html#selector', b_sobre_e: 'Lorentz.html#selector', selector_equilibrio: 'Lorentz.html#selector', par_nulo: 'Lorentz.html#conductor', sentido_par: 'Lorentz.html#conductor', cos_en_par: 'Lorentz.html#conductor' };
+    radio_por_diametro: 'Lorentz.html#selector', b_sobre_e: 'Lorentz.html#selector', selector_equilibrio: 'Lorentz.html#selector', par_nulo: 'Lorentz.html#conductor', sentido_par: 'Lorentz.html#conductor', cos_en_par: 'Lorentz.html#conductor',
+    flujo_constante: 'Faraday.html#flujo', lenz_sentido: 'Faraday.html#iman', delta_b: 'Faraday.html#flujo', coseno_flujo: 'Faraday.html#flujo', flujo_vs_fem: 'Faraday.html#flujo',
+    fem_vs_corriente: 'Faraday.html#barra', fem_max_posicion: 'Faraday.html#generador', omega_f: 'Faraday.html#generador', eficaz_pico: 'Faraday.html#generador' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
 const LABS = { Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
 export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
