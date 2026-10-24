@@ -82,7 +82,8 @@ Para enriquecer la enseñanza del electromagnetismo y conectar la teoría abstra
   - Brazo horizontal simétrico ultraligero con receptáculos para esferas de icopor metalizadas o esferas de aluminio calibradas ($\varnothing = \SI{15}{\milli\metre}$).
   - Cunas aislantes con ranura para frotamiento triboeléctrico de barras de ebonita, vidrio y acrílico.
 - **Parámetros de impresión sugeridos:** PLA+, altura de capa $0{,}16\ \text{mm}$, relleno $20\%$, tolerancia mecánica $0{,}25\ \text{mm}$.
-- **Conexión con simulador:** Calibra exactamente las masas y distancias de `simuladores/Coulomb.html`.
+- **Conexión con simulador:** misma geometría que la diapositiva 8 de la clase y el ejercicio resuelto 8 del taller (brazo $b = 5{,}0$ cm, separación $r$ de 3 a 9 cm en el riel).
+- **Implementado (2026-10-24):** modelo paramétrico `recursos/modelos_3d/M01_CoulombBench.scad` (piezas `base` Ø 240 mm con escala 0–360°, `torre` en horca fuera del giro del brazo, `brazo`, `poste` sobre riel graduado y `cuna`) y ficha técnica con protocolo de aula en `recursos/modelos_3d/M01_CoulombBench.html`. La constante de torsión se mide en clase por el período de oscilación, $\kappa = 4\pi^2 I/T^2$; no se supone.
 
 ---
 

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoulombBench-3D · Pieza del módulo 1 — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})"></script>
+<style>
+/* Ficha técnica de la pieza 3D del módulo 1. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 16px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+.top{font-size:14px;color:var(--e10-muted)}.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1{font:700 clamp(28px,5vw,40px)/1.1 var(--e10-font-display);margin:14px 0 4px}
+h2{font:600 21px var(--e10-font-display);margin:28px 0 10px}
+.sub{color:var(--e10-muted);font-size:18px;margin:0 0 16px}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 18px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--e10-line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--e10-primary);font-weight:600}
+td.m{font-family:var(--e10-font-mono);white-space:nowrap}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}.tip b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px}.warn b{color:var(--e10-warning)}
+ol li,ul li{margin:4px 0}
+figure{margin:10px 0;text-align:center}figure svg{max-width:100%;height:auto}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>Electro<span>10.Easy</span></b> · Módulo 1 · Pieza 3D</div>
+  <h1>CoulombBench-3D</h1>
+  <p class="sub">Balanza de torsión didáctica y cuna triboeléctrica: comprobar en el aula que \(F\propto1/r^2\).</p>
+  <div class="bar"><a class="btn pri" href="M01_CoulombBench.scad" download>Descargar el modelo paramétrico (.scad)</a><a class="btn" href="../../presentaciones/M1_Coulomb/index.html#8" target="_blank" rel="noopener">Diapositiva 8 de la clase</a><a class="btn" href="../../talleres/Taller_1_Ley_de_Coulomb.html#s18" target="_blank" rel="noopener">Ejercicio 8 del taller</a></div>
+
+  <figure><svg role="img" viewBox="0 0 560 300" width="560" aria-label="Montaje: base con escala angular, torre en horca con el hilo, brazo con dos esferas y poste con la esfera fija sobre un riel">
+    <ellipse cx="280" cy="255" rx="240" ry="34" fill="var(--e10-surface)" stroke="var(--e10-line)" stroke-width="2"/>
+    <rect x="236" y="40" width="16" height="215" fill="var(--e10-line)"/><rect x="236" y="34" width="110" height="14" fill="var(--e10-line)"/><rect x="330" y="26" width="26" height="30" rx="4" fill="var(--e10-muted)"/>
+    <line x1="343" y1="56" x2="343" y2="150" stroke="var(--e10-ink)" stroke-width="1.5"/>
+    <line x1="263" y1="156" x2="423" y2="148" stroke="var(--e10-ink)" stroke-width="4"/><circle cx="263" cy="156" r="10" fill="var(--e10-muted)"/><circle cx="423" cy="148" r="10" fill="var(--e10-q-pos)"/>
+    <rect x="455" y="160" width="8" height="90" fill="var(--e10-line)"/><circle cx="459" cy="150" r="10" fill="var(--e10-q-pos)"/>
+    <text x="40" y="292" font-size="13" fill="var(--e10-muted)">base Ø 240 mm con escala 0–360°</text><text x="160" y="30" font-size="13" fill="var(--e10-muted)">torre en horca</text><text x="350" y="100" font-size="13" fill="var(--e10-muted)">hilo de torsión</text><text x="430" y="130" font-size="13" fill="var(--e10-q-pos)">esfera fija (riel)</text><text x="250" y="182" font-size="13" fill="var(--e10-muted)">brazo, b = 50 mm</text></svg></figure>
+
+  <h2>Función pedagógica</h2>
+  <div class="card">Medir el giro \(\phi\) del brazo para varias separaciones \(r\) y mostrar que \(\phi\propto F\propto1/r^2\); dividir la carga tocando una esfera con otra idéntica descargada, como Coulomb en 1784 (Young y Freedman, 2009, sección 21.3), y ver que el giro se reduce a la mitad. El brazo usa \(b=5{,}0\) cm, igual que el ejercicio resuelto 8 del taller y la simulación de la diapositiva 8.</div>
+
+  <h2>Piezas y parámetros</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Pieza (<code>pieza=</code>)</th><th>Medidas principales</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td class="m">base</td><td>Ø 240 × 8 mm; escala grabada cada 1° (larga cada 10°, número cada 30°); riel radial de 12 mm con marcas cada 10 mm de r = 30 a 90 mm</td><td>Leer \(\phi\) con la aguja del brazo y fijar \(r\)</td></tr>
+      <tr><td class="m">torre</td><td>Columna Ø 20 × 220 mm en (0; −75) mm, viga hasta el eje y pinza con ranura de 0,8 mm y tornillo M3</td><td>Colgar el hilo justo sobre el eje de giro, fuera del recorrido del brazo</td></tr>
+      <tr><td class="m">brazo</td><td>100 × 4 × 3 mm; copa Ø 15 mm a cada lado (esfera móvil y contrapeso); buje con ojal de 1,6 mm; aguja de 108 mm</td><td>Esfera cargada a \(b=50\) mm del hilo</td></tr>
+      <tr><td class="m">poste</td><td>Patín de 12 × 20 mm con índice; columna Ø 8 mm; copa Ø 15 mm a la altura del brazo</td><td>Esfera fija sobre la perpendicular al brazo</td></tr>
+      <tr><td class="m">cuna</td><td>90 × 40 × 22 mm con ranuras de Ø 10, 11 y 12 mm (+ holgura)</td><td>Sostener barras de ebonita, vidrio y acrílico al frotarlas</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted" style="font-size:14px;color:var(--e10-muted)">Todo es paramétrico: <code>b_brazo</code>, <code>d_esfera</code>, <code>r_min</code>, <code>r_max</code>, <code>holgura</code>, <code>torre_h</code>, <code>base_d</code>. Si cambias <code>b_brazo</code>, cambia también el valor de \(b\) en tus cálculos.</p>
+
+  <h2>Impresión</h2>
+  <div class="card"><ul>
+    <li>Material: PLA+ (PETG si el aula es muy húmeda). Capa 0,16 mm, relleno 20 %, 3 perímetros.</li>
+    <li>Tolerancia entre piezas que encajan: <code>holgura = 0,25 mm</code> (espiga de la torre, patín del riel, copas).</li>
+    <li>Orientación: base y cuna planas; brazo plano, con la aguja hacia abajo; la torre acostada sobre la columna, con soportes solo bajo la viga.</li>
+    <li>Materiales extra: 3 esferas de icopor de Ø 15 mm pintadas con grafito o forradas en papel aluminio (una para el contrapeso), un tornillo M3 × 12, hilo de nailon monofilamento fino o alambre muy delgado, barras para frotar.</li>
+  </ul></div>
+
+  <h2>Protocolo de aula</h2>
+  <ol class="card" style="padding-left:34px">
+    <li><b>Calibrar el hilo.</b> Sin cargas, gira un poco el brazo y suéltalo; mide el período \(T\) de 10 oscilaciones. Con el momento de inercia de las dos esferas, \(I\approx2\,m\,b^2\), la constante de torsión es \(\kappa=4\pi^2 I/T^2\). Pesa las esferas: no supongas su masa.</li>
+    <li><b>Cargar.</b> Frota una barra en la cuna, toca la esfera fija y luego toca la móvil con la fija (quedan con la misma carga si son idénticas).</li>
+    <li><b>Medir.</b> Coloca el poste en r = 40, 50, 60, 70 y 90 mm y anota \(\phi\) en la escala tras amortiguarse el brazo.</li>
+    <li><b>Analizar.</b> Grafica \(\phi\) frente a \(1/r^2\): debe salir una recta por el origen. De su pendiente, \(q^2=\kappa\,\phi\,r^2/(k\,b)\).</li>
+    <li><b>Dividir la carga.</b> Toca la esfera fija con una esfera idéntica neutra y vuelve a medir: \(\phi\) baja a la mitad.</li>
+  </ol>
+  <div class="warn"><b>Limitaciones honestas.</b> La humedad descarga las esferas en minutos, el brazo se carga por inducción y \(r\) cambia un poco al girar (el modelo vale para giros pequeños, \(\phi\lesssim0{,}35\) rad). Mide rápido y repite cada punto tres veces.</div>
+  <div class="tip" style="margin-top:10px"><b>Conexión con el simulador.</b> La diapositiva 8 de la clase usa la misma geometría (\(b=5{,}0\) cm) y avisa cuando el giro sale del rango de ángulo pequeño.</div>
+  <p style="font-size:14px;color:var(--e10-muted);margin-top:18px">El modelo se describe en <code>GUIA_DIDACTICA_Y_MODELOS_3D.md</code> (módulo 1). © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+</div>
+</body>
+</html>
