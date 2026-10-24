@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Póster · Ley de Coulomb — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Póster del capítulo 1 (A3 horizontal). Idea rectora: el inverso del cuadrado. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--e10-surface-2);color:var(--e10-ink);font:400 15px/1.45 var(--e10-font-body)}
+.bar{position:sticky;top:0;z-index:5;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line)}
+.btn{font:600 14px/1 var(--e10-font-body);min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.fit{width:100%;overflow:hidden;padding:16px 0}
+.poster{width:1600px;height:1131px;margin:0 auto;background:var(--e10-bg);position:relative;transform-origin:top left;display:grid;grid-template-columns:360px 1fr 400px;grid-template-rows:128px 1fr 200px;gap:18px;padding:30px 34px 26px;box-shadow:var(--e10-shadow)}
+.poster::before{content:'';position:absolute;left:0;top:0;bottom:0;width:12px;background:var(--e10-primary)}
+.head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--e10-line);padding-bottom:12px}
+.eyebrow{font:500 13px var(--e10-font-mono);letter-spacing:.12em;color:var(--e10-muted)}
+h1{font:800 76px/0.95 var(--e10-font-display);margin:6px 0 0;letter-spacing:-.02em}
+h1 span{color:var(--e10-primary)}
+.tagline{font:500 22px/1.25 var(--e10-font-display);color:var(--e10-muted);max-width:520px;text-align:right}
+.tagline b{color:var(--e10-accent-strong)}
+.col{display:flex;flex-direction:column;gap:12px;min-height:0}
+.box{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:16px;padding:12px 16px}
+.box h2{font:700 18px var(--e10-font-display);margin:0 0 6px;display:flex;gap:8px;align-items:baseline}
+.box h2 i{font:600 13px var(--e10-font-mono);font-style:normal;color:var(--e10-primary)}
+.box p{margin:4px 0}
+.small{font-size:13px;color:var(--e10-muted)}
+.hero{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:20px;padding:16px 22px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.formula{display:flex;align-items:center;justify-content:center;gap:20px}
+.formula .katex{font-size:2.6em}
+.callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;font-size:14px}
+.callouts div{border-top:3px solid var(--e10-primary);padding-top:6px}
+.callouts div:nth-child(2){border-color:var(--e10-accent)}.callouts div:nth-child(3){border-color:var(--e10-vec-field)}
+.ctrl{display:flex;align-items:center;gap:12px;font:500 14px var(--e10-font-mono)}
+.ctrl input{flex:1;accent-color:var(--e10-primary)}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.nums div{background:var(--e10-primary-soft);border-radius:12px;padding:8px 10px;text-align:center;font-size:13px;color:var(--e10-muted)}
+.nums b{display:block;font:700 22px var(--e10-font-mono);color:var(--e10-ink)}
+.foot{grid-column:1/-1;display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px;min-height:0}
+.tl{position:relative;height:96px}
+.tl::before{content:'';position:absolute;left:8px;right:8px;top:27px;height:3px;background:var(--e10-line)}
+.ev{position:absolute;top:0;width:132px;transform:translateX(-50%);text-align:center;font-size:12px;line-height:1.25}
+.ev b{display:block;font:700 13px var(--e10-font-mono);color:var(--e10-primary);margin-bottom:24px}
+.ev::after{content:'';position:absolute;left:50%;top:21px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--e10-primary)}
+.err{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.err div{background:var(--e10-warning-soft);border-radius:10px;padding:7px 10px;font-size:13px}
+.err div b{color:var(--e10-warning);display:block}
+.err div span{color:var(--e10-success)}
+.scale{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.scale .row{display:flex;align-items:center;gap:8px}
+.scale .lbl{width:110px;color:var(--e10-muted)}
+.scale .b{height:16px;border-radius:8px}
+svg text{font-family:var(--e10-font-body)}
+@media print{
+  @page{size:A3 landscape;margin:0}
+  .bar{display:none}.fit{padding:0}html,body{background:#fff}
+  .poster{transform:none!important;box-shadow:none;width:420mm;height:297mm;zoom:.99}
+}
+</style>
+</head>
+<body>
+<div class="bar"><a class="btn" href="index.html?cap=2">Otras láminas</a><a class="btn" href="../presentaciones/M1_Coulomb/index.html" target="_blank" rel="noopener">Clase del capítulo 1</a><a class="btn" href="../simuladores/Coulomb.html" target="_blank" rel="noopener">CoulombLab</a><button type="button" class="btn pri" id="btn-print">Imprimir en A3 / PDF</button></div>
+<div class="fit" id="fit"><article class="poster" id="poster" aria-label="Póster de la ley de Coulomb">
+
+  <header class="head">
+    <div><span class="eyebrow">ELECTRO10.EASY · CAPÍTULO 1 · ELECTROSTÁTICA</span><h1>Ley de <span>Coulomb</span></h1></div>
+    <p class="tagline">Dos cargas, una recta y un cuadrado:<br><b>duplica la distancia y la fuerza queda en la cuarta parte.</b></p>
+  </header>
+
+  <!-- Columna izquierda: la carga -->
+  <section class="col">
+    <div class="box">
+      <h2><i>01</i>La carga viene en paquetes</h2>
+      <svg viewBox="0 0 320 120" width="100%" role="img" aria-label="Escalera de cargas: cero, e, 2e, 3e; no hay valores intermedios">
+        <g stroke="var(--e10-line)" stroke-width="2">
+          <line x1="20" y1="100" x2="300" y2="100"/>
+        </g>
+        <g fill="var(--e10-q-pos)">
+          <rect x="40" y="76" width="48" height="24" rx="4"/><rect x="110" y="52" width="48" height="48" rx="4"/><rect x="180" y="28" width="48" height="72" rx="4"/><rect x="250" y="4" width="48" height="96" rx="4"/>
+        </g>
+        <g fill="var(--e10-on-primary)" font-size="13" font-weight="700" text-anchor="middle"><text x="64" y="93">e</text><text x="134" y="81">2e</text><text x="204" y="69">3e</text><text x="274" y="57">4e</text></g>
+        <text x="20" y="118" font-size="11" fill="var(--e10-muted)">q = ±Ne, con N entero · nunca 1,5e</text>
+      </svg>
+      <p>\(e=1{,}602\times10^{-19}\ \mathrm C\). Un microcoulomb son \(6{,}24\times10^{12}\) electrones.</p>
+    </div>
+    <div class="box">
+      <h2><i>02</i>Se transfiere, no se crea</h2>
+      <svg viewBox="0 0 320 110" width="100%" role="img" aria-label="Dos esferas idénticas de +6 y −2 microcoulombs se tocan y quedan con +2 cada una">
+        <circle cx="45" cy="45" r="30" fill="var(--e10-surface-2)" stroke="var(--e10-q-pos)" stroke-width="3"/><text x="45" y="50" text-anchor="middle" font-size="14" font-weight="700">+6</text>
+        <circle cx="115" cy="45" r="30" fill="var(--e10-surface-2)" stroke="var(--e10-q-neg)" stroke-width="3"/><text x="115" y="50" text-anchor="middle" font-size="14" font-weight="700">−2</text>
+        <path d="M155 45h30" stroke="var(--e10-primary)" stroke-width="3" marker-end="url(#pa)"/>
+        <defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--e10-primary)"/></marker></defs>
+        <circle cx="225" cy="45" r="30" fill="var(--e10-surface-2)" stroke="var(--e10-q-pos)" stroke-width="3"/><text x="225" y="50" text-anchor="middle" font-size="14" font-weight="700">+2</text>
+        <circle cx="290" cy="45" r="28" fill="var(--e10-surface-2)" stroke="var(--e10-q-pos)" stroke-width="3"/><text x="290" y="50" text-anchor="middle" font-size="14" font-weight="700">+2</text>
+        <text x="10" y="100" font-size="12" fill="var(--e10-muted)">µC · total +4 antes y después · pasan 2,5 × 10¹³ e⁻</text>
+      </svg>
+    </div>
+    <div class="box">
+      <h2><i>03</i>Conductores, aislantes y polarización</h2>
+      <svg viewBox="0 0 320 100" width="100%" role="img" aria-label="Una varilla negativa polariza un papel neutro: las cargas positivas del papel quedan más cerca y la atracción gana">
+        <rect x="10" y="38" width="120" height="22" rx="11" fill="var(--e10-q-neg)"/><g fill="var(--e10-on-primary)" font-size="14" font-weight="700"><text x="26" y="54">− − − − −</text></g>
+        <rect x="170" y="22" width="120" height="56" rx="8" fill="var(--e10-surface-2)" stroke="var(--e10-line)" stroke-width="2"/>
+        <g font-size="16" font-weight="700"><text x="180" y="45" fill="var(--e10-q-pos)">+</text><text x="180" y="68" fill="var(--e10-q-pos)">+</text><text x="270" y="45" fill="var(--e10-q-neg)">−</text><text x="270" y="68" fill="var(--e10-q-neg)">−</text></g>
+        <text x="203" y="55" font-size="12" fill="var(--e10-muted)">neutro</text>
+        <path d="M168 50h-24" stroke="var(--e10-vec-force)" stroke-width="3" marker-end="url(#pf)"/><defs><marker id="pf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--e10-vec-force)"/></marker></defs>
+        <text x="10" y="95" font-size="12" fill="var(--e10-muted)">Por el 1/r², gana la atracción del lado cercano.</text>
+      </svg>
+      <p class="small">En un metal algunos electrones se mueven libres; en el vidrio o el plástico, no.</p>
+    </div>
+  </section>
+
+  <!-- Centro: el inverso del cuadrado -->
+  <section class="hero">
+    <div class="formula"><span>\( F=k\,\dfrac{|q_1\,q_2|}{r^2} \)</span></div>
+    <div class="callouts">
+      <div><b>Producto de las cargas</b><br>misma fuerza sobre las dos (tercera ley)</div>
+      <div><b>\(k=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}\)</b><br>\(k=1/(4\pi\epsilon_0)\)</div>
+      <div><b>Inverso del cuadrado</b><br>\(r\to2r\Rightarrow F\to F/4\)</div>
+    </div>
+    <svg id="hero" viewBox="0 0 760 420" width="100%" role="img" aria-label="Una carga fuente y cargas de prueba a distancias r, 2r y 3r; la fuerza sobre cada una mide F, F/4 y F/9; la misma influencia se reparte en 1, 4 y 9 cuadros"></svg>
+    <div class="ctrl"><label for="r">r</label><input id="r" type="range" min="0.10" max="0.40" step="0.01" value="0.20"><output id="r-o">0,20 m</output></div>
+    <div class="nums"><div>\(+3{,}0\) y \(-5{,}0\ \mu\mathrm C\) a \(r\)<b id="n1">3,37 N</b></div><div>a \(2r\)<b id="n2">0,843 N</b></div><div>a \(3r\)<b id="n3">0,374 N</b></div></div>
+  </section>
+
+  <!-- Columna derecha: superposición, simetría y la balanza -->
+  <section class="col">
+    <div class="box">
+      <h2><i>04</i>Varias cargas: suma de flechas</h2>
+      <svg viewBox="0 0 360 200" width="100%" style="max-height:150px" role="img" aria-label="Las fuerzas de dos cargas sobre una tercera se suman como vectores: la neta mide 0,641 N, no 1,23 N">
+        <defs><marker id="pv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs>
+        <line x1="60" y1="115" x2="196" y2="13" stroke="var(--e10-line)" stroke-dasharray="5 4"/>
+        <circle cx="60" cy="13" r="9" fill="var(--e10-q-pos)"/><circle cx="196" cy="13" r="9" fill="var(--e10-q-neg)"/>
+        <line x1="60" y1="115" x2="60" y2="187" stroke="var(--e10-vec-force)" stroke-width="3" marker-end="url(#pv)"/>
+        <line x1="60" y1="115" x2="91" y2="92" stroke="var(--e10-vec-force)" stroke-width="3" marker-end="url(#pv)"/>
+        <line x1="91" y1="92" x2="91" y2="164" stroke="var(--e10-vec-force)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="60" y1="115" x2="91" y2="164" stroke="var(--e10-primary)" stroke-width="4" marker-end="url(#pv)"/>
+        <circle cx="60" cy="115" r="9" fill="var(--e10-q-pos)"/>
+        <text x="74" y="18" font-size="12">q₁ +2 µC</text><text x="208" y="18" font-size="12">q₂ −3 µC</text><text x="16" y="119" font-size="12">q₃</text>
+        <text x="30" y="196" font-size="11" fill="var(--e10-accent-strong)">F₁₃</text><text x="96" y="90" font-size="11" fill="var(--e10-accent-strong)">F₂₃</text>
+        <text x="150" y="140" font-size="14" fill="var(--e10-primary)" font-weight="700">F neta = 0,641 N</text>
+        <text x="150" y="160" font-size="12" fill="var(--e10-muted)">no 0,799 + 0,431 = 1,23 N</text>
+      </svg>
+      <p class="small">Por componentes: \(\vec F=\sum_i k\,q_iq_0\,(\vec r_0-\vec r_i)/|\vec r_0-\vec r_i|^3\).</p>
+    </div>
+    <div class="box">
+      <h2><i>05</i>Sobre el eje de dos cargas iguales</h2>
+      <svg id="eje" viewBox="0 0 360 130" width="100%" style="max-height:96px" role="img" aria-label="Gráfica de la fuerza sobre el eje de simetría: nula en el centro, máxima en a sobre raíz de dos y decreciente lejos"></svg>
+      <p class="small">\(F=\dfrac{2kqq_0\,y}{(a^2+y^2)^{3/2}}\): cero en el centro, máxima en \(y=a/\sqrt2\) y, lejos, como una carga \(2q\).</p>
+    </div>
+    <div class="box">
+      <h2><i>06</i>1784: la balanza de torsión</h2>
+      <svg viewBox="0 0 360 120" width="100%" style="max-height:92px" role="img" aria-label="Balanza de torsión: un brazo colgado de un hilo gira hasta que el hilo equilibra la repulsión entre dos esferas">
+        <line x1="180" y1="4" x2="180" y2="60" stroke="var(--e10-muted)" stroke-width="2"/><rect x="160" y="0" width="40" height="8" fill="var(--e10-line)"/>
+        <line x1="90" y1="66" x2="270" y2="54" stroke="var(--e10-ink)" stroke-width="4"/><circle cx="90" cy="66" r="8" fill="var(--e10-muted)"/><circle cx="270" cy="54" r="10" fill="var(--e10-q-pos)"/>
+        <circle cx="300" cy="96" r="10" fill="var(--e10-q-pos)"/><text x="245" y="112" font-size="11" fill="var(--e10-muted)">esfera fija</text>
+        <path d="M150 90a40 14 0 0 0 60 0" fill="none" stroke="var(--e10-primary)" stroke-width="2.5" marker-end="url(#pv)"/><text x="160" y="118" font-size="12" fill="var(--e10-primary)">κφ = F b</text>
+        <text x="8" y="20" font-size="12" fill="var(--e10-muted)">φ ∝ F ∝ 1/r²</text>
+      </svg>
+      <p class="small">Coulomb midió el giro del hilo y dividió la carga tocando esferas idénticas (Young y Freedman, 21.3).</p>
+    </div>
+  </section>
+
+  <!-- Franja inferior -->
+  <footer class="foot">
+    <div class="box">
+      <h2><i>07</i>Línea de tiempo</h2>
+      <div class="tl">
+        <div class="ev" style="left:8%"><b>600 a. C.</b>Griegos: el ámbar frotado atrae objetos</div>
+        <div class="ev" style="left:29%"><b>Siglo XVIII</b>Franklin nombra la carga positiva y la negativa</div>
+        <div class="ev" style="left:50%"><b>1784</b>Coulomb y su balanza de torsión</div>
+        <div class="ev" style="left:71%"><b>1797</b>Cavendish mide la gravedad con una balanza similar</div>
+        <div class="ev" style="left:92%"><b>1909–1913</b>Millikan mide la carga del electrón</div>
+      </div>
+      <p class="small">Fuente: Young y Freedman (2009), cap. 21, secciones 21.1 y 21.3; problema 23.91.</p>
+    </div>
+    <div class="box">
+      <h2><i>08</i>Cuatro errores que cuestan puntos</h2>
+      <div class="err">
+        <div><b>Sumar módulos</b><span>Suma vectores, por componentes.</span></div>
+        <div><b>La carga mayor «empuja más»</b><span>Las dos sienten la misma fuerza.</span></div>
+        <div><b>Duplicar r ⇒ F/2</b><span>Es F/4: el cuadrado manda.</span></div>
+        <div><b>Signo en el módulo</b><span>Valores absolutos; el sentido, con el dibujo.</span></div>
+      </div>
+    </div>
+    <div class="box">
+      <h2><i>09</i>¿Qué tan fuerte es?</h2>
+      <div class="scale">
+        <div class="row"><span class="lbl">Gravedad p–p</span><span class="b" style="width:6px;background:var(--e10-muted)"></span><span>1</span></div>
+        <div class="row"><span class="lbl">Eléctrica p–p</span><span class="b" style="width:170px;background:var(--e10-primary)"></span><span>\(1{,}23\times10^{36}\)</span></div>
+        <div class="row"><span class="lbl">Eléctrica e–e</span><span class="b" style="width:200px;background:var(--e10-accent)"></span><span>\(4{,}17\times10^{42}\)</span></div>
+        <p class="small" style="margin:4px 0 0">Barras en escala logarítmica respecto a la gravedad entre los mismos dos protones. La distancia se cancela.</p>
+      </div>
+      <p class="small" style="margin-top:8px">© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy · Taller, guía y clase del capítulo 1 en la plataforma.</p>
+    </div>
+  </footer>
+</article></div>
+<script>
+(() => {
+  'use strict';
+  const K = 8.988e9, uC = 1e-6, NS = 'http://www.w3.org/2000/svg';
+  const $ = (id) => document.getElementById(id);
+  const dec = (x, d) => x.toFixed(d).replace('.', ',');
+  const fN = (F) => (F >= 1 ? dec(F, 2) : dec(F, 3)) + ' N';
+  const el = (tag, at, parent) => { const e = document.createElementNS(NS, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (parent) parent.appendChild(e); return e; };
+
+  // Centro: fuente, tres cargas de prueba a r, 2r y 3r y los cuadros 1, 4, 9 por donde «se reparte» la influencia
+  function hero() {
+    const svg = $('hero'), r = +$('r').value; svg.innerHTML = '';
+    const defs = el('defs', {}, svg), mk = el('marker', { id: 'ha', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto' }, defs); el('path', { d: 'M0 0L10 5L0 10z', fill: 'var(--e10-vec-force)' }, mk);
+    const ox = 70, oy = 210, U = 190; // U: píxeles por «r»
+    for (let n = 1; n <= 3; n++) { el('circle', { cx: ox, cy: oy, r: n * U * 0.95, fill: 'none', stroke: 'var(--e10-line)', 'stroke-dasharray': '6 6' }, svg); }
+    // Cuadrículas 1, 4 y 9 a cada distancia (misma «cantidad de influencia» repartida en más área)
+    [1, 2, 3].forEach((n) => { const s = 22 * n, x = ox + n * U * 0.95, y = oy + 70; const g = el('g', {}, svg);
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) el('rect', { x: x - s / 2 + i * 22, y: y + j * 22 - (n - 1) * 11, width: 21, height: 21, fill: `color-mix(in srgb, var(--e10-primary) ${Math.round(60 / (n * n))}%, var(--e10-surface))`, stroke: 'var(--e10-primary-soft)' }, g);
+      const t = el('text', { x, y: y + n * 11 + 30, 'text-anchor': 'middle', 'font-size': 13, fill: 'var(--e10-muted)' }, svg); t.textContent = `${n * n} ${n === 1 ? 'cuadro' : 'cuadros'}`; });
+    // Cargas de prueba y fuerzas F, F/4, F/9
+    [1, 2, 3].forEach((n) => { const x = ox + n * U * 0.95, L = 150 / (n * n);
+      el('line', { x1: x + 12, y1: oy, x2: x + 12 + L, y2: oy, stroke: 'var(--e10-vec-force)', 'stroke-width': 6 - n, 'marker-end': 'url(#ha)' }, svg);
+      el('circle', { cx: x, cy: oy, r: 10, fill: 'var(--e10-q-pos)' }, svg);
+      const t = el('text', { x: x + 8, y: oy - 22, 'font-size': 18, 'font-weight': 700, fill: 'var(--e10-accent-strong)' }, svg); t.textContent = ['F', 'F/4', 'F/9'][n - 1];
+      const d = el('text', { x: x - 12, y: oy + 34, 'font-size': 14, fill: 'var(--e10-muted)' }, svg); d.textContent = `${n === 1 ? '' : n}r = ${dec(n * r, 2)} m`; });
+    el('circle', { cx: ox, cy: oy, r: 24, fill: 'var(--e10-q-pos)' }, svg);
+    const p = el('path', { d: `M${ox - 11} ${oy}h22M${ox} ${oy - 11}v22`, stroke: 'var(--e10-on-primary)', 'stroke-width': 4 }, svg);
+    const tt = el('text', { x: 20, y: 30, 'font-size': 15, fill: 'var(--e10-muted)' }, svg); tt.textContent = 'La misma influencia de la fuente se reparte en un área que crece como r²';
+    const F = K * 3 * 5 * uC * uC / (r * r); $('n1').textContent = fN(F); $('n2').textContent = fN(F / 4); $('n3').textContent = fN(F / 9); $('r-o').textContent = dec(r, 2) + ' m';
+    void p;
+  }
+  // Gráfica F(y) sobre el eje (a = 0,15 m, q = 4 µC, q0 = 1 µC: como el taller)
+  function eje() {
+    const svg = $('eje'), a = 0.15, Fy = (y) => 2 * K * 4 * uC * uC * y / (a * a + y * y) ** 1.5, Fm = Fy(a / Math.SQRT2);
+    const X = (y) => 30 + y / 0.6 * 320, Y = (f) => 110 - f / Fm * 92; let d = '';
+    for (let y = 0; y <= 0.6; y += 0.005) d += (y === 0 ? 'M' : 'L') + X(y).toFixed(1) + ' ' + Y(Fy(y)).toFixed(1);
+    svg.innerHTML = `<path d="M30 8V110H352" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/><path d="${d}" fill="none" stroke="var(--e10-primary)" stroke-width="3"/><line x1="${X(a / Math.SQRT2)}" y1="${Y(Fm)}" x2="${X(a / Math.SQRT2)}" y2="110" stroke="var(--e10-accent)" stroke-dasharray="4 4"/><circle cx="${X(a / Math.SQRT2)}" cy="${Y(Fm)}" r="5" fill="var(--e10-accent)"/><text x="${X(a / Math.SQRT2) + 8}" y="${Y(Fm) + 4}" font-size="12" fill="var(--e10-accent-strong)">1,23 N en a/√2</text><text x="330" y="126" font-size="11" fill="var(--e10-muted)">y</text><text x="8" y="16" font-size="11" fill="var(--e10-muted)">F</text>`;
+  }
+  $('r').addEventListener('input', hero);
+  hero(); eje();
+  function fit() { const w = $('fit').clientWidth - 16, s = Math.min(1, w / 1600); $('poster').style.transform = `scale(${s})`; $('fit').style.height = (1131 * s + 32) + 'px'; $('poster').style.marginLeft = s < 1 ? '8px' : 'auto'; }
+  window.addEventListener('resize', fit); fit();
+  $('btn-print').addEventListener('click', () => window.print());
+  window.addEventListener('load', () => { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }], throwOnError: false }); fit(); });
+})();
+</script>
+</body>
+</html>

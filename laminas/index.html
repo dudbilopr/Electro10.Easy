@@ -836,7 +836,10 @@
 
     let activeCap = 9;
 
+    // Capítulos con póster propio (diseño exclusivo, no esta plantilla)
+    const POSTERS = { 1: 'M1_Coulomb.html' };
     function renderLamina(capNum) {
+        if (POSTERS[capNum]) { location.href = POSTERS[capNum]; return; }
         activeCap = capNum;
         const d = LAMINAS_DATA[capNum];
         if (!d) return;
