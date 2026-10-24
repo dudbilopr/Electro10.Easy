@@ -79,15 +79,15 @@
         }
 
         .hud-badge {
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            background: linear-gradient(135deg, #0B8CA8, #B3246B);
             color: white;
-            font-family: 'Patrick Hand', cursive;
-            font-size: 16px;
-            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
             padding: 4px 12px;
             border-radius: 8px;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 14px rgba(11, 140, 168, 0.4);
         }
 
         .hud-title {
@@ -165,7 +165,7 @@
         }
         .btn-nav-hub:hover { background: rgba(255, 255, 255, 0.2); }
 
-        /* LIENZO DE CUADERNO DE INGENIERÍA / NOTEBOOKLM INFOGRAPHIC */
+        /* LIENZO DE CUADERNO DE INGENIERÍA */
         .infographic-wrapper {
             width: 100%;
             max-width: 1420px;
@@ -220,55 +220,61 @@
 
         .sheet-title {
             font-family: 'Patrick Hand', cursive;
-            font-size: 46px;
-            line-height: 1.05;
+            font-size: 42px;
+            line-height: 1.08;
             color: #1c1917;
             text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
         }
 
         .sheet-subtitle {
             font-family: 'Caveat', cursive;
-            font-size: 22px;
+            font-size: 21px;
             color: #44403c;
             margin-top: 4px;
             line-height: 1.3;
         }
 
-        .mascot-card {
+        /* TARJETA DE CONSEJO DE CÁTEDRA */
+        .mentor-card {
             background: #ffffff;
             border: 2px solid #2b2623;
             border-radius: 14px;
-            padding: 10px 16px;
+            padding: 10px 18px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             box-shadow: 4px 4px 0px #2b2623;
             transform: rotate(-1deg);
+            max-width: 460px;
         }
 
-        .mascot-avatar {
-            font-size: 32px;
-            animation: bounce 2s infinite ease-in-out;
+        .mentor-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0B8CA8, #B3246B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(179, 36, 107, 0.35);
+            flex-shrink: 0;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
-
-        .mascot-text {
+        .mentor-text {
             font-family: 'Patrick Hand', cursive;
             font-size: 15px;
             line-height: 1.25;
             color: #1c1917;
         }
 
-        .mascot-text b { color: var(--e10-primary); }
+        .mentor-text b { color: var(--e10-primary); }
 
         /* REJILLA MODULAR DE LA LÁMINA */
         .sheet-grid {
             display: grid;
-            grid-template-columns: 1.1fr 1fr 1fr;
+            grid-template-columns: 1.15fr 1fr 1fr;
             gap: 26px;
         }
 
@@ -302,7 +308,7 @@
 
         .ink-card-title {
             font-family: 'Patrick Hand', cursive;
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 700;
             color: #1c1917;
             display: flex;
@@ -310,60 +316,33 @@
             gap: 8px;
         }
 
-        .tape-strip {
-            position: absolute;
-            top: -12px;
-            left: 30px;
-            width: 80px;
-            height: 22px;
-            background: rgba(253, 224, 71, 0.65);
-            transform: rotate(-3deg);
-            border: 1px dashed rgba(0,0,0,0.2);
-            pointer-events: none;
-        }
-
         .ink-content {
-            font-size: 15px;
-            line-height: 1.5;
+            font-family: 'Caveat', cursive;
+            font-size: 19.5px;
+            line-height: 1.35;
             color: #292524;
         }
 
         .handwritten-formula {
-            background: #fffbeb;
-            border: 1.5px solid #d97706;
-            border-radius: 10px;
-            padding: 12px;
-            margin: 8px 0;
-            font-size: 15.5px;
+            background: #fefce8;
+            border: 1.5px solid #ca8a04;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 6px 0;
+            color: #1c1917;
             text-align: center;
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.06);
         }
 
-        /* ANIMACIÓN DE RAYOS FOTÓNICOS (NOTEBOOKLM ENGINE) */
-        @keyframes rayPulseFlow {
-            0% { stroke-dashoffset: 280; opacity: 0.2; }
-            25% { opacity: 0.95; }
-            75% { opacity: 0.95; }
-            100% { stroke-dashoffset: 0; opacity: 0.2; }
-        }
-
-        .light-ray-cyan {
-            stroke: #0ea5e9;
-            stroke-width: 3.5px;
-            stroke-linecap: round;
-            stroke-dasharray: 45 180;
-            animation: rayPulseFlow 1.8s linear infinite;
-            filter: drop-shadow(0 0 6px #0284c7);
-            pointer-events: none;
-        }
-
-        .light-ray-magenta {
-            stroke: #ec4899;
-            stroke-width: 3.5px;
-            stroke-linecap: round;
-            stroke-dasharray: 45 180;
-            animation: rayPulseFlow 2.1s linear infinite;
-            filter: drop-shadow(0 0 6px #db2777);
+        /* TAPE EFFECT */
+        .tape-strip {
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            width: 80px;
+            height: 20px;
+            background: rgba(254, 240, 138, 0.65);
+            border: 1px dashed rgba(202, 138, 4, 0.4);
+            transform: rotate(-2deg);
             pointer-events: none;
         }
 
@@ -424,6 +403,35 @@
             color: #0f172a;
         }
 
+        /* RAYOS DE LUZ FOTÓNICOS (NOTEBOOKLM ENGINE) */
+        .light-ray-cyan {
+            stroke: #38bdf8;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 6px #0ea5e9);
+            stroke-dasharray: 8 6;
+            animation: dashStream 1.8s linear infinite;
+        }
+
+        .light-ray-magenta {
+            stroke: #f43f5e;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 6px #e11d48);
+            stroke-dasharray: 8 6;
+            animation: dashStream 1.8s linear infinite;
+        }
+
+        .light-ray-amber {
+            stroke: #f59e0b;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 6px #d97706);
+            stroke-dasharray: 8 6;
+            animation: dashStream 1.8s linear infinite;
+        }
+
+        @keyframes dashStream {
+            to { stroke-dashoffset: -28; }
+        }
+
         /* PIE DE LÁMINA DE CAMPO */
         .sheet-footer {
             border-top: 2px solid #2b2623;
@@ -470,8 +478,18 @@
                 <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ec4899" flood-opacity="0.95"/>
                 <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#be185d" flood-opacity="0.8"/>
             </filter>
+            <filter id="glowYellow" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#fbbf24" flood-opacity="0.95"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#f59e0b" flood-opacity="0.8"/>
+            </filter>
             <marker id="inkArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#1c1917"/>
+            </marker>
+            <marker id="magentaArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#b3246b"/>
+            </marker>
+            <marker id="cyanArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7"/>
             </marker>
         </defs>
     </svg>
@@ -479,8 +497,8 @@
     <!-- BARRA HUD DE NAVEGACIÓN -->
     <header class="hud-topbar">
         <div class="hud-brand">
-            <span class="hud-badge">NOTEBOOKLM · 10.EASY</span>
-            <div class="hud-title">Láminas Visuales de Campo</div>
+            <span class="hud-badge">ELECTRO10.EASY</span>
+            <div class="hud-title">Láminas de Campo e Infografías Maestras</div>
         </div>
 
         <nav class="selector-tabs" id="chips-container"></nav>
@@ -505,17 +523,17 @@
             <!-- ENCABEZADO DE LA LÁMINA -->
             <header class="sheet-header">
                 <div>
-                    <div class="sheet-meta-tag" id="sheet-meta">LÁMINA DE INGENIERÍA #09 · MAGNETOSTÁTICA</div>
+                    <div class="sheet-meta-tag" id="sheet-meta">LÁMINA DE CAMPO #09 · MAGNETOSTÁTICA</div>
                     <h1 class="sheet-title" id="sheet-title">Ley de Biot-Savart: Fuentes del Campo Magnético</h1>
                     <p class="sheet-subtitle" id="sheet-subtitle">Deducción de hilos, espiras y horquillas mediante la suma de elementos diferenciales infinitésimos.</p>
                 </div>
 
-                <!-- MASCOTA NANO BANANA -->
-                <div class="mascot-card">
-                    <div class="mascot-avatar">🍌⚡</div>
-                    <div class="mascot-text">
-                        <b>Nano Banana dice:</b><br>
-                        <span id="mascot-tip">¡La regla de la mano derecha nunca falla: pulgar en la corriente, dedos en el campo!</span>
+                <!-- ORIENTACIÓN DE CÁTEDRA -->
+                <div class="mentor-card">
+                    <div class="mentor-avatar"><span class="material-symbols-outlined">psychology</span></div>
+                    <div class="mentor-text">
+                        <b>Cátedra · Prof. Dudbil Olvasada Pabón:</b><br>
+                        <span id="mentor-tip">¡La regla de la mano derecha nunca falla: pulgar en la corriente, dedos en el campo!</span>
                     </div>
                 </div>
             </header>
@@ -530,18 +548,14 @@
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">help_center</span> 1. El Enigma Físico</h2>
                         </div>
-                        <div class="ink-content" id="sheet-enigma">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-enigma"></div>
                     </div>
 
                     <div class="ink-card">
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">gesture</span> 2. Esquema Vectorial Vivo</h2>
                         </div>
-                        <div class="vector-canvas-box" id="sheet-diagram-box">
-                            <!-- SVG Vectorial con animación de fotones en curvas de Bézier -->
-                        </div>
+                        <div class="vector-canvas-box" id="sheet-diagram-box"></div>
                     </div>
                 </section>
 
@@ -551,27 +565,21 @@
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">calculate</span> 3. Ecuación Rectora</h2>
                         </div>
-                        <div class="ink-content" id="sheet-math">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-math"></div>
                     </div>
 
                     <div class="ink-card">
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">alt_route</span> 4. Dos Caminos de Solución</h2>
                         </div>
-                        <div class="ink-content" id="sheet-dual-path">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-dual-path"></div>
                     </div>
 
                     <div class="ink-card">
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">tune</span> 5. Laboratorio en Miniatura</h2>
                         </div>
-                        <div class="live-interactive-widget" id="sheet-widget">
-                            <!-- Widget interactivo con slider en vivo -->
-                        </div>
+                        <div class="live-interactive-widget" id="sheet-widget"></div>
                     </div>
                 </section>
 
@@ -582,27 +590,21 @@
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">view_in_ar</span> 6. Prototipo Físico 3D</h2>
                         </div>
-                        <div class="ink-content" id="sheet-3d-proto">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-3d-proto"></div>
                     </div>
 
                     <div class="ink-card">
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">warning</span> 7. Paradoja del Novato</h2>
                         </div>
-                        <div class="ink-content" id="sheet-paradox">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-paradox"></div>
                     </div>
 
                     <div class="ink-card">
                         <div class="ink-card-header">
                             <h2 class="ink-card-title"><span class="material-symbols-outlined">school</span> 8. Conclusión de Ingeniería</h2>
                         </div>
-                        <div class="ink-content" id="sheet-takeaways">
-                            <!-- Inyectado dinámicamente -->
-                        </div>
+                        <div class="ink-content" id="sheet-takeaways"></div>
                     </div>
                 </section>
 
@@ -610,11 +612,9 @@
 
             <!-- PIE DE LÁMINA: CONEXIONES INTERMODULARES -->
             <footer class="sheet-footer">
-                <div class="path-connection" id="sheet-path">
-                    Ruta: M08 (Lorentz) → <span>M09 (Biot-Savart)</span> → M10 (Ampère)
-                </div>
+                <div class="path-connection" id="sheet-path"></div>
                 <div>
-                    <b>Electro10.Easy · Cuaderno de Campo</b> · Dudbil Olvasada Pabón Riaño
+                    <b>Electro10.Easy · Cátedra de Electromagnetismo</b> · Prof. Dudbil Olvasada Pabón Riaño
                 </div>
             </footer>
 
@@ -624,274 +624,215 @@
     <!-- MOTOR DE CONTENIDOS DE LÁMINAS VISUALES -->
     <script>
     const LAMINAS_DATA = {
-        9: {
-            meta: "LÁMINA DE INGENIERÍA #09 · MAGNETOSTÁTICA",
-            title: "Ley de Biot-Savart: Fuentes del Campo Magnético",
-            subtitle: "Deducción geométrica exacta de campos magnetostáticos generados por corrientes estacionarias.",
-            mascotTip: "¡Ojo al ángulo! En el hilo recto, el producto cruz forma φ = 90° + θ, por lo que sin(φ) = cos(θ).",
-            deckUrl: "../presentaciones/M9_BiotSavart/index.html",
-            enigma: `
-                ¿Cómo sabe el espacio que por un cable fluye corriente eléctrica y cómo se calcula el campo resultante punto a punto?
-                Biot y Savart descubrieron que cada trozo diminuto \(I\,d\vec{\ell}\) contribuye con un diferencial \(d\vec{B}\) que decae con el inverso del cuadrado \(1/r^2\) pero en una dirección puramente perpendicular dada por el producto cruz.
-            `,
-            diagramSvg: `
-                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Hilo conductor con trazo entintado -->
-                    <line x1="90" y1="20" x2="90" y2="180" stroke="#1c1917" stroke-width="4" filter="url(#inkSketch)"/>
-                    <!-- Corriente I con flecha -->
-                    <path d="M 90 140 L 90 60" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
-                    <text x="65" y="105" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b" font-weight="bold">I = 10 A</text>
-                    
-                    <!-- Elemento dl resaltado -->
-                    <rect x="85" y="90" width="10" height="25" fill="#f59e0b" stroke="#1c1917" stroke-width="1.5"/>
-                    <text x="50" y="85" font-family="'Caveat', cursive" font-size="16" fill="#d97706">dℓ = dy</text>
-
-                    <!-- Punto P de observación -->
-                    <circle cx="280" cy="100" r="6" fill="#1c1917"/>
-                    <text x="295" y="105" font-family="'Patrick Hand', cursive" font-size="20" font-weight="bold">P</text>
-
-                    <!-- Distancia perpendicular a -->
-                    <line x1="90" y1="100" x2="280" y2="100" stroke="#78716c" stroke-width="2" stroke-dasharray="4,4"/>
-                    <text x="180" y="92" font-family="'Caveat', cursive" font-size="18" fill="#78716c">a = const</text>
-
-                    <!-- Curva de Bézier de inducción magnética con fotones en movimiento -->
-                    <path id="bezierBiot" d="M 90 100 C 140 30, 220 30, 280 100" stroke="#0ea5e9" stroke-width="2.5" fill="none" stroke-dasharray="5,5"/>
-                    <path d="M 90 100 C 140 30, 220 30, 280 100" class="light-ray-cyan" fill="none"/>
-
-                    <!-- Fotón viajero -->
-                    <circle r="4" fill="#ffffff" filter="url(#glowCyan)">
-                        <animateMotion dur="1.8s" repeatCount="indefinite" rotate="auto">
-                            <mpath href="#bezierBiot"/>
-                        </animateMotion>
-                    </circle>
-
-                    <!-- Símbolo de campo entrando B (⊗) en P -->
-                    <circle cx="280" cy="140" r="14" fill="#ffffff" stroke="#b3246b" stroke-width="2.5"/>
-                    <line x1="270" y1="130" x2="290" y2="150" stroke="#b3246b" stroke-width="2.5"/>
-                    <line x1="290" y1="130" x2="270" y2="150" stroke="#b3246b" stroke-width="2.5"/>
-                    <text x="304" y="146" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">B ⊗ (entra)</text>
-                </svg>
-            `,
-            math: `
-                <div class="handwritten-formula">
-                    \\[ d\\vec{B} = \\frac{\\mu_0}{4\\pi} \\frac{I\\,d\\vec{\\ell}\\times\\hat{r}}{r^2} \\]
-                </div>
-                Para un hilo infinito, integrando entre \(\\theta = -90^\\circ\) y \(+90^\\circ\):
-                \\[ B = \\frac{\\mu_0 I}{2\\pi a} \\]
-            `,
-            dualPath: `
-                <b>Camino A (Sustitución Trigonométrica):</b><br>
-                Haciendo \(y = a\\tan\\theta \\implies dy = a\\sec^2\\theta\\,d\\theta\), la integral colapsa a una función coseno elemental:<br>
-                \(\\int \\cos\\theta\\,d\\theta = \\sin\\theta_2 - \\sin\\theta_1\).<br><br>
-                <b>Camino B (Integrales de Tabla Directa):</b><br>
-                Uso de la forma algebraica estándar \(\\int \\frac{dy}{(y^2+a^2)^{3/2}} = \\left[\\frac{y}{a^2\\sqrt{y^2+a^2}}\\right]\).
-            `,
-            widget: `
-                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Calculador Dinámico de Biot-Savart</div>
-                <div class="widget-controls">
-                    <label>Corriente I (A):</label>
-                    <input type="range" id="w-i" min="1" max="50" value="10">
-                    <span id="w-i-val" class="widget-readout">10 A</span>
-                </div>
-                <div class="widget-controls">
-                    <label>Distancia a (cm):</label>
-                    <input type="range" id="w-a" min="1" max="20" value="5">
-                    <span id="w-a-val" class="widget-readout">5.0 cm</span>
-                </div>
-                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
-                    Campo B resultante: <b id="w-b-res">40.00 µT</b>
-                </div>
-            `,
-            proto3D: `
-                <b>Pieza Imprimible: BiotSavart-Jig</b><br>
-                Soporte de espiras con ranura micrométrica para sonda Hall. Fabricado en PLA 100% no ferroso, tornillos de nylon para no distorsionar el campo magnético.
-            `,
-            paradox: `
-                <b>¿Hay campo sobre el mismo hilo?</b><br>
-                ¡Jamás! Como \(d\\vec{\\ell} \\parallel \\hat{r}\), el producto vectorial se anula de forma idéntica (\(d\\vec{\\ell}\\times\\hat{r} = \\vec{0}\)). En todo punto colineal al hilo, \(B = 0\).
-            `,
-            takeaways: `
-                La ley de Biot-Savart demuestra que las corrientes son fuentes toroidales de campo magnético continuo. El modelo es la base de transformadores, motores y resonancia magnética.
-            `,
-            path: `Ruta: M08 (Fuerza de Lorentz) → <span>M09 (Ley de Biot-Savart)</span> → M10 (Ley de Ampère)`
-        },
-        1: {
-            meta: "LÁMINA DE INGENIERÍA #01 · ELECTROSTÁTICA",
-            title: "Ley de Coulomb: Interacción entre Cargas Puntuales",
-            subtitle: "Fuerzas electrostáticas, principio de superposición y balance gravitacional.",
-            mascotTip: "¡Cuidado con los signos! Cargas del mismo signo se repelen; de signos opuestos se atraen con fuerza colineal.",
-            deckUrl: "../presentaciones/M1_Coulomb/index.html",
-            enigma: `
-                ¿Por qué un peine frotado con lana puede levantar trocitos de papel venciendo la atracción de toda la Tierra?
-                La interacción electrostática es aproximadamente \(10^{36}\) veces más intensa que la gravedad. Coulomb cuantificó esta fuerza mediante una balanza de torsión.
-            `,
-            diagramSvg: `
-                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="20" fill="#ef4444" stroke="#1c1917" stroke-width="2.5" filter="url(#glowMagenta)"/>
-                    <text x="100" y="106" font-family="'Patrick Hand', cursive" font-size="20" fill="#ffffff" font-weight="bold" text-anchor="middle">+q₁</text>
-
-                    <circle cx="280" cy="100" r="16" fill="#3b82f6" stroke="#1c1917" stroke-width="2.5" filter="url(#glowCyan)"/>
-                    <text x="280" y="105" font-family="'Patrick Hand', cursive" font-size="18" fill="#ffffff" font-weight="bold" text-anchor="middle">-q₂</text>
-
-                    <!-- Línea de acción con rayo en movimiento -->
-                    <path id="bezierCoulomb" d="M 120 100 L 264 100" stroke="#78716c" stroke-width="2" stroke-dasharray="4,4"/>
-                    <path d="M 120 100 L 264 100" class="light-ray-magenta" fill="none"/>
-
-                    <!-- Vectores de atracción -->
-                    <line x1="100" y1="100" x2="160" y2="100" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
-                    <line x1="280" y1="100" x2="220" y2="100" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
-                    <text x="140" y="85" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">F₁₂</text>
-                    <text x="235" y="85" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">F₂₁</text>
-                </svg>
-            `,
-            math: `
-                <div class="handwritten-formula">
-                    \\[ \\vec{F}_{12} = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{r^2} \\hat{r}_{12} \\]
-                </div>
-                Constante de Coulomb: \(k = \\frac{1}{4\\pi\\epsilon_0} \\approx 8{,}99\\times 10^9\\ \\text{N}\\cdot\\text{m}^2/\\text{C}^2\).
-            `,
-            dualPath: `
-                <b>Camino A (Formulación Cartesiana):</b><br>
-                Uso de componentes independientes \(F_x = F\\cos\\theta, F_y = F\\sin\\theta\).<br><br>
-                <b>Camino B (Notación Cúbica Vectorial):</b><br>
-                \(\\vec{F} = k q_1 q_2 \\frac{\\vec{r}_2 - \\vec{r}_1}{|\\vec{r}_2 - \\vec{r}_1|^3}\).
-            `,
-            widget: `
-                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Calculador de Fuerza de Coulomb</div>
-                <div class="widget-controls">
-                    <label>Carga q₁ (µC):</label>
-                    <input type="range" id="w-q" min="1" max="20" value="5">
-                    <span id="w-q-val" class="widget-readout">5 µC</span>
-                </div>
-                <div class="widget-controls">
-                    <label>Separación r (cm):</label>
-                    <input type="range" id="w-r" min="1" max="30" value="10">
-                    <span id="w-r-val" class="widget-readout">10 cm</span>
-                </div>
-                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
-                    Fuerza resultante: <b id="w-f-res">22.47 N</b>
-                </div>
-            `,
-            proto3D: `
-                <b>Pieza Imprimible: CoulombBench-3D</b><br>
-                Balanza de torsión con nonio graduado milimétrico y cunas aislantes para frotamiento triboeléctrico de barras de ebonita y vidrio.
-            `,
-            paradox: `
-                <b>¿Se suman las magnitudes aritméticas?</b><br>
-                ¡No! Las fuerzas son vectores. Dos cargas iguales a ambos lados de una tercera producen una fuerza neta de exactamente cero newtons.
-            `,
-            takeaways: `
-                La ley de Coulomb es el pilar de toda la electrostática y define la interacción que mantiene unidos átomos, moléculas y materia sólida.
-            `,
-            path: `Ruta: Presaberes (Vectores) → <span>M01 (Ley de Coulomb)</span> → M02 (Campo Eléctrico)`
-        },
-        12: {
-            meta: "LÁMINA DE INGENIERÍA #12 · SÍNTESIS ELECTROMAGNÉTICA",
-            title: "Ecuaciones de Maxwell y Ondas Electromagnéticas",
-            subtitle: "La unificación cumbre de la física clásica y la predicción de la velocidad de la luz.",
-            mascotTip: "¡El secreto de Maxwell! En el vacío no hay cargas; el campo eléctrico variable crea campo magnético y viceversa de forma autosostenida.",
-            deckUrl: "../presentaciones/M12_Maxwell/index.html",
-            enigma: `
-                ¿Cómo viaja la luz de las estrellas a través del vacío absoluto del espacio interestelar sin necesitar ningún medio material?
-                Maxwell demostró que una perturbación eléctrica genera un campo magnético acoplado que se propaga a la velocidad \(c\).
-            `,
-            diagramSvg: `
-                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="20" y1="100" x2="360" y2="100" stroke="#78716c" stroke-width="2"/>
-                    <text x="365" y="105" font-family="'Patrick Hand', cursive" font-size="16">z (propagación)</text>
-
-                    <!-- Curva E vertical (roja) -->
-                    <path id="bezierOndaE" d="M 40 100 Q 100 20 160 100 T 280 100 T 360 100" fill="none" stroke="#ef4444" stroke-width="3"/>
-                    <path d="M 40 100 Q 100 20 160 100 T 280 100 T 360 100" class="light-ray-magenta" fill="none"/>
-
-                    <!-- Curva B horizontal (azul en perspectiva) -->
-                    <path id="bezierOndaB" d="M 40 100 Q 100 160 160 100 T 280 100 T 360 100" fill="none" stroke="#0ea5e9" stroke-width="2.5" stroke-dasharray="4,4"/>
-                    <path d="M 40 100 Q 100 160 160 100 T 280 100 T 360 100" class="light-ray-cyan" fill="none"/>
-
-                    <text x="100" y="45" font-family="'Patrick Hand', cursive" font-size="18" fill="#ef4444" font-weight="bold">Campo E(y)</text>
-                    <text x="100" y="175" font-family="'Patrick Hand', cursive" font-size="18" fill="#0ea5e9" font-weight="bold">Campo B(x)</text>
-                </svg>
-            `,
-            math: `
-                <div class="handwritten-formula">
-                    \\[ \\nabla^2 \\vec{E} = \\mu_0\\epsilon_0 \\frac{\\partial^2 \\vec{E}}{\\partial t^2} \\implies c = \\frac{1}{\\sqrt{\\mu_0\\epsilon_0}} \\]
-                </div>
-                Vector de Poynting (Flujo de Energía): \(\\vec{S} = \\frac{1}{\\mu_0}(\\vec{E}\\times\\vec{B})\).
-            `,
-            dualPath: `
-                <b>Camino A (Forma Integral de Circulación):</b><br>
-                \(\\oint \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0(I_c + \\epsilon_0\\frac{d\\Phi_E}{dt})\).<br><br>
-                <b>Camino B (Forma Diferencial de Campo Local):</b><br>
-                \(\\vec{\\nabla}\\times\\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial\\vec{E}}{\\partial t}\).
-            `,
-            widget: `
-                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Relación de Amplitudes E = c B</div>
-                <div class="widget-controls">
-                    <label>Amplitud E₀ (V/m):</label>
-                    <input type="range" id="w-e0" min="10" max="600" value="300">
-                    <span id="w-e0-val" class="widget-readout">300 V/m</span>
-                </div>
-                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
-                    Amplitud B₀ = E₀/c: <b id="w-b0-res">1.00 µT</b>
-                </div>
-            `,
-            proto3D: `
-                <b>Pieza Imprimible: Maxwell-Wave 3D</b><br>
-                Modelo físico articulado con varillas de acoplamiento perpendicular \(\\vec{E}\\perp\\vec{B}\) y rejilla para demostrar la ley de Malus en polarización.
-            `,
-            paradox: `
-                <b>¿La corriente de desplazamiento tiene carga eléctrica?</b><br>
-                No. No hay electrones atravesando el espacio entre placas; es el cambio temporal del flujo eléctrico el que induce magnéticamente como si fuera corriente.
-            `,
-            takeaways: `
-                Las ecuaciones de Maxwell son la cúspide del electromagnetismo clásico y demostraron que la luz y las ondas de radio son el mismo fenómeno físico.
-            `,
-            path: `Ruta: M11 (Ley de Faraday) → <span>M12 (Ecuaciones de Maxwell)</span> → M13 (Circuitos de Corriente Alterna)`
-        }
-    };
-
-    // Auto-generación limpia para los módulos restantes
-    for (let i = 1; i <= 13; i++) {
-        if (!LAMINAS_DATA[i]) {
-            const modTitles = {
-                2: "Campo Eléctrico y Dipolos",
-                3: "Potencial Eléctrico y Gradiente",
-                4: "Distribuciones Continuas de Carga",
-                5: "Ley de Gauss y Teorema del Flujo",
-                6: "Capacitancia y Dieléctricos",
-                7: "Circuitos de Corriente Continua",
-                8: "Fuerza de Lorentz y Espectrometría",
-                10: "Ley de Ampère y Solenoides",
-                11: "Ley de Faraday e Inductancia",
-                13: "Circuitos de Corriente Alterna y RLC"
-            };
-            LAMINAS_DATA[i] = {
-                meta: `LÁMINA DE INGENIERÍA #${i < 10 ? '0' + i : i} · FÍSICA UNIVERSITARIA`,
-                title: `${modTitles[i] || 'Módulo ' + i}: Fundamentos y Modelos`,
-                subtitle: "Cuaderno de campo interactivo con deducción paso a paso y validación experimental.",
-                mascotTip: `Nano Banana recomienda: ¡Revisa siempre la coherencia de unidades dimensionales antes de integrar!`,
-                deckUrl: `../presentaciones/M${i}_${getDirSlug(i)}/index.html`,
-                enigma: `Investigación del comportamiento físico fundamental del Capítulo ${i}, articulando modelos en KaTeX y validación interactiva de aula.`,
-                diagramSvg: `<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg"><rect width="380" height="200" rx="12" fill="#fff" stroke="#2b2623" stroke-width="2"/><text x="190" y="105" font-family="'Patrick Hand', cursive" font-size="20" fill="#78716c" text-anchor="middle">Esquema Vectorial Dinámico Módulo ${i}</text></svg>`,
-                math: `<div class="handwritten-formula">\\[ \\text{Fórmulas Rectoras Módulo } ${i} \\]</div>Consulte el Master Deck para la deducción completa.`,
-                dualPath: `<b>Camino A:</b> Deducción analítica directa.<br><br><b>Camino B:</b> Enfoque geométrico y leyes de conservación.`,
-                widget: `<div style="font-size:13px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">Simulador activo en el Master Deck.</div>`,
-                proto3D: `<b>Pieza Imprimible: Modelo 3D Módulo ${i}</b><br>Ver especificaciones en GUIA_DIDACTICA_Y_MODELOS_3D.md.`,
-                paradox: `Identificación y desactivación de concepciones erróneas comunes en el tema.`,
-                takeaways: `Comprensión profunda de los principios del capítulo ${i}.`,
-                path: `Ruta: Módulo ${i-1} → <span>Módulo ${i}</span> → Módulo ${i+1}`
-            };
-        }
+    "1": {
+        "meta": "LÁMINA DE CAMPO #01 · ELECTROSTÁTICA FUNDAMENTAL",
+        "title": "Ley de Coulomb: Balanza de Fuerzas Electrostáticas",
+        "subtitle": "Interacción cuantitativa entre cargas puntuales, ley del inverso del cuadrado y principio de superposición vectorial.",
+        "mentorTip": "La fuerza de Coulomb siempre actúa a lo largo de la recta colineal que une los centros de ambas cargas. El signo algebraico orienta el sentido de atracción o repulsión.",
+        "deckUrl": "../presentaciones/M1_Coulomb/index.html",
+        "enigma": "¿Cómo puede un peine de plástico frotado con lana levantar trozos de papel venciendo la atracción gravitatoria de todo el planeta Tierra? La interacción electrostática entre electrones y protones es aproximadamente $10^{36}$ veces más intensa que la gravedad. Coulomb cuantificó esta fuerza midiendo la torsión micrométrica de un hilo de plata con esferas cargadas.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Carga 1 (+q1) -->\n    <circle cx=\"90\" cy=\"100\" r=\"20\" fill=\"#ef4444\" stroke=\"#1c1917\" stroke-width=\"2.5\" filter=\"url(#glowMagenta)\"/>\n    <text x=\"90\" y=\"106\" font-family=\"'Patrick Hand', cursive\" font-size=\"20\" fill=\"#ffffff\" font-weight=\"bold\" text-anchor=\"middle\">+q₁</text>\n\n    <!-- Carga 2 (-q2) -->\n    <circle cx=\"270\" cy=\"100\" r=\"16\" fill=\"#3b82f6\" stroke=\"#1c1917\" stroke-width=\"2.5\" filter=\"url(#glowCyan)\"/>\n    <text x=\"270\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#ffffff\" font-weight=\"bold\" text-anchor=\"middle\">-q₂</text>\n\n    <!-- Línea de acción con rayo en movimiento -->\n    <path id=\"bezierCoulomb\" d=\"M 110 100 L 254 100\" stroke=\"#78716c\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 110 100 L 254 100\" class=\"light-ray-magenta\" fill=\"none\"/>\n\n    <!-- Fotón de interacción electrostática -->\n    <circle r=\"4\" fill=\"#ffffff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.6s\" repeatCount=\"indefinite\">\n            <mpath href=\"#bezierCoulomb\"/>\n        </animateMotion>\n    </circle>\n\n    <!-- Vectores de fuerza atractiva colineales -->\n    <line x1=\"90\" y1=\"100\" x2=\"155\" y2=\"100\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <line x1=\"270\" y1=\"100\" x2=\"205\" y2=\"100\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"130\" y=\"85\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\">F₁₂</text>\n    <text x=\"220\" y=\"85\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\">F₂₁</text>\n\n    <!-- Marcador de distancia r -->\n    <line x1=\"90\" y1=\"150\" x2=\"270\" y2=\"150\" stroke=\"#57534e\" stroke-width=\"1.5\"/>\n    <line x1=\"90\" y1=\"142\" x2=\"90\" y2=\"158\" stroke=\"#57534e\" stroke-width=\"1.5\"/>\n    <line x1=\"270\" y1=\"142\" x2=\"270\" y2=\"158\" stroke=\"#57534e\" stroke-width=\"1.5\"/>\n    <text x=\"180\" y=\"170\" font-family=\"'Caveat', cursive\" font-size=\"20\" fill=\"#57534e\" text-anchor=\"middle\">Separación r</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\vec{F}_{12} = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{r^2} \\hat{r}_{12} \\]</div>\nConstante de permitividad del vacío: $\\epsilon_0 = 8{,}854\\times 10^{-12}\\ \\text{C}^2/(\\text{N}\\cdot\\text{m}^2) \\implies k \\approx 8{,}99\\times 10^9\\ \\text{N}\\cdot\\text{m}^2/\\text{C}^2$.",
+        "dualPath": "<b>Camino A (Formulación Escalar por Componentes):</b><br>Descomposición trigonométrica directa $F_x = F\\cos\\theta$, $F_y = F\\sin\\theta$ sumando las proyecciones cartesianas de cada carga independiente.<br><br><b>Camino B (Notación Cúbica Vectorial):</b><br>$\\vec{F}_{12} = k q_1 q_2 \\frac{\\vec{r}_2 - \\vec{r}_1}{|\\vec{r}_2 - \\vec{r}_1|^3}$, método computacional óptimo para $N$ cargas sin ambigüedad de cuadrantes.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Fuerza de Coulomb</div>\n<div class=\"widget-controls\">\n    <label>Carga q₁ (µC):</label>\n    <input type=\"range\" id=\"w1-q\" min=\"1\" max=\"20\" value=\"5\">\n    <span id=\"w1-q-val\" class=\"widget-readout\">5 µC</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Separación r (cm):</label>\n    <input type=\"range\" id=\"w1-r\" min=\"2\" max=\"30\" value=\"10\">\n    <span id=\"w1-r-val\" class=\"widget-readout\">10 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Fuerza resultante: <b id=\"w1-res\">22.47 N (Repulsión)</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: CoulombBench-3D</b><br>Balanza de torsión con nonio graduado milimétrico y cunas aislantes para frotamiento triboeléctrico de barras de ebonita y vidrio (especificada en GUIA_DIDACTICA_Y_MODELOS_3D.md).",
+        "paradox": "<b>¿Se suman las magnitudes escalares?</b><br>¡Error clásico! Las fuerzas son vectores. Dos cargas idénticas situadas a distancias iguales a ambos lados de una tercera producen una fuerza resultante de exactamente cero newtons, a pesar de que cada interacción individual sea enorme.",
+        "takeaways": "La ley de Coulomb es la base microscópica de la química, la física del estado sólido y toda la electrostática. La fuerza decrece como $1/r^2$, extendiéndose hasta el infinito pero amortiguándose rápidamente.",
+        "path": "Ruta: Presaberes (Vectores) → <span>M01 (Ley de Coulomb)</span> → M02 (Campo Eléctrico)"
+    },
+    "2": {
+        "meta": "LÁMINA DE CAMPO #02 · CAMPOS Y DIPOLOS",
+        "title": "Campo Eléctrico y Dipolos: La Geometría de las Líneas de Fuerza",
+        "subtitle": "Perturbación del espacio, principio de superposición continua y momento dipolar eléctrico.",
+        "mentorTip": "El campo eléctrico existe en el espacio independientemente de si colocamos una carga de prueba en él. Las líneas de campo jamás se cruzan.",
+        "deckUrl": "../presentaciones/M2_CampoElectrico/index.html",
+        "enigma": "¿Cómo 'siente' una carga a otra a través del vacío sin tocarse? Michael Faraday postuló que una carga altera el espacio circundante creando un campo vectorial $\\vec{E}$. El dipolo eléctrico (+q y -q separadas una distancia d) es el bloque constitutivo de la molécula del agua y el fundamento de la transmisión en antenas de radio.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Cargas del dipolo -->\n    <circle cx=\"110\" cy=\"100\" r=\"14\" fill=\"#ef4444\" stroke=\"#1c1917\" stroke-width=\"2\" filter=\"url(#glowMagenta)\"/>\n    <text x=\"110\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#fff\" text-anchor=\"middle\">+q</text>\n\n    <circle cx=\"210\" cy=\"100\" r=\"14\" fill=\"#3b82f6\" stroke=\"#1c1917\" stroke-width=\"2\" filter=\"url(#glowCyan)\"/>\n    <text x=\"210\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#fff\" text-anchor=\"middle\">-q</text>\n\n    <!-- Vector momento dipolar p -->\n    <line x1=\"124\" y1=\"100\" x2=\"196\" y2=\"100\" stroke=\"#f59e0b\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"160\" y=\"92\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" fill=\"#f59e0b\" text-anchor=\"middle\">p = q·d</text>\n\n    <!-- Curvas de campo dipolar Bézier superior e inferior -->\n    <path id=\"dipUp\" d=\"M 110 86 C 110 20, 210 20, 210 86\" fill=\"none\" stroke=\"#b3246b\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 110 86 C 110 20, 210 20, 210 86\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"2s\" repeatCount=\"indefinite\"><mpath href=\"#dipUp\"/></animateMotion>\n    </circle>\n\n    <path id=\"dipDown\" d=\"M 110 114 C 110 180, 210 180, 210 114\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 110 114 C 110 180, 210 180, 210 114\" class=\"light-ray-cyan\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowCyan)\">\n        <animateMotion dur=\"2s\" repeatCount=\"indefinite\"><mpath href=\"#dipDown\"/></animateMotion>\n    </circle>\n\n    <!-- Punto P sobre el eje axial -->\n    <circle cx=\"310\" cy=\"100\" r=\"5\" fill=\"#1c1917\"/>\n    <text x=\"310\" y=\"88\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" font-weight=\"bold\" text-anchor=\"middle\">P(z)</text>\n    <line x1=\"310\" y1=\"100\" x2=\"365\" y2=\"100\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"340\" y=\"122\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#b3246b\">E_eje</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\vec{E}(\\vec{r}) = \\frac{1}{4\\pi\\epsilon_0}\\sum_{i} \\frac{q_i}{r_i^2}\\hat{r}_i \\]</div>\nEn el eje del dipolo ($z \\gg d$): \\[ E_{\\text{eje}} \\approx \\frac{1}{4\\pi\\epsilon_0} \\frac{2p}{z^3} \\quad \\text{y en el ecuador:} \\quad E_{\\text{ec}} \\approx -\\frac{1}{4\\pi\\epsilon_0} \\frac{p}{y^3} \\]",
+        "dualPath": "<b>Camino A (Superposición Vectorial Exacta):</b><br>Cálculo de $E_+ = \\frac{kq}{(z-d/2)^2}$ y $E_- = \\frac{kq}{(z+d/2)^2}$, hallando la diferencia algebraica exacta para cualquier distancia.<br><br><b>Camino B (Expansión Multipolar de Campo Lejano):</b><br>Aproximación por serie de Taylor $(1 \\pm \\frac{d}{2z})^{-2} \\approx 1 \\mp \\frac{d}{z}$, demostrando la caída cúbica $1/z^3$ inherente a todos los dipolos.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Campo Dipolar</div>\n<div class=\"widget-controls\">\n    <label>Momento p (10⁻²⁹ C·m):</label>\n    <input type=\"range\" id=\"w2-p\" min=\"1\" max=\"20\" value=\"6\">\n    <span id=\"w2-p-val\" class=\"widget-readout\">6·10⁻²⁹ C·m</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Distancia z (cm):</label>\n    <input type=\"range\" id=\"w2-z\" min=\"2\" max=\"15\" value=\"5\">\n    <span id=\"w2-z-val\" class=\"widget-readout\">5 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Campo en el eje: <b id=\"w2-res\">8.63 aN/C (10⁻¹⁸ N/C)</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: DipoleField-Mapper 3D</b><br>Matriz orientable de micro-agujas dieléctricas suspendidas sobre pivotes de baja inercia para visualizar en 3D la curvatura del campo dipolar.",
+        "paradox": "<b>¿Por qué el campo decae con $1/z^3$ y no con $1/z^2$?</b><br>Porque a grandes distancias las dos cargas opuestas casi se superponen. Sus campos se cancelan parcialmente, haciendo que el campo residual decaiga mucho más rápido que el de una carga aislada.",
+        "takeaways": "El momento dipolar $\\vec{p} = q\\vec{d}$ orienta moléculas dieléctricas en hornos microondas y rige la solvatación en disoluciones biológicas.",
+        "path": "Ruta: M01 (Coulomb) → <span>M02 (Campo Eléctrico)</span> → M03 (Potencial Eléctrico)"
+    },
+    "3": {
+        "meta": "LÁMINA DE CAMPO #03 · ENERGÍA Y POTENCIAL",
+        "title": "Potencial Eléctrico y Gradiente: El Mapa Topográfico del Voltaje",
+        "subtitle": "Superficies equipotenciales, relación diferencial $\\vec{E} = -\\vec{\\nabla}V$ y conservación de energía.",
+        "mentorTip": "El campo eléctrico siempre apunta hacia las regiones de menor potencial eléctrico (cuesta abajo en el paisaje de voltaje).",
+        "deckUrl": "../presentaciones/M3_Potencial/index.html",
+        "enigma": "¿Por qué un pájaro puede posarse sobre un cable de alta tensión de 13.200 voltios sin electrocutarse? Porque el peligro no radica en el potencial absoluto, sino en la diferencia de potencial (voltaje) entre dos puntos. El pájaro tiene ambas patas al mismo potencial, por lo que el campo eléctrico dentro de su cuerpo es cero.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Carga fuente central -->\n    <circle cx=\"120\" cy=\"100\" r=\"16\" fill=\"#ef4444\" stroke=\"#1c1917\" stroke-width=\"2\" filter=\"url(#glowMagenta)\"/>\n    <text x=\"120\" y=\"106\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#fff\" text-anchor=\"middle\">+Q</text>\n\n    <!-- Superficies equipotenciales concéntricas -->\n    <circle cx=\"120\" cy=\"100\" r=\"38\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"1.5\" stroke-dasharray=\"3,3\"/>\n    <text x=\"160\" y=\"85\" font-family=\"'JetBrains Mono', monospace\" font-size=\"11\" fill=\"#0284c7\">100V</text>\n\n    <circle cx=\"120\" cy=\"100\" r=\"68\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"1.5\" stroke-dasharray=\"3,3\"/>\n    <text x=\"190\" y=\"85\" font-family=\"'JetBrains Mono', monospace\" font-size=\"11\" fill=\"#0284c7\">50V</text>\n\n    <circle cx=\"120\" cy=\"100\" r=\"98\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"1.5\" stroke-dasharray=\"3,3\"/>\n    <text x=\"220\" y=\"85\" font-family=\"'JetBrains Mono', monospace\" font-size=\"11\" fill=\"#0284c7\">25V</text>\n\n    <!-- Vector Gradiente de Campo E = -grad(V) -->\n    <line x1=\"120\" y1=\"100\" x2=\"310\" y2=\"100\" stroke=\"#b3246b\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <path id=\"radGrad\" d=\"M 136 100 L 300 100\" class=\"light-ray-amber\" fill=\"none\"/>\n    <circle r=\"4\" fill=\"#ffffff\" filter=\"url(#glowYellow)\">\n        <animateMotion dur=\"1.8s\" repeatCount=\"indefinite\"><mpath href=\"#radGrad\"/></animateMotion>\n    </circle>\n    <text x=\"280\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\" font-weight=\"bold\">E = -∇V</text>\n    <text x=\"250\" y=\"125\" font-family=\"'Caveat', cursive\" font-size=\"17\" fill=\"#57534e\">Línea de máxima pendiente</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ V(\\vec{r}) = -\\int_{\\infty}^{\\vec{r}} \\vec{E}\\cdot d\\vec{\\ell} = \\frac{1}{4\\pi\\epsilon_0}\\frac{q}{r} \\]</div>\nRelación de gradiente: \\[ \\vec{E} = -\\vec{\\nabla}V = -\\left(\\frac{\\partial V}{\\partial x}\\hat{\\imath} + \\frac{\\partial V}{\\partial y}\\hat{\\jmath} + \\frac{\\partial V}{\\partial z}\\hat{k}\\right) \\]",
+        "dualPath": "<b>Camino A (Integral de Línea de Trabajo Mecánico):</b><br>Evaluación del trabajo conservativo $W_{A\\to B} = -q\\Delta V = -q(V_B - V_A)$, independiente de la trayectoria elegida.<br><br><b>Camino B (Superposición Escalar Directa):</b><br>$V_{\\text{total}} = \\sum \\frac{k q_i}{r_i}$, sumando directamente números reales sin necesidad de descomponer vectores.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Potencial y Gradiente</div>\n<div class=\"widget-controls\">\n    <label>Carga Q (nC):</label>\n    <input type=\"range\" id=\"w3-q\" min=\"1\" max=\"50\" value=\"10\">\n    <span id=\"w3-q-val\" class=\"widget-readout\">10 nC</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Distancia r (cm):</label>\n    <input type=\"range\" id=\"w3-r\" min=\"2\" max=\"25\" value=\"10\">\n    <span id=\"w3-r-val\" class=\"widget-readout\">10 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Potencial y Campo: <b id=\"w3-res\">899.0 V | E = 8990.0 V/m</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: EquiPotential-3D Topo</b><br>Superficie topográfica 3D donde la elevación representa $V(x,y)$, con esferas metálicas calibradas que ruedan por la pendiente de máxima caída de $-\\vec{\\nabla}V$.",
+        "paradox": "<b>¿Potencial cero implica campo cero?</b><br>¡Falso! En el plano mediador de un dipolo eléctrico, el potencial es exactamente $0\\text{ V}$ en todos sus puntos, pero el campo eléctrico es no nulo y paralelo al eje del dipolo.",
+        "takeaways": "El potencial eléctrico transforma un problema vectorial tridimensional complejo en un campo escalar continuo, simplificando drásticamente el análisis de circuitos y electroquímica.",
+        "path": "Ruta: M02 (Campo Eléctrico) → <span>M03 (Potencial Eléctrico)</span> → M04 (Distribuciones Continuas)"
+    },
+    "4": {
+        "meta": "LÁMINA DE CAMPO #04 · INTEGRACIÓN CONTINUA",
+        "title": "Distribuciones Continuas: De la Carga Puntual a la Integración de Volumen",
+        "subtitle": "Densidades $\\lambda, \\sigma, \\rho$, simetrías de cancelación perpendicular y campo sobre el eje axial.",
+        "mentorTip": "Antes de integrar, identifica siempre los elementos infinitesimales opuestos: si sus componentes transversales se anulan mutuamente, ahórrate la integral de esa dimensión.",
+        "deckUrl": "../presentaciones/M4_DistribucionesContinuas/index.html",
+        "enigma": "¿Cómo se calcula el campo de un anillo, un disco o una varilla compuesta por billones de electrones? No podemos sumar carga a carga discretamente; dividimos el cuerpo en elementos infinitesimales $dq$ e integramos vectorialmente sobre la geometría.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Anillo cargado en perspectiva -->\n    <ellipse cx=\"100\" cy=\"100\" rx=\"24\" ry=\"65\" fill=\"none\" stroke=\"#b3246b\" stroke-width=\"4\" filter=\"url(#inkSketch)\"/>\n    <text x=\"100\" y=\"24\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#b3246b\" text-anchor=\"middle\">Anillo (Q, R)</text>\n\n    <!-- Elemento diferencial dq superior -->\n    <rect x=\"94\" y=\"35\" width=\"12\" height=\"10\" fill=\"#f59e0b\" stroke=\"#1c1917\" stroke-width=\"1.5\"/>\n    <text x=\"65\" y=\"42\" font-family=\"'Caveat', cursive\" font-size=\"16\" fill=\"#d97706\">dq = λ·dℓ</text>\n\n    <!-- Eje axial z -->\n    <line x1=\"100\" y1=\"100\" x2=\"340\" y2=\"100\" stroke=\"#78716c\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <text x=\"345\" y=\"104\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\">Eje z</text>\n\n    <!-- Punto de observación P -->\n    <circle cx=\"270\" cy=\"100\" r=\"5\" fill=\"#1c1917\"/>\n    <text x=\"270\" y=\"122\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" font-weight=\"bold\">P(z)</text>\n\n    <!-- Vector de campo dE desde dq hasta P -->\n    <path id=\"rayRing\" d=\"M 100 40 L 270 100\" stroke=\"#0ea5e9\" stroke-width=\"2\" stroke-dasharray=\"3,3\"/>\n    <path d=\"M 100 40 L 270 100\" class=\"light-ray-cyan\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowCyan)\">\n        <animateMotion dur=\"1.7s\" repeatCount=\"indefinite\"><mpath href=\"#rayRing\"/></animateMotion>\n    </circle>\n\n    <!-- Componente axial reforzada Ez y cancelada Eperp -->\n    <line x1=\"270\" y1=\"100\" x2=\"330\" y2=\"100\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <line x1=\"270\" y1=\"100\" x2=\"270\" y2=\"70\" stroke=\"#78716c\" stroke-width=\"2\" stroke-dasharray=\"2,2\"/>\n    <text x=\"300\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"17\" fill=\"#b3246b\">dEz</text>\n    <text x=\"275\" y=\"65\" font-family=\"'Caveat', cursive\" font-size=\"15\" fill=\"#78716c\">dE⊥ (anulado)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ dq = \\lambda\\,d\\ell = \\sigma\\,dA = \\rho\\,dV \\]</div>\nCampo axial de un anillo de radio $R$ y carga $Q$: \\[ E_z = \\int \\frac{k\\,dq}{r^2}\\cos\\alpha = \\frac{1}{4\\pi\\epsilon_0} \\frac{Q z}{(z^2 + R^2)^{3/2}} \\]",
+        "dualPath": "<b>Camino A (Integración Vectorial Directa):</b><br>Planteamiento de $\\vec{E} = \\int \\frac{k dq}{r^2}\\hat{r}$ y proyección trigonométrica con $\\cos\\alpha = z/\\sqrt{z^2+R^2}$.<br><br><b>Camino B (Derivación por Potencial Axial):</b><br>Calcular primero el escalar $V(z) = \\frac{kQ}{\\sqrt{z^2+R^2}}$ y derivar: $E_z = -\\frac{dV}{dz} = \\frac{k Q z}{(z^2+R^2)^{3/2}}$.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Campo en Anillo Axial</div>\n<div class=\"widget-controls\">\n    <label>Radio R (cm):</label>\n    <input type=\"range\" id=\"w4-r\" min=\"2\" max=\"15\" value=\"6\">\n    <span id=\"w4-r-val\" class=\"widget-readout\">6 cm</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Posición z (cm):</label>\n    <input type=\"range\" id=\"w4-z\" min=\"1\" max=\"20\" value=\"4\">\n    <span id=\"w4-z-val\" class=\"widget-readout\">4 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Campo axial: <b id=\"w4-res\">920.65 kN/C (Z_máx = 4.2 cm)</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Continuous-Charge Rig</b><br>Bastidor coaxial con anillos intercambiables calibrados y carro milimétrico porta-sensores Hall y electrométricos sobre corredera templada.",
+        "paradox": "<b>¿El campo es máximo en el centro del anillo?</b><br>¡No! En el centro ($z=0$), todas las componentes se cancelan simétricamente dando $E=0$. El campo crece hasta un máximo en $z = R/\\sqrt{2}$ y luego decae asintóticamente a cero.",
+        "takeaways": "El análisis de distribuciones continuas conecta el electromagnetismo clásico con el cálculo multivariable, esencial en el diseño de aceleradores de partículas y trampas iónicas.",
+        "path": "Ruta: M03 (Potencial) → <span>M04 (Distribuciones Continuas)</span> → M05 (Ley de Gauss)"
+    },
+    "5": {
+        "meta": "LÁMINA DE CAMPO #05 · TEOREMA DEL FLUJO",
+        "title": "Ley de Gauss: Flujo de Campo Eléctrico y Superficies Cerradas",
+        "subtitle": "Primera ecuación de Maxwell, simetrías fundamentales y teorema de la divergencia.",
+        "mentorTip": "La Ley de Gauss es universalmente válida, pero solo permite despejar el campo eléctrico si existe suficiente simetría para que $|\\vec{E}|$ sea constante sobre la superficie gaussiana.",
+        "deckUrl": "../presentaciones/M5_Gauss/index.html",
+        "enigma": "¿Por qué el interior de un automóvil o de un avión es el lugar más seguro durante una tormenta eléctrica? Porque la carga se redistribuye exclusivamente en la superficie externa del metal conductor. La Ley de Gauss demuestra formalmente que en el interior de un conductor en equilibrio electrostático, el campo eléctrico es idénticamente cero.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Hilo cargado infinito central -->\n    <line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"180\" stroke=\"#b3246b\" stroke-width=\"4\" filter=\"url(#inkSketch)\"/>\n    <text x=\"50\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\" font-weight=\"bold\">+λ</text>\n\n    <!-- Superficie gaussiana cilíndrica -->\n    <rect x=\"75\" y=\"45\" width=\"160\" height=\"110\" rx=\"20\" fill=\"rgba(14, 165, 233, 0.08)\" stroke=\"#0ea5e9\" stroke-width=\"2\" stroke-dasharray=\"5,5\"/>\n    <ellipse cx=\"235\" cy=\"100\" rx=\"14\" ry=\"55\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"2\"/>\n    <text x=\"210\" y=\"38\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#0284c7\">Cilindro de Gauss</text>\n\n    <!-- Vectores de campo radiales atravesando la cara lateral -->\n    <path id=\"radGauss1\" d=\"M 80 80 L 300 80\" stroke=\"#b3246b\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <path id=\"radGauss2\" d=\"M 80 120 L 300 120\" stroke=\"#b3246b\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <path d=\"M 80 80 L 300 80\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\"><mpath href=\"#radGauss1\"/></animateMotion>\n    </circle>\n    <text x=\"310\" y=\"85\" font-family=\"'Patrick Hand', cursive\" font-size=\"17\" fill=\"#b3246b\">E(r)</text>\n    <text x=\"310\" y=\"125\" font-family=\"'Patrick Hand', cursive\" font-size=\"17\" fill=\"#b3246b\">dA ∥ E</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\Phi_E = \\oint_{\\mathcal{S}} \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\epsilon_0} \\]</div>\nPara simetría cilíndrica infinita: \\[ E (2\\pi r L) = \\frac{\\lambda L}{\\epsilon_0} \\implies E(r) = \\frac{\\lambda}{2\\pi\\epsilon_0 r} \\]",
+        "dualPath": "<b>Camino A (Superficie Gaussiana Integral):</b><br>Separación del flujo en 3 tapas: $\\Phi_{\\text{sup}} + \\Phi_{\\text{inf}} + \\Phi_{\\text{lat}} = 0 + 0 + E(2\\pi r L) = Q_{\\text{enc}}/\\epsilon_0$.<br><br><b>Camino B (Forma Diferencial de Maxwell):</b><br>Aplicación del Teorema de la Divergencia de Gauss: $\\vec{\\nabla}\\cdot\\vec{E} = \\frac{\\rho}{\\epsilon_0}$, conectando el flujo global con la densidad volumétrica local.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Campo por Gauss</div>\n<div class=\"widget-controls\">\n    <label>Densidad λ (nC/m):</label>\n    <input type=\"range\" id=\"w5-lam\" min=\"1\" max=\"50\" value=\"15\">\n    <span id=\"w5-lam-val\" class=\"widget-readout\">15 nC/m</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Radio radial r (cm):</label>\n    <input type=\"range\" id=\"w5-r\" min=\"1\" max=\"20\" value=\"5\">\n    <span id=\"w5-r-val\" class=\"widget-readout\">5 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Campo en r: <b id=\"w5-res\">5394.0 V/m</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: GaussCage & Sensor-Ring</b><br>Cilindro de jaula de Faraday con mallas concéntricas desmontables para demostrar la ausencia de campo interior mediante electrómetro de láminas.",
+        "paradox": "<b>¿Las cargas externas alteran el flujo neto?</b><br>No. Toda línea de campo de una carga exterior que entra en una superficie cerrada también sale de ella, contribuyendo con un flujo neto de cero. Solo las cargas encerradas generan flujo neto.",
+        "takeaways": "La ley de Gauss permite blindar componentes microelectrónicos sensibles contra interferencias electromagnéticas mediante jaulas de Faraday conductoras.",
+        "path": "Ruta: M04 (Distribuciones Continuas) → <span>M05 (Ley de Gauss)</span> → M06 (Capacitancia)"
+    },
+    "6": {
+        "meta": "LÁMINA DE CAMPO #06 · ALMACENAMIENTO DE ENERGÍA",
+        "title": "Capacitancia y Dieléctricos: Almacenamiento de Energía Electrostática",
+        "subtitle": "Polarización molecular, placas paralelas, permitividad relativa y densidad volumétrica de energía.",
+        "mentorTip": "Identifica siempre la condición de frontera: si la batería está conectada, el voltaje $V$ se mantiene constante; si el capacitor está desconectado, la carga $Q$ permanece fija.",
+        "deckUrl": "../presentaciones/M6_Capacitancia/index.html",
+        "enigma": "¿Cómo almacena energía un desfibrilador médico para descargarla en milésimas de segundo y salvar una vida? Los capacitores no almacenan corriente, almacenan energía electrostática concentrada en el campo eléctrico entre sus placas mediante cargas confinadas.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Placas paralelas del capacitor -->\n    <rect x=\"70\" y=\"45\" width=\"240\" height=\"12\" fill=\"#334155\" stroke=\"#1c1917\" stroke-width=\"2\"/>\n    <text x=\"320\" y=\"55\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#ef4444\" font-weight=\"bold\">+Q</text>\n\n    <rect x=\"70\" y=\"145\" width=\"240\" height=\"12\" fill=\"#334155\" stroke=\"#1c1917\" stroke-width=\"2\"/>\n    <text x=\"320\" y=\"155\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#3b82f6\" font-weight=\"bold\">-Q</text>\n\n    <!-- Bloque dieléctrico insertado parcialmente -->\n    <rect x=\"180\" y=\"59\" width=\"130\" height=\"84\" fill=\"rgba(245, 158, 11, 0.25)\" stroke=\"#f59e0b\" stroke-width=\"2\"/>\n    <text x=\"245\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#d97706\" text-anchor=\"middle\" font-weight=\"bold\">Dieléctrico (κ)</text>\n\n    <!-- Líneas de campo con rayo rebotando -->\n    <path id=\"rayCap\" d=\"M 120 57 L 120 145\" stroke=\"#b3246b\" stroke-width=\"2\" stroke-dasharray=\"3,3\"/>\n    <path d=\"M 120 57 L 120 145\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.2s\" repeatCount=\"indefinite\"><mpath href=\"#rayCap\"/></animateMotion>\n    </circle>\n    <text x=\"125\" y=\"105\" font-family=\"'Caveat', cursive\" font-size=\"18\" fill=\"#b3246b\">E₀ (Vacío)</text>\n    <text x=\"245\" y=\"130\" font-family=\"'Caveat', cursive\" font-size=\"16\" fill=\"#b45309\">E = E₀/κ</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ C = \\kappa \\frac{\\epsilon_0 A}{d} \\]</div>\nEnergía electrostática almacenada: \\[ U = \\frac{1}{2} C V^2 = \\frac{Q^2}{2C} \\quad \\text{con densidad:} \\quad u_E = \\frac{1}{2}\\kappa\\epsilon_0 E^2 \\]",
+        "dualPath": "<b>Camino A (Condición Aislada · Q Constante):</b><br>Al introducir el dieléctrico, $C$ aumenta por $\\kappa$, el voltaje disminuye a $V_0/\\kappa$ y la energía decae: $U = U_0/\\kappa$ (fuerza atractiva sobre el dieléctrico).<br><br><b>Camino B (Condición Conectada · V Constante):</b><br>La batería inyecta carga adicional ($Q = \\kappa Q_0$), la energía aumenta a $U = \\kappa U_0$ y el campo $E$ permanece inalterado.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Capacitancia y Energía</div>\n<div class=\"widget-controls\">\n    <label>Dieléctrico κ:</label>\n    <input type=\"range\" id=\"w6-k\" min=\"1\" max=\"10\" step=\"0.5\" value=\"4\">\n    <span id=\"w6-k-val\" class=\"widget-readout\">4.0</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Espaciado d (mm):</label>\n    <input type=\"range\" id=\"w6-d\" min=\"0.5\" max=\"5\" step=\"0.5\" value=\"2\">\n    <span id=\"w6-d-val\" class=\"widget-readout\">2.0 mm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Capacitancia y Energía: <b id=\"w6-res\">C = 70.8 pF | U = 0.35 µJ</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: DielectricSliding-Cap</b><br>Capacitor de placas paralelas con cremallera milimétrica y ranura para intercambiar muestras de teflón, baquelita, vidrio y cerámicas piezoeléctricas.",
+        "paradox": "<b>¿El dieléctrico siempre disminuye la energía del sistema?</b><br>Solo si el capacitor está desconectado. Si permanece conectado a la batería, la energía total almacenada aumenta proporcionalmente a $\\kappa$, suministrada por la fuente química.",
+        "takeaways": "Los capacitores y supercapacitores son fundamentales en sistemas de almacenamiento rápido, filtros de audio, fuentes conmutadas y buses de potencia para satélites.",
+        "path": "Ruta: M05 (Ley de Gauss) → <span>M06 (Capacitancia)</span> → M07 (Circuitos CC)"
+    },
+    "7": {
+        "meta": "LÁMINA DE CAMPO #07 · ELECTRODINÁMICA Y REDES",
+        "title": "Circuitos de Corriente Continua: Leyes de Kirchhoff y Conservación",
+        "subtitle": "Conservación de carga (KCL), conservación de energía en mallas (KVL) y equivalentes de Thévenin.",
+        "mentorTip": "Al recorrer una malla en el sentido supuesto de la corriente, atravesar una resistencia siempre representa una caída de potencial ($-IR$).",
+        "deckUrl": "../presentaciones/M7_CircuitosCC/index.html",
+        "enigma": "¿Por qué las luces de un hogar no se apagan todas cuando desconectas una sola lámpara? Porque están conectadas en paralelo, garantizando el mismo voltaje a cada ramal. Gustav Kirchhoff formuló las dos leyes universales que resuelven cualquier red eléctrica, por intrincada que sea.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Esquema de 2 Mallas -->\n    <rect x=\"70\" y=\"50\" width=\"110\" height=\"100\" fill=\"none\" stroke=\"#1c1917\" stroke-width=\"2.5\"/>\n    <rect x=\"180\" y=\"50\" width=\"110\" height=\"100\" fill=\"none\" stroke=\"#1c1917\" stroke-width=\"2.5\"/>\n\n    <!-- Batería E1 rama izquierda -->\n    <line x1=\"70\" y1=\"90\" x2=\"70\" y2=\"110\" stroke=\"#ef4444\" stroke-width=\"4\"/>\n    <text x=\"45\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#ef4444\">Ɛ</text>\n\n    <!-- Resistencia central R2 -->\n    <rect x=\"174\" y=\"85\" width=\"12\" height=\"30\" fill=\"#f59e0b\" stroke=\"#1c1917\" stroke-width=\"1.5\"/>\n    <text x=\"192\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#d97706\">R₂</text>\n\n    <!-- Nodos A y B -->\n    <circle cx=\"180\" cy=\"50\" r=\"4\" fill=\"#1c1917\"/>\n    <text x=\"180\" y=\"40\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" text-anchor=\"middle\">Nodo A</text>\n    <circle cx=\"180\" cy=\"150\" r=\"4\" fill=\"#1c1917\"/>\n    <text x=\"180\" y=\"168\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" text-anchor=\"middle\">Nodo B</text>\n\n    <!-- Flujo de corriente animado con electrones -->\n    <circle r=\"3.5\" fill=\"#38bdf8\" filter=\"url(#glowCyan)\">\n        <animateMotion dur=\"2.4s\" repeatCount=\"indefinite\" path=\"M 70 50 L 180 50 L 180 150 L 70 150 Z\"/>\n    </circle>\n    <text x=\"110\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#0284c7\">Malla I</text>\n    <text x=\"220\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#0284c7\">Malla II</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\sum I_{\\text{in}} = \\sum I_{\\text{out}} \\quad \\text{(KCL)} \\quad \\text{y} \\quad \\sum \\mathcal{E} - \\sum I R = 0 \\quad \\text{(KVL)} \\]</div>\nBalance de potencia: $P_{\\text{fuente}} = \\mathcal{E}I = \\sum I^2 R = P_{\\text{disipada}}$. Teorema de Thévenin: $V_{\\text{th}}, R_{\\text{th}}$.",
+        "dualPath": "<b>Camino A (Método de Corrientes de Malla):</b><br>Definición de corrientes ficticias de lazo $I_A, I_B$ resolviendo un sistema de matrices de resistencia simétricas: $[R][I] = [\\mathcal{E}]$.<br><br><b>Camino B (Método de Voltajes de Nodo):</b><br>Aplicación de KCL en cada nodo esencial expresando corrientes como conductancias $\\frac{V_A - V_B}{R}$, reduciendo el orden del sistema de ecuaciones.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Malla Eléctrica</div>\n<div class=\"widget-controls\">\n    <label>Voltaje Ɛ (V):</label>\n    <input type=\"range\" id=\"w7-e\" min=\"5\" max=\"50\" value=\"24\">\n    <span id=\"w7-e-val\" class=\"widget-readout\">24 V</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Resistencia R (Ω):</label>\n    <input type=\"range\" id=\"w7-r\" min=\"10\" max=\"200\" value=\"48\">\n    <span id=\"w7-r-val\" class=\"widget-readout\">48 Ω</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Corriente y Potencia: <b id=\"w7-res\">I = 0.50 A | P = 12.00 W</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Kirchhoff-Trainer PCB Case</b><br>Caja para riel DIN con bornes dorados de 4 mm, derivaciones para amperímetro shunt y visualización de nodos en acrílico grabado.",
+        "paradox": "<b>¿La corriente se 'consume' al pasar por una resistencia?</b><br>¡Nunca! La corriente que sale de una resistencia es exactamente igual a la que entra (conservación estricta de electrones). Lo que se consume es la energía potencial electrostática por unidad de carga (voltaje), degradada en calor por efecto Joule.",
+        "takeaways": "El formalismo de Kirchhoff es la base de todo el diseño electrónico analógico y digital, desde chips VLSI hasta redes de distribución eléctrica de alta tensión.",
+        "path": "Ruta: M06 (Capacitancia) → <span>M07 (Circuitos CC)</span> → M08 (Fuerza de Lorentz)"
+    },
+    "8": {
+        "meta": "LÁMINA DE CAMPO #08 · MAGNETOSTÁTICA Y DINÁMICA",
+        "title": "Fuerza de Lorentz y Espectrometría: Cargas en Campos Cruzados",
+        "subtitle": "Trayectorias helicoidales, radio de ciclotrón, selector de velocidades de Wien y efecto Hall.",
+        "mentorTip": "El campo magnético estático jamás realiza trabajo mecánico sobre una partícula cargada libre porque la fuerza es siempre perpendicular a la velocidad ($W \\equiv 0$).",
+        "deckUrl": "../presentaciones/M8_Lorentz/index.html",
+        "enigma": "¿Cómo puede un espectrómetro de masas pesar con precisión atómica una sola molécula de ADN? Aprovechando que una partícula cargada inyectada en un campo magnético perpendicular se desvía en una órbita circular cuyo radio depende estrictamente de su masa dividida por su carga ($m/q$).",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Región de campo magnético entrante B (cruces) -->\n    <rect x=\"70\" y=\"30\" width=\"240\" height=\"140\" fill=\"rgba(14, 165, 233, 0.05)\" stroke=\"#0ea5e9\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\"/>\n    <text x=\"90\" y=\"55\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#0284c7\">B ⊗ (entra)</text>\n\n    <!-- Trayectoria circular de la partícula cargada -->\n    <path id=\"lorentzArc\" d=\"M 70 140 A 50 50 0 0 1 170 140\" fill=\"none\" stroke=\"#b3246b\" stroke-width=\"2.5\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 70 140 A 50 50 0 0 1 170 140\" class=\"light-ray-magenta\" fill=\"none\"/>\n\n    <!-- Partícula orbitando -->\n    <circle r=\"5\" fill=\"#ef4444\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.8s\" repeatCount=\"indefinite\"><mpath href=\"#lorentzArc\"/></animateMotion>\n    </circle>\n\n    <!-- Vectores velocidad v y fuerza magnética FB -->\n    <line x1=\"70\" y1=\"140\" x2=\"105\" y2=\"140\" stroke=\"#1c1917\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"85\" y=\"160\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\">v (entrada)</text>\n    <line x1=\"120\" y1=\"90\" x2=\"120\" y2=\"120\" stroke=\"#b3246b\" stroke-width=\"2.5\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"130\" y=\"110\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" fill=\"#b3246b\">FB = q·v×B</text>\n    <text x=\"230\" y=\"110\" font-family=\"'Caveat', cursive\" font-size=\"18\" fill=\"#1c1917\">Radio R = mv/(qB)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\vec{F} = q(\\vec{E} + \\vec{v}\\times\\vec{B}) \\]</div>\nRadio de giro de Larmor: \\[ R = \\frac{m v}{q B} \\quad \\text{y frecuencia de ciclotrón:} \\quad \\omega_c = \\frac{q B}{m} \\implies f_c = \\frac{q B}{2\\pi m} \\]",
+        "dualPath": "<b>Camino A (Dinámica de Newton en Coordenadas Polares):</b><br>Igualación de fuerza magnética a aceleración centrípeta: $q v B = m\\frac{v^2}{R} \\implies R = \\frac{mv}{qB}$.<br><br><b>Camino B (Teorema de Trabajo y Energía Cinética):</b><br>$\\frac{dK}{dt} = \\vec{F}\\cdot\\vec{v} = q(\\vec{v}\\times\\vec{B})\\cdot\\vec{v} \\equiv 0$. La rapidez es constante y la trayectoria en $\\vec{B}$ uniforme es un círculo perfecto sin alteración de energía cinética.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Radio de Ciclotrón (Protón)</div>\n<div class=\"widget-controls\">\n    <label>Velocidad v (10⁶ m/s):</label>\n    <input type=\"range\" id=\"w8-v\" min=\"1\" max=\"10\" value=\"4\">\n    <span id=\"w8-v-val\" class=\"widget-readout\">4·10⁶ m/s</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Campo B (T):</label>\n    <input type=\"range\" id=\"w8-b\" min=\"0.1\" max=\"2.0\" step=\"0.1\" value=\"0.5\">\n    <span id=\"w8-b-val\" class=\"widget-readout\">0.50 T</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Parámetros de órbita: <b id=\"w8-res\">Radio R = 8.35 cm | fc = 7.6 MHz</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Lorentz-Cyclotron Chamber</b><br>Cámara de deflexión con bobinas de Helmholtz concéntricas y tubo de gas de baja presión ionizable para visualizar la fluorescencia del haz orbital.",
+        "paradox": "<b>¿Un campo magnético puede acelerar una partícula?</b><br>Acelera en el sentido vectorial (cambia constantemente la dirección de su velocidad), pero jamás incrementa su rapidez ni le transmite energía cinética.",
+        "takeaways": "La fuerza de Lorentz es el principio operativo de los ciclotrones médicos para radioterapia, las auroras boreales, los reactores de fusión Tokamak y la resonancia magnética nuclear.",
+        "path": "Ruta: M07 (Circuitos CC) → <span>M08 (Fuerza de Lorentz)</span> → M09 (Ley de Biot-Savart)"
+    },
+    "9": {
+        "meta": "LÁMINA DE CAMPO #09 · MAGNETOSTÁTICA",
+        "title": "Ley de Biot-Savart: Fuentes del Campo Magnético",
+        "subtitle": "Deducción geométrica exacta de campos magnetostáticos generados por corrientes estacionarias.",
+        "mentorTip": "¡Ojo al ángulo! En el hilo recto, el producto cruz forma φ = 90° + θ, por lo que sin(φ) = cos(θ).",
+        "deckUrl": "../presentaciones/M9_BiotSavart/index.html",
+        "enigma": "¿Cómo sabe el espacio que por un cable fluye corriente eléctrica y cómo se calcula el campo resultante punto a punto? Biot y Savart descubrieron que cada trozo diminuto $I\\,d\\vec{\\ell}$ contribuye con un diferencial $d\\vec{B}$ que decae con el inverso del cuadrado $1/r^2$ pero en una dirección puramente perpendicular dada por el producto cruz.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Hilo conductor con trazo entintado -->\n    <line x1=\"90\" y1=\"20\" x2=\"90\" y2=\"180\" stroke=\"#1c1917\" stroke-width=\"4\" filter=\"url(#inkSketch)\"/>\n    <path d=\"M 90 140 L 90 60\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"65\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\" font-weight=\"bold\">I = 10 A</text>\n    \n    <!-- Elemento dl resaltado -->\n    <rect x=\"85\" y=\"90\" width=\"10\" height=\"25\" fill=\"#f59e0b\" stroke=\"#1c1917\" stroke-width=\"1.5\"/>\n    <text x=\"50\" y=\"85\" font-family=\"'Caveat', cursive\" font-size=\"16\" fill=\"#d97706\">dℓ = dy</text>\n\n    <!-- Punto P de observación -->\n    <circle cx=\"280\" cy=\"100\" r=\"6\" fill=\"#1c1917\"/>\n    <text x=\"295\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"20\" font-weight=\"bold\">P</text>\n\n    <!-- Distancia perpendicular a -->\n    <line x1=\"90\" y1=\"100\" x2=\"280\" y2=\"100\" stroke=\"#78716c\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <text x=\"180\" y=\"92\" font-family=\"'Caveat', cursive\" font-size=\"18\" fill=\"#78716c\">a = const</text>\n\n    <!-- Curva de Bézier de inducción magnética con fotones en movimiento -->\n    <path id=\"bezierBiot\" d=\"M 90 100 C 140 30, 220 30, 280 100\" stroke=\"#0ea5e9\" stroke-width=\"2.5\" fill=\"none\" stroke-dasharray=\"5,5\"/>\n    <path d=\"M 90 100 C 140 30, 220 30, 280 100\" class=\"light-ray-cyan\" fill=\"none\"/>\n\n    <!-- Fotón viajero -->\n    <circle r=\"4\" fill=\"#ffffff\" filter=\"url(#glowCyan)\">\n        <animateMotion dur=\"1.8s\" repeatCount=\"indefinite\" rotate=\"auto\">\n            <mpath href=\"#bezierBiot\"/>\n        </animateMotion>\n    </circle>\n\n    <!-- Símbolo de campo entrando B (⊗) en P -->\n    <circle cx=\"280\" cy=\"140\" r=\"14\" fill=\"#ffffff\" stroke=\"#b3246b\" stroke-width=\"2.5\"/>\n    <line x1=\"270\" y1=\"130\" x2=\"290\" y2=\"150\" stroke=\"#b3246b\" stroke-width=\"2.5\"/>\n    <line x1=\"290\" y1=\"130\" x2=\"270\" y2=\"150\" stroke=\"#b3246b\" stroke-width=\"2.5\"/>\n    <text x=\"304\" y=\"146\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\">B ⊗ (entra)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ d\\vec{B} = \\frac{\\mu_0}{4\\pi} \\frac{I\\,d\\vec{\\ell}\\times\\hat{r}}{r^2} \\]</div>\nPara un hilo infinito, integrando entre $\\theta = -90^\\circ$ y $+90^\\circ$: \\[ B = \\frac{\\mu_0 I}{2\\pi a} \\]",
+        "dualPath": "<b>Camino A (Sustitución Trigonométrica):</b><br>Haciendo $y = a\\tan\\theta \\implies dy = a\\sec^2\\theta\\,d\\theta$, la integral colapsa a una función coseno elemental: $\\int \\cos\\theta\\,d\\theta = \\sin\\theta_2 - \\sin\\theta_1$.<br><br><b>Camino B (Integrales de Tabla Directa):</b><br>Uso de la forma algebraica estándar $\\int \\frac{dy}{(y^2+a^2)^{3/2}} = \\left[\\frac{y}{a^2\\sqrt{y^2+a^2}}\\right]$.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador Dinámico de Biot-Savart</div>\n<div class=\"widget-controls\">\n    <label>Corriente I (A):</label>\n    <input type=\"range\" id=\"w-i\" min=\"1\" max=\"50\" value=\"10\">\n    <span id=\"w-i-val\" class=\"widget-readout\">10 A</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Distancia a (cm):</label>\n    <input type=\"range\" id=\"w-a\" min=\"1\" max=\"20\" value=\"5\">\n    <span id=\"w-a-val\" class=\"widget-readout\">5.0 cm</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Campo B resultante: <b id=\"w-b-res\">40.00 µT</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: BiotSavart-Jig</b><br>Soporte de espiras con ranura micrométrica para sonda Hall. Fabricado en PLA 100% no ferroso, tornillos de nylon para no distorsionar el campo magnético.",
+        "paradox": "<b>¿Hay campo sobre el mismo hilo?</b><br>¡Jamás! Como $d\\vec{\\ell} \\parallel \\hat{r}$, el producto vectorial se anula de forma idéntica ($d\\vec{\\ell}\\times\\hat{r} = \\vec{0}$). En todo punto colineal al hilo, $B = 0$.",
+        "takeaways": "La ley de Biot-Savart demuestra que las corrientes son fuentes toroidales de campo magnético continuo. El modelo es la base de transformadores, motores y resonancia magnética.",
+        "path": "Ruta: M08 (Fuerza de Lorentz) → <span>M09 (Ley de Biot-Savart)</span> → M10 (Ley de Ampère)"
+    },
+    "10": {
+        "meta": "LÁMINA DE CAMPO #10 · LEY DE CIRCULACIÓN",
+        "title": "Ley de Ampère: Circulación Magnética y Campo en Solenoides",
+        "subtitle": "Segunda ley de la magnetostática, corrientes concatenadas, cables coaxiales y solenoides ideales.",
+        "mentorTip": "La integral cerrada $\\oint \\vec{B}\\cdot d\\vec{\\ell}$ solo depende de la corriente neta que atraviesa la superficie encerrada por la curva, no de las corrientes exteriores.",
+        "deckUrl": "../presentaciones/M10_Ampere/index.html",
+        "enigma": "¿Cómo se crea un campo magnético perfectamente uniforme y potente dentro de un resonador magnético hospitalario? Con un solenoide. André-Marie Ampère descubrió que la suma circular del campo magnético a lo largo de un lazo cerrado equivale exactamente a la corriente total encerrada multiplicada por $\\mu_0$.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Espiras superiores (salen ·) -->\n    <g fill=\"#ef4444\" stroke=\"#1c1917\" stroke-width=\"1.5\">\n        <circle cx=\"80\" cy=\"50\" r=\"8\"/><circle cx=\"120\" cy=\"50\" r=\"8\"/><circle cx=\"160\" cy=\"50\" r=\"8\"/>\n        <circle cx=\"200\" cy=\"50\" r=\"8\"/><circle cx=\"240\" cy=\"50\" r=\"8\"/><circle cx=\"280\" cy=\"50\" r=\"8\"/>\n    </g>\n    <text x=\"50\" y=\"55\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\" fill=\"#ef4444\">⊙ I</text>\n\n    <!-- Espiras inferiores (entran ×) -->\n    <g fill=\"#3b82f6\" stroke=\"#1c1917\" stroke-width=\"1.5\">\n        <circle cx=\"80\" cy=\"150\" r=\"8\"/><circle cx=\"120\" cy=\"150\" r=\"8\"/><circle cx=\"160\" cy=\"150\" r=\"8\"/>\n        <circle cx=\"200\" cy=\"150\" r=\"8\"/><circle cx=\"240\" cy=\"150\" r=\"8\"/><circle cx=\"280\" cy=\"150\" r=\"8\"/>\n    </g>\n    <text x=\"50\" y=\"155\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\" fill=\"#3b82f6\">⊗ I</text>\n\n    <!-- Campo magnético uniforme interior -->\n    <path id=\"solField\" d=\"M 60 100 L 320 100\" stroke=\"#b3246b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <path d=\"M 60 100 L 320 100\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"4\" fill=\"#ffffff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.4s\" repeatCount=\"indefinite\"><mpath href=\"#solField\"/></animateMotion>\n    </circle>\n    <text x=\"180\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#b3246b\" font-weight=\"bold\">B_int = μ₀·n·I</text>\n\n    <!-- Lazo amperiano rectangular abcd -->\n    <rect x=\"100\" y=\"40\" width=\"120\" height=\"80\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <text x=\"160\" y=\"32\" font-family=\"'Caveat', cursive\" font-size=\"16\" fill=\"#0284c7\">Lazo Amperiano (L)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\oint_{\\mathcal{C}} \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0 I_{\\text{enc}} \\]</div>\nPara un solenoide ideal de $n$ vueltas por metro: \\[ B L = \\mu_0 (n L I) \\implies B = \\mu_0 n I \\]",
+        "dualPath": "<b>Camino A (Lazo Rectangular Amperiano):</b><br>División en 4 segmentos: $\\int_a^b B d\\ell + \\int_b^c 0 + \\int_c^d 0 + \\int_d^a 0 = B L = \\mu_0 n L I$. Despeje directo sin cálculo infinitesimal.<br><br><b>Camino B (Superposición de Espiras de Biot-Savart):</b><br>Integración axial de anillos de corriente circulares continuos: $B = \\frac{\\mu_0 n I}{2} (\\cos\\theta_2 - \\cos\\theta_1)$, que tiende a $\\mu_0 n I$ en el solenoide infinito.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Campo en Solenoide</div>\n<div class=\"widget-controls\">\n    <label>Densidad n (vueltas/cm):</label>\n    <input type=\"range\" id=\"w10-n\" min=\"5\" max=\"50\" value=\"20\">\n    <span id=\"w10-n-val\" class=\"widget-readout\">20 v/cm</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Corriente I (A):</label>\n    <input type=\"range\" id=\"w10-i\" min=\"0.5\" max=\"10\" step=\"0.5\" value=\"3\">\n    <span id=\"w10-i-val\" class=\"widget-readout\">3.0 A</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Campo interior: <b id=\"w10-res\">B_interior = 7.54 mT</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Ampere-Loop Explorer</b><br>Solenoide transparente con bobinado helicoidal ranurado y corredera micrométrica para mapear con precisión el decaimiento de campo en los bordes $B_{\\text{extremo}} = \\frac{1}{2} B_{\\text{centro}}$.",
+        "paradox": "<b>¿La Ley de Ampère funciona para cualquier forma de lazo?</b><br>Sí, la ecuación es matemáticamente exacta para cualquier curva cerrada arbitraria. Sin embargo, solo resulta útil para despejar $B$ cuando existe alta simetría (circular o solenoidal).",
+        "takeaways": "La ley de Ampère es la base para diseñar electroimanes industriales de elevación, motores síncronos y bobinas de choque para filtros de audio y radiofrecuencia.",
+        "path": "Ruta: M09 (Biot-Savart) → <span>M10 (Ley de Ampère)</span> → M11 (Ley de Faraday)"
+    },
+    "11": {
+        "meta": "LÁMINA DE CAMPO #11 · INDUCCIÓN ELECTROMAGNÉTICA",
+        "title": "Ley de Faraday y Lenz: Generación de Energía y Fuerzas Inducidas",
+        "subtitle": "Variación temporal del flujo magnético, fem inducida motriz y principio de conservación energética de Lenz.",
+        "mentorTip": "La Ley de Lenz establece que la corriente inducida se opone siempre a la variación del flujo: si el flujo crece, crea un campo opuesto; si el flujo disminuye, crea un campo en el mismo sentido para sostenerlo.",
+        "deckUrl": "../presentaciones/M11_Faraday/index.html",
+        "enigma": "¿De dónde sale la electricidad que ilumina nuestras ciudades? De la Ley de Faraday. Casi el 100% de la energía eléctrica generada por centrales hidroeléctricas, eólicas, nucleares y térmicas se produce girando bobinas dentro de campos magnéticos.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Rieles conductores en U con resistencia R -->\n    <line x1=\"80\" y1=\"60\" x2=\"300\" y2=\"60\" stroke=\"#1c1917\" stroke-width=\"3\"/>\n    <line x1=\"80\" y1=\"140\" x2=\"300\" y2=\"140\" stroke=\"#1c1917\" stroke-width=\"3\"/>\n    <rect x=\"74\" y=\"85\" width=\"12\" height=\"30\" fill=\"#f59e0b\" stroke=\"#1c1917\" stroke-width=\"1.5\"/>\n    <text x=\"50\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#d97706\">R</text>\n\n    <!-- Campo magnético B entrante -->\n    <g fill=\"#0ea5e9\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\">\n        <text x=\"120\" y=\"85\">⊗</text><text x=\"160\" y=\"85\">⊗</text><text x=\"120\" y=\"125\">⊗</text><text x=\"160\" y=\"125\">⊗</text>\n        <text x=\"140\" y=\"45\">B ⊗ (entra)</text>\n    </g>\n\n    <!-- Barra conductora deslizante con velocidad v -->\n    <rect x=\"220\" y=\"50\" width=\"10\" height=\"100\" fill=\"#ef4444\" stroke=\"#1c1917\" stroke-width=\"2\"/>\n    <line x1=\"230\" y1=\"100\" x2=\"280\" y2=\"100\" stroke=\"#ef4444\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"250\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\" fill=\"#ef4444\" font-weight=\"bold\">v</text>\n\n    <!-- Corriente inducida en sentido antihorario -->\n    <path id=\"faradayLoop\" d=\"M 80 60 L 225 60 L 225 140 L 80 140 Z\" fill=\"none\" stroke=\"#b3246b\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 80 60 L 225 60 L 225 140 L 80 140 Z\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"2.2s\" repeatCount=\"indefinite\"><mpath href=\"#faradayLoop\"/></animateMotion>\n    </circle>\n    <text x=\"150\" y=\"165\" font-family=\"'Caveat', cursive\" font-size=\"17\" fill=\"#b3246b\">I_ind (Lenz: antihoraria)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\mathcal{E}_{\\text{ind}} = -\\frac{d\\Phi_B}{dt} = -\\frac{d}{dt}\\int_{\\mathcal{S}} \\vec{B}\\cdot d\\vec{A} \\]</div>\nFem en barra deslizante: $\\mathcal{E} = B L v$. Balance de potencias exacto: \\[ P_{\\text{mec}} = F_{\\text{ext}} v = \\frac{B^2 L^2 v^2}{R} = I^2 R = P_{\\text{Joule}} \\]",
+        "dualPath": "<b>Camino A (Flujo de Faraday Global):</b><br>Cálculo de la tasa de variación temporal de área: $\\frac{d\\Phi}{dt} = B L \\frac{dx}{dt} = BLv$, deduciendo la fem inducida sin entrar en detalles microscópicos.<br><br><b>Camino B (Fuerza de Lorentz sobre Electrones Libres):</b><br>La fuerza magnética $\\vec{F} = -e(\\vec{v}\\times\\vec{B})$ empuja los portadores a lo largo de la barra, generando el campo motriz $\\vec{E}_{\\text{mot}} = \\vec{v}\\times\\vec{B}$ e integrando la fem.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Inducción Motriz</div>\n<div class=\"widget-controls\">\n    <label>Velocidad v (m/s):</label>\n    <input type=\"range\" id=\"w11-v\" min=\"1\" max=\"20\" value=\"8\">\n    <span id=\"w11-v-val\" class=\"widget-readout\">8 m/s</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Campo B (T):</label>\n    <input type=\"range\" id=\"w11-b\" min=\"0.2\" max=\"2.0\" step=\"0.1\" value=\"0.8\">\n    <span id=\"w11-b-val\" class=\"widget-readout\">0.80 T</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Balance inducido: <b id=\"w11-res\">fem = 3.20 V | I = 1.60 A | P = 5.12 W</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Faraday-Rails Dynamic Rig</b><br>Bancada óptica con rieles de latón calibrados, electroimán con entrehierro ajustable y barra sobre rodamientos lineales de bajísima fricción con fotoceldas de tiempo.",
+        "paradox": "<b>¿La corriente inducida se opone al campo magnético?</b><br>¡No! Se opone al cambio de flujo. Si un campo magnético es gigantesco pero perfectamente constante en el tiempo y el circuito no se deforma, la fem inducida es rigurosamente cero.",
+        "takeaways": "La ley de Faraday es el pilar de toda la red eléctrica moderna: transformadores, generadores de turbina, placas de inducción y sistemas de frenado magnético regenerativo de trenes de alta velocidad.",
+        "path": "Ruta: M10 (Ley de Ampère) → <span>M11 (Ley de Faraday)</span> → M12 (Ecuaciones de Maxwell)"
+    },
+    "12": {
+        "meta": "LÁMINA DE CAMPO #12 · SÍNTESIS ELECTROMAGNÉTICA",
+        "title": "Ecuaciones de Maxwell y Ondas: La Gran Unificación de la Luz",
+        "subtitle": "Corriente de desplazamiento, ecuaciones rectoras completas, velocidad de la luz y vector de Poynting.",
+        "mentorTip": "En el vacío absoluto sin cargas ni corrientes materiales, el campo eléctrico variable engendra campo magnético y viceversa de forma autosostenida a la velocidad de la luz.",
+        "deckUrl": "../presentaciones/M12_Maxwell/index.html",
+        "enigma": "¿Qué es realmente la luz visible, los rayos X y las ondas de Wi-Fi? James Clerk Maxwell descubrió que la electricidad y el magnetismo son dos caras inseparables de la misma moneda. Al añadir el término de corriente de desplazamiento a la ley de Ampère, las ecuaciones predijeron ondas transversales que viajan exactamente a $300.000\\text{ km/s}$.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <line x1=\"20\" y1=\"100\" x2=\"360\" y2=\"100\" stroke=\"#78716c\" stroke-width=\"2\"/>\n    <text x=\"365\" y=\"105\" font-family=\"'Patrick Hand', cursive\" font-size=\"16\">z (propagación)</text>\n\n    <!-- Curva E vertical (roja) -->\n    <path id=\"bezierOndaE\" d=\"M 40 100 Q 100 20 160 100 T 280 100 T 360 100\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"3\"/>\n    <path d=\"M 40 100 Q 100 20 160 100 T 280 100 T 360 100\" class=\"light-ray-magenta\" fill=\"none\"/>\n\n    <!-- Curva B horizontal (azul en perspectiva) -->\n    <path id=\"bezierOndaB\" d=\"M 40 100 Q 100 160 160 100 T 280 100 T 360 100\" fill=\"none\" stroke=\"#0ea5e9\" stroke-width=\"2.5\" stroke-dasharray=\"4,4\"/>\n    <path d=\"M 40 100 Q 100 160 160 100 T 280 100 T 360 100\" class=\"light-ray-cyan\" fill=\"none\"/>\n\n    <text x=\"100\" y=\"45\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#ef4444\" font-weight=\"bold\">Campo E(y)</text>\n    <text x=\"100\" y=\"175\" font-family=\"'Patrick Hand', cursive\" font-size=\"18\" fill=\"#0ea5e9\" font-weight=\"bold\">Campo B(x)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ \\nabla^2 \\vec{E} = \\mu_0\\epsilon_0 \\frac{\\partial^2 \\vec{E}}{\\partial t^2} \\implies c = \\frac{1}{\\sqrt{\\mu_0\\epsilon_0}} \\approx 2{,}998\\times 10^8\\ \\text{m/s} \\]</div>\nVector de Poynting (Flujo de Energía): \\[ \\vec{S} = \\frac{1}{\\mu_0} (\\vec{E}\\times\\vec{B}) \\quad \\text{con magnitud media:} \\quad \\langle S \\rangle = \\frac{E_0^2}{2\\mu_0 c} \\]",
+        "dualPath": "<b>Camino A (Forma Integral de Cuatro Leyes):</b><br>Gauss eléctrico (cargas), Gauss magnético (monopolos inexistentes), Faraday (inducción) y Ampère-Maxwell (corrientes de conducción y desplazamiento).<br><br><b>Camino B (Forma Diferencial de Operadores Vectoriales):</b><br>$\\vec{\\nabla}\\cdot\\vec{E}=\\rho/\\epsilon_0$, $\\vec{\\nabla}\\cdot\\vec{B}=0$, $\\vec{\\nabla}\\times\\vec{E}=-\\frac{\\partial\\vec{B}}{\\partial t}$, $\\vec{\\nabla}\\times\\vec{B}=\\mu_0\\vec{J}+\\mu_0\\epsilon_0\\frac{\\partial\\vec{E}}{\\partial t}$.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Relación de Amplitudes E = c B</div>\n<div class=\"widget-controls\">\n    <label>Amplitud E₀ (V/m):</label>\n    <input type=\"range\" id=\"w-e0\" min=\"10\" max=\"600\" value=\"300\">\n    <span id=\"w-e0-val\" class=\"widget-readout\">300 V/m</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Amplitud magnética e intensidad: <b id=\"w-b0-res\">B₀ = 1.00 µT | &lt;S&gt; = 119.37 W/m²</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: Maxwell-Wave 3D</b><br>Modelo espacial desmontable con guías ortogonales graduadas en $\\vec{E}\\perp\\vec{B}$ y ranuras para polarizadores ópticos lineales (demostración de ley de Malus).",
+        "paradox": "<b>¿La corriente de desplazamiento tiene carga eléctrica?</b><br>No. No hay electrones atravesando el espacio entre placas de un capacitor en el vacío; es la variación temporal del flujo eléctrico $\\epsilon_0 \\frac{d\\Phi_E}{dt}$ la que engendra el campo magnético circundante idéntico a una corriente real.",
+        "takeaways": "Las ecuaciones de Maxwell son la cumbre de la física clásica del siglo XIX y permitieron inventar la radio, el radar, la fibra óptica, la telefonía celular e internet inalámbrico.",
+        "path": "Ruta: M11 (Ley de Faraday) → <span>M12 (Ecuaciones de Maxwell)</span> → M13 (Circuitos CA)"
+    },
+    "13": {
+        "meta": "LÁMINA DE CAMPO #13 · RÉGIMEN SENOIDAL Y RESONANCIA",
+        "title": "Circuitos de Corriente Alterna: Fasores, Impedancia y Resonancia RLC",
+        "subtitle": "Análisis en el plano complejo, reactancia inductiva/capacitiva, triángulo de potencias y ancho de banda.",
+        "mentorTip": "En la resonancia RLC serie, la reactancia inductiva cancela exactamente a la capacitiva ($X_L = X_C$), la impedancia cae a su mínimo absoluto $Z = R$ y la corriente alcanza su pico máximo.",
+        "deckUrl": "../presentaciones/M13_AC/index.html",
+        "enigma": "¿Cómo sintoniza un radiorreceptor una emisora de 101.5 MHz entre cientos de señales simultáneas en el aire? Mediante un circuito RLC resonante. Cuando la frecuencia de la señal coincide exactamente con la frecuencia natural del circuito, la impedancia colapsa y la señal se amplifica cientos de veces respecto a las demás.",
+        "diagramSvg": "<svg viewBox=\"0 0 380 200\" xmlns=\"http://www.w3.org/2000/svg\">\n    <!-- Ejes del plano complejo de fasores -->\n    <line x1=\"40\" y1=\"100\" x2=\"200\" y2=\"100\" stroke=\"#78716c\" stroke-width=\"1.5\"/>\n    <line x1=\"120\" y1=\"20\" x2=\"120\" y2=\"180\" stroke=\"#78716c\" stroke-width=\"1.5\"/>\n    <text x=\"190\" y=\"90\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\">Re (+I)</text>\n    <text x=\"125\" y=\"35\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\">+j (VL)</text>\n    <text x=\"125\" y=\"175\" font-family=\"'Patrick Hand', cursive\" font-size=\"14\">-j (VC)</text>\n\n    <!-- Fasores VR, VL, VC -->\n    <line x1=\"120\" y1=\"100\" x2=\"180\" y2=\"100\" stroke=\"#f59e0b\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"150\" y=\"115\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" fill=\"#d97706\">VR</text>\n\n    <line x1=\"120\" y1=\"100\" x2=\"120\" y2=\"40\" stroke=\"#3b82f6\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"95\" y=\"55\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" fill=\"#2563eb\">VL</text>\n\n    <line x1=\"120\" y1=\"100\" x2=\"120\" y2=\"140\" stroke=\"#0ea5e9\" stroke-width=\"3\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"95\" y=\"135\" font-family=\"'Patrick Hand', cursive\" font-size=\"15\" fill=\"#0284c7\">VC</text>\n\n    <!-- Fasor resultante V0 -->\n    <line x1=\"120\" y1=\"100\" x2=\"180\" y2=\"60\" stroke=\"#b3246b\" stroke-width=\"3.5\" marker-end=\"url(#inkArrow)\"/>\n    <text x=\"185\" y=\"60\" font-family=\"'Patrick Hand', cursive\" font-size=\"17\" fill=\"#b3246b\" font-weight=\"bold\">V₀</text>\n\n    <!-- Onda senoidal animada a la derecha -->\n    <path id=\"waveAC\" d=\"M 230 100 Q 260 50 290 100 T 350 100\" fill=\"none\" stroke=\"#b3246b\" stroke-width=\"2.5\"/>\n    <path d=\"M 230 100 Q 260 50 290 100 T 350 100\" class=\"light-ray-magenta\" fill=\"none\"/>\n    <circle r=\"3.5\" fill=\"#fff\" filter=\"url(#glowMagenta)\">\n        <animateMotion dur=\"1.6s\" repeatCount=\"indefinite\"><mpath href=\"#waveAC\"/></animateMotion>\n    </circle>\n    <text x=\"260\" y=\"130\" font-family=\"'Caveat', cursive\" font-size=\"16\" fill=\"#1c1917\">v(t) = V₀·cos(ωt+ϕ)</text>\n</svg>",
+        "math": "<div class=\"handwritten-formula\">\\[ Z = \\sqrt{R^2 + (X_L - X_C)^2} \\quad \\text{con} \\quad X_L = \\omega L, \\quad X_C = \\frac{1}{\\omega C} \\]</div>\nFrecuencia de resonancia serie: \\[ \\omega_0 = \\frac{1}{\\sqrt{LC}} \\implies f_0 = \\frac{1}{2\\pi\\sqrt{LC}} \\quad \\text{y factor de calidad:} \\quad Q = \\frac{\\omega_0 L}{R} \\]",
+        "dualPath": "<b>Camino A (Diagrama Fasorial Vectorial en el Plano):</b><br>Composición trigonométrica de voltajes en cuadratura: $V_{\\text{total}} = \\sqrt{V_R^2 + (V_L - V_C)^2}$ y ángulo de desfasaje $\\tan\\phi = \\frac{X_L - X_C}{R}$.<br><br><b>Camino B (Impedancias Complejas Generalizadas en $j\\omega$):</b><br>Formulación algebraica $\\mathbf{Z} = R + j\\left(\\omega L - \\frac{1}{\\omega C}\\right) = |Z|e^{j\\phi}$, aplicando la Ley de Ohm generalizada $\\mathbf{V} = \\mathbf{I}\\mathbf{Z}$.",
+        "widget": "<div style=\"font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;\">Calculador de Resonancia RLC Serie</div>\n<div class=\"widget-controls\">\n    <label>Inductancia L (mH):</label>\n    <input type=\"range\" id=\"w13-l\" min=\"10\" max=\"200\" value=\"50\">\n    <span id=\"w13-l-val\" class=\"widget-readout\">50 mH</span>\n</div>\n<div class=\"widget-controls\">\n    <label>Capacitancia C (µF):</label>\n    <input type=\"range\" id=\"w13-c\" min=\"1\" max=\"50\" value=\"10\">\n    <span id=\"w13-c-val\" class=\"widget-readout\">10 µF</span>\n</div>\n<div style=\"margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);\">\n    Frecuencia natural: <b id=\"w13-res\">f₀ = 225.1 Hz | ω₀ = 1414 rad/s</b>\n</div>",
+        "proto3D": "<b>Pieza Imprimible: RLC-Tuner Modular Enclosure</b><br>Gabinete de sintonizador con perillas vernier graduadas para núcleo de ferrita móvil, capacitor variable de aire de doble tándem y medidor analógico central de resonancia.",
+        "paradox": "<b>¿La suma escalar de voltajes en CA cumple la ley de Kirchhoff?</b><br>No aritméticamente. Un circuito puede tener $V_R = 30\\text{ V}$, $V_L = 80\\text{ V}$ y $V_C = 40\\text{ V}$ con una fuente de solo $50\\text{ V}$, porque los voltajes en $L$ y $C$ están desfasados $180^\\circ$ entre sí y se restan vectorialmente.",
+        "takeaways": "La resonancia RLC es el corazón de las comunicaciones inalámbricas, el filtrado de audio de alta fidelidad, la transmisión de energía inductiva sin cables y la corrección del factor de potencia en plantas industriales.",
+        "path": "Ruta: M12 (Ecuaciones de Maxwell) → <span>M13 (Circuitos CA y RLC)</span> → Reto Final de Maestría"
     }
-
-    function getDirSlug(n) {
-        const slugs = {
-            1: "Coulomb", 2: "CampoElectrico", 3: "Potencial", 4: "DistribucionesContinuas",
-            5: "Gauss", 6: "Capacitancia", 7: "CircuitosCC", 8: "Lorentz",
-            9: "BiotSavart", 10: "Ampere", 11: "Faraday", 12: "Maxwell", 13: "AC"
-        };
-        return slugs[n] || "Coulomb";
-    }
+};
 
     let activeCap = 9;
 
@@ -903,7 +844,7 @@
         document.getElementById('sheet-meta').innerText = d.meta;
         document.getElementById('sheet-title').innerText = d.title;
         document.getElementById('sheet-subtitle').innerText = d.subtitle;
-        document.getElementById('mascot-tip').innerText = d.mascotTip;
+        document.getElementById('mentor-tip').innerText = d.mentorTip || d.mascotTip || "";
         document.getElementById('btn-open-deck').href = d.deckUrl;
         
         document.getElementById('sheet-enigma').innerHTML = d.enigma;
@@ -929,54 +870,255 @@
             });
         }
 
-        // Conectar widgets específicos
-        if (capNum === 9) {
-            const wi = document.getElementById('w-i');
-            const wa = document.getElementById('w-a');
-            if (wi && wa) {
-                const calcB = () => {
-                    const I = parseFloat(wi.value);
-                    const a_cm = parseFloat(wa.value);
-                    document.getElementById('w-i-val').innerText = `${I} A`;
-                    document.getElementById('w-a-val').innerText = `${a_cm.toFixed(1)} cm`;
-                    // B = (mu0 * I) / (2 * pi * a) -> mu0/(2*pi) = 2e-7 T*m/A = 0.2 uT * m / A = 20 uT * cm / A
-                    const B_uT = (20 * I) / a_cm;
-                    document.getElementById('w-b-res').innerText = `${B_uT.toFixed(2)} µT`;
-                };
-                wi.oninput = calcB;
-                wa.oninput = calcB;
-            }
-        } else if (capNum === 1) {
-            const wq = document.getElementById('w-q');
-            const wr = document.getElementById('w-r');
-            if (wq && wr) {
-                const calcF = () => {
-                    const q = parseFloat(wq.value) * 1e-6;
-                    const r = parseFloat(wr.value) * 1e-2;
-                    document.getElementById('w-q-val').innerText = `${wq.value} µC`;
-                    document.getElementById('w-r-val').innerText = `${wr.value} cm`;
-                    const F = (8.99e9 * q * q) / (r * r);
-                    document.getElementById('w-f-res').innerText = `${F.toFixed(2)} N`;
-                };
-                wq.oninput = calcF;
-                wr.oninput = calcF;
-            }
-        } else if (capNum === 12) {
-            const we = document.getElementById('w-e0');
-            if (we) {
-                we.oninput = () => {
-                    const E0 = parseFloat(we.value);
-                    document.getElementById('w-e0-val').innerText = `${E0} V/m`;
-                    const B0_uT = (E0 / 3e8) * 1e6;
-                    document.getElementById('w-b0-res').innerText = `${B0_uT.toFixed(2)} µT`;
-                };
-            }
-        }
+        // Conectar widgets específicos reactivos (1 al 13)
+        conectarWidget(capNum);
 
-        // Actualizar chips
+        // Actualizar chips activos
         document.querySelectorAll('.tab-chip').forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.dataset.mod) === capNum);
         });
+    }
+
+    function conectarWidget(cap) {
+        switch(cap) {
+            case 1: {
+                const wq = document.getElementById('w1-q');
+                const wr = document.getElementById('w1-r');
+                if (wq && wr) {
+                    const calc = () => {
+                        const q = parseFloat(wq.value) * 1e-6;
+                        const r = parseFloat(wr.value) * 1e-2;
+                        document.getElementById('w1-q-val').innerText = `${wq.value} µC`;
+                        document.getElementById('w1-r-val').innerText = `${wr.value} cm`;
+                        const F = (8.99e9 * q * q) / (r * r);
+                        document.getElementById('w1-res').innerText = `${F.toFixed(2)} N (Repulsión)`;
+                    };
+                    wq.oninput = calc;
+                    wr.oninput = calc;
+                }
+                break;
+            }
+            case 2: {
+                const wp = document.getElementById('w2-p');
+                const wz = document.getElementById('w2-z');
+                if (wp && wz) {
+                    const calc = () => {
+                        const p = parseFloat(wp.value) * 1e-29;
+                        const z = parseFloat(wz.value) * 1e-2;
+                        document.getElementById('w2-p-val').innerText = `${wp.value}·10⁻²⁹ C·m`;
+                        document.getElementById('w2-z-val').innerText = `${wz.value} cm`;
+                        // E_eje = 2*k*p / z^3
+                        const E_eje = (2 * 8.99e9 * p) / Math.pow(z, 3);
+                        document.getElementById('w2-res').innerText = `${(E_eje * 1e18).toFixed(2)} aN/C (10⁻¹⁸ N/C)`;
+                    };
+                    wp.oninput = calc;
+                    wz.oninput = calc;
+                }
+                break;
+            }
+            case 3: {
+                const wq = document.getElementById('w3-q');
+                const wr = document.getElementById('w3-r');
+                if (wq && wr) {
+                    const calc = () => {
+                        const q = parseFloat(wq.value) * 1e-9;
+                        const r = parseFloat(wr.value) * 1e-2;
+                        document.getElementById('w3-q-val').innerText = `${wq.value} nC`;
+                        document.getElementById('w3-r-val').innerText = `${wr.value} cm`;
+                        const V = (8.99e9 * q) / r;
+                        const E = V / r;
+                        document.getElementById('w3-res').innerText = `${V.toFixed(1)} V | E = ${E.toFixed(1)} V/m`;
+                    };
+                    wq.oninput = calc;
+                    wr.oninput = calc;
+                }
+                break;
+            }
+            case 4: {
+                const wr = document.getElementById('w4-r');
+                const wz = document.getElementById('w4-z');
+                if (wr && wz) {
+                    const calc = () => {
+                        const R = parseFloat(wr.value) * 1e-2;
+                        const z = parseFloat(wz.value) * 1e-2;
+                        const Q = 10e-6; // 10 uC
+                        document.getElementById('w4-r-val').innerText = `${wr.value} cm`;
+                        document.getElementById('w4-z-val').innerText = `${wz.value} cm`;
+                        const Ez = (8.99e9 * Q * z) / Math.pow(z*z + R*R, 1.5);
+                        const z_max_cm = (parseFloat(wr.value) / Math.SQRT2).toFixed(1);
+                        document.getElementById('w4-res').innerText = `${(Ez/1000).toFixed(2)} kN/C (Z_máx = ${z_max_cm} cm)`;
+                    };
+                    wr.oninput = calc;
+                    wz.oninput = calc;
+                }
+                break;
+            }
+            case 5: {
+                const wlam = document.getElementById('w5-lam');
+                const wr = document.getElementById('w5-r');
+                if (wlam && wr) {
+                    const calc = () => {
+                        const lam = parseFloat(wlam.value) * 1e-9;
+                        const r = parseFloat(wr.value) * 1e-2;
+                        document.getElementById('w5-lam-val').innerText = `${wlam.value} nC/m`;
+                        document.getElementById('w5-r-val').innerText = `${wr.value} cm`;
+                        // E = lam / (2*pi*eps0*r) = 2*k*lam/r
+                        const E = (2 * 8.99e9 * lam) / r;
+                        document.getElementById('w5-res').innerText = `${E.toFixed(1)} V/m`;
+                    };
+                    wlam.oninput = calc;
+                    wr.oninput = calc;
+                }
+                break;
+            }
+            case 6: {
+                const wk = document.getElementById('w6-k');
+                const wd = document.getElementById('w6-d');
+                if (wk && wd) {
+                    const calc = () => {
+                        const kappa = parseFloat(wk.value);
+                        const d = parseFloat(wd.value) * 1e-3;
+                        const A = 0.04; // 0.04 m2
+                        const V = 100; // 100 V
+                        document.getElementById('w6-k-val').innerText = `${kappa.toFixed(1)}`;
+                        document.getElementById('w6-d-val').innerText = `${wd.value} mm`;
+                        const eps0 = 8.854e-12;
+                        const C_pF = (kappa * eps0 * A / d) * 1e12;
+                        const U_uJ = (0.5 * (C_pF * 1e-12) * V * V) * 1e6;
+                        document.getElementById('w6-res').innerText = `C = ${C_pF.toFixed(1)} pF | U = ${U_uJ.toFixed(2)} µJ`;
+                    };
+                    wk.oninput = calc;
+                    wd.oninput = calc;
+                }
+                break;
+            }
+            case 7: {
+                const we = document.getElementById('w7-e');
+                const wr = document.getElementById('w7-r');
+                if (we && wr) {
+                    const calc = () => {
+                        const E = parseFloat(we.value);
+                        const R = parseFloat(wr.value);
+                        document.getElementById('w7-e-val').innerText = `${E} V`;
+                        document.getElementById('w7-r-val').innerText = `${R} Ω`;
+                        const I = E / R;
+                        const P = I * I * R;
+                        document.getElementById('w7-res').innerText = `I = ${I.toFixed(2)} A | P = ${P.toFixed(2)} W`;
+                    };
+                    we.oninput = calc;
+                    wr.oninput = calc;
+                }
+                break;
+            }
+            case 8: {
+                const wv = document.getElementById('w8-v');
+                const wb = document.getElementById('w8-b');
+                if (wv && wb) {
+                    const calc = () => {
+                        const v = parseFloat(wv.value) * 1e6;
+                        const B = parseFloat(wb.value);
+                        document.getElementById('w8-v-val').innerText = `${wv.value}·10⁶ m/s`;
+                        document.getElementById('w8-b-val').innerText = `${B.toFixed(2)} T`;
+                        const m = 1.67e-27;
+                        const q = 1.60e-19;
+                        const R_cm = ((m * v) / (q * B)) * 100;
+                        const fc_MHz = ((q * B) / (2 * Math.PI * m)) / 1e6;
+                        document.getElementById('w8-res').innerText = `Radio R = ${R_cm.toFixed(2)} cm | fc = ${fc_MHz.toFixed(1)} MHz`;
+                    };
+                    wv.oninput = calc;
+                    wb.oninput = calc;
+                }
+                break;
+            }
+            case 9: {
+                const wi = document.getElementById('w-i');
+                const wa = document.getElementById('w-a');
+                if (wi && wa) {
+                    const calc = () => {
+                        const I = parseFloat(wi.value);
+                        const a_cm = parseFloat(wa.value);
+                        document.getElementById('w-i-val').innerText = `${I} A`;
+                        document.getElementById('w-a-val').innerText = `${a_cm.toFixed(1)} cm`;
+                        const B_uT = (20 * I) / a_cm;
+                        document.getElementById('w-b-res').innerText = `${B_uT.toFixed(2)} µT`;
+                    };
+                    wi.oninput = calc;
+                    wa.oninput = calc;
+                }
+                break;
+            }
+            case 10: {
+                const wn = document.getElementById('w10-n');
+                const wi = document.getElementById('w10-i');
+                if (wn && wi) {
+                    const calc = () => {
+                        const n_v_m = parseFloat(wn.value) * 100; // vueltas/m
+                        const I = parseFloat(wi.value);
+                        document.getElementById('w10-n-val').innerText = `${wn.value} v/cm`;
+                        document.getElementById('w10-i-val').innerText = `${I} A`;
+                        // B = mu0 * n * I = 4*pi*1e-7 * n_v_m * I
+                        const B_mT = (4 * Math.PI * 1e-7 * n_v_m * I) * 1000;
+                        document.getElementById('w10-res').innerText = `B_interior = ${B_mT.toFixed(2)} mT`;
+                    };
+                    wn.oninput = calc;
+                    wi.oninput = calc;
+                }
+                break;
+            }
+            case 11: {
+                const wv = document.getElementById('w11-v');
+                const wb = document.getElementById('w11-b');
+                if (wv && wb) {
+                    const calc = () => {
+                        const v = parseFloat(wv.value);
+                        const B = parseFloat(wb.value);
+                        const L = 0.5; // 0.5 m
+                        const R = 2.0; // 2 ohm
+                        document.getElementById('w11-v-val').innerText = `${v} m/s`;
+                        document.getElementById('w11-b-val').innerText = `${B.toFixed(2)} T`;
+                        const fem = B * L * v;
+                        const I = fem / R;
+                        const P = fem * I;
+                        document.getElementById('w11-res').innerText = `fem = ${fem.toFixed(2)} V | I = ${I.toFixed(2)} A | P = ${P.toFixed(2)} W`;
+                    };
+                    wv.oninput = calc;
+                    wb.oninput = calc;
+                }
+                break;
+            }
+            case 12: {
+                const we = document.getElementById('w-e0');
+                if (we) {
+                    we.oninput = () => {
+                        const E0 = parseFloat(we.value);
+                        document.getElementById('w-e0-val').innerText = `${E0} V/m`;
+                        const B0_uT = (E0 / 3e8) * 1e6;
+                        // S = E0^2 / (2 * mu0 * c)
+                        const S_prom = (E0 * E0) / (2 * 4 * Math.PI * 1e-7 * 3e8);
+                        document.getElementById('w-b0-res').innerText = `B₀ = ${B0_uT.toFixed(2)} µT | <S> = ${S_prom.toFixed(2)} W/m²`;
+                    };
+                }
+                break;
+            }
+            case 13: {
+                const wl = document.getElementById('w13-l');
+                const wc = document.getElementById('w13-c');
+                if (wl && wc) {
+                    const calc = () => {
+                        const L = parseFloat(wl.value) * 1e-3;
+                        const C = parseFloat(wc.value) * 1e-6;
+                        document.getElementById('w13-l-val').innerText = `${wl.value} mH`;
+                        document.getElementById('w13-c-val').innerText = `${wc.value} µF`;
+                        const f0 = 1 / (2 * Math.PI * Math.sqrt(L * C));
+                        const omega0 = 2 * Math.PI * f0;
+                        document.getElementById('w13-res').innerText = `f₀ = ${f0.toFixed(1)} Hz | ω₀ = ${omega0.toFixed(0)} rad/s`;
+                    };
+                    wl.oninput = calc;
+                    wc.oninput = calc;
+                }
+                break;
+            }
+        }
     }
 
     // Inicializar botones de capítulos
@@ -994,7 +1136,7 @@
     document.getElementById('btn-export-pdf').addEventListener('click', () => {
         const opt = {
             margin: [5, 5, 5, 5],
-            filename: `Lamina_Visual_M${activeCap}_10Easy.pdf`,
+            filename: `Lamina_Visual_M${activeCap}_Electro10Easy.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }

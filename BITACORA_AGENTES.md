@@ -53,13 +53,22 @@
   - Retiro gradual de Tailwind CDN residual hacia variables de tokens unificados en `css/tokens.css`.
   - Asegurar que la telemetría de todos los simuladores (`SIM_TELEMETRY`) se registre limpiamente en `js/seguimiento.js`.
 
-### 2026-10-24 · Gemini · Síntesis Pedagógica de Evaluaciones (Desafío Integral 3F), Láminas Visuales NotebookLM y Consolidación de Navegación Lateral
+### 2026-10-24 · Gemini · Autoría Integral de las 13 Láminas Visuales (NotebookLM), Eliminación de Placeholders y Marca de Generador IA
 - Qué hice:
-  1. **Motor de Láminas Visuales e Infografías Técnicas Interactivas (`laminas/index.html`):**
-     - Erradicado el concepto burocrático y estático de "Pósters de Congreso" en favor de láminas técnicas vivas inspiradas en NotebookLM y cuadernos de ingeniería física.
-     - Implementada estética de pergamino milimetrado (`.engineering-notebook`), filtros SVG de trazo entintado a mano alzada (`inkSketch`), rayos de luz fotónicos animados en movimiento continuo a lo largo de curvas de Bézier mediante `<animateMotion>` y CSS stream.
-     - Incluye widgets de cálculo reactivo con sliders dinámicos (Coulomb, Biot-Savart, Maxwell), comparativa conmutada de los dos caminos analíticos, especificación del modelo 3D físico, y tips interactivos de la mascota pedagógica **Nano Banana**.
-     - `posters/index.html` redirige automáticamente a `../laminas/index.html` con soporte de parámetros `?cap=1..13`.
+  1. **Autoría 100% no-genérica de los 13 Módulos en `laminas/index.html`:**
+     - Eliminado por completo el bucle de fallback que generaba cajas grises vacías ("Esquema Vectorial Dinámico Módulo X").
+     - Desarrollado a mano para CADA UNO de los 13 módulos:
+       * Esquema vectorial animado único en SVG con fotones en movimiento continuo a lo largo de curvas de Bézier (`<animateMotion>`), flechas entintadas y marcas de campo.
+       * Fórmulas rectoras en KaTeX con resolución rigurosa.
+       * Comparativa de los dos caminos analíticos de resolución (Camino A vs. Camino B).
+       * Mini-laboratorio reactivo en vivo con controles deslizantes (sliders) y cálculo instantáneo para los 13 temas (fuerza de Coulomb, campo dipolar, potencial y gradiente, anillo axial continuo, cilindro de Gauss, capacitancia con dieléctrico, mallas de Kirchhoff, ciclotrón de Lorentz, Biot-Savart, solenoide de Ampère, fem de Faraday-Lenz, onda de Maxwell e impedancia/resonancia RLC).
+       * Especificación física del prototipo imprimible 3D (`GUIA_DIDACTICA_Y_MODELOS_3D.md`).
+       * Desactivación de la paradoja del novato y conclusiones de ingeniería aplicada.
+  2. **Eliminación Total de Nombres de Generadores de Imágenes ("Nano Banana") y Avatares Inadecuados:**
+     - Erradicada la mención de "Nano Banana" y emojis de banana en `laminas/index.html` y `desafios/desafio.html`.
+     - Reemplazado por **Orientación de Cátedra / Mentor Electro10** bajo la firma institucional y académica del docente **Prof. Dudbil Olvasada Pabón Riaño**.
+  3. **Preservación de Parámetros en Redirección:**
+     - `posters/index.html` ahora preserva `window.location.search` al redirigir a `laminas/index.html`, garantizando que enlaces con `?cap=X` abran directamente el capítulo solicitado.
   2. **Síntesis de Evaluaciones en los 13 Módulos (`desafios/desafio.html`):**
      - Resuelto el problema de fatiga cognitiva y dispersión: tener 3 evaluaciones separadas (Quiz Adaptativo, Physics Quest y Evaluación Sumativa) en cada módulo abrumaba al estudiante.
      - Creado el contenedor maestro `desafios/desafio.html?m=X` con HUD Glassmorphism, barra de progreso unificada (0% → 100%), telemetría `postMessage` y 3 fases pedagógicas progresivas:
