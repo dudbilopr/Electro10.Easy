@@ -1,0 +1,110 @@
+// Banco del Desafío Integral · Módulo 1 (ley de Coulomb).
+// Respuestas numéricas calculadas con k = 8,988e9, e = 1,602e-19 (Young y Freedman, 2009), como en el taller.
+// Tipos: mc (opción múltiple con distractores), num (cálculo), dir (dirección vectorial), orden (pasos),
+// pares (emparejar), huecos (completar), limite (asintótico), grafica, error (caza de errores), mision (reto interactivo).
+(() => {
+  const K = 8.988e9, uC = 1e-6, nC = 1e-9, E = 1.602e-19;
+  const f10a = Math.hypot(K * 4 * 2 * uC * uC / 0.09, K * 3 * 2 * uC * uC / 0.16);
+  window.DESAFIO = {
+    modulo: 1,
+    titulo: 'Ley de Coulomb',
+    sub: 'Carga, fuerza entre cargas puntuales y superposición',
+    clase: '../presentaciones/M1_Coulomb/index.html',
+    taller: '../talleres/Taller_1_Ley_de_Coulomb.html',
+    juego: '../juegos/Juego_1.html',
+    lab: '../simuladores/Coulomb.html',
+    fases: [
+      {
+        nombre: 'Calentamiento conceptual', peso: 35,
+        intro: 'Ideas antes que cuentas: de dónde sale la carga, hacia dónde apunta la fuerza y qué pasa en los extremos.',
+        preguntas: [
+          { tipo: 'mc', id: 'c1', enun: 'Una varilla de vidrio frotada con seda queda con carga positiva. ¿Qué pasó?',
+            ops: [
+              { t: 'El vidrio perdió electrones, que pasaron a la seda.', ok: true, fb: 'Correcto. Solo se mueven electrones; el vidrio queda con menos electrones que protones y la seda con la misma carga, negativa.' },
+              { t: 'El vidrio ganó protones de la seda.', fb: 'Los protones están en los núcleos y no se transfieren al frotar. Lo que se mueve son electrones.' },
+              { t: 'El frotamiento creó carga positiva en el vidrio.', fb: 'La carga no se crea: se conserva. Si el vidrio queda positivo, la seda queda negativa con la misma magnitud.' },
+              { t: 'El vidrio tomó carga positiva del aire.', fb: 'El aire no aporta carga en este proceso; la transferencia es entre el vidrio y la seda.' },
+            ] },
+          { tipo: 'dir', id: 'c2', enun: 'Tres cargas de igual magnitud: \\(+q\\) en el origen, \\(+q\\) en \\((d,0)\\) y \\(-q\\) en \\((0,d)\\). ¿Hacia dónde apunta la fuerza neta sobre la carga del origen?',
+            fig: 'tri', ok: 'NO',
+            fb: { NO: 'Correcto. La carga en \\((d,0)\\) repele hacia \\(-x\\) y la de \\((0,d)\\) atrae hacia \\(+y\\), con el mismo módulo: la suma apunta a 135°, hacia arriba y a la izquierda.',
+              N: 'Esa es solo la atracción de \\(-q\\). Falta sumar la repulsión de la carga en \\((d,0)\\), que empuja hacia \\(-x\\).',
+              O: 'Esa es solo la repulsión de la carga en \\((d,0)\\). Falta la atracción hacia \\(-q\\), hacia \\(+y\\).',
+              SE: 'Invertiste las dos fuerzas: las cargas iguales se repelen y las opuestas se atraen.',
+              _: 'Dibuja las dos fuerzas sobre la carga del origen: repulsión lejos de \\((d,0)\\) y atracción hacia \\((0,d)\\); luego súmalas.' } },
+          { tipo: 'limite', id: 'c3', enun: 'Dos cargas \\(+q\\) en \\((\\pm a,0)\\). Sobre el eje \\(y\\), muy lejos (\\(y\\gg a\\)), la fuerza sobre \\(q_0\\) se parece a…',
+            ops: [
+              { t: '\\(k\\,(2q)\\,q_0/y^2\\): una sola carga \\(2q\\) en el origen.', ok: true, fb: 'Correcto. Desde lejos las dos cargas casi coinciden; de \\(F=2kqq_0y/(a^2+y^2)^{3/2}\\), con \\(a^2\\ll y^2\\), queda \\(2kqq_0/y^2\\).' },
+              { t: '\\(2kqq_0\\,y/a^3\\): crece con \\(y\\).', fb: 'Esa es la aproximación cerca del origen (\\(y\\ll a\\)). Lejos la fuerza tiene que disminuir.' },
+              { t: 'Cero, porque las componentes se anulan.', fb: 'Solo se anulan las componentes en \\(x\\). Las de \\(y\\) se suman y no son cero.' },
+              { t: '\\(kqq_0/y^2\\): la de una sola carga \\(q\\).', fb: 'Desde lejos se ven las dos cargas juntas: la carga total es \\(2q\\), no \\(q\\).' },
+            ] },
+          { tipo: 'pares', id: 'c4', enun: 'Relaciona cada situación con la idea que la explica.',
+            izq: ['Al frotar un globo, el pelo queda con carga opuesta', 'Un peine cargado atrae papelitos neutros', 'Las gotas de Millikan tienen cargas que son múltiplos de una misma cantidad', 'Al duplicar la distancia, la fuerza queda en la cuarta parte', 'La fuerza sobre una carga rodeada de otras tres'],
+            der: ['Conservación de la carga', 'Polarización', 'Cuantización', 'Ley del inverso del cuadrado', 'Superposición'],
+            fb: 'Cada fenómeno remite a una idea distinta del capítulo: conservación (se transfiere, no se crea), polarización (cuerpo neutro con cargas desplazadas), cuantización (múltiplos de e), 1/r² y suma vectorial.' },
+          { tipo: 'mc', id: 'c5', enun: '\\(q_1=+3{,}0\\ \\mu\\mathrm C\\) y \\(q_2=-5{,}0\\ \\mu\\mathrm C\\) están a \\(0{,}20\\ \\mathrm m\\). ¿Cuánto vale el módulo de la fuerza entre ellas?',
+            ops: [
+              { t: '\\(3{,}37\\ \\mathrm N\\)', ok: true, fb: 'Correcto: \\(F=k|q_1q_2|/r^2=(8{,}988\\times10^9)(15\\times10^{-12})/0{,}040=3{,}37\\ \\mathrm N\\).' },
+              { t: '\\(0{,}674\\ \\mathrm N\\)', fb: 'Dividiste entre \\(r\\) y no entre \\(r^2\\). La ley de Coulomb es del inverso del cuadrado.' },
+              { t: '\\(-3{,}37\\ \\mathrm N\\)', fb: 'Un módulo no es negativo. En \\(F=k|q_1q_2|/r^2\\) van los valores absolutos; el signo solo dice que se atraen.' },
+              { t: '\\(3{,}37\\times10^{12}\\ \\mathrm N\\)', fb: 'Olvidaste pasar los microcoulombs a coulombs: \\(1\\ \\mu\\mathrm C=10^{-6}\\ \\mathrm C\\).' },
+            ] },
+        ],
+      },
+      {
+        nombre: 'Misión interactiva', peso: 35,
+        intro: 'Manipula, predice y comprueba. Si quieres más práctica, juega Charge Wars antes de seguir.',
+        preguntas: [
+          { tipo: 'mision', id: 'm1', enun: '\\(q_1=+2{,}0\\ \\mu\\mathrm C\\) está en \\(x=0\\) y \\(q_2=+8{,}0\\ \\mu\\mathrm C\\) en \\(x=0{,}60\\ \\mathrm m\\). Arrastra la carga de prueba hasta el punto donde la fuerza neta sea cero y pulsa «Fijar». Las flechas no muestran números: guíate por la física.',
+            q1: 2, q2: 8, L: 0.6, ok: 0.2, tol: 0.012,
+            fbOk: 'Correcto: \\(x=L/(1+\\sqrt{q_2/q_1})=0{,}60/3=0{,}20\\ \\mathrm m\\), más cerca de la carga menor.',
+            fbMal: 'Ahí las flechas no son iguales. El punto está más cerca de la carga menor: iguala \\(q_1/x^2=q_2/(L-x)^2\\).' },
+          { tipo: 'grafica', id: 'm2', enun: '¿Cuál de las curvas representa el módulo de la fuerza entre dos cargas en función de su distancia \\(r\\)?',
+            ops: [
+              { f: (r) => 1 / r, t: 'A', fb: 'Esta curva va como \\(1/r\\): al duplicar \\(r\\) la fuerza queda a la mitad. Coulomb da la cuarta parte.' },
+              { f: (r) => 1 / (r * r), t: 'B', ok: true, fb: 'Correcto: \\(F\\propto1/r^2\\). Mira los puntos: al pasar de \\(r\\) a \\(2r\\) la altura se divide entre 4.' },
+              { f: (r) => Math.max(0, 1.2 - 0.25 * r), t: 'C', fb: 'Una recta que decrece no corresponde a ninguna ley de fuerza entre cargas puntuales; además cortaría el eje a una distancia finita.' },
+            ] },
+          { tipo: 'huecos', id: 'm3', texto: 'La fuerza entre dos cargas puntuales es directamente proporcional al {0} de las cargas e inversamente proporcional al {1} de la distancia. Actúa sobre la {2} que une las cargas; si tienen el mismo signo, se {3}.',
+            slots: [['producto', 'suma', 'cociente'], ['cuadrado', 'cubo', 'valor'], ['recta', 'perpendicular', 'circunferencia'], ['repelen', 'atraen', 'neutralizan']],
+            ok: [0, 0, 0, 0], fb: 'Es la ley de Coulomb tal como la enunció en 1784: \\(F=k|q_1q_2|/r^2\\) sobre la recta que une las cargas, repulsiva para signos iguales.' },
+          { tipo: 'ajuste', id: 'm4', enun: 'La flecha gris es la fuerza entre \\(+3{,}0\\ \\mu\\mathrm C\\) y \\(-5{,}0\\ \\mu\\mathrm C\\) a \\(0{,}20\\ \\mathrm m\\). Mueve la carga de la derecha hasta que la fuerza sea <b>la cuarta parte</b> y pulsa «Fijar».',
+            r0: 0.2, ok: 0.4, tol: 0.012,
+            fbOk: 'Correcto: \\(F\\propto1/r^2\\), así que para \\(F/4\\) hace falta \\(2r=0{,}40\\ \\mathrm m\\).',
+            fbMal: 'No es la cuarta parte. Si \\(F\\propto1/r^2\\), ¿por cuánto multiplicas \\(r\\) para dividir \\(F\\) entre 4?' },
+        ],
+      },
+      {
+        nombre: 'Certificación rigurosa', peso: 30,
+        intro: 'Cálculo exacto, deducción y ojo crítico. Usa unidades SI; acepta coma o punto y notación 2,5e-3.',
+        preguntas: [
+          { tipo: 'num', id: 'r1', enun: '\\(q_3=+2{,}0\\ \\mu\\mathrm C\\) está en el origen; \\(q_1=-4{,}0\\ \\mu\\mathrm C\\) en \\((0{,}30;\\,0)\\) m y \\(q_2=+3{,}0\\ \\mu\\mathrm C\\) en \\((0;\\,0{,}40)\\) m. ¿Cuánto vale el módulo de la fuerza neta sobre \\(q_3\\)?',
+            ans: f10a, unidad: 'N', tol: 0.02,
+            errores: [{ v: K * 8 * uC * uC / 0.09 + K * 6 * uC * uC / 0.16, fb: 'Sumaste los módulos. Las dos fuerzas son perpendiculares: súmalas por componentes (Pitágoras).' },
+              { v: Math.abs(K * 8 * uC * uC / 0.09 - K * 6 * uC * uC / 0.16), fb: 'Restaste los módulos. Las fuerzas son perpendiculares, no opuestas.' }],
+            fbOk: 'Correcto: \\(F_{13}=0{,}799\\ \\mathrm N\\) hacia \\(+x\\) (atracción) y \\(F_{23}=0{,}337\\ \\mathrm N\\) hacia \\(-y\\) (repulsión); \\(F=\\sqrt{0{,}799^2+0{,}337^2}=0{,}867\\ \\mathrm N\\).',
+            fbMal: 'Calcula cada fuerza con valores absolutos, decide su sentido y suma por componentes.' },
+          { tipo: 'num', id: 'r2', enun: '¿Cuántos electrones hay que quitarle a una esfera neutra para que quede con \\(+4{,}8\\ \\mathrm{nC}\\)?',
+            ans: 4.8 * nC / E, unidad: 'electrones', tol: 0.02,
+            errores: [{ v: 4.8 * E / nC, fb: 'Invertiste el cociente: \\(N=q/e\\), no \\(e/q\\).' }, { v: 4.8 / E, fb: 'Olvidaste pasar los nanocoulombs a coulombs (\\(10^{-9}\\)).' }],
+            fbOk: 'Correcto: \\(N=q/e=4{,}8\\times10^{-9}/1{,}602\\times10^{-19}=3{,}00\\times10^{10}\\) electrones.',
+            fbMal: 'La carga está cuantizada: \\(N=q/e\\), con \\(q\\) en coulombs.' },
+          { tipo: 'orden', id: 'r3', enun: 'Ordena los pasos para hallar la fuerza sobre \\(q_0\\) en el eje de simetría de dos cargas iguales.',
+            pasos: ['Escribir la fuerza de una fuente: \\(F_1=kqq_0/(a^2+y^2)\\).', 'Ver por simetría que las componentes en \\(x\\) se anulan.', 'Proyectar en \\(y\\): \\(F=2F_1\\sin\\theta\\), con \\(\\sin\\theta=y/r\\).', 'Sacar constantes: \\(F=2kqq_0\\,y/(a^2+y^2)^{3/2}\\).', 'Derivar e igualar a cero: \\(y_{\\text{máx}}=a/\\sqrt2\\).', 'Comprobar los límites: \\(F\\to k(2q)q_0/y^2\\) lejos.'],
+            fb: 'Primero una fuente, luego la simetría, después la proyección y las constantes; el máximo y los límites se analizan al final, con la expresión ya obtenida.' },
+          { tipo: 'error', id: 'r4', enun: 'Un estudiante calcula la fuerza entre \\(+2{,}0\\ \\mu\\mathrm C\\) y \\(-2{,}0\\ \\mu\\mathrm C\\) separadas \\(3{,}0\\ \\mathrm{cm}\\). Toca la línea con el error.',
+            lineas: ['F=k\\,\\dfrac{|q_1q_2|}{r^2}', 'F=(8{,}988\\times10^9)\\,\\dfrac{(2{,}0\\times10^{-6})(2{,}0\\times10^{-6})}{0{,}030}', 'F=1{,}20\\ \\mathrm N', '\\text{Es de atracción: los signos son opuestos.}'],
+            mala: 1, fb: 'El error está en la línea 2: falta elevar la distancia al cuadrado, \\((0{,}030)^2\\). La respuesta correcta es \\(F=40{,}0\\ \\mathrm N\\); la línea 3 solo arrastra el error.' },
+          { tipo: 'mc', id: 'r5', enun: '\\(q_1=+2{,}0\\ \\mu\\mathrm C\\) en \\(x=0\\) y \\(q_2=-8{,}0\\ \\mu\\mathrm C\\) en \\(x=0{,}60\\ \\mathrm m\\). ¿Dónde puede quedar en equilibrio una tercera carga?',
+            ops: [
+              { t: 'Fuera del segmento, del lado de \\(q_1\\), en \\(x=-0{,}60\\ \\mathrm m\\).', ok: true, fb: 'Correcto. Con signos opuestos, entre las cargas las dos fuerzas van hacia el mismo lado. Fuera, del lado de la carga menor, \\(2/x^2=8/(x-0{,}60)^2\\) da \\(x=-0{,}60\\ \\mathrm m\\).' },
+              { t: 'Entre las cargas, en \\(x=0{,}20\\ \\mathrm m\\).', fb: 'Ese es el resultado con dos cargas positivas. Con signos opuestos, entre ellas una empuja y la otra jala hacia el mismo lado.' },
+              { t: 'Fuera, del lado de \\(q_2\\).', fb: 'Del lado de la carga mayor, la fuerza de \\(q_2\\) siempre gana porque está más cerca y es mayor.' },
+              { t: 'En ninguna parte.', fb: 'Sí existe: fuera del segmento, del lado de la carga menor, las dos fuerzas son opuestas y pueden igualarse.' },
+            ] },
+        ],
+      },
+    ],
+  };
+})();

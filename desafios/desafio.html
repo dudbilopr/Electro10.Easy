@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Desafío Integral de Maestría — Electro10.Easy</title>
+  <script>
+    // Módulos con banco propio (bancos/m{N}.js): usan el motor de 3 fases y 10 tipos de pregunta.
+    (function () { var p = new URLSearchParams(location.search), m = parseInt(p.get('m') || p.get('modulo') || '1', 10);
+      if ([1].indexOf(m) >= 0 && !p.has('clasico')) location.replace('integral.html?m=' + m); })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
   <style>

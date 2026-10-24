@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafío Integral — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Motor del Desafío Integral: 3 fases y 10 tipos de pregunta. El banco de cada módulo está en bancos/m{N}.js. */
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 17px/1.5 var(--e10-font-body);min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font:700 18px var(--e10-font-display)}.brand span{color:var(--e10-primary)}
+.chip{font:500 12px var(--e10-font-mono);padding:4px 10px;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary)}
+h1{font:700 clamp(26px,5vw,36px)/1.1 var(--e10-font-display);margin:14px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--e10-muted);margin:0 0 14px}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 16px}
+.ph{border:1px solid var(--e10-line);border-radius:12px;background:var(--e10-surface);padding:8px 12px;font-size:14px}
+.ph b{display:block;font:600 15px var(--e10-font-display)}
+.ph .bar{height:5px;border-radius:9px;background:var(--e10-line);margin-top:6px;overflow:hidden}.ph .bar i{display:block;height:100%;width:0;background:var(--e10-primary);transition:width .3s}
+.ph.on{border-color:var(--e10-primary);box-shadow:0 0 0 3px var(--e10-primary-soft)}
+.ph.done b{color:var(--e10-success)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:16px;padding:18px 20px}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:6px}
+.qtype{font:600 12px var(--e10-font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--e10-accent-strong)}
+.qn{font:500 13px var(--e10-font-mono);color:var(--e10-muted)}
+.enun{font-size:18px;margin:4px 0 14px}
+.ops{display:flex;flex-direction:column;gap:8px}
+.op{font:400 17px var(--e10-font-body);text-align:left;min-height:50px;padding:10px 14px;border-radius:12px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer}
+.op:hover{border-color:var(--e10-primary)}.op:focus-visible,.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.op.sel{border-color:var(--e10-primary);background:var(--e10-primary-soft)}
+.op.right{border-color:var(--e10-success);background:var(--e10-success-soft)}.op.wrong{border-color:var(--e10-danger);background:var(--e10-danger-soft)}
+.btn{font:600 16px/1 var(--e10-font-body);min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--e10-primary)}.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.btn[disabled]{opacity:.45;cursor:default}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:16px;display:none}
+.fb.ok{display:block;background:var(--e10-success-soft)}.fb.ok b{color:var(--e10-success)}
+.fb.bad{display:block;background:var(--e10-warning-soft)}.fb.bad b{color:var(--e10-warning)}
+.dirs{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center}
+.dirs .op{min-height:56px;text-align:center;font-size:26px;padding:0}
+.figrow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:center}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+.pairs .op{font-size:15px;min-height:46px}
+.pairs .op[data-p]{position:relative;padding-right:34px}
+.pairs .op[data-p]::after{content:attr(data-p);position:absolute;right:10px;top:50%;transform:translateY(-50%);font:700 13px var(--e10-font-mono);color:var(--e10-on-primary);background:var(--e10-primary);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.blank select{font:600 16px var(--e10-font-body);border:1px solid var(--e10-primary);border-radius:8px;padding:4px 6px;background:var(--e10-surface);color:var(--e10-primary);margin:0 2px}
+.blank select.right{border-color:var(--e10-success);color:var(--e10-success)}.blank select.wrong{border-color:var(--e10-danger);color:var(--e10-danger)}
+.order{display:flex;flex-direction:column;gap:6px}
+.order .it{display:flex;align-items:center;gap:8px;border:1px solid var(--e10-line);border-radius:10px;padding:6px 8px;background:var(--e10-surface);font-size:16px}
+.order .it .mv{display:flex;flex-direction:column;gap:2px}.order .it .mv button{width:32px;height:24px;border-radius:6px;border:1px solid var(--e10-line);background:var(--e10-surface-2);cursor:pointer;color:var(--e10-ink)}
+.order .it .n{font:600 13px var(--e10-font-mono);color:var(--e10-primary);width:20px}
+.order .it.right{border-color:var(--e10-success)}.order .it.wrong{border-color:var(--e10-danger)}
+.lines .op{font-size:17px}
+.graphs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.graphs .op{padding:8px;text-align:center}.graphs svg{width:100%;height:auto}
+canvas.mis{width:100%;max-width:760px;height:auto;display:block;margin:0 auto;background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:12px;touch-action:none;cursor:grab}
+.num{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num input{flex:1;min-width:160px;min-height:46px;border:1px solid var(--e10-line);border-radius:10px;padding:0 12px;font:500 17px var(--e10-font-mono);background:var(--e10-surface);color:var(--e10-ink)}
+.muted{color:var(--e10-muted);font-size:15px}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:10px 14px;font-size:15px;margin-bottom:12px}
+.tip b{color:var(--e10-accent-strong)}
+.cert{border:3px solid var(--e10-primary);border-radius:18px;padding:26px;text-align:center;background:var(--e10-surface)}
+.cert h2{font:700 30px var(--e10-font-display);margin:6px 0}
+.cert .big{font:700 46px var(--e10-font-display);color:var(--e10-primary)}
+.cert input{min-height:44px;border:1px solid var(--e10-line);border-radius:10px;padding:0 12px;font:17px var(--e10-font-body);width:min(420px,100%);text-align:center}
+table.res{width:100%;border-collapse:collapse;font-size:15px;margin-top:12px;text-align:left}
+table.res td,table.res th{border-bottom:1px solid var(--e10-line);padding:6px 8px}
+.nobank{text-align:center;padding:30px}
+@media (max-width:640px){.phases{grid-template-columns:1fr}.pairs,.graphs{grid-template-columns:1fr}}
+@media print{.no-print{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="brand">Electro<span>10.Easy</span></span><span class="chip" id="mod-chip">Módulo</span></header>
+  <h1 id="title">Desafío Integral</h1>
+  <p class="sub" id="sub"></p>
+  <div class="phases no-print" id="phases"></div>
+  <main id="stage" aria-live="polite"></main>
+</div>
+<script>
+(() => {
+  'use strict';
+  const m = parseInt(new URLSearchParams(location.search).get('m') || '1', 10);
+  const s = document.createElement('script'); s.src = `bancos/m${m}.js`;
+  s.onload = () => (window.renderMathInElement ? start() : window.addEventListener('load', start));
+  s.onerror = () => { document.getElementById('stage').innerHTML = `<div class="card nobank">Este módulo todavía no tiene su banco de preguntas. <a class="btn" href="desafio.html?m=${m}&clasico=1">Abrir el desafío anterior</a></div>`; };
+  document.head.appendChild(s);
+
+  const $ = (id) => document.getElementById(id);
+  const TIPO = { mc: '1 · Opción múltiple', num: '2 · Cálculo numérico', dir: '3 · Dirección vectorial', orden: '4 · Orden de los pasos', pares: '5 · Emparejamiento', huecos: '6 · Completar', limite: '7 · Casos límite', grafica: '8 · Interpretar gráficas', error: '9 · Caza de errores', mision: '10 · Misión interactiva', ajuste: '10 · Misión: manipula la variable' };
+  const math = (el) => { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); };
+  const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const col = (n) => getComputedStyle(document.body).getPropertyValue('--e10-' + n).trim() || '#888';
+  const parseNum = (t) => { t = String(t || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1').replace(/(N|C|m|electrones)$/i, ''); return t === '' ? NaN : Number(t); };
+  const post = (msg) => { try { if (window.parent !== window) window.parent.postMessage(msg, '*'); } catch (_) {} };
+  let D, KEY, st;
+
+  function start() {
+    D = window.DESAFIO; KEY = `e10_desafio_m${D.modulo}`;
+    try { st = JSON.parse(localStorage.getItem(KEY)); } catch (_) { st = null; }
+    if (!st || !st.r) st = { f: 0, q: 0, r: {} };
+    $('mod-chip').textContent = `Módulo ${D.modulo}`; $('title').textContent = `Desafío Integral · ${D.titulo}`; $('sub').textContent = D.sub; document.title = `Desafío Integral · ${D.titulo} — Electro10.Easy`;
+    render();
+  }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+  const fase = () => D.fases[st.f];
+  function phases() {
+    $('phases').innerHTML = D.fases.map((f, i) => { const n = f.preguntas.length, a = f.preguntas.filter((q) => st.r[q.id]).length; return `<div class="ph${i === st.f ? ' on' : ''}${a === n ? ' done' : ''}"><span class="muted">Fase ${i + 1} · ${f.peso} %</span><b>${f.nombre}</b><div class="bar"><i style="width:${a / n * 100}%"></i></div></div>`; }).join('');
+  }
+  function nota() { let t = 0; D.fases.forEach((f) => { const ok = f.preguntas.filter((q) => st.r[q.id] && st.r[q.id].ok).length; t += f.peso * ok / f.preguntas.length; }); return t; }
+
+  function render() {
+    phases();
+    if (st.f >= D.fases.length) return cert();
+    const f = fase();
+    if (st.q >= f.preguntas.length) return resumenFase();
+    const q = f.preguntas[st.q], el = $('stage');
+    el.innerHTML = `${st.q === 0 ? `<div class="tip"><b>Fase ${st.f + 1} · ${f.nombre}.</b> ${f.intro}${st.f === 1 ? ` <a href="${D.juego}" target="_blank" rel="noopener">Abrir Charge Wars</a>.` : ''}</div>` : ''}
+      <div class="card"><div class="qhead"><span class="qtype">${TIPO[q.tipo]}</span><span class="qn">Pregunta ${st.q + 1} de ${f.preguntas.length}</span></div>
+      <div class="enun">${q.enun || ''}</div><div id="qbody"></div>
+      <div class="fb" id="fb"></div>
+      <div class="actions no-print"><button type="button" class="btn pri" id="btn-ck">Comprobar</button><button type="button" class="btn" id="btn-next" hidden>Siguiente →</button><span class="muted" id="hint"></span></div></div>`;
+    const ui = BUILD[q.tipo](q, $('qbody'));
+    math(el);
+    const done = st.r[q.id];
+    const finish = (ok, msg, code) => {
+      if (!st.r[q.id]) { st.r[q.id] = { ok, code: code || null }; save(); post({ type: 'SIM_TELEMETRY', action: 'desafio', details: { modulo: D.modulo, pregunta: q.id, tipo: q.tipo, ok, error: ok ? null : (code || q.id) } }); }
+      const fb = $('fb'); fb.className = 'fb ' + (ok ? 'ok' : 'bad'); fb.innerHTML = `<b>${ok ? 'Correcto.' : 'Revisa esta idea.'}</b> ${String(msg).replace(/^Correcto[.:]?\s*/, '')}`; math(fb);
+      $('btn-ck').hidden = true; $('btn-next').hidden = false; $('btn-next').focus(); phases();
+    };
+    $('btn-ck').addEventListener('click', () => { const r = ui.check(); if (r === null) { $('hint').textContent = 'Primero responde.'; return; } $('hint').textContent = ''; finish(r.ok, r.msg, r.code); });
+    $('btn-next').addEventListener('click', () => { st.q++; save(); render(); window.scrollTo(0, 0); });
+    if (done && ui.restore) { ui.restore(); }
+    if (done) { const r = ui.check(true); if (r) finish(done.ok, r.msg); }
+  }
+
+  // ── Constructores de cada tipo: devuelven { check(silent) → {ok,msg} | null } ──
+  const BUILD = {
+    mc(q, box) {
+      const ops = q._ops || (q._ops = shuffle(q.ops)); let sel = null;
+      box.innerHTML = `<div class="ops">${ops.map((o, i) => `<button type="button" class="op" data-i="${i}">${o.t}</button>`).join('')}</div>`;
+      box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = +b.dataset.i; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
+      return { check() { if (sel === null) { const prev = st.r[q.id]; if (!prev) return null; sel = ops.findIndex((o) => o.ok); }
+        box.querySelectorAll('.op').forEach((x, i) => { x.classList.remove('sel'); if (ops[i].ok) x.classList.add('right'); else if (i === sel) x.classList.add('wrong'); });
+        return { ok: !!ops[sel].ok, msg: ops[sel].fb + (ops[sel].ok ? '' : ' ' + ops.find((o) => o.ok).fb.replace(/^Correcto[.:]?\s*/, 'La respuesta: ')), code: ops[sel].ok ? null : `${q.id}_op` }; } };
+    },
+    limite(q, box) { return BUILD.mc(q, box); },
+    num(q, box) {
+      box.innerHTML = `<div class="num"><input id="num-in" inputmode="decimal" aria-label="Tu respuesta" placeholder="p. ej. 2,5e-3"><span class="muted">${q.unidad}</span></div>`;
+      const inp = box.querySelector('input'); inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') $('btn-ck').click(); });
+      return { check(silent) { const v = parseNum(inp.value); if (silent) return { msg: q.fbOk }; if (!isFinite(v)) return null; inp.disabled = true;
+        if (Math.abs(v - q.ans) <= q.tol * Math.abs(q.ans)) return { ok: true, msg: q.fbOk };
+        const e = (q.errores || []).find((x) => Math.abs(v - x.v) <= 0.03 * Math.abs(x.v));
+        return { ok: false, msg: (e ? e.fb : q.fbMal) + ' ' + q.fbOk.replace(/^Correcto:\s*/, 'Solución: '), code: e ? `${q.id}_tipico` : q.id }; } };
+    },
+    dir(q, box) {
+      const D8 = [['NO', '↖'], ['N', '↑'], ['NE', '↗'], ['O', '←'], ['0', '0'], ['E', '→'], ['SO', '↙'], ['S', '↓'], ['SE', '↘']]; let sel = null;
+      box.innerHTML = `<div class="figrow">${FIG[q.fig]()}<div class="dirs">${D8.map(([k, a]) => `<button type="button" class="op" data-k="${k}" aria-label="${k === '0' ? 'fuerza nula' : 'dirección ' + k}">${a}</button>`).join('')}</div></div>`;
+      box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = b.dataset.k; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
+      return { check(silent) { if (silent) sel = q.ok; if (sel === null) return null; box.querySelectorAll('.op').forEach((x) => { x.classList.remove('sel'); if (x.dataset.k === q.ok) x.classList.add('right'); else if (x.dataset.k === sel) x.classList.add('wrong'); });
+        return { ok: sel === q.ok, msg: sel === q.ok ? q.fb[q.ok] : (q.fb[sel] || q.fb._), code: `${q.id}_${sel}` }; } };
+    },
+    pares(q, box) {
+      const order = q._o || (q._o = shuffle(q.der.map((_, i) => i))); const link = {}; let pend = null;
+      box.innerHTML = `<p class="muted" style="margin-top:0">Toca una situación y luego la idea que le corresponde.</p><div class="pairs"><div class="ops" id="pl">${q.izq.map((t, i) => `<button type="button" class="op" data-l="${i}">${t}</button>`).join('')}</div><div class="ops" id="pr">${order.map((j) => `<button type="button" class="op" data-r="${j}">${q.der[j]}</button>`).join('')}</div></div>`;
+      const paint = () => { const num = {}; Object.keys(link).forEach((l, k) => { num[l] = k + 1; });
+        box.querySelectorAll('[data-l]').forEach((b) => { const l = b.dataset.l; b.classList.toggle('sel', +l === pend); if (l in link) b.dataset.p = num[l]; else delete b.dataset.p; });
+        box.querySelectorAll('[data-r]').forEach((b) => { const l = Object.keys(link).find((x) => link[x] === +b.dataset.r); if (l !== undefined) b.dataset.p = num[l]; else delete b.dataset.p; }); };
+      box.querySelectorAll('[data-l]').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; pend = +b.dataset.l; paint(); }));
+      box.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id] || pend === null) return; const r = +b.dataset.r; Object.keys(link).forEach((l) => { if (link[l] === r) delete link[l]; }); link[pend] = r; pend = null; paint(); }));
+      return { check(silent) { if (silent) q.izq.forEach((_, i) => { link[i] = i; }); if (Object.keys(link).length < q.izq.length) return null; paint();
+        let n = 0; box.querySelectorAll('[data-l]').forEach((b) => { const ok = link[b.dataset.l] === +b.dataset.l; if (ok) n++; b.classList.add(ok ? 'right' : 'wrong'); });
+        return { ok: n === q.izq.length, msg: `${n} de ${q.izq.length} parejas bien. ` + q.fb + (n < q.izq.length ? ' Pares correctos: ' + q.izq.map((t, i) => `«${t}» → ${q.der[i]}`).join('; ') + '.' : ''), code: n < q.izq.length ? `${q.id}_${q.izq.length - n}mal` : null }; } };
+    },
+    huecos(q, box) {
+      const opts = q._s || (q._s = q.slots.map((s) => shuffle(s.map((t, i) => [t, i]))));
+      box.innerHTML = `<p class="blank" style="font-size:18px;line-height:2.1">${q.texto.replace(/\{(\d)\}/g, (_, k) => `<select data-k="${k}" aria-label="Espacio ${+k + 1}"><option value="">…</option>${opts[k].map(([t, i]) => `<option value="${i}">${t}</option>`).join('')}</select>`)}</p>`;
+      return { check(silent) { const ss = [...box.querySelectorAll('select')]; if (silent) ss.forEach((x) => { x.value = '0'; }); if (ss.some((x) => x.value === '')) return null; let n = 0;
+        ss.forEach((x) => { const ok = +x.value === q.ok[+x.dataset.k]; if (ok) n++; x.classList.add(ok ? 'right' : 'wrong'); x.disabled = true; });
+        return { ok: n === ss.length, msg: `${n} de ${ss.length} espacios bien. ` + q.fb + (n < ss.length ? ' Las palabras correctas: ' + q.slots.map((s) => s[0]).join(', ') + '.' : ''), code: n < ss.length ? q.id : null }; } };
+    },
+    orden(q, box) {
+      let cur = q._o || (q._o = (() => { let o; do { o = shuffle(q.pasos.map((_, i) => i)); } while (o.every((v, i) => v === i)); return o; })());
+      const draw = () => { box.innerHTML = `<div class="order">${cur.map((i, k) => `<div class="it" data-i="${i}"><span class="mv no-print"><button type="button" data-u="${k}" aria-label="Subir">▲</button><button type="button" data-d="${k}" aria-label="Bajar">▼</button></span><span class="n">${k + 1}</span><span>${q.pasos[i]}</span></div>`).join('')}</div>`; math(box);
+        box.querySelectorAll('[data-u]').forEach((b) => b.addEventListener('click', () => { const k = +b.dataset.u; if (k > 0 && !st.r[q.id]) { [cur[k - 1], cur[k]] = [cur[k], cur[k - 1]]; draw(); } }));
+        box.querySelectorAll('[data-d]').forEach((b) => b.addEventListener('click', () => { const k = +b.dataset.d; if (k < cur.length - 1 && !st.r[q.id]) { [cur[k + 1], cur[k]] = [cur[k], cur[k + 1]]; draw(); } })); };
+      draw();
+      return { check(silent) { if (silent) { cur = q.pasos.map((_, i) => i); draw(); } let n = 0; box.querySelectorAll('.it').forEach((it, k) => { const ok = +it.dataset.i === k; if (ok) n++; it.classList.add(ok ? 'right' : 'wrong'); });
+        return { ok: n === q.pasos.length, msg: `${n} de ${q.pasos.length} pasos en su lugar. ` + q.fb, code: n < q.pasos.length ? q.id : null }; } };
+    },
+    error(q, box) {
+      let sel = null;
+      box.innerHTML = `<div class="ops lines">${q.lineas.map((l, i) => `<button type="button" class="op" data-i="${i}"><span class="qn">Línea ${i + 1}</span>&nbsp;&nbsp;\\(${l}\\)</button>`).join('')}</div>`;
+      box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = +b.dataset.i; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
+      return { check(silent) { if (silent) sel = q.mala; if (sel === null) return null; box.querySelectorAll('.op').forEach((x, i) => { x.classList.remove('sel'); if (i === q.mala) x.classList.add('right'); else if (i === sel) x.classList.add('wrong'); });
+        return { ok: sel === q.mala, msg: (sel === q.mala ? '' : `La línea ${sel + 1} ${sel > q.mala ? 'solo arrastra el error anterior' : 'está bien'}. `) + q.fb, code: sel === q.mala ? null : `${q.id}_l${sel + 1}` }; } };
+    },
+    grafica(q, box) {
+      const ops = q.ops; let sel = null;
+      const svg = (f) => { const P = []; let mx = 0; for (let k = 0; k <= 60; k++) { const r = 0.5 + k * 3.5 / 60; mx = Math.max(mx, Math.min(f(r), 4)); } for (let k = 0; k <= 60; k++) { const r = 0.5 + k * 3.5 / 60; P.push(`${(20 + (r - 0.5) / 3.5 * 170).toFixed(1)},${(120 - Math.min(f(r), 4) / mx * 100).toFixed(1)}`); }
+        const pt = (r) => `<circle cx="${(20 + (r - 0.5) / 3.5 * 170).toFixed(1)}" cy="${(120 - Math.min(f(r), 4) / mx * 100).toFixed(1)}" r="4" fill="var(--e10-accent)"/>`;
+        return `<svg viewBox="0 0 200 140" role="img" aria-label="curva"><path d="M20 10V120H195" fill="none" stroke="var(--e10-line)" stroke-width="1.5"/><polyline points="${P.join(' ')}" fill="none" stroke="var(--e10-primary)" stroke-width="3"/>${pt(1)}${pt(2)}<text x="150" y="136" font-size="11" fill="var(--e10-muted)">r</text><text x="4" y="16" font-size="11" fill="var(--e10-muted)">F</text><text x="44" y="136" font-size="10" fill="var(--e10-muted)">r₀</text><text x="92" y="136" font-size="10" fill="var(--e10-muted)">2r₀</text></svg>`; };
+      box.innerHTML = `<div class="graphs">${ops.map((o, i) => `<button type="button" class="op" data-i="${i}">${svg(o.f)}<b>${o.t}</b></button>`).join('')}</div>`;
+      box.querySelectorAll('.op').forEach((b) => b.addEventListener('click', () => { if (st.r[q.id]) return; sel = +b.dataset.i; box.querySelectorAll('.op').forEach((x) => x.classList.toggle('sel', x === b)); }));
+      return { check(silent) { if (silent) sel = ops.findIndex((o) => o.ok); if (sel === null) return null; box.querySelectorAll('.op').forEach((x, i) => { x.classList.remove('sel'); if (ops[i].ok) x.classList.add('right'); else if (i === sel) x.classList.add('wrong'); });
+        return { ok: !!ops[sel].ok, msg: ops[sel].fb, code: ops[sel].ok ? null : `${q.id}_${ops[sel].t}` }; } };
+    },
+    mision(q, box) { return lineSim(q, box, 'mision'); },
+    ajuste(q, box) { return lineSim(q, box, 'ajuste'); },
+  };
+
+  // Lienzo de una recta con cargas: misión de equilibrio (mueve q0) o de ajuste (mueve q2 hasta F/4)
+  function lineSim(q, box, mode) {
+    box.innerHTML = `<canvas class="mis" id="mis" width="760" height="230" aria-label="Recta con cargas; arrastra la carga marcada"></canvas><p class="muted">Arrastra la carga con borde grueso. Posición: <b id="mis-x">—</b></p>`;
+    const cv = box.querySelector('canvas'), dpr = window.devicePixelRatio || 1; cv.width = 760 * dpr; cv.height = 230 * dpr; const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const X0 = 70, S = mode === 'mision' ? 1000 : 1250, Y = 120; let x = mode === 'mision' ? 0.45 : 0.25, drag = false, locked = false;
+    const arrow = (x1, x2, c, w = 4) => { const d = Math.sign(x2 - x1), L = Math.abs(x2 - x1); if (L < 2) return; ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, Y); ctx.lineTo(x2 - d * 8, Y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x2, Y); ctx.lineTo(x2 - d * 14, Y - 7); ctx.lineTo(x2 - d * 14, Y + 7); ctx.closePath(); ctx.fill(); };
+    const ch = (px, s, r, ring) => { ctx.fillStyle = col(s > 0 ? 'q-pos' : 'q-neg'); ctx.beginPath(); ctx.arc(px, Y, r, 0, 7); ctx.fill(); if (ring) { ctx.strokeStyle = col('ink'); ctx.lineWidth = 3; ctx.stroke(); } ctx.strokeStyle = col('surface'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(px - r * 0.45, Y); ctx.lineTo(px + r * 0.45, Y); if (s > 0) { ctx.moveTo(px, Y - r * 0.45); ctx.lineTo(px, Y + r * 0.45); } ctx.stroke(); };
+    const txt = (t, px, py, c) => { ctx.fillStyle = c; ctx.font = "600 14px 'IBM Plex Sans', sans-serif"; ctx.fillText(t, px, py); };
+    function draw() {
+      ctx.clearRect(0, 0, 760, 230); ctx.strokeStyle = col('line'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, Y); ctx.lineTo(740, Y); ctx.stroke();
+      for (let t = 0; t <= (mode === 'mision' ? 0.6 : 0.5) + 1e-9; t += 0.1) { const p = X0 + t * S; ctx.beginPath(); ctx.moveTo(p, Y + 26); ctx.lineTo(p, Y + 34); ctx.stroke(); txt(t.toFixed(1).replace('.', ','), p - 10, Y + 52, col('muted')); }
+      txt('x (m)', 690, Y + 52, col('muted'));
+      if (mode === 'mision') {
+        const F1 = q.q1 / (x * x), F2 = q.q2 / ((q.L - x) ** 2), sc = 2.2, px = X0 + x * S;
+        arrow(px + 16, px + 16 + Math.min(150, F1 * sc), col('vec-force')); arrow(px - 16, px - 16 - Math.min(150, F2 * sc), col('vec-force'));
+        ch(X0, 1, 18); ch(X0 + q.L * S, 1, 24); ch(px, 1, 11, true);
+        txt('q₁', X0 - 8, Y - 30, col('ink')); txt('q₂', X0 + q.L * S - 8, Y - 34, col('ink')); txt('q₀', px - 8, Y - 22, col('ink'));
+      } else {
+        const F0 = 1 / (q.r0 * q.r0), F = 1 / (x * x), sc = 3.2, px = X0 + x * S;
+        ctx.save(); ctx.globalAlpha = 0.35; arrow(X0 + 20, X0 + 20 + F0 * sc, col('muted'), 6); ctx.restore();
+        arrow(X0 + 20, X0 + 20 + Math.min(260, F * sc), col('vec-force')); arrow(px - 20, px - 20 - Math.min(260, F * sc), col('vec-force'));
+        ch(X0, 1, 18); ch(px, -1, 18, true); txt('+3,0 µC', X0 - 26, Y - 30, col('ink')); txt('−5,0 µC', px - 26, Y - 30, col('ink'));
+        txt('gris: la fuerza a 0,20 m', 20, 24, col('muted'));
+      }
+      $('mis-x').textContent = x.toFixed(3).replace('.', ',') + ' m';
+    }
+    const toX = (e) => { const r = cv.getBoundingClientRect(); return ((e.clientX - r.left) * 760 / r.width - X0) / S; };
+    cv.addEventListener('pointerdown', (e) => { if (locked) return; const xx = toX(e); if (Math.abs(xx - x) * S < 30) { drag = true; cv.setPointerCapture(e.pointerId); } });
+    cv.addEventListener('pointermove', (e) => { if (!drag) return; const lo = mode === 'mision' ? 0.03 : 0.12, hi = mode === 'mision' ? q.L - 0.03 : 0.52; x = Math.max(lo, Math.min(hi, Math.round(toX(e) * 200) / 200)); draw(); });
+    cv.addEventListener('pointerup', () => { drag = false; });
+    cv.addEventListener('keydown', (e) => { if (locked) return; if (e.key === 'ArrowRight') x += 0.005; if (e.key === 'ArrowLeft') x -= 0.005; draw(); }); cv.tabIndex = 0;
+    draw(); $('btn-ck').textContent = 'Fijar';
+    const api = { check(silent) { if (silent) x = q.ok; locked = true; draw(); const ok = Math.abs(x - q.ok) <= q.tol; return { ok, msg: ok ? q.fbOk : q.fbMal + ' ' + q.fbOk.replace(/^Correcto:\s*/, 'Solución: '), code: ok ? null : q.id }; }, set(v) { x = v; draw(); } };
+    window.__mision = api; return api;
+  }
+
+  const FIG = {
+    tri: () => `<svg viewBox="0 0 220 200" width="220" role="img" aria-label="Carga positiva en el origen, otra positiva a la derecha y una negativa arriba"><path d="M30 160H205M50 185V15" stroke="var(--e10-line)" stroke-width="1.5" fill="none"/><circle cx="50" cy="160" r="13" fill="var(--e10-q-pos)"/><circle cx="170" cy="160" r="13" fill="var(--e10-q-pos)"/><circle cx="50" cy="40" r="13" fill="var(--e10-q-neg)"/><text x="58" y="188" font-size="13" fill="var(--e10-ink)">+q (origen)</text><text x="150" y="188" font-size="13" fill="var(--e10-ink)">+q en (d,0)</text><text x="70" y="44" font-size="13" fill="var(--e10-ink)">−q en (0,d)</text></svg>`,
+  };
+
+  function resumenFase() {
+    const f = fase(), ok = f.preguntas.filter((q) => st.r[q.id] && st.r[q.id].ok).length;
+    $('stage').innerHTML = `<div class="card"><span class="qtype">Fin de la fase ${st.f + 1}</span><h2 style="font:700 26px var(--e10-font-display);margin:6px 0">${f.nombre}: ${ok} de ${f.preguntas.length}</h2>
+      <p>Aporta ${(f.peso * ok / f.preguntas.length).toFixed(1).replace('.', ',')} de ${f.peso} puntos.${ok < f.preguntas.length ? ` Repasa en la <a href="${D.clase}" target="_blank" rel="noopener">clase</a> o el <a href="${D.taller}" target="_blank" rel="noopener">taller</a> lo que falló.` : ''}</p>
+      <div class="actions"><button type="button" class="btn pri" id="btn-f">${st.f + 1 < D.fases.length ? 'Ir a la fase ' + (st.f + 2) + ' →' : 'Ver mi resultado'}</button></div></div>`;
+    $('btn-f').addEventListener('click', () => { st.f++; st.q = 0; save(); render(); });
+  }
+
+  function cert() {
+    const n = nota(), pasa = n >= 60, rows = D.fases.map((f, i) => { const ok = f.preguntas.filter((q) => st.r[q.id] && st.r[q.id].ok).length; return `<tr><td>Fase ${i + 1} · ${f.nombre}</td><td>${ok} / ${f.preguntas.length}</td><td>${(f.peso * ok / f.preguntas.length).toFixed(1).replace('.', ',')} / ${f.peso}</td></tr>`; }).join('');
+    $('stage').innerHTML = `<div class="cert"><span class="qtype">Electro10.Easy · Módulo ${D.modulo}</span><h2>${pasa ? 'Certificado de logro' : 'Resultado del desafío'}</h2><p>${D.titulo}</p><div class="big">${n.toFixed(1).replace('.', ',')} / 100</div>
+      <p><input id="cert-name" placeholder="Escribe tu nombre completo" aria-label="Nombre completo"></p><p class="muted" id="cert-date">${new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <table class="res"><thead><tr><th>Fase</th><th>Aciertos</th><th>Puntos</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="muted">${pasa ? 'Superaste el 60 % que pide el desafío.' : 'Necesitas 60 puntos. Repasa y vuelve a intentarlo.'}</p>
+      <div class="actions no-print" style="justify-content:center"><button type="button" class="btn pri" id="btn-print">Descargar en PDF</button><button type="button" class="btn" id="btn-again">Intentar de nuevo</button></div></div>`;
+    try { $('cert-name').value = localStorage.getItem('e10_est-nombre') || ''; } catch (_) {}
+    $('cert-name').addEventListener('input', (e) => { try { localStorage.setItem('e10_est-nombre', e.target.value); } catch (_) {} });
+    $('btn-print').addEventListener('click', () => window.print());
+    $('btn-again').addEventListener('click', () => { st = { f: 0, q: 0, r: {} }; D.fases.forEach((f) => f.preguntas.forEach((q) => { delete q._ops; delete q._o; delete q._s; })); save(); render(); });
+    if (!st.sent) { st.sent = true; save(); post({ type: 'DESAFIO_COMPLETADO', modulo: D.modulo, xp: pasa ? 100 : 40, nota: Math.round(n * 10) / 10, aprobado: pasa }); try { localStorage.setItem(`desafio_m${D.modulo}_completado`, 'true'); } catch (_) {} }
+    window.__nota = n;
+  }
+  window.__desafio = { get st() { return st; }, BUILD, nota };
+})();
+</script>
+</body>
+</html>
