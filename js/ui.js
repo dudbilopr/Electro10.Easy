@@ -31,12 +31,9 @@ export function mostrarDashboardEstudiante() {
     window.actualizarContenidoDashboard?.();
 }
 
-export function mostrarCalendario() {
-    resetNav();
-    document.getElementById('nav-calendario').classList.add('active');
-    document.getElementById('calendar-dashboard').style.display = 'block';
-
+export function renderizarNodosUniverso() {
     const grid = document.getElementById('calendar-grid');
+    if (!grid) return;
     grid.innerHTML = '';
 
     if (!_curriculoData?.modulos) return;
@@ -86,6 +83,10 @@ export function mostrarCalendario() {
     });
 }
 
+export function mostrarCalendario() {
+    mostrarCerebro('brain-universe');
+}
+
 export function mostrarPerfil() {
     resetNav();
     document.getElementById('nav-perfil').classList.add('active');
@@ -93,40 +94,63 @@ export function mostrarPerfil() {
     window.cargarDatosPerfil?.();
 }
 
-export function mostrarLaboratorios() {
-    resetNav();
-    document.getElementById('nav-labs').classList.add('active');
-    document.getElementById('labs-dashboard').style.display = 'block';
-}
+export function cambiarTabLabs(tabId, btnElement) {
+    document.querySelectorAll('.labs-tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('labs-dashboard')?.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const target = document.getElementById(tabId);
+    if (target) target.style.display = 'block';
+    if (btnElement) btnElement.classList.add('active');
 
-export function mostrarJuegoSnake() {
-    resetNav();
-    const btn = document.getElementById('nav-snake');
-    if (btn) btn.classList.add('active');
-    document.getElementById('game-dashboard').style.display = 'block';
-    
-    // Initialize game if not already running
-    if (!window.snakeGameInstance) {
-        window.snakeGameInstance = new SnakeGame();
-        window.snakeGameInstance.start();
-    } else {
-        window.snakeGameInstance.resume();
+    if (tabId === 'labs-games') {
+        if (!window.snakeGameInstance) {
+            window.snakeGameInstance = new SnakeGame();
+            window.snakeGameInstance.start();
+        } else {
+            window.snakeGameInstance.resume();
+        }
     }
 }
 
-export function mostrarCerebro() {
+export function mostrarLaboratorios(subtab = 'labs-sims') {
+    resetNav();
+    const btn = document.getElementById('nav-labs');
+    if (btn) btn.classList.add('active');
+    document.getElementById('labs-dashboard').style.display = 'block';
+    const tabBtn = document.getElementById(subtab === 'labs-games' ? 'tab-btn-games' : 'tab-btn-sims');
+    cambiarTabLabs(subtab, tabBtn);
+}
+
+export function mostrarJuegoSnake() {
+    mostrarLaboratorios('labs-games');
+}
+
+export function mostrarCerebro(subtab = 'brain-universe') {
     resetNav();
     const btn = document.getElementById('nav-brain');
-    if(btn) btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     document.getElementById('brain-dashboard').style.display = 'block';
-    if(window.initBrainGraph) window.initBrainGraph();
+
+    if (subtab === 'brain-graph') {
+        cambiarTabCerebro('brain-graph', document.getElementById('tab-btn-graph'));
+        if (window.initBrainGraph) window.initBrainGraph();
+    } else {
+        cambiarTabCerebro('brain-universe', document.getElementById('tab-btn-universe'));
+        renderizarNodosUniverso();
+    }
 }
 
 export function cambiarTabCerebro(tabId, btnElement) {
     document.querySelectorAll('.brain-tab-content').forEach(c => c.style.display = 'none');
     document.getElementById('brain-dashboard').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabId).style.display = 'block';
-    if(btnElement) btnElement.classList.add('active');
+    const target = document.getElementById(tabId);
+    if (target) target.style.display = 'block';
+    if (btnElement) btnElement.classList.add('active');
+
+    if (tabId === 'brain-universe') {
+        renderizarNodosUniverso();
+    } else if (tabId === 'brain-graph') {
+        if (window.initBrainGraph) window.initBrainGraph();
+    }
 }
 
 

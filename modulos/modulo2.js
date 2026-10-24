@@ -63,50 +63,34 @@ export const modulo2 = {
             ]
         },
         {
-            "id": "m2-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_2.html",
-            "titulo": "4. Physics Quest — Campo Eléctrico",
-            "descripcion": "¡Guía partículas a través de campos eléctricos! 5 rondas de desafío y calibración vectorial.",
-            "xp": 25,
-            "logro": { "id": "logro_m2", "nombre": "Cartógrafo de Campos", "icono": "navigation" }
-        },
-        {
             "id": "m2-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_2_Campo_Electrico.html",
-            "titulo": "5. Taller Práctico No. 2 — Campo Eléctrico",
+            "titulo": "4. Taller Práctico No. 2 — Campo Eléctrico",
             "descripcion": "Problemas de nivel Sears-Zemansky: cálculo de campo neto, momentos dipolares y cinemática en campos uniformes.",
             "xp": 30
         },
         {
-            "id": "m2-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_2.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 2",
-            "descripcion": "Evaluación multinivel: conceptos de campo, cálculo vectorial numérico y comportamiento de dipolos.",
-            "xp": 40
-        },
-        {
-            "id": "m2-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_2_Campo_Electrico.html",
-            "titulo": "7. Evaluación Sumativa — Campo Eléctrico",
-            "descripcion": "Cuestionario oficial de validación de conocimientos sobre el campo electrostático.",
-            "xp": 50
+            "id": "m2-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=2",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m2", "nombre": "Cartógrafo de Campos", "icono": "navigation" }
         },
         {
             "id": "m2-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Campo Eléctrico",
+            "titulo": "6. Asistente IA (NotebookLM) — Campo Eléctrico",
             "descripcion": "Consulta dudas matemáticas sobre divergencia, líneas de campo y dipolos con IA.",
             "xp": 10
         },
         {
             "id": "m2-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes sobre teoría de campos electrostáticos.",
             "xp": 10,
             "secciones": [

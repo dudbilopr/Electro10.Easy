@@ -81,50 +81,34 @@ export const modulo9 = {
             ]
         },
         {
-            "id": "m9-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_8.html",
-            "titulo": "4. Physics Quest — Biot-Savart",
-            "descripcion": "Construye la configuración óptima de corriente para alcanzar los vectores objetivo de campo magnético. ¡5 misiones!",
-            "xp": 25,
-            "logro": { "id": "logro_m9", "nombre": "Arquitecto Magnético", "icono": "stream" }
-        },
-        {
             "id": "m9-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_9_Biot_Savart.html",
-            "titulo": "5. Taller Práctico No. 8 — Ley de Biot-Savart",
+            "titulo": "4. Taller Práctico No. 8 — Ley de Biot-Savart",
             "descripcion": "Cálculo analítico del campo magnético en hilos, arcos circulares, espiras y bobinas de Helmholtz.",
             "xp": 30
         },
         {
-            "id": "m9-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_8.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 9",
-            "descripcion": "Evaluación formativa progresiva: regla de la mano derecha, cálculo diferencial e integrales de corriente.",
-            "xp": 40
-        },
-        {
-            "id": "m9-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_8_Campo_Magnetico.html",
-            "titulo": "7. Evaluación Sumativa — Biot-Savart y Campo Magnético",
-            "descripcion": "Cuestionario oficial de acreditación sobre fuentes de campo magnético y análisis diferencial.",
-            "xp": 50
+            "id": "m9-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=9",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m9", "nombre": "Navegante de Biot-Savart", "icono": "rotate_right" }
         },
         {
             "id": "m9-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Biot-Savart",
+            "titulo": "6. Asistente IA (NotebookLM) — Biot-Savart",
             "descripcion": "Consulta paso a paso integrales de Biot-Savart, simetrías cilíndricas y comparación analítica con Ampere.",
             "xp": 10
         },
         {
             "id": "m9-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Textos universitarios, artículos formativos y simuladores sobre la Ley de Biot-Savart.",
             "xp": 10,
             "secciones": [

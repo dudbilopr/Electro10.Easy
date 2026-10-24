@@ -73,50 +73,34 @@ export const modulo13 = {
             ]
         },
         {
-            "id": "m13-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_12.html",
-            "titulo": "4. Physics Quest — Circuitos CA",
-            "descripcion": "Sintoniza el circuito RLC a la frecuencia de resonancia y maximiza la potencia útil. ¡5 desafíos!",
-            "xp": 25,
-            "logro": { "id": "logro_m13", "nombre": "Maestro de la Resonancia", "icono": "graphic_eq" }
-        },
-        {
             "id": "m13-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_13_Circuitos_CA.html",
-            "titulo": "5. Taller Práctico No. 13 — Circuitos RLC y Corriente Alterna",
+            "titulo": "4. Taller Práctico No. 13 — Circuitos RLC y Corriente Alterna",
             "descripcion": "Problemas de régimen transitorio, análisis de impedancia compleja, factor de potencia y diseño de filtros.",
             "xp": 30
         },
         {
-            "id": "m13-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_12.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 13",
-            "descripcion": "Evaluación cognitiva en 3 niveles: reactancia y fase, oscilaciones LC amortiguadas y resonancia en CA.",
-            "xp": 40
-        },
-        {
-            "id": "m13-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_11_Inductancia.html",
-            "titulo": "7. Evaluación Sumativa — Inductancia y Circuitos de CA",
-            "descripcion": "Cuestionario oficial de acreditación sobre regímenes transitorios y alternos.",
-            "xp": 50
+            "id": "m13-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=13",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m13", "nombre": "Maestro de la Resonancia", "icono": "waves" }
         },
         {
             "id": "m13-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Circuitos CA",
+            "titulo": "6. Asistente IA (NotebookLM) — Circuitos CA",
             "descripcion": "Consulta dudas analíticas sobre transformadas en régimen permanente senoidal, corrección del factor de potencia y resonancia.",
             "xp": 10
         },
         {
             "id": "m13-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Textos y manuales sobre análisis de circuitos en corriente alterna y señales senoidales.",
             "xp": 10,
             "secciones": [

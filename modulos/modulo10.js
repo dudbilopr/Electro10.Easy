@@ -84,24 +84,15 @@ export const modulo10 = {
             ]
         },
         {
-            "id": "m10-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_9.html",
-            "titulo": "4. Physics Quest — Ley de Ampere",
-            "descripcion": "Selecciona el camino amperiano óptimo y calcula el campo en 5 geometrías desafiantes.",
-            "xp": 25,
-            "logro": { "id": "logro_m10", "nombre": "Maestro Amperiano", "icono": "loop" }
-        },
-        {
             "id": "m10-g2",
             "tipo": "grupo",
-            "titulo": "5. Taller No. 10 — Ley de Ampère",
+            "titulo": "4. Taller No. 10 — Ley de Ampère",
             "sublecciones": [
                 {
                     "id": "m10-l7",
                     "tipo": "ejercicio",
                     "recurso": "presentaciones/M10_Ampere/recursos/Cap10_Taller_Ampere.pdf",
-                    "titulo": "5.1 Taller (PDF)",
+                    "titulo": "4.1 Taller (PDF)",
                     "descripcion": "7 ejercicios resueltos, 14 retos por niveles, preguntas de teoría, dos programas de Python y códigos QR al simulador.",
                     "xp": 30
                 },
@@ -109,7 +100,7 @@ export const modulo10 = {
                     "id": "m10-l8",
                     "tipo": "ejercicio",
                     "recurso": "presentaciones/M10_Ampere/recursos/Cap10_Guia_Ampere.pdf",
-                    "titulo": "5.2 Guía de estudio (PDF)",
+                    "titulo": "4.2 Guía de estudio (PDF)",
                     "descripcion": "Ideas clave, fórmulas, errores comunes, autoevaluación con respuestas, conectores de conceptos, glosario y bibliografía.",
                     "xp": 15
                 },
@@ -117,40 +108,33 @@ export const modulo10 = {
                     "id": "m10-l9",
                     "tipo": "ejercicio",
                     "recurso": "talleres/Taller_10_Ley_de_Ampere.html",
-                    "titulo": "5.3 Taller de práctica (versión web)",
+                    "titulo": "4.3 Taller de práctica (versión web)",
                     "descripcion": "Problemas de solenoides, toroides y cables coaxiales con densidades volumétricas de corriente.",
                     "xp": 20
                 }
             ]
         },
         {
-            "id": "m10-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_9.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 10",
-            "descripcion": "Evaluación cognitiva en 3 niveles: concepto de circulación, aplicaciones simétricas y corrección de Maxwell.",
-            "xp": 40
-        },
-        {
-            "id": "m10-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_9_Ley_de_Ampere.html",
-            "titulo": "7. Evaluación Sumativa — Ley de Ampere",
-            "descripcion": "Cuestionario oficial de acreditación sobre circulación magnética y la ley de Ampere-Maxwell.",
-            "xp": 50
+            "id": "m10-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=10",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m10", "nombre": "Guardián de la Circulación", "icono": "all_inclusive" }
         },
         {
             "id": "m10-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Ley de Ampere",
+            "titulo": "6. Asistente IA (NotebookLM) — Ley de Ampere",
             "descripcion": "Consulta cómo seleccionar el camino amperiano, comparación con la ley de Gauss y demostración de la corriente de desplazamiento.",
             "xp": 10
         },
         {
             "id": "m10-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes académicas sobre la ley de Ampere, magnetostática y corrección de Maxwell.",
             "xp": 10,
             "secciones": [

@@ -23,6 +23,8 @@ export function getIconForType(tipo) {
         case 'quiz':            return 'quiz';
         case 'enlaces':         return 'folder_special';
         case 'juego':           return 'sports_esports';
+        case 'desafio':         return 'military_tech';
+        case 'lamina':          return 'auto_awesome';
         case 'clase_emi':       return 'school';
         default:                return 'description';
     }
@@ -443,6 +445,16 @@ if (typeof window !== 'undefined') {
             const activeIframe = document.querySelector('#lesson-iframe-wrapper iframe');
             if (activeIframe) {
                 activeIframe.src = target;
+            }
+        }
+
+        // 3. Desafío Integral completado
+        if (e.data.type === 'DESAFIO_COMPLETADO') {
+            const mod = e.data.modulo;
+            console.log(`[Desafío Integral] Módulo ${mod} completado con éxito.`);
+            if (currentLeccionId && window._progressData) {
+                const el = document.getElementById('menu-' + currentLeccionId);
+                _marcarCompletado({ id: currentLeccionId }, el, window._progressData);
             }
         }
     });

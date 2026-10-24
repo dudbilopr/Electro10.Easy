@@ -63,50 +63,34 @@ export const modulo1 = {
             ]
         },
         {
-            "id": "m1-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_1.html",
-            "titulo": "4. Physics Quest — Ley de Coulomb",
-            "descripcion": "Ubica cargas de prueba en el espacio para guiar partículas y neutralizar campos. ¡5 misiones vectoriales!",
-            "xp": 25,
-            "logro": { "id": "logro_m1", "nombre": "Maestro de Cargas", "icono": "bolt" }
-        },
-        {
             "id": "m1-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_1_Ley_de_Coulomb.html",
-            "titulo": "5. Taller Práctico No. 1 — Ley de Coulomb",
+            "titulo": "4. Taller Práctico No. 1 — Ley de Coulomb",
             "descripcion": "Problemas de nivel universitario: modelado vectorial, equilibrio de cargas en hilos y sistemas simétricos.",
             "xp": 30
         },
         {
-            "id": "m1-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_1.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 1",
-            "descripcion": "Evaluación cognitiva en 3 niveles: conceptual, cálculo vectorial numérico y problemas de aplicación.",
-            "xp": 40
-        },
-        {
-            "id": "m1-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_1_Ley_de_Coulomb.html",
-            "titulo": "7. Evaluación Sumativa — Ley de Coulomb",
-            "descripcion": "Cuestionario oficial de validación con preguntas de opción múltiple, cálculo riguroso y análisis físico.",
-            "xp": 50
+            "id": "m1-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=1",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m1", "nombre": "Maestro de Cargas", "icono": "bolt" }
         },
         {
             "id": "m1-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Ley de Coulomb",
+            "titulo": "6. Asistente IA (NotebookLM) — Ley de Coulomb",
             "descripcion": "Consulta dudas teóricas, solicita derivaciones paso a paso y valida ejercicios con el modelo de lenguaje curado.",
             "xp": 10
         },
         {
             "id": "m1-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Textos de referencia, artículos y herramientas de cálculo.",
             "xp": 10,
             "secciones": [

@@ -91,29 +91,21 @@
                 <span class="material-symbols-outlined">insights</span>
                 <span>Mi avance</span>
             </a>
-            <a onclick="window.mostrarCalendario()" class="nav-item" id="nav-calendario">
-                <span class="material-symbols-outlined">hub</span>
-                <span>Universo de Conocimiento</span>
-            </a>
             <a onclick="window.mostrarPerfil()" class="nav-item" id="nav-perfil">
                 <span class="material-symbols-outlined">person</span>
                 <span>Mi Perfil</span>
             </a>
             <a onclick="window.mostrarLaboratorios()" class="nav-item" id="nav-labs">
                 <span class="material-symbols-outlined">science</span>
-                <span>Centro de Simulaciones</span>
-            </a>
-            <a onclick="window.mostrarJuegoSnake()" class="nav-item" id="nav-snake">
-                <span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span>
-                <span style="font-weight: 600;">Juegos Educativos</span>
+                <span>Laboratorio & Desafíos</span>
             </a>
             <a onclick="window.mostrarCerebro()" class="nav-item" id="nav-brain" style="color: #a855f7;">
                 <span class="material-symbols-outlined">psychology</span>
-                <span>Cerebro de Conocimiento</span>
+                <span>Cerebro & Grafo Cognitivo</span>
             </a>
-            <a href="posters/index.html" class="nav-item" id="nav-posters" style="color: #38bdf8;">
-                <span class="material-symbols-outlined">analytics</span>
-                <span>Pósters de Congreso</span>
+            <a href="laminas/index.html" class="nav-item" id="nav-laminas" style="color: #38bdf8;">
+                <span class="material-symbols-outlined">auto_awesome</span>
+                <span>Láminas Visuales (NotebookLM)</span>
             </a>
             <a href="revisar.html" class="nav-item" id="nav-revisar" style="color: var(--e10-primary, #b3246b);">
                 <span class="material-symbols-outlined">schema</span>
@@ -593,157 +585,175 @@
                 </div>
             </div>
 
-            <!-- ================= CENTRO DE SIMULACIÓN Y LABORATORIOS ================= -->
+            <!-- ================= LABORATORIOS Y DESAFÍOS INTERACTIVOS (SÍNTESIS) ================= -->
             <div id="labs-dashboard" class="bento-container" style="display: none;">
-                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
-                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
-                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #0ea5e9;">science</span>
-                        Centro de Simulación
+                <div class="bento-header" style="margin-bottom: 25px; text-align: center; flex-direction: column; gap: 12px;">
+                    <h2 style="font-size: 2.5rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 38px; color: #0ea5e9;">science</span>
+                        Laboratorio & Desafíos Interactivos
                     </h2>
-                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                        El puente entre las matemáticas y la realidad física. Aquí encontrarás las guías de laboratorio y entornos de experimentación interactiva.
+                    <p style="color: var(--text-medium); font-size: 1.05rem; max-width: 750px; margin: 0 auto; line-height: 1.5;">
+                        Simuladores computacionales rigurosos y retos gamificados. Experimenta con campos, cargas y circuitos en tiempo real.
                     </p>
                 </div>
-                <div class="bento-grid">
-                    <div class="bento-card col-4">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">group_work</span>
-                        </div>
-                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Ley de Coulomb</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Interacción de fuerzas entre cargas puntuales.</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">Abrir Simulador</button>
-                    </div>
 
-                    <div class="bento-card col-4">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">line_style</span>
-                        </div>
-                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Campo Eléctrico</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo eléctrico y mapas de vectores.</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">Abrir Simulador</button>
-                    </div>
-
-                    <div class="bento-card col-4">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">3d_rotation</span>
-                        </div>
-                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Potencial Eléctrico 3D</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Topografía del potencial generado por cargas.</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">Abrir Simulador</button>
-                    </div>
-
-                    <div class="bento-card col-4">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">air</span>
-                        </div>
-                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Flujo Eléctrico</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo atravesando superficies (Gauss).</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">Abrir Simulador</button>
-                    </div>
-                    
-                    <div class="bento-card col-4">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Capacitance.html', '_blank')">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">battery_charging_full</span>
-                        </div>
-                        <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Capacitancia</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Acumulación de carga y arreglos de capacitores.</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Capacitance.html', '_blank')">Abrir Simulador</button>
-                    </div>
-
-                    <div class="bento-card col-4" style="border: 1px solid rgba(14, 165, 233, 0.3); background: rgba(14, 165, 233, 0.05); cursor: pointer;" onclick="window.open('simuladores/index.html', '_blank')">
-                        <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">bolt</span>
-                        </div>
-                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Lab10 Hub (32 Labs)</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Catálogo completo con todos los 32 simuladores interconectados.</p>
-                        <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/index.html', '_blank')">Explorar Todo el Hub</button>
-                    </div>
+                <!-- Tabs del Laboratorio -->
+                <div class="tabs-nav" style="margin-bottom: 25px; border-bottom: 2px solid var(--border-color); display: flex; gap: 20px; justify-content: center;">
+                    <button class="tab-btn active" id="tab-btn-sims" onclick="window.cambiarTabLabs('labs-sims', this)">
+                        <span class="material-symbols-outlined">science</span> Simuladores de Física (32 Labs)
+                    </button>
+                    <button class="tab-btn" id="tab-btn-games" onclick="window.cambiarTabLabs('labs-games', this)">
+                        <span class="material-symbols-outlined" style="color: #00f2fe;">gamepad</span> Desafíos & Arcade Gamificado
+                    </button>
                 </div>
-            </div>
 
-            <!-- JUEGO SNAKE DASHBOARD -->
-            <div id="game-dashboard" class="bento-container" style="display: none;">
-                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
-                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
-                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #00f2fe;">gamepad</span>
-                        Juegos Educativos
-                    </h2>
-                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                        Gamificación del aprendizaje. Aprende conceptos clave de física jugando.
-                    </p>
-                </div>
-                <div class="bento-grid">
-                    <div class="card col-12">
-                        <div class="card-header">
-                            <h2><span class="material-symbols-outlined" style="color: #00f2fe;">videogame_asset</span> Superposition Snake</h2>
-                            <span class="badge" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">Disponible</span>
+                <!-- Pestaña 1: Simuladores de Física -->
+                <div id="labs-sims" class="labs-tab-content" style="display: block;">
+                    <div class="bento-grid">
+                        <div class="bento-card col-4">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">group_work</span>
+                            </div>
+                            <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Ley de Coulomb</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Interacción de fuerzas entre cargas puntuales.</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Simulador_Ley_de_Coulomb.html', '_blank')">Abrir Simulador</button>
                         </div>
-                    <div class="card-content">
-                        <p style="text-align: center; margin-bottom: 1rem; color: var(--text-medium);">¡Aprende conceptos de electrostática mientras juegas! Usa las flechas de tu teclado para moverte.</p>
+
+                        <div class="bento-card col-4">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">line_style</span>
+                            </div>
+                            <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Campo Eléctrico</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo eléctrico y mapas de vectores.</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Campo_Electrico.html', '_blank')">Abrir Simulador</button>
+                        </div>
+
+                        <div class="bento-card col-4">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">3d_rotation</span>
+                            </div>
+                            <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Potencial Eléctrico 3D</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Topografía del potencial generado por cargas.</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Potencial_Electrico.html', '_blank')">Abrir Simulador</button>
+                        </div>
+
+                        <div class="bento-card col-4">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">air</span>
+                            </div>
+                            <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Flujo Eléctrico</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Líneas de campo atravesando superficies (Gauss).</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Flujo_Electrico.html', '_blank')">Abrir Simulador</button>
+                        </div>
                         
-                        <div id="game-scoreboard" style="display:flex; justify-content:center; gap: 2rem; font-size: 1.2rem; margin-top: 1rem; font-weight: bold;">
-                            <div>Nivel: <span id="game-level">1</span></div>
-                            <div>Puntos: <span id="game-score">0</span></div>
-                            <div>Meta: <span id="game-target">5</span></div>
+                        <div class="bento-card col-4">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; cursor: pointer;" onclick="window.open('simuladores/Capacitance.html', '_blank')">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9;">battery_charging_full</span>
+                            </div>
+                            <h3 style="margin: 0 0 5px 0; color: var(--text-high);">Capacitancia</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Acumulación de carga y arreglos de capacitores.</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/Capacitance.html', '_blank')">Abrir Simulador</button>
                         </div>
 
-                        <div id="game-container" style="display:flex; justify-content:center; align-items:center; position:relative; margin-top: 1rem; height: 500px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; background: #0f172a; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px rgba(0,242,254,0.1);">
-                            <canvas id="snake-canvas" style="display:block; width:100%; height:100%;"></canvas>
-                            
-                            <!-- Popup overlay for concepts -->
-                            <div id="game-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 2px solid #00f2fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 10; box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);">
-                                <h3 id="game-popup-title" style="color: #00f2fe; margin-bottom: 1rem; font-size: 1.8rem; margin-top: 0;">Concepto</h3>
-                                <p id="game-popup-desc" style="font-size: 1.2rem; line-height: 1.5;">Descripción del concepto.</p>
-                                <button id="game-popup-btn" class="btn" style="margin-top: 1.5rem; background: var(--accent); color: white; padding: 10px 20px;">Continuar (Espacio)</button>
+                        <div class="bento-card col-4" style="border: 1px solid rgba(14, 165, 233, 0.3); background: rgba(14, 165, 233, 0.05); cursor: pointer;" onclick="window.open('simuladores/index.html', '_blank')">
+                            <div style="height: 120px; background: rgba(14, 165, 233, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #0ea5e9; opacity: 0.5;">bolt</span>
                             </div>
-                            
-                            <!-- Level up overlay -->
-                            <div id="game-level-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(168, 85, 247, 0.95); border: 2px solid #d8b4fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 20; box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);">
-                                <h3 style="margin-bottom: 1rem; font-size: 2rem; margin-top: 0;">¡Nivel <span id="game-level-display">2</span> Alcanzado!</h3>
-                                <p id="game-level-desc" style="font-size: 1.2rem; line-height: 1.5;">La velocidad aumenta.</p>
-                                <button id="game-level-btn" class="btn" style="background: white; color: #a855f7; margin-top: 1.5rem; padding: 10px 20px;">Comenzar Nivel</button>
-                            </div>
-                            </div>
+                            <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Lab10 Hub (32 Labs)</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Catálogo completo con todos los 32 simuladores interconectados.</p>
+                            <button class="btn btn-primary" style="width: 100%" onclick="window.open('simuladores/index.html', '_blank')">Explorar Todo el Hub</button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="bento-card col-6" style="border: 2px dashed var(--border-strong); background: rgba(0, 242, 254, 0.02);">
-                        <div style="height: 150px; background: rgba(0, 242, 254, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <span class="material-symbols-outlined" style="font-size: 48px; color: #00f2fe; opacity: 0.5;">casino</span>
+                <!-- Pestaña 2: Arcade y Desafíos Gamificados -->
+                <div id="labs-games" class="labs-tab-content" style="display: none;">
+                    <div class="bento-grid">
+                        <div class="card col-12">
+                            <div class="card-header">
+                                <h2><span class="material-symbols-outlined" style="color: #00f2fe;">videogame_asset</span> Superposition Snake</h2>
+                                <span class="badge" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">Disponible</span>
+                            </div>
+                            <div class="card-content">
+                                <p style="text-align: center; margin-bottom: 1rem; color: var(--text-medium);">¡Aprende conceptos de electrostática mientras juegas! Usa las flechas de tu teclado para moverte.</p>
+                                
+                                <div id="game-scoreboard" style="display:flex; justify-content:center; gap: 2rem; font-size: 1.2rem; margin-top: 1rem; font-weight: bold;">
+                                    <div>Nivel: <span id="game-level">1</span></div>
+                                    <div>Puntos: <span id="game-score">0</span></div>
+                                    <div>Meta: <span id="game-target">5</span></div>
+                                </div>
+
+                                <div id="game-container" style="display:flex; justify-content:center; align-items:center; position:relative; margin-top: 1rem; height: 500px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; background: #0f172a; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px rgba(0,242,254,0.1);">
+                                    <canvas id="snake-canvas" style="display:block; width:100%; height:100%;"></canvas>
+                                    
+                                    <!-- Popup overlay for concepts -->
+                                    <div id="game-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 2px solid #00f2fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 10; box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);">
+                                        <h3 id="game-popup-title" style="color: #00f2fe; margin-bottom: 1rem; font-size: 1.8rem; margin-top: 0;">Concepto</h3>
+                                        <p id="game-popup-desc" style="font-size: 1.2rem; line-height: 1.5;">Descripción del concepto.</p>
+                                        <button id="game-popup-btn" class="btn" style="margin-top: 1.5rem; background: var(--accent); color: white; padding: 10px 20px;">Continuar (Espacio)</button>
+                                    </div>
+                                    
+                                    <!-- Level up overlay -->
+                                    <div id="game-level-popup" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background: rgba(168, 85, 247, 0.95); border: 2px solid #d8b4fe; padding: 2rem; border-radius: 12px; text-align: center; color: white; width: 80%; z-index: 20; box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);">
+                                        <h3 style="margin-bottom: 1rem; font-size: 2rem; margin-top: 0;">¡Nivel <span id="game-level-display">2</span> Alcanzado!</h3>
+                                        <p id="game-level-desc" style="font-size: 1.2rem; line-height: 1.5;">La velocidad aumenta.</p>
+                                        <button id="game-level-btn" class="btn" style="background: white; color: #a855f7; margin-top: 1.5rem; padding: 10px 20px;">Comenzar Nivel</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Próximos Juegos</h3>
-                        <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Nuevas experiencias interactivas en desarrollo.</p>
-                        <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
-                            <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Muy pronto
+
+                        <div class="bento-card col-6" style="border: 2px dashed var(--border-strong); background: rgba(0, 242, 254, 0.02);">
+                            <div style="height: 150px; background: rgba(0, 242, 254, 0.1); border-radius: var(--shape-medium); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                                <span class="material-symbols-outlined" style="font-size: 48px; color: #00f2fe; opacity: 0.5;">casino</span>
+                            </div>
+                            <h3 style="margin: 0 0 10px 0; color: var(--text-high);">Próximos Juegos</h3>
+                            <p style="color: var(--text-medium); font-size: 0.85rem; margin-bottom: 15px;">Nuevas experiencias interactivas en desarrollo.</p>
+                            <div style="display: inline-block; background: var(--bg-surface-hover); color: var(--text-medium); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
+                                <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">schedule</span> Muy pronto
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= CEREBRO DEL ESTUDIANTE (OBSIDIAN STYLE) ================= -->
+            <!-- Legacy game-dashboard placeholder -->
+            <div id="game-dashboard" style="display: none;"></div>
+
+            <!-- ================= CEREBRO Y GRAFO COGNITIVO (SÍNTESIS) ================= -->
             <div id="brain-dashboard" class="bento-container" style="display: none;">
-                <div class="bento-header" style="margin-bottom: 30px; text-align: center; flex-direction: column; gap: 15px;">
-                    <h2 style="font-size: 2.8rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
-                        <span class="material-symbols-outlined icon-filled" style="font-size: 40px; color: #a855f7;">psychology</span>
-                        Cerebro de Conocimiento
+                <div class="bento-header" style="margin-bottom: 25px; text-align: center; flex-direction: column; gap: 12px;">
+                    <h2 style="font-size: 2.5rem; font-weight: 900; margin:0; color: var(--text-high); letter-spacing: -1px; display:flex; align-items:center; justify-content:center; gap: 10px;">
+                        <span class="material-symbols-outlined icon-filled" style="font-size: 38px; color: #a855f7;">psychology</span>
+                        Cerebro & Grafo Cognitivo
                     </h2>
-                    <p style="color: var(--text-medium); font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                        Tu segundo cerebro. Aquí se interconectan los conceptos que vas aprendiendo, herramientas cognitivas y un tutor IA visual.
+                    <p style="color: var(--text-medium); font-size: 1.05rem; max-width: 750px; margin: 0 auto; line-height: 1.5;">
+                        Tu segundo cerebro de aprendizaje: universo curricular no lineal, grafo neuronal de conceptos interconectados, fórmulas y tutor IA.
                     </p>
                 </div>
 
                 <!-- Navegación interna del Cerebro -->
-                <div class="tabs-nav" style="margin-bottom: 20px; border-bottom: 2px solid var(--border-color); display: flex; gap: 20px;">
-                    <button class="tab-btn active" onclick="window.cambiarTabCerebro('brain-graph', this)"><span class="material-symbols-outlined">account_tree</span> Mapa Mental</button>
-                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-tools', this)"><span class="material-symbols-outlined">menu_book</span> Herramientas</button>
+                <div class="tabs-nav" style="margin-bottom: 20px; border-bottom: 2px solid var(--border-color); display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="tab-btn active" id="tab-btn-universe" onclick="window.cambiarTabCerebro('brain-universe', this)"><span class="material-symbols-outlined" style="color: var(--accent);">hub</span> Universo Curricular (13 Módulos)</button>
+                    <button class="tab-btn" id="tab-btn-graph" onclick="window.cambiarTabCerebro('brain-graph', this)"><span class="material-symbols-outlined">account_tree</span> Mapa Mental (Obsidian)</button>
+                    <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-tools', this)"><span class="material-symbols-outlined">menu_book</span> Herramientas & Fórmulas</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-history', this)"><span class="material-symbols-outlined">history_edu</span> Historia</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-games', this)"><span class="material-symbols-outlined">extension</span> Juegos Cognitivos</button>
                     <button class="tab-btn" onclick="window.cambiarTabCerebro('brain-camera', this)" style="color: #10b981;"><span class="material-symbols-outlined">photo_camera</span> Tutor por Cámara</button>
                     <button class="btn-primary" onclick="window.descargarObsidian()" style="margin-left: auto; background: #2b2b2b; color: #a855f7; border: 1px solid #a855f7;"><span class="material-symbols-outlined text-[18px]">download</span> Bóveda Obsidian</button>
                 </div>
 
-                <!-- Tab: Grafo Visual (Obsidian) -->
-                <div id="brain-graph" class="brain-tab-content" style="display: block;">
+                <!-- Tab 1: Universo Curricular (Constelación No Lineal) -->
+                <div id="brain-universe" class="brain-tab-content" style="display: block;">
+                    <div class="constellation-wrapper" style="margin-top: 10px;">
+                        <div id="calendar-grid" class="constellation-grid">
+                            <!-- El Mapa Constelación se inyecta dinámicamente mediante JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Grafo Visual (Obsidian) -->
+                <div id="brain-graph" class="brain-tab-content" style="display: none;">
                     <div class="bento-card col-12" style="padding: 0; overflow: hidden; height: 600px; position: relative; border: 1px solid var(--border-color);">
                         <div id="vis-network-container" style="width: 100%; height: 100%; background: #000;"></div>
                         <div style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 8px; color: white; font-size: 0.85rem; border: 1px solid var(--border-color); backdrop-filter: blur(5px);">

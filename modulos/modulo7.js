@@ -83,24 +83,15 @@ export const modulo7 = {
             ]
         },
         {
-            "id": "m7-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_6.html",
-            "titulo": "4. Physics Quest — Circuitos DC",
-            "descripcion": "Diseña redes eléctricas para satisfacer especificaciones de voltaje y corriente. ¡5 misiones de ingeniería!",
-            "xp": 25,
-            "logro": { "id": "logro_m7", "nombre": "Arquitecto de Redes", "icono": "schema" }
-        },
-        {
             "id": "m7-t",
             "tipo": "grupo",
-            "titulo": "5. Talleres Prácticos",
+            "titulo": "4. Talleres Prácticos",
             "sublecciones": [
                 {
                     "id": "m7-t1",
                     "tipo": "ejercicio",
                     "recurso": "talleres/Taller_7_1_Reduccion_Circuitos.html",
-                    "titulo": "5.1 Taller — Reducción de Circuitos",
+                    "titulo": "4.1 Taller — Reducción de Circuitos",
                     "descripcion": "Simplificación sistemática de redes resistivas en serie, paralelo y conversiones delta-estrella.",
                     "xp": 25
                 },
@@ -108,40 +99,33 @@ export const modulo7 = {
                     "id": "m7-t2",
                     "tipo": "ejercicio",
                     "recurso": "talleres/Taller_7_2_Leyes_K.html",
-                    "titulo": "5.2 Taller — Leyes de Kirchhoff y Mallas",
+                    "titulo": "4.2 Taller — Leyes de Kirchhoff y Mallas",
                     "descripcion": "Análisis sistemático de circuitos mediante sistemas de ecuaciones con LKV y LKC.",
                     "xp": 30
                 }
             ]
         },
         {
-            "id": "m7-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_6.html",
-            "titulo": "6. Quiz Adaptativo — Circuitos DC",
-            "descripcion": "Evalúa desde la Ley de Ohm elemental hasta análisis de redes complejas con Kirchhoff.",
-            "xp": 40
-        },
-        {
-            "id": "m7-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_7_Circuitos_CC.html",
-            "titulo": "7. Evaluación Sumativa — Módulo 7 (Circuitos CC)",
-            "descripcion": "Cuestionario oficial de validación de conocimientos teóricos y problemas de circuitos de CC.",
-            "xp": 50
+            "id": "m7-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=7",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m7", "nombre": "Maestro de Kirchhoff", "icono": "electrical_services" }
         },
         {
             "id": "m7-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/d8eac5d0-34e5-4bdc-949e-fdbef626d764",
-            "titulo": "8. NotebookLM — Circuitos de Corriente Continua",
+            "titulo": "6. NotebookLM — Circuitos de Corriente Continua",
             "descripcion": "IA especializada en circuitos DC. Asistencia en resolución por mallas, nodos y teoremas de Thévenin/Norton.",
             "xp": 10
         },
         {
             "id": "m7-e1",
             "tipo": "referencias",
-            "titulo": "9. Referencias Bibliográficas y Repositorio",
+            "titulo": "7. Referencias Bibliográficas y Repositorio",
             "descripcion": "Libros universitarios, manuales técnicos y herramientas online para circuitos CC.",
             "xp": 10,
             "secciones": [

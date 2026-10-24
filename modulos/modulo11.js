@@ -67,50 +67,34 @@ export const modulo11 = {
             ]
         },
         {
-            "id": "m11-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_10.html",
-            "titulo": "4. Physics Quest — Faraday",
-            "descripcion": "Genera la corriente exacta moviendo espiras y núcleos magnéticos. ¡5 misiones de inducción!",
-            "xp": 25,
-            "logro": { "id": "logro_m11", "nombre": "Maestro de la Inducción", "icono": "bolt" }
-        },
-        {
             "id": "m11-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_11_Ley_de_Faraday.html",
-            "titulo": "5. Taller Práctico No. 10 — Ley de Faraday",
+            "titulo": "4. Taller Práctico No. 10 — Ley de Faraday",
             "descripcion": "Problemas de inductancia mutua, barras deslizantes con fricción y circuitos con inductores acoplados.",
             "xp": 30
         },
         {
-            "id": "m11-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_10.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 11",
-            "descripcion": "Evaluación progresiva en 3 niveles: polaridad por ley de Lenz, cálculo de derivadas temporales y fem de movimiento.",
-            "xp": 40
-        },
-        {
-            "id": "m11-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_10_Ley_de_Faraday.html",
-            "titulo": "7. Evaluación Sumativa — Ley de Faraday y Lenz",
-            "descripcion": "Cuestionario oficial de acreditación sobre inducción electromagnética e inductores.",
-            "xp": 50
+            "id": "m11-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=11",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m11", "nombre": "Maestro de la Inducción", "icono": "motion_photos_on" }
         },
         {
             "id": "m11-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Ley de Faraday",
+            "titulo": "6. Asistente IA (NotebookLM) — Ley de Faraday",
             "descripcion": "Consulta dudas analíticas, balance de potencia en barras móviles y solución de ecuaciones diferenciales acopladas.",
             "xp": 10
         },
         {
             "id": "m11-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes sobre inducción electromagnética, aplicaciones industriales y transformadores.",
             "xp": 10,
             "secciones": [

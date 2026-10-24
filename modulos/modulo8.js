@@ -112,51 +112,35 @@ export const modulo8 = {
             ]
         },
         {
-            "id": "m8-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_7.html",
-            "titulo": "4. Physics Quest — Misión Lorentz",
-            "descripcion": "Pilota partículas cargadas a través de campos magnéticos hacia el reactor cuántico objetivo. ¡5 misiones de precisión vectorial!",
-            "xp": 25,
-            "logro": { "id": "logro_m8", "nombre": "Piloto Cuántico", "icono": "speed" }
-        },
-        {
             "id": "m8-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_8_Ley_de_Lorentz.html",
-            "titulo": "5. Taller Práctico No. 8 — Ley de Lorentz y Trayectorias",
+            "titulo": "4. Taller Práctico No. 8 — Ley de Lorentz y Trayectorias",
             "descripcion": "Resolución analítica de problemas: cálculo de radio de órbita, ciclotrones, espectrómetros de masas y fuerzas sobre conductores rectilíneos.",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
             "xp": 30
         },
         {
-            "id": "m8-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_7.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 8",
-            "descripcion": "Evaluación formativa progresiva: regla de la mano derecha, productos vectoriales, fuerzas nulas sobre partículas en reposo y frecuencia de ciclotrón.",
-            "xp": 40
-        },
-        {
-            "id": "m8-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_8_Campo_Magnetico.html",
-            "titulo": "7. Evaluación Sumativa — Campo Magnético y Lorentz",
-            "descripcion": "Examen oficial de acreditación con 20 reactivos rigurosos de nivel universitario Sears-Zemansky: teoría, cálculo numérico, efecto Hall y espectrometría.",
-            "xp": 50
+            "id": "m8-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=8",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m8", "nombre": "Piloto de Lorentz", "icono": "explore" }
         },
         {
             "id": "m8-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/490fdd69-c932-4486-9866-e68a80ae92da",
-            "titulo": "8. Asistente IA (NotebookLM) — Ley de Lorentz y Campo Magnético",
+            "titulo": "6. Asistente IA (NotebookLM) — Ley de Lorentz y Campo Magnético",
             "descripcion": "Tutor inteligente conectado al cuaderno de cátedra: resuelve dudas paso a paso sobre el producto cruz v×B, el selector de velocidades de Wien, la demostración de W = 0 y el efecto Hall.",
             "xp": 10
         },
         {
             "id": "m8-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias Bibliográficas",
+            "titulo": "7. Repositorio Documental y Referencias Bibliográficas",
             "descripcion": "Textos universitarios, artículos de divulgación, apuntes del MIT y simuladores de referencia sobre campo magnético y fuerza de Lorentz.",
             "xp": 10,
             "secciones": [

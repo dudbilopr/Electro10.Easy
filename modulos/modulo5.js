@@ -63,50 +63,34 @@ export const modulo5 = {
             ]
         },
         {
-            "id": "m5-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_3.html",
-            "titulo": "4. Physics Quest — Ley de Gauss",
-            "descripcion": "Encierra cargas en superficies gaussianas y calcula el flujo neto en geometrías desafiantes. ¡5 misiones vectoriales!",
-            "xp": 25,
-            "logro": { "id": "logro_m5", "nombre": "Guardián de Gauss", "icono": "blur_circular" }
-        },
-        {
             "id": "m5-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_5_Ley_de_Gauss.html",
-            "titulo": "5. Taller Práctico No. 5 — Flujo Eléctrico y Ley de Gauss",
+            "titulo": "4. Taller Práctico No. 5 — Flujo Eléctrico y Ley de Gauss",
             "descripcion": "Colección de problemas Sears-Zemansky: integración directa de flujo, esferas no uniformes y equilibrio electrostático.",
             "xp": 30
         },
         {
-            "id": "m5-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_3.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 5",
-            "descripcion": "Evaluación formativa progresiva: cálculo conceptual de flujo, simetrías admisibles y campo en conductores.",
-            "xp": 40
-        },
-        {
-            "id": "m5-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
-            "titulo": "7. Evaluación Sumativa — Ley de Gauss",
-            "descripcion": "Cuestionario oficial de acreditación del Módulo 5 con problemas analíticos y preguntas de opción múltiple.",
-            "xp": 50
+            "id": "m5-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=5",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m5", "nombre": "Guardián del Flujo", "icono": "shield" }
         },
         {
             "id": "m5-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Ley de Gauss",
+            "titulo": "6. Asistente IA (NotebookLM) — Ley de Gauss",
             "descripcion": "Consulta derivaciones analíticas, selección de superficies gaussianas y condiciones de frontera electrostáticas.",
             "xp": 10
         },
         {
             "id": "m5-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Textos universitarios rigurosos, guías académicas y herramientas de simulación para la Ley de Gauss.",
             "xp": 10,
             "secciones": [

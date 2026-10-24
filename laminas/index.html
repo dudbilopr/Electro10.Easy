@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Láminas Visuales e Infografías Maestras · Electro10.Easy</title>
+    
+    <!-- Tokens de Color Plasma y Sistema -->
+    <link rel="stylesheet" href="../css/tokens.css">
+    
+    <!-- Tipografías Estilo Cuaderno de Ingeniería & NotebookLM -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Comic+Neue:ital,wght@0,700;1,700&family=Patrick+Hand&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX 0.16.9 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- html2pdf.js para exportación directa -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --e10-primary: #B3246B;
+            --e10-primary-soft: rgba(179, 36, 107, 0.08);
+            --e10-accent: #0B8CA8;
+            --e10-accent-strong: #08758C;
+            --e10-accent-soft: rgba(11, 140, 168, 0.08);
+            --e10-ink: #1c1917;
+            --e10-muted: #57534e;
+            --e10-paper: #f6efe1;
+            --e10-paper-dark: #ebdec8;
+            --e10-line-grid: rgba(168, 153, 132, 0.28);
+            --e10-line-major: rgba(145, 128, 106, 0.42);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: #090d16;
+            color: var(--e10-ink);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* BARRA SUPERIOR DE CONTROL E INTERACTIVIDAD */
+        .hud-topbar {
+            width: 100%;
+            max-width: 1420px;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .hud-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hud-badge {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .hud-title {
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .selector-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 650px;
+            padding: 4px 0;
+            scrollbar-width: thin;
+        }
+
+        .tab-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-chip:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .tab-chip.active {
+            background: var(--e10-primary);
+            border-color: var(--e10-primary);
+            color: white;
+            box-shadow: 0 0 14px rgba(179, 36, 107, 0.6);
+        }
+
+        .hud-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-hud {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-exp-pdf {
+            background: #0ea5e9;
+            color: white;
+        }
+        .btn-exp-pdf:hover { background: #0284c7; }
+
+        .btn-nav-hub {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-nav-hub:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* LIENZO DE CUADERNO DE INGENIERÍA / NOTEBOOKLM INFOGRAPHIC */
+        .infographic-wrapper {
+            width: 100%;
+            max-width: 1420px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .engineering-notebook {
+            width: 100%;
+            background-color: var(--e10-paper);
+            background-image:
+                radial-gradient(at 15% 15%, rgba(255, 253, 248, 0.65) 0px, transparent 50%),
+                radial-gradient(at 85% 85%, rgba(224, 206, 176, 0.65) 0px, transparent 50%),
+                linear-gradient(to right, var(--e10-line-grid) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--e10-line-grid) 1px, transparent 1px),
+                linear-gradient(to right, var(--e10-line-major) 1.5px, transparent 1.5px),
+                linear-gradient(to bottom, var(--e10-line-major) 1.5px, transparent 1.5px);
+            background-size: 100% 100%, 100% 100%, 22px 22px, 22px 22px, 110px 110px, 110px 110px;
+            box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.75), inset 0 0 75px rgba(165, 138, 100, 0.3);
+            border: 3px solid #2b2623;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            padding: 36px 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* ENCABEZADO ILUSTRADO DE LA LÁMINA */
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2.5px solid #2b2623;
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        .sheet-meta-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .sheet-title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 46px;
+            line-height: 1.05;
+            color: #1c1917;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+        }
+
+        .sheet-subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: #44403c;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .mascot-card {
+            background: #ffffff;
+            border: 2px solid #2b2623;
+            border-radius: 14px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 4px 4px 0px #2b2623;
+            transform: rotate(-1deg);
+        }
+
+        .mascot-avatar {
+            font-size: 32px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .mascot-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 15px;
+            line-height: 1.25;
+            color: #1c1917;
+        }
+
+        .mascot-text b { color: var(--e10-primary); }
+
+        /* REJILLA MODULAR DE LA LÁMINA */
+        .sheet-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 1fr;
+            gap: 26px;
+        }
+
+        .sheet-col {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* TARJETAS TÉCNICAS ENTINTADAS (INK CARDS) */
+        .ink-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(8px);
+            border: 2px solid #2b2623;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 4px 4px 0px #2b2623;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .ink-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px dashed #a8a29e;
+            padding-bottom: 8px;
+        }
+
+        .ink-card-title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1917;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tape-strip {
+            position: absolute;
+            top: -12px;
+            left: 30px;
+            width: 80px;
+            height: 22px;
+            background: rgba(253, 224, 71, 0.65);
+            transform: rotate(-3deg);
+            border: 1px dashed rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        .ink-content {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #292524;
+        }
+
+        .handwritten-formula {
+            background: #fffbeb;
+            border: 1.5px solid #d97706;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            font-size: 15.5px;
+            text-align: center;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.06);
+        }
+
+        /* ANIMACIÓN DE RAYOS FOTÓNICOS (NOTEBOOKLM ENGINE) */
+        @keyframes rayPulseFlow {
+            0% { stroke-dashoffset: 280; opacity: 0.2; }
+            25% { opacity: 0.95; }
+            75% { opacity: 0.95; }
+            100% { stroke-dashoffset: 0; opacity: 0.2; }
+        }
+
+        .light-ray-cyan {
+            stroke: #0ea5e9;
+            stroke-width: 3.5px;
+            stroke-linecap: round;
+            stroke-dasharray: 45 180;
+            animation: rayPulseFlow 1.8s linear infinite;
+            filter: drop-shadow(0 0 6px #0284c7);
+            pointer-events: none;
+        }
+
+        .light-ray-magenta {
+            stroke: #ec4899;
+            stroke-width: 3.5px;
+            stroke-linecap: round;
+            stroke-dasharray: 45 180;
+            animation: rayPulseFlow 2.1s linear infinite;
+            filter: drop-shadow(0 0 6px #db2777);
+            pointer-events: none;
+        }
+
+        /* CONTENEDOR DE DIAGRAMA VECTORIAL VIVO */
+        .vector-canvas-box {
+            background: #ffffff;
+            border: 2px solid #2b2623;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 16px rgba(0,0,0,0.05);
+            min-height: 200px;
+            position: relative;
+        }
+
+        .vector-canvas-box svg {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+        }
+
+        /* SIMULADOR EN VIVO EMBEBIDO EN LA LÁMINA */
+        .live-interactive-widget {
+            background: #ffffff;
+            border: 2px solid #2b2623;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.04);
+        }
+
+        .widget-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .widget-controls input[type="range"] {
+            flex: 1;
+            accent-color: var(--e10-primary);
+        }
+
+        .widget-readout {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        /* PIE DE LÁMINA DE CAMPO */
+        .sheet-footer {
+            border-top: 2px solid #2b2623;
+            padding-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 18px;
+            color: #44403c;
+        }
+
+        .path-connection {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .path-connection span {
+            color: var(--e10-primary);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1100px) {
+            .sheet-grid { grid-template-columns: 1fr; }
+            .sheet-header { flex-direction: column; gap: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DEFINICIONES DE FILTROS SVG GLOBALES (NOTEBOOKLM ENGINE) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <filter id="inkSketch" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.35" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <filter id="glowCyan" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#38bdf8" flood-opacity="0.95"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#0284c7" flood-opacity="0.8"/>
+            </filter>
+            <filter id="glowMagenta" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ec4899" flood-opacity="0.95"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#be185d" flood-opacity="0.8"/>
+            </filter>
+            <marker id="inkArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1c1917"/>
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- BARRA HUD DE NAVEGACIÓN -->
+    <header class="hud-topbar">
+        <div class="hud-brand">
+            <span class="hud-badge">NOTEBOOKLM · 10.EASY</span>
+            <div class="hud-title">Láminas Visuales de Campo</div>
+        </div>
+
+        <nav class="selector-tabs" id="chips-container"></nav>
+
+        <div class="hud-actions">
+            <button class="btn-hud btn-exp-pdf" id="btn-export-pdf" title="Exportar Lámina en PDF">
+                <span class="material-symbols-outlined" style="font-size: 18px;">picture_as_pdf</span> Guardar PDF
+            </button>
+            <a class="btn-hud btn-nav-hub" id="btn-open-deck" href="#" target="_blank" title="Abrir Master Deck 16:9">
+                <span class="material-symbols-outlined" style="font-size: 18px;">slideshow</span> Clase 16:9
+            </a>
+            <a class="btn-hud btn-nav-hub" href="../revisar.html" title="Matriz Curricular Conectada">
+                <span class="material-symbols-outlined" style="font-size: 18px;">hub</span> Matriz Hub
+            </a>
+        </div>
+    </header>
+
+    <!-- LIENZO DE CUADERNO DE INGENIERÍA -->
+    <main class="infographic-wrapper">
+        <article class="engineering-notebook" id="sheet-element">
+            
+            <!-- ENCABEZADO DE LA LÁMINA -->
+            <header class="sheet-header">
+                <div>
+                    <div class="sheet-meta-tag" id="sheet-meta">LÁMINA DE INGENIERÍA #09 · MAGNETOSTÁTICA</div>
+                    <h1 class="sheet-title" id="sheet-title">Ley de Biot-Savart: Fuentes del Campo Magnético</h1>
+                    <p class="sheet-subtitle" id="sheet-subtitle">Deducción de hilos, espiras y horquillas mediante la suma de elementos diferenciales infinitésimos.</p>
+                </div>
+
+                <!-- MASCOTA NANO BANANA -->
+                <div class="mascot-card">
+                    <div class="mascot-avatar">🍌⚡</div>
+                    <div class="mascot-text">
+                        <b>Nano Banana dice:</b><br>
+                        <span id="mascot-tip">¡La regla de la mano derecha nunca falla: pulgar en la corriente, dedos en el campo!</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENIDO DE 3 COLUMNAS TÉCNICAS -->
+            <div class="sheet-grid">
+
+                <!-- COLUMNA 1: CONCEPTUALIZACIÓN VISUAL Y PREGUNTA CLAVE -->
+                <section class="sheet-col">
+                    <div class="ink-card">
+                        <div class="tape-strip"></div>
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">help_center</span> 1. El Enigma Físico</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-enigma">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">gesture</span> 2. Esquema Vectorial Vivo</h2>
+                        </div>
+                        <div class="vector-canvas-box" id="sheet-diagram-box">
+                            <!-- SVG Vectorial con animación de fotones en curvas de Bézier -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMNA 2: FORMULACIÓN MATEMÁTICA Y DUALIDAD DE CAMINOS -->
+                <section class="sheet-col">
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">calculate</span> 3. Ecuación Rectora</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-math">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">alt_route</span> 4. Dos Caminos de Solución</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-dual-path">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">tune</span> 5. Laboratorio en Miniatura</h2>
+                        </div>
+                        <div class="live-interactive-widget" id="sheet-widget">
+                            <!-- Widget interactivo con slider en vivo -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMNA 3: PROTOTIPO TANGIBLE 3D Y CONEXIÓN CURRICULAR -->
+                <section class="sheet-col">
+                    <div class="ink-card">
+                        <div class="tape-strip" style="left: auto; right: 30px; transform: rotate(3deg);"></div>
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">view_in_ar</span> 6. Prototipo Físico 3D</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-3d-proto">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">warning</span> 7. Paradoja del Novato</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-paradox">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="ink-card">
+                        <div class="ink-card-header">
+                            <h2 class="ink-card-title"><span class="material-symbols-outlined">school</span> 8. Conclusión de Ingeniería</h2>
+                        </div>
+                        <div class="ink-content" id="sheet-takeaways">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- PIE DE LÁMINA: CONEXIONES INTERMODULARES -->
+            <footer class="sheet-footer">
+                <div class="path-connection" id="sheet-path">
+                    Ruta: M08 (Lorentz) → <span>M09 (Biot-Savart)</span> → M10 (Ampère)
+                </div>
+                <div>
+                    <b>Electro10.Easy · Cuaderno de Campo</b> · Dudbil Olvasada Pabón Riaño
+                </div>
+            </footer>
+
+        </article>
+    </main>
+
+    <!-- MOTOR DE CONTENIDOS DE LÁMINAS VISUALES -->
+    <script>
+    const LAMINAS_DATA = {
+        9: {
+            meta: "LÁMINA DE INGENIERÍA #09 · MAGNETOSTÁTICA",
+            title: "Ley de Biot-Savart: Fuentes del Campo Magnético",
+            subtitle: "Deducción geométrica exacta de campos magnetostáticos generados por corrientes estacionarias.",
+            mascotTip: "¡Ojo al ángulo! En el hilo recto, el producto cruz forma φ = 90° + θ, por lo que sin(φ) = cos(θ).",
+            deckUrl: "../presentaciones/M9_BiotSavart/index.html",
+            enigma: `
+                ¿Cómo sabe el espacio que por un cable fluye corriente eléctrica y cómo se calcula el campo resultante punto a punto?
+                Biot y Savart descubrieron que cada trozo diminuto \(I\,d\vec{\ell}\) contribuye con un diferencial \(d\vec{B}\) que decae con el inverso del cuadrado \(1/r^2\) pero en una dirección puramente perpendicular dada por el producto cruz.
+            `,
+            diagramSvg: `
+                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Hilo conductor con trazo entintado -->
+                    <line x1="90" y1="20" x2="90" y2="180" stroke="#1c1917" stroke-width="4" filter="url(#inkSketch)"/>
+                    <!-- Corriente I con flecha -->
+                    <path d="M 90 140 L 90 60" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
+                    <text x="65" y="105" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b" font-weight="bold">I = 10 A</text>
+                    
+                    <!-- Elemento dl resaltado -->
+                    <rect x="85" y="90" width="10" height="25" fill="#f59e0b" stroke="#1c1917" stroke-width="1.5"/>
+                    <text x="50" y="85" font-family="'Caveat', cursive" font-size="16" fill="#d97706">dℓ = dy</text>
+
+                    <!-- Punto P de observación -->
+                    <circle cx="280" cy="100" r="6" fill="#1c1917"/>
+                    <text x="295" y="105" font-family="'Patrick Hand', cursive" font-size="20" font-weight="bold">P</text>
+
+                    <!-- Distancia perpendicular a -->
+                    <line x1="90" y1="100" x2="280" y2="100" stroke="#78716c" stroke-width="2" stroke-dasharray="4,4"/>
+                    <text x="180" y="92" font-family="'Caveat', cursive" font-size="18" fill="#78716c">a = const</text>
+
+                    <!-- Curva de Bézier de inducción magnética con fotones en movimiento -->
+                    <path id="bezierBiot" d="M 90 100 C 140 30, 220 30, 280 100" stroke="#0ea5e9" stroke-width="2.5" fill="none" stroke-dasharray="5,5"/>
+                    <path d="M 90 100 C 140 30, 220 30, 280 100" class="light-ray-cyan" fill="none"/>
+
+                    <!-- Fotón viajero -->
+                    <circle r="4" fill="#ffffff" filter="url(#glowCyan)">
+                        <animateMotion dur="1.8s" repeatCount="indefinite" rotate="auto">
+                            <mpath href="#bezierBiot"/>
+                        </animateMotion>
+                    </circle>
+
+                    <!-- Símbolo de campo entrando B (⊗) en P -->
+                    <circle cx="280" cy="140" r="14" fill="#ffffff" stroke="#b3246b" stroke-width="2.5"/>
+                    <line x1="270" y1="130" x2="290" y2="150" stroke="#b3246b" stroke-width="2.5"/>
+                    <line x1="290" y1="130" x2="270" y2="150" stroke="#b3246b" stroke-width="2.5"/>
+                    <text x="304" y="146" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">B ⊗ (entra)</text>
+                </svg>
+            `,
+            math: `
+                <div class="handwritten-formula">
+                    \\[ d\\vec{B} = \\frac{\\mu_0}{4\\pi} \\frac{I\\,d\\vec{\\ell}\\times\\hat{r}}{r^2} \\]
+                </div>
+                Para un hilo infinito, integrando entre \(\\theta = -90^\\circ\) y \(+90^\\circ\):
+                \\[ B = \\frac{\\mu_0 I}{2\\pi a} \\]
+            `,
+            dualPath: `
+                <b>Camino A (Sustitución Trigonométrica):</b><br>
+                Haciendo \(y = a\\tan\\theta \\implies dy = a\\sec^2\\theta\\,d\\theta\), la integral colapsa a una función coseno elemental:<br>
+                \(\\int \\cos\\theta\\,d\\theta = \\sin\\theta_2 - \\sin\\theta_1\).<br><br>
+                <b>Camino B (Integrales de Tabla Directa):</b><br>
+                Uso de la forma algebraica estándar \(\\int \\frac{dy}{(y^2+a^2)^{3/2}} = \\left[\\frac{y}{a^2\\sqrt{y^2+a^2}}\\right]\).
+            `,
+            widget: `
+                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Calculador Dinámico de Biot-Savart</div>
+                <div class="widget-controls">
+                    <label>Corriente I (A):</label>
+                    <input type="range" id="w-i" min="1" max="50" value="10">
+                    <span id="w-i-val" class="widget-readout">10 A</span>
+                </div>
+                <div class="widget-controls">
+                    <label>Distancia a (cm):</label>
+                    <input type="range" id="w-a" min="1" max="20" value="5">
+                    <span id="w-a-val" class="widget-readout">5.0 cm</span>
+                </div>
+                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
+                    Campo B resultante: <b id="w-b-res">40.00 µT</b>
+                </div>
+            `,
+            proto3D: `
+                <b>Pieza Imprimible: BiotSavart-Jig</b><br>
+                Soporte de espiras con ranura micrométrica para sonda Hall. Fabricado en PLA 100% no ferroso, tornillos de nylon para no distorsionar el campo magnético.
+            `,
+            paradox: `
+                <b>¿Hay campo sobre el mismo hilo?</b><br>
+                ¡Jamás! Como \(d\\vec{\\ell} \\parallel \\hat{r}\), el producto vectorial se anula de forma idéntica (\(d\\vec{\\ell}\\times\\hat{r} = \\vec{0}\)). En todo punto colineal al hilo, \(B = 0\).
+            `,
+            takeaways: `
+                La ley de Biot-Savart demuestra que las corrientes son fuentes toroidales de campo magnético continuo. El modelo es la base de transformadores, motores y resonancia magnética.
+            `,
+            path: `Ruta: M08 (Fuerza de Lorentz) → <span>M09 (Ley de Biot-Savart)</span> → M10 (Ley de Ampère)`
+        },
+        1: {
+            meta: "LÁMINA DE INGENIERÍA #01 · ELECTROSTÁTICA",
+            title: "Ley de Coulomb: Interacción entre Cargas Puntuales",
+            subtitle: "Fuerzas electrostáticas, principio de superposición y balance gravitacional.",
+            mascotTip: "¡Cuidado con los signos! Cargas del mismo signo se repelen; de signos opuestos se atraen con fuerza colineal.",
+            deckUrl: "../presentaciones/M1_Coulomb/index.html",
+            enigma: `
+                ¿Por qué un peine frotado con lana puede levantar trocitos de papel venciendo la atracción de toda la Tierra?
+                La interacción electrostática es aproximadamente \(10^{36}\) veces más intensa que la gravedad. Coulomb cuantificó esta fuerza mediante una balanza de torsión.
+            `,
+            diagramSvg: `
+                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="20" fill="#ef4444" stroke="#1c1917" stroke-width="2.5" filter="url(#glowMagenta)"/>
+                    <text x="100" y="106" font-family="'Patrick Hand', cursive" font-size="20" fill="#ffffff" font-weight="bold" text-anchor="middle">+q₁</text>
+
+                    <circle cx="280" cy="100" r="16" fill="#3b82f6" stroke="#1c1917" stroke-width="2.5" filter="url(#glowCyan)"/>
+                    <text x="280" y="105" font-family="'Patrick Hand', cursive" font-size="18" fill="#ffffff" font-weight="bold" text-anchor="middle">-q₂</text>
+
+                    <!-- Línea de acción con rayo en movimiento -->
+                    <path id="bezierCoulomb" d="M 120 100 L 264 100" stroke="#78716c" stroke-width="2" stroke-dasharray="4,4"/>
+                    <path d="M 120 100 L 264 100" class="light-ray-magenta" fill="none"/>
+
+                    <!-- Vectores de atracción -->
+                    <line x1="100" y1="100" x2="160" y2="100" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
+                    <line x1="280" y1="100" x2="220" y2="100" stroke="#b3246b" stroke-width="3" marker-end="url(#inkArrow)"/>
+                    <text x="140" y="85" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">F₁₂</text>
+                    <text x="235" y="85" font-family="'Patrick Hand', cursive" font-size="18" fill="#b3246b">F₂₁</text>
+                </svg>
+            `,
+            math: `
+                <div class="handwritten-formula">
+                    \\[ \\vec{F}_{12} = \\frac{1}{4\\pi\\epsilon_0} \\frac{q_1 q_2}{r^2} \\hat{r}_{12} \\]
+                </div>
+                Constante de Coulomb: \(k = \\frac{1}{4\\pi\\epsilon_0} \\approx 8{,}99\\times 10^9\\ \\text{N}\\cdot\\text{m}^2/\\text{C}^2\).
+            `,
+            dualPath: `
+                <b>Camino A (Formulación Cartesiana):</b><br>
+                Uso de componentes independientes \(F_x = F\\cos\\theta, F_y = F\\sin\\theta\).<br><br>
+                <b>Camino B (Notación Cúbica Vectorial):</b><br>
+                \(\\vec{F} = k q_1 q_2 \\frac{\\vec{r}_2 - \\vec{r}_1}{|\\vec{r}_2 - \\vec{r}_1|^3}\).
+            `,
+            widget: `
+                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Calculador de Fuerza de Coulomb</div>
+                <div class="widget-controls">
+                    <label>Carga q₁ (µC):</label>
+                    <input type="range" id="w-q" min="1" max="20" value="5">
+                    <span id="w-q-val" class="widget-readout">5 µC</span>
+                </div>
+                <div class="widget-controls">
+                    <label>Separación r (cm):</label>
+                    <input type="range" id="w-r" min="1" max="30" value="10">
+                    <span id="w-r-val" class="widget-readout">10 cm</span>
+                </div>
+                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
+                    Fuerza resultante: <b id="w-f-res">22.47 N</b>
+                </div>
+            `,
+            proto3D: `
+                <b>Pieza Imprimible: CoulombBench-3D</b><br>
+                Balanza de torsión con nonio graduado milimétrico y cunas aislantes para frotamiento triboeléctrico de barras de ebonita y vidrio.
+            `,
+            paradox: `
+                <b>¿Se suman las magnitudes aritméticas?</b><br>
+                ¡No! Las fuerzas son vectores. Dos cargas iguales a ambos lados de una tercera producen una fuerza neta de exactamente cero newtons.
+            `,
+            takeaways: `
+                La ley de Coulomb es el pilar de toda la electrostática y define la interacción que mantiene unidos átomos, moléculas y materia sólida.
+            `,
+            path: `Ruta: Presaberes (Vectores) → <span>M01 (Ley de Coulomb)</span> → M02 (Campo Eléctrico)`
+        },
+        12: {
+            meta: "LÁMINA DE INGENIERÍA #12 · SÍNTESIS ELECTROMAGNÉTICA",
+            title: "Ecuaciones de Maxwell y Ondas Electromagnéticas",
+            subtitle: "La unificación cumbre de la física clásica y la predicción de la velocidad de la luz.",
+            mascotTip: "¡El secreto de Maxwell! En el vacío no hay cargas; el campo eléctrico variable crea campo magnético y viceversa de forma autosostenida.",
+            deckUrl: "../presentaciones/M12_Maxwell/index.html",
+            enigma: `
+                ¿Cómo viaja la luz de las estrellas a través del vacío absoluto del espacio interestelar sin necesitar ningún medio material?
+                Maxwell demostró que una perturbación eléctrica genera un campo magnético acoplado que se propaga a la velocidad \(c\).
+            `,
+            diagramSvg: `
+                <svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="20" y1="100" x2="360" y2="100" stroke="#78716c" stroke-width="2"/>
+                    <text x="365" y="105" font-family="'Patrick Hand', cursive" font-size="16">z (propagación)</text>
+
+                    <!-- Curva E vertical (roja) -->
+                    <path id="bezierOndaE" d="M 40 100 Q 100 20 160 100 T 280 100 T 360 100" fill="none" stroke="#ef4444" stroke-width="3"/>
+                    <path d="M 40 100 Q 100 20 160 100 T 280 100 T 360 100" class="light-ray-magenta" fill="none"/>
+
+                    <!-- Curva B horizontal (azul en perspectiva) -->
+                    <path id="bezierOndaB" d="M 40 100 Q 100 160 160 100 T 280 100 T 360 100" fill="none" stroke="#0ea5e9" stroke-width="2.5" stroke-dasharray="4,4"/>
+                    <path d="M 40 100 Q 100 160 160 100 T 280 100 T 360 100" class="light-ray-cyan" fill="none"/>
+
+                    <text x="100" y="45" font-family="'Patrick Hand', cursive" font-size="18" fill="#ef4444" font-weight="bold">Campo E(y)</text>
+                    <text x="100" y="175" font-family="'Patrick Hand', cursive" font-size="18" fill="#0ea5e9" font-weight="bold">Campo B(x)</text>
+                </svg>
+            `,
+            math: `
+                <div class="handwritten-formula">
+                    \\[ \\nabla^2 \\vec{E} = \\mu_0\\epsilon_0 \\frac{\\partial^2 \\vec{E}}{\\partial t^2} \\implies c = \\frac{1}{\\sqrt{\\mu_0\\epsilon_0}} \\]
+                </div>
+                Vector de Poynting (Flujo de Energía): \(\\vec{S} = \\frac{1}{\\mu_0}(\\vec{E}\\times\\vec{B})\).
+            `,
+            dualPath: `
+                <b>Camino A (Forma Integral de Circulación):</b><br>
+                \(\\oint \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0(I_c + \\epsilon_0\\frac{d\\Phi_E}{dt})\).<br><br>
+                <b>Camino B (Forma Diferencial de Campo Local):</b><br>
+                \(\\vec{\\nabla}\\times\\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial\\vec{E}}{\\partial t}\).
+            `,
+            widget: `
+                <div style="font-size:13px; font-weight:700; color:#1c1917; margin-bottom:4px;">Relación de Amplitudes E = c B</div>
+                <div class="widget-controls">
+                    <label>Amplitud E₀ (V/m):</label>
+                    <input type="range" id="w-e0" min="10" max="600" value="300">
+                    <span id="w-e0-val" class="widget-readout">300 V/m</span>
+                </div>
+                <div style="margin-top:6px; font-size:13.5px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">
+                    Amplitud B₀ = E₀/c: <b id="w-b0-res">1.00 µT</b>
+                </div>
+            `,
+            proto3D: `
+                <b>Pieza Imprimible: Maxwell-Wave 3D</b><br>
+                Modelo físico articulado con varillas de acoplamiento perpendicular \(\\vec{E}\\perp\\vec{B}\) y rejilla para demostrar la ley de Malus en polarización.
+            `,
+            paradox: `
+                <b>¿La corriente de desplazamiento tiene carga eléctrica?</b><br>
+                No. No hay electrones atravesando el espacio entre placas; es el cambio temporal del flujo eléctrico el que induce magnéticamente como si fuera corriente.
+            `,
+            takeaways: `
+                Las ecuaciones de Maxwell son la cúspide del electromagnetismo clásico y demostraron que la luz y las ondas de radio son el mismo fenómeno físico.
+            `,
+            path: `Ruta: M11 (Ley de Faraday) → <span>M12 (Ecuaciones de Maxwell)</span> → M13 (Circuitos de Corriente Alterna)`
+        }
+    };
+
+    // Auto-generación limpia para los módulos restantes
+    for (let i = 1; i <= 13; i++) {
+        if (!LAMINAS_DATA[i]) {
+            const modTitles = {
+                2: "Campo Eléctrico y Dipolos",
+                3: "Potencial Eléctrico y Gradiente",
+                4: "Distribuciones Continuas de Carga",
+                5: "Ley de Gauss y Teorema del Flujo",
+                6: "Capacitancia y Dieléctricos",
+                7: "Circuitos de Corriente Continua",
+                8: "Fuerza de Lorentz y Espectrometría",
+                10: "Ley de Ampère y Solenoides",
+                11: "Ley de Faraday e Inductancia",
+                13: "Circuitos de Corriente Alterna y RLC"
+            };
+            LAMINAS_DATA[i] = {
+                meta: `LÁMINA DE INGENIERÍA #${i < 10 ? '0' + i : i} · FÍSICA UNIVERSITARIA`,
+                title: `${modTitles[i] || 'Módulo ' + i}: Fundamentos y Modelos`,
+                subtitle: "Cuaderno de campo interactivo con deducción paso a paso y validación experimental.",
+                mascotTip: `Nano Banana recomienda: ¡Revisa siempre la coherencia de unidades dimensionales antes de integrar!`,
+                deckUrl: `../presentaciones/M${i}_${getDirSlug(i)}/index.html`,
+                enigma: `Investigación del comportamiento físico fundamental del Capítulo ${i}, articulando modelos en KaTeX y validación interactiva de aula.`,
+                diagramSvg: `<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg"><rect width="380" height="200" rx="12" fill="#fff" stroke="#2b2623" stroke-width="2"/><text x="190" y="105" font-family="'Patrick Hand', cursive" font-size="20" fill="#78716c" text-anchor="middle">Esquema Vectorial Dinámico Módulo ${i}</text></svg>`,
+                math: `<div class="handwritten-formula">\\[ \\text{Fórmulas Rectoras Módulo } ${i} \\]</div>Consulte el Master Deck para la deducción completa.`,
+                dualPath: `<b>Camino A:</b> Deducción analítica directa.<br><br><b>Camino B:</b> Enfoque geométrico y leyes de conservación.`,
+                widget: `<div style="font-size:13px; font-family:'JetBrains Mono', monospace; color:var(--e10-primary);">Simulador activo en el Master Deck.</div>`,
+                proto3D: `<b>Pieza Imprimible: Modelo 3D Módulo ${i}</b><br>Ver especificaciones en GUIA_DIDACTICA_Y_MODELOS_3D.md.`,
+                paradox: `Identificación y desactivación de concepciones erróneas comunes en el tema.`,
+                takeaways: `Comprensión profunda de los principios del capítulo ${i}.`,
+                path: `Ruta: Módulo ${i-1} → <span>Módulo ${i}</span> → Módulo ${i+1}`
+            };
+        }
+    }
+
+    function getDirSlug(n) {
+        const slugs = {
+            1: "Coulomb", 2: "CampoElectrico", 3: "Potencial", 4: "DistribucionesContinuas",
+            5: "Gauss", 6: "Capacitancia", 7: "CircuitosCC", 8: "Lorentz",
+            9: "BiotSavart", 10: "Ampere", 11: "Faraday", 12: "Maxwell", 13: "AC"
+        };
+        return slugs[n] || "Coulomb";
+    }
+
+    let activeCap = 9;
+
+    function renderLamina(capNum) {
+        activeCap = capNum;
+        const d = LAMINAS_DATA[capNum];
+        if (!d) return;
+
+        document.getElementById('sheet-meta').innerText = d.meta;
+        document.getElementById('sheet-title').innerText = d.title;
+        document.getElementById('sheet-subtitle').innerText = d.subtitle;
+        document.getElementById('mascot-tip').innerText = d.mascotTip;
+        document.getElementById('btn-open-deck').href = d.deckUrl;
+        
+        document.getElementById('sheet-enigma').innerHTML = d.enigma;
+        document.getElementById('sheet-diagram-box').innerHTML = d.diagramSvg;
+        document.getElementById('sheet-math').innerHTML = d.math;
+        document.getElementById('sheet-dual-path').innerHTML = d.dualPath;
+        document.getElementById('sheet-widget').innerHTML = d.widget;
+        document.getElementById('sheet-3d-proto').innerHTML = d.proto3D;
+        document.getElementById('sheet-paradox').innerHTML = d.paradox;
+        document.getElementById('sheet-takeaways').innerHTML = d.takeaways;
+        document.getElementById('sheet-path').innerHTML = d.path;
+
+        // Render KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(document.getElementById('sheet-element'), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        // Conectar widgets específicos
+        if (capNum === 9) {
+            const wi = document.getElementById('w-i');
+            const wa = document.getElementById('w-a');
+            if (wi && wa) {
+                const calcB = () => {
+                    const I = parseFloat(wi.value);
+                    const a_cm = parseFloat(wa.value);
+                    document.getElementById('w-i-val').innerText = `${I} A`;
+                    document.getElementById('w-a-val').innerText = `${a_cm.toFixed(1)} cm`;
+                    // B = (mu0 * I) / (2 * pi * a) -> mu0/(2*pi) = 2e-7 T*m/A = 0.2 uT * m / A = 20 uT * cm / A
+                    const B_uT = (20 * I) / a_cm;
+                    document.getElementById('w-b-res').innerText = `${B_uT.toFixed(2)} µT`;
+                };
+                wi.oninput = calcB;
+                wa.oninput = calcB;
+            }
+        } else if (capNum === 1) {
+            const wq = document.getElementById('w-q');
+            const wr = document.getElementById('w-r');
+            if (wq && wr) {
+                const calcF = () => {
+                    const q = parseFloat(wq.value) * 1e-6;
+                    const r = parseFloat(wr.value) * 1e-2;
+                    document.getElementById('w-q-val').innerText = `${wq.value} µC`;
+                    document.getElementById('w-r-val').innerText = `${wr.value} cm`;
+                    const F = (8.99e9 * q * q) / (r * r);
+                    document.getElementById('w-f-res').innerText = `${F.toFixed(2)} N`;
+                };
+                wq.oninput = calcF;
+                wr.oninput = calcF;
+            }
+        } else if (capNum === 12) {
+            const we = document.getElementById('w-e0');
+            if (we) {
+                we.oninput = () => {
+                    const E0 = parseFloat(we.value);
+                    document.getElementById('w-e0-val').innerText = `${E0} V/m`;
+                    const B0_uT = (E0 / 3e8) * 1e6;
+                    document.getElementById('w-b0-res').innerText = `${B0_uT.toFixed(2)} µT`;
+                };
+            }
+        }
+
+        // Actualizar chips
+        document.querySelectorAll('.tab-chip').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.mod) === capNum);
+        });
+    }
+
+    // Inicializar botones de capítulos
+    const chipsContainer = document.getElementById('chips-container');
+    for (let i = 1; i <= 13; i++) {
+        const btn = document.createElement('button');
+        btn.className = `tab-chip ${i === activeCap ? 'active' : ''}`;
+        btn.dataset.mod = i;
+        btn.innerText = `L${i < 10 ? '0' + i : i}`;
+        btn.onclick = () => renderLamina(i);
+        chipsContainer.appendChild(btn);
+    }
+
+    // Exportar PDF
+    document.getElementById('btn-export-pdf').addEventListener('click', () => {
+        const opt = {
+            margin: [5, 5, 5, 5],
+            filename: `Lamina_Visual_M${activeCap}_10Easy.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(document.getElementById('sheet-element')).save();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const reqCap = parseInt(params.get('cap')) || 9;
+        renderLamina(reqCap);
+    });
+    </script>
+</body>
+</html>

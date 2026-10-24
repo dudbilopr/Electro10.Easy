@@ -71,50 +71,34 @@ export const modulo4 = {
             ]
         },
         {
-            "id": "m4-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_2.html",
-            "titulo": "4. Physics Quest — Distribuciones de Carga",
-            "descripcion": "Configura geometrías continuas de carga para neutralizar trayectorias de partículas. ¡5 retos analíticos!",
-            "xp": 25,
-            "logro": { "id": "logro_m4", "nombre": "Maestro del Cálculo Continuo", "icono": "calculate" }
-        },
-        {
             "id": "m4-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_4_Distribuciones_de_Carga_Continua.html",
-            "titulo": "5. Taller Práctico No. 4 — Cargas Continuas",
+            "titulo": "4. Taller Práctico No. 4 — Cargas Continuas",
             "descripcion": "Guía rigurosa de ejercicios: resolución de integrales impropias, densidad no uniforme y límites asintóticos.",
             "xp": 30
         },
         {
-            "id": "m4-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_5.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 4",
-            "descripcion": "Evalúa desde la elección del diferencial dq hasta el planteamiento correcto de los límites de integración.",
-            "xp": 40
-        },
-        {
-            "id": "m4-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_4_Distribuciones_de_Carga_continua.html",
-            "titulo": "7. Evaluación Sumativa — Distribuciones de Carga Continua",
-            "descripcion": "Cuestionario oficial de validación analítica sobre geometrías continuas de carga.",
-            "xp": 50
+            "id": "m4-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=4",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m4", "nombre": "Calculista Diferencial", "icono": "integration_instructions" }
         },
         {
             "id": "m4-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Cargas Continuas",
+            "titulo": "6. Asistente IA (NotebookLM) — Cargas Continuas",
             "descripcion": "Asistencia paso a paso para resolver integrales de Coulomb en coordenadas cartesianas y cilíndricas.",
             "xp": 10
         },
         {
             "id": "m4-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes sobre cálculo de campos en distribuciones continuas.",
             "xp": 10,
             "secciones": [

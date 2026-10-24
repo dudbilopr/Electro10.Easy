@@ -63,50 +63,34 @@ export const modulo3 = {
             ]
         },
         {
-            "id": "m3-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_4.html",
-            "titulo": "4. Physics Quest — Potencial Eléctrico",
-            "descripcion": "Navega partículas hacia regiones de menor potencial esquivando barreras de energía. ¡5 misiones!",
-            "xp": 25,
-            "logro": { "id": "logro_m3", "nombre": "Explorador de Equipotenciales", "icono": "terrain" }
-        },
-        {
             "id": "m3-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_3_Potencial_Electrico.html",
-            "titulo": "5. Taller Práctico No. 3 — Potencial Eléctrico",
+            "titulo": "4. Taller Práctico No. 3 — Potencial Eléctrico",
             "descripcion": "Problemas de nivel universitario sobre trabajo de fuerzas eléctricas, potenciales de esferas y gradientes.",
             "xp": 30
         },
         {
-            "id": "m3-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_4.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 3",
-            "descripcion": "Evalúa desde conceptos fundamentales de energía y trabajo hasta cálculo del gradiente de potencial.",
-            "xp": 40
-        },
-        {
-            "id": "m3-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_3_Trabajo_Potencial_Electrico.html",
-            "titulo": "7. Evaluación Sumativa — Potencial Eléctrico",
-            "descripcion": "Cuestionario oficial de validación con problemas de trabajo eléctrico, voltaje y equipotenciales.",
-            "xp": 50
+            "id": "m3-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=3",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m3", "nombre": "Explorador de Superficies", "icono": "terrain" }
         },
         {
             "id": "m3-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Potencial Eléctrico",
+            "titulo": "6. Asistente IA (NotebookLM) — Potencial Eléctrico",
             "descripcion": "Consulta deducciones de energía electrostática y relación diferencial entre campo y potencial.",
             "xp": 10
         },
         {
             "id": "m3-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes sobre teoría de potencial electrostático y energía.",
             "xp": 10,
             "secciones": [

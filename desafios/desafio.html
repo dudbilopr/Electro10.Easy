@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desafío Integral de Maestría — Electro10.Easy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --surface: #0b1120;
+      --card: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #0ea5e9;
+      --accent-glow: rgba(14, 165, 233, 0.35);
+      --gold: #f59e0b;
+      --emerald: #10b981;
+      --purple: #a855f7;
+      --text-high: #f8fafc;
+      --text-mid: #94a3b8;
+      --text-low: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.12), transparent 45%),
+                        radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.08), transparent 35%);
+      color: var(--text-high);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER HUD ── */
+    .hud-header {
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-module {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(168, 85, 247, 0.2));
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .header-titles h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-high);
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-titles p {
+      font-size: 0.75rem;
+      color: var(--text-mid);
+    }
+
+    /* ── STEPPER ── */
+    .stepper-nav {
+      display: flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .step-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 8px 16px;
+      color: var(--text-mid);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .step-btn:hover {
+      color: var(--text-high);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .step-btn.active {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(99, 102, 241, 0.25));
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .step-btn.completed .step-number {
+      background: var(--emerald);
+      color: #fff;
+    }
+
+    .step-number {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      transition: all 0.2s;
+    }
+
+    .step-btn.active .step-number {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ── PROGRESS & XP BAR ── */
+    .meta-metrics {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .xp-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 5px 12px;
+      border-radius: 20px;
+      color: var(--gold);
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* ── NANO BANANA BAR ── */
+    .nano-bar {
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.08), rgba(245, 158, 11, 0.08), rgba(168, 85, 247, 0.08));
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      font-size: 0.84rem;
+    }
+
+    .nano-mascot-tip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-high);
+    }
+
+    .nano-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #eab308);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+      flex-shrink: 0;
+      animation: pulseNano 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseNano {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); box-shadow: 0 0 18px rgba(245, 158, 11, 0.6); }
+    }
+
+    .nano-text b {
+      color: var(--gold);
+    }
+
+    .progress-track-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 220px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 33%;
+      background: linear-gradient(90deg, var(--accent), var(--emerald));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── IFRAME VIEWER CONTAINER ── */
+    .viewer-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 100%;
+      min-height: calc(100vh - 120px);
+    }
+
+    iframe#stage-frame {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 125px);
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    /* ── BOTTOM FLOATING ACTION BAR ── */
+    .floating-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 17, 32, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 60;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 7px 14px;
+      color: var(--text-high);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .floating-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .floating-btn.primary {
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      color: #fff;
+      border: none;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .floating-btn.primary:hover {
+      box-shadow: 0 0 22px rgba(14, 165, 233, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hud-header { flex-direction: column; align-items: flex-start; padding: 12px; }
+      .stepper-nav { width: 100%; justify-content: space-between; }
+      .step-btn span.label { display: none; }
+      .nano-bar { flex-direction: column; align-items: flex-start; }
+      .progress-track-wrap { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= HUD HEADER ================= -->
+  <header class="hud-header">
+    <div class="brand-group">
+      <span class="badge-module" id="badge-mod">MÓDULO 1</span>
+      <div class="header-titles">
+        <h1 id="mod-title">
+          <span class="material-symbols-outlined" style="color: var(--accent); font-size: 20px;">military_tech</span>
+          Desafío Integral de Maestría
+        </h1>
+        <p id="mod-sub">Fusión Pedagógica: Calentamiento ➔ Misión Interactiva ➔ Certificación</p>
+      </div>
+    </div>
+
+    <!-- Stepper de 3 Fases -->
+    <nav class="stepper-nav" aria-label="Fases del Desafío">
+      <button class="step-btn active" id="btn-step-1" onclick="cambiarFase(1)">
+        <span class="step-number" id="num-step-1">1</span>
+        <span class="label">Calentamiento Conceptual</span>
+      </button>
+      <button class="step-btn" id="btn-step-2" onclick="cambiarFase(2)">
+        <span class="step-number" id="num-step-2">2</span>
+        <span class="label">Misión Interactiva</span>
+      </button>
+      <button class="step-btn" id="btn-step-3" onclick="cambiarFase(3)">
+        <span class="step-number" id="num-step-3">3</span>
+        <span class="label">Certificación de Problemas</span>
+      </button>
+    </nav>
+
+    <!-- XP & Estado -->
+    <div class="meta-metrics">
+      <div class="xp-pill" title="Puntos de Maestría Otorgados">
+        <span class="material-symbols-outlined" style="font-size: 16px;">bolt</span>
+        <span id="xp-text">100 XP</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NANO BANANA BAR ================= -->
+  <div class="nano-bar">
+    <div class="nano-mascot-tip">
+      <div class="nano-avatar" title="Nano Banana — Asistente Pedagógico">🍌</div>
+      <div class="nano-text" id="nano-tip">
+        <b>Nano Banana:</b> Fase 1 activa presaberes e intuición conceptual sin estrés numérico. ¡Responde a tu ritmo!
+      </div>
+    </div>
+    <div class="progress-track-wrap">
+      <span style="font-size: 0.75rem; color: var(--text-mid); font-family: 'Orbitron', monospace;" id="pct-label">Fase 1 de 3 (33%)</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 33%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEWER IFRAME ================= -->
+  <main class="viewer-container">
+    <iframe id="stage-frame" src="about:blank" allow="fullscreen; autoplay; clipboard-write; web-share"></iframe>
+  </main>
+
+  <!-- ================= CONTROLES FLOTANTES INFERIORES ================= -->
+  <footer class="floating-bar">
+    <button class="floating-btn" id="btn-prev-stage" onclick="navegarFase(-1)">
+      <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+      Anterior
+    </button>
+    <button class="floating-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
+      <span class="material-symbols-outlined" style="font-size: 16px;" id="fs-icon">fullscreen</span>
+      Pantalla Completa
+    </button>
+    <button class="floating-btn primary" id="btn-next-stage" onclick="navegarFase(1)">
+      <span>Siguiente Fase</span>
+      <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+    </button>
+  </footer>
+
+  <script>
+    // ── CATÁLOGO INTEGRADO DE MÓDULOS (13 Módulos) ──
+    const MODULOS_MAP = {
+      1: {
+        titulo: "Electrostática — Ley de Coulomb",
+        sub: "Fuerza vectorial, conservación de carga y principio de superposición",
+        fase1: "../Examen/Quiz_Adaptativo_1.html",
+        fase2: "../juegos/Juego_1.html",
+        fase3: "../Examen/Cuestionario_1_Ley_de_Coulomb.html",
+        tips: [
+          "Fase 1: Activa tu intuición física sobre atracción, repulsión y polarización.",
+          "Fase 2: ¡Charge Wars! Coloca cargas en el espacio para neutralizar vectores y guiar la partícula.",
+          "Fase 3: Certificación formal: aplica la ley del cuadrado inverso con vectores unitarios."
+        ]
+      },
+      2: {
+        titulo: "Campo Eléctrico y Dipolos",
+        sub: "Líneas de fuerza, momento dipolar y superposición continua",
+        fase1: "../Examen/Quiz_Adaptativo_2.html",
+        fase2: "../juegos/Juego_2.html",
+        fase3: "../Examen/Cuestionario_2_Campo_Electrico.html",
+        tips: [
+          "Fase 1: Recuerda: las líneas de campo nacen en cargas positivas y mueren en negativas.",
+          "Fase 2: Experimenta con vectores de campo en tiempo real en la misión física.",
+          "Fase 3: Resuelve distribuciones discretas y pares de dipolos con rigor Sears-Zemansky."
+        ]
+      },
+      3: {
+        titulo: "Potencial Eléctrico y Gradiente",
+        sub: "Superficies equipotenciales, energía electrostática y voltaje",
+        fase1: "../Examen/Quiz_Adaptativo_4.html",
+        fase2: "../juegos/Juego_4.html",
+        fase3: "../Examen/Cuestionario_3_Trabajo_Potencial_Electrico.html",
+        tips: [
+          "Fase 1: El potencial es un escalar: ¡no te preocupes por componentes vectoriales aquí!",
+          "Fase 2: Escala las colinas y valles de potencial en el simulador gamificado.",
+          "Fase 3: Calcula integrales de línea y gradientes de potencial con precisión."
+        ]
+      },
+      4: {
+        titulo: "Distribuciones Continuas de Carga",
+        sub: "Densidades lineal (λ), superficial (σ) y volumétrica (ρ)",
+        fase1: "../Examen/Quiz_Adaptativo_5.html",
+        fase2: "../juegos/Juego_2.html",
+        fase3: "../Examen/Cuestionario_4_Distribuciones_de_Carga_continua.html",
+        tips: [
+          "Fase 1: Elige el diferencial dq adecuado según la geometría (anillo, disco, barra).",
+          "Fase 2: Visualiza cómo la simetría cancela componentes antes de integrar.",
+          "Fase 3: Resuelve integrales analíticas con límites bien definidos."
+        ]
+      },
+      5: {
+        titulo: "Ley de Gauss y Flujo Eléctrico",
+        sub: "Superficies gaussianas cerradas, teorema de Gauss y conductores",
+        fase1: "../Examen/Quiz_Adaptativo_3.html",
+        fase2: "../juegos/Juego_3.html",
+        fase3: "../Examen/Cuestionario_5_Flujo_Electrico_Ley_de_Gauss.html",
+        tips: [
+          "Fase 1: El flujo total depende únicamente de la carga encerrada Q_enc / ε₀.",
+          "Fase 2: Atrapa cargas con superficies gaussianas cilíndricas y esféricas.",
+          "Fase 3: Aplica la ley de Gauss en aislantes y conductores en equilibrio electrostático."
+        ]
+      },
+      6: {
+        titulo: "Capacitancia y Dieléctricos",
+        sub: "Almacenamiento de energía, arreglos serie/paralelo y constante κ",
+        fase1: "../Examen/Quiz_Adaptativo_5.html",
+        fase2: "../juegos/Juego_5.html",
+        fase3: "../Examen/Cuestionario_6_Capacitancia.html",
+        tips: [
+          "Fase 1: ¿Qué pasa con C y V al insertar un dieléctrico con batería conectada vs aislada?",
+          "Fase 2: Construye arreglos de placas paralelas y optimiza la densidad energética.",
+          "Fase 3: Certificación formal: modelado de dieléctricos parciales y energía electrostática."
+        ]
+      },
+      7: {
+        titulo: "Corriente, Resistencia y Leyes de Kirchhoff",
+        sub: "Densidad de corriente J, ley de Ohm microscópica y mallas de CC",
+        fase1: "../Examen/Quiz_Adaptativo_6.html",
+        fase2: "../juegos/Juego_6.html",
+        fase3: "../Examen/Cuestionario_7_Circuitos_CC.html",
+        tips: [
+          "Fase 1: Conservación de carga en nodos (LKC) y conservación de energía en mallas (LKV).",
+          "Fase 2: Resuelve laberintos resistivos y balancea el puente de Wheatstone.",
+          "Fase 3: Sistemas de ecuaciones de mallas y análisis de circuitos RC en carga y descarga."
+        ]
+      },
+      8: {
+        titulo: "Fuerza Magnética de Lorentz",
+        sub: "Movimiento de cargas en campos B, ciclotrón y efecto Hall",
+        fase1: "../Examen/Quiz_Adaptativo_7.html",
+        fase2: "../juegos/Juego_7.html",
+        fase3: "../Examen/Cuestionario_8_Campo_Magnetico.html",
+        tips: [
+          "Fase 1: La fuerza magnética F = q(v x B) es siempre perpendicular a la velocidad.",
+          "Fase 2: Dirige partículas alfa y electrones a través del selector de velocidades.",
+          "Fase 3: Calcula radios de curvatura, frecuencia de ciclotrón y voltaje Hall."
+        ]
+      },
+      9: {
+        titulo: "Fuentes de Campo B — Ley de Biot-Savart",
+        sub: "Cálculo diferencial dB = (μ₀/4π)(I dl x r̂)/r² y fuerzas entre conductores",
+        fase1: "../Examen/Quiz_Adaptativo_8.html",
+        fase2: "../juegos/Juego_8.html",
+        fase3: "../Examen/Cuestionario_8_Campo_Magnetico.html",
+        tips: [
+          "Fase 1: Regla de la mano derecha: el pulgar sigue la corriente I, los dedos abrazan B.",
+          "Fase 2: Integra arcos circulares y segmentos rectilíneos en el simulador vectorial.",
+          "Fase 3: Deducción analítica completa del eje de una espira circular y solenoide."
+        ]
+      },
+      10: {
+        titulo: "Ley de Ampère y Magnetismo en la Materia",
+        sub: "Circulación de B, solenoides, toroides y materiales ferromagnéticos",
+        fase1: "../Examen/Quiz_Adaptativo_9.html",
+        fase2: "../juegos/Juego_9.html",
+        fase3: "../Examen/Cuestionario_9_Ley_de_Ampere.html",
+        tips: [
+          "Fase 1: Selecciona una curva amperiana cerrada con campo constante y paralelo a dl.",
+          "Fase 2: Mide la corriente encerrada total y neutraliza fugas en el toroide.",
+          "Fase 3: Cálculo riguroso de cables coaxiales y campo B dentro y fuera del conductor."
+        ]
+      },
+      11: {
+        titulo: "Ley de Inducción de Faraday y Ley de Lenz",
+        sub: "Fem inducida ε = -dΦ/dt, corrientes de Foucault y generadores",
+        fase1: "../Examen/Quiz_Adaptativo_10.html",
+        fase2: "../juegos/Juego_10.html",
+        fase3: "../Examen/Cuestionario_10_Ley_de_Faraday.html",
+        tips: [
+          "Fase 1: El signo menos de Lenz indica oposición radical al cambio de flujo.",
+          "Fase 2: Haz rotar espiras en campos variables para mantener encendida la red.",
+          "Fase 3: Barras conductoras deslizantes sobre rieles y conservación de energía."
+        ]
+      },
+      12: {
+        titulo: "Ecuaciones de Maxwell y Ondas EM",
+        sub: "Corriente de desplazamiento, unificación electromagnética y luz",
+        fase1: "../Examen/Quiz_Adaptativo_11.html",
+        fase2: "../juegos/Juego_11.html",
+        fase3: "../Examen/Cuestionario_12_Ecuaciones_Maxwell.html",
+        tips: [
+          "Fase 1: Maxwell predijo que los campos eléctricos cambiantes generan campos magnéticos.",
+          "Fase 2: Sintoniza el espectro electromagnético propagando ondas transversales.",
+          "Fase 3: Vector de Poynting S = (1/μ₀)(E x B), presión de radiación e intensidad."
+        ]
+      },
+      13: {
+        titulo: "Inductancia, Circuitos RL, LC y RLC",
+        sub: "Autoinductancia L, resonancia y corriente alterna en régimen transitorio",
+        fase1: "../Examen/Quiz_Adaptativo_12.html",
+        fase2: "../juegos/Juego_12.html",
+        fase3: "../Examen/Cuestionario_11_Inductancia.html",
+        tips: [
+          "Fase 1: Los inductores se oponen a cambios bruscos de corriente di/dt.",
+          "Fase 2: Sintoniza la frecuencia de resonancia ω₀ = 1/√(LC) para máxima potencia.",
+          "Fase 3: Ecuaciones diferenciales de segundo orden y oscilaciones amortiguadas."
+        ]
+      }
+    };
+
+    // ── ESTADO ACTUAL ──
+    const urlParams = new URLSearchParams(window.location.search);
+    const modId = parseInt(urlParams.get('m') || urlParams.get('modulo') || '1');
+    const moduloActual = MODULOS_MAP[modId] || MODULOS_MAP[1];
+    let faseActual = 1;
+    let fasesCompletadas = { 1: false, 2: false, 3: false };
+
+    // ── INICIALIZACIÓN ──
+    document.getElementById('badge-mod').innerText = `MÓDULO ${modId}`;
+    document.getElementById('mod-title').innerHTML = `
+      <span class="material-symbols-outlined" style="color: var(--accent); font-size: 20px;">military_tech</span>
+      Desafío Integral: ${moduloActual.titulo}
+    `;
+    document.getElementById('mod-sub').innerText = moduloActual.sub;
+
+    // Cargar fase 1 inicial
+    cambiarFase(1);
+
+    // ── GESTIÓN DE FASES ──
+    function cambiarFase(faseNum) {
+      faseActual = faseNum;
+      
+      // Actualizar botones
+      [1, 2, 3].forEach(num => {
+        const btn = document.getElementById(`btn-step-${num}`);
+        const badge = document.getElementById(`num-step-${num}`);
+        btn.classList.remove('active');
+        if (num === faseActual) {
+          btn.classList.add('active');
+        }
+        if (fasesCompletadas[num]) {
+          btn.classList.add('completed');
+          badge.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span>';
+        }
+      });
+
+      // Actualizar frame
+      const frame = document.getElementById('stage-frame');
+      const targetUrl = faseNum === 1 ? moduloActual.fase1 : (faseNum === 2 ? moduloActual.fase2 : moduloActual.fase3);
+      if (frame.src !== targetUrl) {
+        frame.src = targetUrl;
+      }
+
+      // Actualizar Nano Banana Tip
+      const tipText = moduloActual.tips[faseNum - 1] || "Avanza con confianza a través del desafío.";
+      document.getElementById('nano-tip').innerHTML = `<b>Nano Banana:</b> ${tipText}`;
+
+      // Actualizar Progress Bar
+      const pct = Math.round((faseNum / 3) * 100);
+      document.getElementById('progress-fill').style.width = `${pct}%`;
+      document.getElementById('pct-label').innerText = `Fase ${faseNum} de 3 (${pct}%)`;
+
+      // Actualizar botones de navegación
+      const prevBtn = document.getElementById('btn-prev-stage');
+      const nextBtn = document.getElementById('btn-next-stage');
+      prevBtn.style.opacity = faseNum === 1 ? '0.5' : '1';
+      prevBtn.style.pointerEvents = faseNum === 1 ? 'none' : 'auto';
+
+      if (faseNum === 3) {
+        nextBtn.innerHTML = `<span>Finalizar Misión 🏆</span><span class="material-symbols-outlined" style="font-size: 16px;">celebration</span>`;
+        nextBtn.classList.add('completed-style');
+      } else {
+        nextBtn.innerHTML = `<span>Siguiente Fase</span><span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>`;
+        nextBtn.classList.remove('completed-style');
+      }
+    }
+
+    function navegarFase(delta) {
+      const nuevaFase = faseActual + delta;
+      if (nuevaFase >= 1 && nuevaFase <= 3) {
+        fasesCompletadas[faseActual] = true;
+        cambiarFase(nuevaFase);
+      } else if (nuevaFase > 3) {
+        // Finalizar desafío completo
+        finalizarDesafio();
+      }
+    }
+
+    function finalizarDesafio() {
+      fasesCompletadas[1] = true;
+      fasesCompletadas[2] = true;
+      fasesCompletadas[3] = true;
+      [1, 2, 3].forEach(num => {
+        document.getElementById(`btn-step-${num}`).classList.add('completed');
+        document.getElementById(`num-step-${num}`).innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span>';
+      });
+
+      // Notificar progreso a la ventana padre (Electro10.Easy)
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'DESAFIO_COMPLETADO',
+          modulo: modId,
+          xp: 100
+        }, '*');
+      }
+
+      // Marcar en localStorage
+      try {
+        const key = `desafio_m${modId}_completado`;
+        localStorage.setItem(key, 'true');
+      } catch (_) {}
+
+      // Mostrar modal o alert
+      alert(`🎉 ¡FELICITACIONES! Has dominado el Desafío Integral del Módulo ${modId}.\n+100 XP agregados a tu perfil de maestría.`);
+    }
+
+    // ── PANTALLA COMPLETA ──
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        document.getElementById('fs-icon').innerText = 'fullscreen_exit';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('fs-icon').innerText = 'fullscreen';
+      }
+    }
+
+    // ── COMUNICACIÓN BIDIRECCIONAL CON IFRAMES HIJOS ──
+    window.addEventListener('message', (e) => {
+      if (!e.data) return;
+      // Si el juego o quiz emite finalización
+      if (e.data.type === 'QUIZ_FINISHED' || e.data.type === 'GAME_LEVEL_CLEAR') {
+        fasesCompletadas[faseActual] = true;
+        document.getElementById(`btn-step-${faseActual}`).classList.add('completed');
+        document.getElementById(`num-step-${faseActual}`).innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span>';
+      }
+    });
+  </script>
+</body>
+</html>

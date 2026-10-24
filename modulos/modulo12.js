@@ -65,50 +65,34 @@ export const modulo12 = {
             ]
         },
         {
-            "id": "m12-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_11.html",
-            "titulo": "4. Physics Quest — Maxwell",
-            "descripcion": "Completa las 4 ecuaciones de Maxwell y resuelve el balance de radiación. ¡El desafío unificado!",
-            "xp": 25,
-            "logro": { "id": "logro_m12", "nombre": "Físico Teórico", "icono": "flare" }
-        },
-        {
             "id": "m12-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_12_Ecuaciones_Maxwell.html",
-            "titulo": "5. Taller Práctico No. 12 — Ecuaciones de Maxwell",
+            "titulo": "4. Taller Práctico No. 12 — Ecuaciones de Maxwell",
             "descripcion": "Problemas de corriente de desplazamiento en capacitores, cálculo del vector de Poynting y balance energético.",
             "xp": 30
         },
         {
-            "id": "m12-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_11.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 12",
-            "descripcion": "Evaluación cognitiva en 3 niveles: significado físico de cada ley, cálculo de vector de Poynting y velocidad de propagación.",
-            "xp": 40
-        },
-        {
-            "id": "m12-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_12_Ecuaciones_Maxwell.html",
-            "titulo": "7. Evaluación Sumativa — Ecuaciones de Maxwell",
-            "descripcion": "Cuestionario oficial de acreditación sobre síntesis electromagnética y teoría ondulatoria.",
-            "xp": 50
+            "id": "m12-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=12",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m12", "nombre": "Físico Teórico Maxwelliano", "icono": "auto_awesome" }
         },
         {
             "id": "m12-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Maxwell",
+            "titulo": "6. Asistente IA (NotebookLM) — Maxwell",
             "descripcion": "Consulta dudas teóricas sobre la derivación de la ecuación de onda, gauge de Lorenz y tensor de esfuerzos.",
             "xp": 10
         },
         {
             "id": "m12-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Fuentes sobre las ecuaciones de Maxwell, teoría de radiación y ondas electromagnéticas.",
             "xp": 10,
             "secciones": [

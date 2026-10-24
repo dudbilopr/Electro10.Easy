@@ -71,50 +71,34 @@ export const modulo6 = {
             ]
         },
         {
-            "id": "m6-j1",
-            "tipo": "juego",
-            "recurso": "juegos/Juego_5.html",
-            "titulo": "4. Physics Quest — Capacitancia",
-            "descripcion": "Diseña el capacitor óptimo para almacenar energía bajo restricciones de campo dieléctrico. ¡5 retos de física!",
-            "xp": 25,
-            "logro": { "id": "logro_m6", "nombre": "Ingeniero de Capacitores", "icono": "battery_charging_full" }
-        },
-        {
             "id": "m6-l7",
             "tipo": "ejercicio",
             "recurso": "talleres/Taller_6_Capacitancia.html",
-            "titulo": "5. Taller Práctico No. 6 — Capacitancia y Dieléctricos",
+            "titulo": "4. Taller Práctico No. 6 — Capacitancia y Dieléctricos",
             "descripcion": "Guía de problemas de nivel universitario enfocada en el cálculo de cargas, potenciales en redes mixtas y energía electrostática.",
             "xp": 30
         },
         {
-            "id": "m6-q1",
-            "tipo": "quiz",
-            "recurso": "Examen/Quiz_Adaptativo_5.html",
-            "titulo": "6. Quiz Adaptativo — Módulo 6",
-            "descripcion": "Evaluación cognitiva progresiva en 3 niveles: relaciones fundamentales Q=CV, circuitos mixtos y balance de energía.",
-            "xp": 40
-        },
-        {
-            "id": "m6-eval",
-            "tipo": "quiz",
-            "recurso": "Examen/Cuestionario_6_Capacitancia.html",
-            "titulo": "7. Evaluación Sumativa — Capacitancia y Dieléctricos",
-            "descripcion": "Cuestionario oficial de acreditación del Módulo 6 con problemas analíticos y conceptuales.",
-            "xp": 50
+            "id": "m6-desafio",
+            "tipo": "desafio",
+            "recurso": "desafios/desafio.html?m=6",
+            "titulo": "5. Desafío Integral de Maestría (3 Fases)",
+            "descripcion": "Ruta formativa unificada: 1. Calentamiento Conceptual ➔ 2. Misión Interactiva Physics Quest ➔ 3. Certificación Cuantitativa.",
+            "xp": 100,
+            "logro": { "id": "logro_m6", "nombre": "Arquitecto Dieléctrico", "icono": "battery_charging_full" }
         },
         {
             "id": "m6-nb1",
             "tipo": "notebooklm",
             "llmLink": "https://notebooklm.google.com/notebook/37622815-4b54-4808-b770-37464cb05719",
-            "titulo": "8. Asistente IA (NotebookLM) — Capacitancia",
+            "titulo": "6. Asistente IA (NotebookLM) — Capacitancia",
             "descripcion": "Consulta dudas analíticas, métodos de reducción de redes capacitivas y comportamiento microscópico de dipolos dieléctricos.",
             "xp": 10
         },
         {
             "id": "m6-e1",
             "tipo": "referencias",
-            "titulo": "9. Repositorio Documental y Referencias",
+            "titulo": "7. Repositorio Documental y Referencias",
             "descripcion": "Directorio de recursos externos, apuntes universitarios y textos de referencia sobre física de capacitores y dieléctricos.",
             "xp": 10,
             "secciones": [
