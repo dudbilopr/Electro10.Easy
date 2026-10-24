@@ -121,6 +121,30 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 .fcard.back{background:var(--e10-success-soft);color:var(--e10-success);font:500 18px/1.4 var(--e10-font-body)}
 @media (prefers-reduced-motion:reduce){.cmap .flow,.cmap .flow.hot{animation:none}}
 @media (prefers-reduced-motion:reduce){.slide,.flip .in,.btn{transition:none}}
+/* Deducción en pasos: un paso a la vez, en letra legible desde el fondo del aula */
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.stp-nav{display:flex;gap:5px;flex-wrap:wrap}
+.stp-nav button{font:500 12px/1 var(--e10-font-body);min-height:32px;padding:0 9px;border-radius:999px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.stp-nav button b{font:600 12px var(--e10-font-mono)}
+.stp-nav button.seen{border-color:var(--e10-primary);color:var(--e10-primary)}
+.stp-nav button.on{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.stp-nav button:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.stp-body{flex:1;min-height:0;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 22px;overflow:auto}
+.stp-p{display:none;flex-direction:column;gap:10px;font-size:18px;line-height:1.45}
+.stp-p.on{display:flex;animation:stpIn .25s ease}
+@keyframes stpIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stp-p h3{margin:0;font:600 21px/1.2 var(--e10-font-display);color:var(--e10-primary)}
+.stp-p p{margin:0}
+.stp-p .eq{text-align:center;padding:6px 14px;overflow-x:auto}
+.stp-p .eq .katex-display{margin:.35em 0}
+.stp-p .card.live{font-size:15px;border-left:3px solid var(--e10-primary)}
+.stp-p .card.live:empty{display:none}
+.stp-foot{display:flex;justify-content:space-between;align-items:center}
+.stp-count{font-size:13px;color:var(--e10-muted)}
+.seg2{display:flex;gap:6px}.seg2 .btn{flex:1;min-height:34px;font-size:13px;padding:0 8px}
+.ans-d summary{cursor:pointer;color:var(--e10-primary);font-weight:600}
+.ans-d[open] summary{margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){.stp-p.on{animation:none}}
 @page{size:1280px 720px;margin:0}
 @media print{
   html,body{overflow:visible;height:auto;background:#fff}
@@ -130,6 +154,7 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
   .deck-ui,.progress,.no-print{display:none!important}
   .print-only{display:block}
   .flip .in{transform:none!important}.flip .b{position:relative;transform:none;margin-top:8px}.flip .f{position:relative}
+  .stp-p{display:none!important}.stp-p[data-print]{display:flex!important;animation:none}
 }
 </style>
 </head>
@@ -211,155 +236,159 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 <!-- 4 · HILO -->
 <section class="slide" data-n="4">
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
-  <h2>Deducción del hilo: paso a paso y dos caminos</h2>
+  <h2>Hilo recto: deducción en siete pasos</h2>
   <div class="row">
-    <div class="col" style="width:430px">
-      <canvas class="sim" id="cv-hilo" width="430" height="340" aria-label="Segmento de hilo, elemento diferencial arrastrable y punto P"></canvas>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-hilo" width="440" height="300" aria-label="Segmento de hilo, elemento diferencial arrastrable y punto P"></canvas>
       <div class="ctrl no-print">
         <label for="hi-t1">θ₁</label><input id="hi-t1" type="range" min="-89" max="89" value="-60"><output id="hi-t1-o">−60°</output>
         <label for="hi-t2">θ₂</label><input id="hi-t2" type="range" min="-89" max="89" value="60"><output id="hi-t2-o">60°</output>
       </div>
-      <div class="no-print" style="display:flex;gap:6px;margin-top:2px;margin-bottom:4px">
-        <button type="button" class="btn on" id="hi-tog-dl" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Elemento dℓ y r̂</button>
-        <button type="button" class="btn" id="hi-tog-sym" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Par simétrico (±y)</button>
+      <div class="no-print seg2">
+        <button type="button" class="btn on" id="hi-tog-dl">Elemento dℓ y r̂</button>
+        <button type="button" class="btn" id="hi-tog-sym">Par simétrico (±y)</button>
+        <button type="button" class="btn pri" id="hi-anim">▶ Integrar</button>
       </div>
-      <div class="read">
-        <div>Segmento / infinito<b id="hi-ratio">—</b></div>
-        <div>B segmento (I=5 A, a=2 cm)<b id="hi-b">—</b></div>
-        <div class="no-print" style="display:flex;align-items:center;justify-content:center;padding:4px"><button type="button" class="btn pri" id="hi-anim">▶ Integrar</button></div>
-      </div>
-      <div id="hi-math-panel" class="card" style="font-size:12px;padding:6px 10px;margin-top:4px;background:var(--e10-surface);border-left:3px solid var(--e10-primary);min-height:38px;line-height:1.4"></div>
-      <div class="no-print" style="font-size:11px;color:var(--e10-muted);text-align:center;margin-top:2px">
-        💡 <b>Arrastra el elemento \(d\vec\ell\)</b> verticalmente sobre el hilo para explorar la variación de \(\theta\) y \(\hat r\).
-      </div>
+      <div class="read" style="grid-template-columns:1fr 1fr"><div>Segmento / hilo infinito<b id="hi-ratio">—</b></div><div>B del segmento (I = 5 A, a = 2 cm)<b id="hi-b">—</b></div></div>
     </div>
-    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
-      <div class="steps" style="font-size:13.5px;gap:5px">
-        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell=dy\,\hat\jmath\) y vector de posición relativa \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</span></div>
-        <div><span class="n">2</span><span><b>Referencia angular (\(\theta=0^\circ\)):</b> Los ángulos \(\theta_1, \theta_2\) y \(\theta\) se miden desde la <b>perpendicular trazada de \(P\) al hilo</b> (\(\theta_1 < 0\) abajo, \(\theta_2 > 0\) arriba). Geometría: \(y=a\tan\theta\), \(r=\sqrt{a^2+y^2}=a\sec\theta\).</span></div>
-      </div>
-      <!-- Explicación rigurosa de phi = 90 + theta -->
-      <div class="card" style="background:var(--e10-primary-soft);border-color:var(--e10-primary);padding:8px 12px;font-size:12.5px;line-height:1.4">
-        <b style="color:var(--e10-primary);font-size:13px">¿Por qué el ángulo del producto cruz es \(\varphi = 90^\circ + \theta\)?</b>
-        <div style="margin-top:3px">
-          El producto cruz requiere el ángulo \(\varphi\) entre el vector tangente \(d\vec\ell = dy\,\hat\jmath\) (que apunta vertical hacia \(+y\)) y el vector posición \(\hat r\) (que desciende hacia \(P\)):
-          <ul style="margin:3px 0 3px 18px;padding:0">
-            <li>El ángulo entre \(d\vec\ell\) (\(+y\)) y la perpendicular horizontal hacia \(P\) es exactamente \(90^\circ\).</li>
-            <li>El vector hacia \(P\) se inclina un ángulo \(\theta\) adicional respecto a esa horizontal.</li>
-          </ul>
-          Por tanto, el ángulo total formado es \(\varphi = 90^\circ + \theta\). Por identidad de ángulos complementarios:
-          \[ \sin\varphi = \sin(90^\circ + \theta) = \cos\theta \]
-          Así, la magnitud del producto cruz resulta: \(|d\vec\ell \times \hat r| = dy \sin\varphi = dy \cos\theta\) (con dirección \(\otimes\) hacia adentro).
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Elemento">
+          <h3>1 · El elemento de corriente</h3>
+          <p>Cada tramo \(d\vec\ell\) del hilo aporta un campo dado por la ley de Biot–Savart:</p>
+          <div class="soft eq">\[ d\vec B=\frac{\mu_0 I}{4\pi}\,\frac{d\vec\ell\times\hat r}{r^2} \]</div>
+          <p>El hilo está sobre el eje \(y\) y el punto \(P\) a una distancia \(a\): \(d\vec\ell=dy\,\hat\jmath\) y el vector que va del elemento a \(P\) es \(\vec r=a\,\hat\imath-y\,\hat\jmath\).</p>
+          <div class="tipbox"><b>En la figura.</b> Arrastra el elemento \(d\vec\ell\) sobre el hilo y mira cómo cambian \(\vec r\) y \(\hat r\).</div>
         </div>
-      </div>
-      <div class="steps" style="font-size:13.5px;gap:5px">
-        <div><span class="n">3</span><span><b>Cambio de variable:</b> \(B=\dfrac{\mu_0 I a}{4\pi}\displaystyle\int_{y_1}^{y_2}\dfrac{dy}{(y^2+a^2)^{3/2}}\).</span></div>
-      </div>
-      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <b style="font-size:13px;color:var(--e10-primary)">4 · Dos caminos para resolver la integral:</b>
-          <div class="no-print" style="display:flex;gap:4px">
-            <button type="button" class="btn on" id="btn-camino-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Trigonométrico</button>
-            <button type="button" class="btn" id="btn-camino-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Por tablas</button>
+        <div class="stp-p" data-t="Geometría">
+          <h3>2 · Geometría y ángulos</h3>
+          <p>Los ángulos se miden desde la <b>perpendicular trazada de \(P\) al hilo</b>: \(\theta_1<0\) hacia abajo y \(\theta_2>0\) hacia arriba.</p>
+          <div class="soft eq">\[ y=a\tan\theta,\qquad r=\sqrt{a^2+y^2}=a\sec\theta \]</div>
+          <p>Mueve los controles \(\theta_1\) y \(\theta_2\): el segmento crece o se acorta y la figura marca cada ángulo.</p>
+        </div>
+        <div class="stp-p" data-t="Producto cruz">
+          <h3>3 · El producto cruz</h3>
+          <p>El ángulo entre \(d\vec\ell\) (hacia \(+y\)) y \(\hat r\) es \(\varphi=90^\circ+\theta\): \(90^\circ\) hasta la perpendicular y \(\theta\) más hasta \(P\).</p>
+          <div class="soft eq">\[ |d\vec\ell\times\hat r|=dy\,\sin(90^\circ+\theta)=dy\,\cos\theta \]</div>
+          <p>Por la regla de la mano derecha, todos los aportes apuntan en el mismo sentido (\(\otimes\), hacia dentro): los módulos se pueden sumar.</p>
+          <div id="hi-math-panel" class="card live"></div>
+        </div>
+        <div class="stp-p" data-t="Integral">
+          <h3>4 · Reemplazo y constantes fuera</h3>
+          <p>Con \(\cos\theta=a/r\) y \(r^2=y^2+a^2\), lo que no depende de \(y\) sale de la integral:</p>
+          <div class="soft eq">\[ B=\frac{\mu_0 I}{4\pi}\int_{y_1}^{y_2}\frac{dy}{y^2+a^2}\cdot\frac{a}{\sqrt{y^2+a^2}}=\frac{\mu_0 I a}{4\pi}\int_{y_1}^{y_2}\frac{dy}{(y^2+a^2)^{3/2}} \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para la integral</h3>
+          <div class="seg2 no-print" style="max-width:520px"><button type="button" class="btn on" id="btn-camino-a">Camino A · sustitución trigonométrica</button><button type="button" class="btn" id="btn-camino-b">Camino B · tabla de integrales</button></div>
+          <div id="camino-a-box">
+            <p>Con \(y=a\tan\theta\Rightarrow dy=a\sec^2\theta\,d\theta\):</p>
+            <div class="soft eq">\[ \int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{1}{a^2}\left(\sin\theta_2-\sin\theta_1\right) \]</div>
+          </div>
+          <div id="camino-b-box" style="display:none">
+            <p>De la tabla de integrales:</p>
+            <div class="soft eq">\[ \int\frac{dy}{(y^2+a^2)^{3/2}}=\left[\frac{y}{a^2\sqrt{y^2+a^2}}\right]_{y_1}^{y_2} \]</div>
+            <p>Como \(\dfrac{y}{\sqrt{y^2+a^2}}=\sin\theta\), los dos caminos dan el mismo resultado.</p>
           </div>
         </div>
-        <div id="camino-a-box" style="font-size:12.5px;line-height:1.35">
-          Sustitución \(y=a\tan\theta \implies dy=a\sec^2\theta\,d\theta\):<br>
-          \(\displaystyle\int\frac{a\sec^2\theta\,d\theta}{a^3\sec^3\theta}=\frac{1}{a^2}\int\cos\theta\,d\theta=\frac{1}{a^2}(\sin\theta_2-\sin\theta_1)\)
+        <div class="stp-p" data-t="Resultado" data-print>
+          <h3>6 · Resultado y caso límite</h3>
+          <div class="ok eq">\[ B_{\text{segmento}}=\frac{\mu_0 I}{4\pi a}\left(\sin\theta_2-\sin\theta_1\right) \]</div>
+          <p>Hilo infinito: \(\theta_1\to-90^\circ\) y \(\theta_2\to+90^\circ\), así que \(\sin\theta_2-\sin\theta_1\to2\):</p>
+          <div class="ok eq">\[ B_{\infty}=\frac{\mu_0 I}{2\pi a} \]</div>
+          <p>La lectura «Segmento / hilo infinito» de la izquierda compara los dos valores.</p>
         </div>
-        <div id="camino-b-box" style="display:none;font-size:12.5px;line-height:1.35">
-          Fórmula de tabla: \(\displaystyle\int\frac{dy}{(y^2+a^2)^{3/2}}=\left[\frac{y}{a^2\sqrt{y^2+a^2}}\right]_{y_1}^{y_2}\).<br>
-          Como \(\frac{y}{\sqrt{y^2+a^2}}=\sin\theta\), ambos métodos llegan exactamente a la misma solución.
+        <div class="stp-p" data-t="Pregunta">
+          <h3>7 · Pregunta de rigor</h3>
+          <p>¿Cuánto vale \(\vec B\) en un punto sobre la prolongación del hilo (\(a=0\))?</p>
+          <details class="ans-d"><summary>Ver la respuesta</summary><p>Allí \(d\vec\ell\parallel\hat r\), así que \(d\vec\ell\times\hat r=\vec 0\) para todo elemento: \(\vec B=\vec 0\) en cualquier punto colineal con el hilo.</p></details>
         </div>
       </div>
-      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
-        <div><b>5 · Segmento:</b> \(B=\dfrac{\mu_0 I}{4\pi a}(\sin\theta_2-\sin\theta_1)\)</div>
-        <div style="font-size:15px;font-weight:600"><b>Hilo infinito (\(\pm 90^\circ\)):</b> \(B=\dfrac{\mu_0 I}{2\pi a}\)</div>
-      </div>
-      <div class="tipbox" style="font-size:12px;padding:6px 10px">
-        <b>6 · Pregunta de rigor:</b> En el eje del hilo (\(a=0\)), ¿cuánto vale \(\vec B\)? <i>Como \(d\vec\ell\parallel\hat r\), el producto cruz produce estrictamente el <b>vector cero</b>: \(d\vec\ell\times\hat r=\vec 0 \implies d\vec B=\vec 0\), por lo que \(\vec B=\vec 0\) en todo punto colineal al hilo.</i>
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Los ángulos \(\theta\) se miden desde la perpendicular trazada de \(P\) al hilo (\(\theta_1 < 0\) abajo, \(\theta_2 > 0\) arriba).</span><span class="mono">4 / 13</span></div>
+  <div class="foot"><span>Ángulos medidos desde la perpendicular de \(P\) al hilo: \(\theta_1<0\) abajo, \(\theta_2>0\) arriba.</span><span class="mono">4 / 13</span></div>
 </section>
 
 <!-- 5 · SUPERPOSICIÓN -->
 <section class="slide" data-n="5">
-  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Deducción y Simulación</span></div>
-  <h2>Superposición de campos magnéticos: paso a paso (Vistas 2D y 3D)</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag l">Deducción y simulación</span></div>
+  <h2>Dos hilos: superposición en siete pasos</h2>
   <div class="row">
-    <div class="col" style="width:440px">
+    <div class="col" style="width:440px;flex:none">
       <canvas class="sim" id="cv-sup" width="440" height="280" aria-label="Superposición de dos hilos en 2D o 3D con punto P arrastrable"></canvas>
-      <div class="no-print" style="display:flex;gap:4px;margin-top:2px;margin-bottom:2px">
-        <button type="button" class="btn on" id="su-mode-2d" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 2D (Corte transversal)</button>
-        <button type="button" class="btn" id="su-mode-3d" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 3D (Perspectiva espacial)</button>
+      <div class="no-print seg2">
+        <button type="button" class="btn on" id="su-mode-2d">Vista 2D</button>
+        <button type="button" class="btn" id="su-mode-3d">Vista 3D</button>
+        <button type="button" class="btn" id="su-s1">I₁ sale ⊙</button>
+        <button type="button" class="btn" id="su-s2">I₂ entra ⊗</button>
       </div>
-      <div class="ctrl no-print" style="grid-template-columns:auto 1fr auto auto 1fr auto;gap:4px">
+      <div class="ctrl no-print">
         <label for="su-i1">I₁</label><input id="su-i1" type="range" min="1" max="30" value="20"><output id="su-i1-o">20 A</output>
         <label for="su-i2">I₂</label><input id="su-i2" type="range" min="1" max="30" value="12"><output id="su-i2-o">12 A</output>
       </div>
-      <div class="no-print" style="display:flex;gap:6px;margin-top:2px">
-        <button type="button" class="btn" id="su-s1" style="flex:1;min-height:26px;font-size:11px">I₁ sale ⊙</button>
-        <button type="button" class="btn" id="su-s2" style="flex:1;min-height:26px;font-size:11px">I₂ entra ⊗</button>
-        <span style="font-size:11.5px;color:var(--e10-muted);align-self:center">Arrastra P libremente</span>
-      </div>
-      <div class="read" style="margin-top:4px">
-        <div>|B₁|<b id="su-b1">—</b></div>
-        <div>|B₂|<b id="su-b2">—</b></div>
-        <div>|B total|<b id="su-b">—</b></div>
-      </div>
-      <div class="card" style="font-size:12.5px;padding:5px 8px;margin-top:2px">
-        <b>Fuerza entre los hilos:</b> \(\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}\) = <b id="su-f" class="mono">—</b> · <span id="su-fd"></span>
-      </div>
+      <div class="read"><div>|B₁|<b id="su-b1">—</b></div><div>|B₂|<b id="su-b2">—</b></div><div>|B total|<b id="su-b">—</b></div></div>
     </div>
-    <div class="col" style="flex:1;overflow-y:auto;gap:6px">
-      <div class="steps" style="font-size:13.5px;gap:4px">
-        <div><span class="n">1</span><span><b>Principio de Superposición Vectorial:</b> \(\vec B_{\text{total}}=\sum \vec B_i = \vec B_1 + \vec B_2\). Los módulos <u>no</u> se suman escalarmente; se deben componer como vectores ortogonales en el espacio.</span></div>
-        <div><span class="n">2</span><span><b>Variables del esquema (2D/3D):</b> Distancias radiales \(r_1, r_2\) desde cada conductor a \(P\). Por regla de la mano derecha, cada vector \(\vec B_i\) es perpendicular al vector posición correspondiente (\(\vec B_i \perp \vec r_i\)).</span></div>
-        <div><span class="n">3</span><span><b>Magnitudes individuales de Biot-Savart:</b> \(B_1=\dfrac{\mu_0 I_1}{2\pi r_1}\quad\text{y}\quad B_2=\dfrac{\mu_0 I_2}{2\pi r_2}\).</span></div>
-        <div><span class="n">4</span><span><b>Descomposición por componentes:</b> En el plano cartesiano, \(\vec B_1 = B_{1x}\hat\imath + B_{1y}\hat\jmath\) y \(\vec B_2 = B_{2x}\hat\imath + B_{2y}\hat\jmath\).</span></div>
-      </div>
-      <div class="card" style="padding:6px 10px;background:var(--e10-surface)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-          <b style="font-size:12.5px;color:var(--e10-primary)">5 · Dos caminos para calcular el campo total:</b>
-          <div class="no-print" style="display:flex;gap:4px">
-            <button type="button" class="btn on" id="btn-sup-a" style="min-height:22px;padding:0 6px;font-size:10.5px">Camino A: Componentes</button>
-            <button type="button" class="btn" id="btn-sup-b" style="min-height:22px;padding:0 6px;font-size:10.5px">Camino B: Ley del Coseno</button>
-          </div>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Principio">
+          <h3>1 · Principio de superposición</h3>
+          <div class="soft eq">\[ \vec B_{\text{total}}=\sum_i\vec B_i=\vec B_1+\vec B_2 \]</div>
+          <p>Los campos se suman como <b>vectores</b>, nunca sus módulos. Arrastra \(P\) en la figura y compara \(|B_1|+|B_2|\) con \(|B_{\text{total}}|\).</p>
         </div>
-        <div id="sup-a-box" style="font-size:12px;line-height:1.3">
-          Suma de componentes cartesianas independientes:<br>
-          \(B_x = B_{1x} + B_{2x},\quad B_y = B_{1y} + B_{2y} \implies |\vec B| = \sqrt{B_x^2 + B_y^2}\).
+        <div class="stp-p" data-t="Geometría">
+          <h3>2 · Distancias y direcciones</h3>
+          <p>\(r_1\) y \(r_2\) son las distancias de cada hilo a \(P\). Por la regla de la mano derecha, cada \(\vec B_i\) es tangente a la circunferencia que rodea su hilo, es decir, perpendicular a \(\vec r_i\):</p>
+          <div class="soft eq">\[ \vec B_i\perp\vec r_i \]</div>
         </div>
-        <div id="sup-b-box" style="display:none;font-size:12px;line-height:1.3">
-          Ley del coseno con el ángulo \(\gamma\) entre \(\vec B_1\) y \(\vec B_2\):<br>
-          \(|\vec B|^2 = B_1^2 + B_2^2 + 2 B_1 B_2 \cos\gamma\).
+        <div class="stp-p" data-t="Módulos">
+          <h3>3 · El campo de cada hilo</h3>
+          <div class="soft eq">\[ B_1=\frac{\mu_0 I_1}{2\pi r_1}\qquad B_2=\frac{\mu_0 I_2}{2\pi r_2} \]</div>
+          <p>Son las lecturas \(|B_1|\) y \(|B_2|\) de la izquierda.</p>
+        </div>
+        <div class="stp-p" data-t="Componentes">
+          <h3>4 · Descomposición en componentes</h3>
+          <div class="soft eq">\[ \vec B_1=B_{1x}\,\hat\imath+B_{1y}\,\hat\jmath\qquad \vec B_2=B_{2x}\,\hat\imath+B_{2y}\,\hat\jmath \]</div>
+          <p>Cada componente sale del ángulo de \(\vec r_i\) girado \(90^\circ\) según el sentido de la corriente.</p>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para el campo total</h3>
+          <div class="seg2 no-print" style="max-width:480px"><button type="button" class="btn on" id="btn-sup-a">Camino A · componentes</button><button type="button" class="btn" id="btn-sup-b">Camino B · ley del coseno</button></div>
+          <div id="sup-a-box"><div class="soft eq">\[ B_x=B_{1x}+B_{2x},\quad B_y=B_{1y}+B_{2y}\ \Rightarrow\ |\vec B|=\sqrt{B_x^2+B_y^2} \]</div></div>
+          <div id="sup-b-box" style="display:none"><p>Con \(\gamma\), el ángulo entre \(\vec B_1\) y \(\vec B_2\):</p><div class="soft eq">\[ |\vec B|^2=B_1^2+B_2^2+2B_1B_2\cos\gamma \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Casos" data-print>
+          <h3>6 · Punto medio y fuerza entre los hilos</h3>
+          <p>En el punto medio (\(r_1=r_2=d/2\)) y con corrientes iguales:</p>
+          <div class="ok eq">\[ \text{sentidos opuestos: } B=\frac{2\mu_0 I}{\pi d}\qquad\text{mismo sentido: } \vec B=\vec 0 \]</div>
+          <div class="card">Fuerza por unidad de longitud: \(\dfrac{F}{L}=\dfrac{\mu_0 I_1 I_2}{2\pi d}=\) <b id="su-f" class="mono">—</b> · <span id="su-fd"></span></div>
+        </div>
+        <div class="stp-p" data-t="Pregunta">
+          <h3>7 · Pregunta de rigor</h3>
+          <p>Con corrientes opuestas y distintas (\(I_1>I_2\)), ¿dónde se anula \(\vec B\)?</p>
+          <details class="ans-d"><summary>Ver la respuesta</summary><p>Sobre la recta que une los hilos, <b>por fuera</b> del segmento y del lado del hilo de menor corriente \(I_2\): allí los dos campos son opuestos y pueden igualarse en módulo.</p></details>
         </div>
       </div>
-      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;font-size:12.5px">
-        <div><b>6 · Punto medio (\(d/2\)):</b> Opuestas: \(B=\frac{2\mu_0 I}{\pi d}\) | Iguales: \(\vec B=\vec 0\)</div>
-      </div>
-      <div class="warn" style="font-size:11.5px;padding:5px 8px">
-        <b>7 · Pregunta de rigor:</b> ¿Dónde se anula el campo magnético (\(\vec B=\vec 0\)) si las corrientes son opuestas y desiguales (\(I_1 > I_2\))? <i>Sobre la recta que une los hilos, <b>por fuera del segmento</b>, más cerca del conductor de menor corriente \(I_2\).</i>
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Suma vectorial estricta: \(\vec B_{\text{total}}=\vec B_1+\vec B_2\). Los campos magnéticos obedecen superposición lineal.</span><span class="mono">5 / 13</span></div>
+  <div class="foot"><span>Arrastra el punto \(P\). Los campos magnéticos obedecen la superposición lineal.</span><span class="mono">5 / 13</span></div>
 </section>
 
 <!-- 6 · ESPIRA -->
 <section class="slide" data-n="6">
-  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Deducción y Reto</span></div>
-  <h2>Espira circular: deducción en el eje y dos caminos</h2>
+  <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag e">Deducción y reto</span></div>
+  <h2>Espira circular: campo en su eje en siete pasos</h2>
   <div class="row">
-    <div class="col" style="width:440px">
+    <div class="col" style="width:440px;flex:none">
       <canvas class="sim" id="cv-esp" width="440" height="260" aria-label="Geometría 3D de la espira o gráfica de B(z)"></canvas>
-      <div class="no-print" style="display:flex;gap:4px;margin-top:2px;margin-bottom:2px">
-        <button type="button" class="btn on" id="esp-mode-geom" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Vista 3D / Simetría</button>
-        <button type="button" class="btn" id="esp-mode-plot" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Gráfica B(z)</button>
-        <button type="button" class="btn on" id="esp-tog-dl" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">dℓ y r̂</button>
-        <button type="button" class="btn on" id="esp-tog-sym" style="flex:1;min-height:26px;font-size:11px;padding:0 4px">Par simétrico</button>
+      <div class="no-print seg2">
+        <button type="button" class="btn on" id="esp-mode-geom">Vista 3D</button>
+        <button type="button" class="btn" id="esp-mode-plot">Gráfica B(z)</button>
+        <button type="button" class="btn on" id="esp-tog-dl">dℓ y r̂</button>
+        <button type="button" class="btn on" id="esp-tog-sym">Par simétrico</button>
       </div>
       <div class="ctrl no-print">
         <label for="es-r">R</label><input id="es-r" type="range" min="2" max="20" value="10"><output id="es-r-o">10 cm</output>
@@ -367,45 +396,55 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
         <label for="es-z">z</label><input id="es-z" type="range" min="-30" max="30" value="10"><output id="es-z-o">10 cm</output>
       </div>
       <div class="read"><div>B en el centro<b id="es-b0">—</b></div><div>B en z<b id="es-bz">—</b></div><div>B(z)/B₀<b id="es-ratio">—</b></div></div>
-      <div class="reto" id="reto-esp" style="padding:8px 10px;gap:6px">
-        <span class="q" id="re-q" style="font-size:13.5px"></span>
-        <div class="ans"><input id="re-in" inputmode="decimal" placeholder="µT" style="min-height:32px;font-size:14px" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="re-ck" style="min-height:32px;padding:0 8px">OK</button><button type="button" class="btn" id="re-new" style="min-height:32px;padding:0 8px">Nuevo</button></div>
-        <span class="fb" id="re-fb" style="font-size:13px;min-height:16px"></span>
-        <button type="button" class="btn" id="re-sb" style="align-self:flex-start;min-height:28px;padding:2px 8px;font-size:12px">Ver solución</button>
-        <div class="sol" id="re-sol" style="font-size:12.5px;padding:6px 10px"></div>
-      </div>
     </div>
-    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
-      <div class="steps" style="font-size:14px;gap:4px">
-        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\). Con \(d\vec\ell\perp\hat r \implies |d\vec\ell\times\hat r|=d\ell\).</span></div>
-        <div><span class="n">2</span><span><b>Variables y simetría 3D:</b> \(r=\sqrt{R^2+z^2}\). Por simetría circular \(\oint d\vec B_\perp=\vec 0\): solo sobrevive \(dB_z=dB\cos\alpha\).</span></div>
-        <div><span class="n">3</span><span><b>Cambio de variable:</b> \(\cos\alpha=\dfrac{R}{r} \implies dB_z=\dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}d\ell\).</span></div>
-        <div><span class="n">4</span><span><b>Constantes fuera:</b> \(B_z=\dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}\displaystyle\oint d\ell\).</span></div>
-      </div>
-      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <b style="font-size:13px;color:var(--e10-primary)">5 · Dos caminos para resolver:</b>
-          <div class="no-print" style="display:flex;gap:4px">
-            <button type="button" class="btn on" id="btn-esp-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Perímetro 2πR</button>
-            <button type="button" class="btn" id="btn-esp-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Angular dφ</button>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Elemento">
+          <h3>1 · El elemento de corriente</h3>
+          <div class="soft eq">\[ d\vec B=\frac{\mu_0 I}{4\pi}\,\frac{d\vec\ell\times\hat r}{r^2} \]</div>
+          <p>En la espira, cada \(d\vec\ell\) es perpendicular a \(\hat r\): \(|d\vec\ell\times\hat r|=d\ell\).</p>
+        </div>
+        <div class="stp-p" data-t="Simetría">
+          <h3>2 · Distancia y simetría</h3>
+          <div class="soft eq">\[ r=\sqrt{R^2+z^2} \]</div>
+          <p>Cada elemento tiene otro diametralmente opuesto («Par simétrico»): sus componentes perpendiculares al eje se cancelan, \(\oint d\vec B_\perp=\vec 0\). Solo sobrevive \(dB_z=dB\cos\alpha\).</p>
+        </div>
+        <div class="stp-p" data-t="Reemplazo">
+          <h3>3 · Reemplazo</h3>
+          <p>Con \(\cos\alpha=R/r\):</p>
+          <div class="soft eq">\[ dB_z=\frac{\mu_0 I}{4\pi}\,\frac{d\ell}{R^2+z^2}\cdot\frac{R}{\sqrt{R^2+z^2}}=\frac{\mu_0 I R}{4\pi\,(R^2+z^2)^{3/2}}\,d\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Constantes">
+          <h3>4 · Constantes fuera de la integral</h3>
+          <p>\(R\), \(z\) e \(I\) son iguales para todos los elementos:</p>
+          <div class="soft eq">\[ B_z=\frac{\mu_0 I R}{4\pi\,(R^2+z^2)^{3/2}}\oint d\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para \(\oint d\ell\)</h3>
+          <div class="seg2 no-print" style="max-width:460px"><button type="button" class="btn on" id="btn-esp-a">Camino A · perímetro</button><button type="button" class="btn" id="btn-esp-b">Camino B · ángulo dφ</button></div>
+          <div id="esp-a-box"><p>La suma de los \(d\ell\) es el perímetro, \(\oint d\ell=2\pi R\):</p><div class="soft eq">\[ B_z=\frac{\mu_0 I R}{4\pi(R^2+z^2)^{3/2}}\,(2\pi R)=\frac{\mu_0 I R^2}{2\,(R^2+z^2)^{3/2}} \]</div></div>
+          <div id="esp-b-box" style="display:none"><p>Con \(d\ell=R\,d\phi\) y \(\phi\) de \(0\) a \(2\pi\):</p><div class="soft eq">\[ \int_0^{2\pi}R\,d\phi=2\pi R \]</div><p>El resultado es el mismo.</p></div>
+        </div>
+        <div class="stp-p" data-t="Límites" data-print>
+          <h3>6 · Centro y punto lejano</h3>
+          <div class="ok eq">\[ z=0:\ \ B_0=\frac{\mu_0 I}{2R}\qquad\qquad z\gg R:\ \ B_z\approx\frac{\mu_0\,\mu}{2\pi z^3},\ \ \mu=I\pi R^2 \]</div>
+          <p>Lejos, la espira se comporta como un dipolo magnético: su campo decae como \(1/z^3\). Mira la «Gráfica B(z)».</p>
+        </div>
+        <div class="stp-p" data-t="Reto">
+          <h3>7 · Reto y pregunta de rigor</h3>
+          <div class="reto" id="reto-esp">
+            <span class="mono" style="font-size:12px;color:var(--e10-muted)">RETO CON VALORES NUEVOS CADA VEZ</span>
+            <span class="q" id="re-q"></span>
+            <div class="ans"><input id="re-in" inputmode="decimal" placeholder="B en µT" aria-label="Tu respuesta en microteslas"><button type="button" class="btn pri" id="re-ck">Comprobar</button><button type="button" class="btn" id="re-new">Nuevo</button></div>
+            <span class="fb" id="re-fb"></span>
+            <button type="button" class="btn" id="re-sb" style="align-self:flex-start">Ver solución</button>
+            <div class="sol" id="re-sol"></div>
           </div>
-        </div>
-        <div id="esp-a-box" style="font-size:12.5px;line-height:1.35">
-          Por longitud de circunferencia completa: \(\displaystyle\oint d\ell = 2\pi R\).<br>
-          \(B_z = \dfrac{\mu_0 I R}{4\pi (R^2+z^2)^{3/2}}(2\pi R) = \dfrac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}}\)
-        </div>
-        <div id="esp-b-box" style="display:none;font-size:12.5px;line-height:1.35">
-          Por parametrización azimutal: \(d\ell=R\,d\phi\) con \(\phi\in[0, 2\pi]\):<br>
-          \(\displaystyle\int_0^{2\pi} R\,d\phi = R[\phi]_0^{2\pi} = 2\pi R\). Resultado idéntico garantizado.
+          <p>Si \(R\) se duplica con la misma \(I\), ¿qué le pasa a \(B_0\)? <details class="ans-d" style="display:inline"><summary>Respuesta</summary>Se reduce a la mitad: \(B_0\propto 1/R\).</details></p>
         </div>
       </div>
-      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
-        <div><b>6 · Centro (\(z=0\)):</b> \(B_0=\dfrac{\mu_0 I}{2R}\)</div>
-        <div style="font-size:14.5px;font-weight:600">Dipolo (\(z\gg R\)): \(B_z\approx\dfrac{\mu_0 \mu_{\text{mag}}}{2\pi z^3}\)</div>
-      </div>
-      <div class="tipbox" style="font-size:12px;padding:6px 10px">
-        <b>7 · Pregunta de rigor:</b> Si \(R\) se duplica con \(I\) constante, ¿qué le ocurre a \(B_0\) en el centro? <i>Se reduce exactamente a la mitad (\(B\propto 1/R\)).</i>
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
   <div class="foot"><span>Lejos (\(z\gg R\)) el campo decae como \(1/z^{3}\): la espira es un dipolo magnético.</span><span class="mono">6 / 13</span></div>
@@ -414,54 +453,59 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
 <!-- 7 · ARCOS -->
 <section class="slide" data-n="7">
   <div class="topbar"><span><b>Electro<span>10.Easy</span></b> · Capítulo 9 · Biot–Savart</span><span class="tag c">Deducción</span></div>
-  <h2>Arcos de corriente: paso a paso y dos caminos</h2>
+  <h2>Arcos de corriente: deducción en siete pasos</h2>
   <div class="row">
-    <div class="col" style="width:420px">
-      <canvas class="sim" id="cv-arco" width="420" height="340" aria-label="Arco de corriente de ángulo theta y su centro"></canvas>
+    <div class="col" style="width:440px;flex:none">
+      <canvas class="sim" id="cv-arco" width="440" height="320" aria-label="Arco de corriente de ángulo theta y su centro"></canvas>
       <div class="ctrl no-print">
         <label for="ar-t">θ</label><input id="ar-t" type="range" min="10" max="360" value="120"><output id="ar-t-o">120°</output>
         <label for="ar-r">R</label><input id="ar-r" type="range" min="2" max="15" value="6"><output id="ar-r-o">6 cm</output>
       </div>
-      <div class="no-print" style="display:flex;gap:6px;margin-top:2px;margin-bottom:4px">
-        <button type="button" class="btn on" id="arc-tog-dl" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Elemento dℓ y r̂</button>
-        <button type="button" class="btn" id="arc-tog-sym" style="flex:1;min-height:28px;font-size:11.5px;padding:0 6px">Par simétrico</button>
-      </div>
-      <div class="read"><div>B en el centro (I=9 A)<b id="ar-b">—</b></div><div>Fracción de espira<b id="ar-f">—</b></div><div>Espira completa<b id="ar-full">—</b></div></div>
+      <div class="no-print seg2"><button type="button" class="btn on" id="arc-tog-dl">Elemento dℓ y r̂</button><button type="button" class="btn" id="arc-tog-sym">Par simétrico</button></div>
+      <div class="read"><div>B en el centro (I = 9 A)<b id="ar-b">—</b></div><div>Fracción de espira<b id="ar-f">—</b></div><div>Espira completa<b id="ar-full">—</b></div></div>
     </div>
-    <div class="col" style="flex:1;overflow-y:auto;gap:7px">
-      <div class="steps" style="font-size:14px;gap:4px">
-        <div><span class="n">1</span><span><b>Elemento infinitesimal:</b> \(d\vec B=\dfrac{\mu_0 I}{4\pi}\dfrac{d\vec\ell\times\hat r}{r^2}\).</span></div>
-        <div><span class="n">2</span><span><b>Variables en el plano:</b> Radio constante \(r=R\). El vector tangente cumple \(d\vec\ell\perp\hat r\) (\(\sin 90^\circ=1\)); por regla de la mano derecha todos los \(d\vec B\) apuntan hacia dentro (\(\otimes\)).</span></div>
-        <div><span class="n">3</span><span><b>Reemplazo de magnitudes:</b> \(dB=\dfrac{\mu_0 I}{4\pi R^2} d\ell\).</span></div>
-        <div><span class="n">4</span><span><b>Constantes fuera:</b> \(B=\dfrac{\mu_0 I}{4\pi R^2}\displaystyle\int_{\text{arco}} d\ell\).</span></div>
-      </div>
-      <div class="card" style="padding:8px 12px;background:var(--e10-surface)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <b style="font-size:13px;color:var(--e10-primary)">5 · Dos caminos para resolver:</b>
-          <div class="no-print" style="display:flex;gap:4px">
-            <button type="button" class="btn on" id="btn-arc-a" style="min-height:24px;padding:0 8px;font-size:11px">Camino A: Longitud s = Rθ</button>
-            <button type="button" class="btn" id="btn-arc-b" style="min-height:24px;padding:0 8px;font-size:11px">Camino B: Variable angular</button>
-          </div>
+    <div class="stp" data-stp>
+      <div class="stp-nav no-print"></div>
+      <div class="stp-body">
+        <div class="stp-p" data-t="Elemento">
+          <h3>1 · El elemento de corriente</h3>
+          <div class="soft eq">\[ d\vec B=\frac{\mu_0 I}{4\pi}\,\frac{d\vec\ell\times\hat r}{r^2} \]</div>
+          <p>Calculamos el campo en el centro del arco.</p>
         </div>
-        <div id="arc-a-box" style="font-size:12.5px;line-height:1.35">
-          Por longitud de arco circular: \(s = R\theta\) (con \(\theta\) en radianes).<br>
-          \(B = \dfrac{\mu_0 I}{4\pi R^2} (R\theta) = \dfrac{\mu_0 I\,\theta}{4\pi R}\)
+        <div class="stp-p" data-t="Geometría">
+          <h3>2 · Geometría en el plano</h3>
+          <p>Todos los elementos están a la misma distancia del centro, \(r=R\), y cada \(d\vec\ell\) es tangente, perpendicular a \(\hat r\): \(\sin90^\circ=1\).</p>
+          <p>Por la regla de la mano derecha, todos los \(d\vec B\) apuntan en el mismo sentido (\(\otimes\) en la figura).</p>
         </div>
-        <div id="arc-b-box" style="display:none;font-size:12.5px;line-height:1.35">
-          Por diferencial angular \(d\ell = R\,d\theta'\), integrando de \(0\) a \(\theta\):<br>
-          \(\displaystyle\int_0^\theta R\,d\theta' = R[\theta']_0^\theta = R\theta \implies B = \dfrac{\mu_0 I\,\theta}{4\pi R}\).
+        <div class="stp-p" data-t="Reemplazo">
+          <h3>3 · Reemplazo</h3>
+          <div class="soft eq">\[ dB=\frac{\mu_0 I}{4\pi R^2}\,d\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Constantes">
+          <h3>4 · Constantes fuera de la integral</h3>
+          <div class="soft eq">\[ B=\frac{\mu_0 I}{4\pi R^2}\int_{\text{arco}}d\ell \]</div>
+        </div>
+        <div class="stp-p" data-t="Dos caminos">
+          <h3>5 · Dos caminos para \(\int d\ell\)</h3>
+          <div class="seg2 no-print" style="max-width:480px"><button type="button" class="btn on" id="btn-arc-a">Camino A · longitud s = Rθ</button><button type="button" class="btn" id="btn-arc-b">Camino B · variable angular</button></div>
+          <div id="arc-a-box"><p>La longitud del arco es \(s=R\theta\), con \(\theta\) en radianes:</p><div class="soft eq">\[ B=\frac{\mu_0 I}{4\pi R^2}\,(R\theta)=\frac{\mu_0 I\,\theta}{4\pi R} \]</div></div>
+          <div id="arc-b-box" style="display:none"><p>Con \(d\ell=R\,d\theta'\) desde \(0\) hasta \(\theta\):</p><div class="soft eq">\[ \int_0^{\theta}R\,d\theta'=R\theta\ \Rightarrow\ B=\frac{\mu_0 I\,\theta}{4\pi R} \]</div></div>
+        </div>
+        <div class="stp-p" data-t="Casos" data-print>
+          <h3>6 · Casos particulares</h3>
+          <div class="ok eq">\[ \text{semicircunferencia }(\theta=\pi):\ B=\frac{\mu_0 I}{4R}\qquad \text{espira }(\theta=2\pi):\ B=\frac{\mu_0 I}{2R} \]</div>
+          <p>Mueve \(\theta\): la lectura «Fracción de espira» es \(\theta/2\pi\).</p>
+        </div>
+        <div class="stp-p" data-t="Pregunta">
+          <h3>7 · Pregunta de rigor</h3>
+          <p>¿Por qué los tramos rectos que apuntan al centro no aportan campo en el centro?</p>
+          <details class="ans-d"><summary>Ver la respuesta</summary><p>En esos tramos \(d\vec\ell\parallel\hat r\), así que \(d\vec\ell\times\hat r=\vec 0\).</p></details>
         </div>
       </div>
-      <div class="ok" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px">
-        <div><b>6 · Semicírculo (\(\theta=\pi\)):</b> \(B=\dfrac{\mu_0 I}{4R}\)</div>
-        <div style="font-size:14.5px;font-weight:600">Espira (\(\theta=2\pi\)): \(B=\dfrac{\mu_0 I}{2R}\)</div>
-      </div>
-      <div class="warn" style="font-size:12px;padding:6px 10px">
-        <b>7 · Pregunta de rigor:</b> ¿Por qué los cables rectos alineados hacia el centro no aportan al campo? <i>Porque \(d\vec\ell\parallel\hat r \implies d\vec\ell\times\hat r=\vec 0\).</i>
-      </div>
+      <div class="stp-foot no-print"><button type="button" class="btn" data-stp-prev>← Paso anterior</button><span class="mono stp-count"></span><button type="button" class="btn pri" data-stp-next>Paso siguiente →</button></div>
     </div>
   </div>
-  <div class="foot"><span>Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 13</span></div>
+  <div class="foot"><span>Ángulo \(\theta\) en radianes. Semicircunferencia: la mitad del campo de la espira completa.</span><span class="mono">7 / 13</span></div>
 </section>
 
 <!-- 8 · ERRORES -->
@@ -1607,6 +1651,16 @@ body{--e10-violet-soft:color-mix(in srgb,var(--e10-vec-field) 12%,var(--e10-surf
     return { draw() { if (!built) build(); paint(); } };
   })();
 
+
+  // ── Deducción en pasos: chips 1–7, un paso visible ──
+  document.querySelectorAll('[data-stp]').forEach((box) => {
+    const ps = [...box.querySelectorAll('.stp-p')], nav = box.querySelector('.stp-nav'), cnt = box.querySelector('.stp-count'); let k = 0;
+    ps.forEach((p, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<b>${i + 1}</b>${p.dataset.t}`; b.addEventListener('click', () => show(i)); nav.appendChild(b); });
+    const bs = [...nav.children];
+    function show(i) { k = Math.max(0, Math.min(ps.length - 1, i)); ps.forEach((p, j) => p.classList.toggle('on', j === k)); bs.forEach((b, j) => { b.classList.toggle('on', j === k); if (j === k) b.classList.add('seen'); }); cnt.textContent = `paso ${k + 1} de ${ps.length}`; box.querySelector('[data-stp-prev]').disabled = k === 0; box.querySelector('[data-stp-next]').disabled = k === ps.length - 1; }
+    box.querySelector('[data-stp-prev]').addEventListener('click', () => show(k - 1)); box.querySelector('[data-stp-next]').addEventListener('click', () => show(k + 1));
+    show(0);
+  });
   // ── Navegación ──
   const slides = [...document.querySelectorAll('.slide')]; let cur = 0;
   const onShow = { 1: () => sims.cover.show(), 2: sims.oersted.draw, 3: sims.ley.draw, 4: sims.hilo.draw, 5: sims.sup.draw, 6: sims.esp.draw, 7: sims.arco.draw, 9: sims.tree.draw, 10: () => { if (!$('lab-frame').src) $('lab-frame').src = labBtns[0].dataset.lab; }, 11: sims.cmap.draw, 12: sims.hist.draw };
