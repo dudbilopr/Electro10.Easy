@@ -134,6 +134,9 @@ table{width:100%;text-align:left;border-collapse:collapse;font-size:.9rem} th,td
 .avt{display:inline-block;border:2px solid transparent;border-radius:50%;padding:4px} .avt:hover{background:var(--e10-line)}
 .star-rating i{font-size:24px;color:var(--e10-muted);cursor:pointer} .star-rating i:hover,.star-rating i.active{color:var(--e10-warning)}
 
+/* Incrustado en una clase (?embed): sin cabecera ni pie; la clase trae sus propias tareas */
+html.embed header.e10-header,html.embed footer{display:none}
+
 /* Modo proyector */
 body.e10-projector{font-size:17px}
 body.e10-projector .canvas-label{font-size:1.15rem}
@@ -183,6 +186,7 @@ document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{if(window.__e10
 <script src="../js/lab10-intelligence.js"></script>
 </head>
 <body data-domain="electro" class="light-mode">
+<script>if(/[?&]embed(&|=|$)/.test(location.search))document.documentElement.classList.add('embed');</script>
 <header class="e10-header">
     <a class="e10-brand" href="../index.html">CoulombLab<span>10.easy</span></a>
     <span class="e10-chip module-chip">Módulo 1 · Ley de Coulomb</span>
@@ -405,7 +409,25 @@ const col=(n)=>getComputedStyle(document.body).getPropertyValue('--e10-'+n).trim
 // --- 10.EASY: CICLO PREDECIR → COMPROBAR → EXPLICAR ---
 state.prediction=null;state.checked=!1;
 window.setPrediction=(p)=>{state.prediction=p;document.querySelectorAll('[data-pred]').forEach(b=>b.classList.toggle('on',b.dataset.pred===p));updateSteps();};
-window.comprobar=()=>{state.checked=!0;analizarFisica();if(window.matchMedia('(max-width:900px)').matches)document.getElementById('right-panel').classList.add('open');};
+window.comprobar=()=>{state.checked=!0;analizarFisica();emitirComprobacion();if(window.matchMedia('(max-width:900px)').matches)document.getElementById('right-panel').classList.add('open');};
+// Telemetría «comprobar» (códigos en js/seguimiento.js): ¿cada fuerza dibujada va sobre la recta correcta y con el sentido correcto?
+function emitirComprobacion(){
+    const chs=state.objects.filter(o=>o.type.startsWith('charge')),vs=state.objects.filter(o=>o.type==='vector'),F=state.calculatedForces||[];
+    let error=null;
+    if(chs.length<2)error='coulomb_pocas_cargas';
+    else if(!vs.length)error='coulomb_sin_vectores';
+    else if(vs.some(v=>v.validation==='warn'))error='coulomb_sin_origen';
+    else{
+        const malo=vs.find(v=>v.validation==='error');
+        if(malo){
+            const vA=Math.atan2(getPhysY(malo.end.y)-getPhysY(malo.start.y),malo.end.x-malo.start.x);
+            const opuesta=F.filter(f=>f.t.id===malo.targetId).some(f=>{let d=Math.abs(((vA-f.ang-Math.PI)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI);return d<0.6;});
+            error=opuesta?'coulomb_atraccion_repulsion':'coulomb_fuera_de_recta';
+        }else if(chs.some(c=>F.some(f=>f.target===c.id)&&!c.hasVectors))error='coulomb_falta_fuerza';
+    }
+    try{window.lab10Bus&&window.lab10Bus.emitTelemetry('comprobar',{escena:'fuerzas',ok:!error,error,cargas:chs.length,vectores:vs.length});}catch(_){}
+    window.__ultimaComprobacion={ok:!error,error};
+}
 function firstPair(){const chs=state.objects.filter(o=>o.type.startsWith('charge'));return chs.length>=2?[chs[0],chs[1]]:null;}
 function setStep(n,s){const el=document.getElementById('step-'+n);if(el)el.dataset.s=s;}
 function updateSteps(){
@@ -825,6 +847,7 @@ function exportarImagen(){const t=document.createElement('canvas');t.width=cvs.w
 import { auth, db } from '../js/firebase.js';
 import { lab10Auth } from '../js/lab10-auth.js';
 import { lab10Bus } from '../js/lab10-bus.js';
+window.lab10Bus = lab10Bus;
 import { lab10Shell } from '../js/lab10-shell.js';
 import { doc, setDoc, getDoc, getDocs, collection, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getDatabase, ref, set, get, push, onValue, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";

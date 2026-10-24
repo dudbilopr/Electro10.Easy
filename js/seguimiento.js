@@ -95,6 +95,13 @@ export const ERRORES = {
     fem_max_posicion: 'Posición de la fem máxima del generador',
     omega_f: 'Usó f en lugar de ω = 2πf',
     eficaz_pico: 'Dio el valor eficaz en lugar del pico',
+    // CoulombLab (capítulo 1)
+    coulomb_pocas_cargas: 'Comprobó con menos de dos cargas',
+    coulomb_sin_vectores: 'No dibujó ninguna fuerza',
+    coulomb_sin_origen: 'Dibujó una fuerza que no sale de una carga',
+    coulomb_atraccion_repulsion: 'Confundió atracción y repulsión',
+    coulomb_fuera_de_recta: 'Fuerza fuera de la recta que une las cargas',
+    coulomb_falta_fuerza: 'Faltó una fuerza (superposición incompleta)',
     otro: 'Otro error',
 };
 
@@ -166,9 +173,10 @@ const PRACTICA = { campo_radial: 'BiotSavart.html#hilos', sentido_invertido: 'Bi
     mano_derecha_lorentz: 'Lorentz.html#fuerza', falta_seno: 'Lorentz.html#fuerza', falta_carga: 'Lorentz.html#fuerza', sentido_giro: 'Lorentz.html#orbita', v_perp: 'Lorentz.html#orbita',
     radio_por_diametro: 'Lorentz.html#selector', b_sobre_e: 'Lorentz.html#selector', selector_equilibrio: 'Lorentz.html#selector', par_nulo: 'Lorentz.html#conductor', sentido_par: 'Lorentz.html#conductor', cos_en_par: 'Lorentz.html#conductor',
     flujo_constante: 'Faraday.html#flujo', lenz_sentido: 'Faraday.html#iman', delta_b: 'Faraday.html#flujo', coseno_flujo: 'Faraday.html#flujo', flujo_vs_fem: 'Faraday.html#flujo',
-    fem_vs_corriente: 'Faraday.html#barra', fem_max_posicion: 'Faraday.html#generador', omega_f: 'Faraday.html#generador', eficaz_pico: 'Faraday.html#generador' };
+    fem_vs_corriente: 'Faraday.html#barra', fem_max_posicion: 'Faraday.html#generador', omega_f: 'Faraday.html#generador', eficaz_pico: 'Faraday.html#generador',
+    coulomb_pocas_cargas: 'Coulomb.html', coulomb_sin_vectores: 'Coulomb.html', coulomb_sin_origen: 'Coulomb.html', coulomb_atraccion_repulsion: 'Coulomb.html', coulomb_fuera_de_recta: 'Coulomb.html', coulomb_falta_fuerza: 'Coulomb.html' };
 export const practicaDe = (code) => (PRACTICA[code] ? `simuladores/${PRACTICA[code]}` : null);
-const LABS = { Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
+const LABS = { Coulomb: 'CoulombLab', Ampere: 'AmpèreLab', Lorentz: 'LorentzLab', Faraday: 'FaradayLab', BiotSavart: 'BiotSavartLab' };
 export const labDe = (code) => LABS[(PRACTICA[code] || '').split('.')[0]] || 'BiotSavartLab';
 
 // ── Portada del estudiante: «Continúa donde ibas» y «Mi semana» ──
