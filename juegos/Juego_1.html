@@ -1052,8 +1052,10 @@ const Game = (() => {
     conceptIdx++;
 
     if (score >= lvl.concepts.length) {
-      // Level complete
+      // Level complete: avisa a la ruta formativa (desafío integral y portal)
       const nextIdx = levelIdx + 1;
+      try { if (window.parent !== window) window.parent.postMessage({ type: 'GAME_LEVEL_CLEAR', modulo: 1, nivel: levelIdx + 1, conceptos: conceptsTotal }, '*'); } catch (_) {}
+      try { localStorage.setItem('e10_juego1_nivel', String(Math.max(+(localStorage.getItem('e10_juego1_nivel') || 0), levelIdx + 1))); } catch (_) {}
       if (nextIdx >= LEVELS_DATA.length) { endGame(true); return; }
       showLevelPopup(nextIdx);
     } else {
@@ -1084,6 +1086,7 @@ const Game = (() => {
   // ── End Game ───────────────────────────────────────────────────
   function endGame(won) {
     running = false; paused = false;
+    try { if (won && window.parent !== window) window.parent.postMessage({ type: 'GAME_LEVEL_CLEAR', modulo: 1, nivel: LEVELS_DATA.length, completo: true, conceptos: conceptsTotal }, '*'); } catch (_) {}
     cancelAnimationFrame(rafId);
 
     document.getElementById('end-emoji').textContent = won ? '🏆' : '💀';
