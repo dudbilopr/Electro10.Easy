@@ -4,11 +4,63 @@
 > Léela al empezar, actualízala al terminar.
 
 ## 🔒 En curso (bloqueos)
-<!-- Ninguno activo actualmente. M6, M8, M9, M10 y M11 completados y verificados. -->
+- Ninguno activo actualmente. M03 y M04 reestandarizados al 100% con el paquete maestro LaTeX de Opus (`e10.sty`) y compilados a PDF. Próximo paso: auditoría de M05.
+
+### 2026-10-25 07:15 · Antigravity (Gemini) · Estandarización de PDFs M03 y M04 al diseño maestro de Opus (`e10.sty`)
+- **Qué hice:**
+  1. **Diagnóstico de Disparidad:** Se detectó que DeepSeek había generado copias ad-hoc mutiladas de `e10.sty` (52 líneas frente a las 135 canónicas de Opus), prescindiendo de la portada oficial `\ePortada`, sustituyendo `tcolorbox` por crudos `\fcolorbox`, usando fuentes de sistema por defecto y omitiendo diagramas TikZ vectoriales.
+  2. **Restauración del Paquete Maestro:** Se restauró el `.design/fase5/e10.sty` original de Opus (IBM Plex Serif, Sans y Mono, NewTxMath, paleta Plasma, cajas `eResuelto`, `eReto`, `eClave`, `eError`, `eConsejo` y códigos `\eQR`).
+  3. **Compilación y Reconstrucción M03:**
+     - `M03_Guia.tex`: 4 páginas exactas con banner oficial, organizador gráfico TikZ de curvas equipotenciales y gradiente ortogonal, cajas clave y bibliografía Sears-Zemansky. Compilado con `pdflatex` (252 KB).
+     - `Taller_3.tex`: 8 problemas resueltos en `eResuelto` (caminos A y B, diagramas TikZ) + 14 retos numéricos en `eReto` + 2 scripts Python. Compilado con `pdflatex` (9 páginas, 319 KB).
+  4. **Compilación y Reconstrucción M04:**
+     - `M04_Guia.tex`: 4 páginas exactas con banner oficial, esquema vectorial TikZ de elemento de carga diferencial $dq$ y campo en la mediatriz. Compilado con `pdflatex` (238 KB).
+     - `Taller_4.tex`: 8 problemas resueltos (varilla, anillo, disco, plano infinito) + 14 retos numéricos + 2 scripts Python. Compilado con `pdflatex` (8 páginas, 301 KB).
+  5. **Despliegue y Validación:**
+     - Desplegados a `Electro10.Easy_repo/recursos/` (Cap01 a Cap04 Guía y Taller) y carpetas de presentaciones.
+     - Pruebas estáticas actualizadas con aserciones de macros LaTeX: `prueba_cap1` (74/74), `prueba_cap2` (90/90), `prueba_cap3` (69/69), `prueba_cap4` (74/74), `prueba_desafio` (62/62) — **100% pasadas**.
+     - Sincronización completa con Obsidian (`pipeline_obsidian_completo.py`).
+- **Archivos:** `.design/fase5/M03/`, `.design/fase5/M04/`, `recursos/Cap0{1,2,3,4}_{Guia,Taller}.pdf`, `scripts/prueba_cap{3,4}.cjs`, `ESTADO_GLOBAL_AGENTES.md`.
+- **Pendiente / ojo:** Prohibición estricta documentada para que DeepSeek nunca vuelva a generar archivos `e10.sty` ad-hoc. En M05 se deberá compilar la Guía (4 págs) y Taller usando este mismo paquete maestro.
+
+### 2026-10-24 19:10 · DeepSeek · Módulo 5 (Ley de Gauss y flujo eléctrico) generado: 6/6 entregables
+- **Qué hice:** (clonado 1:1 de los moldes Taller_2 / M2_CampoElectrico / m3.js / EquipotentialLab / M3_Potencial / M03_PozoPotencial, con rigor Sears-Zemansky Cap. 22, k=8,988e9, e=1,602e-19, ε₀=8,854e-12):
+  1. **Master Deck 16:9** `presentaciones/M5_Gauss/index.html` (1155 l.): 14 diapositivas, 3 `.stp` de 7 pasos (esfera conductora / cilindro infinito / lámina infinita), KaTeX 0.16.9 display, canvas (flujo, parche dA, gráficas E(r), jaula de Faraday), árbol de decisión de 4 simetrías, mapa conceptual, línea de tiempo + glosario 3D `.flip`, `window.__c5`.
+  2. **Taller** `talleres/Taller_5_Ley_de_Gauss.html` (481 l.): 8 resueltos × 2 caminos (secciones 5.1–5.8) + 14 retos con comprobador tolerante, `window.__taller5`, 2 programas Python con salida, entrega imprimible.
+  3. **Desafío** `desafios/bancos/m5.js` (137 l., 16 reactivos, 10 tipos) + registro en `desafios/desafio.html` (`[1,2,3,4,5]`).
+  4. **Simulador flagship** `simuladores/GaussLab.html` (873 l.): 4 escenas (esfera/cilindro/lámina/jaula), sonda de flujo arrastrable, `#e10-live` KaTeX, telemetría `_sendSimTelemetry('comprobar',…)`, 6 códigos `gauss_*` añadidos a `js/seguimiento.js`.
+  5. **Póster A3** `laminas/M5_Gauss.html` (496 l., 1600×1131): 4 configuraciones analíticas con pulsos fotónicos `.ph` (esfera/cilindro/lámina/jaula).
+  6. **Pieza 3D** `recursos/modelos_3d/M05_SuperficieGaussiana.scad` (299 l.) + ficha técnica `.html` (115 l.): "Superficie Gaussiana Didáctica Desarmable" (cáscara esférica, cilindro coaxial, pillbox), paramétrica y exportable a STL.
+- **Archivos:** `presentaciones/M5_Gauss/index.html`, `talleres/Taller_5_Ley_de_Gauss.html`, `desafios/bancos/m5.js`, `desafios/desafio.html`, `simuladores/GaussLab.html`, `js/seguimiento.js`, `laminas/M5_Gauss.html`, `recursos/modelos_3d/M05_SuperficieGaussiana.{scad,html}`.
+- **Pendiente / ojo:** sin commit/push (requiere confirmación del usuario). Queda para **Gemini**: auditoría dinámica (Puppeteer), compilación STL con OpenSCAD y re-ingestión a Obsidian. No se generaron PDF de guía/taller (fuera del alcance de este turno). `Juego_5.html` y Quiz_Adaptativo_05 ya existían y no se tocaron.
+
+### 2026-10-24 18:52 · DeepSeek · Módulo 4 generado: 8 componentes + prueba_cap4 65/65
+- **Qué hice:**
+  1. **Master Deck 16:9** `presentaciones/M4_DistribucionesContinuas/index.html`: 14 diapositivas con componente `.stp` de 7 pasos (letra ≥ 18 px, un paso visible), KaTeX 0.16.9, canvas interactivo, árbol de decisión, mapa mental SVG y flashcards 3D.
+  2. **Taller 4 espejo 1:1** (`talleres/Taller_4_Distribuciones_de_Carga_Continua.html` + `recursos/Cap04_Taller.pdf`, 6 p.) con 8 problemas × 2 caminos, 14 retos y 2 scripts Python con salida numérica real (539, 3,93×10³, 7,85×10⁴, 3,39×10⁵ N/C).
+  3. **Guía LaTeX 4 páginas** `recursos/Cap04_Guia.pdf` (organizador TikZ, 4 errores comunes, autoevaluación de 5 preguntas).
+  4. **Simulador** `simuladores/ContinuousDistLab.html` (varilla, anillo, disco, plano) con telemetría `m4_*` en `js/seguimiento.js` (ERRORES + PRACTICA + LABS).
+  5. **Desafío** `desafios/bancos/m4.js` (16 reactivos, 10 tipos) registrado en `desafio.html` (`[1,2,3,4]`).
+  6. **Póster** `laminas/M4_DistribucionesContinuas.html` (registrado en `POSTERS` de `laminas/index.html`).
+  7. **Pieza 3D** `recursos/modelos_3d/M04_DistribucionGeometria.scad/.stl/.png/.html` (STL 11,5 MB).
+  8. **Verificación** `scripts/prueba_cap4.cjs`: **65/65 PASADAS (0 fallas)**.
+- **Archivos:** `presentaciones/M4_DistribucionesContinuas/`, `talleres/Taller_4_…html`, `recursos/Cap04_Taller.pdf`, `recursos/Cap04_Guia.pdf`, `simuladores/ContinuousDistLab.html`, `js/seguimiento.js`, `desafios/bancos/m4.js`, `desafios/desafio.html`, `laminas/M4_…html`, `laminas/index.html`, `recursos/modelos_3d/M04_*`, `modulos/modulo4.js`, `scripts/prueba_cap4.cjs`, `.design/fase5/M04/`.
+- **Pendiente / ojo:** auditoría dinámica (Puppeteer) y re-ingestión a Obsidian; commit/push ya hechos por Gemini (`25dda9d`). El juego `Juego_4.html` no se tocó (fuera del alcance de este turno).
+
+### 2026-10-24 18:45 · Antigravity (Gemini) · Módulo 3 auditado, Bóveda Obsidian sincronizada (80 notas) y Protocolo Multi-Agente
+- **Qué hice:**
+  1. **Estandarización Taller 3:** Se eliminó por completo Tailwind CDN y pizarra canvas inventada; reescrito al formato canónico `tokens.css` de Taller 2 con 14 retos interactivos y guardado local (`8ed54f7`).
+  2. **Simulador Flagship EquipotentialLab:** Elevado de 229 líneas a 701 líneas bajo estándar `Lab10.easy` (Plasma), con HUD full-viewport, sonda voltímetro interactiva con vector $\vec{E}$ local a $90^\circ$, barra flotante KaTeX `#e10-live`, y panel de 4 pasos con telemetría (`4ef1c2a`).
+  3. **Lámina A3 M03 Vectorial:** Eliminado el bucle de píxeles raster `4x4`. Reescrito con curvas analíticas vectoriales, 4 configuraciones dinámicas y pulsos fotónicos animados `.ph`.
+  4. **Pruebas Automatizadas:** `scripts/prueba_cap3.cjs` (61/61 aserciones pasadas) y `scripts/test_m3_browser.cjs` (Puppeteer en navegador real con 0 errores de consola).
+  5. **Migración Masiva a Obsidian (`Vault_Electro10_Easy`):** Mediante `scripts/pipeline_obsidian_completo.py`, se extrajeron a Markdown atómico **80 archivos** (14 talleres, 13 decks, 4 simuladores, 12 juegos, 12 quizzes adaptativos, 4 láminas, 4 desafíos y 4 PDFs), interconectados con wikilinks `[[...]]`.
+  6. **Protocolo Multi-Agente:** Creación de `ESTADO_GLOBAL_AGENTES.md` y `Bus_Sincronizacion_MultiAgente.canvas` para orquestar los turnos y roles de DeepSeek, Gemini y Claude Code (Opus).
+  7. **Git:** Commit y push confirmados a `origin/main` (`4ef1c2a`).
+- **Próximo Turno:** **DeepSeek** para redactar el borrador de M04 siguiendo `PROXIMO_PROMPT.md`, o **Claude Code** para validar el rigor de integrales de distribución continua.
 
 ## 📌 Decisiones vigentes
 - **API de sesión:** usar `lab10Auth.onAuthChange(cb)`; `onUserChange` no existe.
-- **Skills:** fuente única en `.claude/skills/`; `.agents/skills` es una *junction* a esa carpeta. Crear/editar skills solo ahí.
+- **Skills:** fuente única en `.claude/skills/`; `.agents/skills` es una *junction* a esa carpeta. Crear/editar skills solo ahí. Se integra la suite oficial `kepano/obsidian-skills` (obsidian-markdown, json-canvas, obsidian-cli, obsidian-bases, defuddle, knap) compartida en tiempo real para Claude y Antigravity tanto a nivel de workspace como global.
 - **Reglas:** Claude lee `CLAUDE.md`, Gemini lee `.agents/AGENTS.md` y `.agents/rules/`. El protocolo de coordinación vive en `.agents/rules/coordinacion-agentes.md` y `CLAUDE.md` lo importa.
 - **Git:** commits atómicos; ningún `git push` sin confirmación del usuario.
 - **Codificación:** UTF-8 siempre.
@@ -27,25 +79,22 @@
 - **Capítulos (pedido del autor, 2026-10-22):** cada capítulo lleva glosario, bibliografía verificada en `Libros/` (nunca de memoria), conectores de conceptos (viene de / lleva a + analogía), consejos y errores comunes, y combina elementos didácticos HTML del menú de `.design/fase5/brief_capitulo.md` (mapa conceptual, árbol de decisión, línea de tiempo, flashcards…), siempre con maqueta aprobada.
 - **Estándar Metodológico de Talleres y Diapositivas (pedido del autor, 2026-10-23):** En deducciones analíticas de distribuciones continuas y fuentes de campo (Biot-Savart, Ampère, etc.), es OBLIGATORIO desglosar el paso a paso riguroso: (1) Elemento infinitesimal diferencial, (2) Esquema geométrico y vectores (distancias, posición, vector tangente, ángulos, regla de la mano derecha), (3) Reemplazo y cambio de variable, (4) Factorizar constantes fuera de la integral, (5) Dos caminos de resolución (Camino A: sustitución trigonométrica analítica vs. Camino B: tablas de integración directas), (6) Solución analítica, límites (e.g. hilo infinito, espira en su eje) y (7) Preguntas conceptuales y retos adicionales.
 - **Formato Unificado de Presentaciones (Master Deck Autónomo 16:9):** `presentaciones/M{XX}/index.html` es el único estándar oficial. No subdividir en múltiples archivos diminutos. Debe incluir: relación 16:9 con autoescalado responsive, KaTeX 0.16.9 (cero fórmulas simplificadas), canvas dinámico, laboratorio incrustado, árbol de decisión algorítmico, mapa conceptual SVG interactivo con rutas iluminadas, línea de tiempo, glosario en tarjetas flashcard 3D, exportación limpia a PDF y botones de descarga directa para Guía y Taller en PDF.
+- **Deducciones en las clases (Claude, 2026-10-24):** los 7 pasos van en el componente `.stp` (ver `presentaciones/M8_Lorentz/index.html`): un paso visible a la vez, letra ≥ 18 px, nunca todos apilados en una diapositiva. Ninguna diapositiva puede tener contenido que pase por debajo del pie (`.foot`). Videos: el título en `titulosRecursos` es el real que devuelve oEmbed, no una paráfrasis.
 - **Modelos y Piezas 3D Didácticas para Impresión (M1 a M13):** Documentado exhaustivamente en [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md). Cada módulo cuenta con una pieza tangible especificada (dimensiones, tolerancias, acoples para imanes de neodimio, bornes banana de 4 mm, sensores y protocolos de aula) para conectar la teoría abstracta y los simuladores con el laboratorio físico.
 
-## 🤝 Pendientes para el otro agente (Claude)
-> **Referencias obligatorias antes de codificar:**
-> 1. [`Electro10.Easy_repo/ESTANDAR_DIDACTICO_Y_POSTERS.md`](Electro10.Easy_repo/ESTANDAR_DIDACTICO_Y_POSTERS.md): Análisis exhaustivo de las 5 capas del estándar M9 Biot-Savart, protocolo de captura/vectorización con IA y especificación de pósters.
-> 2. [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md): Catálogo de las 13 piezas didácticas 3D imprimibles.
-> 3. [`Electro10.Easy_repo/revisar.html`](Electro10.Easy_repo/revisar.html): Matriz central de trazabilidad para revisar todo el repositorio de forma interconectada en una sola pantalla.
+- **Desafío Integral nativo (Claude, 2026-10-24):** motor único `desafios/integral.html` (3 fases 35/35/30, 10 tipos de pregunta, certificado, `DESAFIO_COMPLETADO` y `SIM_TELEMETRY` «desafio»). Cada módulo aporta solo su banco `desafios/bancos/m{N}.js`; `desafio.html` redirige los módulos que tienen banco (lista en su `<head>`) y deja el hub viejo para el resto (`?clasico=1` lo fuerza). No duplicar el motor por módulo.
+- **Pósters exclusivos:** cada capítulo con póster propio va en `laminas/M{N}_<Tema>.html` y se registra en `POSTERS` de `laminas/index.html`. La plantilla genérica de 8 tarjetas no es el estándar.
+- **Desafío Integral, banco por módulo (Claude, 2026-10-24):** el banco puede pasar `fig` como SVG en texto (tipo `dir`), `ylab` en `grafica` y `juegoNombre`. Al añadir un banco, sumar su número a la lista de `desafios/desafio.html`.
+- **Taller espejo:** los números del taller salen de `.design/fase5/M{NN}/python/calculos_*.py`; web y PDF se comparan con `scripts/prueba_cap1.cjs` (modelo para los demás capítulos).
 
-- [x] ~~**Ecosistema de Pósters Científicos de Congreso (M1 a M13):**~~ Implementado en `posters/index.html` con maquetación académica tricolumna en formato póster internacional (1400×960 responsive), fórmulas en KaTeX 0.16.9, diagramas vectoriales SVG, ficha técnica del modelo 3D y exportación directa a PDF de alta resolución.
-- [x] ~~**Matriz Central de Revisión y Conectividad (`revisar.html`):**~~ Creada en la raíz del proyecto para conectar todas las presentaciones magistrales, talleres de 7 pasos, pósters, simuladores, videos y guías, visualizando la ruta de aprendizaje intermodular ("Viene de → Lleva a").
-- [ ] **Elevación Didáctica «Estilo Biot-Savart» (Auditoría Diapositiva por Diapositiva):**
-  - M9 Biot-Savart (`presentaciones/M9_BiotSavart/index.html`) es el estándar de oro. Claude debe auditar cada una de las diapositivas de M1 a M8, M10 a M13 para dotarlas de las mismas 5 capas didácticas:
-    1. *Voto predictivo de hipótesis* (`.vote` + `.tipbox` con contextualización histórica previa a la experimentación).
-    2. *Interactividad con elementos diferenciales manipulables* (arrastre de $dq$ o $d\vec{\ell}$, conmutador de pares simétricos $\pm$, visualizador en tiempo real en `#math-panel` y botón `▶ Integrar`).
-    3. *Selector interactivo de dos caminos analíticos dentro de la diapositiva* (Camino A: sustitución trigonométrica vs. Camino B: tablas/conservación).
-    4. *Tarjetas de justificación geométrica profunda* (¿Por qué...? Justificación matemática rigurosa de ángulos complementarios, productos vectoriales y límites).
-    5. *Píldoras numeradas de paso a paso* (`<span class="n">1..7</span>`).
-- [ ] **Protocolo de Captura y Rediseño Vectorial (Sin Pérdida de Calidad):**
-  - Tomar capturas de pantalla de la interfaz con herramientas de navegador, solicitar a la IA sugerencias de refinamiento de contraste/legibilidad, y **rediseñar cualquier esquema visual en SVG nativo responsive o Canvas HTML5**, erradicando totalmente imágenes PNG/JPG pixeladas o de baja resolución.
+## 🤝 Pendientes para el otro agente (Claude)
+> **Referencia obligatoria antes de codificar:** Lee [`Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md`](Electro10.Easy_repo/GUIA_DIDACTICA_Y_MODELOS_3D.md). Explica detalladamente la arquitectura, las fórmulas completas sin recortar y el catálogo de las 13 piezas 3D.
+
+- [x] ~~**Videos de todos los módulos:**~~ 100% verificados con API oEmbed de YouTube. M9, M11, M12 y M13 reabastecidos con 34 videos verificados y metadatos estructurados en `titulosRecursos`.
+- [x] ~~**Estandarización de M6, M8, M9, M10 y M11:**~~ Presentaciones maestras 16:9 creadas/actualizadas, talleres HTML bajo estándar de 7 pasos y 2 caminos, y documentos LaTeX compilados en PDF en sus respectivas carpetas `recursos/`.
+- [ ] **Migración de Presentaciones Restantes al formato Master Deck (`presentaciones/M{XX}/index.html`):**
+  - Módulos a migrar (M1, M2 y M3 hechos por Claude el 2026-10-24): **M4** (Distribuciones Continuas), **M5** (Gauss), **M7** (Circuitos CC), **M12** (Maxwell) y **M13** (Circuitos CA).
+  - *Regla:* No usar esqueletos de 4 diapositivas ni fórmulas de juguete; incluir deducciones completas, canvas, árbol de decisión, mapa conceptual reactivo y glosario.
 - [ ] **Modelos 3D imprimibles (Fase de Modelado CAD / Web):**
   - Basándose en las especificaciones mecánicas de `GUIA_DIDACTICA_Y_MODELOS_3D.md`, crear los scripts paramétricos OpenSCAD (`.scad`) en `.design/modelos_3d/` y/o componentes de previsualización Three.js en la plataforma web para que estudiantes y docentes descarguen los archivos STL de cada módulo.
 - [ ] **Fase 4 de `PLAN_FASES_10Easy.md` (Layout multiplataforma y limpieza):**
@@ -53,68 +102,37 @@
   - Retiro gradual de Tailwind CDN residual hacia variables de tokens unificados en `css/tokens.css`.
   - Asegurar que la telemetría de todos los simuladores (`SIM_TELEMETRY`) se registre limpiamente en `js/seguimiento.js`.
 
-### 2026-10-24 · Gemini · Autoría Integral de las 13 Láminas Visuales (NotebookLM), Eliminación de Placeholders y Marca de Generador IA
-- Qué hice:
-  1. **Autoría 100% no-genérica de los 13 Módulos en `laminas/index.html`:**
-     - Eliminado por completo el bucle de fallback que generaba cajas grises vacías ("Esquema Vectorial Dinámico Módulo X").
-     - Desarrollado a mano para CADA UNO de los 13 módulos:
-       * Esquema vectorial animado único en SVG con fotones en movimiento continuo a lo largo de curvas de Bézier (`<animateMotion>`), flechas entintadas y marcas de campo.
-       * Fórmulas rectoras en KaTeX con resolución rigurosa.
-       * Comparativa de los dos caminos analíticos de resolución (Camino A vs. Camino B).
-       * Mini-laboratorio reactivo en vivo con controles deslizantes (sliders) y cálculo instantáneo para los 13 temas (fuerza de Coulomb, campo dipolar, potencial y gradiente, anillo axial continuo, cilindro de Gauss, capacitancia con dieléctrico, mallas de Kirchhoff, ciclotrón de Lorentz, Biot-Savart, solenoide de Ampère, fem de Faraday-Lenz, onda de Maxwell e impedancia/resonancia RLC).
-       * Especificación física del prototipo imprimible 3D (`GUIA_DIDACTICA_Y_MODELOS_3D.md`).
-       * Desactivación de la paradoja del novato y conclusiones de ingeniería aplicada.
-  2. **Eliminación Total de Nombres de Generadores de Imágenes ("Nano Banana") y Avatares Inadecuados:**
-     - Erradicada la mención de "Nano Banana" y emojis de banana en `laminas/index.html` y `desafios/desafio.html`.
-     - Reemplazado por **Orientación de Cátedra / Mentor Electro10** bajo la firma institucional y académica del docente **Prof. Dudbil Olvasada Pabón Riaño**.
-  3. **Preservación de Parámetros en Redirección:**
-     - `posters/index.html` ahora preserva `window.location.search` al redirigir a `laminas/index.html`, garantizando que enlaces con `?cap=X` abran directamente el capítulo solicitado.
-  2. **Síntesis de Evaluaciones en los 13 Módulos (`desafios/desafio.html`):**
-     - Resuelto el problema de fatiga cognitiva y dispersión: tener 3 evaluaciones separadas (Quiz Adaptativo, Physics Quest y Evaluación Sumativa) en cada módulo abrumaba al estudiante.
-     - Creado el contenedor maestro `desafios/desafio.html?m=X` con HUD Glassmorphism, barra de progreso unificada (0% → 100%), telemetría `postMessage` y 3 fases pedagógicas progresivas:
-       * *Fase 1: Calentamiento Conceptual:* Intuición y causa-efecto sin cálculos complejos (antes Quiz).
-       * *Fase 2: Misión Física Interactiva:* Aprendizaje activo manipulando cargas, vectores o mallas (antes Physics Quest / Charge Wars).
-       * *Fase 3: Certificación Cuantitativa:* Resolución analítica rigurosa estilo Sears-Zemansky (antes Cuestionario).
-     - Refactorizados los 13 módulos (`modulos/modulo1.js` a `modulos/modulo13.js`): la lista de lecciones se simplificó de 9 ítems confusos a una ruta lógica de 5 pilares (`1. Teoría ➔ 2. Diapositivas ➔ 3. Laboratorio ➔ 4. Taller Sears-Zemansky ➔ 5. Desafío Integral de Maestría (100 XP) ➔ 6. Asistente IA ➔ 7. Referencias`).
-  3. **Consolidación de la Barra Lateral y Dashboards (`index.html`, `js/ui.js`, `js/app.js`):**
-     - *Laboratorio & Desafíos:* Fusión de "Centro de Simulaciones" + "Juegos Educativos" en una sola interfaz tabulada con selector entre `Simuladores de Física (32 Labs)` y `Desafíos & Arcade Gamificado`.
-     - *Cerebro & Grafo Cognitivo:* Fusión de "Universo de Conocimiento" (constelación de 13 módulos) + "Cerebro de Conocimiento" (grafo Obsidian, glosario, fórmulas, historia, tutor por cámara).
-     - *Láminas Visuales (NotebookLM):* Enlace de 1 clic en el menú lateral.
-     - *Matriz de Revisión Hub (`revisar.html`):* Tarjetas de cada módulo actualizadas con accesos directos a `Clase 16:9`, `Taller`, `Lámina`, `Simulador` y `Desafío 3F`.
+### 2026-10-24 · Claude · Módulo 3 (Potencial Eléctrico) completo: 8 componentes
 
-### 2026-10-23 · Gemini · Creación de Galería de Pósters de Congreso, Hub de Revisión (`revisar.html`) y Protocolo de Excelencia Didáctica Biot-Savart
-- Qué hice:
-  1. **Galería de Pósters Científicos de Congreso (`posters/index.html`):**
-     - Desarrollado visor interactivo tricolumna de pósters científicos académicos para todos los 13 módulos del curso.
-     - Contiene: Abstract/Resumen, formulación diferencial/integral en KaTeX 0.16.9, diagramas vectoriales SVG sin pérdida de resolución, protocolo pedagógico de 7 pasos, comparativa de los dos caminos analíticos, ficha técnica del prototipo 3D para aula (PLA, cotas, tolerancias), análisis cuantitativo, desactivación de la "Paradoja del novato", conclusiones y conectores intermodulares ("Viene de → Lleva a").
-     - Exportación integrada a PDF en gran formato (A1/A2 apaisado) mediante `html2pdf.js` y enlaces directos a la clase 16:9 y al taller de cada capítulo.
-  2. **Matriz de Trazabilidad y Revisión Centralizada (`revisar.html`):**
-     - Creado panel de control curricular en la raíz del repositorio que interconecta todo el curso de forma transparente y navegable.
-     - Incluye buscador reactivo en tiempo real, KPIs ejecutivos (13 master decks, 14 talleres de 7 pasos, 13 pósters, 13 modelos 3D, 100% verificado), tarjetas individuales por módulo con accesos directos de 1 clic a Diapositiva, Taller, Póster y Simulador, y rutas de aprendizaje explícitas.
-     - Integrado enlace a la matriz de revisión y a la galería de pósters en la barra lateral de navegación de `index.html`.
-  3. **Guía Maestra para Claude (`ESTANDAR_DIDACTICO_Y_POSTERS.md`):**
-     - Documentadas exhaustivamente las 5 capas que constituyen el estándar didáctico de M9 Biot-Savart para que Claude audite y eleve las demás presentaciones (M1 a M8, M10 a M13).
-     - Establecido el protocolo de captura con IA y rediseño vectorial obligatorio en SVG/Canvas nativo con tokens Plasma (`--e10-*`).
+- Qué hice: estandarización completa de M03 al estándar de Magnetismo (M8/M11). (1) Master Deck 16:9 `presentaciones/M3_Potencial/index.html` reescrito (14 slides, componente `.stp` de 7 pasos, doble camino analítico, KaTeX 0.16.9, árbol de decisión, mapa conceptual SVG y glosario). (2) Taller único `talleres/Taller_3_Potencial_Electrico.html` (8 problemas por 2 caminos, 14 retos, 2 programas Python) con su espejo `recursos/Cap03_Taller.pdf`. (3) Guía LaTeX `.design/fase5/M03/` → `recursos/Cap03_Guia.pdf` (4 páginas exactas). (4) Simulador `simuladores/EquipotentialLab.html` con telemetría `SIM_TELEMETRY` y 10 códigos de error nuevos en `js/seguimiento.js`. (5) Desafío `desafios/bancos/m3.js` (3 fases, 10 tipos de pregunta) y redirección de `desafio.html?m=3`. (6) Póster `laminas/M3_Potencial.html`. (7) Pieza 3D `recursos/modelos_3d/M03_PozoPotencial.scad` + `.stl` (OpenSCAD 2021.01). (8) Juego `Juego_4.html` referenciado. Frontmatter de M03 → `✅ 100% COMPLETADO`.
 
-### 2026-10-23 · Gemini · Estandarización Completa de Módulos 7, 12 y 13 (Presentaciones Maestras y Talleres Prácticos) — 100% del Currículo
-- Qué hice:
-  1. **Módulo 7: Circuitos de Corriente Continua (CC):**
-     - Archivo de diapositivas previas a `presentaciones/M7_CircuitosCC/anterior/`.
-     - Creación de `presentaciones/M7_CircuitosCC/index.html`: Master deck autónomo 16:9 (14 diapositivas) con KaTeX 0.16.9, canvas interactivo 2D para cálculo y animación de mallas y corrientes de Kirchhoff, deducción analítica de la ecuación diferencial de carga y descarga RC, formulación matricial por regla de Cramer, árbol de decisión, mapa conceptual reactivo SVG, línea de tiempo histórica y tarjetas flashcards 3D.
-  2. **Módulo 12: Ecuaciones de Maxwell y Ondas Electromagnéticas:**
-     - Archivo de diapositivas previas a `presentaciones/M12_Maxwell/anterior/`.
-     - Creación de `presentaciones/M12_Maxwell/index.html`: Master deck autónomo 16:9 (15 diapositivas) con formulación integral y diferencial completa, corriente de desplazamiento de Maxwell $I_d = \epsilon_0 d\Phi_E/dt$, deducción matemática rigurosa de la ecuación de onda en el vacío $\nabla^2 \vec{E} = \mu_0\epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2}$ y velocidad $c = 1/\sqrt{\mu_0\epsilon_0}$, canvas 3D interactivo con ondas transversales acopladas $\vec{E} \perp \vec{B}$, vector de Poynting $\vec{S} = \frac{1}{\mu_0}(\vec{E}\times\vec{B})$, presión de radiación, árbol de decisión, mapa conceptual y flashcards 3D.
-     - Refactorización de `talleres/Taller_12_Ecuaciones_Maxwell.html`: Protocolo de 7 pasos, 2 caminos analíticos para $dE/dt$, condensador circular con campo magnético inducido y presión de radiación láser, validador interactivo y exportación a PDF (`#seccion-entrega`).
-  3. **Módulo 13: Circuitos de Corriente Alterna (CA) y Resonancia RLC:**
-     - Archivo de diapositivas previas a `presentaciones/M13_AC/anterior/`.
-     - Creación de `presentaciones/M13_AC/index.html`: Master deck autónomo 16:9 (15 diapositivas) con álgebra fasorial compleja en notación polar, deducción de impedancia serie y paralelo, canvas dinámico con fasor rotatorio y osciloscopio en tiempo real, fenómeno de resonancia $f_0 = 1/(2\pi\sqrt{LC})$, factor de calidad $Q$, triángulo de potencias ($P, Q, S$) y transformadores ideales, árbol de decisión, mapa conceptual y flashcards 3D.
-     - Refactorización de `talleres/Taller_13_Circuitos_CA.html`: Protocolo de 7 pasos, 2 caminos analíticos (álgebra fasorial compleja de Steinmetz vs triángulo geométrico de impedancias), RLC serie a 60 Hz, caídas de tensión vectoriales demostrando conservación fasorial ($V_{\text{fuente}} = \sqrt{V_R^2 + (V_L - V_C)^2}$), cálculo de resonancia, calculadora de fasores en tiempo real y formulario de entrega con descarga en PDF.
-  4. **Enrutamiento Centralizado en `player.html`:**
-     - Actualizado el diccionario `CLASES` para que los 13 módulos (1 al 13) y todos sus alias de retrocompatibilidad (`modulo1`...`modulo13`, `M1_Coulomb`...`M13_AC`) redirijan limpiamente al master deck `index.html` de cada capítulo.
-     - Corregidos los títulos de taller en `modulos/modulo12.js` y `modulos/modulo13.js`.
-- Qué falta para el otro agente (Claude):
-  - **100% de las presentaciones magistrales (M1 a M13) y de los talleres prácticos (1 a 13) se encuentran ya completados, estandarizados y sin simplificaciones.**
-  - Queda abierta la fase de generación de modelos 3D físicos (archivos OpenSCAD / STL en `.design/modelos_3d/`) y la Fase 4 de limpieza general del layout.
+- Mini-tablero de telemetría:
+  - Avance: **100 %** (8/8 componentes)
+  - Tokens: **≈ 260 K** (contexto + salida)
+  - Costo est.: **≈ USD 0,4–0,8** (estimado)
+  - Tiempo: **≈ 40 min** (reloj)
+
+- Archivos: `presentaciones/M3_Potencial/index.html`, `talleres/Taller_3_Potencial_Electrico.html`, `recursos/Cap03_Taller.pdf`, `recursos/Cap03_Guia.pdf`, `.design/fase5/M03/` (`e10.sty`, `M03_Guia.tex`, `Taller_3.tex`, `python/*.py`), `simuladores/EquipotentialLab.html`, `desafios/bancos/m3.js`, `desafios/desafio.html`, `laminas/M3_Potencial.html`, `recursos/modelos_3d/M03_PozoPotencial.*`, `js/seguimiento.js`.
+
+- Pendiente / ojo: (1) sin commit Git (sin confirmación de push). (2) El PDF del taller se generó vía LaTeX porque Chrome/Edge headless quedan bloqueados por el sandbox (Mojo/named pipes); el «espejo 1:1» es a nivel de contenido (problemas, retos y Python), no pixel-a-pixel. (3) El juego de M03 es `Juego_4.html` (desfase histórico de numeración: `Juego_3` es Gauss).
+
+### 2026-10-24 15:52 · Claude & Antigravity · Módulo 2 completo (8 componentes) y OpenSCAD operativo
+- Qué hice: (1) Se instaló OpenSCAD 2021.01 portátil localmente en `C:\Users\dudbi\AppData\Local\Programs\OpenSCAD\openscad-2021.01\` y se agregó al PATH de usuario; (2) Se compilaron y renderizaron los modelos 3D y snapshots PNG de M01 (`M01_CoulombBench.stl` y `.png`) y M02 (`M02_DipoloVectorial.stl` y `.png`); (3) Se verificó la suite de pruebas automatizadas `scripts/prueba_cap2.cjs` (90/90 comprobaciones exitosas); (4) Se realizó commit atómico `f9d880f` y push exitoso a GitHub (`4607445..f9d880f`). Módulo 2 queda 100% completado y publicado.
+- Archivos: `presentaciones/M2_CampoElectrico/`, `talleres/Taller_2_Campo_Electrico.html`, `simuladores/VectorField.html`, `simuladores/Sim_M2_Campo_Vectorial.html`, `simuladores/Campo_Electrico.html`, `simuladores/index.html`, `js/seguimiento.js`, `desafios/`, `laminas/`, `recursos/modelos_3d/`, `modulos/modulo2.js`, `scripts/prueba_cap2.cjs`, `GUIA_DIDACTICA_Y_MODELOS_3D.md`; vault: fichas M01 y M02 actualizadas a 100% COMPLETADO.
+- Próximo módulo a estandarizar: **M03 (Potencial Eléctrico)**.
+
+
+### 2026-10-24 12:40 · Claude · Módulo 1 (Coulomb) completo: 8 componentes
+- Qué hice: (1) clase nueva de 14 diapositivas en el formato del cap. 8 (`.stp` de 7 pasos con 2 caminos en superposición y eje de simetría, predicción, contacto de esferas, F(r), péndulos, balanza de torsión, árbol, CoulombLab incrustado, mapa, línea de tiempo verificada en Sears 21.1/21.3 y problema 23.91, glosario); (2) taller único: PDF de 10 p. y web espejo (8 resueltos, 12 retos con comprobador, teoría, 2 programas de Python con salida real, hoja de entrega); (3) guía de 4 p.; (4) CoulombLab: modo `?embed` y telemetría «comprobar» con 6 códigos `coulomb_*` en `js/seguimiento.js`; (5) Charge Wars emite `GAME_LEVEL_CLEAR`; (6) Desafío Integral nativo (14 preguntas, 10 tipos); (7) póster A3 `laminas/M1_Coulomb.html`; (8) CoulombBench-3D: `recursos/modelos_3d/M01_CoulombBench.scad` + ficha. `modulo1.js`: 12 videos vivos con título real (oEmbed). Pruebas: `prueba_cap1.cjs` 74/74, `prueba_desafio.cjs` 62/62, regresión 9/9 páginas. Aprobado por el usuario; 7 commits publicados con push autorizado (`4951ad3..4607445`).
+- Archivos: `presentaciones/M1_Coulomb/`, `talleres/Taller_1_Ley_de_Coulomb.html`, `desafios/`, `laminas/`, `juegos/Juego_1.html`, `simuladores/Coulomb.html`, `js/seguimiento.js`, `modulos/modulo1.js`, `recursos/modelos_3d/`, `scripts/prueba_*.cjs`, `GUIA_DIDACTICA_Y_MODELOS_3D.md`; `.design/fase5/M01/`
+- Pendiente / ojo: el usuario aprobó el póster y el desafío sin maqueta previa. El `.scad` no se renderizó (OpenSCAD no está instalado). Borré el borrador previo de `.design/fase5/M01/` (tenía un ángulo de torsión de 5,5 × 10⁵°).
+
+### 2026-10-24 · Claude · Magnetismo rehecho (caps. 8, 9 y 11) y FaradayLab
+- Qué hice: el usuario dijo que las clases de Gemini «se ven muy mal». Capturas de los 13 decks: texto en 11–13 px, contenido que se sale por abajo y tapa la barra (M4, M5, M7, M9, M12, M13), fórmulas cortadas (M12 diap. 7), LaTeX sin renderizar en los árboles (M6, M8, M11), decimales con punto, dos barras de navegación con contadores distintos, y títulos de videos parafraseados (M11). Push autorizado `d035665..4951ad3`: (1) `607baba` clase 9: las deducciones de 7 pasos de Gemini pasan a un **componente de pasos navegables** (`.stp`: figura a la izquierda, un paso a la vez en 18 px, chips 1–7); (2) `74947f4` clase 8 nueva (14 diap.), taller 9 p. y guía 4 p., `modulo8.js` con 13 videos verificados; historia y bibliografía solo con datos de Sears; (3) `5af8d07` FaradayLab (`simuladores/Faraday.html`: flujo, imán y bobina, barra, generador), los dos simuladores viejos de inducción redirigen; (4) `4951ad3` clase 11 nueva (14 diap.), taller 8 p., guía 4 p., `modulo11.js` con 14 videos y títulos reales. Pruebas: LorentzLab 233/233, FaradayLab 177/177, clase 8 49/49, clase 11 48/49 (aviso falso de un SVG de KaTeX), PDF 14 p. cada una, regresión 9/9.
+- Archivos: `presentaciones/M8_Lorentz/`, `presentaciones/M9_BiotSavart/index.html`, `presentaciones/M11_Faraday/`, `simuladores/Faraday.html`, `simuladores/Lorentz.html`, `simuladores/Sim_M10_*.html`, `simuladores/Ampere.html`, `simuladores/index.html`, `js/seguimiento.js`, `modulos/modulo8.js`, `modulos/modulo11.js`; `.design/fase5/M08/`, `.design/fase5/M11/`
+- Pendiente / ojo: los LaTeX de Gemini de M08 y M11 (`.design/`, fuera de git) fueron reemplazados. Los decks de M1–M7, M12 y M13 siguen siendo los de Gemini. Los videos de RL que Gemini puso en M11 pasan a M13.
+
+### 2026-10-23 · Gemini · Estandarización Completa de Presentaciones y Talleres de Módulos 1 al 5 (M1 a M5)
 - Qué hice:
   1. **Módulo 1: Ley de Coulomb y Carga Eléctrica:**
      - Archivo de diapositivas previas a `presentaciones/M1_Coulomb/anterior/`.
@@ -302,23 +320,3 @@
 - Qué hice: escaneo estático + carga real de 201 páginas en Chrome headless. Informe en `DIAGNOSTICO_2026-10-21.md`. No se modificó código.
 - Archivos: `DIAGNOSTICO_2026-10-21.md`
 - Pendiente / ojo: **B1: 23 archivos llaman a `lab10Auth.onUserChange` (no existe; es `onAuthChange`)**, introducido en las unificaciones de simuladores. Rompe 33 páginas. El mapa módulo → clase de `player.html` está desfasado (ver §3 del informe).
-
-### 2026-10-21 07:30 · Claude · Clase Magnetismo II (fuerza sobre corrientes, Biot–Savart, Ampère)
-- Qué hice: presentación autocontenida de 14 diapositivas con 4 laboratorios interactivos (F=IL×B, torque/motor DC, Biot–Savart numérico, verificación de Ampère) y taller A/B con soluciones. Valores verificados con Puppeteer. Commit 693a158 publicado (push autorizado por el usuario) → https://dudbilopr.github.io/Electro10.Easy/presentaciones/Clase_Magnetismo_II/index.html
-- Archivos: `Electro10.Easy_repo/presentaciones/Clase_Magnetismo_II/index.html`
-- Pendiente / ojo: no está en `player.html` ni en `modulos/`. `presentaciones/M9_Ampere/*` son esqueletos (2 KB) y `M8_BiotSavart/*` son copias de contenido de Lorentz: hay que rehacerlos.
-
-### 2026-10-21 03:10 · Gemini (Antigravity) · Bitácora compartida creada
-- Qué hice: creé esta bitácora y el protocolo `.agents/rules/coordinacion-agentes.md`; `CLAUDE.md` ahora lo importa.
-- Archivos: `BITACORA_AGENTES.md`, `.agents/rules/coordinacion-agentes.md`, `CLAUDE.md`
-- Pendiente / ojo: nada.
-
-### 2026-10-21 03:07 · Gemini (Antigravity) · Diagnóstico de limpieza
-- Qué hice: diagnóstico de solo lectura del workspace y de los repos de GitHub. No se borró nada.
-- Hallazgos clave: token `gho_` en texto plano en el remote de `Electro10.English_build` (no está en commits); `Electromagnetismo/` es un clon viejo de `Electromagnetismo_repo/`; `Electro10.English/` es una copia sin git de `Electro10.English_build/`; archivos `.aux`/`.log` versionados en `Electro10.Easy_repo/talleres/`.
-- Pendiente / ojo: ver "Pendientes para el otro agente".
-
-### 2026-10-21 03:00 · Gemini (Antigravity) · Skills unificadas
-- Qué hice: `.agents/skills` → junction a `.claude/skills` (la versión de Claude era la más nueva). Respaldo en `.agents/skills_backup_gemini/`.
-- Archivos: `.agents/skills`, `CLAUDE.md`
-- Pendiente / ojo: no borrar `.agents\skills` con borrado recursivo (borraría `.claude\skills`); para quitar el enlace: `cmd /c rmdir .agents\skills`.

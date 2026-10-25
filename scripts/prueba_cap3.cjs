@@ -38,6 +38,24 @@ files.forEach(f => {
   }
 });
 
+// 1.1 Validar estándar de diseño LaTeX Opus (.design/fase5/e10.sty)
+const guiaTexPath3 = path.join(baseDir, '.design/fase5/M03/M03_Guia.tex');
+const tallerTexPath3 = path.join(baseDir, '.design/fase5/M03/Taller_3.tex');
+if (fs.existsSync(guiaTexPath3)) {
+  const gTex = fs.readFileSync(guiaTexPath3, 'utf8');
+  ok(gTex.includes('\\ePortada'), 'M03 Guía usa banner oficial \\ePortada');
+  ok(gTex.includes('\\begin{eClave}'), 'M03 Guía usa cajas tcolorbox eClave');
+  ok(gTex.includes('\\begin{eError}'), 'M03 Guía usa cajas tcolorbox eError');
+  ok(!gTex.includes('\\fcolorbox{plasmaViolet}'), 'M03 Guía erradica tablas crudas fcolorbox');
+}
+if (fs.existsSync(tallerTexPath3)) {
+  const tTex = fs.readFileSync(tallerTexPath3, 'utf8');
+  ok(tTex.includes('\\ePortada'), 'Taller 3 usa banner oficial \\ePortada');
+  ok(tTex.includes('\\begin{eResuelto}'), 'Taller 3 usa cajas tcolorbox eResuelto');
+  ok(tTex.includes('\\begin{eReto}'), 'Taller 3 usa cajas tcolorbox eReto');
+  ok(!tTex.includes('\\newcommand{\\prob}'), 'Taller 3 no define comandos ad-hoc \\prob');
+}
+
 // 2. Verificar contenido de Master Deck 16:9
 const deckPath = path.join(baseDir, 'presentaciones/M3_Potencial/index.html');
 const deckContent = fs.readFileSync(deckPath, 'utf8');

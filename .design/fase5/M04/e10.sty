@@ -1,51 +1,134 @@
-% ==========================================================================
-%  e10.sty -- Plantilla de diseno Electro10.Easy para guias de estudio LaTeX.
-%  Paleta "Plasma" (magenta #B3246B + cian #0B8CA8), coincide con css/tokens.css.
-%  Uso: \usepackage{e10}  (compilar con pdflatex desde el directorio de la guia).
-% ==========================================================================
+% =====================================================================
+%  e10.sty — Estilo de impresión 10.Easy (talleres, guías y libro)
+%  Paleta Plasma (css/tokens.css), tipografía IBM Plex, figuras TikZ (vectoriales).
+%  Compilar con pdflatex.
+% =====================================================================
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{e10}[2026/10/24 Electro10.Easy design template]
+\ProvidesPackage{e10}[2026/10/22 Estilo 10.Easy]
 
-\RequirePackage[table]{xcolor}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\DeclareUnicodeCharacter{2299}{\ensuremath{\odot}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\RequirePackage[spanish,es-noshorthands,es-nodecimaldot]{babel}
+\RequirePackage[scale=0.94]{plex-serif}
+\RequirePackage[scale=0.94]{plex-sans}
+\RequirePackage[scale=0.88]{plex-mono}
 \RequirePackage{amsmath,amssymb}
+\RequirePackage{newtxmath}
+\RequirePackage{bm}
+\RequirePackage{microtype}
+\RequirePackage[a4paper,top=24mm,bottom=22mm,left=22mm,right=22mm,headheight=14pt]{geometry}
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.markings,3d,perspective}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{qrcode}
+\RequirePackage{listings}
+\RequirePackage{listingsutf8}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{siunitx}
+\sisetup{output-decimal-marker={,}, exponent-product=\times, inter-unit-product=\ensuremath{\cdot}, per-mode=symbol}
 
-% --- Paleta Plasma ---------------------------------------------------------
+% ---- Paleta Plasma (mismos valores que css/tokens.css) ----
 \definecolor{e10primary}{HTML}{B3246B}
 \definecolor{e10primarysoft}{HTML}{F8E6EF}
 \definecolor{e10accent}{HTML}{0B8CA8}
+\definecolor{e10accentstrong}{HTML}{08758C}
 \definecolor{e10accentsoft}{HTML}{E3F4F8}
 \definecolor{e10ink}{HTML}{22111B}
 \definecolor{e10muted}{HTML}{6A5562}
 \definecolor{e10line}{HTML}{ECDDE6}
-\definecolor{e10warn}{HTML}{9A5B00}
-\definecolor{e10warnsoft}{HTML}{FDF1DC}
-\definecolor{e10ok}{HTML}{1F7A52}
-\definecolor{e10oksoft}{HTML}{E3F3EA}
+\definecolor{e10bg}{HTML}{FBF8FA}
+\definecolor{e10success}{HTML}{1F7A52}
+\definecolor{e10successsoft}{HTML}{E3F3EA}
+\definecolor{e10warning}{HTML}{9A5B00}
+\definecolor{e10warningsoft}{HTML}{FDF1DC}
+\definecolor{e10qpos}{HTML}{D1402F}
+\definecolor{e10qneg}{HTML}{2A62D4}
+\definecolor{e10field}{HTML}{6A4BD1}
+\color{e10ink}
 
-% --- Cajas -----------------------------------------------------------------
-% Formula maestra resaltada
-\newcommand{\eformula}[1]{%
-  \begin{center}%
-    \fcolorbox{e10primary}{e10primarysoft}{%
-      \begin{minipage}{0.92\linewidth}\centering #1\end{minipage}}%
-  \end{center}}
+% ---- Tipografía de títulos ----
+\newcommand{\eTitleFont}{\sffamily\bfseries}
+\newcommand{\eEyebrow}[1]{{\sffamily\footnotesize\color{e10muted}\MakeUppercase{#1}}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\linespread{1.08}
 
-% Encabezado de seccion
-\newcommand{\esection}[1]{%
-  \vspace{1.1em}\noindent{\color{e10primary}\large\bfseries #1}\par\vspace{0.3em}%
-  \noindent{\color{e10primary}\hrule height 1.2pt}\par\vspace{0.5em}}
+% ---- Encabezado y pie ----
+\newcommand{\eCapitulo}{}
+\newcommand{\eDocumento}{}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\sffamily\footnotesize\textbf{\color{e10ink}Electro}\textbf{\color{e10primary}10.Easy}\quad\color{e10muted}\eCapitulo}
+\fancyhead[R]{\sffamily\footnotesize\color{e10muted}\eDocumento}
+\fancyfoot[L]{\sffamily\scriptsize\color{e10muted}\textcopyright\ 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}
+\fancyfoot[R]{\sffamily\footnotesize\color{e10primary}\thepage}
 
-% Caja de error comun
-\newcommand{\eerror}[2]{%
-  \noindent\fcolorbox{e10line}{e10warnsoft}{%
-    \begin{minipage}{0.95\linewidth}{\color{e10warn}\bfseries #1}\par\smallskip #2\end{minipage}}\par\vspace{0.5em}}
+% ---- Portada de documento ----
+\newcommand{\ePortada}[4]{% #1 capítulo  #2 tipo de documento  #3 título  #4 subtítulo
+  \thispagestyle{plain}
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[e10primary] (current page.north west) rectangle ([yshift=-7mm]current page.north east);
+  \end{tikzpicture}
+  \vspace*{2mm}
+  {\eEyebrow{#1 · #2}}\par\vspace{2mm}
+  {\eTitleFont\fontsize{24}{28}\selectfont\color{e10ink} #3\par}\vspace{1.5mm}
+  {\sffamily\large\color{e10muted} #4\par}
+  \vspace{2mm}{\color{e10line}\rule{\linewidth}{0.8pt}}\par\vspace{1mm}
+}
 
-% Caja de consejo
-\newcommand{\etip}[2]{%
-  \noindent\fcolorbox{e10accent}{e10accentsoft}{%
-    \begin{minipage}{0.95\linewidth}{\color{e10accent}\bfseries #1}\par\smallskip #2\end{minipage}}\par\vspace{0.5em}}
+% ---- Secciones ----
+\RequirePackage{needspace}
+\newcommand{\eSeccion}[2]{% #1 letra  #2 título (nunca queda sola al pie de página)
+  \par\needspace{7\baselineskip}\vspace{6pt}
+  {\eTitleFont\large\color{e10primary}#1\quad\color{e10ink}#2}\par\vspace{-3pt}
+  {\color{e10line}\rule{\linewidth}{0.6pt}}\par\vspace{0pt}}
 
-% Solucion de la autoevaluacion
-\newcommand{\esol}[2]{\noindent{\color{e10ok}\bfseries #1.}\ #2\par}
+% ---- Recuadros ----
+\tcbset{e10base/.style={enhanced,breakable,arc=2.5mm,boxrule=0.6pt,left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,
+  fonttitle=\sffamily\bfseries\small,coltitle=e10ink,attach boxed title to top left={xshift=3mm,yshift=-2mm},
+  boxed title style={arc=1.5mm,boxrule=0pt}}}
+\newtcolorbox{eResuelto}[2][]{e10base,colback=white,colframe=e10line,
+  title={Ejercicio resuelto #2},colbacktitle=e10primarysoft,coltitle=e10primary,#1}
+\newtcolorbox{eReto}[2][]{e10base,colback=white,colframe=e10line,
+  title={Reto #2},colbacktitle=e10accentsoft,coltitle=e10accentstrong,#1}
+\newtcolorbox{eTeoria}[1][]{e10base,colback=e10bg,colframe=e10line,title={Pregunta de teoría},colbacktitle=e10line,coltitle=e10ink,#1}
+% Etiqueta en línea al comienzo de un recuadro (solo la etiqueta va en negrita y color)
+\newcommand{\eEtiqueta}[2]{\textsf{\textbf{\textcolor{#1}{#2}}}\ }
+\newtcolorbox{ePredice}[1][]{enhanced,breakable,arc=2mm,boxrule=0pt,colback=e10warningsoft,left=3mm,right=3mm,top=1.5mm,bottom=1.5mm,
+  fontupper=\small,before upper=\eEtiqueta{e10warning}{Predice antes de calcular.},#1}
+\newtcolorbox{eClave}[1][]{enhanced,breakable,arc=2mm,boxrule=0pt,colback=e10primarysoft,left=3mm,right=3mm,top=2mm,bottom=2mm,#1}
+\newtcolorbox{eError}[1][]{enhanced,breakable,arc=2mm,boxrule=0pt,colback=e10warningsoft,left=3mm,right=3mm,top=2mm,bottom=2mm,
+  before upper=\eEtiqueta{e10warning}{Error común.},#1}
+\newtcolorbox{eConsejo}[1][]{enhanced,breakable,arc=2mm,boxrule=0pt,colback=e10accentsoft,left=3mm,right=3mm,top=2mm,bottom=2mm,
+  before upper=\eEtiqueta{e10accentstrong}{Consejo de estudio.},#1}
+\newtcolorbox{eFormula}[1][]{enhanced,arc=2mm,boxrule=0pt,colback=e10primarysoft,halign=center,top=2mm,bottom=2mm,#1}
 
-\endinput
+% Pasos dentro de un resuelto
+\newcommand{\ePaso}[1]{\par\smallskip{\sffamily\bfseries\small\color{e10primary}#1}\par}
+\newcommand{\eResultado}[1]{\par\smallskip\begin{tcolorbox}[enhanced,arc=1.5mm,boxrule=0pt,colback=e10successsoft,left=2mm,right=2mm,top=1mm,bottom=1mm]
+  {\sffamily\bfseries\small\color{e10success}Resultado.\ }#1\end{tcolorbox}}
+\newcommand{\eNivel}[1]{{\sffamily\scriptsize\color{e10muted}[#1]}}
+
+% ---- QR a la plataforma ----
+\newcommand{\eQR}[2]{% #1 URL  #2 texto
+  \begin{tabular}{@{}c@{\hspace{3mm}}p{0.62\linewidth}@{}}
+    \raisebox{-0.5\height}{\qrcode[height=18mm]{#1}} &
+    {\sffamily\small\bfseries #2}\newline{\scriptsize\ttfamily\color{e10muted}\nolinkurl{#1}}
+  \end{tabular}}
+
+% ---- Código Python ----
+\lstdefinestyle{e10python}{language=Python,basicstyle=\ttfamily\footnotesize\color{e10ink},
+  keywordstyle=\color{e10primary}\bfseries,commentstyle=\color{e10muted}\itshape,stringstyle=\color{e10accentstrong},
+  numbers=left,numberstyle=\tiny\color{e10muted},numbersep=6pt,backgroundcolor=\color{e10bg},frame=single,rulecolor=\color{e10line},
+  framesep=2mm,xleftmargin=5mm,breaklines=true,showstringspaces=false,columns=fullflexible,keepspaces=true,extendedchars=true,inputencoding=utf8/latin1}
+
+% ---- Notación ----
+\newcommand{\mo}{\mu_0}
+\newcommand{\vect}[1]{\vec{\bm{#1}}}
+\newcommand{\uv}[1]{\hat{\bm{#1}}}

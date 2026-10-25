@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Superficie Gaussiana Didáctica Desarmable · M05 — Electro10.Easy</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})"></script>
+<style>
+/* Ficha técnica de la maqueta 3D del módulo 5. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 16px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+.top{font-size:14px;color:var(--e10-muted)}.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1{font:700 clamp(28px,5vw,40px)/1.1 var(--e10-font-display);margin:14px 0 4px}
+h2{font:600 21px var(--e10-font-display);margin:28px 0 10px}
+.sub{color:var(--e10-muted);font-size:18px;margin:0 0 16px}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:14px 18px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--e10-line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--e10-primary);font-weight:600}
+td.m{font-family:var(--e10-font-mono);white-space:nowrap}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);display:inline-flex;align-items:center;text-decoration:none}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}.tip b{color:var(--e10-accent-strong)}
+.warn{background:var(--e10-warning-soft);border-radius:12px;padding:12px 16px}.warn b{color:var(--e10-warning)}
+ol li,ul li{margin:4px 0}
+.formula{background:var(--e10-primary-soft);border-radius:10px;padding:10px 14px;margin:8px 0;overflow-x:auto}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>Electro<span>10.Easy</span></b> · Módulo 5 · Pieza 3D</div>
+  <h1>Superficie Gaussiana Didáctica Desarmable · M05</h1>
+  <p class="sub">Kit de tres superficies gaussianas que se desarman y se ensamblan: cáscara esférica hueca, cilindro coaxial y pillbox, para deducir \(E\) por simetría y verificar la ley de Gauss con las manos.</p>
+  <div class="bar">
+    <a class="btn pri" href="M05_SuperficieGaussiana.stl" download>Descargar STL para imprimir (.stl)</a>
+    <a class="btn" href="M05_SuperficieGaussiana.scad" download>Descargar código OpenSCAD (.scad)</a>
+    <a class="btn" href="../../presentaciones/M5_Gauss/index.html" target="_blank" rel="noopener">Clase interactiva M05</a>
+    <a class="btn" href="../../simuladores/GaussLab.html" target="_blank" rel="noopener">GaussLab</a>
+  </div>
+
+  <h2>Función pedagógica</h2>
+  <div class="card">
+    La ley de Gauss afirma que el flujo del campo eléctrico a través de una superficie cerrada depende solo de la carga encerrada:
+    <div class="formula">\[\oint \vec{E}\cdot d\vec{A} = \frac{Q_{\mathrm{enc}}}{\varepsilon_0}\]</div>
+    El kit materializa el paso clave de la deducción: <b>elegir una superficie gaussiana cuya simetría haga que \(\vec{E}\) sea constante y paralelo (o perpendicular) al vector de área</b>, para que la integral colapse en un producto \(EA\). Cada estación reproduce una de las tres simetrías canónicas:
+    <ul>
+      <li><b>Cáscara esférica</b> (simetría esférica): al abrir los dos hemisferios se comprueba que el interior está vacío y, por tanto, \(E=0\) para \(r&lt;R\). Cerrada y con una carga puntual en el centro, la superficie gaussiana es la propia esfera de radio \(r&gt;R\), y \(E = Q/(4\pi\varepsilon_0 r^2)\).</li>
+      <li><b>Cilindro coaxial</b> (simetría cilíndrica): para el hilo infinito con densidad lineal \(\lambda\), la superficie gaussiana es un cilindro coaxial de radio \(r\). El flujo solo atraviesa la pared lateral, de donde \(E = \lambda/(2\pi\varepsilon_0 r)\).</li>
+      <li><b>Pillbox</b> (simetría planar): para la lámina infinita con densidad superficial \(\sigma\), la superficie gaussiana es una «caja de pastillas» que atraviesa la lámina. El flujo solo sale por las dos tapas planas, de donde \(E = \sigma/(2\varepsilon_0)\).</li>
+    </ul>
+    La pieza se desarma pieza a pieza: el estudiante «construye» la superficie gaussiana al mismo tiempo que la dibuja en el tablero, y lee en cada pieza la fórmula del campo que se obtiene al aplicar la ley.
+  </div>
+
+  <h2>Piezas del kit</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Pieza</th><th>Parámetro OpenSCAD</th><th>Medidas / Función</th></tr></thead>
+    <tbody>
+      <tr><td class="m">Base</td><td><code>base_l, base_a, base_h</code></td><td>\(120 \times 80 \times 8\text{ mm}\); tres pocillos de asiento y rótulos grabados</td></tr>
+      <tr><td class="m">Hemisferio inferior</td><td><code>R, t_esf, encaje</code></td><td>Cáscara \(\varnothing 40\text{ mm}\), pared \(2{,}5\text{ mm}\), con espiga de encaje</td></tr>
+      <tr><td class="m">Hemisferio superior</td><td><code>R, ventana_w, ventana_h</code></td><td>Cáscara \(\varnothing 40\text{ mm}\) con ventana y pestaña «E = 0 interior»</td></tr>
+      <tr><td class="m">Cilindro lateral</td><td><code>rc, tc, hc</code></td><td>Tubo \(\varnothing 26 \times 40\text{ mm}\), pared \(2{,}5\text{ mm}\) (superficie gaussiana del hilo)</td></tr>
+      <tr><td class="m">Tapas del cilindro (2)</td><td><code>rc_tapa, tapa_c, r_eje</code></td><td>Discos \(\varnothing 30\text{ mm}\) con agujero central \(\varnothing 5\text{ mm}\) (ranura del hilo λ)</td></tr>
+      <tr><td class="m">Hilo λ</td><td><code>hilo_l</code></td><td>Varilla \(\varnothing 4{,}2 \times 70\text{ mm}\) con puntas cónicas; representa el hilo infinito</td></tr>
+      <tr><td class="m">Anillo del pillbox</td><td><code>rp, tl, pill_l</code></td><td>Anillo \(\varnothing 34\text{ mm}\), alto \(18\text{ mm}\), con ranura para la lámina σ</td></tr>
+      <tr><td class="m">Tapas del pillbox (2)</td><td><code>rp, tp</code></td><td>Discos \(\varnothing 34\text{ mm}\), espesor \(3\text{ mm}\) (tapas planas paralelas)</td></tr>
+      <tr><td class="m">Lámina σ</td><td><code>lamina_l, lamina_w, lamina_g</code></td><td>Placa \(62 \times 25 \times 1{,}6\text{ mm}\) que atraviesa el pillbox (lámina infinita)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Parámetros del .scad</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Parámetro</th><th>Valor por defecto</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td class="m">base_l / base_a / base_h</td><td class="m">120 / 80 / 8</td><td>Largo, ancho y espesor de la base (mm)</td></tr>
+      <tr><td class="m">receso_d / holgura / prof</td><td class="m">2 / 0.4 / 0.8</td><td>Profundidad de pocillos, juego radial entre piezas y profundidad del grabado</td></tr>
+      <tr><td class="m">R / t_esf</td><td class="m">20 / 2.5</td><td>Radio exterior y espesor de pared de la cáscara esférica</td></tr>
+      <tr><td class="m">encaje / t_lap</td><td class="m">3 / t_esf/2</td><td>Altura del solape de encaje y mitad del espesor que solapa</td></tr>
+      <tr><td class="m">ventana_w / ventana_h</td><td class="m">14 / 12</td><td>Ancho y alto de la ventana que revela el interior hueco</td></tr>
+      <tr><td class="m">rc / tc / hc</td><td class="m">13 / 2.5 / 40</td><td>Radio exterior, espesor de pared y altura del cilindro coaxial</td></tr>
+      <tr><td class="m">rc_tapa / tapa_c / r_eje</td><td class="m">15 / 3 / 2.5</td><td>Radio de tapas, espesor de tapa y radio del agujero central (hilo λ)</td></tr>
+      <tr><td class="m">rp / tp / tl / hp</td><td class="m">17 / 3 / 2.5 / 24</td><td>Radio de tapas, espesor de tapa, espesor de anillo y altura total del pillbox</td></tr>
+      <tr><td class="m">lamina_g / lamina_w / lamina_l</td><td class="m">1.6 / 25 / 62</td><td>Espesor, ancho y largo de la lámina σ</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Impresión 3D</h2>
+  <div class="card"><ul>
+    <li><b>Material:</b> PLA+ (o PETG si se reutiliza mucho en el laboratorio).</li>
+    <li><b>Altura de capa:</b> \(0{,}16\text{ mm}\); los rótulos y ranuras salen nítidos a \(0{,}12\text{ mm}\).</li>
+    <li><b>Relleno:</b> \(20\%\) giroide o cuadrícula; 3 perímetros de pared.</li>
+    <li><b>Soportes:</b> No requiere salvo la espiga del hemisferio inferior (añadir brim de \(5\text{ mm}\)).</li>
+    <li><b>Piezas:</b> 11 piezas en total (base, 2 hemisferios, cilindro + 2 tapas + hilo, anillo + 2 tapas + lámina).</li>
+    <li><b>Exportación:</b> en OpenSCAD, \(F6\) (render) y «Exportar como STL». Para el kit completo desarmado, cambia la última línea a <code>partes();</code>.</li>
+  </ul></div>
+
+  <h2>Protocolo de aula</h2>
+  <ol class="card" style="padding-left:34px">
+    <li><b>Abrir la cáscara:</b> el estudiante separa los dos hemisferios y lee «E = 0 interior»: dentro de una cáscara esférica hueca no hay carga y el campo es nulo.</li>
+    <li><b>Ensamblar y cerrar:</b> vuelve a encajar los hemisferios por la espiga y comprueba, por la ventana, que el centro sigue vacío.</li>
+    <li><b>Hilo infinito:</b> inserta el hilo λ por el agujero central del cilindro y recorre con el dedo la superficie lateral: solo ella contribuye al flujo, de donde \(E = \lambda/(2\pi\varepsilon_0 r)\).</li>
+    <li><b>Lámina infinita:</b> desliza la lámina σ por la ranura del pillbox y observa que el campo sale por las dos tapas planas: \(E = \sigma/(2\varepsilon_0)\).</li>
+    <li><b>Cerrar la ley:</b> lee en la base \(\oint \vec{E}\cdot d\vec{A} = Q_{\mathrm{enc}}/\varepsilon_0\) y contrasta cada resultado con <code>GaussLab</code> (escenas «Esfera», «Hilo» y «Lámina»).</li>
+  </ol>
+
+  <div class="tip"><b>Conexión con Sears-Zemansky Cap. 22 (Ley de Gauss):</b> las tres estaciones reproducen los ejemplos 22.5 (carga puntual / esfera), 22.6 (hilo infinito) y 22.7 (lámina infinita). En los tres, el valor de \(E\) es independiente de la forma exacta de la superficie elegida: solo importa la carga encerrada \(Q_{\mathrm{enc}}\).</div>
+  <p style="font-size:14px;color:var(--e10-muted);margin-top:18px">Ficha técnica documentada en <code>GUIA_DIDACTICA_Y_MODELOS_3D.md</code> (módulo 5). © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
+</div>
+</body>
+</html>

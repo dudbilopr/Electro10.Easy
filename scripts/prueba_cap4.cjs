@@ -82,12 +82,30 @@ if (fs.existsSync(tallerPath)) {
   ok(tallerContent.includes('ContinuousDistLab'), 'Taller referencia a ContinuousDistLab');
 }
 
-// 4. Guía LaTeX → PDF de 4 páginas
+// 4. Guía y Taller LaTeX → Validación de macros y páginas
+const guiaTexPath4 = path.join(baseDir, '.design/fase5/M04/M04_Guia.tex');
+const tallerTexPath4 = path.join(baseDir, '.design/fase5/M04/Taller_4.tex');
+if (fs.existsSync(guiaTexPath4)) {
+  const gTex = fs.readFileSync(guiaTexPath4, 'utf8');
+  ok(gTex.includes('\\ePortada'), 'M04 Guía usa banner oficial \\ePortada');
+  ok(gTex.includes('\\begin{eClave}'), 'M04 Guía usa cajas tcolorbox eClave');
+  ok(gTex.includes('\\begin{eError}'), 'M04 Guía usa cajas tcolorbox eError');
+  ok(!gTex.includes('\\fcolorbox{plasmaViolet}'), 'M04 Guía erradica tablas crudas fcolorbox');
+}
+if (fs.existsSync(tallerTexPath4)) {
+  const tTex = fs.readFileSync(tallerTexPath4, 'utf8');
+  ok(tTex.includes('\\ePortada'), 'Taller 4 usa banner oficial \\ePortada');
+  ok(tTex.includes('\\begin{eResuelto}'), 'Taller 4 usa cajas tcolorbox eResuelto');
+  ok(tTex.includes('\\begin{eReto}'), 'Taller 4 usa cajas tcolorbox eReto');
+  ok(!tTex.includes('\\newcommand{\\prob}'), 'Taller 4 no define comandos ad-hoc \\prob');
+}
 const guiaPath = path.join(baseDir, 'recursos/Cap04_Guia.pdf');
 if (fs.existsSync(guiaPath)) {
   const nPages = countPages(fs.readFileSync(guiaPath));
   ok(nPages === 4, `Guía PDF tiene 4 páginas exactas (detectadas: ${nPages})`);
 }
+const tallerPathPdf = path.join(baseDir, 'recursos/Cap04_Taller.pdf');
+ok(fs.existsSync(tallerPathPdf), 'Cap04_Taller.pdf existe en recursos/');
 
 // 5. Banco de Desafío Integral
 const bancoPath = path.join(baseDir, 'desafios/bancos/m4.js');

@@ -1,146 +1,181 @@
-% ==========================================================================
-%  Guía de Estudio · M03 · Potencial Eléctrico y Superficies Equipotenciales
-%  Electro10.Easy — Universidad Autónoma de Bucaramanga
-%  Autor: Prof. Dudbil Olvasada Pabón Riaño · 4 páginas exactas
-%  Compilar:  pdflatex M03_Guia.tex   (desde .design/fase5/M03/)
-% ==========================================================================
 \documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[spanish,es-noshorthands]{babel}
-\usepackage[a4paper,margin=1.7cm]{geometry}
 \usepackage{e10}
-\usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
-\usepackage{tabularx}
-\usepackage{array}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.5em}
+\usepackage{array,booktabs,multicol}
+\renewcommand{\eCapitulo}{Capítulo 3 · Potencial eléctrico y superficies equipotenciales}
+\renewcommand{\eDocumento}{Guía de estudio}
 
 \begin{document}
+\ePortada{Capítulo 3}{Guía de estudio}{Potencial eléctrico y superficies equipotenciales}{Lo esencial del capítulo, con organizador gráfico, errores comunes y autoevaluación}
 
-% ═══════════════════════════ PÁGINA 1 ═══════════════════════════
+\begin{minipage}[c]{0.58\linewidth}
+{\eTitleFont\color{e10primary}Al terminar el capítulo podrás}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Definir el potencial eléctrico como energía potencial por unidad de carga y calcular $\Delta V=-\int\vect{E}\cdot d\vect{\ell}$.
+  \item Calcular el potencial de una o varias cargas puntuales como una suma escalar directa sin vectores.
+  \item Trazar e interpretar superficies equipotenciales y su ortogonalidad a $90^\circ$ con las líneas de campo.
+  \item Obtener el vector de campo eléctrico a partir del gradiente del potencial: $\vect{E}=-\vect{\nabla}V$.
+  \item Aplicar la conservación de la energía mecánica $K_a+U_a=K_b+U_b$ a partículas cargadas.
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.38\linewidth}
 \begin{center}
-  {\color{e10primary}\rule{\linewidth}{3.5pt}}\\[1.2em]
-  {\LARGE\bfseries Guía de Estudio · Módulo 03}\\[0.25em]
-  {\huge\bfseries Potencial Eléctrico y Superficies Equipotenciales}\\[0.6em]
-  {\color{e10muted}Electro10.Easy · Cátedra de Electromagnetismo · Prof. Dudbil Olvasada Pabón Riaño}\\[0.3em]
-  {\color{e10muted}\small Rigor: Sears--Zemansky, \emph{Física Universitaria} Vol.~2, Cap.~23 · $\Delta V=-\int\vec E\cdot d\vec\ell,\ \ \vec E=-\vec\nabla V$}
-  \\[1em]
-  {\color{e10primary}\rule{\linewidth}{1pt}}
+\begin{tikzpicture}[scale=0.78,>=Stealth]
+  % Carga puntual positiva
+  \fill[e10qpos] (0,0) circle (0.22); \node[white,font=\bfseries] at (0,0) {$+$};
+  % Superficies equipotenciales circulares
+  \draw[e10primary,thick] (0,0) circle (0.65);
+  \draw[e10primary,thick] (0,0) circle (1.2);
+  \draw[e10primary,thick] (0,0) circle (1.8);
+  % Rótulos de potencial
+  \node[e10primary,font=\tiny\bfseries] at (0.65,0.2) {$V_1$};
+  \node[e10primary,font=\tiny\bfseries] at (1.2,0.2) {$V_2$};
+  \node[e10primary,font=\tiny\bfseries] at (1.8,0.2) {$V_3$};
+  % Líneas de campo ortogonales
+  \foreach \ang in {30,90,150,210,270,330} {
+    \draw[->,e10accent,very thick] ({\ang}:0.3) -- ({\ang}:2.1);
+  }
+  \node[e10accentstrong,font=\scriptsize\bfseries] at (1.7,1.7) {$\vect{E}=-\vect{\nabla}V$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+\eSeccion{1}{Ideas clave}
+\begin{eClave}
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=0pt]
+  \item \textbf{El potencial es energía por unidad de carga:} $V=U/q_0$, en volt ($1\ \mathrm{V}=1\ \mathrm{J/C}$). Es un \textbf{escalar}: no tiene componentes vectoriales ni requiere descomposición trigonométrica para sumarse.
+  \item \textbf{El voltaje es la altura de un mapa topográfico:} el campo eléctrico $\vect{E}$ apunta cuesta abajo, en la dirección de máximo descenso del potencial. Una carga positiva acelera espontáneamente hacia menor $V$; una negativa, hacia mayor $V$.
+  \item \textbf{Superficies equipotenciales = curvas de nivel:} el campo eléctrico siempre es \textbf{perpendicular} ($\mathbf{90^\circ}$) a las superficies equipotenciales. Mover una carga sobre una misma superficie no requiere trabajo: $W_{a\to b}=0$ si $V_a=V_b$.
+  \item \textbf{$V=0$ no implica $\vect{E}=\vect{0}$:} en el punto medio de un dipolo eléctrico el potencial se cancela ($V=0$), pero el campo eléctrico es máximo y distinto de cero. Lo que determina el campo es la derivada (pendiente), no el valor absoluto de $V$.
+  \item \textbf{Conductores en equilibrio:} todo el volumen y la superficie de un conductor cargado en equilibrio electrostático se encuentran al \textbf{mismo potencial} ($V=\text{cte}$), por lo que $\vect{E}=\vect{0}$ en su interior.
+  \item \textbf{El electrón-volt es unidad de energía, no de potencial:} $1\ \mathrm{eV}=e\cdot(1\ \mathrm{V})=\SI{1,602e-19}{\joule}$.
+\end{itemize}
+\end{eClave}
+
+\eSeccion{2}{Organizador gráfico}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small,
+  nodo/.style={draw=e10primary,line width=0.8pt,rounded corners=2mm,fill=white,align=center,inner sep=4pt,text width=3.1cm},
+  previo/.style={nodo,draw=e10accentstrong,fill=e10accentsoft},
+  sig/.style={nodo,draw=e10field,fill=e10field!8},
+  eti/.style={font=\scriptsize,e10muted,fill=white,inner sep=1pt}]
+  \node[previo] (fe) at (0,2.5) {Fuerza eléctrica\\ $\vect{F}=q\vect{E}$ (conservativa)};
+  \node[nodo,fill=e10primarysoft,line width=1.4pt] (U) at (4.6,2.5) {\textbf{Energía potencial}\\ $U=k\sum \frac{q_iq_j}{r_{ij}}$};
+  \node[nodo,fill=e10accentsoft,line width=1.4pt] (V) at (9.2,2.5) {\textbf{Potencial eléctrico}\\ $V=U/q_0=\sum \frac{kq_i}{r_i}$};
+  \node[nodo] (int) at (0,-0.2) {Integral de línea\\ $\Delta V=-\int_a^b \vect{E}\cdot d\vect{\ell}$};
+  \node[nodo] (grad) at (4.6,-0.2) {Gradiente\\ $\vect{E}=-\vect{\nabla}V$};
+  \node[nodo] (eq) at (9.2,-0.2) {Equipotenciales\\ $V=\text{cte}\ \Rightarrow\ \vect{E}\perp d\vect{\ell}$};
+  \node[sig] (c4) at (4.6,-2.6) {Cap.~4 · Continuas\\ $V=k\int \frac{dq}{r}$};
+  \node[sig] (c6) at (9.2,-2.6) {Cap.~6 · Capacitancia\\ $C=Q/\Delta V$};
+
+  \draw[->,thick,e10muted] (fe) -- node[eti,above,yshift=2pt]{trabajo $W$} (U);
+  \draw[->,thick,e10muted] (U) -- node[eti,above,yshift=2pt]{$\div q_0$} (V);
+  \draw[->,thick,e10muted] (int) -- node[eti,above,yshift=2pt]{$\Delta V$} (V);
+  \draw[->,thick,e10muted] (V) -- node[eti,left,xshift=-2pt]{$-\vect{\nabla}$} (grad);
+  \draw[->,thick,e10muted] (V) -- (eq);
+  \draw[->,thick,e10muted] (grad) -- node[eti,left,xshift=-2pt]{$\sum\to\int$} (c4);
+  \draw[->,thick,e10muted] (eq) -- (c6);
+\end{tikzpicture}
 \end{center}
 
-\esection{Ideas clave}
-\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
-  \item \textbf{El potencial es energía por unidad de carga:} $V=U/q_0$, en volt ($1\ \mathrm{V}=1\ \mathrm{J/C}$). Es un \textbf{escalar}.
-  \item \textbf{El voltaje es una altura en el mapa:} $\vec E$ apunta cuesta abajo, de mayor a menor $V$. Una carga positiva ``cae'' hacia el potencial menor; la negativa, al revés.
-  \item \textbf{Superficies equipotenciales} = curvas de nivel de $V$. $\vec E$ es \textbf{perpendicular} a ellas y mover carga sobre una no cuesta trabajo.
-  \item \textbf{$V=0$ no implica $\vec E=0$:} en la mediatriz de un dipolo $V=0$ pero el campo es no nulo.
-  \item \textbf{El electrón-volt es energía, no voltaje:} $1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm{J}$.
-\end{itemize}
+\eSeccion{3}{Fórmulas maestras}
+\renewcommand{\arraystretch}{1.65}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.28\linewidth} >{\centering\arraybackslash}p{0.37\linewidth} >{\raggedright\arraybackslash}p{0.27\linewidth}}
+\toprule
+{\sffamily\small\bfseries Situación} & {\sffamily\small\bfseries Fórmula} & {\sffamily\small\bfseries Cuándo vale}\\
+\midrule
+Definición de potencial & $V=\dfrac{U}{q_0},\quad \Delta V=-\int_{a}^{b}\vect{E}\cdot d\vect{\ell}$ & siempre; campo conservativo \\
+Carga puntual & $V=k\dfrac{q}{r}$ & carga puntual con $V(\infty)=0$ \\
+Superposición de cargas & $V=\sum_i k\dfrac{q_i}{r_i}$ & suma escalar directa sin vectores \\
+Campo uniforme & $\Delta V = -E\,d$ & entre placas o región uniforme \\
+Energía del sistema & $U=k\sum_{i<j}\dfrac{q_iq_j}{r_{ij}}$ & trabajo para ensamblar el sistema \\
+Campo desde potencial & $E_x=-\dfrac{\partial V}{\partial x},\quad \vect{E}=-\vect{\nabla}V$ & gradiente en coordenadas cartesianas \\
+Trabajo del campo & $W_{a\to b} = -\Delta U = -q\Delta V$ & teorema del trabajo y la energía \\
+\bottomrule
+\end{tabular}
+\end{center}
+{\small\color{e10muted}$k=\SI{8,988e9}{\newton\metre\squared\per\coulomb\squared}$, $e=\SI{1,602e-19}{\coulomb}$, $1\ \mathrm{V}=1\ \mathrm{J/C}=1\ \mathrm{N\cdot m/C}$. Unidades de campo: $\SI{1}{\newton\per\coulomb}=\SI{1}{\volt\per\metre}$.}
 
-\esection{Organizador gráfico}
+\eSeccion{4}{Errores comunes, con su explicación física}
+\begin{eError}\textbf{«Sumo los potenciales como vectores con senos y cosenos.»} No: el potencial eléctrico es un campo escalar, no vectorial. Se suma con signo algebraico ordinario: si tienes dos cargas de $+4\ \mathrm{nC}$ y $-4\ \mathrm{nC}$ a la misma distancia, $V=V_1+V_2=0\ \mathrm{V}$, sin descomponer ángulos.\end{eError}
+\begin{eError}\textbf{«Si el potencial en un punto es cero, el campo eléctrico también debe ser cero.»} Falso. El campo eléctrico es la derivada espacial (la pendiente) del potencial: $\vect{E}=-\vec\nabla V$. En el plano medio de un dipolo $V=0\ \mathrm{V}$, pero la pendiente es pronunciada y el campo es intenso.\end{eError}
+\begin{eError}\textbf{«El trabajo para mover una carga depende de la trayectoria elegida.»} Falso. La fuerza electrostática es estrictamente conservativa: $\oint \vect{E}\cdot d\vect{\ell}=0$. El trabajo $W_{a\to b}=-q\Delta V$ depende exclusivamente de los puntos inicial y final, nunca de la curva recorrida.\end{eError}
+\begin{eError}\textbf{«El electrón-volt es un voltaje.»} El electrón-volt ($\mathrm{eV}$) es una unidad de energía ($1\ \mathrm{eV}=\SI{1,602e-19}{\joule}$), equivalente a la energía cinética que gana un electrón al atravesar una diferencia de potencial de $\SI{1}{\volt}$.\end{eError}
+
+\eSeccion{5}{Cómo estudiar este capítulo}
+\begin{eConsejo}Domina la analogía del mapa de curvas de nivel: el potencial es la cota de altitud y el campo eléctrico es la flecha de máxima pendiente cuesta abajo. En EquipotentialLab, visualiza cómo al colocar cargas puntuales se forman pozos (cargas negativas) y colinas (cargas positivas). Resuelve los problemas primero calculando el escalar $V$ y sólo después el vector $\vect{E}$ mediante derivadas parciales; este orden siempre simplifica el cálculo analítico.\end{eConsejo}
+
+\eSeccion{6}{Autoevaluación}
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+  \item ¿Cuánto vale el potencial a $\SI{0,25}{\metre}$ de una carga puntual de $+\SI{5,0}{\nano\coulomb}$?
+  \item Si un protón se acelera desde el reposo a través de $\Delta V=-\SI{500}{\volt}$, ¿cuál es su energía cinética final en $\mathrm{eV}$ y en joules?
+  \item Dos cargas de $+q$ y $-q$ están separadas una distancia $2a$. ¿Cuánto vale el potencial en cualquier punto de su mediatriz?
+  \item Si el potencial en una región está dado por $V(x,y)=4x^2y - 2z$, halle las componentes del vector $\vect{E}$.
+  \item ¿Cuánto trabajo se requiere para mover una carga de $\SI{2,0}{\micro\coulomb}$ a lo largo de una superficie equipotencial de $\SI{100}{\volt}$ durante $\SI{5}{\metre}$?
+\end{enumerate}
+
+\medskip
+\eQR{https://dudbilopr.github.io/Electro10.Easy/simuladores/EquipotentialLab.html}{Comprueba tus respuestas 1, 3 y 5 en EquipotentialLab: mide voltajes y gradientes con la sonda virtual.}
+
+\medskip
+{\sffamily\footnotesize\color{e10muted}\textbf{Solucionario.}
+1) $V=kq/r=(8{,}988\times10^9)(5{,}0\times10^{-9})/0{,}25=\SI{180}{\volt}$.\enspace
+2) $K=q|\Delta V|=\SI{500}{\electronvolt}=\SI{8,01e-17}{\joule}$.\enspace
+3) $V=0\ \mathrm{V}$ en toda la mediatriz porque $r_+=r_-$.\enspace
+4) $E_x=-\partial V/\partial x=-8xy$, $E_y=-\partial V/\partial y=-4x^2$, $E_z=-\partial V/\partial z=+2$.\enspace
+5) $W=0\ \mathrm{J}$ porque $\Delta V=0$ sobre cualquier equipotencial.}
+
+\eSeccion{7}{Conectores de conceptos}
+\begin{minipage}[t]{0.48\linewidth}\small
+{\sffamily\small\bfseries\color{e10primary}Viene de}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item \textbf{Cap.~1 · Ley de Coulomb:} la fuerza eléctrica es conservativa.
+  \item \textbf{Cap.~2 · Campo eléctrico:} $\Delta V=-\int \vect{E}\cdot d\vect{\ell}$; el potencial integra el campo.
+  \item \textbf{Mecánica · Trabajo y Energía:} $W=-\Delta U$, teorema de conservación $K+U=\text{cte}$.
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}\small
+{\sffamily\small\bfseries\color{e10accentstrong}Lleva a}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item \textbf{Cap.~4 · Continuas:} cálculo de $V=\int \frac{k\,dq}{r}$ como integral escalar antes de hallar $\vect{E}$.
+  \item \textbf{Cap.~5 · Gauss:} superficies cerradas y conductores equipotenciales.
+  \item \textbf{Cap.~6 · Capacitancia:} relación carga-voltaje $Q=C\Delta V$ y energía almacenada $U=\frac{1}{2}C(\Delta V)^2$.
+\end{itemize}
+\end{minipage}
+
+\medskip
+{\sffamily\small\bfseries Analogía topográfica que ordena el capítulo}
 \renewcommand{\arraystretch}{1.25}
-\begin{center}
-\begin{tabular}{m{3.1cm} m{0.8cm} m{4.2cm} m{0.8cm} m{5.2cm}}
-  \fcolorbox{e10primary}{e10primarysoft}{\parbox[c][1.4cm][c]{2.9cm}{\centering\small\textbf{Energía potencial}\\ $U=q_0V$}} &
-  \centering\color{e10primary}\LARGE$\xrightarrow{\ \div q_0\ }$ &
-  \fcolorbox{e10primary}{e10primarysoft}{\parbox[c][1.4cm][c]{4.0cm}{\centering\small\textbf{Potencial}\\ $V=\sum\dfrac{kq_i}{r_i}$}} &
-  \centering\color{e10primary}\LARGE$\xrightarrow{\ -\vec\nabla\ }$ &
-  \fcolorbox{e10primary}{e10primarysoft}{\parbox[c][1.4cm][c]{5.0cm}{\centering\small\textbf{Campo eléctrico}\\ $\vec E=-\vec\nabla V$}}\\[-0.3em]
-  & & \color{e10primary}$\downarrow$ & & \color{e10primary}$\downarrow$\\[-0.3em]
-  & & \fcolorbox{e10accent}{e10accentsoft}{\parbox[c][1.3cm][c]{4.0cm}{\centering\small\textbf{Equipotenciales}\\ $W=q_0\Delta V=0$}} & & \fcolorbox{e10accent}{e10accentsoft}{\parbox[c][1.3cm][c]{5.0cm}{\centering\small\textbf{Campo uniforme}\\ $\Delta V=Ed$}}\\[-0.3em]
-  & & \color{e10primary}$\downarrow$ & & \\[-0.3em]
-  & & \fcolorbox{e10ok}{e10oksoft}{\parbox[c][1.3cm][c]{4.0cm}{\centering\small\textbf{Electrón-volt}\\ $1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm{J}$}} & & \\
+\begin{center}\footnotesize
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth} >{\centering\arraybackslash}p{0.34\linewidth} >{\centering\arraybackslash}p{0.34\linewidth}}
+\toprule
+ & {\sffamily\bfseries Mapa topográfico (Gravedad)} & {\sffamily\bfseries Paisaje electrostático}\\
+\midrule
+Variable escalar & Altitud $h(x,y)$ en metros & Potencial eléctrico $V(x,y)$ en volts\\
+Energía & $U_g=mgh$ & $U_e=q_0V$\\
+Curvas de nivel & Altura constante ($h=\text{cte}$) & Superficies equipotenciales ($V=\text{cte}$)\\
+Pendiente & Vector de máxima inclinación & Campo eléctrico $\vect{E}=-\vect{\nabla}V$\\
+Movimiento libre & La masa rueda cuesta abajo & Carga positiva acelera hacia menor $V$\\
+\bottomrule
 \end{tabular}
 \end{center}
 
-\etip{Analogía topográfica}{El voltaje es la altura de un mapa de montaña; el campo es la pendiente de la ladera. Una canica rueda cuesta abajo igual que una carga positiva ``cae'' hacia el potencial menor. La gravedad y la fuerza electrostática son ambas conservativas.}
+\eSeccion{8}{Glosario}
+\begin{multicols}{2}\small\begin{description}[leftmargin=0pt,itemsep=1pt,font=\sffamily\bfseries\color{e10primary}]
+  \item[Potencial eléctrico $V$.] Energía potencial electrostática por unidad de carga; escalar medido en volts ($1\ \mathrm{V}=1\ \mathrm{J/C}$).
+  \item[Voltaje $\Delta V$.] Diferencia de potencial $V_b-V_a=-\int_a^b\vect{E}\cdot d\vect{\ell}$ entre dos puntos.
+  \item[Superficie equipotencial.] Lugar geométrico de los puntos que comparten el mismo valor de $V$; $\vect{E}\perp$ a ella.
+  \item[Gradiente de potencial.] Vector $\vect{\nabla}V=(\frac{\partial V}{\partial x},\frac{\partial V}{\partial y},\frac{\partial V}{\partial z})$ que apunta hacia el máximo aumento de $V$; $\vect{E}=-\vect{\nabla}V$.
+  \item[Electrón-volt ($\mathrm{eV}$).] Unidad de energía correspondiente al trabajo realizado al mover $e$ a través de $\SI{1}{\volt}$; $\SI{1,602e-19}{\joule}$.
+  \item[Conductor equipotencial.] Todo cuerpo conductor en equilibrio electrostático mantiene el mismo potencial en su superficie y volumen.
+  \item[Rigidez dieléctrica.] Campo eléctrico máximo que soporta un aislante antes de ionizarse y conducir ($3\times10^6\ \mathrm{V/m}$ en aire).
+  \item[Energía de ensamble.] Trabajo externo necesario para reunir una configuración de cargas desde el infinito: $U=k\sum_{i<j}\frac{q_iq_j}{r_{ij}}$.
+\end{description}\end{multicols}
 
-\etip{¿Por qué el pájaro no se electrocuta?}{Posado en un cable de alta tensión, sus dos patas están al mismo potencial: $\Delta V\approx0$ y no circula corriente por su cuerpo. Lo que daña es la \emph{diferencia} de potencial, no el valor absoluto.}
-
-\newpage
-% ═══════════════════════════ PÁGINA 2 ═══════════════════════════
-\esection{Fórmulas maestras}
-\begin{center}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.2cm} >{\centering\arraybackslash}X >{\raggedright\arraybackslash}p{5.6cm}}
-\hline
-\rowcolor{e10primarysoft} \textbf{Magnitud} & \textbf{Fórmula} & \textbf{Cuándo usarla} \\
-\hline
-Diferencia de potencial & $\Delta V=-\displaystyle\int_a^b \vec E\cdot d\vec\ell$ & Conocido el campo; integra a lo largo de la trayectoria. \\
-Potencial de carga puntual & $V=\dfrac{kq}{r}$ & Una carga, con $V=0$ en el infinito. \\
-Superposición & $V=\displaystyle\sum_i\dfrac{kq_i}{r_i}$ & Varias cargas puntuales (suma escalar). \\
-Distribución continua & $V=\displaystyle\int\dfrac{k\,dq}{r}$ & Anillo, disco, varilla o cascarón. \\
-Energía potencial & $U=q_0V=\displaystyle\sum_{i<j}\dfrac{kq_iq_j}{r_{ij}}$ & Energía de una carga o de un sistema. \\
-Campo uniforme & $\Delta V=Ed$ & Entre placas paralelas con $\vec E$ constante. \\
-Gradiente & $\vec E=-\vec\nabla V$ & Recuperar el campo a partir de $V$. \\
-Electrón-volt & $1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm{J}$ & Energías de partículas (eV, keV, MeV). \\
-\hline
-\end{tabularx}
-\end{center}
-
-\esection{Cuatro errores comunes resueltos}
-
-\eerror{Error 1 · ``Si $V=0$, entonces no hay campo.''}{
-\textbf{La intuición correcta:} el potencial es un número que puede anularse por \emph{cancelación de signos}. En la mediatriz de un dipolo las dos contribuciones $kq/r$ y $k(-q)/r$ suman cero, pero el campo apunta de la carga positiva a la negativa. $V=0$ solo fija la referencia de altura; la pendiente ($\vec E=-\vec\nabla V$) puede ser distinta de cero ahí.
-}
-
-\eerror{Error 2 · ``Los potenciales se suman como vectores.''}{
-\textbf{La intuición correcta:} el potencial es un \textbf{escalar}. $V=\sum_i kq_i/r_i$ es una suma de números reales con su signo, sin ángulos ni componentes. Esa es justamente su ventaja frente al campo: en el dipolo del ejemplo 23.4 de Sears--Zemansky, $V_a=1800+(-2700)=-900\ \mathrm{V}$, una suma algebraica directa.
-}
-
-\newpage
-% ═══════════════════════════ PÁGINA 3 ═══════════════════════════
-\eerror{Error 3 · ``El electrón-volt es una unidad de voltaje.''}{
-\textbf{La intuición correcta:} el electrón-volt es una unidad de \textbf{energía}. $1\ \mathrm{eV}=1{,}602\times10^{-19}\ \mathrm{J}$ es la energía que gana una carga de magnitud $e$ al cruzar una diferencia de potencial de $1\ \mathrm{V}$. Un protón que atraviesa $7{,}5\ \mathrm{MV}$ gana $7{,}5\ \mathrm{MeV}$, no ``7,5 millones de electrones-volt de voltaje''.
-}
-
-\eerror{Error 4 · ``El potencial baja en contra del campo.''}{
-\textbf{La intuición correcta:} de $\Delta V=-\int\vec E\cdot d\vec\ell$, al movernos \emph{a favor} de $\vec E$ el potencial \emph{disminuye}. El signo menos es la clave. Entre placas, $V$ cae de la placa positiva a la negativa, que es exactamente la dirección de $\vec E$.
-}
-
-\esection{Autoevaluación cuantitativa (5 preguntas)}
-\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
-  \item ¿Cuánto vale el potencial a $0{,}30\ \mathrm{m}$ de una carga de $+2{,}0\ \mathrm{nC}$? \hfill ($k=8{,}99\times10^9\ \mathrm{N\,m^2/C^2}$)
-  \item Un electrón cruza una diferencia de potencial de $120\ \mathrm{V}$. ¿Cuánta energía gana, en eV y en joules?
-  \item Un dipolo de $\pm12\ \mathrm{nC}$ separadas $10\ \mathrm{cm}$. ¿Cuánto vale $V$ en la mediatriz, a $13\ \mathrm{cm}$ de cada carga?
-  \item Entre dos placas separadas $4{,}0\ \mathrm{mm}$ hay $\Delta V=80\ \mathrm{V}$. ¿Cuánto vale el campo $E$?
-  \item Dado $V(x)=100-50x$ (en volt, con $x$ en metros), ¿cuánto vale $\vec E$ y hacia dónde apunta?
-\end{enumerate}
-
-\etip{Cómo usarla}{Resuelve primero en papel, luego contrasta con el solucionario de la página 4. Si fallas, vuelve al error común correspondiente antes de mirar la fórmula.}
-
-\newpage
-% ═══════════════════════════ PÁGINA 4 ═══════════════════════════
-\esection{Solucionario numérico}
-
-\esol{1.}{$V=kq/r=(8{,}99\times10^9)(2{,}0\times10^{-9})/0{,}30=59{,}9\ \mathrm{V}$.}
-\esol{2.}{$\Delta K=|e|\,\Delta V=120\ \mathrm{eV}=120\times1{,}602\times10^{-19}=1{,}92\times10^{-17}\ \mathrm{J}$.}
-\esol{3.}{$V=\dfrac{k(12\ \mathrm{nC})}{0{,}13}+\dfrac{k(-12\ \mathrm{nC})}{0{,}13}=830-830=0\ \mathrm{V}$. Ojo: $E\ne0$ en ese punto.}
-\esol{4.}{$E=\Delta V/d=80/0{,}004=2{,}0\times10^4\ \mathrm{V/m}$.}
-\esol{5.}{$E_x=-dV/dx=-(-50)=50\ \mathrm{V/m}$, apuntando en la dirección $+x$ (hacia donde $V$ disminuye).}
-
-\esection{Errores detectados por telemetría (EquipotentialLab)}
-\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
-  \item \texttt{potencial\_v\_vs\_u} — confundir $V$ con la energía $U$.
-  \item \texttt{potencial\_r2} — usar $1/r^2$ en lugar de $1/r$.
-  \item \texttt{potencial\_v0\_e0} — creer que $V=0$ implica $E=0$.
-  \item \texttt{potencial\_equip\_perp} — dibujar equipotenciales no perpendiculares a $E$.
-  \item \texttt{potencial\_ev\_vs\_v} — confundir electrón-volt con volt.
+\eSeccion{9}{Bibliografía}
+{\small
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+  \item Young, H.~D., y Freedman, R.~A. (2009). \emph{Física universitaria con física moderna}, vol.~2 (12.ª ed.; trad. J.~Enríquez Brito). Pearson Educación. Capítulo 23 «Potencial eléctrico», secciones 23.1--23.5, pp.~780--807. ISBN 978-607-442-304-4.
 \end{itemize}
-El botón «Practicar» del portal usa estos códigos para llevarte a la escena exacta de EquipotentialLab donde se repite el error.
-
-\esection{Bibliografía y conexión}
-Young, H.~D. y Freedman, R.~A. (2009). \emph{Física universitaria con física moderna}, Vol.~2 (12.\textsuperscript{a} ed.). Pearson. Capítulo~23 ``Potencial eléctrico'', secciones 23.1--23.5, pp.~780--805, ejemplos 23.1--23.5.
-
-\vspace{0.6em}
-\begin{center}
-  \fcolorbox{e10line}{e10accentsoft}{\parbox{0.92\linewidth}{\centering
-    \textbf{Conexión curricular:} $\ $ viene de M02 (Campo eléctrico) $\ \rightarrow\ $ \textbf{M03 (Potencial)} $\ \rightarrow\ $ lleva a M04 (Distribuciones continuas) y M06 (Capacitancia).}}
-
-  \small\textcolor{e10muted}{Simulador: EquipotentialLab · Taller: \texttt{recursos/Cap03\_Taller.pdf} · © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}
-\end{center}
-
+{\color{e10muted}Los enunciados de esta guía y del taller son originales de 10.Easy; el libro sirvió como referencia de rigor y nomenclatura estándar. Relación $\vect{E}=-\vect{\nabla}V$: sección 23.5. Ejemplos de conservación y aceleración de partículas: secciones 23.1 y 23.2.}}
 \end{document}

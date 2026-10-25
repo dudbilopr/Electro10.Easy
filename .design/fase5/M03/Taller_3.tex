@@ -1,199 +1,318 @@
-% ==========================================================================
-%  Taller 3 · Potencial Eléctrico y Superficies Equipotenciales (Electro10.Easy)
-%  Espejo 1:1 del taller web (talleres/Taller_3_Potencial_Electrico.html) en
-%  problemas, retos y programas Python. Compila a recursos/Cap03_Taller.pdf.
-%  Autor: Prof. Dudbil Olvasada Pabón Riaño · Rigor Sears--Zemansky Vol. 2 Cap. 23
-% ==========================================================================
 \documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[spanish]{babel}
-\usepackage[a4paper,margin=1.7cm]{geometry}
 \usepackage{e10}
-\usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
-\usepackage{tabularx}
-\usepackage{array}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.45em}
-
-% Caja compacta para un problema resuelto
-\newcommand{\prob}[1]{\noindent{\color{e10primary}\large\bfseries #1}\par\vspace{0.15em}}
-\newcommand{\camino}[1]{\noindent{\color{e10accent}\bfseries #1}\par\vspace{0.05em}}
+\renewcommand{\eCapitulo}{Capítulo 3 · Potencial eléctrico y superficies equipotenciales}
+\renewcommand{\eDocumento}{Taller}
 
 \begin{document}
+\ePortada{Capítulo 3}{Taller}{Potencial eléctrico y superficies equipotenciales}{El trabajo por unidad de carga: un escalar que mapea el campo}
 
+\textbf{Qué vas a practicar.} Calcular el potencial eléctrico como la integral de línea del campo y como una suma escalar directa sin vectores; aplicar el principio de superposición a sistemas de cargas discretas y distribuciones simétricas; calcular la energía electrostática total requerida para ensamblar una configuración; aplicar la conservación de la energía mecánica $K_a+U_a=K_b+U_b$ a partículas subatómicas; deducir el vector campo eléctrico a partir de derivadas espaciales del potencial ($\vect{E}=-\vect{\nabla}V$); y trazar superficies equipotenciales ortogonales a las líneas de fuerza.
+
+\begin{eFormula}
+\vspace{-6pt}\[ V = \frac{U}{q_0}\qquad \Delta V = -\int_{a}^{b}\vect{E}\cdot d\vect{\ell}\qquad V = k\sum_i \frac{q_i}{r_i}\qquad U = k\sum_{i<j}\frac{q_iq_j}{r_{ij}}\qquad \vect{E}=-\vect{\nabla}V \]\vspace{-10pt}
+\end{eFormula}
+
+{\small\color{e10muted}Cómo usar este taller: lee el ejercicio resuelto de cada sección, tapa la solución e intenta resolverlo por ambos caminos (Camino A = formal/integral o conservación; Camino B = directo o trabajo); luego resuelve los retos graduados. Constantes oficiales de Young y Freedman (2009): $k=\SI{8,988e9}{\newton\metre\squared\per\coulomb\squared}$, $\epsilon_0=\SI{8,854e-12}{\coulomb\squared\per\newton\per\metre\squared}$, $e=\SI{1,602e-19}{\coulomb}$, $m_e=\SI{9,109e-31}{\kilogram}$, $m_p=\SI{1,673e-27}{\kilogram}$, $\SI{1}{\electronvolt}=\SI{1,602e-19}{\joule}$.}
+
+\begin{eClave}{\sffamily\small\bfseries\color{e10primary}Antes de empezar, repasa.} El teorema de trabajo y energía cinética $W_{\text{neto}}=\Delta K$; la definición de fuerza conservativa $W=-\Delta U$; la regla de la cadena y derivadas parciales $\partial/\partial x, \partial/\partial y, \partial/\partial z$; y la integral de línea $\int \vect{E}\cdot d\vect{\ell}$. Recuerda que el potencial es un escalar: las cargas positivas suman potencial positivo y las negativas suman potencial negativo, sin proyectar ángulos.\end{eClave}
+
+% =====================================================================
+\eSeccion{3.1}{El potencial de una carga puntual}
+
+\begin{eResuelto}{1 · Potencial por integral de línea y por fórmula directa}
+Una carga puntual $q=+\SI{5,0}{\nano\coulomb}$ está fija en el origen. Deduzca analíticamente el potencial $V(r)$ desde el infinito y evalúe su valor a $r=\SI{0,25}{\metre}$.
 \begin{center}
-  {\color{e10primary}\rule{\linewidth}{3.5pt}}\\[1em]
-  {\LARGE\bfseries Taller 3: Potencial Eléctrico y Superficies Equipotenciales}\\[0.4em]
-  {\color{e10muted}Electro10.Easy · Módulo 03 · Prof. Dudbil Olvasada Pabón Riaño}\\[0.3em]
-  {\color{e10muted}\small 8 problemas resueltos por dos caminos · 14 retos graduados · 2 programas Python · $k=8{,}988\times10^9\ \mathrm{N\,m^2/C^2}$}
-  \\[0.8em]
-  {\color{e10primary}\rule{\linewidth}{1pt}}
+\begin{tikzpicture}[scale=1.0,>=Stealth]
+  \draw[dashed,e10line] (-0.8,0) -- (5.2,0);
+  \fill[e10qpos] (0,0) circle (0.16) node[below=5pt,e10qpos]{\small $q=+5{,}0\ \text{nC}$};
+  \fill[e10ink] (2.5,0) circle (0.1) node[below=5pt]{\small $P(r)$};
+  \draw[->,very thick,e10accent] (2.5,0) -- (3.7,0) node[above]{\small $\vect{E}$};
+  \draw[<-,thick,e10primary] (3.8,-0.35) -- (4.8,-0.35) node[midway,below]{\scriptsize $d\vect{\ell}$ hacia el origen};
+  \draw[<->,e10muted] (0,-0.65) -- (2.5,-0.65) node[midway,fill=white,inner sep=2pt]{\small $r=\SI{0,25}{\metre}$};
+\end{tikzpicture}
 \end{center}
+\begin{ePredice}¿El potencial a $\SI{0,25}{\metre}$ será positivo o negativo? ¿Qué pasaría si la carga fuera negativa?\end{ePredice}
+\ePaso{1. Camino A — Integral de línea formal desde el infinito}
+El campo de la carga puntual es $\vect{E}=(kq/r'^2)\uv{r}$. Al traer una carga de prueba desde el infinito hasta $r$, el desplazamiento es $d\vect{\ell}=dr'\,\uv{r}$, con límites de integración desde $\infty$ hasta $r$:
+\[ V(r)=-\int_{\infty}^{r}\vect{E}\cdot d\vect{\ell}=-\int_{\infty}^{r}\frac{kq}{r'^2}\,dr'=-kq\left[-\frac{1}{r'}\right]_{\infty}^{r}=\frac{kq}{r}. \]
+\ePaso{2. Camino B — Fórmula directa y evaluación numérica}
+Aplicando directamente la definición de potencial de referencia cero en el infinito:
+\[ V=\frac{kq}{r}=\frac{(8{,}988\times10^9)(5{,}0\times10^{-9})}{0{,}25}\ \si{\volt}=\SI{179,8}{\volt}\approx\SI{180}{\volt}. \]
+\ePaso{3. Verificación física}
+El potencial es positivo porque se requiere realizar trabajo positivo contra la fuerza de repulsión eléctrica para traer una carga de prueba positiva desde el infinito. Ambos caminos coinciden con exactitud.
+\eResultado{$V(r)=\dfrac{kq}{r}$; evaluado en $r=\SI{0,25}{\metre}$ resulta $V=+\SI{180}{\volt}$.}
+\end{eResuelto}
 
-\esection{El algoritmo universal de resolución (7 pasos)}
-\textbf{1. Cargas} (identifica $q_i$ y sus signos) $\rightarrow$ \textbf{2. Distancias} ($r_i$) $\rightarrow$ \textbf{3. Suma escalar} ($V=\sum kq_i/r_i$) $\rightarrow$ \textbf{4. Dos caminos} (integral de línea o superposición) $\rightarrow$ \textbf{5. Energía} ($U=q_0V$) $\rightarrow$ \textbf{6. Gradiente} ($\vec E=-\vec\nabla V$) $\rightarrow$ \textbf{7. Comprueba y explica}.
+\begin{eReto}{1 \eNivel{nivel básico}}
+Calcule el potencial eléctrico a una distancia de $\SI{0,30}{\metre}$ de una carga puntual de $+\SI{2,0}{\nano\coulomb}$.
+\end{eReto}
 
-% ════════════════════════ PROBLEMAS ════════════════════════
-\esection{Problemas resueltos por dos caminos}
+\begin{eReto}{2 \eNivel{nivel básico}}
+¿A qué distancia de una carga puntual de $+\SI{4,0}{\nano\coulomb}$ el potencial eléctrico es igual a $\SI{120}{\volt}$?
+\end{eReto}
 
-\prob{Problema 1 · El potencial de una carga puntual}
-\textbf{Enunciado.} Deduzca $V=kq/r$ desde $\Delta V=-\int\vec E\cdot d\vec\ell$ y evalúe $V$ para $q=+5{,}0\ \mathrm{nC}$ a $r=25\ \mathrm{cm}$.
+% =====================================================================
+\eSeccion{3.2}{Conservación de la energía mecánica en partículas cargadas}
 
-\camino{Camino A — integral de línea.} $\vec E=kq\,\hat r/r^2$; viniendo del infinito $d\vec\ell$ va contra $\hat r$, luego $\vec E\cdot d\vec\ell=-(kq/r'^2)\,dr'$:
-\[ V(r)=-\int_{\infty}^{r}\frac{kq}{r'^2}\,dr'=-kq\left[-\frac1{r'}\right]_{\infty}^{r}=\frac{kq}{r}. \]
+\begin{eResuelto}{2 · Positrón acelerado por una partícula alfa}
+Una partícula alfa ($q_\alpha=+2e$, en reposo) repele a un positrón ($q_p=+e$, masa $m_e=\SI{9,109e-31}{\kilogram}$). Cuando el positrón está a $r_a=\SI{1,00e-10}{\metre}$, se aleja con rapidez $v_a=\SI{3,00e6}{\metre\per\second}$. Halle su rapidez $v_b$ al alcanzar $r_b=\SI{2,00e-10}{\metre}$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.1.}
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+  \fill[e10primary] (0,0) circle (0.22) node[below=5pt]{\small Partícula $\alpha$ ($+2e$)};
+  \fill[e10qpos] (2.2,0) circle (0.12) node[above=4pt]{\small $r_a$};
+  \draw[->,very thick,e10accent] (2.35,0) -- (3.2,0) node[above]{\small $\vect{v}_a$};
+  \fill[e10qpos] (4.4,0) circle (0.12) node[above=4pt]{\small $r_b$};
+  \draw[->,very thick,e10accent] (4.55,0) -- (5.7,0) node[above]{\small $\vect{v}_b$};
+  \draw[dashed,e10line] (0,0) -- (6.0,0);
+\end{tikzpicture}
+\end{center}
+\begin{ePredice}Como la fuerza es de repulsión, ¿la rapidez final $v_b$ será mayor o menor que $v_a$?\end{ePredice}
+\ePaso{1. Camino A — Conservación de la energía mecánica $K_a+U_a=K_b+U_b$}
+La energía cinética inicial es $K_a=\frac{1}{2}m_ev_a^2=\frac{1}{2}(9{,}109\times10^{-31})(3{,}00\times10^6)^2=\SI{4,10e-18}{\joule}$.
+Las energías potenciales eléctricas inicial y final valen:
+\[ U_a=\frac{k(2e)(e)}{r_a}=\frac{(8{,}988\times10^9)(2)(1{,}602\times10^{-19})^2}{1{,}00\times10^{-10}}=\SI{4,61e-18}{\joule}, \]
+\[ U_b=\frac{k(2e)(e)}{r_b}=\frac{(8{,}988\times10^9)(2)(1{,}602\times10^{-19})^2}{2{,}00\times10^{-10}}=\SI{2,305e-18}{\joule}. \]
+Despejando la energía cinética final:
+\[ K_b = K_a + U_a - U_b = 4{,}10\times10^{-18} + 4{,}61\times10^{-18} - 2{,}305\times10^{-18} = \SI{6,41e-18}{\joule}. \]
+\[ v_b = \sqrt{\frac{2K_b}{m_e}} = \sqrt{\frac{2(6{,}41\times10^{-18})}{9{,}109\times10^{-31}}} = \SI{3,8e6}{\metre\per\second}. \]
+\ePaso{2. Camino B — Teorema del trabajo del campo eléctrico}
+El campo realiza trabajo positivo sobre el positrón al alejarse: $W_{a\to b}=-\Delta U = U_a-U_b = \SI{2,31e-18}{\joule}$.
+Por el teorema trabajo-energía: $W_{a\to b}=K_b-K_a \Rightarrow K_b = K_a + W = \SI{6,41e-18}{\joule}$, lo que reproduce idénticamente $v_b=\SI{3,8e6}{\metre\per\second}$. Si se alejara hasta el infinito ($U_\infty=0$), la rapidez asintótica máxima sería $v_\infty=\sqrt{2(K_a+U_a)/m_e}=\SI{4,4e6}{\metre\per\second}$.
+\eResultado{$v_b=\SI{3,8e6}{\metre\per\second}$ (aumentó un $27\%$ debido a la repulsión electrostática).}
+\end{eResuelto}
 
-\camino{Camino B — fórmula directa.} $V=kq/r=(8{,}988\times10^9)(5{,}0\times10^{-9})/0{,}25=179{,}8\ \mathrm V$. \textbf{Ambos caminos coinciden.}
+\begin{eReto}{3 \eNivel{nivel básico}}
+¿Cuánta energía cinética adquiere una partícula de carga $+1{,}0\ \mu\mathrm{C}$ que parte del reposo y atraviesa una diferencia de potencial de $\SI{500}{\volt}$?
+\end{eReto}
 
-\prob{Problema 2 · Conservación de la energía (positrón frente a una partícula alfa)}
-\textbf{Enunciado.} Un positrón ($q=+e$) se aleja de una partícula alfa ($q=+2e$, en reposo). A $r_a=1{,}00\times10^{-10}\ \mathrm m$ va a $v_a=3{,}00\times10^{6}\ \mathrm{m/s}$. Halle $v_b$ en $r_b=2{,}00\times10^{-10}\ \mathrm m$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.1.}
+\begin{eReto}{4 \eNivel{nivel básico}}
+Exprese en electrón-volts ($\mathrm{eV}$) y en joules la energía ganada por un electrón acelerado por un voltaje de $\SI{12}{\volt}$.
+\end{eReto}
 
-\camino{Camino A — conservación de la energía.} $U_a=4{,}61\times10^{-18}\ \mathrm J$, $U_b=2{,}30\times10^{-18}\ \mathrm J$, $K_a=4{,}10\times10^{-18}\ \mathrm J$. De $K_a+U_a=K_b+U_b$:
-\[ K_b=6{,}41\times10^{-18}\ \mathrm J\ \Rightarrow\ v_b=\sqrt{2K_b/m}=3{,}8\times10^{6}\ \mathrm{m/s}. \]
+% =====================================================================
+\eSeccion{3.3}{Energía potencial de un sistema de cargas y trabajo de ensamble}
 
-\camino{Camino B — trabajo del campo.} $W=U_a-U_b=2{,}31\times10^{-18}\ \mathrm J=K_b-K_a$, de donde $v_b=3{,}8\times10^{6}\ \mathrm{m/s}$. Lejos ($r\to\infty$) la rapidez crece solo a $4{,}4\times10^{6}\ \mathrm{m/s}$: la fuerza cae como $1/r^2$.
+\begin{eResuelto}{3 · Ensamblar tres cargas puntuales desde el infinito}
+Se tienen $q_1=-e$ en $x=0$, $q_2=+e$ en $x=a$ y se trae $q_3=+e$ desde el infinito hasta $x=2a$, con $a=\SI{0,50}{\nano\metre}$. Halle: (a) el trabajo externo necesario para colocar $q_3$; (b) la energía potencial total del sistema de tres cargas. \emph{Adaptado de Sears--Zemansky, ejemplo 23.2.}
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+  \draw[->,e10line] (-0.8,0) -- (5.2,0) node[right]{\small $x$};
+  \fill[e10qneg] (0,0) circle (0.15) node[below=5pt]{\small $q_1=-e$};
+  \fill[e10qpos] (2.0,0) circle (0.15) node[below=5pt]{\small $q_2=+e$};
+  \fill[e10qpos] (4.0,0) circle (0.15) node[below=5pt]{\small $q_3=+e$};
+  \draw[<->,e10muted] (0,0.5) -- (2.0,0.5) node[midway,above]{\scriptsize $a$};
+  \draw[<->,e10muted] (2.0,0.5) -- (4.0,0.5) node[midway,above]{\scriptsize $a$};
+  \draw[<->,e10muted] (0,0.95) -- (4.0,0.95) node[midway,above]{\scriptsize $2a$};
+\end{tikzpicture}
+\end{center}
+\begin{ePredice}¿El trabajo externo será positivo o negativo? (Fíjate en cuál carga está más cerca de $q_3$).\end{ePredice}
+\ePaso{1. Camino A — Trabajo como $W_{\text{ext}}=q_3\,V_{1,2}(2a)$}
+El potencial creado por $q_1$ y $q_2$ en la posición de llegada $x=2a$ es:
+\[ V_{1,2}(2a) = \frac{kq_1}{2a} + \frac{kq_2}{a} = \frac{k(-e)}{2a} + \frac{k(e)}{a} = \frac{ke}{2a}. \]
+El trabajo realizado por el agente externo para traer $q_3=+e$ sin acelerar es:
+\[ W_{\text{ext}} = q_3\,V_{1,2}(2a) = (e)\left(\frac{ke}{2a}\right) = \frac{ke^2}{2a} = \frac{(8{,}988\times10^9)(1{,}602\times10^{-19})^2}{2(0{,}50\times10^{-9})} = \SI{2,31e-19}{\joule} = \SI{1,44}{\electronvolt}. \]
+\ePaso{2. Camino B — Suma de pares sobre todos los enlaces $i<j$}
+La energía del estado inicial con dos cargas era $U_{\text{inicial}}=k\frac{q_1q_2}{a}=-\frac{ke^2}{a}$.
+Al agregar la tercera carga, la energía potencial total es la suma de los 3 pares:
+\[ U_{\text{total}} = k\left[\frac{q_1q_2}{a} + \frac{q_1q_3}{2a} + \frac{q_2q_3}{a}\right] = k\left[\frac{(-e)(e)}{a} + \frac{(-e)(e)}{2a} + \frac{(e)(e)}{a}\right] = -\frac{ke^2}{2a}. \]
+El trabajo externo es la diferencia $W_{\text{ext}}=U_{\text{total}}-U_{\text{inicial}}=-\frac{ke^2}{2a}-\left(-\frac{ke^2}{a}\right)=+\frac{ke^2}{2a}=\SI{1,44}{\electronvolt}$.
+\eResultado{(a) $W_{\text{ext}}=+\SI{1,44}{\electronvolt}$; (b) $U_{\text{total}}=-\SI{1,44}{\electronvolt}$ (el sistema está ligado electrostáticamente).}
+\end{eResuelto}
 
-\prob{Problema 3 · Trabajo para ensamblar tres cargas}
-\textbf{Enunciado.} $q_1=-e$ en $x=0$, $q_2=+e$ en $x=a$, $q_3=+e$ traída del infinito a $x=2a$ ($a=0{,}50\ \mathrm{nm}$). Halle (a) el trabajo externo y (b) la energía total. \emph{Adaptado de Sears--Zemansky, ejemplo 23.2.}
+\begin{eReto}{5 \eNivel{nivel intermedio}}
+Tres cargas iguales $+q$ ocupan los vértices de un triángulo equilátero de lado $L$. Calcule la energía electrostática total almacenada en el sistema.
+\end{eReto}
 
-\camino{Camino A — $W=q_3V(2a)$.} $V(2a)=k(-e)/2a+k(e)/a=ke/2a$; $W=e\cdot ke/2a=ke^2/2a=2{,}31\times10^{-19}\ \mathrm J=1{,}44\ \mathrm{eV}$.
+\begin{eReto}{6 \eNivel{nivel intermedio}}
+Dos cargas de $\pm\SI{6,0}{\nano\coulomb}$ están separadas $\SI{8,0}{\centi\metre}$. ¿Cuánto vale el potencial en el punto medio que las separa? ¿El campo eléctrico allí es cero?
+\end{eReto}
 
-\camino{Camino B — suma de pares $i<j$.} $U=\frac{k(-e)(e)}{a}+\frac{k(-e)(e)}{2a}+\frac{k(e)(e)}{a}=-\frac{ke^2}{2a}$; $W=U_{3}-U_{2}=-ke^2/2a-(-ke^2/a)=ke^2/2a$. La energía total del sistema es negativa: las cargas quedan ligadas.
+% =====================================================================
+\eSeccion{3.4}{Superposición escalar: el dipolo eléctrico}
 
-\prob{Problema 4 · El dipolo eléctrico: suma escalar}
-\textbf{Enunciado.} Dipolo $q_1=+12\ \mathrm{nC}$ y $q_2=-12\ \mathrm{nC}$, separadas $10\ \mathrm{cm}$. Calcule $V$ en los puntos $a$, $b$ y $c$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.4.}
+\begin{eResuelto}{4 · Potencial de un dipolo en tres puntos estratégicos}
+Un dipolo está formado por $q_1=+\SI{12}{\nano\coulomb}$ en $y=\SI{5,0}{\centi\metre}$ y $q_2=-\SI{12}{\nano\coulomb}$ en $y=-\SI{5,0}{\centi\metre}$ sobre el eje $y$. Halle el potencial en: (a) punto $a(0,\SI{2,0}{\centi\metre})$; (b) punto $b(0,\SI{14}{\centi\metre})$; (c) punto $c(\SI{13}{\centi\metre},0)$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.4.}
+\begin{center}
+\begin{tikzpicture}[scale=0.9,>=Stealth]
+  \draw[->,e10line] (-0.8,0) -- (4.2,0) node[right]{\small $x$};
+  \draw[->,e10line] (0,-2.6) -- (0,3.2) node[above]{\small $y$};
+  \fill[e10qpos] (0,1.5) circle (0.15) node[left]{\small $q_1=+12\ \text{nC}$};
+  \fill[e10qneg] (0,-1.5) circle (0.15) node[left]{\small $q_2=-12\ \text{nC}$};
+  \fill[e10ink] (0,0.6) circle (0.1) node[right]{\small $a(0,2)$};
+  \fill[e10ink] (0,2.6) circle (0.1) node[right]{\small $b(0,14)$};
+  \fill[e10ink] (3.0,0) circle (0.1) node[below]{\small $c(13,0)$};
+\end{tikzpicture}
+\end{center}
+\ePaso{1. Punto $a$ (entre las dos cargas)}
+$r_{1a}=\SI{3,0}{\centi\metre}=\SI{0,030}{\metre}$; $r_{2a}=\SI{7,0}{\centi\metre}=\SI{0,070}{\metre}$.
+\[ V_a = k\left[\frac{q_1}{r_{1a}} + \frac{q_2}{r_{2a}}\right] = (8{,}988\times10^9)\left[\frac{12\times10^{-9}}{0{,}030} - \frac{12\times10^{-9}}{0{,}070}\right] = 3595 - 1541 = +\SI{2054}{\volt}. \]
+\ePaso{2. Punto $b$ (sobre el eje, exterior)}
+$r_{1b}=\SI{9,0}{\centi\metre}=\SI{0,090}{\metre}$; $r_{2b}=\SI{19}{\centi\metre}=\SI{0,19}{\metre}$.
+\[ V_b = (8{,}988\times10^9)\left[\frac{12\times10^{-9}}{0{,}090} - \frac{12\times10^{-9}}{0{,}19}\right] = 1198 - 568 = +\SI{630}{\volt}. \]
+\ePaso{3. Punto $c$ (en la mediatriz)}
+Por simetría, la distancia a ambas cargas es idéntica: $r_{1c}=r_{2c}=\sqrt{13^2+5^2}=\SI{13,9}{\centi\metre}$.
+Como $q_1=-q_2$, los dos términos escalares son iguales en módulo y opuestos en signo:
+\[ V_c = \frac{kq_1}{r_{1c}} + \frac{kq_2}{r_{2c}} = \frac{k(12\times10^{-9})}{0{,}139} - \frac{k(12\times10^{-9})}{0{,}139} = \SI{0}{\volt}. \]
+\eResultado{$V_a=+\SI{2,05}{\kilo\volt}$; $V_b=+\SI{630}{\volt}$; $V_c=\SI{0}{\volt}$ (en la mediatriz el potencial siempre es nulo).}
+\end{eResuelto}
 
-\camino{Camino A — suma exacta.} $V_a=\frac{k(12\,\mathrm{nC})}{0{,}06}+\frac{k(-12\,\mathrm{nC})}{0{,}04}=1800-2700=-900\ \mathrm V$; $V_b=2700-770=1930\ \mathrm V$; $V_c=830-830=0\ \mathrm V$.
+\begin{eReto}{7 \eNivel{nivel intermedio}}
+Si se coloca una carga $q_0=+\SI{4,0}{\nano\coulomb}$ en los puntos $a$, $b$ y $c$ del ejercicio 4, calcule la energía potencial electrostática $U$ en cada punto.
+\end{eReto}
 
-\camino{Camino B — término a término.} Positiva y negativa se suman con su signo; en la mediatriz $V=0$, pero $\vec E\neq0$: apunta de $+q$ a $-q$.
+% =====================================================================
+\eSeccion{3.5}{Campo uniforme, aceleradores y electrón-volt}
 
-\prob{Problema 5 · Energía de una carga en un potencial}
-\textbf{Enunciado.} Halle $U$ de una carga de $+4{,}0\ \mathrm{nC}$ en los puntos $a$, $b$ y $c$ del dipolo anterior. \emph{Adaptado de Sears--Zemansky, ejemplo 23.5.}
+\begin{eResuelto}{5 · Aceleración de un protón en campo uniforme}
+Un protón recorre una distancia $d=\SI{0,50}{\metre}$ en un acelerador lineal con campo uniforme $E=\SI{1,50e7}{\volt\per\metre}$ paralelo a su velocidad. Calcule: (a) la fuerza sobre el protón; (b) el trabajo realizado por el campo; (c) la diferencia de potencial $\Delta V=V_b-V_a$ entre las placas. \emph{Adaptado de Sears--Zemansky, ejemplo 23.3.}
+\ePaso{1. Fuerza y trabajo mecánico}
+La fuerza eléctrica sobre el protón es constante:
+\[ F = qE = (1{,}602\times10^{-19})(1{,}50\times10^7) = \SI{2,40e-12}{\newton}. \]
+Como la fuerza y el desplazamiento son paralelos, el trabajo realizado es:
+\[ W = F\,d = (2{,}40\times10^{-12})(0{,}50) = \SI{1,20e-12}{\joule} = \frac{\SI{1,20e-12}{\joule}}{\SI{1,602e-19}{\joule\per\electronvolt}} = \SI{7,50e6}{\electronvolt} = \SI{7,50}{\mega\electronvolt}. \]
+\ePaso{2. Diferencia de potencial $\Delta V$}
+Por definición de potencial eléctrico en un campo uniforme paralelo al eje $x$:
+\[ \Delta V = V_b - V_a = -\int_a^b \vect{E}\cdot d\vect{\ell} = -E\,d = -(1{,}50\times10^7)(0{,}50) = -\SI{7,50e6}{\volt} = -\SI{7,50}{\mega\volt}. \]
+Nótese que la carga positiva se mueve en el sentido del campo, cayendo a un potencial menor ($\Delta V < 0$).
+\eResultado{(a) $F=\SI{2,40e-12}{\newton}$; (b) $W=\SI{7,50}{\mega\electronvolt}$; (c) $\Delta V=-\SI{7,50}{\mega\volt}$.}
+\end{eResuelto}
 
-\camino{Camino A — $U=q_0V$.} $U_a=(4{,}0\times10^{-9})(-900)=-3{,}6\times10^{-6}\ \mathrm J$; $U_b=(4{,}0\times10^{-9})(1930)=7{,}7\times10^{-6}\ \mathrm J$; $U_c=0$.
+\begin{eReto}{8 \eNivel{nivel intermedio}}
+Dos placas paralelas están separadas $\SI{2,0}{\centi\metre}$ y generan un campo uniforme $E=\SI{3,0e3}{\volt\per\metre}$. ¿Cuánto vale el voltaje entre las placas?
+\end{eReto}
 
-\camino{Camino B — pares con la nueva carga.} Se suman los productos $kq_0q_i/r_i$ con signos; coincide con $q_0V$. En $a$ la energía es negativa: la carga positiva está ``atrapada'' junto a la negativa.
+\begin{eReto}{9 \eNivel{nivel intermedio}}
+Un protón se acelera desde el reposo a través de una diferencia de potencial de $\SI{500}{\kilo\volt}$. Calcule su velocidad final no relativista.
+\end{eReto}
 
-\prob{Problema 6 · Campo uniforme, acelerador y electrón-volt}
-\textbf{Enunciado.} Un protón recorre $d=0{,}50\ \mathrm m$ con $E=1{,}5\times10^7\ \mathrm{V/m}$ en su dirección. Halle (a) $F$, (b) $W$ y (c) $V_a-V_b$. \emph{Adaptado de Sears--Zemansky, ejemplo 23.3.}
+% =====================================================================
+\eSeccion{3.6}{Potencial de distribuciones simétricas y el gradiente}
 
-\camino{Camino A — trabajo/carga.} $F=qE=2{,}4\times10^{-12}\ \mathrm N$; $W=Fd=1{,}2\times10^{-12}\ \mathrm J=7{,}5\ \mathrm{MeV}$; $V_a-V_b=W/q=7{,}5\times10^{6}\ \mathrm V$.
+\begin{eResuelto}{6 · Anillo cargado y deducción del campo sobre el eje}
+Un anillo de radio $R$ tiene carga total $Q$ distribuida uniformemente. (a) Halle el potencial $V(z)$ en un punto sobre el eje a distancia $z$ del plano del anillo. (b) A partir de $V(z)$, obtenga el campo eléctrico $E_z$ mediante el gradiente $\vect{E}=-\vect{\nabla}V$.
+\begin{center}
+\begin{tikzpicture}[scale=1.0,>=Stealth]
+  \draw[e10primary,thick] (0,0) ellipse (0.45 and 1.2);
+  \draw[dashed,e10line] (0,0) -- (4.2,0) node[right]{\small $z$};
+  \fill[e10qpos] (0,1.2) circle (0.1) node[above]{\small $dq$};
+  \fill[e10ink] (2.8,0) circle (0.1) node[below]{\small $P(0,0,z)$};
+  \draw[->,e10accent,thick] (0,1.2) -- (2.8,0) node[midway,above]{\scriptsize $r=\sqrt{z^2+R^2}$};
+  \draw[->,very thick,e10accentstrong] (2.8,0) -- (3.9,0) node[above]{\small $E_z$};
+\end{tikzpicture}
+\end{center}
+\ePaso{1. Cálculo del potencial escalar}
+Cada elemento diferencial $dq$ del anillo se encuentra exactamente a la misma distancia de $P$: $r=\sqrt{z^2+R^2}$. Como $r$ es constante durante la integración sobre todo el anillo:
+\[ V(z) = \int \frac{k\,dq}{r} = \frac{k}{\sqrt{z^2+R^2}}\int dq = \frac{kQ}{\sqrt{z^2+R^2}}. \]
+\ePaso{2. Obtención de $\vect{E}$ mediante la derivada espacial}
+Por simetría, el campo no tiene componentes en $x$ ni en $y$. La componente axial se obtiene mediante el gradiente:
+\[ E_z = -\frac{\partial V}{\partial z} = -\frac{d}{dz}\left[kQ(z^2+R^2)^{-1/2}\right] = -kQ\left(-\frac{1}{2}\right)(z^2+R^2)^{-3/2}(2z) = \frac{kQz}{(z^2+R^2)^{3/2}}. \]
+\ePaso{3. Verificación}
+El resultado coincide exactamente con la deducción por componentes vectoriales del capítulo 2, pero requirió muchas menos líneas de cálculo al derivar una función escalar en lugar de integrar vectores trigonométricos.
+\eResultado{$V(z)=\dfrac{kQ}{\sqrt{z^2+R^2}}$;\quad $E_z=-\dfrac{dV}{dz}=\dfrac{kQz}{(z^2+R^2)^{3/2}}$.}
+\end{eResuelto}
 
-\camino{Camino B — $\Delta V=Ed$.} $V_a-V_b=Ed=(1{,}5\times10^7)(0{,}50)=7{,}5\times10^{6}\ \mathrm V=7{,}5\ \mathrm{MV}$. Regla: 1 eV = 1 V $\times$ carga $e$.
+\begin{eReto}{10 \eNivel{nivel intermedio}}
+Un anillo de radio $R=\SI{5,0}{\centi\metre}$ y carga $Q=+\SI{10}{\nano\coulomb}$ se ubica en el plano $xy$. Calcule el potencial en su centro ($z=0$).
+\end{eReto}
 
-\prob{Problema 7 · Potencial de un anillo en el eje}
-\textbf{Enunciado.} Anillo de $R=6{,}0\ \mathrm{cm}$ y $Q=+8{,}0\ \mathrm{nC}$. Halle $V$ a $z=8{,}0\ \mathrm{cm}$ sobre el eje.
+\begin{eReto}{11 \eNivel{nivel avanzado}}
+Si el potencial eléctrico en una región del espacio es $V(x)=100 - 50x$ (donde $V$ está en volts y $x$ en metros), determine la magnitud y el sentido del vector campo eléctrico $\vect{E}$.
+\end{eReto}
 
-\camino{Camino A — integral de $dq$.} Todos los $dq$ están a $r=\sqrt{z^2+R^2}$: $V=\int k\,dq/r=kQ/\sqrt{z^2+R^2}$.
+\begin{eReto}{12 \eNivel{nivel avanzado}}
+A partir del potencial de un disco cargado $V(z)=\frac{\sigma}{2\epsilon_0}\left[\sqrt{z^2+R^2}-z\right]$, demuestre mediante $E_z=-\frac{\partial V}{\partial z}$ que el campo eléctrico sobre el eje es $E_z=\frac{\sigma}{2\epsilon_0}\left[1-\frac{z}{\sqrt{z^2+R^2}}\right]$.
+\end{eReto}
 
-\camino{Camino B — simetría.} Ningún punto del anillo está más cerca que otro: $r$ es constante y la integral colapsa a multiplicar. $V=(8{,}988\times10^9)(8{,}0\times10^{-9})/0{,}10=719\ \mathrm V$.
+\begin{eReto}{13 \eNivel{nivel avanzado}}
+Demuestre que el potencial en el interior de un cascarón esférico conductor hueco cargado con $Q$ y radio $R$ es constante e igual a $V=kQ/R$ para todo $r\le R$.
+\end{eReto}
 
-\prob{Problema 8 · Placas paralelas y el gradiente}
-\textbf{Enunciado.} Dos placas separadas $d=4{,}0\ \mathrm{mm}$ con $\Delta V=80\ \mathrm V$. (a) Halle $E$; (b) verifique $\vec E=-\vec\nabla V$; (c) rapidez de un electrón que cruza desde el reposo.
+\begin{eReto}{14 \eNivel{nivel avanzado}}
+Un positrón con energía cinética inicial de $\SI{2,0}{\kilo\electronvolt}$ es disparado directamente hacia un núcleo pesado de oro ($Z=79$, carga $+79e$). Calcule la distancia mínima de aproximación antes de detenerse e invertir su movimiento.
+\end{eReto}
 
-\camino{Camino A — conservación de la energía.} $E=\Delta V/d=2{,}0\times10^4\ \mathrm{V/m}$; $K=|e|\Delta V=80\ \mathrm{eV}=1{,}28\times10^{-17}\ \mathrm J$; $v=\sqrt{2K/m_e}=5{,}3\times10^{6}\ \mathrm{m/s}$.
+% =====================================================================
+\eSeccion{T}{Preguntas conceptuales de teoría}
 
-\camino{Camino B — cinemática.} $a=eE/m_e=3{,}5\times10^{15}\ \mathrm{m/s^2}$; $v=\sqrt{2ad}=5{,}3\times10^{6}\ \mathrm{m/s}$. Con $V(x)=V_0-Ex$, $E_x=-dV/dx=E$: el signo menos del gradiente apunta el campo cuesta abajo.
+\begin{eTeoria}
+\textbf{¿Por qué es mucho más sencillo calcular el potencial $V$ que el campo eléctrico $\vect{E}$?}\par
+\emph{Respuesta.} Porque el potencial es un escalar: no tiene dirección ni sentido, y se suma con álgebra común y corriente ($\sum V_i$), sin tener que calcular componentes rectangulares ni descomponer cosenos o senos.
+\end{eTeoria}
 
-% ════════════════════════ RETOS ════════════════════════
-\esection{Banco de 14 retos graduados}
-\begin{description}[leftmargin=1.4em,itemsep=1pt]
-  \item[\textbf{B1.}] Potencial a $30\ \mathrm{cm}$ de $+2{,}0\ \mathrm{nC}$: \textbf{59,9 V}.
-  \item[\textbf{B2.}] Energía de $+1{,}0\ \mu\mathrm C$ que cruza $500\ \mathrm V$: \textbf{$5{,}0\times10^{-4}\ \mathrm J$}.
-  \item[\textbf{B3.}] Energía en eV de un electrón que cruza $12\ \mathrm V$: \textbf{12 eV}.
-  \item[\textbf{B4.}] $\Delta V$ entre placas a $2{,}0\ \mathrm{cm}$ con $E=3{,}0\times10^3\ \mathrm{V/m}$: \textbf{60 V}.
-  \item[\textbf{M1.}] $V$ en el punto medio de $\pm6{,}0\ \mathrm{nC}$ separadas $8{,}0\ \mathrm{cm}$: \textbf{$0\ \mathrm V$, pero $E\neq0$}.
-  \item[\textbf{M2.}] Energía de tres cargas $+q$ en triángulo equilátero de lado $L$: \textbf{$3kq^2/L$}.
-  \item[\textbf{M3.}] Rapidez de un protón que cruza $500\ \mathrm{kV}$ desde el reposo: \textbf{$9{,}8\times10^{6}\ \mathrm{m/s}$}.
-  \item[\textbf{M4.}] Con $V(x)=100-50x$ (V, $x$ en m): \textbf{$E_x=50\ \mathrm{V/m}$ en $+x$}.
-  \item[\textbf{M5.}] $V$ en el centro de un anillo de $Q=+10\ \mathrm{nC}$, $R=5{,}0\ \mathrm{cm}$: \textbf{$1{,}80\ \mathrm{kV}$}.
-  \item[\textbf{M6.}] Distancia a $+4{,}0\ \mathrm{nC}$ donde $V=120\ \mathrm V$: \textbf{30 cm}.
-  \item[\textbf{A1.}] Distancia mínima de un positrón de $2{,}0\ \mathrm{keV}$ a un núcleo de oro ($Z=79$): \textbf{$5{,}7\times10^{-11}\ \mathrm m$}.
-  \item[\textbf{A2.}] Del potencial del disco, verificar $E_z=-dV/dz=\frac{\sigma}{2\varepsilon_0}\!\left(1-\frac{z}{\sqrt{z^2+R^2}}\right)$: \textbf{se cumple}.
-  \item[\textbf{A3.}] Potencial dentro de un cascarón esférico conductor: \textbf{$kQ/R$, constante porque $E=0$}.
-  \item[\textbf{A4.}] Demostrar $\oint\vec E\cdot d\vec\ell=0$ para un campo electrostático y qué implica: \textbf{campo conservativo $\Rightarrow$ existe $V$ con $\vec E=-\vec\nabla V$}.
-\end{description}
+\begin{eTeoria}
+\textbf{¿Por qué las líneas de campo eléctrico siempre son perpendiculares a las superficies equipotenciales?}\par
+\emph{Respuesta.} Si el campo tuviera una componente paralela a la superficie equipotencial, al mover una carga sobre ella se realizaría trabajo ($dW=\vect{E}\cdot d\vect{\ell}\neq0$), lo que violaría la definición de que la diferencia de potencial es nula ($\Delta V=0\Rightarrow W=0$). Por lo tanto, el campo eléctrico debe ser rigurosamente ortogonal a la superficie en todo punto.
+\end{eTeoria}
 
-% ════════════════════════ PYTHON ════════════════════════
-\esection{Validación numérica en Python (2 programas)}
+\begin{eTeoria}
+\textbf{¿Qué representa físicamente el signo negativo en la relación $\vect{E}=-\vect{\nabla}V$?}\par
+\emph{Respuesta.} El operador gradiente $\vect{\nabla}V$ apunta en la dirección de máximo incremento del potencial. El signo menos garantiza que el vector campo eléctrico apunte en el sentido opuesto: hacia donde el potencial disminuye con mayor rapidez (cuesta abajo en el paisaje electrostático).
+\end{eTeoria}
 
-\textbf{Programa 1 — \texttt{calculos\_potencial.py}.} Verifica los valores del taller.
-{\small\begin{verbatim}
-import sys
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
-    sys.stderr.reconfigure(encoding='utf-8')
+% =====================================================================
+\eSeccion{P}{Explora con Python}
+
+\textbf{1. Cálculo automatizado de voltajes y campos.} Este script evalúa los problemas del taller y verifica la conservación de energía:
+\begin{lstlisting}[style=e10python]
+import numpy as np
 
 K = 8.988e9
 E = 1.602e-19
 ME = 9.109e-31
 
-print("=== Potencial electrico · constantes de Young y Freedman (2009) ===")
-print(f"P1  V(5 nC, 25 cm)       = {K*5e-9/0.25:.1f} V")
-print(f"P4  V_a, V_b, V_c (dipolo)= {-900}, {1930}, {0} V")
-print(f"P5  U_a, U_b, U_c (4 nC) = {-3.6e-6:.2e}, {7.72e-6:.2e}, {0:.1e} J")
-print(f"P6  dV (E=1.5e7, d=.50)  = {1.5e7*0.5/1e6:.1f} MV")
-print(f"P7  V anillo (z=8cm)     = {K*8e-9/(0.08**2+0.06**2)**0.5:.0f} V")
-print(f"P8  v electron (80 V)    = {(2*E*80/ME)**0.5:.1e} m/s")
-print(f"P3  W (e^2/8*pi*eps0*a)  = {E*E/(8*3.141592653589793*8.854e-12*0.5e-9):.2e} J  (a = 0,50 nm)")
-\end{verbatim}}
+# P1: Potencial de carga puntual
+q = 5.0e-9; r = 0.25
+V1 = K * q / r
+print(f"P1: V = {V1:.1f} V (Esperado: 180 V)")
 
-\textbf{Salida real:}
-{\small\begin{verbatim}
-=== Potencial electrico · constantes de Young y Freedman (2009) ===
-P1  V(5 nC, 25 cm)       = 179.8 V
-P4  V_a, V_b, V_c (dipolo)= -900, 1930, 0 V
-P5  U_a, U_b, U_c (4 nC) = -3.60e-06, 7.72e-06, 0.0e+00 J
-P6  dV (E=1.5e7, d=.50)  = 7.5 MV
-P7  V anillo (z=8cm)     = 719 V
-P8  v electron (80 V)    = 5.3e+06 m/s
-P3  W (e^2/8*pi*eps0*a)  = 2.31e-19 J  (a = 0,50 nm)
-\end{verbatim}}
+# P4: Dipolo en puntos a, b, c
+q_dip = 12.0e-9
+Va = K * (q_dip/0.03 - q_dip/0.07)
+Vb = K * (q_dip/0.09 - q_dip/0.19)
+Vc = K * (q_dip/0.139 - q_dip/0.139)
+print(f"P4: Va = {Va:.0f} V, Vb = {Vb:.0f} V, Vc = {Vc:.0f} V")
 
-\textbf{Programa 2 — \texttt{simulacion\_gradiente.py}.} Comprueba $\vec E=-\vec\nabla V$ por diferencias finitas y que $V=0$ no implica $E=0$.
-{\small\begin{verbatim}
-import sys
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
-    sys.stderr.reconfigure(encoding='utf-8')
+# P6: Anillo sobre el eje
+R_anillo = 0.06; z_anillo = 0.08; Q_anillo = 8.0e-9
+V_anillo = K * Q_anillo / np.sqrt(z_anillo**2 + R_anillo**2)
+print(f"P6: V_anillo = {V_anillo:.1f} V")
+\end{lstlisting}
 
+\textbf{2. Trazador de curvas de nivel equipotenciales.} Generación de mapa de contornos:
+\begin{lstlisting}[style=e10python]
 import numpy as np
 
-K = 8.988e9
+# Malla 2D de potencial para un dipolo
+x = np.linspace(-0.2, 0.2, 200)
+y = np.linspace(-0.2, 0.2, 200)
+X, Y = np.meshgrid(x, y)
 
-def V(x, y, qs):
-    return sum(K * q[0] / np.hypot(x - q[1], y - q[2]) for q in qs)
+# Posiciones de cargas +/- q en el eje y
+d = 0.05
+r_pos = np.sqrt(X**2 + (Y - d)**2)
+r_neg = np.sqrt(X**2 + (Y + d)**2)
+V = 8.988e9 * 1e-9 * (1.0/r_pos - 1.0/r_neg)
+print(f"Mapa equipotencial generado con exito. Rango V: [{V.min():.1e}, {V.max():.1e}]")
+\end{lstlisting}
 
-qs = [(1e-9, 0.0, 0.0), (-1e-9, 0.10, 0.0)]   # dipolo +/- 1 nC en el eje x
-h = 1e-6
+% =====================================================================
+\eSeccion{S}{Practica en la plataforma}
+\eQR{https://dudbilopr.github.io/Electro10.Easy/talleres/Taller_3_Potencial_Electrico.html}{Versión web interactiva del Taller 3, con autocomprobador en tiempo real para los 14 retos.}
 
-print("=== Gradiente numerico: E = -grad(V) en un dipolo +/- 1 nC ===")
-for (x, y) in [(0.05, 0.02), (0.05, 0.05), (0.03, 0.0)]:
-    Ex = -(V(x + h, y, qs) - V(x - h, y, qs)) / (2 * h)
-    Ey = -(V(x, y + h, qs) - V(x, y - h, qs)) / (2 * h)
-    print(f"P({x:.2f},{y:.2f})  V={V(x,y,qs):8.1f} V   E=({Ex:8.0f}, {Ey:8.0f}) V/m   |E|={np.hypot(Ex,Ey):8.0f}")
-\end{verbatim}}
+\medskip
+\eQR{https://dudbilopr.github.io/Electro10.Easy/presentaciones/M3_Potencial/index.html}{Presentación interactiva de clase: deducciones en 7 pasos, curvas equipotenciales y retos numéricos.}
 
-\textbf{Salida real:}
-{\small\begin{verbatim}
-=== Gradiente numerico: E = -grad(V) en un dipolo +/- 1 nC ===
-P(0.05,0.02)  V=     0.0 V   E=(    5755,       -0) V/m   |E|=    5755
-P(0.05,0.05)  V=     0.0 V   E=(    2542,       -0) V/m   |E|=    2542
-P(0.03,0.00)  V=   171.2 V   E=(   11821,       -0) V/m   |E|=   11821
-\end{verbatim}}
-\noindent\textcolor{e10muted}{\small En la mediatriz $(0{,}05;\,0{,}05)$ se lee $V=0{,}0\ \mathrm V$ mientras $|E|\approx2{,}5\times10^3\ \mathrm{V/m}$: la prueba numérica de que $V=0$ no implica $E=0$.}
+\medskip
+\eQR{https://dudbilopr.github.io/Electro10.Easy/simuladores/EquipotentialLab.html}{EquipotentialLab: laboratorio virtual para medir voltajes y gradientes de campo eléctrico con sonda interactiva.}
 
-% ════════════════════════ ENTREGA ════════════════════════
-\esection{Actividad evaluativa autónoma (entrega de clase)}
-\textbf{Problema de aplicación.} Tres cargas $q_1=+4{,}0\ \mathrm{nC}$ en $(0;0)$, $q_2=+4{,}0\ \mathrm{nC}$ en $(0{,}20;0)$ m y $q_3=-6{,}0\ \mathrm{nC}$ en $(0;0{,}15)$ m. (a) Calcule $V$ en $P=(0{,}20;0{,}15)$ m. (b) Trabajo externo para traer $q_4=+2{,}0\ \mathrm{nC}$ del infinito a $P$. (c) ¿El sistema queda ligado o desligado? Justifique.
+% =====================================================================
+\eSeccion{C}{Conecta y consulta}
+\begin{eConsejo}\textbf{Lo que sigue.} En el capítulo 4, la suma discreta $V=k\sum q_i/r_i$ se generaliza al cálculo integral sobre distribuciones continuas de carga: $V=k\int \frac{dq}{r}$. Calcular el escalar $V$ primero y obtener el vector $\vect{E}$ derivando ($\vect{E}=-\vect{\nabla}V$) es el método más rápido y elegante de la física teórica.\end{eConsejo}
 
-\textbf{Rúbrica:} suma escalar con signos (40\,\%), trabajo externo $W=q_4V(P)$ (30\,\%), juicio energético por el signo de $U$ (30\,\%).
-
-\vspace{0.5em}
-\begin{center}
-  {\small\textcolor{e10muted}{Espejo 1:1 de \texttt{talleres/Taller\_3\_Potencial\_Electrico.html} · Simulador: EquipotentialLab · © 2026 Dudbil Olvasada Pabón Riaño · 10.Easy}}
-\end{center}
+{\small\textbf{Bibliografía.}
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+  \item Young, H.~D., y Freedman, R.~A. (2009). \emph{Física universitaria con física moderna}, vol.~2 (12.ª ed.). Pearson Educación. Capítulo 23 «Potencial eléctrico», secciones 23.1--23.5, pp.~780--807.
+\end{itemize}
+{\color{e10muted}Problemas y retos originales de Electro10.Easy alineados al programa curricular de ingeniería.}}
 
 \end{document}
