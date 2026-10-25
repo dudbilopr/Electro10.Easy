@@ -1,0 +1,262 @@
+{
+  "nodes": [
+    {
+      "id": "hub_cerebro",
+      "type": "text",
+      "text": "# 🧠 CEREBRO DE ELECTRO10.EASY\n**Manual Maestro de Arquitectura y Patrones:**\n[[ARQUITECTURA_Y_PATRONES_DE_DISENO_REUTILIZABLES]]\n\n- **Tokens:** `css/tokens.css` (Paleta Plasma)\n- **LaTeX:** `e10.sty` (IBM Plex + tcolorbox)\n- **Matemáticas:** KaTeX 0.16.9 Display\n- **Filosofía:** Sears-Zemansky Vol. 2\n- **Autor:** Prof. Dudbil Olvasada Pabón Riaño",
+      "x": 650,
+      "y": -360,
+      "width": 520,
+      "height": 260,
+      "color": "1"
+    },
+    {
+      "id": "node_m01",
+      "type": "text",
+      "text": "## 🏛️ M01: Ley de Coulomb y Carga Eléctrica\n**Ecuación Fundamental:**\n$$\\vec{F} = k\\frac{|q_1 q_2|}{r^2}\\hat{r}$$\n\n- 📝 [[Taller_1_Ley]]\n- 🖥️ [[Deck_M01_Ley]]\n- 🧪 [[Simulador_CoulombLab]]\n- 📄 [[Cap01_Guia]]",
+      "x": 0,
+      "y": 0,
+      "width": 460,
+      "height": 300,
+      "color": "1"
+    },
+    {
+      "id": "img_guia_m01",
+      "type": "file",
+      "file": "06_Adjuntos/Cap01_Guia_p1.png",
+      "x": 0,
+      "y": 340,
+      "width": 460,
+      "height": 620
+    },
+    {
+      "id": "img_3d_m01",
+      "type": "file",
+      "file": "06_Adjuntos/M01_CoulombBench.png",
+      "x": 0,
+      "y": 990,
+      "width": 460,
+      "height": 320
+    },
+    {
+      "id": "node_m02",
+      "type": "text",
+      "text": "## 🏛️ M02: Campo Eléctrico y Dipolos\n**Ecuación Fundamental:**\n$$\\vec{E} = \\frac{\\vec{F}_0}{q_0}, \\quad \\vec{\\tau} = \\vec{p} \\times \\vec{E}$$\n\n- 📝 [[Taller_2_Campo]]\n- 🖥️ [[Deck_M02_Campo]]\n- 🧪 [[Simulador_VectorFieldLab]]\n- 📄 [[Cap02_Guia]]",
+      "x": 550,
+      "y": 0,
+      "width": 460,
+      "height": 300,
+      "color": "1"
+    },
+    {
+      "id": "img_guia_m02",
+      "type": "file",
+      "file": "06_Adjuntos/Cap02_Guia_p1.png",
+      "x": 550,
+      "y": 340,
+      "width": 460,
+      "height": 620
+    },
+    {
+      "id": "img_3d_m02",
+      "type": "file",
+      "file": "06_Adjuntos/M02_DipoloVectorial.png",
+      "x": 550,
+      "y": 990,
+      "width": 460,
+      "height": 320
+    },
+    {
+      "id": "node_m03",
+      "type": "text",
+      "text": "## 🏛️ M03: Potencial Eléctrico y Equipotenciales\n**Ecuación Fundamental:**\n$$\\Delta V = -\\int \\vec{E}\\cdot d\\vec{\\ell}, \\quad \\vec{E} = -\\vec{\\nabla}V$$\n\n- 📝 [[Taller_3_Potencial]]\n- 🖥️ [[Deck_M03_Potencial]]\n- 🧪 [[Simulador_EquipotentialLab]]\n- 📄 [[Cap03_Guia]]",
+      "x": 1100,
+      "y": 0,
+      "width": 460,
+      "height": 300,
+      "color": "1"
+    },
+    {
+      "id": "img_guia_m03",
+      "type": "file",
+      "file": "06_Adjuntos/Cap03_Guia_p1.png",
+      "x": 1100,
+      "y": 340,
+      "width": 460,
+      "height": 620
+    },
+    {
+      "id": "img_3d_m03",
+      "type": "file",
+      "file": "06_Adjuntos/M03_PozoPotencial.png",
+      "x": 1100,
+      "y": 990,
+      "width": 460,
+      "height": 320
+    },
+    {
+      "id": "node_m04",
+      "type": "text",
+      "text": "## 🏛️ M04: Distribuciones Continuas de Carga\n**Ecuación Fundamental:**\n$$d\\vec{E} = \\frac{1}{4\\pi\\epsilon_0}\\frac{dq}{r^2}\\hat{r}, \\quad dq = \\lambda dl$$\n\n- 📝 [[Taller_4_Distribuciones]]\n- 🖥️ [[Deck_M04_Distribuciones]]\n- 🧪 [[Simulador_ContinuousDistLab]]\n- 📄 [[Cap04_Guia]]",
+      "x": 1650,
+      "y": 0,
+      "width": 460,
+      "height": 300,
+      "color": "4"
+    },
+    {
+      "id": "img_guia_m04",
+      "type": "file",
+      "file": "06_Adjuntos/Cap04_Guia_p1.png",
+      "x": 1650,
+      "y": 340,
+      "width": 460,
+      "height": 620
+    },
+    {
+      "id": "img_3d_m04",
+      "type": "file",
+      "file": "06_Adjuntos/M04_DistribucionGeometria.png",
+      "x": 1650,
+      "y": 990,
+      "width": 460,
+      "height": 320
+    },
+    {
+      "id": "node_m05",
+      "type": "text",
+      "text": "## 🏛️ M05: Ley de Gauss y Flujo Eléctrico\n**Ecuación Fundamental:**\n$$\\Phi_E = \\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\epsilon_0}$$\n\n- 📝 [[Taller_5_Ley]]\n- 🖥️ [[Deck_M05_Ley]]\n- 🧪 [[Simulador_GaussLab]]\n- 📄 [[Cap05_Guia]]",
+      "x": 2200,
+      "y": 0,
+      "width": 460,
+      "height": 300,
+      "color": "4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_guia_m01",
+      "fromNode": "node_m01",
+      "fromSide": "bottom",
+      "toNode": "img_guia_m01",
+      "toSide": "top",
+      "label": "Guía Oficial 4 Págs"
+    },
+    {
+      "id": "edge_3d_m01",
+      "fromNode": "img_guia_m01",
+      "fromSide": "bottom",
+      "toNode": "img_3d_m01",
+      "toSide": "top",
+      "label": "Maqueta Tangible 3D"
+    },
+    {
+      "id": "edge_guia_m02",
+      "fromNode": "node_m02",
+      "fromSide": "bottom",
+      "toNode": "img_guia_m02",
+      "toSide": "top",
+      "label": "Guía Oficial 4 Págs"
+    },
+    {
+      "id": "edge_3d_m02",
+      "fromNode": "img_guia_m02",
+      "fromSide": "bottom",
+      "toNode": "img_3d_m02",
+      "toSide": "top",
+      "label": "Maqueta Tangible 3D"
+    },
+    {
+      "id": "edge_guia_m03",
+      "fromNode": "node_m03",
+      "fromSide": "bottom",
+      "toNode": "img_guia_m03",
+      "toSide": "top",
+      "label": "Guía Oficial 4 Págs"
+    },
+    {
+      "id": "edge_3d_m03",
+      "fromNode": "img_guia_m03",
+      "fromSide": "bottom",
+      "toNode": "img_3d_m03",
+      "toSide": "top",
+      "label": "Maqueta Tangible 3D"
+    },
+    {
+      "id": "edge_guia_m04",
+      "fromNode": "node_m04",
+      "fromSide": "bottom",
+      "toNode": "img_guia_m04",
+      "toSide": "top",
+      "label": "Guía Oficial 4 Págs"
+    },
+    {
+      "id": "edge_3d_m04",
+      "fromNode": "img_guia_m04",
+      "fromSide": "bottom",
+      "toNode": "img_3d_m04",
+      "toSide": "top",
+      "label": "Maqueta Tangible 3D"
+    },
+    {
+      "id": "edge_hub_m01",
+      "fromNode": "hub_cerebro",
+      "fromSide": "bottom",
+      "toNode": "node_m01",
+      "toSide": "top"
+    },
+    {
+      "id": "edge_hub_m02",
+      "fromNode": "hub_cerebro",
+      "fromSide": "bottom",
+      "toNode": "node_m02",
+      "toSide": "top"
+    },
+    {
+      "id": "edge_hub_m03",
+      "fromNode": "hub_cerebro",
+      "fromSide": "bottom",
+      "toNode": "node_m03",
+      "toSide": "top"
+    },
+    {
+      "id": "edge_hub_m04",
+      "fromNode": "hub_cerebro",
+      "fromSide": "bottom",
+      "toNode": "node_m04",
+      "toSide": "top"
+    },
+    {
+      "id": "curric_1_2",
+      "fromNode": "node_m01",
+      "fromSide": "right",
+      "toNode": "node_m02",
+      "toSide": "left",
+      "label": "E = F/q"
+    },
+    {
+      "id": "curric_2_3",
+      "fromNode": "node_m02",
+      "fromSide": "right",
+      "toNode": "node_m03",
+      "toSide": "left",
+      "label": "E = -grad V"
+    },
+    {
+      "id": "curric_3_4",
+      "fromNode": "node_m03",
+      "fromSide": "right",
+      "toNode": "node_m04",
+      "toSide": "left",
+      "label": "Integración continua"
+    },
+    {
+      "id": "curric_4_5",
+      "fromNode": "node_m04",
+      "fromSide": "right",
+      "toNode": "node_m05",
+      "toSide": "left",
+      "label": "Flujo y simetría"
+    }
+  ]
+}
