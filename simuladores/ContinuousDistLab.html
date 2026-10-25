@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet">
 <link rel="stylesheet" href="../css/tokens.css">
 <style>
 /* ContinuousDistLab10.easy · diseño 10.Easy (Plasma). Colores solo desde css/tokens.css. */
@@ -330,8 +329,9 @@ function current() { return SCENES[scene]; }
 function buildParams() {
   const box = $('params-box'); const sc = current(); box.innerHTML = '';
   sc.params.forEach((pr) => {
+    P[pr.id] = pr.val;
     const lab = document.createElement('label');
-    lab.innerHTML = `<span>${pr.label} <b class="out" id="out-${pr.id}"></b></span><input type="range" id="rng-${pr.id}" min="${pr.min}" max="${pr.max}" step="${pr.step}" value="${pr.val}">`;
+    lab.innerHTML = `<span>${pr.label} <b class="out" id="out-${pr.id}">${pr.fmt(pr.val)}</b></span><input type="range" id="rng-${pr.id}" min="${pr.min}" max="${pr.max}" step="${pr.step}" value="${pr.val}">`;
     box.appendChild(lab);
     const r = lab.querySelector('input');
     r.addEventListener('input', () => { P[pr.id] = parseFloat(r.value); lab.querySelector('.out').textContent = pr.fmt(P[pr.id]); draw(); updateLive(); });
@@ -397,7 +397,7 @@ function comprobar() {
   $('latex-result').innerHTML = sc.solucion(P).pasos.replace(/\n\n/g, '<br><br>');
   $('solution-conclusion').innerHTML = conc;
   $('theory-questions').innerHTML = 'Límites asintóticos: lejos (z≫R) toda distribución finita tiende a una carga puntual kQ/z²; al agrandar R, el disco tiende al plano σ/2ε₀.';
-  if (window.katex) { ['latex-result', 'solution-conclusion', 'explain-box'].forEach((id) => { const el = $(id); if (el) katex.render(String(el.dataset.tex || ''), el, { throwOnError: false }); }); renderMath(); }
+  renderMath();
   document.getElementById('solution-overlay').style.display = 'block';
   emitirComprobacion(ok, error);
 }

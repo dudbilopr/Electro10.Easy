@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EXGD1GSLLB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EXGD1GSLLB');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GaussLab10.easy · Ley de Gauss y flujo eléctrico</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* GaussLab10.easy · Lab10.easy Flagship Standard (Plasma). Colores solo desde css/tokens.css */
+:root{--panel-w:400px;--accent:var(--e10-primary)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--e10-bg);color:var(--e10-ink);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font:400 var(--e10-text-sm)/1.5 var(--e10-font-body)}
+button,input,select{font-family:inherit}
+canvas,.h-menu,header{user-select:none}
+
+header.e10-header{flex-shrink:0;z-index:100;gap:10px;flex-wrap:nowrap;display:flex;align-items:center;padding:10px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line)}
+header .e10-brand{font:700 1.15rem/1 var(--e10-font-display);color:var(--e10-ink);text-decoration:none;letter-spacing:-.01em}
+header .e10-brand span{color:var(--e10-primary)}
+.module-chip{font:600 12px/1 var(--e10-font-mono);padding:4px 10px;border-radius:999px;background:var(--e10-primary-soft);color:var(--e10-primary);margin-left:6px}
+.scene-tabs{display:flex;gap:4px;padding:3px;border-radius:var(--e10-radius-md);background:var(--e10-surface-2);border:1px solid var(--e10-line);margin-left:14px;overflow-x:auto;scrollbar-width:none}
+.scene-tabs button{min-height:34px;padding:0 14px;border:0;border-radius:var(--e10-radius-sm);background:transparent;color:var(--e10-muted);font:500 var(--e10-text-sm)/1 var(--e10-font-body);cursor:pointer;white-space:nowrap;transition:all .15s}
+.scene-tabs button[aria-selected="true"]{background:var(--e10-surface);color:var(--e10-primary);font-weight:700;box-shadow:0 1px 3px rgba(34,17,27,.08)}
+.header-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:1px solid var(--e10-line);border-radius:var(--e10-radius-sm);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;font:500 var(--e10-text-sm)/1 var(--e10-font-body);white-space:nowrap;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.active{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary);font-weight:600}
+.btn-primary:hover{background:var(--e10-primary-hover);border-color:var(--e10-primary-hover)}
+.btn-icon{width:38px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.h-menu{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:8px 16px;background:var(--e10-surface);border-bottom:1px solid var(--e10-line);z-index:90;flex-wrap:wrap}
+.tool-group{display:flex;align-items:center;gap:6px}
+.tool-group__label{font:600 11px/1 var(--e10-font-mono);letter-spacing:.08em;color:var(--e10-muted);margin-right:2px;text-transform:uppercase}
+.tool-sep{width:1px;height:24px;background:var(--e10-line)}
+.tog{min-height:32px;padding:0 10px;border-radius:999px;font-size:var(--e10-text-xs);border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-muted);cursor:pointer}
+.tog.active{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+
+.workspace{position:relative;flex:1;display:flex;overflow:hidden;min-height:0}
+.canvas-area{flex:1;position:relative;overflow:hidden;min-width:0;background-color:var(--e10-surface-2);background-image:linear-gradient(var(--e10-grid) 1px,transparent 1px),linear-gradient(90deg,var(--e10-grid) 1px,transparent 1px);background-size:32px 32px}
+canvas{position:absolute;top:0;left:0;z-index:1;touch-action:none}
+#coords-indicator{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:999px;font:500 var(--e10-text-xs)/1.6 var(--e10-font-mono);color:var(--e10-muted);background:var(--e10-surface);border:1px solid var(--e10-line);pointer-events:none;z-index:5}
+
+#values{position:absolute;top:10px;left:10px;z-index:5;background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);box-shadow:var(--e10-shadow);width:320px;max-width:calc(100% - 20px)}
+#values>summary{cursor:pointer;list-style:none;padding:8px 12px;font:600 11px/1.4 var(--e10-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center}
+#values>summary::-webkit-details-marker{display:none}
+#values-body{display:grid;gap:8px;padding:0 12px 12px}
+.vrange{display:grid;grid-template-columns:32px minmax(0,1fr) 72px;align-items:center;gap:8px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.vrange .sym{font:italic 1.05rem/1 'Times New Roman',serif;color:var(--e10-ink)}
+.vrange output{font:600 var(--e10-text-xs)/1 var(--e10-font-mono);color:var(--e10-ink);text-align:right}
+.vrange input{accent-color:var(--e10-primary);width:100%}
+
+#e10-live{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;display:flex;align-items:center;gap:18px;padding:10px 18px;border-radius:14px;background:var(--e10-surface);border:1px solid var(--e10-line);box-shadow:var(--e10-shadow);overflow-x:auto;min-height:56px}
+#e10-live .katex{font-size:1.15em}
+.live-readout{display:flex;gap:16px;align-items:center;border-left:1px solid var(--e10-line);padding-left:16px;font-size:var(--e10-text-xs);color:var(--e10-muted);white-space:nowrap}
+.live-readout b{color:var(--e10-primary);font-family:var(--e10-font-mono);font-size:14px;display:block}
+
+.slide-panel{width:var(--panel-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--e10-surface);border-left:1px solid var(--e10-line);overflow:hidden;z-index:80}
+.panel-scroll{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:18px}
+.sheet-handle{display:none}
+.e10-step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px}
+.e10-step__n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--e10-font-mono);background:var(--e10-line);color:var(--e10-muted)}
+.e10-step[data-s="done"] .e10-step__n{background:var(--e10-success);color:#fff}
+.e10-step[data-s="now"] .e10-step__n{background:var(--e10-primary);color:var(--e10-on-primary)}
+.e10-step__body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.e10-step__title{font:600 .95rem/1.3 var(--e10-font-display)}
+.e10-step[data-s="todo"] .e10-step__title{color:var(--e10-muted)}
+#reto-text{line-height:1.55;font-size:14px}
+.predict-row{display:flex;gap:8px;flex-wrap:wrap}
+.predict-row .btn{min-height:36px;font-size:13px}
+.predict-row .btn.on{background:var(--e10-primary-soft);border-color:var(--e10-primary);color:var(--e10-primary);font-weight:600}
+#pred-hint{font-size:var(--e10-text-xs);color:var(--e10-muted);line-height:1.4}
+.ans{display:grid;gap:6px;font-size:var(--e10-text-xs);color:var(--e10-muted)}
+.ans input{background:var(--e10-surface);border:1px solid var(--e10-line);color:var(--e10-ink);min-height:38px;padding:6px 10px;border-radius:var(--e10-radius-sm);width:100%;font:600 var(--e10-text-sm) var(--e10-font-mono);outline:none}
+.ans input:focus{border-color:var(--e10-primary);box-shadow:var(--e10-focus)}
+#validation-box{display:flex;flex-direction:column;border:1px solid var(--e10-line);border-radius:var(--e10-radius-md);overflow:hidden;padding:10px 12px;font-size:13px;line-height:1.45}
+#validation-box.ok{background:var(--e10-success-soft);border-color:var(--e10-success);color:var(--e10-ink)}
+#validation-box.bad{background:var(--e10-warning-soft);border-color:var(--e10-warning);color:var(--e10-ink)}
+#solution{padding:12px;border-radius:var(--e10-radius-md);background:var(--e10-surface-2);border:1px solid var(--e10-line);overflow-x:auto;font-size:13.5px;line-height:1.55}
+
+.panel-progress{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--e10-line);font-size:12px;color:var(--e10-muted)}
+.panel-progress .bar-wrap{flex:1;height:6px;background:var(--e10-line);border-radius:999px;overflow:hidden}
+.panel-progress .bar-fill{height:100%;width:25%;background:var(--e10-primary);transition:width .3s}
+
+footer{flex-shrink:0;background:var(--e10-surface);border-top:1px solid var(--e10-line);padding:8px 16px;font-size:var(--e10-text-xs);color:var(--e10-muted);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer a{color:var(--e10-primary);text-decoration:none;font-weight:600}
+
+body.embed .e10-brand,body.embed .module-chip,body.embed .header-actions,body.embed .slide-panel,body.embed footer{display:none}
+body.embed header.e10-header{padding:6px 8px;min-height:0}
+body.embed .scene-tabs{margin:0}
+
+@media (max-width:900px){
+  header.e10-header{padding:8px 10px;min-height:56px;flex-wrap:wrap}
+  .module-chip{display:none}
+  .scene-tabs{order:5;margin:6px 0 0;width:100%}
+  .workspace{flex-direction:column}
+  .slide-panel{width:100%;max-height:48%;border-left:0;border-top:1px solid var(--e10-line);border-radius:18px 18px 0 0;margin-top:-14px}
+  #e10-live{bottom:22px;left:10px;right:10px;padding:6px 10px;gap:10px}
+  footer{display:none}
+}
+</style>
+<script>
+(function(){
+  var t=null;try{t=localStorage.getItem('lab10_theme')||localStorage.getItem('electro10_theme');}catch(_){}
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.toggle('dark-mode',t==='dark');
+    document.body.classList.toggle('light-mode',t!=='dark');
+    if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');
+  });
+})();
+</script>
+</head>
+<body data-domain="gauss" class="light-mode">
+
+<header class="e10-header">
+  <a class="e10-brand" href="../index.html">GaussLab<span>10.easy</span></a>
+  <span class="module-chip">Módulo 5 · Ley de Gauss</span>
+  <nav class="scene-tabs" aria-label="Escenas">
+    <button type="button" class="tab-btn" data-scene="esfera" aria-selected="true"><i class="ph ph-circle"></i> Esfera conductora</button>
+    <button type="button" class="tab-btn" data-scene="cilindro" aria-selected="false"><i class="ph ph-line-vertical"></i> Hilo infinito</button>
+    <button type="button" class="tab-btn" data-scene="lamina" aria-selected="false"><i class="ph ph-pause"></i> Lámina infinita</button>
+    <button type="button" class="tab-btn" data-scene="jaula" aria-selected="false"><i class="ph ph-shield"></i> Jaula de Faraday</button>
+  </nav>
+  <div class="header-actions">
+    <button type="button" class="btn btn-icon" id="btn-theme" title="Modo claro/oscuro"><i class="ph ph-sun-moon"></i></button>
+    <a class="btn" href="../talleres/Taller_5_Ley_de_Gauss.html" title="Ir al taller"><i class="ph ph-book-open"></i> Taller</a>
+  </div>
+</header>
+
+<div class="h-menu" id="h-menu">
+  <div class="tool-group">
+    <span class="tool-group__label">Herramientas</span>
+    <button type="button" class="tog active" id="tog-probe"><i class="ph ph-circle-dashed"></i> Superficie gaussiana</button>
+    <button type="button" class="tog active" id="tog-field"><i class="ph ph-arrow-down-right"></i> Campo E</button>
+    <button type="button" class="tog active" id="tog-flux"><i class="ph ph-sparkle"></i> Flujo Φ</button>
+  </div>
+  <div class="tool-sep"></div>
+  <div class="tool-group">
+    <button type="button" class="btn btn-icon" id="btn-reset" title="Restablecer posiciones"><i class="ph ph-arrow-counter-clockwise"></i></button>
+  </div>
+</div>
+
+<div class="workspace" id="workspace">
+  <div class="canvas-area" id="canvas-area">
+    <canvas id="cv" aria-label="Simulador interactivo de la ley de Gauss: flujo eléctrico y superficies gaussianas"></canvas>
+    <div id="coords-indicator">x: 0,00 m | y: 0,00 m | r: 0,00 m</div>
+
+    <details id="values" open>
+      <summary><span><i class="ph ph-sliders"></i> Parámetros de fuente y sonda</span> <i class="ph ph-caret-down"></i></summary>
+      <div id="values-body">
+        <div class="vrange" id="row-q">
+          <span class="sym">Q</span>
+          <input type="range" id="sl-q" min="-30" max="30" step="1" value="5">
+          <output id="out-q">+5 nC</output>
+        </div>
+        <div class="vrange" id="row-lam" style="display:none">
+          <span class="sym">λ</span>
+          <input type="range" id="sl-lam" min="-20" max="20" step="1" value="2">
+          <output id="out-lam">+2 nC/m</output>
+        </div>
+        <div class="vrange" id="row-sigma" style="display:none">
+          <span class="sym">σ</span>
+          <input type="range" id="sl-sigma" min="-20" max="20" step="1" value="3">
+          <output id="out-sigma">+3 nC/m²</output>
+        </div>
+        <div class="vrange" id="row-R">
+          <span class="sym">R</span>
+          <input type="range" id="sl-R" min="2" max="12" step="1" value="8">
+          <output id="out-R">8 cm</output>
+        </div>
+        <div class="vrange" id="row-r">
+          <span class="sym">r</span>
+          <input type="range" id="sl-r" min="2" max="30" step="1" value="12">
+          <output id="out-r">12 cm</output>
+        </div>
+        <div class="vrange" id="row-a" style="display:none">
+          <span class="sym">a</span>
+          <input type="range" id="sl-a" min="5" max="30" step="1" value="20">
+          <output id="out-a">20 cm</output>
+        </div>
+      </div>
+    </details>
+
+    <div id="e10-live">
+      <div id="live-fx">\[ \oint_S \vec E\cdot d\vec A = \frac{Q_{\rm enc}}{\varepsilon_0} \]</div>
+      <div class="live-readout">
+        <div>Flujo Φ<b id="live-flux">0 N·m²/C</b></div>
+        <div>Carga Q<sub>enc</sub><b id="live-qenc">0 nC</b></div>
+        <div>Campo E<b id="live-e">0 N/C</b></div>
+        <div>E · dA<b id="live-edot">—</b></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="slide-panel" id="slide-panel">
+    <div class="panel-scroll">
+      <!-- Paso 1: Reto -->
+      <div class="e10-step" data-s="now" id="step-1">
+        <div class="e10-step__n">1</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Reto conceptual del fenómeno</div>
+          <div id="reto-text">Arrastra la superficie gaussiana sobre el plano. ¿Qué flujo Φ atraviesa la superficie al encerrar carga?</div>
+        </div>
+      </div>
+
+      <!-- Paso 2: Predicción -->
+      <div class="e10-step" data-s="todo" id="step-2">
+        <div class="e10-step__n">2</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Predice antes de medir</div>
+          <div class="predict-row" id="pred-btns"></div>
+          <div id="pred-hint"></div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Medición y Comprobación -->
+      <div class="e10-step" data-s="todo" id="step-3">
+        <div class="e10-step__n">3</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Comprobación cuantitativa</div>
+          <div class="ans">
+            <label for="inp-calc" id="lbl-calc">Ingresa el campo E previsto en la sonda (N/C):</label>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="inp-calc" placeholder="ej. 1123,5">
+              <button type="button" class="btn btn-primary" id="btn-check">Verificar</button>
+            </div>
+          </div>
+          <div id="validation-box"></div>
+        </div>
+      </div>
+
+      <!-- Paso 4: Solución -->
+      <div class="e10-step" data-s="todo" id="step-4">
+        <div class="e10-step__n">4</div>
+        <div class="e10-step__body">
+          <div class="e10-step__title">Deducción Sears-Zemansky</div>
+          <div id="solution"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-progress">
+      <span>Avance formativo</span>
+      <div class="bar-wrap"><div class="bar-fill" id="prog-fill"></div></div>
+      <span id="prog-text">1 / 4</span>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <span><b>GaussLab10.easy</b> · Rigor Sears-Zemansky Vol. 2 Cap. 22 · Telemetría en <code>js/seguimiento.js</code></span>
+  <span>© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</span>
+</footer>
+
+<script src="../js/sim_telemetry.js"></script>
+<script>
+(() => {
+  'use strict';
+  const K = 8.988e9, QE = 1.602e-19, EPS0 = 8.854e-12;
+  const $ = (id) => document.getElementById(id);
+  const col = (name) => getComputedStyle(document.body).getPropertyValue('--e10-' + name).trim() || '#b3246b';
+
+  const cv = $('cv');
+  const ctx = cv.getContext('2d');
+  let W = 800, H = 600, dpr = window.devicePixelRatio || 1;
+
+  // Estado físico
+  let scene = 'esfera';
+  let Q = 5e-9;            // C (esfera conductora)
+  let lam = 2e-9;          // C/m (hilo infinito)
+  let sigma = 3e-9;        // C/m² (lámina y jaula)
+  let R = 0.08;            // m (radio del conductor, esfera/jaula)
+  let aBox = 0.20;         // m (semi-altura de la caja gaussiana, lámina)
+  const boxW = 0.12;       // m (semi-ancho de la caja gaussiana, lámina)
+  let showProbe = true, showField = true, showFlux = true;
+
+  // Sonda de flujo (superficie gaussiana)
+  let probe = { x: 0.12, y: 0 }; // posición en metros respecto al centro
+  let dragItem = null;
+
+  function radius() { return Math.hypot(probe.x, probe.y); }
+
+  function initScene(s) {
+    scene = s;
+    const rows = {
+      q: ['esfera'],
+      lam: ['cilindro'],
+      sigma: ['lamina', 'jaula'],
+      R: ['esfera', 'jaula'],
+      r: ['esfera', 'cilindro', 'jaula'],
+      a: ['lamina']
+    };
+    for (const [key, scenes] of Object.entries(rows)) {
+      $('row-' + key).style.display = scenes.includes(scene) ? 'grid' : 'none';
+    }
+
+    if (scene === 'esfera') setProbeRadius(0.12, 0);
+    else if (scene === 'cilindro') setProbeRadius(0.10, 0);
+    else if (scene === 'lamina') { probe = { x: 0, y: 0 }; }
+    else if (scene === 'jaula') setProbeRadius(0.04, 0);
+    updateReto();
+  }
+
+  function setProbeRadius(r, ang) {
+    const a = ang === undefined ? 0 : ang;
+    probe.x = r * Math.cos(a);
+    probe.y = r * Math.sin(a);
+    $('sl-r').value = Math.max(2, Math.min(30, Math.round(r * 100)));
+    $('out-r').textContent = $('sl-r').value + ' cm';
+  }
+
+  // Conversión metros <-> canvas px
+  const SCALE = 1200; // 1 metro = 1200 px
+  function toPx(x, y) { return { px: W / 2 + x * SCALE, py: H / 2 - y * SCALE }; }
+  function toM(px, py) { return { x: (px - W / 2) / SCALE, y: (H / 2 - py) / SCALE }; }
+
+  // Campo vectorial por escena (magnitud y componentes)
+  function calcE(x, y) {
+    if (scene === 'esfera' || scene === 'jaula') {
+      const r = Math.hypot(x, y);
+      const Qtot = (scene === 'jaula') ? sigma * 4 * Math.PI * R * R : Q;
+      if (r < R) return { Ex: 0, Ey: 0, em: 0 };
+      if (r < 1e-4) return { Ex: 0, Ey: 0, em: 0 };
+      const E = K * Qtot / (r * r);
+      return { Ex: E * x / r, Ey: E * y / r, em: Math.abs(E) };
+    }
+    if (scene === 'cilindro') {
+      const r = Math.hypot(x, y);
+      if (r < 1e-4) return { Ex: 0, Ey: 0, em: 0 };
+      const E = 2 * K * lam / r;
+      return { Ex: E * x / r, Ey: E * y / r, em: Math.abs(E) };
+    }
+    if (scene === 'lamina') {
+      const E = sigma / (2 * EPS0);
+      return { Ex: (x >= 0 ? E : -E), Ey: 0, em: Math.abs(E) };
+    }
+    return { Ex: 0, Ey: 0, em: 0 };
+  }
+
+  // Lectura física en la sonda de flujo
+  function physicalReadout() {
+    const r = radius();
+    let E = 0, Qenc = 0;
+    if (scene === 'esfera') {
+      const inside = r < R;
+      E = inside ? 0 : Math.abs(K * Q) / (r * r);
+      Qenc = inside ? 0 : Q;
+    } else if (scene === 'cilindro') {
+      E = (r > 1e-3) ? Math.abs(2 * K * lam) / r : Infinity;
+      Qenc = lam * 1.0; // por metro de hilo
+    } else if (scene === 'lamina') {
+      E = Math.abs(sigma) / (2 * EPS0);
+      Qenc = sigma * (2 * aBox); // cara de área A = 2a × 1 m
+    } else if (scene === 'jaula') {
+      const Qtot = sigma * 4 * Math.PI * R * R;
+      const inside = r < R;
+      E = inside ? 0 : Math.abs(K * Qtot) / (r * r);
+      Qenc = inside ? 0 : Qtot;
+    }
+    return { E, Qenc, flux: Qenc / EPS0, r };
+  }
+
+  // Formateadores (decimal con punto, magnitudes con signo)
+  function fmtSigned(v) { const n = Math.round(Number(v)); return (n >= 0 ? '+' : '') + n; }
+  function fmtE(E) {
+    if (!isFinite(E)) return '∞';
+    if (E === 0) return '0 N/C';
+    if (E >= 1e6) return E.toExponential(1) + ' N/C';
+    if (E >= 1e4) return (E / 1e3).toFixed(1) + ' kV/m';
+    if (E >= 1) return E.toFixed(1) + ' N/C';
+    return E.toFixed(3) + ' N/C';
+  }
+  function fmtQ(Qenc) {
+    const v = Qenc * 1e9; // nC
+    if (Math.abs(v) >= 0.01) return (v >= 0 ? '+' : '') + v.toFixed(2) + ' nC';
+    const p = Qenc * 1e12; // pC
+    return (p >= 0 ? '+' : '') + p.toFixed(1) + ' pC';
+  }
+  function fmtFlux(phi) {
+    if (!isFinite(phi)) return '∞';
+    if (Math.abs(phi) >= 1e6) return phi.toExponential(1) + ' N·m²/C';
+    if (Math.abs(phi) >= 1) return (phi >= 0 ? '+' : '') + phi.toFixed(1) + ' N·m²/C';
+    return (phi >= 0 ? '+' : '') + phi.toFixed(2) + ' N·m²/C';
+  }
+
+  // Renderizado gráfico
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    // 1. Líneas de campo E (rejilla de vectores)
+    if (showField) {
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = col('vec-field');
+      const step = 45;
+      for (let px = 30; px < W; px += step) {
+        for (let py = 30; py < H; py += step) {
+          const m = toM(px, py);
+          const { Ex, Ey, em } = calcE(m.x, m.y);
+          if (em > 10 && isFinite(em)) {
+            const len = Math.min(18, Math.max(8, Math.log10(em) * 4));
+            const nx = Ex / em, ny = -Ey / em;
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + nx * len, py + ny * len);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // 2. Fuente: conductor, hilo o lámina
+    drawSource();
+
+    // 3. Superficie gaussiana + flujo + sonda
+    if (showProbe) drawGaussian();
+    if (showFlux) drawFluxArrows();
+    if (showProbe) drawProbeHandle();
+
+    // 4. Actualizar HUD en vivo
+    updateLive();
+  }
+
+  function drawSource() {
+    if (scene === 'esfera') {
+      const c = toPx(0, 0), rPx = R * SCALE;
+      ctx.beginPath();
+      ctx.arc(c.px, c.py, rPx, 0, 2 * Math.PI);
+      ctx.fillStyle = Q >= 0 ? col('q-pos') : col('q-neg');
+      ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = col('surface'); ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = '700 15px var(--e10-font-mono)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(Q >= 0 ? '+' : '−', c.px, c.py);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('Esfera conductora · Q = ' + fmtSigned(Q * 1e9) + ' nC', c.px, c.py - rPx - 8);
+    } else if (scene === 'cilindro') {
+      const c = toPx(0, 0);
+      ctx.beginPath();
+      ctx.arc(c.px, c.py, 9, 0, 2 * Math.PI);
+      ctx.fillStyle = lam >= 0 ? col('q-pos') : col('q-neg');
+      ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = col('surface'); ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = '700 13px var(--e10-font-mono)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('⊙', c.px, c.py);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('Hilo infinito · λ = ' + fmtSigned(lam * 1e9) + ' nC/m', c.px + 14, c.py + 4);
+    } else if (scene === 'lamina') {
+      const p = toPx(0, 0);
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = sigma >= 0 ? col('q-pos') : col('q-neg');
+      ctx.beginPath();
+      ctx.moveTo(p.px, 34); ctx.lineTo(p.px, H - 34);
+      ctx.stroke();
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('Lámina infinita · σ = ' + fmtSigned(sigma * 1e9) + ' nC/m²', p.px + 10, 46);
+    } else if (scene === 'jaula') {
+      const c = toPx(0, 0);
+      const outer = R * SCALE, inner = R * 0.6 * SCALE;
+      ctx.beginPath();
+      ctx.arc(c.px, c.py, outer, 0, 2 * Math.PI);
+      ctx.arc(c.px, c.py, inner, 0, 2 * Math.PI, true);
+      ctx.fillStyle = sigma >= 0 ? col('q-pos') : col('q-neg');
+      ctx.fill('evenodd');
+      ctx.lineWidth = 2; ctx.strokeStyle = col('surface'); ctx.stroke();
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('Jaula de Faraday · σ = ' + fmtSigned(sigma * 1e9) + ' nC/m²', c.px - outer - 130, c.py - outer - 8);
+    }
+  }
+
+  function drawGaussian() {
+    ctx.save();
+    ctx.setLineDash([6, 5]);
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = col('d-gauss');
+    if (scene === 'lamina') {
+      const c = toPx(0, probe.y);
+      const w = boxW * SCALE, h = aBox * SCALE;
+      ctx.strokeRect(c.px - w, c.py - h, 2 * w, 2 * h);
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('Caja gaussiana', c.px + w + 8, c.py - h - 6);
+    } else {
+      const c = toPx(0, 0);
+      const r = radius();
+      const rPx = r * SCALE;
+      ctx.beginPath();
+      ctx.arc(c.px, c.py, rPx, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = col('muted');
+      ctx.font = '600 11px monospace';
+      ctx.fillText('r = ' + r.toFixed(2) + ' m', c.px + rPx + 6, c.py - rPx + 2);
+    }
+    ctx.restore();
+  }
+
+  function drawFluxArrows() {
+    const rd = physicalReadout();
+    if (rd.E === 0) return; // sin campo en la superficie: flujo nulo
+    ctx.save();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = col('d-gauss');
+    ctx.fillStyle = col('d-gauss');
+    if (scene === 'lamina') {
+      const c = toPx(0, probe.y);
+      const h = aBox * SCALE;
+      const dir = sigma >= 0 ? 1 : -1;
+      const len = 22;
+      [[-1, -1], [-1, 1]].forEach(([sx, sy]) => {
+        const x0 = c.px + sx * boxW * SCALE, y0 = c.py + sy * h * 0.5;
+        const dx = dir * sx * len;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0); ctx.lineTo(x0 + dx, y0);
+        ctx.stroke();
+        drawArrowHead(x0 + dx, y0, dx > 0 ? 1 : -1);
+      });
+    } else {
+      const c = toPx(0, 0);
+      const rPx = radius() * SCALE;
+      const dir = (scene === 'esfera' ? Q : scene === 'jaula' ? sigma : lam) >= 0 ? 1 : -1;
+      const len = 20;
+      [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2].forEach((ang) => {
+        const nx = Math.cos(ang), ny = Math.sin(ang);
+        const x0 = c.px + nx * rPx, y0 = c.py - ny * rPx;
+        const dx = nx * dir * len, dy = -ny * dir * len;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x0 + dx, y0 + dy);
+        ctx.stroke();
+        drawArrowHead(x0 + dx, y0 + dy, (dx !== 0 ? Math.sign(dx) : Math.sign(dy)));
+      });
+    }
+    ctx.restore();
+  }
+
+  function drawArrowHead(x, y, dir) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - dir * 6, y - 4);
+    ctx.lineTo(x - dir * 6, y + 4);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawProbeHandle() {
+    const r = radius();
+    const inside = (scene === 'esfera') ? r < R : (scene === 'jaula') ? r < R : false;
+    let px, py;
+    if (scene === 'lamina') {
+      const p = toPx(0, probe.y);
+      px = p.px + boxW * SCALE; py = p.py - aBox * SCALE;
+    } else {
+      const p = toPx(probe.x, probe.y);
+      px = p.px; py = p.py;
+    }
+
+    ctx.beginPath();
+    ctx.arc(px, py, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = col('danger');
+    ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(px - 6, py); ctx.lineTo(px + 6, py);
+    ctx.moveTo(px, py - 6); ctx.lineTo(px, py + 6);
+    ctx.stroke();
+
+    // Flecha del campo local en la sonda
+    const { Ex, Ey, em } = calcE(probe.x, probe.y);
+    if (em > 1 && isFinite(em)) {
+      const flen = 34;
+      const fx = Ex / em * flen, fy = -Ey / em * flen;
+      ctx.strokeStyle = col('primary'); ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + fx, py + fy);
+      ctx.stroke();
+    }
+    if (inside) {
+      ctx.fillStyle = col('danger');
+      ctx.font = '700 11px monospace';
+      ctx.fillText('E = 0', px + 14, py - 12);
+    }
+  }
+
+  function updateLive() {
+    const rd = physicalReadout();
+    $('live-flux').textContent = fmtFlux(rd.flux);
+    $('live-qenc').textContent = fmtQ(rd.Qenc);
+    $('live-e').textContent = fmtE(rd.E);
+    $('live-edot').textContent = (scene === 'lamina') ? '∥ caras' : '∥ (paralelo)';
+    $('coords-indicator').textContent = (scene === 'lamina')
+      ? `x: 0,00 m | y: ${probe.y.toFixed(2)} m`
+      : `x: ${probe.x.toFixed(2)} m | y: ${probe.y.toFixed(2)} m | r: ${rd.r.toFixed(2)} m`;
+  }
+
+  // Interacción y Arrastre
+  function resize() {
+    const rect = $('canvas-area').getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    render();
+  }
+  window.addEventListener('resize', resize);
+
+  cv.addEventListener('pointerdown', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    const m = toM(px, py);
+
+    if (scene === 'lamina') {
+      const c = toPx(0, probe.y);
+      if (Math.abs(px - c.px) <= boxW * SCALE + 12 && Math.abs(py - c.py) <= aBox * SCALE + 12) {
+        dragItem = 'probe';
+        cv.setPointerCapture(e.pointerId);
+        return;
+      }
+    } else if (Math.hypot(m.x - probe.x, m.y - probe.y) < 0.035) {
+      dragItem = 'probe';
+      cv.setPointerCapture(e.pointerId);
+      return;
+    }
+  });
+
+  cv.addEventListener('pointermove', (e) => {
+    if (!dragItem) return;
+    const rect = cv.getBoundingClientRect();
+    const m = toM(e.clientX - rect.left, e.clientY - rect.top);
+    if (scene === 'lamina') {
+      probe.y = m.y;
+    } else {
+      probe.x = m.x; probe.y = m.y;
+      const r = radius();
+      $('sl-r').value = Math.max(2, Math.min(30, Math.round(r * 100)));
+      $('out-r').textContent = $('sl-r').value + ' cm';
+    }
+    render();
+  });
+
+  cv.addEventListener('pointerup', () => { dragItem = null; });
+
+  // Flujo Pedagógico de 4 Pasos
+  const RETOS_DATA = {
+    esfera: {
+      q: 'Una esfera conductora maciza de radio R = 8 cm tiene carga neta Q = +5 nC repartida en su superficie. Arrastra la superficie gaussiana (círculo) hasta r = 0,20 m y anota el campo E que marca la sonda.',
+      p_opts: [
+        { p: 'esfera', label: 'Esfera concéntrica (E ∥ dA)' },
+        { p: 'cubo', label: 'Un cubo' },
+        { p: 'cilindro', label: 'Un cilindro' }
+      ],
+      p_ok: 'esfera',
+      p_fb: 'Correcto. La esfera concéntrica hace que E sea constante y paralelo a dA en toda el área, y la integral queda E·4πr².',
+      p_wrong: 'Para que ∮E·dA se simplifique, elige una superficie donde E tenga módulo constante y sea paralelo (o perpendicular) a dA en toda ella.',
+      calc_label: 'Ingresa el campo E en r = 0,20 m (N/C):',
+      calc_target: 1123.5,
+      calc_tol: 0.01,
+      err_code: 'gauss_superficie',
+      sol: '\\[ E=\\frac{kQ}{r^2}=\\frac{(8.988\\times10^9)(5\\times10^{-9})}{0.20^2}=1123.5\\ \\text{N/C} \\]'
+        + '<p>Dentro del conductor (r &lt; R) la carga encerrada es nula, por eso <b>E = 0</b>. La superficie gaussiana ideal es una esfera concéntrica, de modo que E ∥ dA en toda su área.</p>'
+    },
+    cilindro: {
+      q: 'Un hilo rectilíneo infinito tiene densidad lineal λ = +2 nC/m. Arrastra la superficie gaussiana cilíndrica (círculo) hasta r = 0,05 m y anota el campo E.',
+      p_opts: [
+        { p: 'mitad', label: 'Baja a la mitad (E ∝ 1/r)' },
+        { p: 'igual', label: 'No cambia' },
+        { p: 'cuarta', label: 'Baja a la cuarta parte (1/r²)' }
+      ],
+      p_ok: 'mitad',
+      p_fb: 'Correcto. Por simetría cilíndrica E = λ/(2πε₀r): el campo del hilo infinito cae como 1/r, no como 1/r².',
+      p_wrong: 'El área lateral del cilindro gaussiano crece con r; como el flujo es constante, E debe caer como 1/r.',
+      calc_label: 'Ingresa el campo E en r = 0,05 m (N/C):',
+      calc_target: 719.0,
+      calc_tol: 0.01,
+      err_code: 'gauss_cilindro_r',
+      sol: '\\[ E=\\frac{\\lambda}{2\\pi\\varepsilon_0 r}=\\frac{2k\\lambda}{r}=\\frac{2(8.988\\times10^9)(2\\times10^{-9})}{0.05}=719.0\\ \\text{N/C} \\]'
+        + '<p>La simetría cilíndrica hace que E dependa solo de r y sea radial (E ∥ dA en la superficie lateral).</p>'
+    },
+    lamina: {
+      q: 'Una lámina infinita tiene densidad superficial σ = +3 nC/m². La caja gaussiana encierra la lámina: anota el campo E uniforme que produce.',
+      p_opts: [
+        { p: 'sobre2', label: 'E = σ/(2ε₀)' },
+        { p: 'sobre1', label: 'E = σ/ε₀' },
+        { p: 'cero', label: 'E = 0' }
+      ],
+      p_ok: 'sobre2',
+      p_fb: 'Correcto. La caja tiene dos caras: 2EA = σA/ε₀ ⇒ E = σ/(2ε₀). El factor ½ aparece porque el flujo sale por ambas caras.',
+      p_wrong: 'Cuenta cuántas caras de la caja son atravesadas por el campo: el flujo sale por las dos, no por una sola.',
+      calc_label: 'Ingresa el campo E de la lámina (N/C):',
+      calc_target: 169.4,
+      calc_tol: 0.01,
+      err_code: 'gauss_lamina_factor2',
+      sol: '\\[ 2EA=\\frac{\\sigma A}{\\varepsilon_0}\\;\\Rightarrow\\; E=\\frac{\\sigma}{2\\varepsilon_0}=\\frac{3\\times10^{-9}}{2(8.854\\times10^{-12})}=169.4\\ \\text{N/C} \\]'
+        + '<p>El flujo sale por las dos caras de la caja: no se debe perder el factor ½.</p>'
+    },
+    jaula: {
+      q: 'Una jaula de Faraday es un cascarón conductor con densidad superficial σ = +3 nC/m² en su superficie exterior. Arrastra la sonda al interior del conductor y anota el campo E.',
+      p_opts: [
+        { p: 'cero', label: 'E = 0' },
+        { p: 'sigma', label: 'E = σ/ε₀' },
+        { p: 'kqr', label: 'E = kQ/r²' }
+      ],
+      p_ok: 'cero',
+      p_fb: 'Correcto. Dentro de un conductor en equilibrio electrostático el campo es nulo (blindaje). En su superficie exterior E = σ/ε₀.',
+      p_wrong: 'En equilibrio, la carga libre de un conductor se reordena hasta anular el campo interior: ∮E·dA = 0 ⇒ E = 0.',
+      calc_label: 'Ingresa el campo E dentro del conductor (N/C):',
+      calc_target: 0.0,
+      calc_tol: 0.5,
+      err_code: 'gauss_conductor_interior',
+      sol: '\\[ \\oint\\vec E\\cdot d\\vec A=0\\;\\Rightarrow\\; E=0\\ \\text{(interior del conductor)} \\]'
+        + '<p>En equilibrio electrostático el campo dentro del conductor es nulo (blindaje electrostático). En la superficie exterior E = σ/ε₀.</p>'
+    }
+  };
+
+  function renderLatex(el) {
+    if (window.renderMathInElement) {
+      renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+    }
+  }
+
+  function updateReto() {
+    const d = RETOS_DATA[scene];
+    $('reto-text').textContent = d.q;
+    $('pred-btns').innerHTML = d.p_opts.map((o) =>
+      `<button type="button" class="btn" data-p="${o.p}">${o.label}</button>`).join('');
+    $('pred-hint').textContent = '';
+    $('lbl-calc').textContent = d.calc_label;
+    $('validation-box').className = '';
+    $('validation-box').style.display = 'none';
+    $('inp-calc').value = '';
+    $('solution').innerHTML = d.sol;
+    renderLatex($('solution'));
+    setStep(1);
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = $('step-' + i);
+      if (i < n) el.dataset.s = 'done';
+      else if (i === n) el.dataset.s = 'now';
+      else el.dataset.s = 'todo';
+    }
+    $('prog-fill').style.width = (n * 25) + '%';
+    $('prog-text').textContent = n + ' / 4';
+  }
+
+  // Eventos de botones de predicción (delegación sobre el contenedor)
+  $('pred-btns').addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+    document.querySelectorAll('#pred-btns .btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const d = RETOS_DATA[scene];
+    const ok = (btn.dataset.p === d.p_ok);
+    $('pred-hint').innerHTML = ok
+      ? `<b style="color:var(--e10-success)">¡Excelente predicción!</b> ${d.p_fb}`
+      : `<b style="color:var(--e10-warning)">Piénsalo de nuevo.</b> ${d.p_wrong}`;
+    setStep(3);
+  });
+
+  // Verificación cuantitativa
+  $('btn-check').addEventListener('click', () => {
+    const val = parseFloat($('inp-calc').value.replace(',', '.'));
+    const d = RETOS_DATA[scene];
+    const box = $('validation-box');
+    box.style.display = 'block';
+
+    if (isNaN(val)) {
+      box.className = 'bad';
+      box.innerHTML = `<b>Ingresa un número.</b> Escribe el valor numérico del campo E en N/C.`;
+      return;
+    }
+
+    const isOk = (d.calc_target === 0.0)
+      ? (Math.abs(val) <= d.calc_tol)
+      : (Math.abs(val - d.calc_target) <= d.calc_tol * d.calc_target);
+
+    if (isOk) {
+      box.className = 'ok';
+      box.innerHTML = `<b>¡Cálculo correcto!</b> Valor verificado: E = ${d.calc_target} N/C. Cumple la ley de Gauss ∮E·dA = Q_enc/ε₀.`;
+      setStep(4);
+      if (window._sendSimTelemetry) window._sendSimTelemetry('comprobar', { escena: scene, ok: true });
+    } else {
+      box.className = 'bad';
+      box.innerHTML = `<b>Revisa tu cálculo.</b> El valor esperado es E ≈ ${d.calc_target} N/C. Elige bien la superficie gaussiana y aplica ∮E·dA = Q_enc/ε₀.`;
+      if (window._sendSimTelemetry) window._sendSimTelemetry('comprobar', { escena: scene, ok: false, error: d.err_code });
+    }
+  });
+
+  // Parámetros y sliders
+  $('sl-q').addEventListener('input', (e) => {
+    Q = +e.target.value * 1e-9;
+    $('out-q').textContent = fmtSigned(e.target.value) + ' nC';
+    render();
+  });
+  $('sl-lam').addEventListener('input', (e) => {
+    lam = +e.target.value * 1e-9;
+    $('out-lam').textContent = fmtSigned(e.target.value) + ' nC/m';
+    render();
+  });
+  $('sl-sigma').addEventListener('input', (e) => {
+    sigma = +e.target.value * 1e-9;
+    $('out-sigma').textContent = fmtSigned(e.target.value) + ' nC/m²';
+    render();
+  });
+  $('sl-R').addEventListener('input', (e) => {
+    R = +e.target.value / 100;
+    $('out-R').textContent = e.target.value + ' cm';
+    render();
+  });
+  $('sl-r').addEventListener('input', (e) => {
+    setProbeRadius(+e.target.value / 100, 0);
+    render();
+  });
+  $('sl-a').addEventListener('input', (e) => {
+    aBox = +e.target.value / 100;
+    $('out-a').textContent = e.target.value + ' cm';
+    render();
+  });
+
+  // Herramientas del menú superior
+  $('tog-probe').addEventListener('click', () => { showProbe = !showProbe; $('tog-probe').classList.toggle('active', showProbe); render(); });
+  $('tog-field').addEventListener('click', () => { showField = !showField; $('tog-field').classList.toggle('active', showField); render(); });
+  $('tog-flux').addEventListener('click', () => { showFlux = !showFlux; $('tog-flux').classList.toggle('active', showFlux); render(); });
+  $('btn-reset').addEventListener('click', () => { initScene(scene); render(); });
+
+  // Cambio de pestañas de escena
+  document.querySelectorAll('.scene-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.scene-tabs button').forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      initScene(btn.dataset.scene);
+      render();
+    });
+  });
+
+  // Modo oscuro / claro
+  $('btn-theme').addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode', !isDark);
+    try { localStorage.setItem('lab10_theme', isDark ? 'dark' : 'light'); } catch (_) {}
+    render();
+  });
+
+  // Inicio
+  window.addEventListener('load', () => {
+    initScene('esfera');
+    resize();
+    if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+  });
+})();
+</script>
+</body>
+</html>

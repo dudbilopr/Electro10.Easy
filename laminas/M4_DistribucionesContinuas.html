@@ -285,6 +285,7 @@ svg text{font-family:var(--e10-font-body)}
         const x0 = 200, Px = 200 + (90 + (a - 0.1) / 1.9 * 250), mid = 230, P = Px;
         const top = 96, bot = 364, dq1 = 126, dq2 = 334;
         return `<line x1="${x0}" y1="${top}" x2="${x0}" y2="${bot}" stroke="var(--e10-primary)" stroke-width="8" stroke-linecap="round"/>
+        <line x1="${x0}" y1="${top}" x2="${x0}" y2="${bot}" class="ph phm"/>
         <g font-size="12" fill="var(--e10-muted)"><text x="${x0-12}" y="${top-8}">+</text><text x="${x0-12}" y="${mid+4}">+</text><text x="${x0-12}" y="${bot+14}">+</text></g>
         <text x="${x0-6}" y="${dq1-6}" font-size="12" fill="var(--e10-primary)">dq</text>
         <circle cx="${x0}" cy="${dq1}" r="6" fill="var(--e10-q-pos)"/><circle cx="${x0}" cy="${dq2}" r="6" fill="var(--e10-q-pos)"/>
@@ -297,6 +298,7 @@ svg text{font-family:var(--e10-font-body)}
         <text x="${P+6}" y="${mid-40}" font-size="11" fill="var(--e10-muted)">se cancelan</text>
         <line x1="${P}" y1="${mid}" x2="${P+66}" y2="${mid}" stroke="var(--e10-accent-strong)" stroke-width="4" marker-end="url(#aC)"/>
         <line x1="${P}" y1="${mid}" x2="${P+66}" y2="${mid}" class="ph phm"/>
+        <line x1="${(x0+P)/2}" y1="${mid}" x2="${P}" y2="${mid}" class="ph phc" style="animation-delay:-.3s"/>
         <text x="${P+8}" y="${mid-8}" font-size="12" fill="var(--e10-accent-strong)" font-weight="700">E ⊥ varilla</text>
         <line x1="${x0}" y1="${mid}" x2="${P}" y2="${mid}" stroke="var(--e10-muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
         <text x="${(x0+P)/2-4}" y="${mid+16}" font-size="11" fill="var(--e10-muted)">a</text>

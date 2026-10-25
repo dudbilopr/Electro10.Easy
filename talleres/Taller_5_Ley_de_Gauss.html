@@ -1,497 +1,481 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Práctico No. 5 · Ley de Gauss y Flujo Eléctrico — Electro10.Easy</title>
-    <link rel="stylesheet" href="../css/tokens.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        :root {
-            --e10-primary: #B3246B;
-            --e10-primary-soft: rgba(179, 36, 107, 0.08);
-            --e10-accent: #0B8CA8;
-            --e10-accent-strong: #08758C;
-            --e10-accent-soft: rgba(11, 140, 168, 0.08);
-            --e10-ink: #0f172a;
-            --e10-muted: #64748b;
-            --e10-surface: #ffffff;
-            --e10-bg: #f8fafc;
-            --e10-line: #e2e8f0;
-            --e10-success: #10b981;
-            --e10-success-soft: rgba(16, 185, 129, 0.08);
-            --e10-warning: #f59e0b;
-            --e10-warning-soft: rgba(245, 158, 11, 0.08);
-        }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--e10-bg); color: var(--e10-ink); margin: 0; padding: 24px 20px; line-height: 1.5; }
-        .max-w-container { max-width: 1040px; margin: 0 auto; }
-        .card { background: var(--e10-surface); border: 1px solid var(--e10-line); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .badge { font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
-        .badge-primary { background: var(--e10-primary-soft); color: var(--e10-primary); }
-        .badge-accent { background: var(--e10-accent-soft); color: var(--e10-accent-strong); }
-        .step-badge { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--e10-primary); color: #fff; font-weight: 700; font-size: 13px; margin-right: 8px; flex-shrink: 0; }
-        .soft-box { background: var(--e10-primary-soft); border-radius: 12px; padding: 14px 18px; margin: 10px 0; }
-        .tipbox { background: var(--e10-accent-soft); border-left: 4px solid var(--e10-accent); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .warnbox { background: var(--e10-warning-soft); border-left: 4px solid var(--e10-warning); border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 12px 0; font-size: 15px; }
-        .btn { font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--e10-line); background: var(--e10-surface); color: var(--e10-ink); cursor: pointer; transition: all .15s; }
-        .btn:hover { border-color: var(--e10-primary); transform: translateY(-1px); }
-        .btn-pri { background: var(--e10-primary); border-color: var(--e10-primary); color: #fff; }
-        .btn-pri:hover { background: #961b57; }
-        .btn-acc { background: var(--e10-accent); border-color: var(--e10-accent); color: #fff; }
-        .btn-tab { border-radius: 8px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--e10-line); background: var(--e10-bg); }
-        .btn-tab.active { background: var(--e10-primary); color: #fff; border-color: var(--e10-primary); }
-        .path-content { display: none; margin-top: 10px; }
-        .path-content.active { display: block; }
-        input[type="text"], input[type="number"], select { border: 1px solid var(--e10-line); border-radius: 8px; padding: 8px 12px; font-size: 14px; width: 100%; outline: none; }
-        input:focus { border-color: var(--e10-primary); ring: 2px var(--e10-primary-soft); }
-        @media print {
-            .no-print { display: none !important; }
-            body { background: #fff; padding: 0; }
-            .card { border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller 5 · Ley de Gauss y flujo eléctrico — Electro10.Easy</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Taller 5 · espejo del módulo M5 (Ley de Gauss y flujo eléctrico): mismos enunciados y constantes. Colores solo desde css/tokens.css. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--e10-bg);color:var(--e10-ink);font:400 17px/1.55 var(--e10-font-body)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--e10-muted)}
+.top b{color:var(--e10-ink)}.top b span{color:var(--e10-primary)}
+h1,h2,h3{font-family:var(--e10-font-display);letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.08;margin:18px 0 6px}
+.sub{color:var(--e10-muted);font-size:19px;margin:0 0 18px}
+h2{font-size:23px;margin:34px 0 12px;display:flex;gap:10px;align-items:baseline}
+h2 .n{font:600 15px var(--e10-font-mono);color:var(--e10-primary)}
+.card{background:var(--e10-surface);border:1px solid var(--e10-line);border-radius:14px;padding:16px 18px;margin:12px 0}
+.formula{background:var(--e10-primary-soft);border-radius:12px;padding:6px 14px;text-align:center;overflow-x:auto}
+.clave{background:var(--e10-primary-soft);border-radius:12px;padding:12px 16px;font-size:16px}
+.clave b{color:var(--e10-primary)}
+.muted{color:var(--e10-muted);font-size:15px}
+.res{border:1px solid var(--e10-line);border-radius:14px;background:var(--e10-surface);margin:14px 0;overflow:hidden}
+.res>.h{background:var(--e10-primary-soft);color:var(--e10-primary);font:600 16px var(--e10-font-display);padding:9px 16px}
+.res>.b{padding:12px 18px}
+.pred{background:var(--e10-warning-soft);border-radius:10px;padding:8px 14px;font-size:16px}
+.pred b{color:var(--e10-warning)}
+.paso{font:600 15px var(--e10-font-body);color:var(--e10-primary);margin:12px 0 2px}
+.eq{overflow-x:auto;padding:2px 0}
+.result{background:var(--e10-success-soft);border-radius:10px;padding:9px 14px;margin-top:10px}
+.result b{color:var(--e10-success)}
+details.sol>summary{cursor:pointer;color:var(--e10-primary);font-weight:600;margin:8px 0;list-style:none}
+details.sol>summary::before{content:'▸ '}details.sol[open]>summary::before{content:'▾ '}
+.reto{border:1px solid var(--e10-line);border-radius:12px;background:var(--e10-surface);padding:12px 16px;margin:10px 0}
+.reto .rh{font:600 14px var(--e10-font-display);color:var(--e10-accent-strong)}
+.reto .rh small{font:500 12px var(--e10-font-mono);color:var(--e10-muted);margin-left:6px}
+.ans{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ans input{flex:1;min-width:140px;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:500 16px var(--e10-font-mono);color:var(--e10-ink);background:var(--e10-surface)}
+.ans input:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.ans .u{font-size:14px;color:var(--e10-muted)}
+.fb{font-size:15px;min-height:1.2em;margin-top:6px}
+.btn{font:600 15px/1 var(--e10-font-body);min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--e10-line);background:var(--e10-surface);color:var(--e10-ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--e10-primary)}
+.btn:focus-visible{outline:none;box-shadow:var(--e10-focus)}
+.btn.pri{background:var(--e10-primary);border-color:var(--e10-primary);color:var(--e10-on-primary)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.toc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.toc a{font:500 13px var(--e10-font-body);border:1px solid var(--e10-line);border-radius:999px;padding:5px 11px;color:var(--e10-ink);text-decoration:none;background:var(--e10-surface)}
+.toc a:hover{border-color:var(--e10-primary);color:var(--e10-primary)}
+.teo{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:12px;padding:10px 16px;margin:8px 0}
+.teo summary{cursor:pointer;font-weight:600}
+pre{background:var(--e10-surface-2);border:1px solid var(--e10-line);border-radius:10px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 var(--e10-font-mono)}
+figure{margin:8px 0;text-align:center}
+figure svg{max-width:100%;height:auto}
+.tip{background:var(--e10-accent-soft);border-radius:12px;padding:12px 16px}
+.tip b{color:var(--e10-accent-strong)}
+.entrega{border:2px solid var(--e10-primary)}
+.entrega label{display:block;font-size:14px;color:var(--e10-muted);margin-top:8px}
+.entrega input[type=text]{width:100%;min-height:42px;border-radius:10px;border:1px solid var(--e10-line);padding:0 12px;font:16px var(--e10-font-body);background:var(--e10-surface);color:var(--e10-ink)}
+table.sum{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+table.sum td,table.sum th{border-bottom:1px solid var(--e10-line);padding:6px 8px;text-align:left}
+.print-only{display:none}
+@media print{
+  body{background:#fff;font-size:12pt}.no-print{display:none!important}.print-only{display:block}
+  details{display:block}details>summary{display:none}details>*{display:block!important}
+  .res,.reto,.card{break-inside:avoid}
+}
+.cita{font-size:12px;color:var(--e10-muted);margin:6px 0 0}
+</style>
 </head>
 <body>
-<div class="max-w-container">
+<div class="wrap">
+  <div class="top"><span><b>Electro<span>10.Easy</span></b> · Capítulo 5 · Ley de Gauss y flujo eléctrico</span><span class="mono">Taller</span></div>
+  <h1>Ley de Gauss y flujo eléctrico</h1>
+  <p class="sub">El flujo neto que atraviesa una superficie cerrada revela la carga que encierra.</p>
 
-    <!-- Encabezado Institucional 10.Easy -->
-    <header class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
-        <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-                <span class="badge badge-primary">Capítulo 5 · Flujo y Simetrías</span>
-                <span class="badge badge-accent">Protocolo Sears-Zemansky de 7 Pasos</span>
-            </div>
-            <h1 style="margin:0;font-size:28px;color:var(--e10-ink)">Taller No. 5: Ley de Gauss y Teorema del Flujo</h1>
-            <p style="margin:4px 0 0;font-size:15px;color:var(--e10-muted)">Cálculo riguroso de flujo, simetría esférica continua, cables coaxiales cilíndricos y apantallamiento en conductores.</p>
-        </div>
-        <div class="no-print" style="display:flex;gap:8px">
-            <button class="btn btn-pri" id="btn-print-top">Imprimir Taller</button>
-            <a href="../presentaciones/M5_Gauss/index.html" class="btn" style="text-decoration:none">Ver Clase 5 →</a>
-        </div>
-    </header>
+  <div class="bar no-print">
+    <a class="btn pri" href="../presentaciones/M5_Gauss/index.html" target="_blank" rel="noopener">Clase interactiva</a>
+    <a class="btn" href="../simuladores/GaussLab.html" target="_blank" rel="noopener">GaussLab</a>
+    <a class="btn" href="../desafios/desafio.html?m=5" target="_top">Desafío integral m=5</a>
+  </div>
 
-    <!-- Fórmulas Clave de Referencia -->
-    <section class="card" style="background:linear-gradient(135deg,var(--e10-primary-soft),var(--e10-accent-soft))">
-        <h3 style="margin-top:0;font-size:16px;color:var(--e10-primary)">Formulario Maestro de Ley de Gauss</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;text-align:center">
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Ley de Gauss Integral</b>
-                \[\oint \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\epsilon_0}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Esfera Aislante ($r \le R$)</b>
-                \[E(r) = \frac{k Q}{R^3} r = \frac{\rho r}{3\epsilon_0}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Simetría Cilíndrica</b>
-                \[E(r) = \frac{\lambda}{2\pi\epsilon_0 r}\]
-            </div>
-            <div class="card" style="padding:12px;margin:0">
-                <b style="font-size:13px;color:var(--e10-muted)">Superficie Conductora</b>
-                \[E = \frac{\sigma}{\epsilon_0}\]
-            </div>
-        </div>
-    </section>
+  <p><b>Qué vas a practicar.</b> Calcular el flujo eléctrico a través de superficies abiertas y cerradas; aplicar la ley de Gauss a distribuciones con simetría esférica, cilíndrica y plana; deducir el campo de una esfera conductora, una esfera aislante, un alambre infinito y una lámina infinita; entender por qué el campo dentro de un conductor en equilibrio es cero y cómo un conductor blinda su interior (jaula de Faraday), y calcular la carga inducida en una cavidad.</p>
+  <div class="formula">\[ \Phi_E=\oint \vec E\cdot d\vec A=\frac{Q_{\text{enc}}}{\varepsilon_0}\qquad E_{\text{esfera}}=k\frac{Q}{r^2}\qquad E_{\text{cil}}=\frac{\lambda}{2\pi\varepsilon_0 r}\qquad E_{\text{lám}}=\frac{\sigma}{2\varepsilon_0}\qquad E_{\text{cond}}=\frac{\sigma}{\varepsilon_0} \]</div>
+  <p class="muted">Cómo usar este taller: lee el ejercicio resuelto de cada sección, intenta rehacerlo antes de abrir la solución y luego resuelve los retos; cada reto tiene su comprobador. Antes de calcular, dibuja la carga y una superficie gaussiana que explote la simetría del problema: sobre ella el campo debe ser constante en magnitud y paralelo o perpendicular al vector de área \(d\vec A\). Constantes (Young y Freedman, 2009): \(k=8{,}988\times10^{9}\ \mathrm{N\,m^2/C^2}\), \(e=1{,}602\times10^{-19}\ \mathrm C\), \(\varepsilon_0=8{,}854\times10^{-12}\ \mathrm{C^2/(N\,m^2)}\).</p>
+  <div class="clave"><b>Antes de empezar, repasa.</b> El producto escalar \(\vec E\cdot\vec A=EA\cos\theta\), donde \(\theta\) es el ángulo con la normal; las simetrías esférica, cilíndrica y plana; y que la carga de un conductor en equilibrio se reparte en su superficie. Las palabras nuevas (flujo, superficie gaussiana, densidad lineal \(\lambda\) y superficial \(\sigma\)) están en el glosario de la guía de estudio.</div>
 
-    <!-- PROBLEMA 1: ESFERA MACIZA AISLANTE -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 1: Campo y Flujo en Esfera Maciza Aislante</h2>
-            <span class="badge badge-accent">Nivel Intermedio</span>
-        </div>
-        <p style="font-size:16px">
-            Una esfera sólida aislante y no conductora de radio $R = 0{,}10\ \text{m}$ posee una carga total uniforme $Q = +20{,}0\ \text{nC}$ distribuida en todo su volumen con densidad $\rho = \text{cte}$.<br>
-            <b>a)</b> Determina la magnitud del campo eléctrico en un punto interior a $r_1 = 0{,}05\ \text{m}$ ($5{,}0\ \text{cm}$) del centro y calcula el flujo eléctrico $\Phi_1$ que atraviesa una esfera gaussiana de dicho radio.<br>
-            <b>b)</b> Determina el campo eléctrico en un punto exterior a $r_2 = 0{,}20\ \text{m}$ ($20{,}0\ \text{cm}$) del centro y el flujo total $\Phi_2$ que emerge hacia el infinito.
-        </p>
+  <nav class="toc no-print" aria-label="Secciones">
+    <a href="#s51">5.1 Flujo abierto</a><a href="#s52">5.2 Flujo neto</a><a href="#s53">5.3 Esfera conductora</a><a href="#s54">5.4 Esfera aislante</a><a href="#s55">5.5 Cilindro</a><a href="#s56">5.6 Lámina</a><a href="#s57">5.7 Dos placas</a><a href="#s58">5.8 Cavidad</a><a href="#sT">Teoría</a><a href="#sP">Python</a><a href="#sE">Entrega</a>
+  </nav>
 
-        <!-- 7 PASOS METODOLÓGICOS -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">1</span>
-                    <b>Identificación de la Distribución de Carga y Densidad Volumétrica:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Radio $R = 0{,}10\ \text{m}$, carga total $Q = 20{,}0\times 10^{-9}\ \text{C}$.<br>
-                    Volumen de la esfera: $V = \frac{4}{3}\pi R^3 = \frac{4}{3}\pi (0{,}10)^3 = \frac{4}{3}\pi (10^{-3}) \approx 4{,}1888\times 10^{-3}\ \text{m}^3$.<br>
-                    Densidad volumétrica uniforme:
-                    \[\rho = \frac{Q}{V} = \frac{20{,}0\times 10^{-9}\ \text{C}}{4{,}1888\times 10^{-3}\ \text{m}^3} = 4{,}7746\times 10^{-6}\ \text{C/m}^3 = 4{,}77\ \mu\text{C/m}^3\]
-                </p>
-            </div>
+  <!-- 5.1 -->
+  <h2 id="s51"><span class="n">5.1</span>Flujo a través de una superficie abierta</h2>
+  <div class="res" data-res="1"><div class="h">Ejercicio resuelto 1 · El flujo que atraviesa un rectángulo, por dos caminos</div><div class="b">
+    <p>Un campo eléctrico uniforme de \(E=3{,}0\times10^{3}\ \mathrm{N/C}\) atraviesa un rectángulo de \(0{,}10\ \mathrm m\times0{,}20\ \mathrm m\), formando un ángulo de \(30^\circ\) con la normal a la superficie. ¿Cuánto vale el flujo eléctrico a través del rectángulo?</p>
+    <figure><svg role="img" viewBox="0 0 340 230" width="320" aria-label="Campo uniforme que atraviesa una superficie inclinada; la normal forma 30 grados con el campo"><defs><marker id="m5a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <polygon points="150,25 285,65 215,195 80,155" fill="var(--e10-accent)" opacity=".12" stroke="var(--e10-accent)" stroke-width="2"/>
+      <line x1="20" y1="70" x2="250" y2="70" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5a)"/>
+      <line x1="40" y1="112" x2="300" y2="112" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5a)"/>
+      <line x1="20" y1="152" x2="270" y2="152" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5a)"/>
+      <line x1="180" y1="112" x2="270" y2="58" stroke="var(--e10-primary)" stroke-width="3" marker-end="url(#m5a)"/>
+      <path d="M204,112 A24,24 0 0 0 201,99" fill="none" stroke="var(--e10-primary)" stroke-width="1.5"/>
+      <text x="302" y="75" font-size="14" fill="var(--e10-vec-field)">E</text>
+      <text x="276" y="54" font-size="14" fill="var(--e10-primary)">n</text>
+      <text x="208" y="92" font-size="13" fill="var(--e10-muted)">θ = 30°</text>
+      <text x="258" y="122" font-size="13" fill="var(--e10-accent-strong)">A</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> Si el campo fuera paralelo a la superficie (ángulo de \(90^\circ\) con la normal), ¿cuánto flujo esperas? ¿Y si fuera perpendicular (ángulo \(0^\circ\))?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Área</div><p>\(A=(0{,}10)(0{,}20)=0{,}020\ \mathrm{m^2}\). El ángulo de \(30^\circ\) es entre \(\vec E\) y la normal \(\hat n\).</p>
+      <div class="paso">2. Camino A · proyección del área</div><p>Escribimos \(\Phi=E\,(A\cos\theta)\). La cantidad \(A\cos\theta\) es el área <i>vista</i> por el campo: la proyección del rectángulo sobre un plano perpendicular a \(\vec E\). Con \(\cos30^\circ=0{,}8660\):</p>
+      <div class="eq">\[ \Phi=(3{,}0\times10^{3})(0{,}020)(0{,}8660)=51{,}96\ \mathrm{N\,m^2/C}. \]</div>
+      <div class="paso">3. Camino B · proyección del campo</div><p>Reagrupamos \(\Phi=A\,(E\cos\theta)\). Ahora \(E\cos\theta\) es la componente del campo a lo largo de la normal, \(E_\perp\), la única que «atraviesa» la superficie:</p>
+      <div class="eq">\[ E_\perp=E\cos30^\circ=(3{,}0\times10^{3})(0{,}8660)=2{,}598\times10^{3}\ \mathrm{N/C},\qquad \Phi=(0{,}020)(2{,}598\times10^{3})=51{,}96\ \mathrm{N\,m^2/C}. \]</div>
+      <div class="paso">4. Verificación</div><p>En \(\theta=0\) (campo perpendicular) el flujo es máximo, \(EA=60\ \mathrm{N\,m^2/C}\); en \(\theta=90^\circ\) (campo paralelo) es cero, porque ninguna línea atraviesa la superficie.</p>
+      <div class="result"><b>Resultado.</b> \(\Phi=EA\cos\theta=52{,}0\ \mathrm{N\,m^2/C}\) (exacto \(51{,}96\)).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="1"><div class="rh">Reto 1<small>nivel básico</small></div><p>Un campo eléctrico uniforme de \(2{,}0\times10^{3}\ \mathrm{N/C}\) es perpendicular a un disco de radio \(0{,}10\ \mathrm m\). ¿Cuánto flujo eléctrico atraviesa el disco?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="2"><div class="rh">Reto 2<small>nivel básico</small></div><p>Un campo de \(5{,}0\times10^{3}\ \mathrm{N/C}\) forma un ángulo de \(60^\circ\) con la normal de un cuadrado de \(0{,}20\ \mathrm m\) de lado. ¿Cuánto vale el flujo?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">2</span>
-                    <b>Elección Estratégica de la Superficie Gaussiana:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Debido a la simetría esférica completa, el campo debe ser estrictamente radial $\vec{E} = E(r)\hat{r}$ y su magnitud dependiente solo de la distancia radial $r$.<br>
-                    Elegimos una <b>esfera gaussiana concéntrica imaginaria</b> de radio $r$ centrada en el origen. En cada elemento de área de esta superficie, el vector normal unitario coincide con el radiovector ($\hat{n} = \hat{r}$).
-                </p>
-            </div>
+  <!-- 5.2 -->
+  <h2 id="s52"><span class="n">5.2</span>Flujo neto y ley de Gauss</h2>
+  <div class="res" data-res="2"><div class="h">Ejercicio resuelto 2 · Flujo total y por cara de un cubo, por dos caminos</div><div class="b">
+    <p>Una carga puntual de \(+3{,}0\ \mathrm{nC}\) está en el centro de un cubo de \(0{,}20\ \mathrm m\) de lado. Calcula el flujo total a través de la superficie del cubo y el flujo a través de una sola cara.</p>
+    <figure><svg role="img" viewBox="0 0 340 250" width="330" aria-label="Cubo con una carga puntual en su centro y líneas de campo saliendo por sus seis caras"><defs><marker id="m5b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <polygon points="80,180 200,120 320,180 200,240" fill="var(--e10-accent)" opacity=".10" stroke="var(--e10-line)"/>
+      <line x1="80" y1="180" x2="80" y2="60" stroke="var(--e10-line)"/><line x1="200" y1="120" x2="200" y2="0" stroke="var(--e10-line)"/><line x1="320" y1="180" x2="320" y2="60" stroke="var(--e10-line)"/>
+      <polygon points="80,60 200,0 320,60 200,120" fill="var(--e10-primary)" opacity=".10" stroke="var(--e10-line)"/>
+      <circle cx="200" cy="120" r="9" fill="var(--e10-q-pos)"/><text x="209" y="124" font-size="15" fill="var(--e10-q-pos)">+</text>
+      <line x1="200" y1="120" x2="200" y2="0" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <line x1="200" y1="120" x2="200" y2="238" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <line x1="200" y1="120" x2="320" y2="178" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <line x1="200" y1="120" x2="80" y2="60" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <line x1="200" y1="120" x2="320" y2="62" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <line x1="200" y1="120" x2="80" y2="180" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5b)"/>
+      <text x="206" y="24" font-size="14" fill="var(--e10-vec-field)">Φ</text>
+      <text x="158" y="150" font-size="14" fill="var(--e10-accent-strong)">cara</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿El flujo total depende de dónde esté la carga dentro del cubo? ¿Y del tamaño del cubo?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Camino A · ley de Gauss directa</div><p>La carga está dentro, así que toda queda encerrada. La ley de Gauss da el flujo total sin importar la forma de la superficie:</p>
+      <div class="eq">\[ \Phi_{\text{total}}=\frac{Q_{\text{enc}}}{\varepsilon_0}=\frac{3{,}0\times10^{-9}}{8{,}854\times10^{-12}}=338{,}8\ \mathrm{N\,m^2/C}. \]</div>
+      <div class="paso">2. Camino B · simetría (por caras)</div><p>Como la carga está exactamente en el centro, las seis caras son equivalentes: cada una recibe un sexto del flujo total.</p>
+      <div class="eq">\[ \Phi_{\text{cara}}=\frac{\Phi_{\text{total}}}{6}=\frac{338{,}8}{6}=56{,}5\ \mathrm{N\,m^2/C}. \]</div>
+      <div class="paso">3. Interpretación</div><p>El flujo <i>total</i> no depende de la posición de la carga (mientras quede dentro) ni del tamaño del cubo: el número de líneas que salen es siempre el mismo. Lo que sí depende de la posición es el <i>reparto</i> entre las caras: si la carga no estuviera en el centro, unas caras recibirían más y otras menos.</p>
+      <div class="result"><b>Resultado.</b> \(\Phi_{\text{total}}=338{,}8\ \mathrm{N\,m^2/C}\); \(\Phi_{\text{cara}}=56{,}5\ \mathrm{N\,m^2/C}\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="3"><div class="rh">Reto 3<small>nivel básico</small></div><p>El flujo eléctrico neto a través de una superficie cerrada es \(1{,}0\times10^{5}\ \mathrm{N\,m^2/C}\). ¿Cuánta carga encierra la superficie?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="4"><div class="rh">Reto 4<small>nivel básico</small></div><p>Una carga puntual de \(+4{,}0\ \mathrm{nC}\) está en el centro de un cubo. ¿Cuánto vale el flujo total a través de la superficie del cubo?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="10"><div class="rh">Reto 10<small>nivel medio</small></div><p>Sobre una superficie esférica gaussiana de radio \(r=0{,}30\ \mathrm m\) el campo tiene magnitud uniforme \(E=2{,}0\times10^{3}\ \mathrm{N/C}\). ¿Cuánta carga encierra la superficie?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="11"><div class="rh">Reto 11<small>nivel avanzado</small></div><p>Una carga puntual está FUERA de una superficie cerrada. ¿Cuánto vale el flujo eléctrico neto a través de esa superficie?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">3</span>
-                    <b>Evaluación General de la Integral de Flujo:</b>
-                </div>
-                \[\Phi_E = \oint_S \vec{E}\cdot d\vec{A} = \oint_S E(r)(\hat{r}\cdot\hat{r})\, dA = \oint_S E(r)\, dA = E(r) \oint_S dA = E(r)(4\pi r^2)\]
-                <p style="margin:6px 0 0;font-size:14px;color:var(--e10-muted)">Esta relación es válida para cualquier radio $r$, tanto en el interior como en el exterior.</p>
-            </div>
+  <!-- 5.3 -->
+  <h2 id="s53"><span class="n">5.3</span>Esfera conductora cargada</h2>
+  <div class="res" data-res="3"><div class="h">Ejercicio resuelto 3 · Campo dentro y fuera de una esfera conductora, por dos caminos</div><div class="b">
+    <p>Una esfera conductora maciza de radio \(R=0{,}10\ \mathrm m\) tiene una carga neta \(Q=+5{,}0\ \mathrm{nC}\) repartida en su superficie. Calcula el campo en un punto interior (\(r=0{,}05\ \mathrm m\)) y en un punto exterior (\(r=0{,}20\ \mathrm m\)).</p>
+    <figure><svg role="img" viewBox="0 0 340 250" width="320" aria-label="Esfera conductora con carga en su superficie, superficie gaussiana interior sin campo y exterior con campo radial"><defs><marker id="m5c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <circle cx="150" cy="125" r="95" fill="var(--e10-q-pos)" opacity=".10" stroke="var(--e10-line)"/>
+      <circle cx="150" cy="125" r="50" fill="none" stroke="var(--e10-muted)" stroke-dasharray="5 5"/>
+      <circle cx="150" cy="125" r="150" fill="none" stroke="var(--e10-accent)" stroke-dasharray="5 5"/>
+      <circle cx="150" cy="125" r="95" fill="none" stroke="var(--e10-q-pos)" stroke-width="2"/>
+      <g fill="var(--e10-q-pos)"><text x="140" y="130" font-size="20">+</text><text x="232" y="90" font-size="16">+</text><text x="60" y="120" font-size="16">+</text><text x="150" y="38" font-size="16">+</text><text x="236" y="160" font-size="16">+</text><text x="62" y="86" font-size="14">+</text><text x="160" y="214" font-size="16">+</text></g>
+      <line x1="150" y1="125" x2="290" y2="125" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5c)"/>
+      <line x1="150" y1="125" x2="150" y2="10" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5c)"/>
+      <text x="298" y="120" font-size="14" fill="var(--e10-vec-field)">E = kQ/r²</text>
+      <text x="178" y="158" font-size="13" fill="var(--e10-muted)">E = 0 (r &lt; R)</text>
+      <text x="108" y="30" font-size="14" fill="var(--e10-accent-strong)">gaussiana exterior</text>
+      <text x="40" y="248" font-size="13" fill="var(--e10-q-pos)">carga +Q en la superficie</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Dónde se reparte la carga de un conductor en equilibrio? ¿Cuánto vale el campo dentro del metal?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Carga del conductor</div><p>En equilibrio electrostático toda la carga neta \(Q\) se reparte en la superficie exterior. Dentro del metal no hay carga libre ni campo.</p>
+      <div class="paso">2. Camino A · Gauss interior (\(r&lt;R\))</div><p>Toma una superficie gaussiana esférica de radio \(r&lt;R\), concéntrica. La carga encerrada es cero (toda la carga está en \(r=R\)). Como el flujo es \(E\cdot4\pi r^2\):</p>
+      <div class="eq">\[ \Phi=E\,(4\pi r^2)=\frac{0}{\varepsilon_0}=0\quad\Longrightarrow\quad E=0\quad(r&lt;R). \]</div>
+      <div class="paso">3. Camino B · Gauss exterior (\(r&gt;R\))</div><p>Con una superficie gaussiana de radio \(r&gt;R\), encierra toda la carga \(Q\). Por simetría esférica \(\vec E\) es radial y de módulo constante sobre la superficie:</p>
+      <div class="eq">\[ E\,(4\pi r^2)=\frac{Q}{\varepsilon_0}\quad\Longrightarrow\quad E=\frac{1}{4\pi\varepsilon_0}\frac{Q}{r^2}=k\frac{Q}{r^2}. \]</div>
+      <p>En \(r=0{,}20\ \mathrm m\):</p>
+      <div class="eq">\[ E=(8{,}988\times10^{9})\frac{5{,}0\times10^{-9}}{(0{,}20)^2}=1123{,}5\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Verificación</div><p>Justo en la superficie \(r=R\) el campo vale \(kQ/R^2=4494\ \mathrm{N/C}\) (su valor máximo); dentro cae abruptamente a cero. Es la firma de un conductor: el campo es cero en todo el interior, no solo en el centro.</p>
+      <div class="result"><b>Resultado.</b> \(E=0\) para \(r&lt;R\); en \(r=0{,}20\ \mathrm m\), \(E=1123{,}5\ \mathrm{N/C}\) radial hacia afuera. La esfera conductora se comporta, fuera, como si toda su carga estuviera concentrada en el centro.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="5"><div class="rh">Reto 5<small>nivel medio</small></div><p>Una esfera conductora de radio \(R=0{,}15\ \mathrm m\) tiene una carga neta \(Q=+6{,}0\ \mathrm{nC}\). ¿Cuánto vale el campo en un punto a \(r=0{,}30\ \mathrm m\) de su centro?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="6"><div class="rh">Reto 6<small>nivel medio</small></div><p>¿Cuánto vale el campo eléctrico en el interior de una esfera conductora en equilibrio electrostático, a una distancia \(r&lt;R\) de su centro?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <!-- COMPARATIVA: 2 CAMINOS PARA EL PUNTO INTERIOR -->
-            <div class="card" style="border:1px solid var(--e10-primary);margin-top:4px">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-                    <b style="color:var(--e10-primary)">Paso 4: Carga Encerrada $Q_{\text{enc}}$ en $r_1 = 0{,}05\ \text{m}$ — Comparativa Analítica:</b>
-                    <div style="display:flex;gap:6px">
-                        <button class="btn btn-tab active" id="btn-p1g-camA">Camino A: Razón de Volúmenes (Directo)</button>
-                        <button class="btn btn-tab" id="btn-p1g-camB">Camino B: Integral de Densidad Volumétrica</button>
-                    </div>
-                </div>
+  <!-- 5.4 -->
+  <h2 id="s54"><span class="n">5.4</span>Esfera aislante maciza uniforme</h2>
+  <div class="res" data-res="4"><div class="h">Ejercicio resuelto 4 · Esfera aislante con densidad uniforme, por dos caminos</div><div class="b">
+    <p>Una esfera aislante maciza de radio \(R=0{,}20\ \mathrm m\) tiene una carga \(Q=8{,}0\ \mathrm{nC}\) repartida uniformemente en todo su volumen (densidad \(\rho\)). Calcula el campo en \(r=0{,}10\ \mathrm m\) (interior) y en \(r=0{,}40\ \mathrm m\) (exterior).</p>
+    <figure><svg role="img" viewBox="0 0 340 260" width="320" aria-label="Esfera aislante con carga uniforme en su volumen, superficie gaussiana interior y exterior"><defs><marker id="m5d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <circle cx="160" cy="130" r="100" fill="var(--e10-accent)" opacity=".14" stroke="var(--e10-line)"/>
+      <g fill="var(--e10-accent-strong)" opacity=".5"><circle cx="120" cy="110" r="3"/><circle cx="185" cy="90" r="3"/><circle cx="150" cy="150" r="3"/><circle cx="200" cy="140" r="3"/><circle cx="110" cy="160" r="3"/><circle cx="160" cy="70" r="3"/><circle cx="135" cy="135" r="3"/><circle cx="185" cy="175" r="3"/></g>
+      <circle cx="160" cy="130" r="50" fill="none" stroke="var(--e10-muted)" stroke-dasharray="5 5"/>
+      <circle cx="160" cy="130" r="150" fill="none" stroke="var(--e10-accent)" stroke-dasharray="5 5"/>
+      <line x1="160" y1="130" x2="290" y2="130" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5d)"/>
+      <line x1="160" y1="130" x2="205" y2="130" stroke="var(--e10-primary)" stroke-width="3" marker-end="url(#m5d)"/>
+      <text x="298" y="120" font-size="14" fill="var(--e10-vec-field)">E ∝ 1/r²</text>
+      <text x="212" y="122" font-size="13" fill="var(--e10-primary)">E ∝ r</text>
+      <text x="60" y="262" font-size="13" fill="var(--e10-accent-strong)">carga uniforme en todo el volumen (ρ)</text>
+      <text x="206" y="164" font-size="13" fill="var(--e10-muted)">gaussiana interior (r &lt; R)</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> A diferencia del conductor, dentro de la esfera aislante sí hay campo. ¿Crece o decrece al alejarte del centro, mientras \(r&lt;R\)?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Densidad volumétrica</div><p>La carga está repartida de forma uniforme: \(\rho=\dfrac{Q}{\frac43\pi R^3}=\dfrac{8{,}0\times10^{-9}}{\frac43\pi(0{,}20)^3}=2{,}39\times10^{-7}\ \mathrm{C/m^3}\).</p>
+      <div class="paso">2. Camino A · Gauss interior (\(r&lt;R\))</div><p>Una superficie gaussiana esférica de radio \(r&lt;R\) solo encierra la fracción del volumen \(\left(\frac{r}{R}\right)^3\) de la carga:</p>
+      <div class="eq">\[ Q_{\text{enc}}=\rho\,\tfrac43\pi r^3=Q\frac{r^3}{R^3},\qquad E\,(4\pi r^2)=\frac{Q_{\text{enc}}}{\varepsilon_0}\quad\Longrightarrow\quad E=k\frac{Q\,r}{R^3}=\frac{\rho\,r}{3\varepsilon_0}. \]</div>
+      <p>En \(r=0{,}10\ \mathrm m\):</p>
+      <div class="eq">\[ E=(8{,}988\times10^{9})\frac{(8{,}0\times10^{-9})(0{,}10)}{(0{,}20)^3}=898{,}8\ \mathrm{N/C}. \]</div>
+      <div class="paso">3. Camino B · Gauss exterior (\(r&gt;R\))</div><p>Fuera de la esfera, la superficie gaussiana encierra toda la carga \(Q\), igual que en el ejercicio 3:</p>
+      <div class="eq">\[ E=k\frac{Q}{r^2},\qquad E(r=0{,}40)=(8{,}988\times10^{9})\frac{8{,}0\times10^{-9}}{(0{,}40)^2}=449{,}4\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Verificación</div><p>Dentro, el campo crece linealmente con \(r\) (\(E\propto r\)); fuera decae como \(1/r^2\). En \(r=R\) ambos trozos coinciden: \(kQ/R^2=1797{,}6\ \mathrm{N/C}\), el valor máximo.</p>
+      <div class="result"><b>Resultado.</b> Interior: \(E=kQr/R^3=\rho r/(3\varepsilon_0)=898{,}8\ \mathrm{N/C}\) en \(r=0{,}10\ \mathrm m\). Exterior: \(E=kQ/r^2=449{,}4\ \mathrm{N/C}\) en \(r=0{,}40\ \mathrm m\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="9"><div class="rh">Reto 9<small>nivel medio</small></div><p>Una esfera aislante maciza de radio \(R=0{,}20\ \mathrm m\) tiene carga uniforme total \(Q=8{,}0\ \mathrm{nC}\). ¿Cuánto vale el campo en un punto interior, a \(r=0{,}10\ \mathrm m\) del centro?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-                <div id="content-p1g-camA" class="path-content active">
-                    <div class="tipbox">
-                        <b>Camino A (Fracción de Volumen Homogéneo):</b><br>
-                        Como la carga está distribuida de manera uniforme, la carga dentro de la esfera gaussiana es proporcional a la razón cúbica de sus radios:
-                        \[Q_{\text{enc}}(r_1) = Q \left(\frac{V(r_1)}{V(R)}\right) = Q \left(\frac{\frac{4}{3}\pi r_1^3}{\frac{4}{3}\pi R^3}\right) = Q \left(\frac{r_1}{R}\right)^3\]
-                        \[Q_{\text{enc}}(0{,}05) = (20{,}0\times 10^{-9}\ \text{C})\left(\frac{0{,}05}{0{,}10}\right)^3 = 20{,}0\times 10^{-9} \left(\frac{1}{2}\right)^3 = \frac{20{,}0\times 10^{-9}}{8} = 2{,}50\times 10^{-9}\ \text{C} = 2{,}50\ \text{nC}\]
-                    </div>
-                </div>
+  <!-- 5.5 -->
+  <h2 id="s55"><span class="n">5.5</span>Cilindro infinito cargado</h2>
+  <div class="res" data-res="5"><div class="h">Ejercicio resuelto 5 · Alambre infinito con densidad lineal, por dos caminos</div><div class="b">
+    <p>Un alambre largo (trátalo como un cilindro infinito) tiene una densidad lineal de carga \(\lambda=2{,}0\ \mathrm{nC/m}\). Calcula el campo a una distancia \(r=0{,}05\ \mathrm m\) del eje del alambre.</p>
+    <figure><svg role="img" viewBox="0 0 340 260" width="320" aria-label="Alambre vertical con superficie gaussiana cilíndrica coaxial y campo radial saliente"><defs><marker id="m5e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="170" y1="10" x2="170" y2="250" stroke="var(--e10-q-pos)" stroke-width="6"/>
+      <rect x="95" y="25" width="150" height="210" rx="0" fill="none" stroke="var(--e10-accent)" stroke-dasharray="5 5"/>
+      <line x1="170" y1="130" x2="292" y2="130" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5e)"/>
+      <line x1="170" y1="130" x2="48" y2="130" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5e)"/>
+      <line x1="170" y1="130" x2="170" y2="20" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5e)"/>
+      <line x1="170" y1="130" x2="170" y2="240" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5e)"/>
+      <text x="298" y="120" font-size="14" fill="var(--e10-vec-field)">E</text>
+      <text x="44" y="120" font-size="14" fill="var(--e10-vec-field)">E</text>
+      <text x="252" y="46" font-size="13" fill="var(--e10-accent-strong)">gaussiana cilíndrica</text>
+      <text x="178" y="142" font-size="14" fill="var(--e10-q-pos)">λ</text>
+      <text x="150" y="210" font-size="13" fill="var(--e10-muted)">r = 0,05 m</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Por qué se elige una superficie gaussiana cilíndrica coaxial? ¿Qué dirección tiene el campo y por qué las tapas no contribuyen al flujo?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Simetría</div><p>Por simetría cilíndrica, \(\vec E\) es radial (perpendicular al eje) y solo depende de \(r\), la distancia al eje.</p>
+      <div class="paso">2. Camino A · superficie gaussiana cilíndrica</div><p>Toma un cilindro coaxial de radio \(r\) y longitud \(L\). Por las tapas el flujo es cero (\(\vec E\perp d\vec A\)); solo la pared lateral contribuye, con área \(2\pi rL\). La carga encerrada es \(\lambda L\):</p>
+      <div class="eq">\[ \Phi=E\,(2\pi rL)=\frac{\lambda L}{\varepsilon_0}\quad\Longrightarrow\quad E=\frac{\lambda}{2\pi\varepsilon_0 r}. \]</div>
+      <div class="paso">3. Camino B · con \(k\)</div><p>Como \(1/(2\pi\varepsilon_0)=2k\), la misma fórmula se escribe \(E=\dfrac{2k\lambda}{r}\). En \(r=0{,}05\ \mathrm m\):</p>
+      <div class="eq">\[ E=\frac{2(8{,}988\times10^{9})(2{,}0\times10^{-9})}{0{,}05}=719{,}0\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Verificación</div><p>El campo decae como \(1/r\), no como \(1/r^2\): la carga se extiende a lo largo de una dimensión, así que al alejarse solo «se diluye» en una dimensión de más.</p>
+      <div class="result"><b>Resultado.</b> \(E=\lambda/(2\pi\varepsilon_0 r)=2k\lambda/r=719{,}0\ \mathrm{N/C}\), radial hacia afuera (porque \(\lambda&gt;0\)).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="7"><div class="rh">Reto 7<small>nivel medio</small></div><p>Un alambre infinito tiene densidad lineal de carga \(\lambda=3{,}0\ \mathrm{nC/m}\). ¿Cuánto vale el campo a una distancia \(r=0{,}10\ \mathrm m\) del alambre?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-                <div id="content-p1g-camB" class="path-content">
-                    <div class="tipbox">
-                        <b>Camino B (Integración de Cascarones Diferenciales):</b><br>
-                        Integrando cascarones esféricos de espesor $dr'$ desde $r'=0$ hasta $r'=r_1$:
-                        \[Q_{\text{enc}} = \int_0^{r_1} \rho (4\pi r'^2 dr') = 4\pi \rho \left[ \frac{r'^3}{3} \right]_0^{r_1} = \frac{4}{3}\pi \rho r_1^3\]
-                        Sustituyendo $\rho = 4{,}7746\times 10^{-6}\ \text{C/m}^3$:
-                        \[Q_{\text{enc}} = \frac{4}{3}\pi (4{,}7746\times 10^{-6})(0{,}05)^3 = (20{,}0\times 10^{-6})(1{,}25\times 10^{-4}) = 2{,}50\times 10^{-9}\ \text{C} = 2{,}50\ \text{nC}\]
-                    </div>
-                </div>
-            </div>
+  <!-- 5.6 -->
+  <h2 id="s56"><span class="n">5.6</span>Lámina infinita cargada</h2>
+  <div class="res" data-res="6"><div class="h">Ejercicio resuelto 6 · Lámina plana infinita, por dos caminos</div><div class="b">
+    <p>Una lámina plana infinita (aislante) tiene densidad superficial uniforme \(\sigma=3{,}0\ \mathrm{nC/m^2}\). Calcula el campo que produce, a cualquier distancia de la lámina.</p>
+    <figure><svg role="img" viewBox="0 0 340 230" width="320" aria-label="Lámina plana infinita con una caja de pastillas gaussiana y campo perpendicular por ambas caras"><defs><marker id="m5f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <line x1="20" y1="115" x2="320" y2="115" stroke="var(--e10-q-pos)" stroke-width="4"/>
+      <rect x="120" y="60" width="90" height="110" fill="var(--e10-accent)" opacity=".10" stroke="var(--e10-accent)" stroke-dasharray="5 5"/>
+      <line x1="165" y1="60" x2="165" y2="30" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5f)"/>
+      <line x1="165" y1="170" x2="165" y2="200" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5f)"/>
+      <line x1="60" y1="115" x2="105" y2="115" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5f)"/>
+      <line x1="270" y1="115" x2="225" y2="115" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5f)"/>
+      <text x="171" y="26" font-size="14" fill="var(--e10-vec-field)">E</text>
+      <text x="171" y="214" font-size="14" fill="var(--e10-vec-field)">E</text>
+      <text x="222" y="104" font-size="13" fill="var(--e10-accent-strong)">pillbox</text>
+      <text x="28" y="100" font-size="14" fill="var(--e10-q-pos)">σ</text>
+      <text x="90" y="150" font-size="12" fill="var(--e10-muted)">independiente de la distancia</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿El campo de una lámina infinita depende de la distancia a la lámina? Piensa en por qué las líneas de campo no se separan.</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Superficie gaussiana</div><p>Usa una «caja de pastillas» (pillbox): un cilindro corto con tapas de área \(A\) paralelas a la lámina, atravesándola de forma simétrica. Por simetría, \(\vec E\) es perpendicular a la lámina y sale por las dos tapas.</p>
+      <div class="paso">2. Camino A · flujo por las dos tapas</div><p>Solo las tapas contribuyen (la pared lateral tiene \(\vec E\perp d\vec A\)). Cada tapa aporta \(EA\), y hay dos; la carga encerrada es \(\sigma A\):</p>
+      <div class="eq">\[ \Phi=E\,A+E\,A=2EA=\frac{\sigma A}{\varepsilon_0}\quad\Longrightarrow\quad E=\frac{\sigma}{2\varepsilon_0}. \]</div>
+      <div class="paso">3. Camino B · con los números</div><p>Sustituye directamente la densidad superficial:</p>
+      <div class="eq">\[ E=\frac{3{,}0\times10^{-9}}{2(8{,}854\times10^{-12})}=169{,}4\ \mathrm{N/C}. \]</div>
+      <div class="paso">4. Verificación</div><p>El resultado no depende de la distancia a la lámina: como la lámina es infinita, las líneas de campo son rectas paralelas que no se separan, y el módulo es el mismo en todas partes. Si la lámina fuera <i>conductora</i>, el campo justo afuera sería el doble, \(\sigma/\varepsilon_0\), como verás en 5.7.</p>
+      <div class="result"><b>Resultado.</b> \(E=\sigma/(2\varepsilon_0)=169{,}4\ \mathrm{N/C}\), perpendicular a la lámina, el mismo a cualquier distancia.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="8"><div class="rh">Reto 8<small>nivel medio</small></div><p>Una lámina plana infinita tiene densidad superficial uniforme \(\sigma=5{,}0\ \mathrm{nC/m^2}\). ¿Cuánto vale el campo que produce?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">5</span>
-                    <b>Cálculo del Campo y Flujo Interior ($r_1 = 0{,}05\ \text{m}$):</b>
-                </div>
-                \[E(r_1)(4\pi r_1^2) = \frac{Q_{\text{enc}}(r_1)}{\epsilon_0} \implies E(r_1) = \frac{Q_{\text{enc}}(r_1)}{4\pi\epsilon_0 r_1^2} = \frac{1}{4\pi\epsilon_0}\frac{Q r_1}{R^3} = \frac{k Q r_1}{R^3}\]
-                \[E(0{,}05) = \frac{(8{,}99\times 10^9)(20{,}0\times 10^{-9})(0{,}05)}{(0{,}10)^3} = \frac{8{,}99}{0{,}001} = 8990\ \text{N/C} = 8{,}99\ \text{kN/C}\]
-                \[\Phi_1 = \frac{Q_{\text{enc}}}{\epsilon_0} = \frac{2{,}50\times 10^{-9}\ \text{C}}{8{,}854\times 10^{-12}\ \text{C}^2/\text{N}\cdot\text{m}^2} \approx 282{,}36\ \text{V}\cdot\text{m}\]
-            </div>
+  <!-- 5.7 -->
+  <h2 id="s57"><span class="n">5.7</span>Dos láminas conductoras: el condensador</h2>
+  <div class="res" data-res="7"><div class="h">Ejercicio resuelto 7 · Campo entre dos placas conductoras, por dos caminos</div><div class="b">
+    <p>Dos placas conductoras planas, grandes y paralelas, separadas una distancia \(d\), tienen cargas iguales y opuestas: \(+Q\) (densidad \(+\sigma\)) y \(-Q\) (densidad \(-\sigma\)). Calcula el campo entre las placas y fuera de ellas.</p>
+    <figure><svg role="img" viewBox="0 0 340 230" width="320" aria-label="Dos placas paralelas con cargas opuestas; el campo es uniforme entre ellas y nulo fuera"><defs><marker id="m5g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <rect x="110" y="20" width="16" height="190" rx="3" fill="var(--e10-q-pos)" opacity=".30"/>
+      <rect x="240" y="20" width="16" height="190" rx="3" fill="var(--e10-q-neg)" opacity=".30"/>
+      <line x1="150" y1="115" x2="220" y2="115" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5g)"/>
+      <line x1="150" y1="60" x2="220" y2="60" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5g)"/>
+      <line x1="150" y1="170" x2="220" y2="170" stroke="var(--e10-vec-field)" stroke-width="3" marker-end="url(#m5g)"/>
+      <text x="224" y="108" font-size="14" fill="var(--e10-vec-field)">E = σ/ε₀</text>
+      <text x="60" y="110" font-size="13" fill="var(--e10-muted)">E = 0</text>
+      <text x="300" y="110" font-size="13" fill="var(--e10-muted)">E = 0</text>
+      <text x="118" y="16" font-size="13" fill="var(--e10-q-pos)">+σ</text>
+      <text x="244" y="16" font-size="13" fill="var(--e10-q-neg)">−σ</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> Cada placa conductora en equilibrio reparte su carga de modo que dentro del metal el campo sea cero. ¿Cómo se cancelan los campos fuera del condensador?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Cada placa como dos láminas</div><p>Despreciando los bordes, cada placa se trata como un conjunto de caras planas. La placa positiva, con carga \(+Q\), reparte su carga de forma que dentro del metal \(E=0\): en el condensador ideal la densidad \(\sigma\) se concentra en la cara que mira hacia la otra placa.</p>
+      <div class="paso">2. Camino A · superposición de láminas</div><p>Cada cara con densidad \(\sigma\) produce un campo \(\sigma/(2\varepsilon_0)\) perpendicular, saliendo de la positiva y entrando a la negativa. Entre las placas los dos campos apuntan en el mismo sentido y se suman; fuera, apuntan en sentidos opuestos y se cancelan:</p>
+      <div class="eq">\[ E_{\text{dentro}}=\frac{\sigma}{2\varepsilon_0}+\frac{\sigma}{2\varepsilon_0}=\frac{\sigma}{\varepsilon_0},\qquad E_{\text{fuera}}=0. \]</div>
+      <div class="paso">3. Camino B · Gauss (pillbox)</div><p>Coloca una caja de pastillas con una tapa dentro del metal (donde \(E=0\)) y la otra entre las placas. Solo la tapa exterior contribuye al flujo, y encierra la carga \(\sigma A\):</p>
+      <div class="eq">\[ E\,A=\frac{\sigma A}{\varepsilon_0}\quad\Longrightarrow\quad E=\frac{\sigma}{\varepsilon_0}. \]</div>
+      <p>Una segunda caja que encierre <i>ambas</i> placas encierra carga neta cero, lo que confirma \(E=0\) fuera.</p>
+      <div class="paso">4. Interpretación</div><p>Entre las placas el campo es uniforme y vale el doble que el de una sola lámina aislante; fuera del condensador el campo es (idealmente) cero. En el capítulo 6 este campo uniforme \(E=\sigma/\varepsilon_0\) es la base de la capacitancia.</p>
+      <div class="result"><b>Resultado.</b> Entre placas \(E=\sigma/\varepsilon_0\) (uniforme, de \(+\) a \(-\)); fuera, \(E=0\).</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="12"><div class="rh">Reto 12<small>nivel avanzado</small></div><p>Un conductor en equilibrio tiene una densidad superficial de carga \(\sigma=1{,}0\times10^{-6}\ \mathrm{C/m^2}\). ¿Cuánto vale el campo justo afuera de su superficie?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">6</span>
-                    <b>Cálculo del Campo y Flujo Exterior ($r_2 = 0{,}20\ \text{m}$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Para $r_2 = 0{,}20\ \text{m} > R$, la esfera gaussiana encierra la <b>totalidad</b> de la carga de la esfera: $Q_{\text{enc}} = Q = 20{,}0\ \text{nC}$.
-                </p>
-                \[E(r_2)(4\pi r_2^2) = \frac{Q}{\epsilon_0} \implies E(r_2) = \frac{1}{4\pi\epsilon_0}\frac{Q}{r_2^2} = \frac{k Q}{r_2^2}\]
-                \[E(0{,}20) = \frac{(8{,}99\times 10^9)(20{,}0\times 10^{-9})}{(0{,}20)^2} = \frac{179{,}8}{0{,}04} = 4495\ \text{N/C} \approx 4{,}50\ \text{kN/C}\]
-                \[\Phi_2 = \frac{Q}{\epsilon_0} = \frac{20{,}0\times 10^{-9}\ \text{C}}{8{,}854\times 10^{-12}\ \text{C}^2/\text{N}\cdot\text{m}^2} \approx 2258{,}87\ \text{V}\cdot\text{m}\]
-            </div>
+  <!-- 5.8 -->
+  <h2 id="s58"><span class="n">5.8</span>Conductor con cavidad y blindaje</h2>
+  <div class="res" data-res="8"><div class="h">Ejercicio resuelto 8 · Carga en una cavidad (jaula de Faraday), por dos caminos</div><div class="b">
+    <p>Un conductor neutro tiene una cavidad en su interior. Se coloca una carga puntual \(+q\) en el centro de la cavidad. Describe las cargas inducidas y el campo en cada región del sistema.</p>
+    <figure><svg role="img" viewBox="0 0 340 260" width="320" aria-label="Conductor con cavidad, carga positiva en el centro, carga negativa inducida en la pared interna y positiva en la externa"><defs><marker id="m5h" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+      <circle cx="170" cy="130" r="115" fill="var(--e10-accent)" opacity=".10" stroke="var(--e10-line)"/>
+      <circle cx="170" cy="130" r="55" fill="var(--e10-surface)" stroke="var(--e10-line)"/>
+      <circle cx="170" cy="130" r="9" fill="var(--e10-q-pos)"/><text x="178" y="134" font-size="15" fill="var(--e10-q-pos)">+q</text>
+      <circle cx="170" cy="130" r="55" fill="none" stroke="var(--e10-q-neg)" stroke-width="2.5"/>
+      <circle cx="170" cy="130" r="115" fill="none" stroke="var(--e10-q-pos)" stroke-width="2.5"/>
+      <line x1="170" y1="130" x2="218" y2="130" stroke="var(--e10-vec-field)" stroke-width="2.5" marker-end="url(#m5h)"/>
+      <text x="222" y="134" font-size="13" fill="var(--e10-vec-field)">E</text>
+      <text x="60" y="66" font-size="13" fill="var(--e10-q-neg)">pared interna −q</text>
+      <text x="196" y="30" font-size="13" fill="var(--e10-q-pos)">superficie externa +q</text>
+      <text x="96" y="190" font-size="12" fill="var(--e10-muted)">cuerpo del conductor: E = 0</text>
+    </svg></figure>
+    <div class="pred"><b>Predice antes de calcular.</b> ¿Qué carga aparece en la pared interna de la cavidad? ¿Y en la superficie externa del conductor, si este era neutro?</div>
+    <details class="sol"><summary>Ver la solución</summary>
+      <div class="paso">1. Región del conductor</div><p>En equilibrio electrostático el campo dentro del <i>metal</i> es cero: si hubiera campo, las cargas libres se moverían hasta anularlo.</p>
+      <div class="paso">2. Camino A · Gauss dentro del metal</div><p>Toma una superficie gaussiana que quede totalmente dentro del metal del conductor, rodeando la cavidad. Como \(E=0\) en toda esa superficie, el flujo es cero, luego la carga neta encerrada es cero. Encierra la carga \(+q\) y la carga de la pared interna \(q_{\text{int}}\):</p>
+      <div class="eq">\[ q+q_{\text{int}}=0\quad\Longrightarrow\quad q_{\text{int}}=-q. \]</div>
+      <p>La pared interna induce una carga igual y opuesta, \(-q\).</p>
+      <div class="paso">3. Camino B · conservación de carga</div><p>El conductor era neutro. Si la pared interna tiene \(-q\), la superficie externa debe llevar \(+q\) para que la carga total del conductor siga siendo cero.</p>
+      <div class="paso">4. Campo en cada región</div><p>Dentro de la cavidad, el campo lo produce \(+q\) (junto con la distribución inducida \(-q\) sobre la pared); en el metal, \(E=0\); fuera del conductor, el campo es el de una carga \(+q\) colocada en el centro, pues \(+q\) se reparte en la superficie exterior. Un campo externo tampoco penetra el metal: el interior queda blindado (jaula de Faraday).</p>
+      <div class="result"><b>Resultado.</b> Pared interna \(-q\), superficie externa \(+q\); \(E=0\) en el cuerpo del conductor; blindaje electrostático del interior.</div>
+    </details>
+  </div></div>
+  <div class="reto" data-reto="13"><div class="rh">Reto 13<small>nivel avanzado</small></div><p>¿Cuánto vale el campo eléctrico en el interior de una jaula de Faraday (un conductor cerrado) en equilibrio electrostático?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
+  <div class="reto" data-reto="14"><div class="rh">Reto 14<small>nivel avanzado</small></div><p>Una carga puntual de \(+5{,}0\ \mathrm{nC}\) está en el centro de una cavidad esférica dentro de un conductor neutro. ¿Cuánta carga se induce en la pared interna de la cavidad?</p><p class="cita">Adaptado con deducción propia a partir de Young y Freedman (2009), Cap. 22.</p></div>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">7</span>
-                    <b>Verificación de Continuidad en la Frontera ($r = R$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Evaluando desde el interior: $E_{\text{int}}(R) = \frac{kQ R}{R^3} = \frac{kQ}{R^2} = \frac{(8{,}99\times 10^9)(20\times 10^{-9})}{0{,}01} = 17980\ \text{N/C}$.<br>
-                    Evaluando desde el exterior: $E_{\text{ext}}(R) = \frac{kQ}{R^2} = 17980\ \text{N/C}$.
-                </p>
-                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
-                    <b style="color:var(--e10-success)">Conclusión:</b> El campo es <b>continuo en todo el espacio</b> porque la densidad de carga volumétrica $\rho$ es finita (no hay láminas superficiales infinitesimales infinitamente delgadas).
-                </div>
-            </div>
-        </div>
+  <!-- Teoría -->
+  <h2 id="sT"><span class="n">T</span>Teoría</h2>
+  <details class="teo"><summary>¿Qué dice exactamente la ley de Gauss y por qué es tan potente?</summary><p>El flujo neto a través de una superficie cerrada es igual a la carga encerrada dividida entre \(\varepsilon_0\): \(\oint\vec E\cdot d\vec A=Q_{\text{enc}}/\varepsilon_0\). Es potente porque conecta el campo en una superficie con la carga <i>dentro</i> de ella, sin necesidad de sumar carga por carga. Cuando hay simetría, el campo sale del integral y se despeja en un solo paso.</p></details>
+  <details class="teo"><summary>¿Por qué se necesita simetría para usar la ley de Gauss?</summary><p>Para despejar \(E\), debe ser constante (o cero) sobre la superficie gaussiana y paralelo o perpendicular a \(d\vec A\). Eso solo pasa con simetría esférica, cilíndrica o plana. Sin simetría, el integral \(\oint\vec E\cdot d\vec A\) sigue valiendo \(Q_{\text{enc}}/\varepsilon_0\), pero no da \(E\) en un punto: hay que volver a la superposición (capítulo 2).</p></details>
+  <details class="teo"><summary>¿Por qué el campo dentro de un conductor en equilibrio es cero?</summary><p>Porque las cargas libres se mueven ante cualquier campo. En cuanto aparece un campo interno, los electrones se desplazan y se acumulan en la superficie hasta que su propio campo cancela el campo aplicado. El equilibrio se alcanza, en los metales, en tiempos del orden de \(10^{-16}\ \mathrm s\).</p></details>
+  <details class="teo"><summary>¿Dónde se reparte la carga de un conductor?</summary><p>Toda la carga neta en exceso se coloca en la superficie exterior. Si se toma una superficie gaussiana justo dentro del metal, encierra un campo nulo y por tanto carga neta cero; por eso en el interior no puede quedar carga. Si hay una cavidad, la carga inducida en su pared es igual y opuesta a la carga encerrada en la cavidad.</p></details>
+  <details class="teo"><summary>¿Por qué el campo justo afuera de un conductor es \(\sigma/\varepsilon_0\)?</summary><p>Con una caja de pastillas cuya tapa interior está en el metal (\(E=0\)) y la exterior justo afuera, el flujo es \(EA\) y la carga encerrada \(\sigma A\): \(EA=\sigma A/\varepsilon_0\), de donde \(E=\sigma/\varepsilon_0\). Es el doble del campo de una lámina aislante porque en el conductor el campo solo puede salir por un lado.</p></details>
+  <details class="teo"><summary>¿Qué es el blindaje electrostático (jaula de Faraday)?</summary><p>Un conductor cerrado protege su interior de los campos externos: las cargas inducidas en la superficie se reacomodan hasta cancelar el campo dentro del metal. Por eso la carrocería de un coche o el fuselaje de un avión protegen a sus ocupantes de un rayo, y por eso los equipos sensibles se encierran en cajas metálicas.</p></details>
 
-        <!-- Calculadora Interactiva de Comprobación -->
-        <div class="card no-print" style="margin-top:16px;background:var(--e10-bg)">
-            <b style="color:var(--e10-primary)">Calculadora Paramétrica para Problema 1:</b>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:10px">
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Radio $R$ [m]:</label>
-                    <input type="number" id="calc5-R" value="0.10" step="0.01">
-                </div>
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Carga $Q$ [nC]:</label>
-                    <input type="number" id="calc5-Q" value="20.0" step="1">
-                </div>
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Punto Interior $r_1$ [m]:</label>
-                    <input type="number" id="calc5-r1" value="0.05" step="0.01">
-                </div>
-                <div>
-                    <label style="font-size:12px;color:var(--e10-muted)">Punto Exterior $r_2$ [m]:</label>
-                    <input type="number" id="calc5-r2" value="0.20" step="0.02">
-                </div>
-                <div style="display:flex;align-items:flex-end">
-                    <button class="btn btn-pri" id="btn-calc5-eval" style="width:100%">Recalcular</button>
-                </div>
-            </div>
-            <div id="calc5-res" style="margin-top:10px;font-weight:600;color:var(--e10-ink)">
-                Resultado: $E(r_1) = 8990{,}0\ \text{N/C}$ &nbsp;|&nbsp; $E(r_2) = 4495{,}0\ \text{N/C}$ &nbsp;|&nbsp; $\Phi_1 = 282{,}4\ \text{V}\cdot\text{m}$
-            </div>
-        </div>
-    </article>
+  <!-- Python -->
+  <h2 id="sP"><span class="n">P</span>Explora con Python</h2>
+  <p><b>1. Flujo por una esfera gaussiana.</b> Comprueba que el flujo de una carga puntual a través de una esfera no depende del radio: siempre da \(Q/\varepsilon_0\) (ejercicios 5.2 y 5.3).</p>
+<pre id="py1"># Flujo a traves de una esfera gaussiana centrada en una carga puntual.
+from math import pi
+K = 8.988e9
+EPS0 = 8.854e-12
+Q = 3.0e-9                       # carga puntual en el centro, C
+print(" R (m)     flujo por Gauss (N m2/C)    Q/eps0 (N m2/C)")
+for R in (0.05, 0.10, 0.20, 0.50, 1.00):
+    E = K*Q/R**2                  # campo sobre la esfera de radio R
+    flujo = E * (4*pi*R**2)       # Phi = E * area (E es uniforme sobre la esfera)
+    print(f"{R:5.2f}   {flujo:22.2f}   {Q/EPS0:15.2f}")
+print("El flujo no depende del radio: toda la carga queda encerrada.")</pre>
+  <p class="muted">Salida al ejecutarlo:</p>
+<pre> R (m)     flujo por Gauss (N m2/C)    Q/eps0 (N m2/C)
+ 0.05                  338.83             338.83
+ 0.10                  338.83             338.83
+ 0.20                  338.83             338.83
+ 0.50                  338.83             338.83
+ 1.00                  338.83             338.83
+El flujo no depende del radio: toda la carga queda encerrada.</pre>
+  <p><b>2. \(E(r)\) por Gauss, comparando regiones.</b> Campo de una esfera aislante con carga uniforme: dentro crece como \(r\), fuera cae como \(1/r^2\), y en \(r=R\) ambos trozos coinciden (ejercicio 5.4).</p>
+<pre id="py2"># Campo de una esfera aislante con carga uniforme (region interior y exterior).
+K = 8.988e9
+Q, R = 8.0e-9, 0.20               # carga total y radio de la esfera, en C y m
+def E(r):
+    if r &lt;= R:                    # interior: E = k Q r / R^3  (crece linealmente)
+        return K*Q*r/R**3
+    else:                         # exterior: E = k Q / r^2  (cae como 1/r^2)
+        return K*Q/r**2
+print(" r (m)     E (N/C)   region")
+for r in (0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.60):
+    zona = "interior (E ~ r)" if r &lt;= R else "exterior (E ~ 1/r^2)"
+    print(f"{r:5.2f}  {E(r):9.2f}   {zona}")
+print(f"En r=R los dos trozos coinciden: E = {E(R):.2f} N/C (maximo).")</pre>
+  <p class="muted">Salida al ejecutarlo:</p>
+<pre> r (m)     E (N/C)   region
+ 0.05     449.40   interior (E ~ r)
+ 0.10     898.80   interior (E ~ r)
+ 0.15    1348.20   interior (E ~ r)
+ 0.20    1797.60   interior (E ~ r)
+ 0.30     798.93   exterior (E ~ 1/r^2)
+ 0.40     449.40   exterior (E ~ 1/r^2)
+ 0.60     199.73   exterior (E ~ 1/r^2)
+En r=R los dos trozos coinciden: E = 1797.60 N/C (maximo).</pre>
 
-    <!-- PROBLEMA 2: CABLE COAXIAL Y APANTALLAMIENTO -->
-    <article class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h2 style="margin:0;font-size:22px;color:var(--e10-ink)">Problema 2: Cable Coaxial Cilíndrico y Apantallamiento Conductor</h2>
-            <span class="badge badge-accent">Nivel Avanzado</span>
-        </div>
-        <p style="font-size:16px">
-            Un cable coaxial muy largo está constituido por un conductor cilíndrico interior sólido de radio $a = 2{,}0\ \text{mm}$ que transporta una densidad lineal de carga $+\lambda = +40{,}0\ \text{nC/m}$. Alrededor de él, de forma coaxial, se ubica un cascarón cilíndrico conductor hueco de radio interior $b = 8{,}0\ \text{mm}$ y radio exterior $c = 10{,}0\ \text{mm}$, que transporta una carga neta total por unidad de longitud $-\lambda = -40{,}0\ \text{nC/m}$.<br>
-            <b>a)</b> Determina la expresión analítica del campo eléctrico $\vec{E}(r)$ en todas las regiones del espacio: $r < a$, $a < r < b$, $b < r < c$ y $r > c$.<br>
-            <b>b)</b> Evalúa numéricamente el campo a $r = 5{,}0\ \text{mm}$ (en el dieléctrico/aire intermedio).<br>
-            <b>c)</b> Deduce las densidades superficiales de carga inducidas $\sigma_b$ y $\sigma_c$ en las caras interior y exterior del cascarón.
-        </p>
+  <h2><span class="n">S</span>Practica en la plataforma</h2>
+  <div class="bar"><a class="btn" href="../presentaciones/M5_Gauss/index.html" target="_blank" rel="noopener">Clase interactiva del capítulo 5</a><a class="btn" href="../simuladores/GaussLab.html" target="_blank" rel="noopener">GaussLab (ejercicios 5.2 a 5.8)</a><a class="btn" href="../desafios/desafio.html?m=5" target="_top">Desafío integral del módulo 5</a></div>
 
-        <!-- 7 PASOS METODOLÓGICOS -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">1</span>
-                    <b>Geometría Cilíndrica y Parámetros del Sistema:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    $a = 2{,}0\times 10^{-3}\ \text{m}$, $b = 8{,}0\times 10^{-3}\ \text{m}$, $c = 10{,}0\times 10^{-3}\ \text{m}$.<br>
-                    Densidad del cilindro interior: $+\lambda = 40{,}0\times 10^{-9}\ \text{C/m}$.<br>
-                    Densidad neta del cascarón exterior: $-\lambda = -40{,}0\times 10^{-9}\ \text{C/m}$.
-                </p>
-            </div>
+  <h2><span class="n">C</span>Conecta y consulta</h2>
+  <div class="tip"><b>Lo que sigue.</b> La ley de Gauss convierte un problema de sumar cargas en un problema de simetría: con ella dedujiste el campo de esferas, cilindros y láminas en una línea. En el capítulo 6 ese campo uniforme entre placas (\(E=\sigma/\varepsilon_0\)) te dará la capacitancia y la energía almacenada, y el capítulo sobre potencial eléctrico conectará este flujo con el trabajo por unidad de carga.</div>
+  <p style="font-size:15px"><b>Bibliografía.</b> Young, H. D., y Freedman, R. A. (2009). <i>Física universitaria con física moderna (Sears y Zemansky)</i>, vol. 2 (12.ª ed.). Pearson Educación. Capítulo 22 «Ley de Gauss», secciones 22.1–22.5, pp. 756–776.<br><span class="muted">Los enunciados son originales de 10.Easy. Donde un reto se inspira en un ejercicio del libro, se indica cuál; los datos y la deducción son propios. Las constantes \(k\), \(e\) y \(\varepsilon_0\) son las de la sección 22.3.</span></p>
 
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">2</span>
-                    <b>Superficie Gaussiana Cilíndrica Coaxial:</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Elegimos un cilindro coaxial de radio $r$ y longitud $L$. Como el flujo a través de las tapas planas es nulo ($\vec{E} \perp \hat{n}_{\text{tapa}}$), el flujo total cerrado es:
-                    \[\oint \vec{E}\cdot d\vec{A} = E(r)(2\pi r L)\]
-                </p>
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">3</span>
-                    <b>Análisis en el Conductor Interior ($r < a$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Por el teorema fundamental de conductores en equilibrio electrostático:
-                    \[\vec{E} = \vec{0} \quad \text{para } r < a\]
-                    Toda la carga $+\lambda$ reside exclusivamente en la superficie $r = a$.
-                </p>
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">4</span>
-                    <b>Análisis en la Región Intermedia ($a < r < b$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    La superficie gaussiana de radio $r$ encierra únicamente el cilindro interno: $Q_{\text{enc}} = +\lambda L$.
-                </p>
-                \[E(r)(2\pi r L) = \frac{\lambda L}{\epsilon_0} \implies E(r) = \frac{\lambda}{2\pi\epsilon_0 r} = \frac{2k\lambda}{r}\]
-                <p style="margin:4px 0 0;font-size:15px">Evaluando a $r = 5{,}0\ \text{mm} = 5{,}0\times 10^{-3}\ \text{m}$:</p>
-                \[E(5\ \text{mm}) = \frac{2(8{,}99\times 10^9\ \text{N}\cdot\text{m}^2/\text{C}^2)(40{,}0\times 10^{-9}\ \text{C/m})}{5{,}0\times 10^{-3}\ \text{m}} = \frac{719{,}2}{0{,}005} = 143840\ \text{N/C} \approx 143{,}8\ \text{kN/C}\]
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">5</span>
-                    <b>Análisis Dentro del Cascarón Conductor ($b < r < c$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    Como $b < r < c$ está dentro de la masa metálica de un conductor en equilibrio, <b>el campo eléctrico debe ser idénticamente nulo</b>:
-                    \[\vec{E} = \vec{0} \quad \text{para } b < r < c\]
-                    Para que esto se cumpla, la Ley de Gauss exige que la carga encerrada sea cero: $Q_{\text{enc}} = Q_{\text{int}} + Q_{\text{pared } b} = 0$.<br>
-                    Por tanto, en la pared interior $r = b$ se induce exactamente una carga por unidad de longitud igual y opuesta a la del conductor central:
-                    \[\lambda_b = -\lambda = -40{,}0\ \text{nC/m}\]
-                </p>
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">6</span>
-                    <b>Carga en la Pared Exterior ($r = c$) y Región Exterior ($r > c$):</b>
-                </div>
-                <p style="margin:6px 0 0;font-size:15px">
-                    La carga total neta del cascarón es $-\lambda$. Dado que $\lambda_{\text{total}} = \lambda_b + \lambda_c$:
-                    \[-40{,}0\ \text{nC/m} = -40{,}0\ \text{nC/m} + \lambda_c \implies \lambda_c = 0\ \text{nC/m}\]
-                    Por consiguiente, para cualquier superficie gaussiana con $r > c$, la carga total encerrada es:
-                    \[Q_{\text{enc}} = (+\lambda - \lambda)L = 0 \implies \vec{E} = \vec{0} \quad \text{para } r > c\]
-                </p>
-            </div>
-
-            <div class="soft-box">
-                <div style="display:flex;align-items:center">
-                    <span class="step-badge">7</span>
-                    <b>Densidades Superficiales Inducidas:</b>
-                </div>
-                \[\sigma_b = \frac{\lambda_b}{2\pi b} = \frac{-40{,}0\times 10^{-9}\ \text{C/m}}{2\pi (8{,}0\times 10^{-3}\ \text{m})} = \frac{-40{,}0\times 10^{-9}}{0{,}050265} \approx -7{,}96\times 10^{-7}\ \text{C/m}^2 = -0{,}796\ \mu\text{C/m}^2\]
-                \[\sigma_c = \frac{\lambda_c}{2\pi c} = 0\ \text{C/m}^2\]
-                <div class="ok" style="background:var(--e10-success-soft);border-left:4px solid var(--e10-success);border-radius:0 12px 12px 0;padding:12px;margin-top:8px">
-                    <b style="color:var(--e10-success)">Conclusión del Apantallamiento Coaxial:</b> El cable coaxial confina el 100% de la energía electromagnética en la región dieléctrica interior ($a < r < b$). En el exterior no existe ningún campo parásito que genere interferencias.
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <!-- FORMULARIO DE ENTREGA DEL ESTUDIANTE -->
-    <section class="card" id="seccion-entrega" style="border:2px solid var(--e10-primary)">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-            <div>
-                <span class="badge badge-primary">Evaluación Formal</span>
-                <h3 style="margin:4px 0 0;font-size:20px;color:var(--e10-ink)">Certificado Oficial de Entrega de Taller No. 5</h3>
-            </div>
-            <span class="mono" style="font-size:13px;color:var(--e10-muted)">Plataforma Electro10.Easy</span>
-        </div>
-
-        <form id="form-entrega" onsubmit="return false;">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
-                <div>
-                    <label style="font-size:13px;font-weight:600">Nombre Completo del Estudiante:</label>
-                    <input type="text" id="ent5-nombre" placeholder="Ej. Carlos Martínez" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Código Estudiantil / ID:</label>
-                    <input type="text" id="ent5-codigo" placeholder="Ej. 20261058" required>
-                </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
-                <div>
-                    <label style="font-size:13px;font-weight:600">Campo Interior de la Esfera $E(r_1)$ [N/C]:</label>
-                    <input type="number" id="ent5-p1-eint" step="1" placeholder="Ej. 8990" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Campo Exterior de la Esfera $E(r_2)$ [N/C]:</label>
-                    <input type="number" id="ent5-p1-eext" step="1" placeholder="Ej. 4495" required>
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600">Campo en Cable Coaxial a $5\ \text{mm}$ [kN/C]:</label>
-                    <input type="number" id="ent5-p2-ecoax" step="0.1" placeholder="Ej. 143.8" required>
-                </div>
-            </div>
-
-            <div style="margin-top:12px">
-                <label style="font-size:13px;font-weight:600">Conclusiones Físicas del Estudiante:</label>
-                <textarea id="ent5-obs" style="width:100%;border:1px solid var(--e10-line);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;height:70px" placeholder="Explica por qué el campo eléctrico dentro de un conductor en equilibrio electrostático es estrictamente cero..."></textarea>
-            </div>
-
-            <div class="no-print" style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
-                <button type="button" class="btn" id="btn-validar-entrega-5">Verificar Resultados</button>
-                <button type="button" class="btn btn-pri" id="btn-descargar-pdf-5">Generar Certificado de Entrega en PDF</button>
-            </div>
-            <div id="msg-feedback-5" style="margin-top:10px;font-size:14px;font-weight:600;display:none"></div>
-        </form>
-    </section>
-
+  <!-- Entrega -->
+  <h2 id="sE"><span class="n">E</span>Entrega de los retos</h2>
+  <div class="card entrega">
+    <p style="margin-top:0">Escribe tu nombre, responde los retos con su comprobador y guarda esta hoja en PDF para entregarla.</p>
+    <label for="est-nombre">Nombre completo</label><input type="text" id="est-nombre" autocomplete="name">
+    <label for="est-grupo">Grupo o código</label><input type="text" id="est-grupo">
+    <table class="sum" id="sum"><thead><tr><th>Reto</th><th>Tu respuesta</th><th>Estado</th></tr></thead><tbody></tbody></table>
+    <div class="bar no-print"><button type="button" class="btn pri" id="btn-print">Guardar la entrega en PDF</button><button type="button" class="btn" id="btn-reset">Borrar mis respuestas</button></div>
+  </div>
+  <p class="muted">© 2026 Dudbil Olvasada Pabón Riaño · 10.Easy</p>
 </div>
 
 <script>
-// PESTAÑAS CAMINO A / CAMINO B
-const btnCamA5 = document.getElementById('btn-p1g-camA');
-const btnCamB5 = document.getElementById('btn-p1g-camB');
-const contCamA5 = document.getElementById('content-p1g-camA');
-const contCamB5 = document.getElementById('content-p1g-camB');
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  // Respuestas calculadas con las constantes k=8,988e9, e=1,602e-19 y eps0=8,854e-12. Cada pista nombra el error y te devuelve a la idea física.
+  const RETOS = {
+    1: { unit: 'N·m²/C', ans: 62.83, hint: 'Flujo = E·A·cosθ. El campo es perpendicular al disco, así que θ=0: Φ = E·πR².', extra: 'El flujo máximo se da cuando el campo es perpendicular a la superficie; R en metros.' },
+    2: { unit: 'N·m²/C', ans: 100, hint: 'Φ = E·A·cosθ. Ojo: θ es el ángulo del campo con la NORMAL a la superficie (60°).', extra: 'A = 0,20 × 0,20 = 0,04 m²; cos 60° = 0,5.' },
+    3: { unit: 'C', ans: 8.854e-7, hint: 'Ley de Gauss: Q = Φ·ε0. Sustituye el flujo y ε0 = 8,854×10⁻¹².', extra: 'Φ = 1,0×10⁵ N·m²/C multiplicado por ε0.' },
+    4: { unit: 'N·m²/C', ans: 451.77, hint: 'Φ = Q/ε0 con Q = 4,0 nC = 4,0×10⁻⁹ C.', extra: 'No depende del tamaño del cubo: toda la carga queda dentro.' },
+    5: { unit: 'N/C', ans: 599.2, hint: 'Como r > R, toda la carga se ve: E = kQ/r².', extra: 'r = 0,30 m; Q = 6,0 nC.' },
+    6: { unit: 'N/C', ans: 0, hint: 'En el interior de un conductor en equilibrio electrostático el campo es cero.', extra: 'Toda la carga está en la superficie; ninguna dentro del metal.' },
+    7: { unit: 'N/C', ans: 539.28, hint: 'Cilindro infinito: E = λ/(2πε0·r) = 2kλ/r.', extra: 'λ = 3,0 nC/m, r = 0,10 m.' },
+    8: { unit: 'N/C', ans: 282.35, hint: 'Lámina infinita: E = σ/(2ε0).', extra: 'El campo es uniforme: no depende de la distancia a la lámina.' },
+    9: { unit: 'N/C', ans: 898.8, hint: 'Interior de una esfera aislante: E = kQ·r/R³.', extra: 'Q = 8,0 nC, R = 0,20 m, r = 0,10 m; crece linealmente con r.' },
+    10: { unit: 'C', ans: 2.003e-8, hint: 'Superficie esférica gaussiana: Q = E·r²/k = E·4πε0·r².', extra: 'E = 2,0×10³ N/C en r = 0,30 m.' },
+    11: { unit: 'N·m²/C', ans: 0, hint: 'La carga está FUERA: toda línea de campo que entra a la superficie también sale.', extra: 'El flujo neto solo depende de la carga ENCERRADA.' },
+    12: { unit: 'N/C', ans: 1.1294e5, hint: 'Justo afuera de un conductor: E = σ/ε0 (el doble que una lámina aislante).', extra: 'σ = 1,0×10⁻⁶ C/m².' },
+    13: { unit: 'N/C', ans: 0, hint: 'Blindaje electrostático: E = 0 dentro del conductor y de su cavidad en equilibrio.', extra: 'Por eso el coche y el avión protegen del rayo.' },
+    14: { unit: 'nC', ans: -5, hint: 'La pared interna de la cavidad induce una carga igual y opuesta a la carga encerrada.', extra: 'En la superficie externa queda +5,0 nC.' },
+  };
+  const KEY = 'e10_taller5_respuestas';
+  let st = {}; try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { st = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {} };
+  const parseNum = (s) => { s = String(s || '').trim().replace(/\s+/g, '').replace(/,/g, '.').replace(/−/g, '-').replace(/[×x*·]10\^?\(?([+-]?\d+)\)?/i, 'e$1').replace(/[a-zA-Z/]+$/, (u) => (/^e/i.test(u) ? u : '')); return s === '' ? NaN : Number(s); };
+  const fmt = (x) => { if (!isFinite(x)) return '—'; const a = Math.abs(x); if (a !== 0 && (a < 1e-2 || a >= 1e4)) { const e = Math.floor(Math.log10(a)); return (x / 10 ** e).toFixed(2).replace('.', ',') + ' × 10^' + e; } return x.toFixed(3).replace('.', ','); };
 
-btnCamA5.addEventListener('click', () => {
-    btnCamA5.classList.add('active');
-    btnCamB5.classList.remove('active');
-    contCamA5.classList.add('active');
-    contCamB5.classList.remove('active');
-});
-
-btnCamB5.addEventListener('click', () => {
-    btnCamB5.classList.add('active');
-    btnCamA5.classList.remove('active');
-    contCamB5.classList.add('active');
-    contCamA5.classList.remove('active');
-});
-
-// CALCULADORA PROBLEMA 1
-const kConst = 8.98755e9;
-const eps0 = 8.854187817e-12;
-
-document.getElementById('btn-calc5-eval').addEventListener('click', () => {
-    const R = parseFloat(document.getElementById('calc5-R').value);
-    const Q = parseFloat(document.getElementById('calc5-Q').value) * 1e-9;
-    const r1 = parseFloat(document.getElementById('calc5-r1').value);
-    const r2 = parseFloat(document.getElementById('calc5-r2').value);
-
-    const E1 = (kConst * Q * r1) / (R * R * R);
-    const E2 = (kConst * Q) / (r2 * r2);
-    const Qenc1 = Q * Math.pow(r1 / R, 3);
-    const Phi1 = Qenc1 / eps0;
-
-    document.getElementById('calc5-res').innerHTML = `Resultado: $E(r_1) = ${E1.toFixed(1)}\\ \\text{N/C}$ &nbsp;|&nbsp; $E(r_2) = ${E2.toFixed(1)}\\ \\text{N/C}$ &nbsp;|&nbsp; $\\Phi_1 = ${Phi1.toFixed(1)}\\ \\text{V}\\cdot\\text{m}$`;
-    if (window.renderMathInElement) {
-        renderMathInElement(document.getElementById('calc5-res'), {
-            delimiters: [{left: '$', right: '$', display: false}]
-        });
-    }
-});
-
-// VALIDACIÓN DE RESULTADOS
-document.getElementById('btn-validar-entrega-5').addEventListener('click', () => {
-    const vEint = parseFloat(document.getElementById('ent5-p1-eint').value);
-    const vEext = parseFloat(document.getElementById('ent5-p1-eext').value);
-    const vEcoax = parseFloat(document.getElementById('ent5-p2-ecoax').value);
-    const fb = document.getElementById('msg-feedback-5');
-    fb.style.display = 'block';
-
-    const okEint = Math.abs(vEint - 8990.0) < 50.0;
-    const okEext = Math.abs(vEext - 4495.0) < 30.0;
-    const okEcoax = Math.abs(vEcoax - 143.8) < 2.0;
-
-    if (okEint && okEext && okEcoax) {
-        fb.style.color = '#10b981';
-        fb.innerHTML = '✔ ¡Cálculos gaussianos impecables! Todos los valores numéricos coinciden con la deducción rigurosa de Sears-Zemansky. Ya puedes descargar tu certificado.';
-    } else {
-        fb.style.color = '#b3246b';
-        fb.innerHTML = '⚠ Revisa tus respuestas: asegúrate de usar $r_1/R^3$ en el interior de la esfera, $1/r^2$ en el exterior y expresar el campo coaxial en kN/C.';
-    }
-});
-
-// EXPORTACIÓN A PDF
-document.getElementById('btn-descargar-pdf-5').addEventListener('click', () => {
-    const nombre = document.getElementById('ent5-nombre').value.trim() || 'Estudiante';
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: `Taller_5_Gauss_${nombre.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  document.querySelectorAll('[data-reto]').forEach((box) => {
+    const n = +box.dataset.reto, R = RETOS[n];
+    const w = document.createElement('div'); w.className = 'ans no-print';
+    w.innerHTML = `<input aria-label="Tu respuesta al reto ${n}" inputmode="decimal" placeholder="p. ej. 2,5e-3"><span class="u">${R.unit}</span><button type="button" class="btn pri">Comprobar</button>`;
+    const fb = document.createElement('div'); fb.className = 'fb'; fb.setAttribute('aria-live', 'polite');
+    const pr = document.createElement('div'); pr.className = 'print-only'; pr.textContent = 'Respuesta: ______________________';
+    box.append(w, fb, pr);
+    const inp = w.querySelector('input'); let fails = 0;
+    if (st[n]) { inp.value = st[n].v; }
+    const check = () => {
+      const v = parseNum(inp.value);
+      if (!isFinite(v)) { fb.innerHTML = `<span style="color:var(--e10-muted)">Escribe un número en ${R.unit}.</span>`; return; }
+      const tol = R.tol ?? 0.02, ok = Math.abs(v - R.ans) <= tol * Math.abs(R.ans);
+      if (ok) fb.innerHTML = `<b style="color:var(--e10-success)">¡Correcto!</b> ${R.extra || ''}`;
+      else { fails++; fb.innerHTML = `<b style="color:var(--e10-danger)">Aún no, pero vas en camino.</b> ${fails < 2 ? R.hint : R.hint + ` La respuesta es ${fmt(R.ans)} ${R.unit}.`}`; }
+      st[n] = { v: inp.value, ok }; save(); table();
     };
-    html2pdf().set(opt).from(document.getElementById('seccion-entrega')).save();
-});
+    w.querySelector('button').addEventListener('click', check);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
+  });
 
-document.getElementById('btn-print-top').addEventListener('click', () => window.print());
-
-// AUTO-RENDER KATEX
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '\\[', right: '\\]', display: true},
-                {left: '$', right: '$', display: false},
-                {left: '\\(', right: '\\)', display: false}
-            ],
-            throwOnError: false
-        });
-    }
-});
+  function table() {
+    const tb = $('sum').querySelector('tbody'); tb.innerHTML = '';
+    Object.keys(RETOS).forEach((n) => { const s = st[n]; const tr = document.createElement('tr');
+      tr.innerHTML = `<td>Reto ${n}</td><td class="mono">${s ? s.v.replace(/</g, '&lt;') : '—'}</td><td>${!s ? 'sin responder' : s.ok ? '<b style="color:var(--e10-success)">correcto</b>' : '<span style="color:var(--e10-danger)">por revisar</span>'}</td>`; tb.appendChild(tr); });
+  }
+  table();
+  ['est-nombre', 'est-grupo'].forEach((id) => { try { $(id).value = localStorage.getItem('e10_' + id) || ''; } catch (_) {} $(id).addEventListener('input', () => { try { localStorage.setItem('e10_' + id, $(id).value); } catch (_) {} }); });
+  $('btn-print').addEventListener('click', () => { document.querySelectorAll('details').forEach((d) => { d.open = true; }); setTimeout(() => window.print(), 100); });
+  $('btn-reset').addEventListener('click', () => { st = {}; save(); document.querySelectorAll('[data-reto] input').forEach((i) => { i.value = ''; }); document.querySelectorAll('[data-reto] .fb').forEach((f) => { f.textContent = ''; }); table(); });
+  window.addEventListener('load', () => { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false }); });
+  window.__taller5 = { RETOS, parseNum };
+})();
 </script>
 </body>
 </html>

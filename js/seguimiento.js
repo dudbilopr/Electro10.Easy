@@ -140,6 +140,13 @@ export const ERRORES = {
     m4_varilla_infinita: 'Usó la varilla infinita para una varilla finita',
     m4_limite_z_R: 'No comprobó el límite z≫R (carga puntual)',
     m4_unidades: 'Unidades (cm → m)',
+    // GaussLab (módulo 5 · ley de Gauss)
+    gauss_qenc: 'Olvidó que solo la carga encerrada contribuye al flujo',
+    gauss_carga_externa: 'Contó una carga fuera de la superficie',
+    gauss_cilindro_r: 'Usó el radio equivocado en E=λ/(2πε0·r)',
+    gauss_lamina_factor2: 'Confundió σ/(2ε0) con σ/ε0',
+    gauss_conductor_interior: 'Puso E≠0 dentro del conductor',
+    gauss_superficie: 'Eligió mal la superficie gaussiana',
     otro: 'Otro error',
 };
 

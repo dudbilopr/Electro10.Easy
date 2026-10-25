@@ -11,6 +11,24 @@ console.log('=== INICIANDO VALIDACIÓN ESTÁTICA Y ESTRUCTURAL DE MÓDULO 4 ==='
 
 const baseDir = path.resolve(__dirname, '..');
 
+// Cuenta páginas de un PDF (soporta streams FlateDecode comprimidos).
+function countPages(buf) {
+  const zlib = require('zlib');
+  const s = buf.toString('latin1');
+  let n = (s.match(/\/Type\s*\/Page[^s]/g) || []).length;
+  if (n > 0) return n;
+  const re = /stream\r?\n([\s\S]*?)endstream/g;
+  let m, total = 0;
+  while ((m = re.exec(s)) !== null) {
+    try {
+      const raw = Buffer.from(m[1].replace(/^\s+|\s+$/g, ''), 'latin1');
+      let inf; try { inf = zlib.inflateSync(raw); } catch (e) { inf = zlib.inflateRawSync(raw); }
+      total += (inf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+    } catch (e) {}
+  }
+  return total;
+}
+
 // 1. Existencia de los 8 componentes canónicos y archivos de soporte
 const files = [
   'presentaciones/M4_DistribucionesContinuas/index.html',
@@ -67,14 +85,7 @@ if (fs.existsSync(tallerPath)) {
 // 4. Guía LaTeX → PDF de 4 páginas
 const guiaPath = path.join(baseDir, 'recursos/Cap04_Guia.pdf');
 if (fs.existsSync(guiaPath)) {
-  const buf = fs.readFileSync(guiaPath);
-  let nPages = (buf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-  if (nPages === 0) {
-    try {
-      const { execSync } = require('child_process');
-      nPages = parseInt(execSync(`python -c "import fitz; print(len(fitz.open(r'${guiaPath}')))"`).toString().trim(), 10);
-    } catch (_) {}
-  }
+  const nPages = countPages(fs.readFileSync(guiaPath));
   ok(nPages === 4, `Guía PDF tiene 4 páginas exactas (detectadas: ${nPages})`);
 }
 
@@ -89,7 +100,7 @@ if (fs.existsSync(bancoPath)) {
   const presentes = tipos.filter(t => bancoContent.includes(`tipo: '${t}'`));
   ok(presentes.length >= 10, `Banco usa al menos 10 tipos de pregunta (${presentes.length}): ${presentes.join(', ')}`);
   const dch = fs.readFileSync(path.join(baseDir, 'desafios/desafio.html'), 'utf8');
-  ok(dch.includes('[1, 2, 3, 4]'), 'desafio.html redirige el módulo 4 al motor integral');
+  ok(/\[1,\s*2,\s*3,\s*4/.test(dch), 'desafio.html redirige el módulo 4 al motor integral');
 }
 
 // 6. Simulador ContinuousDistLab
